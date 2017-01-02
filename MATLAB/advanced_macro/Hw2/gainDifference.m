@@ -1,0 +1,6 @@
+function [ val ] = gainDifference( expectationsSurvey,...
+    expectationsLearning)
+val = sum((expectationsSurvey - expectationsLearning).^2) / ...
+    length(expectationsSurvey);
+end
+

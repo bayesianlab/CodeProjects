@@ -1,0 +1,116 @@
+\documentclass[]{article}
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+%opening
+\title{HW1}
+\author{Dillon Flannery}
+
+\begin{document}
+
+\maketitle
+\begin{enumerate}
+	\item 
+	\begin{enumerate}
+	\item The model in state-space form is, 
+	\[  
+	\Gamma_0=\begin{pmatrix}
+	1 & 0 & \sigma^{-1} & \psi(1-\rho_a) & 0 & -\psi_f & -\sigma \\
+	-\kappa & 1 & 0 & 0 & -1 & 0 & \omega_f \\ 
+	-(1-\rho)r_x & -(1-\rho)r_{\pi} & 1 & 0 & 0 & 0& 0 \\
+	0 & 0 & 0& 1 &  0 & 0 & 0 \\
+	1 & 0 & 0 & 0& 0 & 0 & 0 \\
+	0 & 1 & 0 & 0& 0 & 0 & 0 \\
+	\end{pmatrix}
+	\]
+	\[
+	\Gamma_1 = \begin{pmatrix}
+	\omega_b &  0 & 0 & 0& 0 & 0 & 0 \\
+	0 &  \omega_b & 0 & 0 & 0& 0 & 0 & 0 \\
+	0 &  0 & \rho & 0 & 0& 0 & 0 & 0 \\
+	0 &  0 & 0 & \rho_a & 0& 0 & 0 & 0 \\
+	0 &  0 & 0 & 0 & \rho_u& 0 & 0 & 0 \\
+	0 &  0 & 0 & 0 & 0& 0 & 1 & 0 \\
+	0 &  0 & 0 & 0 & 0& 0 & 0 & 1 \\
+	\end{pmatrix}
+	  \]
+	\[
+	\Psi = \begin{pmatrix}
+	0 & 0 & 0 \\
+	0 & 0 & 0 \\
+	0 & 0 & 1 \\
+	1 & 0 & 0 \\
+	0 & 1 & 0 \\
+	0 & 0 & 0 \\
+	0 & 0 & 0 \\
+	\end{pmatrix}
+	\]
+	\[
+	\Pi = \begin{pmatrix}
+	0 & 0 \\
+	0& 0 \\
+0& 0 \\
+0& 0 \\
+0& 0 \\
+1 & 0 \\
+0 & 1 \\	
+	\end{pmatrix}, Y_t = \begin{pmatrix}
+	x_t \\
+	\pi_t \\
+	i_t \\
+	a_t \\
+	E X_{t+1} \\
+	E\pi_{t+1} \\
+	\end{pmatrix}, \epsilon_t = \begin{pmatrix}
+	\epsilon_t^a \\
+	\epsilon_t^u \\
+	\epsilon_t \\
+	\end{pmatrix}, \eta_t = \begin{pmatrix}
+	\eta_t^x \\
+	\eta_t^\pi \\
+	\end{pmatrix}
+	\]
+	\[  \Gamma_0 Y_t = \Gamma_1 Y_{t-1} + \Psi \epsilon_t + \Pi\eta_t \]
+The $ eu $	vector returned (1,1) for all values of $ \alpha $ meaning the solution exists and it is unique. 
+\item The computed IRFs, 
+
+\end{enumerate}
+\end{enumerate}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+\end{document}

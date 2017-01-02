@@ -1,0 +1,222 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>macro_king_rebelo</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-03-11"><meta name="DC.source" content="macro_king_rebelo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Interpretation</a></li></ul></div><pre class="codeinput">clear
+clc
+
+alpha = .3333;
+beta= .99;
+b = 1;
+rho = .90;
+
+n_steady = (1-alpha)/(b*(1-(alpha*beta)) + ( 1- alpha));
+
+mcSims = 100;
+periods = 250;
+
+consumption_variance = zeros(mcSims, 1);
+output_variance = zeros(mcSims, 1);
+hrs_variance = zeros(mcSims, 1);
+capital_variance = zeros(mcSims, 1);
+<span class="keyword">for</span> sim = 1:mcSims
+    lnA_t = zeros(periods+1,1);
+    lnA_t(1,1) = normrnd(0, .0072);
+    k_steady = (alpha*beta*exp(lnA_t(1,1))*(n_steady^(1-alpha))^<span class="keyword">...</span>
+        (1/(1-alpha)));
+
+    k_state = zeros(periods+1,1);
+    k_state(1,1) = log(k_steady);
+
+    output_store = zeros(periods + 1,1);
+    output_store(1,1) = output(exp(lnA_t(1,1)), k_steady, n_steady);
+
+    cons_store = zeros(periods + 1,1);
+    cons_store(1,1) = consumption_policy(exp(lnA_t(1,1)), k_steady,<span class="keyword">...</span>
+        n_steady);
+
+    hrs_store = zeros(periods + 1, 1);
+    hrs_store(1,1) = log(n_steady);
+    <span class="keyword">for</span> p = 1 : periods
+        A_t = exp(lnA_t(p,1));
+        k_t = exp(k_state(p,1));
+        c_t = exp(cons_store(p,1));
+        n_t = exp(hrs_store(p,1));
+
+        cons_store(p+1, 1) = consumption_policy(A_t, k_t, n_t);
+        output_store(p+1, 1) = output(A_t, k_t, n_t);
+        k_state(p+1,1) = capital_policy(A_t, k_t, n_t);
+        hrs_store(p+1,1) = (1-alpha)/(b*(1-(alpha*beta)) + ( 1- alpha));
+
+        lnA_t(p+1,1) = rho*lnA_t(p,1) + normrnd(0, .0072);
+
+    <span class="keyword">end</span>
+    cons_store(1,:) = [];
+    output_store(1,:) = [];
+    k_state(1,:) = [];
+    hrs_store(1,:) =[];
+
+    consumption_variance(sim,1) = var(cons_store);
+    output_variance(sim,1) = var(output_store);
+    hrs_variance(sim,1) = var(hrs_store);
+    capital_variance(sim,1) = var(k_state);
+<span class="keyword">end</span>
+
+str = sprintf([ <span class="string">'Mean Consumption variance %.3f \nMean output variance %.3f\n'</span>,<span class="keyword">...</span>
+     <span class="string">'Mean hours variance %.3f \nMean capital variance %.3f'</span>],<span class="keyword">...</span>
+mean(consumption_variance),<span class="keyword">...</span>
+mean(output_variance),<span class="keyword">...</span>
+mean(hrs_variance),<span class="keyword">...</span>
+mean(capital_variance))
+</pre><pre class="codeoutput">
+str =
+
+Mean Consumption variance 0.005 
+Mean output variance 0.005
+Mean hours variance 0.000 
+Mean capital variance 0.005
+
+</pre><h2>Interpretation<a name="2"></a></h2><p>King-Rebelo found .61 = C, 1.39 = Y, .67 = N,  but our esitmates returned .005 = C, .005 = Y, 0.0 = N and .005 = K. The difference can be explained by the fact that our model had far less perturbations than the King-Rebelo paper, and therefore much smaller variances on all the paramters.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear
+clc
+
+alpha = .3333;
+beta= .99;
+b = 1;
+rho = .90;
+
+n_steady = (1-alpha)/(b*(1-(alpha*beta)) + ( 1- alpha));
+
+mcSims = 100;
+periods = 250;
+
+consumption_variance = zeros(mcSims, 1);
+output_variance = zeros(mcSims, 1);
+hrs_variance = zeros(mcSims, 1);
+capital_variance = zeros(mcSims, 1);
+for sim = 1:mcSims
+    lnA_t = zeros(periods+1,1);
+    lnA_t(1,1) = normrnd(0, .0072);
+    k_steady = (alpha*beta*exp(lnA_t(1,1))*(n_steady^(1-alpha))^...
+        (1/(1-alpha)));
+
+    k_state = zeros(periods+1,1);
+    k_state(1,1) = log(k_steady);
+
+    output_store = zeros(periods + 1,1);
+    output_store(1,1) = output(exp(lnA_t(1,1)), k_steady, n_steady);
+
+    cons_store = zeros(periods + 1,1);
+    cons_store(1,1) = consumption_policy(exp(lnA_t(1,1)), k_steady,...
+        n_steady);
+
+    hrs_store = zeros(periods + 1, 1);
+    hrs_store(1,1) = log(n_steady);
+    for p = 1 : periods
+        A_t = exp(lnA_t(p,1));
+        k_t = exp(k_state(p,1));
+        c_t = exp(cons_store(p,1));
+        n_t = exp(hrs_store(p,1));
+        
+        cons_store(p+1, 1) = consumption_policy(A_t, k_t, n_t);
+        output_store(p+1, 1) = output(A_t, k_t, n_t);
+        k_state(p+1,1) = capital_policy(A_t, k_t, n_t);
+        hrs_store(p+1,1) = (1-alpha)/(b*(1-(alpha*beta)) + ( 1- alpha));
+        
+        lnA_t(p+1,1) = rho*lnA_t(p,1) + normrnd(0, .0072);
+
+    end
+    cons_store(1,:) = [];
+    output_store(1,:) = [];
+    k_state(1,:) = [];
+    hrs_store(1,:) =[];
+
+    consumption_variance(sim,1) = var(cons_store);
+    output_variance(sim,1) = var(output_store);
+    hrs_variance(sim,1) = var(hrs_store);
+    capital_variance(sim,1) = var(k_state);
+end
+
+str = sprintf([ 'Mean Consumption variance %.3f \nMean output variance %.3f\n',...
+     'Mean hours variance %.3f \nMean capital variance %.3f'],...
+mean(consumption_variance),...
+mean(output_variance),...
+mean(hrs_variance),...
+mean(capital_variance))
+
+%% Interpretation
+% King-Rebelo found .61 = C, 1.39 = Y, .67 = N,  but our esitmates returned
+% .005 = C, .005 = Y, 0.0 = N and .005 = K. The difference can be explained
+% by the fact that our model had far less perturbations than the
+% King-Rebelo paper, and therefore much smaller variances on all the
+% paramters. 
+
+
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,262 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>question2_ps4</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-01-28"><meta name="DC.source" content="question2_ps4.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Intuition of Results</a></li></ul></div><pre class="codeinput">clear
+clc
+<span class="comment">% Fixed params</span>
+beta = 0.9;
+gamma = 2;
+z_2 = 1.10;
+p_22 = 0.1;
+power = 1- gamma;
+
+<span class="comment">% Variable params</span>
+p_11 = [.2 .8];
+z_1 = [1 1.10];
+
+<span class="comment">% Construct Matrix 1 p = .2 z_1 = 1</span>
+g_hat_matrix1= constructMatrix(z_1(1,1), z_2,p_11(1,1)<span class="keyword">...</span>
+    ,p_22, power,beta);
+
+<span class="comment">% Select Row one of g_hat_matrix</span>
+g_1 = g_hat_matrix1(1,:);
+
+<span class="comment">% Set up consumption vector</span>
+maxConsumption = 20000;
+initialConsumption = 100;
+step = 0.10;
+consumption = initialConsumption:step:maxConsumption;
+value1 = zeros(length(consumption), 1);
+counter = 0;
+<span class="keyword">for</span> consumption = initialConsumption:step:maxConsumption
+    counter = counter + 1;
+    value1(counter,1) = sum(crraUtility(consumption, power, power)<span class="keyword">...</span>
+        .* g_1);
+<span class="keyword">end</span>
+
+<span class="comment">% Construct Matrix 2 p = .8 z = 1.10</span>
+g_hat_matrix2= constructMatrix(z_1(1,2), z_2,p_11(1,2)<span class="keyword">...</span>
+    ,p_22, power,beta);
+
+<span class="comment">% Select Row one of g_hat_matrix</span>
+g_12 = g_hat_matrix2(1,:);
+
+value2 = zeros(length(consumption), 1);
+counter = 0;
+<span class="keyword">for</span> consumption = initialConsumption:step:maxConsumption
+    counter = counter + 1;
+    value2(counter,1) = sum(crraUtility(consumption, power, power)<span class="keyword">...</span>
+        .* g_12);
+<span class="keyword">end</span>
+
+<span class="comment">% Construct Matrix 3 p = .8 z = 1.00</span>
+g_hat_matrix3 = constructMatrix(z_1(1,1), z_2,p_11(1,2)<span class="keyword">...</span>
+    ,p_22, power,beta);
+row11 = g_hat_matrix3(1,:);
+
+<span class="comment">% Set up consumption for plot</span>
+value3 = zeros(length(consumption), 1);
+counter = 0;
+<span class="keyword">for</span> consumption = initialConsumption:step:maxConsumption
+    counter = counter + 1;
+    value3(counter,1) = sum(crraUtility(consumption, power, power)<span class="keyword">...</span>
+        .* row11);
+<span class="keyword">end</span>
+
+<span class="comment">% Construct Matrix 4 p = .8 z = 1.10</span>
+g_hat_matrix3 = constructMatrix(z_1(1,2), z_2,p_11(1,2)<span class="keyword">...</span>
+    ,p_22, power,beta);
+row12 = g_hat_matrix3(1,:);
+
+<span class="comment">% Set up consumption for plot</span>
+value4 = zeros(length(consumption), 1);
+counter = 0;
+<span class="keyword">for</span> consumption = initialConsumption:step:maxConsumption
+    counter = counter + 1;
+    value4(counter,1) = sum(crraUtility(consumption, power, power)<span class="keyword">...</span>
+        .* row12);
+<span class="keyword">end</span>
+
+figure
+plot(value1)
+hold <span class="string">on</span>
+plot(value2)
+legend(<span class="string">'p = .2 z_1 = 1'</span>,<span class="string">'p = .2 z = 1.10'</span>,<span class="string">'Location'</span>, <span class="string">'southeast'</span>)
+title(<span class="string">'Plot of Probability Set to .2  z_1 \in 1.00, 1.10'</span>)
+
+figure
+plot(value3)
+hold <span class="string">on</span>
+plot(value4)
+legend(<span class="string">'p = .8 z = 1.00'</span>, <span class="string">'p = .8 z = 1.10'</span>, <span class="string">'Location'</span>, <span class="string">'southeast'</span>)
+title(<span class="string">'Plot of Probability Set to .8 z_1 \in \{1.00, 1.10\}'</span>)
+</pre><h2>Intuition of Results<a name="2"></a></h2><p>What we would expect from the plots would be that in our first plot, where we use a probability equal to 20\% of being in state 1,1 and a probability of 10\% of being in state 1,2, is that it would be lower than the other. The other probability is 80\% in state 1,1 and 10\% in state 1,2. With higher odds the expected utility  should be greater.</p><p>The results show this. The utility is less negative in case 2 than  in case 1. Ranging over differen values of z_1, not surprisingly</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear
+clc
+% Fixed params
+beta = 0.9;
+gamma = 2;
+z_2 = 1.10;
+p_22 = 0.1;
+power = 1- gamma;
+
+% Variable params
+p_11 = [.2 .8];
+z_1 = [1 1.10];
+
+% Construct Matrix 1 p = .2 z_1 = 1
+g_hat_matrix1= constructMatrix(z_1(1,1), z_2,p_11(1,1)...
+    ,p_22, power,beta);
+
+% Select Row one of g_hat_matrix
+g_1 = g_hat_matrix1(1,:);
+
+% Set up consumption vector
+maxConsumption = 20000;
+initialConsumption = 100;
+step = 0.10;
+consumption = initialConsumption:step:maxConsumption;
+value1 = zeros(length(consumption), 1);
+counter = 0;
+for consumption = initialConsumption:step:maxConsumption
+    counter = counter + 1;
+    value1(counter,1) = sum(crraUtility(consumption, power, power)...
+        .* g_1);
+end
+
+% Construct Matrix 2 p = .8 z = 1.10
+g_hat_matrix2= constructMatrix(z_1(1,2), z_2,p_11(1,2)...
+    ,p_22, power,beta);
+
+% Select Row one of g_hat_matrix
+g_12 = g_hat_matrix2(1,:);
+
+value2 = zeros(length(consumption), 1);
+counter = 0;
+for consumption = initialConsumption:step:maxConsumption
+    counter = counter + 1;
+    value2(counter,1) = sum(crraUtility(consumption, power, power)...
+        .* g_12);
+end
+
+% Construct Matrix 3 p = .8 z = 1.00
+g_hat_matrix3 = constructMatrix(z_1(1,1), z_2,p_11(1,2)...
+    ,p_22, power,beta);
+row11 = g_hat_matrix3(1,:);
+
+% Set up consumption for plot
+value3 = zeros(length(consumption), 1);
+counter = 0;
+for consumption = initialConsumption:step:maxConsumption
+    counter = counter + 1;
+    value3(counter,1) = sum(crraUtility(consumption, power, power)...
+        .* row11);
+end
+
+% Construct Matrix 4 p = .8 z = 1.10
+g_hat_matrix3 = constructMatrix(z_1(1,2), z_2,p_11(1,2)...
+    ,p_22, power,beta);
+row12 = g_hat_matrix3(1,:);
+
+% Set up consumption for plot
+value4 = zeros(length(consumption), 1);
+counter = 0;
+for consumption = initialConsumption:step:maxConsumption
+    counter = counter + 1;
+    value4(counter,1) = sum(crraUtility(consumption, power, power)...
+        .* row12);
+end
+
+figure
+plot(value1)
+hold on
+plot(value2)
+legend('p = .2 z_1 = 1','p = .2 z = 1.10','Location', 'southeast')
+title('Plot of Probability Set to .2  z_1 \in 1.00, 1.10')
+
+figure
+plot(value3)
+hold on
+plot(value4)
+legend('p = .8 z = 1.00', 'p = .8 z = 1.10', 'Location', 'southeast')
+title('Plot of Probability Set to .8 z_1 \in \{1.00, 1.10\}')
+
+%% Intuition of Results
+% What we would expect from the plots would be that in our first
+% plot, where we use a probability equal to 20\% of being in 
+% state 1,1 and a probability of 10\% of being in state 1,2, is that
+% it would be lower than the other. The other probability is 80\% in 
+% state 1,1 and 10\% in state 1,2. With higher odds the expected utility
+%  should be greater. 
+%
+% The results show this. The utility is less negative in case 2 than
+%  in case 1. Ranging over differen values of z_1, not surprisingly 
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,13 @@
+x <- seq(.01, 10, by = .01)
+y <- (1/x) 
+png("moneysupply.png", width = 800, height = 600, res = 120)
+plot(0, 0, xlim= c(-1,5), ylim = c(-1,10), type ="n", axes = F, 
+     main = "Money Supply and Demand", xlab = "M", ylab = "r")
+axis(1, pos= c(0,0), labels = F, tck = 0)
+axis(2, pos = c(0,0), labels = F, tck = 0)
+lines(x,y, lwd = 2)
+abline(v= 1)
+#abline(v = 2, lty= 2)
+text(1.01, 8, "Money Supply", pos =4)
+#text (2.01, 8, "Money Supply New", pos = 4)
+dev.off()

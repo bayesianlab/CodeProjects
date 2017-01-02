@@ -1,0 +1,247 @@
+\documentclass[]{article}
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+\linespread{1.5}
+%opening
+\title{Final}
+\author{Dillon Flannery}
+
+\begin{document}
+
+\maketitle
+This printout contains solutions to 1, 3, and 4 for the final. The second question is stapled to this. 
+\section*{Problem 1}
+I am  very happy I took this class. I learned many things I may never have been exposed to in the economics department but I feel will be useful in my research. The class was very challenging for me but I learned a lot through taking it. In economics there is application of a lot of complex math but not usually the time to learn it  thoroughly. I believe that those who are equipped better mathematically will do better in economics research if they can understand math at a deeper level. Primarily my interests lie in econometrics, which is just statistics applied to economic problems, usually dealing with regression and modeling. I found in my first year a wide variety of interesting topics that I wanted to pursue more in depth but was only given an introduction to them in my first year. My favorite part of the year was my econometrics class which was similar to a numerical analysis class in that we had to code regression problems ourselves, however many things were left out. I was interested in Bayesian modeling and saw that high dimensional integrals were needed to compute the likelihoods and I heard about quadrature routines but was never given the opportunity to learn about what they were until I took this course. \\
+I am glad for every opportunity I had because almost everything was new. The first few weeks when we learned about machine precision was very important. The simple exercises to figure out the accuracy of computers was something I was aware of but had never quantified myself. It was enlightening to know those things. \\
+Interpolation was something I had heard of and wanted to learn about but never had the chance. In my first year we did fit a  regression with splines but I never really understood what was going on theoretically with splines until this course. The different end conditions changed the fit of the spline sometimes dramatically and it seems a very good way of interpolating functions, even ones that are not fit well but regular polynomial interpolation. The section on splines was definitely challenging, finding the order of accuracy was something that was new to me and involved math that I had not used in awhile. From this section the Taylor series seems like one of the most important parts of numerical analysis, almost all of the error analysis sections of the class involved something with Taylor series. \\
+The material we covered next was probably the most challenging for me. I had a hard time understanding Fourier transforms. It was not until this final that I actually understood the notes and the book on Fourier transformations. The homework took me a very long time to complete. I tried many things to get it right and never was satisfied with the answer that I did get. That homework I received my lowest score, there were many things about Fourier transformations, and differential equations that I just did not know and could not learn fast enough to complete the assignment well. FFT was not so hard to implement, it was just a MATLAB command. The hard part was understanding how to use the results, which came from a lack of understanding of Fourier transformations. Also, I think that if I had done better verification methods, like checking my code with an easier differential equation then I may have gotten better results. \\
+The next section was my favorite and the one I was looking forward to the whole quarter. I was very interested in the quadrature rules that we did. I had been wanting to know about these because integrating likelihood functions is very axiomatic to estimating Bayesian models. The day could come when I will need to write my own code to integrate my own model and will need to use some quadrature. I really wanted to learn about Gaussian quadrature, but I felt we did not cover that too much. That seemed like the best way to integrate and had the smallest error. I did enjoy the quadrature material that we did do, however. \\
+Finding roots of equations is also important for my research so I was very interested in this subject. I really enjoyed the section about continuation methods. I find this fascinating. Unfortunately I did not really feel like I answered the last question perfectly, but I think that this is something that I need to know better. Finding roots of equations is of primary importance to maximizing likelihood equations. \\
+
+Overall a very good course and enjoyed it thoroughly. I thought it was very challenging, maybe too challenging sometimes, but very good for me and important for my research. I think the most valuable thing I walk away with from this course are the emphasis you put on error analysis. Sometimes I just look at graphs and plots, but in reality the best way to analyze algorithms is by looking at the error, rates of convergence, order of accuracy, and order of computation. Thank you for your effort to teach us this quarter, I learned a lot. 
+\section*{Problem 3}
+\subsection*{Sine}
+When $ f(x) $ is  periodic and smooth then the interpolating trigonometric polynomial satisfies
+\[
+\max_x | f(x) - \hat{f}(x) | \leq C_0 e^{-\mu N}
+\]
+$ \mu, C_0  $	are positive constants and $ \hat{f}  $ is the trigonometric polynomial. After interpolating a smooth function like $ \sin(x) $ we should find the inequality satisfied. This can be shown by dividing the error after doubling the points and taking the log. The result should show, 
+\[  
+\log \frac{e_N^{-\mu N}}{e_{2N}^{-\mu 2N}} = N\mu \log e_N
+\]
+
+With a function as smooth as $ \sin(x) $ there is no use in plotting or viewing the results all are less than machine epsilon and the interpolation is exactly the same as the true values up to machine precision. With very few points the interpolation is accurate up to machine epsilon. Using only 4 points the interpolation is exactly the same as the true values:
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale= .5]{untitled}
+	\caption{Using 4 points to interpolate $ \sin(x) $.}
+\end{figure}
+
+The true values cannot even be seen on this graph. The resulting norm from the errors returns complex numbers in MATLAB. \\	
+
+\subsection*{Sawtooth}
+Next the function to be interpolated will be the saw tooth function. 
+\[
+f(x) = \frac{1}{2}(\pi -x) \ \text{for} \  x \in 0 \leq x \leq 2\pi
+\]	
+	
+This function is not smooth. Around the discontinuities large errors will occur and the error will remain constant as a function of $ N $. This is known as the Gibbs phenomenon. Below is a graph of the Saw Tooth function, 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.25]{sawtooth}
+\end{figure}
+With 32 points the interpolation looks as follows, 
+\begin{figure}[H]
+	\caption{Gibb's Phenomenon}
+	\centering
+	\begin{subfigure}{.3\textwidth}
+	\includegraphics[scale = .25]{fsawtooth5}
+	\caption{Using 32 points}
+	\end{subfigure}
+	\begin{subfigure}{.4\textwidth}
+		\includegraphics[scale=.25]{fsawtooth6}
+		\caption{Using 64 points. }
+	\end{subfigure}
+
+It can be shown analytically that as $ N $ increases, 
+
+\[ 
+|f(x) - \hat{f}(x) | \leq \sum_{k=0}^{N} |F_j|
+ \]
+
+$ F_j = \frac{1}{2\pi} \int_{0}^{2\pi} f(x)e ^{-ijk}  $ \\
+
+Approaching this problem in the same was as the last function and plotting the error as, 
+\[  
+\log \frac{e_N^{-\mu N}}{e_{2N}^{-\mu 2N}} = N\mu \log e_N
+\]
+The graph of these results are below,  
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.5]{sawToothErr}
+\end{figure}
+\end{figure}
+
+Theory suggests that the error of the interpolation should be less than the sum of the Fourier coefficients. The results from running this simulation produced the following table, 
+\begin{table}
+	\centering
+	\begin{tabular}{ll}
+		$ \sum_{k=0}^{N} |F_j| $ & $ |f(x) - \hat{f}(x) | $ \\
+		\hline 
+		3.1416 & 2.3562 \\
+		2.3562 & 1.8485 \\
+		1.9635 & 1.6459 \\
+		1.7671 & 1.5899 \\
+		1.6690 & 1.5756 \\
+		1.5953 & 1.5720 \\
+		1.5831 & 1.5711 \\
+		1.5769 & 1.5709 \\
+		1.5739 & 1.5708 \\
+	\end{tabular}
+\end{table}
+	
+\subsection*{Sine With Splines}
+Using spline's to interpolate the sine function was not as impressive as the above Fourier trigonometric interpolation. Using MATLAB's spline function and end conditions $ S'(a) = f'(a) $ and $ S'(b) = f'(b) $ where $ S $ is the interpolating polynomial then the rate of convergence is, 
+\[
+| f(x) - S(x)| \leq C L ||\Delta||^4 
+\]
+
+Dividing the error and taking the $ \log_2 $ the results show that the function levels to four as expected by theory, the order of the clamped spline is fourth order. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.5]{order4Sin}
+	\caption{Larger $ \Delta $'s have larger error ratio's.}
+\end{figure}
+
+\subsection*{Saw Tooth With Splines}
+Below is a graph of the interpolation results of the saw tooth function with splines. The results this function which is linear
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.5]{sawToothSpline}
+	\caption{Saw tooth function fit with splines (Clamped spline)}
+\end{figure}
+
+The order of the saw tooth function with splines is only first order. The error decrease by half has the $ \Delta $ decreases by half. The reason the results are not correct is because the function is discontinuous at the end points. It has a period of 2$ \pi $ but the values of the derivatives are not the same on both sides of the interval 0 to $ 2\pi $. This function is not a good one to use for analyzing the order of convergence and it is one of the downsides of splines for periodic functions
+
+\subsection*{Periodic Function- Splines}
+The next function has a period on the interval $ [0,1] $, 
+\[
+f(x) = \sin(2\pi x) - \frac{1}{3} \cos(6\pi x) - \frac{1}{6} \sin(10\pi x)
+ \]
+ Below two period are plotted, 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.5]{periodic2periods}
+	\caption{Two periods of $ f(x) $ as defined above.}
+\end{figure}
+ 
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.4\textwidth}
+		\includegraphics[scale=.25]{periodicConvergence}
+		\caption{Convergence of splines to $ f(x) $ order four.}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\includegraphics[scale=.25]{convergenceGraphs}
+		\caption{Spline convergence with each step doubling interior knots.}
+	\end{subfigure}
+\end{figure}
+
+\subsection*{Comparison of Methods}
+Nothing can compare with Fourier transformations on smooth function without discontinuities. The function converges so fast only 4 points are needed before machine precision is reached. However, it did not do well with the saw tooth function, the error decrease with the fineness of the grid but it never went to zero due to the Gibb's phenomenon at the discontinuous end points. This is a draw back of Fourier Transforms, if the function is periodic but it is linear inside its period then a large number of interior knots are needed to get high accuracy, and computational complexity goes up. For splines it performed better on the linear function, there were no wild swings at the end points, and with the analytical derivatives known at the end points the error was better than the Fourier transform. However, splines also needed many interior knots for it to be accurate for the saw tooth function but the error was much less for the same amount of points than it was for Fourier Transforms. 
+
+\subsection*{Conclusion} 
+The discontinuities at the end points did not have the same deleterious effect on the error for splines as it did for Fourier transforms, this is a valuable lesson learned. Splines overall did well, on normal periodic functions that were smooth up to $ C^4 $ the order was order four, proven in the first case with $ f(x) = \sin(x) $ and the last case with $ f(x) = \cos(2\pi x) - \frac{1}{3}\sin(6\pi x) - \frac{1}{6} \cos(10\pi x)$. However, the saw tooth function was only once continuously differentiable, and therefore did not meet the criterion for the theorem, it was only first order at best. Fourier transforms were a perfect match for infinitely differentiable functions, however, due to the Gibb's phenomenon did not perform as well as Splines for discontinuous functions.  
+
+
+\section*{Problem 4}
+
+An easy equation to test my code for arc length continuation is the following system of equations:
+\begin{equation}
+x^2 + y^2  + 1-\alpha = 0
+\end{equation}
+
+\begin{equation}
+x - y + 1 - \alpha = 0 
+\end{equation}
+The solution curve will only defined on the circle. Without using arc length continuation normal continuation methods will stop at the top of the circle and not continue around to the other side producing a graph as follows: 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.4\textwidth}
+	\includegraphics[scale = .25]{halfcirc1}
+	\caption{$ \alpha $  on $ Y  $ }
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\includegraphics[scale=.25]{halfcirc2}
+			\caption{$ \alpha $  on $ X  $ }
+	\end{subfigure}
+\end{figure}
+
+
+Using arclength continuation I get the following:
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{.4\textwidth}
+		\includegraphics[scale = .25]{fullcircleY}
+		\caption{$ \alpha $  on $ Y  $ }
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\includegraphics[scale=.25]{fullcircX}
+		\caption{$ \alpha $  on $  X $ }
+	\end{subfigure}
+\end{figure}
+Because I am running out of time to complete this test I do not feel that I found all the solution branches for this system. I feel, although cannot verify there is a problem with the directional vector in my code. The solutions are running one direction with the parameter and then turning around and coming back down. There may be some sort of critical point there, where the direction needs to continue on or explore another branch, however, it is finding a branch and that is all I have for results because I must turn the exam in right now. 
+
+\begin{figure}[H]
+	\begin{subfigure}{.4\textwidth}
+		\includegraphics[scale=.5]{branchX}
+		\caption{$ \alpha $ on $ X $}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\includegraphics[scale=.5]{branchY}
+				\caption{$ \alpha $ on $ Y $}
+	\end{subfigure}
+\end{figure}
+
+\section*{Appendix}
+\lstinputlisting{arcLengthContinuation.m}
+\lstinputlisting{System.m}
+\lstinputlisting{F1.m}
+\lstinputlisting{F2.m}
+\lstinputlisting{Jacobian.m}
+\lstinputlisting{JacobianAlpha.m}
+\lstinputlisting{newtonArc.m}
+\lstinputlisting{newtonWithParameter.m}
+\lstinputlisting{newtonStep.m}
+\lstinputlisting{JacobianSys.m}
+\lstinputlisting{JacobianP.m}
+\lstinputlisting{G.m}
+\lstinputlisting{FA.m}
+\lstinputlisting{FB.m}
+
+\end{document}

@@ -1,0 +1,327 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>2 SLS Simulation</title><meta name="generator" content="MATLAB 8.6"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2016-02-29"><meta name="DC.source" content="two_sls.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>2 SLS Simulation</h1><p>y = XB + e, is the DGP. We will demonstrate the problems with using a weak instrument. The assumption E(ZX) = 0 will not be satisfied, that is, Z will not explain or be correlated with X's variation. We will assume the other assumption holds, E(Ze) = 0. We must build a DGP such that our instrument is not correlated with X.</p><pre class="codeinput">clear
+clc
+mu = 0;
+sigma = 1;
+rows = 1000;
+columns = 1;
+beta = 6.5;
+z_stat = 1.96;
+errorTerm = normrnd(mu,sigma, rows, columns);
+endogenous_error = errorTerm + normrnd(mu,sigma,rows,columns);
+
+<span class="comment">% Some variation of the error term is explainable with our</span>
+<span class="comment">% covariate X, a problem for assumptions of OLS. This justifies using</span>
+<span class="comment">% instrumental variables. The instrument will remove the correlation</span>
+<span class="comment">% of X with e.</span>
+weak_instrument = normrnd(mu,sigma,rows,columns);
+
+<span class="comment">% This will be our one endogenous variable</span>
+X_Endogeneous =  .2*weak_instrument + normrnd(mu,sigma, rows, columns)<span class="keyword">...</span>
+        + endogenous_error;
+X_Exogeneous = normrnd(mu,sigma, rows, columns);
+X_Mat = [X_Endogeneous X_Exogeneous];
+
+<span class="comment">% If we want to examine when we have a good estimate this will be the</span>
+<span class="comment">% X variable to use.</span>
+X_Correlated =  weak_instrument + errorTerm;
+
+<span class="comment">% The correlation is high between X and the error term, but almost</span>
+<span class="comment">% zero between the instrument and X. This makes Z a weak instrument.</span>
+<span class="comment">% Besides this the usual assumptions are satisfied for 2SLS.</span>
+x_uncorr_with_error = corr(X_Endogeneous, errorTerm);
+str = sprintf([<span class="string">'Correlation Endogeneous With Error\n'</span>,<span class="keyword">...</span>
+                <span class="string">'(Should be correlated): %f \n'</span>], x_uncorr_with_error);
+disp(str)
+instrument_with_error = corr(weak_instrument, errorTerm);
+str = sprintf(<span class="string">'Correlation Instrument \n With Error (Should be 0) %f\n'</span>,<span class="keyword">...</span>
+    instrument_with_error);
+disp(str)
+x_uncorr_with_instrument = corr(X_Endogeneous, weak_instrument);
+str = sprintf([<span class="string">'Correlation Endogeneous With Instrument\n'</span>,<span class="keyword">...</span>
+    <span class="string">'This should be  close to` 0 because\n it is weak: %f\n'</span>], instrument_with_error);
+disp(str)
+
+
+<span class="comment">% Very little of x is explained by instrument.</span>
+olsEstimators_instrument_on_x_uncorr = betaOLS(weak_instrument,X_Endogeneous);
+str = sprintf([<span class="string">'Another check for the strength of our\n instrument'</span>,<span class="keyword">...</span>
+    <span class="string">' is running a regreession.\n If the coefficient is small'</span>,<span class="keyword">...</span>
+    <span class="string">' then we know\n it is a weak instrument.\n OLS Estimates:  %f\n'</span>],<span class="keyword">...</span>
+    olsEstimators_instrument_on_x_uncorr);
+disp(str)
+
+<span class="comment">% Create y data for weak and strong instruments</span>
+y_unc = X_Endogeneous*beta + errorTerm;
+y_cor = X_Correlated*beta + errorTerm;
+
+<span class="comment">% Just to see the difference IV makes when X is endogeneous,</span>
+<span class="comment">% OLS returns estimates that are way off.</span>
+goodEstimate = iv_estimator(weak_instrument,X_Correlated, y_cor);
+badEstimate = betaOLS(X_Correlated, y_cor);
+str = sprintf([<span class="string">'OLS way off from the true beta (%.2f)\n compared to IV'</span>,<span class="keyword">...</span>
+    <span class="string">' estimation. \n OLS: %.2f\n IV: %.2f\n '</span>],<span class="keyword">...</span>
+    beta, badEstimate, goodEstimate);
+disp(str)
+
+<span class="comment">% For one instrument</span>
+betaTrue = [5.5; 3.5];
+mcSim = 20;
+store_results_z_weak = zeros(length(mcSim),1);
+store_CI = zeros(length(mcSim),2);
+store_results_normalOLS = zeros(length(mcSim),1);
+<span class="keyword">for</span> index = 1:mcSim
+    <span class="comment">% IV Esitmates</span>
+    [iv, resid, ols_est, CI] = iv_sim(mu,sigma, rows, columns,betaTrue);
+    store_results_z_weak(index,1) = iv;
+    store_CI(index,1:2) = CI;
+
+    <span class="comment">% OLS Esitmates</span>
+    store_results_normalOLS(index, 1) = ols_est;
+<span class="keyword">end</span>
+avg_ivs = mean(store_results_z_weak);
+avg_ols = mean(store_results_normalOLS);
+str = sprintf([<span class="string">'Display the mean of the vector of iv\n estimates:'</span>,<span class="keyword">...</span>
+    <span class="string">'\n %.2f \n Compare with OLS: \n %.2f\n'</span>,<span class="keyword">...</span>
+   <span class="string">'Compare with true parameters:\n %.2f\n'</span>], avg_ivs,<span class="keyword">...</span>
+   avg_ols, betaTrue(1,1));
+disp(str)
+ols_ivs = [store_results_normalOLS, store_results_z_weak];
+hist(ols_ivs)
+legend(<span class="string">'OLS Estimators'</span>, <span class="string">'Weak IV Estimator'</span>)
+title(<span class="string">'True Beta is 5.5'</span>)
+figure
+store_CI_and_wekas = [store_CI, store_results_z_weak];
+plot(store_CI_and_wekas)
+hold <span class="string">on</span>
+plot(1:mcSim, ones(1,mcSim)*betaTrue(1,1))
+legend(<span class="string">'Lower Bound'</span>,<span class="string">'Upper Bound'</span>,<span class="string">'Estimator'</span>, <span class="string">'True Beta'</span>)
+
+cnt = 0;
+<span class="keyword">for</span> i = 1:mcSim
+    <span class="keyword">if</span> betaTrue(1,1) &gt;= store_CI(i,2) | betaTrue(1,1) &lt;= store_CI(i,1)
+        cnt = cnt + 1;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+coverage_prob = 1 - cnt/mcSim
+</pre><pre class="codeoutput">Correlation Endogeneous With Error
+(Should be correlated): 0.572623 
+
+Correlation Instrument 
+ With Error (Should be 0) 0.077040
+
+Correlation Endogeneous With Instrument
+This should be  close to` 0 because
+ it is weak: 0.077040
+
+Another check for the strength of our
+ instrument is running a regreession.
+ If the coefficient is small then we know
+ it is a weak instrument.
+ OLS Estimates:  0.307239
+
+OLS way off from the true beta (6.50)
+ compared to IV estimation. 
+ OLS: 6.99
+ IV: 6.57
+ 
+Display the mean of the vector of iv
+ estimates:
+ 5.55 
+ Compare with OLS: 
+ 5.83
+Compare with true parameters:
+ 5.50
+
+
+coverage_prob =
+
+    0.3000
+
+</pre><img vspace="5" hspace="5" src="two_sls_01.png" alt=""> <img vspace="5" hspace="5" src="two_sls_02.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2015b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% 2 SLS Simulation
+% y = XB + e, is the DGP. 
+% We will demonstrate the problems with using a weak instrument. 
+% The assumption E(ZX) = 0 will not be satisfied, that is, Z will
+% not explain or be correlated with X's variation. We will assume the
+% other assumption holds, E(Ze) = 0. We must build a DGP such that
+% our instrument is not correlated with X. 
+clear
+clc
+mu = 0;
+sigma = 1;
+rows = 1000;
+columns = 1;
+beta = 6.5;
+z_stat = 1.96;
+errorTerm = normrnd(mu,sigma, rows, columns);
+endogenous_error = errorTerm + normrnd(mu,sigma,rows,columns);
+
+% Some variation of the error term is explainable with our 
+% covariate X, a problem for assumptions of OLS. This justifies using
+% instrumental variables. The instrument will remove the correlation
+% of X with e.
+weak_instrument = normrnd(mu,sigma,rows,columns);
+
+% This will be our one endogenous variable
+X_Endogeneous =  .2*weak_instrument + normrnd(mu,sigma, rows, columns)...
+        + endogenous_error;
+X_Exogeneous = normrnd(mu,sigma, rows, columns);
+X_Mat = [X_Endogeneous X_Exogeneous];
+
+% If we want to examine when we have a good estimate this will be the
+% X variable to use. 
+X_Correlated =  weak_instrument + errorTerm;
+
+% The correlation is high between X and the error term, but almost 
+% zero between the instrument and X. This makes Z a weak instrument.
+% Besides this the usual assumptions are satisfied for 2SLS. 
+x_uncorr_with_error = corr(X_Endogeneous, errorTerm);
+str = sprintf(['Correlation Endogeneous With Error\n',...
+                '(Should be correlated): %f \n'], x_uncorr_with_error);
+disp(str)
+instrument_with_error = corr(weak_instrument, errorTerm);
+str = sprintf('Correlation Instrument \n With Error (Should be 0) %f\n',...
+    instrument_with_error);
+disp(str)
+x_uncorr_with_instrument = corr(X_Endogeneous, weak_instrument);
+str = sprintf(['Correlation Endogeneous With Instrument\n',...
+    'This should be  close to` 0 because\n it is weak: %f\n'], instrument_with_error);
+disp(str)
+
+
+% Very little of x is explained by instrument. 
+olsEstimators_instrument_on_x_uncorr = betaOLS(weak_instrument,X_Endogeneous);
+str = sprintf(['Another check for the strength of our\n instrument',...
+    ' is running a regreession.\n If the coefficient is small',...
+    ' then we know\n it is a weak instrument.\n OLS Estimates:  %f\n'],...
+    olsEstimators_instrument_on_x_uncorr);
+disp(str)
+
+% Create y data for weak and strong instruments
+y_unc = X_Endogeneous*beta + errorTerm;
+y_cor = X_Correlated*beta + errorTerm;
+
+% Just to see the difference IV makes when X is endogeneous,
+% OLS returns estimates that are way off. 
+goodEstimate = iv_estimator(weak_instrument,X_Correlated, y_cor);
+badEstimate = betaOLS(X_Correlated, y_cor);
+str = sprintf(['OLS way off from the true beta (%.2f)\n compared to IV',...
+    ' estimation. \n OLS: %.2f\n IV: %.2f\n '],...
+    beta, badEstimate, goodEstimate);
+disp(str)
+
+% For one instrument
+betaTrue = [5.5; 3.5];
+mcSim = 20;
+store_results_z_weak = zeros(length(mcSim),1);
+store_CI = zeros(length(mcSim),2);
+store_results_normalOLS = zeros(length(mcSim),1);
+for index = 1:mcSim
+    % IV Esitmates 
+    [iv, resid, ols_est, CI] = iv_sim(mu,sigma, rows, columns,betaTrue);
+    store_results_z_weak(index,1) = iv;
+    store_CI(index,1:2) = CI;
+    
+    % OLS Esitmates
+    store_results_normalOLS(index, 1) = ols_est;
+end
+avg_ivs = mean(store_results_z_weak);
+avg_ols = mean(store_results_normalOLS);
+str = sprintf(['Display the mean of the vector of iv\n estimates:',...
+    '\n %.2f \n Compare with OLS: \n %.2f\n',...
+   'Compare with true parameters:\n %.2f\n'], avg_ivs,...
+   avg_ols, betaTrue(1,1));
+disp(str)
+ols_ivs = [store_results_normalOLS, store_results_z_weak];
+hist(ols_ivs)
+legend('OLS Estimators', 'Weak IV Estimator')
+title('True Beta is 5.5')
+figure
+store_CI_and_wekas = [store_CI, store_results_z_weak];
+plot(store_CI_and_wekas)
+hold on
+plot(1:mcSim, ones(1,mcSim)*betaTrue(1,1))
+legend('Lower Bound','Upper Bound','Estimator', 'True Beta')
+
+cnt = 0;
+for i = 1:mcSim
+    if betaTrue(1,1) >= store_CI(i,2) | betaTrue(1,1) <= store_CI(i,1)
+        cnt = cnt + 1;
+    end
+end
+coverage_prob = 1 - cnt/mcSim
+
+
+
+
+##### SOURCE END #####
+--></body></html>

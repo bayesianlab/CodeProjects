@@ -1,0 +1,166 @@
+\documentclass[]{article}
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+%opening
+\title{Homework 2}
+\author{Dillon Flannery}
+
+\begin{document}
+
+\maketitle
+
+\section*{Question 1}
+
+\subsection*{i)}
+\begin{figure}[H]
+	\begin{subfigure}{.3\textwidth}
+		\includegraphics[scale=.3]{best_gain}
+		\caption{Approximate minimum value = 0.0405.}
+	\end{subfigure}
+	\begin{subfigure}{.3\textwidth}
+		\includegraphics[scale=.3]{inflation}
+		\caption{Approximate minimum value = 0.0892}
+	\end{subfigure}	
+	\begin{subfigure}{.3\textwidth}
+		\includegraphics[scale=.3]{gaini}
+		\caption{Approximate minimum value = 0.3}
+	\end{subfigure}
+\end{figure}	
+
+\subsection*{ii)}	
+\begin{figure}[H]
+	\begin{subfigure}[b]{.3\textwidth}
+		\includegraphics[scale=.25]{implied_vs_survey}
+		\caption{Implied output rates vs. survey rates}
+	\end{subfigure}	
+	\begin{subfigure}[b]{.3\textwidth}
+		\includegraphics[scale=.25]{impliedPi_vs_surveyPi}
+		\caption{Implied inflation rates vs. survey rates}
+	\end{subfigure}	
+	\begin{subfigure}[b]{.3\textwidth}
+		\includegraphics[scale=.25]{impliedi}
+		\caption{Implied iterest rates vs. survey rates}
+	\end{subfigure}	
+\end{figure}
+
+\subsection*{iii)}
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.3]{ysubs}
+	\caption{Blue 2007q3 - 2016, Yellow 1984 q1-2007 q2, Red 1968-1983 q4}
+	\end{figure}	
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ll}
+			Time interval & Gain \\ 
+			\hline 
+			1968-1983 q4 &	0.0486  \\
+			1984 q1-2007 q2 &  0.0730   \\
+			2007 q3-2016 & 0.1095 \\
+			\hline
+		\end{tabular}
+				\caption{Best gains for time periods}
+	\end{table}	
+	
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=.3]{piGains}
+		\caption{Purple 2007q3 - 2016, Green 1984 q1-2007 q2, Aqua 1968-1983 q4}
+	\end{figure}	
+
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{ll}
+			Time interval & Gain \\ 
+			\hline 
+			1968-1983 q4 &	  0.1014  \\
+			1984 q1-2007 q2 &    0.2027  \\
+			2007 q3-2016 &   0.2473 \\
+			\hline
+		\end{tabular}
+		\caption{Best gains for time periods}
+	\end{table}	
+	
+	\section*{Question 2}
+
+\begin{table}[H]	
+	\centering
+	\begin{tabular}{llllll}
+		Parameter & prior mean & mode   & s.d.   & prior & pst. dev \\
+		\hline 
+		psi1 & 1.100     & 0.7347 & 0.0535 & gamm & 0.5000 \\
+		psi2 & 0.250 & 0.2725 & 0.1419 & gamm & 0.1500 \\
+		rho R & 0.500 & 0.6115 & 0.0182 & beta & 0.2000 \\
+		pi star & 4.000 & 4.2525 & 0.3157 & gamm & 2.0000 \\
+		R star & 2.000 & 1.0726 & 0.0792 & gamm & 1.0000 \\
+		kappa & 0.500 & 0.6780 & 0.1891 & gamm & 0.3500 \\
+		tau inv & 2.000 & 1.4334 & 0.1959 & gamm & 0.5000 \\
+		rho g & 0.700 & 0.6973 & 0.0376 & beta & 0.1000 \\
+		rho z & 0.700 & 0.8083 & 0.0163 & beta & 0.1000 \\
+		l11 & 0.200 & 0.2352 & 0.0101 & invg & 0.1500 \\
+		l22 & 0.300 & 0.2527 & 0.0394 & invg & 0.2000 \\
+		l33 & 1.000 & 1.2655 & 0.3290 & invg & 0.3000 \\
+		l21 & 0.000 & 0.0062 & 0.0227 & norm & 0.1000 \\
+		l31 & 0.000 & -0.0001 & 0.0890 & norm & 0.1000 \\
+		l32 & 0.150 & 0.1602 & 0.0934 & norm & 0.1000 \\
+		l41 1 & 0.000 & -0.1374 & 0.0212 & norm & 0.2000 \\
+		l42 1 & 0.300 & 0.3633 & 0.0161 & norm & 0.2000 \\
+		l43 1 & 0.000 & 0.0782 & 0.0332 & norm & 0.2000 \\
+		l44 1 & 0.100 & 0.1000 & 0.2000 & norm & 0.2000 \\
+		\hline 
+	\end{tabular}	
+\end{table}
+
+	\begin{figure}[H]
+		\begin{subfigure}{.3\textwidth}
+			\includegraphics[scale=.3]{shock1}
+		\end{subfigure}
+		\begin{subfigure}{.3\textwidth}
+			\includegraphics[scale=.3]{shock2}
+		\end{subfigure}
+				\begin{subfigure}{.3\textwidth}
+					\includegraphics[scale=.3]{shock3}
+				\end{subfigure}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics[scale=.4]{shock4}
+	\end{figure}
+
+Modeling business cycles with sunspots is important because LRE models can have indeterminate solutions with even the most realistic parameter choices according to theory. This renders a a set of solutions untenable using standard techniques. If such a solution could be found then it would be of interest to economists working at central banks everywhere. The implications of not reacting strongly enough to economic forces would have solutions as opposed to current methods which give indeterminate solutions when the Fed acts weakly \cite{clarida}. On the other hand some of the disadvantages of this method are the fact that it is simply a recasting of the same problem in a different light. The model's non-fundamental errors are transformed to fundamental ones using the author's method. A new innovation needs to be applied like learning as proposed by Evans and Honkaphoja or as the authors say a ``belief function" as in Farmer. For the solution to work the author's suppose that the belief function is ``time-invariant". These and the many other assumptions that are necessary to impose in order to obtain a solution are certainly disadvantages. In carrying out these methods it may not be true that all of the conditions stipulated are possible to be satisfied, thereby leaving the transformation impossible to carry out, and may not recover the true parameter estimates after all. Sunspots almost by definition are impossible to forecast. It seems unlikely that any method will be able to truly handle the indeterminate case categorically.  
+
+
+\begin{thebibliography}{9}
+	\bibitem{claida} 
+Clarida, R., Gali, J., Gertler, M., 2000. \textit{Monetary policy rules and macroeconomic stability: evidence and some theory}. Q. J. Econ. 115 (1), 147–180.
+
+	
+\end{thebibliography} 
+
+\end{document}

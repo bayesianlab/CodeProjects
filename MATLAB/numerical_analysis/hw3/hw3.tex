@@ -1,0 +1,57 @@
+\documentclass[]{article}
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+%opening
+\title{HW 3}
+
+
+\begin{document}
+
+\maketitle
+The two functions I chose were the runge function and a trig function. The runge function in the last homework was problematic. The interpolation did not improve with increasing the number of points. With splines however the accuracy did increase with the runge function. The output shows the error computed with 10 knots. Then in each loop the number of knots was doubled. Analytically we expected the error to be of order $ O(h^4) $. This was checked by plotting a line of slope 4. The dots represent the following calculation, 
+\[ \log_2\frac{e_h}{e_{h/2i}} \   \text{for i in 1 to 10. }\] 
+This was repeated numerous times with different starting numbers of points. The accuracy was best when the simulation was started with more points. However, these plots show that the order has a slope of 4, which was what was expected with not-a-knot end conditions. The two functions used were
+\[ f(x) = \frac{1}{1+35x^2} \] 
+\[ f(x) = 1 + \sin(x^2) \]\\
+(the Runge function plot is mislabeled, it should be 35$ x^2 $) \\
+\centering
+\includegraphics[scale=.3]{runge} \ \includegraphics[scale= .3]{untitled}	
+
+Code: \\
+\lstinputlisting{prb3.m}
+\lstinputlisting{splineError1.m}
+\lstinputlisting{splineError2.m}
+\lstinputlisting{runge.m}	
+\lstinputlisting{wavySin.m}	
+	
+	
+	
+	
+	
+
+
+
+\end{document}

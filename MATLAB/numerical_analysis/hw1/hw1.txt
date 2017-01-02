@@ -1,0 +1,258 @@
+Finding machine epsilon:
+
+clear;
+clc
+i = 1;
+while i < 1000
+    if 1 + .5^(i)  == 1
+        s = sprintf(['Smallest e such that 1 + 2^e != 1' ... 
+        ' is: \n\n\te = %i'], i);
+        s
+        break 
+    else
+        i = i + 1;
+    end
+end
+
+if 2^53 + 1 == 2^53
+  disp('True, largest integer 2^53')
+end
+
+Output:
+s = Smallest e such that 1 + 2^e != 1 is:
+
+        e = 53
+True, largest integer 2^53
+
+
+Question 2 Code
+Script:
+
+format long
+clear 
+clc
+tol = [10^(-7), 10^(-18)];
+maxIt = 10^3;
+x = linspace(.01,1, 10);
+for t =1:length(tol)
+     disp(sprintf('\n\tTolerance set to \n\t%.18f', tol(t)))
+     for i =1:length(x)
+         getTerms(x(i), tol(t), maxIt);
+     end
+ end
+
+My getTerms() function:
+
+function [ terms ] = getTerms( x, errTolerance, maxIt )
+if checkX(x) == 0
+    disp('Error in input, must be greater than 0, \nless than 1')
+    return
+else
+    terms = 0;
+    approx = x;
+    warning = 0;
+    exact = sin(x);
+    while terms <= maxIt
+        terms = terms + 1;
+        if mod(terms, 2) == 0
+            approx = approx + sinSeries(terms, x);
+        else
+            approx = approx - sinSeries(terms, x);
+        end
+        
+        err = calcRelativeErr(exact, approx);
+        if  err < errTolerance
+            disp(sprintf('Approximation satisfactory...x set to %.4f', x))
+            disp(sprintf('Absolute error %.18f', abs(exact - approx)))
+            str = sprintf('\t%i terms necessary', terms);
+            disp(str)
+            disp(sprintf('\tRelative Error: %.18f', err))
+            disp(sprintf('\tValue of approximation  %.18f', (approx/x)-1))
+            disp(sprintf('\tValue of exact function %.18f\n', (exact/x)-1))
+            warning = 1;
+            return
+        end
+    end
+    if warning == 0
+        disp(sprintf('\nWARNING: Approximation never less than err. tol.'))
+        disp(sprintf('Absolute Error %.18f', abs(exact - approx)))
+        disp(sprintf('Approximation %.18f', approx))
+        disp(sprintf('Exact         %.18f', exact))
+        disp(sprintf('x= %.4f, terms= %i\n', x, terms))
+    end
+end
+
+My checkX() function:
+
+function [ bool ] = checkX( x )
+if x > 1
+    bool = 0;
+elseif x < 0
+    bool = 0; 
+else
+    bool = 1;
+end
+
+My sinSeries() function:
+
+function [ seriesVal ] = sinSeries( iteration,  x )
+den = 2*iteration + 1;
+seriesVal = (x^den)/factorial(den);
+end
+
+My calcRelativeErr() function:
+
+function [ relErr] = calcRelativeErr( exact, approx )
+relErr = abs( (exact - approx) )/ abs(exact);
+end
+
+
+Question 2 output
+
+>> power_series_sinx
+
+
+        Tolerance set to
+        0.000000100000000000
+Approximation satisfactory...x set to 0.0100
+Absolute error 0.000000000000833332
+        1 terms necessary
+        Relative Error: 0.000000000083334556
+        Value of approximation  -0.000016666666666776
+        Value of exact function -0.000016666583333547
+
+Approximation satisfactory...x set to 0.1200
+Absolute error 0.000000000071080641
+        2 terms necessary
+        Relative Error: 0.000000000593762683
+        Value of approximation  -0.002398271999999979
+        Value of exact function -0.002398272592338602
+
+Approximation satisfactory...x set to 0.2300
+Absolute error 0.000000006750644932
+        2 terms necessary
+        Relative Error: 0.000000029611010889
+        Value of approximation  -0.008793346583333306
+        Value of exact function -0.008793375933963454
+
+Approximation satisfactory...x set to 0.3400
+Absolute error 0.000000000167144021
+        3 terms necessary
+        Relative Error: 0.000000000501200870
+        Value of approximation  -0.019155611842145981
+        Value of exact function -0.019155611350545998
+
+Approximation satisfactory...x set to 0.4500
+Absolute error 0.000000002081375350
+        3 terms necessary
+        Relative Error: 0.000000004785150056
+        Value of approximation  -0.033409928822544677
+        Value of exact function -0.033409924197266183
+
+Approximation satisfactory...x set to 0.5600
+Absolute error 0.000000014883045241
+        3 terms necessary
+        Relative Error: 0.000000028018508950
+        Value of approximation  -0.051453244575289103
+        Value of exact function -0.051453217998422618
+
+Approximation satisfactory...x set to 0.6700
+Absolute error 0.000000000305083070
+        4 terms necessary
+        Relative Error: 0.000000000491288171
+        Value of approximation  -0.073155242773667584
+        Value of exact function -0.073155243229015454
+
+Approximation satisfactory...x set to 0.7800
+Absolute error 0.000000001622530110
+        4 terms necessary
+        Relative Error: 0.000000002307091699
+        Value of approximation  -0.098359716893666405
+        Value of exact function -0.098359718973833221
+
+Approximation satisfactory...x set to 0.8900
+Absolute error 0.000000006917225237
+        4 terms necessary
+        Relative Error: 0.000000008901655811
+        Value of approximation  -0.126885669163989800
+        Value of exact function -0.126885676936153047
+
+Approximation satisfactory...x set to 1.0000
+Absolute error 0.000000024892279904
+        4 terms necessary
+        Relative Error: 0.000000029581863610
+        Value of approximation  -0.158528990299823591
+        Value of exact function -0.158529015192103495
+
+
+        Tolerance set to
+        0.000000000000000001
+Approximation satisfactory...x set to 0.0100
+Absolute error 0.000000000000000000
+        3 terms necessary
+        Relative Error: 0.000000000000000000
+        Value of approximation  -0.000016666583333547
+        Value of exact function -0.000016666583333547
+
+
+WARNING: Approximation never less than err. tol.
+Absolute Error 0.000000000000000014
+Approximation 0.119712207288919376
+Exact         0.119712207288919362
+x= 0.1200, terms= 1001
+
+Approximation satisfactory...x set to 0.2300
+Absolute error 0.000000000000000000
+        5 terms necessary
+        Relative Error: 0.000000000000000000
+        Value of approximation  -0.008793375933963454
+        Value of exact function -0.008793375933963454
+
+Approximation satisfactory...x set to 0.3400
+Absolute error 0.000000000000000000
+        6 terms necessary
+        Relative Error: 0.000000000000000000
+        Value of approximation  -0.019155611350545998
+        Value of exact function -0.019155611350545998
+
+
+WARNING: Approximation never less than err. tol.
+Absolute Error 0.000000000000000056
+Approximation 0.434965534111230179
+Exact         0.434965534111230234
+x= 0.4500, terms= 1001
+
+Approximation satisfactory...x set to 0.5600
+Absolute error 0.000000000000000000
+        6 terms necessary
+        Relative Error: 0.000000000000000000
+        Value of approximation  -0.051453217998422618
+        Value of exact function -0.051453217998422618
+
+
+WARNING: Approximation never less than err. tol.
+Absolute Error 0.000000000000000111
+Approximation 0.620985987036559606
+Exact         0.620985987036559717
+x= 0.6700, terms= 1001
+
+
+WARNING: Approximation never less than err. tol.
+Absolute Error 0.000000000000000111
+Approximation 0.703279419200410039
+Exact         0.703279419200410150
+x= 0.7800, terms= 1001
+
+Approximation satisfactory...x set to 0.8900
+Absolute error 0.000000000000000000
+        8 terms necessary
+        Relative Error: 0.000000000000000000
+        Value of approximation  -0.126885676936153047
+        Value of exact function -0.126885676936153047
+
+Approximation satisfactory...x set to 1.0000
+Absolute error 0.000000000000000000
+        8 terms necessary
+        Relative Error: 0.000000000000000000
+        Value of approximation  -0.158529015192103495
+        Value of exact function -0.158529015192103495

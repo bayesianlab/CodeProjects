@@ -1,0 +1,5 @@
+
+hellomake: blank.c functions.c
+	gcc -o hellomake blank.c functions.c
+	@echo 'Built hellomake'
+	

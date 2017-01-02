@@ -1,0 +1,42 @@
+\documentclass{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
+
+\begin{document}
+\begin{center}
+{\huge \underline{Flow Chart}}
+\end{center}
+\pagestyle{empty}
+	
+	
+	% Define block styles
+
+	\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+	text width=5cm, text centered, rounded corners, minimum height=4em, node distance = 4cm]
+	\tikzstyle{line} = [draw, -latex']
+	\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=4cm,
+	minimum height=2cm, text width = 8cm, text badly centered]
+	
+	\begin{tikzpicture}[node distance = 1cm, auto]
+	% Place nodes
+	\node [block] (init) {Given $ (x_0, \dots x_n+1) $ \\ and  $  (f(x_0), \dots, f(x_{n+1})) $ \\ interpolate in a given range [a,b] with an arbitrary amount of points for smoothness, $ n $};
+	
+	\node [cloud, below of=init] (interp) {interp.m function accepts $ (x_0, \dots x_n+1) $  and  $  (f(x_0), \dots, f(x_{n+1})) $ \\ range [a,b] and arbitrary amount of points $ n $ for smoothing};
+	
+	\node [cloud, below of=interp] (dd) {dividedDifferences.m is passed points and values which it uses to obtain the coefficients for a polynomial that pass through all the points given.};
+	
+	\node[cloud, below of =dd](evalPoints){evalPoints.m takes the coefficients of the polynomial and the points passed into interp and uses nested multiplication to evaluate the polynomial at a variety of points using the interval and the number of points to output from interp. };
+	
+	\node [block, below of =evalPoints] (end) {Return points ready for plotting on the specified interval};
+	
+	\path[line] (init) -- (interp);
+	\path[line] (interp) -- (dd);
+	\path[line] (dd) -- (evalPoints);
+	\path[line] (evalPoints) --(end);
+
+	\end{tikzpicture}
+	
+	
+\end{document}

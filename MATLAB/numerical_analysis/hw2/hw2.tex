@@ -1,0 +1,462 @@
+\documentclass[]{article}
+\usepackage{tikz}
+\usepackage{verbatim}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+%opening
+\title{Homework 2 Solutions}
+\author{Dillon Flannery}
+\begin{document}
+	
+	\maketitle	
+	
+\section{Divided Differences} The first task was to create a function that computed the coefficients of a polynomial given inputs $ x_0, \dots x_n+1 $ and $ f(x_0), \dots, f(x_{n+1}) $ using divided differences. The function that does this is \mcode{dividedDifferences.m}, the code is shown below. 
+\lstinputlisting{dividedDifferences.m} I am confident this code is correct and gives the correct values. It was thoroughly tested and the output of the tests is below. The columns compare on the left what my function returned for coefficients and on the  right what the known true values for the coefficients were that created the data. It correctly obtained the coefficients for both larger and smaller polynomials, postitive and negative coefficients, and coefficients that were zero. Here is the code for the tests, and the function that tested them 
+\subsection*{Testing}
+\lstinputlisting{test_dividedDifferences.m}
+\begin{lstlisting}
+passFail = zeros(5,1);
+if test_dividedDifferencesSwitch == 1
+disp('Divided differences Tests.')
+disp(sprintf('6x'))
+passFail(1) = test_dividedDifferences(dividedDifferences([0, 1],...
+[0,6]), [0,6]);
+
+disp(sprintf('6 + 11(x-1) + 3(x-1)(x-2)\n'))
+passFail(2) = test_dividedDifferences(dividedDifferences([1,2,3],...
+[6,17,34]), [6,11,3]);
+
+disp(sprintf('3 + .5(x-1) + (.333)(x-1)(x-1.5) - 2(x-1)(x-1.5)x\n'))
+passFail(3) = test_dividedDifferences(dividedDifferences([1,1.5,0,2],...
+[3, 3.25, 3, 1.6667]), [3,.5,.3333,-2]);
+
+disp(sprintf('-5 + 2x - 4x(x-1) + 8x(x-1)(x+1) + 3x(x-1)(x+1(x-2)\n'))
+passFail(4) = test_dividedDifferences(dividedDifferences([0,1,-1,2,-2],...
+[-5,-3,-15,39,-9]), [-5, 2, -4, 8, 3]);
+
+disp(sprintf('x^2'))
+passFail(5) = test_dividedDifferences(dividedDifferences([-2,0, 2],...
+[4,0,4]), [4,-2,1])
+if passFail' * passFail == length(passFail)
+disp(sprintf('\tAll tests PASSED.\n'))
+disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+else
+disp(sprintf('\tAt least one test FAILED.\n'))
+disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+end
+end	
+\end{lstlisting}  
+\subsection*{MATLAB results}
+\begin{verbatim}
+Divided differences Tests.
+6x
+0     0
+6     6
+
+Test passed.
+6 + 11(x-1) + 3(x-1)(x-2)
+6     6
+11    11
+3     3
+
+Test passed.
+3 + .5(x-1) + (.333)(x-1)(x-1.5) - 2(x-1)(x-1.5)x
+3.0000    3.0000
+0.5000    0.5000
+0.3333    0.3333
+-2.0000   -2.0000
+
+Test passed.
+-5 + 2x - 4x(x-1) + 8x(x-1)(x+1) + 3x(x-1)(x+1(x-2)
+-5    -5
+2     2
+-4    -4
+8     8
+3     3
+
+Test passed.
+x^2
+4     4
+-2    -2
+1     1
+
+Test passed.
+passFail =
+1
+1
+1
+1
+1
+
+All tests PASSED.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{verbatim}	
+Since all these tests passed we can be sure that the code is computing the correct values. We are ready to move on to part 2. 
+
+\section{Nested Multiplication} This question asked for code to compute the function $ f(x) $ value given an input of coefficients, points, and values of $ x $. The code that accomplished this was one simple function, \mcode{nMult.m} shown here, 
+\lstinputlisting{nMult.m}
+
+\subsection*{Testing} This code was rigorously tested against a variety of pathological and normal situations. To test a variety of known cases were calculated by hand and tested against the function output, here is the code: 
+
+\begin{lstlisting}
+% Code for nested multiplication is sufficientently tested. 
+if test_nestedMult == 1
+disp(sprintf('Nested multiplication tests\n'))
+disp(sprintf('f(x) = 1'))
+v1 = nMult(0, [1, 0], 0);
+v2 = 1 ;
+testNestedMult(v1, v2)
+disp(sprintf('f(x) = 0'))
+v1 = nMult(0, [0,0], 0);
+v2 = 0;
+testNestedMult(v1,v2)
+disp(sprintf('f(x) = 1 + 2x^2 + 3x^3'))
+v1 = nMult([0,0],[1,2,3], 2);
+v2 = 17;
+testNestedMult(v1,v2)
+disp(sprintf('f(x) = -1 + 2x^2 + -3x^3'))
+c = -1*[1,2,3];
+v1 = nMult([0,0], c, 1);
+v2 = -6;
+testNestedMult(v1,v2)
+disp(sprintf('f(x) = 0 + 0x^2 + 0x^3'))
+v1 = nMult([0,0], zeros(3,1), 100);
+v2=0;
+testNestedMult(v1,v2)
+disp(sprintf('1 + 3x^3'))
+c = [1,0,3];
+v1 = nMult([0,0], c, 3);
+v2 = 28;
+testNestedMult(v1,v2)
+disp(sprintf( '1 + x +  x^2 + ... + x^10'))
+c = ones(10,1);
+v1 = nMult(zeros(length(c)-1,1), c, 4);
+v2 = 349525;
+testNestedMult(v1,v2)
+
+disp(sprintf('6 + 11(x-1) + 3(x-1)(x-2)'))
+v1 = nMult([1,2], [6,11,3], 2);
+v2 = 17;
+testNestedMult(v1,v2)
+
+disp(sprintf('3 + .5(x-1) + (.3333)(x-1)(x-1.5) - 2(x-1)(x-1.5)x'))
+v1 = nMult([1,1.5,0], [3,.5,.3333, -2], -2);
+v2 = 46.99965;
+testNestedMult(v1,v2)
+
+disp(sprintf('3 + .5(x-1) + (.3333)(x-1)(x-1.5) - 2(x-1)(x-1.5)x'))
+v1 = nMult([1,1.5,0], [3,.5,.3333, -2], 6);
+v2 = -257.00075;
+testNestedMult(v1,v2)
+end 
+\end{lstlisting}
+
+The test function that tests the values is here:
+\lstinputlisting{testNestedMult.m}
+
+\subsection*{MATLAB results}
+\begin{verbatim}
+Nested multiplication tests
+f(x) = 1
+Nested multiplication: 1.000000
+Exact function value:  1.000000
+Test PASSED
+
+f(x) = 0
+Nested multiplication: 0.000000
+Exact function value:  0.000000
+Test PASSED
+
+f(x) = 1 + 2x^2 + 3x^3
+Nested multiplication: 17.000000
+Exact function value:  17.000000
+Test PASSED
+
+f(x) = -1 + 2x^2 + -3x^3
+Nested multiplication: -6.000000
+Exact function value:  -6.000000
+Test PASSED
+
+f(x) = 0 + 0x^2 + 0x^3
+Nested multiplication: 0.000000
+Exact function value:  0.000000
+Test PASSED
+
+1 + 3x^3
+Nested multiplication: 28.000000
+Exact function value:  28.000000
+Test PASSED
+
+1 + x +  x^2 + ... + x^10
+Nested multiplication: 349525.000000
+Exact function value:  349525.000000
+Test PASSED
+
+6 + 11(x-1) + 3(x-1)(x-2)
+Nested multiplication: 17.000000
+Exact function value:  17.000000
+Test PASSED
+
+3 + .5(x-1) + (.3333)(x-1)(x-1.5) - 2(x-1)(x-1.5)x
+Nested multiplication: 46.999650
+Exact function value:  46.999650
+Test PASSED
+
+3 + .5(x-1) + (.3333)(x-1)(x-1.5) - 2(x-1)(x-1.5)x
+Nested multiplication: -257.000750
+Exact function value:  -257.000750
+Test PASSED
+\end{verbatim}
+Because all these tests passed we can be sure that the code is doing the correct thing. 	 
+
+\subsection*{Part ii} I vectorized the above code to evaluate a polynomial at a vector of points $ x_0, \dots, x_n $ instead of just one at a time. This code as also tested. Here is the vectorized version, 
+\lstinputlisting{evalPoints.m}
+The tests for this code are here,
+\begin{lstlisting}
+% eval Points tests
+passFail = zeros(5,1);
+if test_evalPnts == 1
+	disp(sprintf('Function valus match hand calculated values.\n'))
+	passFail(1) = test_evalPoints(evalPoints([1,2], [6,11,3],...
+	[1,2, 3, -1]), [6,17,34,2]');
+	disp(sprintf('Function valus match hand calculated values.\n'))
+	passFail(2) = test_evalPoints(evalPoints([1, 3/2, 0],...
+	[3, .5, 1/3, -2],[-1,0, 10, 2]), [13.6667, 3, -1497, 1.66667]');
+	disp(sprintf('Bad input. Function catches error\n'))
+	passFail(3) = test_evalPoints(evalPoints([0], [0], [0]), num2str(-1));
+	disp(sprintf('Quadratic'))
+	passFail(4) = test_evalPoints(evalPoints([0,0], [0,0,1],...
+	[0, 1, 2]), [0, 1, 4]);
+	passFail(5) = test_evalPoints(evalPoints([1,1.5,0], [3,.5,.3333, -2],...
+	[-2, 6]), [46.99965, -257.00075])
+	if passFail' * passFail == length(passFail)
+	disp(sprintf('\tAll tests PASSED.\n\n'))
+	disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+	disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+	else
+	disp(sprintf('\tAt least one test FAILED.'))
+	disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+	disp('%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+end
+
+\end{lstlisting}
+ \subsection*{MATLAB results}
+\begin{verbatim}
+Function valus match hand calculated values.
+evalPoints Test passed.
+evalPoints Correct Values
+6     6
+17    17
+34    34
+2     2
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+Function valus match hand calculated values.
+evalPoints Test passed.
+evalPoints Correct Values
+1.0e+03 *
+0.0137    0.0137
+0.0030    0.0030
+-1.4970   -1.4970
+0.0017    0.0017
+%%%%%%%%%%%%%%%%%%%%%%%%
+Bad input. Function catches error
+Error, to many or too few points.
+-1
+-1
+Test passed. Error expected.
+%%%%%%%%%%%%%%%%%%%%%%%%
+Quadratic
+evalPoints Test passed.
+evalPoints Correct Values
+0     0
+1     1
+4     4
+%%%%%%%%%%%%%%%%%%%%%%%%
+evalPoints Test passed.
+evalPoints Correct Values
+46.9997   46.9997
+-257.0008 -257.0007
+%%%%%%%%%%%%%%%%%%%%%%%%
+passFail =
+1
+1
+1
+1
+1
+All tests PASSED.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{verbatim}	
+	Because all these tests passed we can be sure this code is correct. 	
+	
+\section*{Interpolation} Next we were asked to create a module to interpolate a table of data to a fitted  polynomial. The module that does this uses the previous two main function \mcode{dividedDifferences.m} and \mcode{nMult.m}. To do this first we suppose we are passed an arbitrary table of data consisting of points and the value of the function at those points. We can use the first function \mcode{dividedDifferences.m} to get the coefficeints of the polynoimal. Next we must interpolate the polynomial in a given range. Once this range is passed in the user is also asked to specify how many points the range is to be subdivided into. More points will result in smoother polynomials. So the function \mcode{interp.m} takes four inputs and these are ($ (n+1)\times1 $ vector) $ x_0, \dots, x_n+1 $ the values ($ (n+1)\times1 $ vector) $ f(x_0), \dots, f(x_{n+1}) $ the range to interpolate ($ (2\times1) $ vector) $ [a,b] $ and the number of points (integer) $ p $. 
+\lstinputlisting{interp.m}
+
+\subsection*{Testing part i} The function was subjected to numerical and visual tests. The tests are here, 
+\begin{lstlisting}
+% 1st polynomial interpolation 
+if test_interpolate_Poly == 1
+n =2:10;
+error = length(n);
+range = [-1,1];
+detail = 50;
+trueTable = generateData1(zeros(3,1), [1,2,4,3], [-1,1], detail);
+legendinfo = {};
+legendinfo{1} = 'True values';
+subplot(2,1,1)
+hold on
+plot(trueTable(1, 1:50), trueTable(2,1:50), 'r') 
+for i = 1:length(n)
+% Data to interpolate
+table = generateData1(zeros(3,1), [1,2,4,3], range, n(i));
+xVals = table(1, 1:n(i));
+fOfx = table(2, 1:n(i));
+
+% Interpolation
+interpPnts = interp(xVals, fOfx, range, detail);
+interpXVals = interpPnts(1, 1:detail);
+interpfOfX = interpPnts(2, 1:detail);
+
+% Calculate error
+error(i) = norm(trueTable(2,1:detail) - interpfOfX);
+
+% Plotting results
+plot(interpXVals, interpfOfX,'--')
+ax = gca;
+ax.XAxisLocation = 'origin';
+ax.YAxisLocation = 'origin';
+legendinfo{i+1} = sprintf('Number of points %i', n(i));
+end
+legend(legendinfo, 'Location', 'northwest');
+hold off
+subplot(2,1,2)
+plot(n, error)
+end
+\end{lstlisting}
+
+The explanation of the above code is going to follow in the order of execution. First we pick a number of suitable subintervals to break up the range over which the table of data is created, namely $ [-1,1] $. We chose a vector of 2-10 (after 10 very little improvement is made). The \mcode{generateData.m} generates a table of data to serve as `the true polynomial' with which to compare the function output. To know whether the approximation is close or not we compute the euclidean distance (norm in MATLAB) between the vectors. I would suspect the error would decline with $ n $. In the loop \mcode{generateData} generates 2 data points from the true function to 10 and this data is passed to be interpolated based on how many points and what interval I want, previously defined as [-1,1] and 50 points. The error each pass through the loop is stored. Each succesive loop the function is plotted and when the loop is ended the total error is plotted also. \\
+
+The output of this is show here, \\
+\includegraphics[scale=.35]{interperror} \\
+The vector of errors is here:
+\begin{verbatim}
+  21.25401464316251
+  5.79654014482518
+  0.00000000000000
+  0.00000000000000
+  0.00000000000000
+  0.00000000000000
+  0.00000000000000
+  0.00000000000000
+  0.00000000000000
+\end{verbatim}
+The values are near zero well out to the computers limited precision. \\
+
+The code for \mcode{generateData.m} is shown here:
+\lstinputlisting{generateData.m}
+
+\subsection*{Testing part ii} The next part of the homework was to interpolate values generated by the function $ sin(x) $. Here is the test:
+\begin{lstlisting}
+content...% Part 2
+if test_interpolate_sinX == 1 
+	n = 3:8;
+	detail = 50;
+	truthXs = linspace(0,2*pi, detail);
+	truth = sin(truthXs);
+	legendinfo = {};
+	error = length(n);
+	subplot(2,1,1)
+	hold on
+	plot(truthXs, truth, 'r')
+	legendinfo{1} = 'True function';
+	for i = 1:length(n)
+		% Interpolation of x and f(x) vals
+		xvals = linspace(0, 2*pi, n(i));
+		fOfx = sin(xvals);
+		interpPnts = interp(xvals, fOfx, [0, 2*pi], detail);
+		
+		% Calculate error
+		error(i) = norm(truth - interpPnts(2,1:detail));
+		
+		% Plot results
+		c = 1 - i/n(length(n));
+		plot(interpPnts(1,1:detail), interpPnts(2, 1:detail),'--', 'color',[i/n(length(n)), 0, c])
+		legendinfo{i+1} = sprintf('Number of points %i', n(i));
+	end
+	legend(legendinfo)
+	hold off
+	subplot(2,1,2)
+	plot(n, error)
+end
+\end{lstlisting}
+
+This proceeds much the same way as the previous. True values are created then for a number of different points from the true function the points are interpolated with the \mcode{interp.m} function. These are compared with the true and the error is caclulated for multiple $ n $.  Here is the output: \\
+\includegraphics[scale=.3]{interpsin} \\
+The error also descends to zero quickly, more points make very little difference. 8 nodes was sufficiently close to zero. The values of the error are below:
+\begin{verbatim}
+   4.949747468305833
+   0.982509628375086
+   0.691160275729819
+   0.080192336774527
+   0.054424157145057
+   0.004219552220544
+\end{verbatim}
+
+\section*{Testing part iii} This function was much more of a problem interpolating that the others. It can be shown that, contrary to what I would have logically suspected increasing $ n $ actually made the interpolation \textit{worse}. This was dealt with by using Chebyshev points. First I will show that increasing n causes the interpolation to be worse. The output from MATLAB gave the following when 11 nodes were used: \\
+\includegraphics[scale=.3]{runge1} \\
+
+The error did not decrease with $ n $, as occured in the other cases. With even more points the situation worsens, to infinity. Below, letting $ n $ grow the error grows: \\
+\includegraphics[scale=.3]{interpmorepoints} \\
+ This is because choosing equally spaced pointsn is not ideal for interpolation, they should be unevenly chosen, hence Chebyshev points. 
+ With Chebyshev points the function is interpolated better. Here are the results with a range of nodes, \\
+ \includegraphics[scale=.4]{chebyshev1} \\
+  Using more nodes: \\
+  \includegraphics[scale=.4]{chebyshev2} \\
+ The error vector returned:
+ \begin{verbatim}
+ error =
+ 10.094840645733498
+ 2.580220357120393
+ 8.531929595253661
+ 1.771470858639550
+ 7.456379136469522
+ 1.181167509515673
+ 6.496217950242951
+ 0.783493029334218
+ 5.596259583592277
+ 0.521091282927234
+ 4.761232225158023
+ 0.347857278100992
+ 4.002131809773738
+ 0.232866318515088
+ \end{verbatim}
+Chebyshev nodes were a decided improvement over regular spaced nodes. 
+
+
+\end{document}

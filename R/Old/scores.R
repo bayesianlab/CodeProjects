@@ -1,0 +1,16 @@
+scores <- c(8, 9, 5, 3.7, 3, 5, 7, 4, 8, 2, 11)
+student <- c('mb', 'ep', 'pp', 'mp', 'kf', 'el', 'gg', 'cf', 
+             'dk', 'gl', 'jk')
+gend <- c(1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1)
+consistency <- c(1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1)
+length(scores)
+length(student)
+length(gend)
+scoreMat <- cbind(student, scores)
+summary(scores)
+boxplot(scores)
+hist(scores, col = "blue")
+
+fit <- lm(scores ~ gend )
+anova(fit)
+summary(fit)

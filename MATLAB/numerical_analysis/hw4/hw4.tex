@@ -1,0 +1,297 @@
+\documentclass[]{article}
+
+\usepackage[english]{babel}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+%opening
+\title{Homework 4}
+\author{Dillon Flannery}
+
+\begin{document}
+
+\maketitle
+
+\section*{Problem 1}
+This problem stated we were to compute the integral of any 2$ \pi $ periodic function from $ 0 $ to $ x $ using FFT. Using the properties of Fourier transforms this is a simple task, merely mainpulating the output from FFT appropriately. In MATLAB FFT output produces, 
+
+\[ \beta_j = \frac{1}{N}\sum_{k=0}^{N-1} f_k e^{ijx_k} \]
+
+This is similar to a average height of all the discretizied rectangles of the periodic function. $ f_k $ are the heights, or y values and the $ \frac{1}{N} $ term averages them, so that we have of sorts a $ \bar{y} $ when it is the case that $ j=0 $ because the exponential term disappears. To actually compute the integram it is simple necessary to multiply by the width of rectange, which would be in out case $ \frac{2\pi}{N} $. This will approximate the integral and by simply changing the uper limit of FFT we can get the integral of any periodic function this way. 
+
+\subsection*{Testing For Problem 1}
+The way to ensure the method is working is to work through some examples, computing first the integral by hand and then checking with the above method. 
+
+The first test will be of the integral, $ \int_{0}^{2\pi} 1 + .5 \sin(x) $ which computed analytically gives $ 2\pi \approx 6.2832 $. As stated before the analytical derivation of this means that we have something similar to an average height and then we multitply it by the width. Using $ N $ smaller means our approximation will be worse, using $ N $ larger means it will be better. Correspondingly the output proves this to be true. In this example the integral is $\int_{0}^{.5} 1 + .5 \sin(x)  $ \\
+
+\centering
+	\begin{table}[H]
+		\centering
+\begin{tabular}{lll}
+	N & Error = $|$ True - Approximation $|  $ & Improvement\\
+	\hline 
+	$ 2^5 $ & $ 4.1301 \times 10^{-5} $ & - \\
+	$ 2^7 $ & $ 1.0083 \times 10^{-5} $ & 76\% \\
+	$ 2^9 $ &  $2.5059\times10^{-6} $ &  75\% \\
+	$ 2^{11} $ & $ 6.2556 \times10^{-7} $ &  75\% \\
+	\hline 
+\end{tabular}
+\caption{Approximation improvement of $\int_{0}^{.5} 1 + .5 \sin(x)  $}
+\end{table}
+Each step gives a corresponding order of accuracy improvement of $ 75\% $. 
+
+Next, the function was tested against a range of values inside the entire domain in a loop.  As the discretized space is less dense the error of the integral decreases, except that the error decreases again towards the end of the period. The output is to verbose to show but in pseudo-code this can be shown through: \\
+
+\begin{lstlisting}
+input(lower limit, upper limit, N, epsilon)
+for i in N
+	x = discretized  space between 0 and x(i)	
+	y = FFT(x)
+	true = integral(f(x), lower limit , upper limit)
+	approx = y(1) * upper limit
+	error(i) = abs(approx - true)
+end
+\end{lstlisting}
+
+The actual code is in the appendix at the end. The results show: \\
+\begin{center}
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.5]{errorGraph}
+\caption{y-axis magnitude of error, x-axis an $ x \in [0, 2\pi]$}
+\end{figure} 
+\end{center}
+
+When the code is run the integral is checked to be with in an $ \epsilon $, as the pseudocode above suggests. Each iteration checks a different $ x $ value and some sample output is as the following: \\
+$ \epsilon = 10^{-4} $
+\hline
+\begin{verbatim}
+Approximation sufficiently close 
+True   0.000000 
+Approx 0.000000
+Error 0.000000
+Approximation sufficiently close 
+True   0.212918 
+Approx 0.212917
+Error 0.000001
+Approximation sufficiently close 
+True   0.445888 
+Approx 0.445870
+Error 0.000018
+Approximation sufficiently close 
+True   0.697668 
+Approx 0.697579
+Error 0.000090
+Approximation FAILED
+True   0.966250 
+Approx 0.965972
+Error 0.000278
+\end{verbatim}
+\begin{flushleft}
+$ \vdots $ \\
+\hline 
+\vspace{.5cm}
+If $ \epsilon $ is to small and the approximation is not close, as the output suggests the function returns a failure. Points in the middle of the interval were the most inaccurate, while points at the beginning and the end of period were the best. 
+\end{flushleft}
+\begin{flushleft}
+\section*{Problem 2}
+Solve the differential equation:
+\[ y'' + .5y' + y = 1 - \cos(t - .75 \sin(t)) \]
+
+The way I approached this was to use Fourier transforms to transform both sides in order to utilize FFT. This approach gave, 
+\[ \mathcal{F}(y'') + .5 \mathcal{F} y' + \mathcal{F}y' = \mathcal{F}(f(t)) \]
+\[  \hat{y} (d^2 + .5 d + 1) = \mathcal{F}(f(t)) \]
+where $ d = 2\pi i $
+\[ \hat{y} = \mathcal{F}(f(t)) u^{-1} \] and $ u = d^2 + .5 d + 1 $ 
+The solution will be:
+\[ y = \mathcal{F}^{-1}(\mathcal{F}(f(t)) u^{-1}) \]
+The boundary conditions ensure that the above transformations can be done. \\
+The partiular solution can be demonstrated by using inverse Fourier transform in MATLAB, after using FFT on $ f(t) $ and dividing by the appropriate constants ($ u $). After $ y $ is obtained it is simply a matter of using FFT to approximate the derivatives to get $ y' $ and $ y'' $, adding them together and verifying that RHS = LHS. Below is a graph of the particular solution, $ y(t), y'(t) $ and $ y''(t) $. 
+
+\begin{figure}[H]
+	\centering
+	    \begin{subfigure}[b]{0.3\textwidth}
+	    	\includegraphics[width=\textwidth]{solutions4}
+	    	\caption{$ N= 2^4 $}
+	    \end{subfigure}
+	    	    \begin{subfigure}[b]{0.3\textwidth}
+	    	    	\includegraphics[width=\textwidth]{solutions6}
+	    	    	\caption{$ N= 2^6 $}
+	    	    \end{subfigure}
+	    	    	    \begin{subfigure}[b]{0.3\textwidth}
+	    	    	    	\includegraphics[width=\textwidth]{solutions8}
+	    	    	    	\caption{$ N= 2^8 $}
+	    	    	    \end{subfigure}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{solutions10}
+		\caption{$ N= 2^{10} $}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+ 		\includegraphics[width=\textwidth]{solutions12}
+		\caption{$ N= 2^{12} $}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{solutions14}
+		\caption{$ N= 2^{14} $}
+	\end{subfigure}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{solutions16}
+		\caption{$ N= 2^{10} $}
+	\end{subfigure}
+\end{figure}
+
+Now that we have some candidate particular solution it needs to be verified against the function $ f(t) $. For different that is below:
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{particular2x216}
+		\caption{$ N= 2^{16} $}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{particular2x214}
+		\caption{$ N= 2^{12} $}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{particular2x212}
+		\caption{$ N= 2^{14} $}
+	\end{subfigure}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\textwidth]{particular2x210}
+			\caption{$ N= 2^{10} $}
+		\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{particular2x28}
+		\caption{$ N= 2^{8} $}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{particular2x26}
+		\caption{$ N= 2^{6} $}
+	\end{subfigure}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{particular2x2}
+		\caption{$ N= 2^{4} $}
+	\end{subfigure}
+\end{figure}
+
+The general solutions still needs to be examined. The solution to the homogeneous solution with the initial values was found to be, 
+\[ y_g = e^{-.25t}(A \cos(\sqrt{15/4} t )  + B \sin(\sqrt{15/4} t) ) \]
+$ A = -y_p(0) $ and $ B = \sqrt{4/15}(A/4 - y_p'(0)) $ and here $ y_p $ is the particular solution. The general solution is, 
+\[  y_g = y_p + y_h\]
+
+After obtaining the vecotr above and adding together it was found that the solution converge to MATLAB's \mcode{ode45} solution. 
+
+\subsection*{Testing Problem 2}
+ The code was tested by comparing it to the solution from MATALB's \mcode{ode45} function. If the two answers are close then we assume that the correct $ y(t) $ equation was found. Also the particular solution was tested simply by comparing it to the graph of $ 1 - \cos(t - .75 \sin(t)) $. To measure the closeness of the two answers we took the maximum error that occred between MATLAB's output and our own and plotted it against the number of powers of 2 that were used to obtain the points for FFT. Also, in an attempt to figure out the order of convergence the $ \log\frac{e_1}{e_2} $ was also plotted. 
+
+MATLAB's general solution and the one I obtained are plotted below, 
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{matVme16}
+		\caption{$ N= 2^{16} $}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{matVme14}
+		\caption{$ N= 2^{14} $}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{matvme12}
+		\caption{$ N= 2^{12} $}
+	\end{subfigure}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{matVme10}
+		\caption{$ N= 2^{10} $}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{matVme8}
+		\caption{$ N= 2^{8} $}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{matVme6}
+		\caption{$ N= 2^{6} $}
+	\end{subfigure}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{matVme4}
+		\caption{$ N= 2^{4} $}
+	\end{subfigure}
+\end{figure}
+
+The rate of convergence was not very good, however. Using the ratio of the errors and the log of this the order was only approximately $ p = .2 $. Succesive increases in N did improve the approximation, it just did not converge to MATLAB's quickly. A graph of this is below, 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\includegraphics[width=\textwidth]{regularerror}
+		\caption{Error for each iteration ($ 2^{2k} $, $ k = 1\dots8 $)}
+	\end{subfigure}
+		\begin{subfigure}[b]{0.3\textwidth}
+			\includegraphics[width=\textwidth]{order}
+			\caption{$ \log{e1/e2} $ ($ e_i =  $ Error for $ N = $$ 2^{2k} $, $ k = 1\dots8 $) Against line with slope $ 1/5 = p $}
+		\end{subfigure}
+\end{figure}
+
+This question still has many issues left unresolved. I believe that I should be as candid as I can in order to dispell the notion that I am not aware the results I presented have problems, because I am aware of this. The order of accuracy was not as well behaved as I thought it should be.  However, I am unable with my knowledge to resolve this issue. The way the solution was obtained $ y_g $ is also not satisfying, and I feel there is still an error there. However, according to the notes and from what I have read I am followed the directions as close as possible yet still was able to get exactly what I though I should have. I was unable to find help from other classmates on this issue and so I have decided to leave my results, although containing errors, as they are because I must move on with other work. 
+\section*{Appendix}
+Code for problem 1:
+\lstinputlisting{problem1FFT.m}
+\lstinputlisting{fftIntegrate.m}
+Code for probelm 2:
+\lstinputlisting{damped_oscillator.m}
+\lstinputlisting{vp1.m}
+\lstinputlisting{dydt.m}
+	
+\end{flushleft}	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+\end{document}

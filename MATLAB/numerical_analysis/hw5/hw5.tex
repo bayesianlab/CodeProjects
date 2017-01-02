@@ -1,0 +1,237 @@
+\documentclass[]{article}
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+%opening
+\title{Homework 5}
+\author{Dillon Flannery}
+
+\begin{document}
+
+\maketitle
+
+\section*{Problem 1}
+Trying to find a method for $ N = 2 $ and $ \nu = 2 $: \\
+$ r = s = 0 $: \\
+$$ \omega_1 + \omega_2  = 1$$ 
+$ r = 1, \ s =0 $: \\
+$$ \omega_1x_1 + \omega_2x_2 = \frac{1}{2} $$ 
+$ r = 0, \ s = 1 $
+\[ \omega_1y_1 + \omega_2y_2 = \frac{1}{2} \]
+$ r =2, \ s=0 $ \\
+$$ \omega_1x_1^2  + \omega_2 x_2 ^2 = \frac{1}{3}$$ \\
+$ r = 1, \ s = 1 $: \\
+$$ \omega_1x_1y_1 + \omega_2x_2y_2 = \frac{1}{4} $$ 
+$ r = 0, \ s= 2 $ \\
+$$ \omega_1y_1^2 + \omega_2y_2^2 = \frac{1}{3} $$
+However, no further closed form solution is possible for the weights. Any choice that satisfied the first equation, the sum of the weights add to 1 and the remaining equations would be possible to estimate the integral on this domain. 
+
+
+\section*{Problem 2} 
+I used the composite trapezoid rule to calculate the integral of three different functions, $ \frac{1}{1+x^2} $, $ x \in [0,1] $, $ \sin(10x) $ $ x \in [0, 2\pi] $, $ \frac{1}{2 + \sin^4(x)} $ $ x \in [0, 2\pi]  $. In order to test the accuracy the true integral was cacluted by MATLAB's \mcode{integral} function.  
+
+It is known that the error from using N trapezoids on an open interval $ [a,b] $ is 
+
+\[
+E = -\frac{(b-a)}{12} h^2 f''(\zeta)
+\]
+
+ for $ \zeta \in (a.b) $, $ h = \frac{b-a}{N} $. Therefore, we can calculate the number of points needed to obtain a given error tolerance. 
+\subsection{Function 1} 
+The first integral was approximately 0.7854 from MATLAB. We can get the desired tolerance as follows. Since the error for the composite is 
+\[
+\int_{a}^{b} f(x) dx =  \sum_{i=1}^{N-1} \int_{x_i}^{x_{i+1}} f(x) dx
+\]
+\[
+= \frac{h}{2} \sum_{i=1}^{N-1} \int_{x_i}^{x_{i+1}} [f(x_i) + f(x_{i+1})] - \frac{h^3}{12} \sum_{i=0}^{N-1} f''(\xi)
+\]
+For a $ \xi \in (x_i, x_{i+1}) $. Using the fact that $ h = \frac{b-a}{N} $, we can reduce this to the error formula above. Then for an error of say $ \frac{1}{2} 10^{-4} $ we can solve for $ N $. Using $ a=0, b =1$ and reasoning that the second derivative of $ \frac{1}{1+x^2} \leq 2 $ we can bound the error by $ \frac{1}{6} h^2  $. 
+\[ 
+\frac{(1)}{12} h^2 f''(\zeta)< \frac{1}{6} h^2 < \frac{1}{2} 10^{-4} 
+ \]
+ \[ 
+ N = 58 
+ \]
+ Is sufficient. 
+ \\
+Using the formula above to obtain the desired level of accuracy to the true value we construct the table below: 
+
+
+	\begin{table}[H]
+\centering
+	\begin{tabular}{ccc}
+		Error Tolerance & Points Needed & Result $ (I - E) $\\
+		\hline 
+		$ 10 ^{-2} $ & 4 & $ 2.6 \times 10^{-3}$ \\
+		$ 10^{-3} $ & 13 & $  2.5 \times 10^{-4} $ \\
+		$ 10^{-4} $ & 41 & $ 2.5\times 10^{-5} $
+	\end{tabular}
+	\caption{$ I  $ represents the true integral and $ E  $ the error}
+		\end{table}
+
+The error is next plotted as a function of the length of subintervals used to approximate the integral, 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale =.5]{f1Error}
+	\caption{Plot of log error versus log length of subintervals.}
+\end{figure}
+
+\subsection*{Function 2}
+The next function is $ \sin(10x) $. Analytically, the true value of the integral is 0 in this example. The number of subintervals always returns zero out to machine precision so the graph of the error is not very meaningful. This is due to the periodic nature of the sine function. Below are the results, 
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale = .5]{f2Error}
+\caption{Plot of log error versus log length of subintervals.}
+\end{figure}
+
+The $ y- $axis shows that the largest error is about $ 8 \times 10^{-15} $ which is at the limit of the computers capability for accuracy. All subsequent subintervals are smaller yet since it is at the limits of the precision the graph should not be trusted. \\
+Going through the same process as above will not be as meaningful. Because sine is periodic the trapezoids on the right of $ \pi $ and to the left of $ \pi $ on the $ x-$axis are merely canceling each other out, returning zero as the result, which is the right answer. Caclulating the number of points necessary is not really needed since the precision of the answer is always correct for even two trapezoids ($ E = -7.7 \times 10^{-15} $). 
+	
+\subsection*{Function 3} 	
+Function 3 is $ \frac{1}{2+ \sin^4(x)} $	and the true integral is approximately 2.7054. It is also periodic on the interval $ 2\pi $ so the approximation is quite good even with a few subintervals. The results show that with just a few subintervals the results are showing 0 error out to machine precision. Again this is because it is periodic. Although it shows more error in the beginning than function 2 did, this is due to the fact  that over the entire interval the function is positive. The previous function had the advantage that the errors cancelled each other out. Here though the errors compound. The graph of the error shows this fact, 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale = .5]{f3Error}
+\caption{Plot of log error versus log length of subintervals.}
+\end{figure}
+
+\section*{Problem 3}
+We can establish quadratic convergence of an equation with multiple roots ($ p $ say) by going about it much the same we we established in class the quadratic convergence of the regular Newton's method. If we have a function $ g(x) = x - \frac{f(x)}{f'(x)} $ then a Taylor expansion gives:
+\[
+ r + g'(r)(x-r) + \frac{g''(\xi)}{2} (x - r)
+\]
+where $ r$  is a root. It was shown in class that $ g'(r)(x-r) = 0  $. Therefore, if an equation say $ f(x) $ has roots of multiplicity $ p $, then rewrite $ f(x) $ as 
+\begin{equation}
+f(x) = g(x) (x-r)^p
+\end{equation}
+\begin{equation}
+f'(x) = g'(x) (x-r)^{p} + pg(x)(x-r)^{p-1}
+\end{equation}
+Because terms cancel in $ f(x)/f'(x) $ we define as $ \Phi(x) = x - \frac{g(x) (x-r)}{g'(x) (x-r) + pg(x)}$. Then $ \Phi'(x) $ is 
+\begin{equation}
+1- \frac{\big[(x - r)g'(r) + g(r)\big]\big[pg(r) + (x-r)g'(r)\big] - \big[g'(r)(1+m) + (x-r)g''(r)\big]\big[(x-r)g(r)\big]}{[pg(r) + (x-r)g'(r)]^2} + 
+\end{equation}
+Since $ r   $ is a root then this leaves:
+\begin{equation}
+1- \frac{\big[(x - r)g'(r)\big]\big[(x-r)g'(r)\big] }{[ (x-r)g'(r)]^2} = 0
+\end{equation}
+Therefore, the expansion of $ \Phi(x) =  $
+\begin{equation}
+\Phi(r) + \Phi'(r)(x-r) + \frac{\Phi''(\xi)}{2}(x-r)^2
+\end{equation}
+for some $ \xi \in |x-p| $. \\
+$ \Phi(r) = r$ and $ \Phi'(r) = 0 $ leaving $ \Phi(x) = r + \frac{\Phi''(\xi)}{2}(x-r)^2 $, then for some $ \xi $ $ \frac{\Phi''(\xi)}{2}(x-r)^2 \leq K$, so 
+
+\begin{equation}
+||x^{n+1} -r  || \leq K|| x^{n} - r ||
+\end{equation}
+
+Then for roots of multiplicity $ p $ this method converges quadratically. 
+
+In order to get an estimate from the data realized by applying Newton's Method the following would suffice. Assuming we have a root of multiplicity $ p  $ then the function $ f(x) $ and $  f(x) \in C^{p+1}$ 
+\begin{enumerate}
+	\item First find the zero of $ f(x) $ using Newton's Method, say $ \alpha $.
+	\item Use the zero found in the derivative, $ f'(x) $.
+	\item Repeat step two until a non-zero value is returned. $ f(x) $ has a zero $ \alpha $ of multiplicity equal to the number of iterations of this method. 
+\end{enumerate}
+The reason this method is successful is due to the definition about functions with roots, if $ f(x) $ has a root at $ r $ of multiplicity $ p $ then
+$ f'(r) =0, f''(r) = 0, \dots, f^(p-1)(r) = 0 , f^p(r) = 0 $ but $ f^{(p+1)}(r) \neq  0 $.
+
+
+\section*{Problem 4}
+In this problem we were to develop a code that utilized Newton's method in order to solve a 2 systems of two equations in two variables. The systems I used are:
+
+\begin{equation}
+x^2 + y^2 -9 = 0
+\end{equation}
+
+\begin{equation}
+x^2 - y - 2 = 0
+\end{equation}
+And the other system was	
+
+\begin{equation}
+x^3 + y^2 = 0
+\end{equation}
+
+\begin{equation}
+x^2 - y^3 = 0
+\end{equation}
+
+One can visualize the solutions by plotting the graphs of both, 
+\begin{figure}
+	\centering
+	\includegraphics[scale=.5]{sys1}
+	\caption{System 1}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[scale=.5]{sys2}
+	\caption{System 2} 
+\end{figure}
+
+Analytically the equations above can be solved for the roots. The solutions to the above systems are that system 1 has real solutions $ [\sqrt{(25- y^2)}, \frac{-1 \pm \sqrt{93}}{2}] $, and for system 2 the real solutions are $ [0,0] $ and $ [-1,1] $. 
+
+The goal is to prove that Newton's method converges quadratically to the correct answer. This can be shown by showing that each step of the error is following some quadratic function. Analyzing the graph this is the case. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.5]{system1Error}
+	\caption{System 1 Error}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.5]{system2Error}\caption{System 2 Solution [0,0]}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.5]{system2Error2}
+	\caption{System 2 Solution [-1,1]}
+\end{figure}
+According to these results Newton's method converges quadratically. The output is showing there is a constant that can be multiplied by the squared norm of the difference between the $ nth $ step of Newton's method and the $ (n+1)th $ step such that equation 5 will be satisfied. Therefore, quadratic convergence is established for these two examples. 
+
+\section*{Appendix}
+\lstinputlisting{integration.m}
+\lstinputlisting{trapezoid.m}
+\lstinputlisting{f1.m}	
+\lstinputlisting{f2.m}	
+\lstinputlisting{f3.m}		
+\lstinputlisting{solveSystem.m}
+\lstinputlisting{eq1.m}
+\lstinputlisting{eq2.m}
+\lstinputlisting{eq3.m}
+\lstinputlisting{eq4.m}
+\lstinputlisting{system1.m}
+\lstinputlisting{system2.m}
+\lstinputlisting{jacobian1.m}
+\lstinputlisting{jacobian2.m}
+\lstinputlisting{newton.m}
+
+\end{document}

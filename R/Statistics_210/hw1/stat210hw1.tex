@@ -1,0 +1,615 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\newcommand{\sumin}{\sum_{i=1}^n}
+\newcommand{\xibar}{ (x_i - \bar{x})}
+\newcommand{\yibar}{ (y_i - \bar{y})}
+\newcommand{\covxy}{\sumin \xibar \yibar }
+
+
+\usepackage{Sweave}
+\begin{document}
+\author{Dillon Flannery-Valadez}
+\title{HW 1}
+\input{stat210hw1-concordance}
+\maketitle
+
+\section*{Part A}
+\begin{enumerate}
+  \item The boxplot is in the output below.
+  \item Sample mean = 5.60, Sample variance = 1.578
+  \item 95\% confidence interval [2.03, 9.17]. 
+  \item Test on $\mu$. 
+  \begin{enumerate}
+    \item The test is $ H_0: \mu = 5 $ versus the alternative $ H_a: \mu \neq 5 $. 
+    \item The value of the test statistic is 1.20. The critical value is 2.262157. 
+    \item Under $H_0$ the test statistic is distributed t because it is a small sample $ n < 30 $. 
+    \item The acceptance region is $ t \in [-2.262, 2.262]$ , the rejection region is $ t\notin [-2.262, 2.262] $. 
+    \item The p-value would need to be less than 0.05 for the test to reject $H_0$. The p-value of this test was 26\%, meaning we fail to reject $H_0$. There is statistical evidence $\mu = 5$. The value of the test statistic was 1.2, this means that it was in the acceptance region, again leading us to not reject $H_0$. 
+  \end{enumerate}
+\end{enumerate}
+\begin{Schunk}
+\begin{Sinput}
+> # Part A
+> # Part 1)
+> x <- c(5,6,3,8,7,6,4,4,7,6)
+> boxplot(x, col='grey50', border='blue', xlab=c('x'), main= 'Part a')
+> # Part 2)
+> summary(x)
+\end{Sinput}
+\begin{Soutput}
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   3.00    4.25    6.00    5.60    6.75    8.00 
+\end{Soutput}
+\begin{Sinput}
+> xSampleAvg <- summary(x)[[4]]
+> # Part 3)
+> xSampleStDev <- sd(x)
+> xSampleStDev
+\end{Sinput}
+\begin{Soutput}
+[1] 1.577621
+\end{Soutput}
+\begin{Sinput}
+> t <- abs(qt(0.025, length(x)-1))
+> t
+\end{Sinput}
+\begin{Soutput}
+[1] 2.262157
+\end{Soutput}
+\begin{Sinput}
+> upb <- mean(x) + t*sd(x)
+> lowb <- mean(x) - t*sd(x)
+> c(upb, lowb)
+\end{Sinput}
+\begin{Soutput}
+[1] 9.168827 2.031173
+\end{Soutput}
+\begin{Sinput}
+> # Part 4)
+>   # Part a) H0 = 5 vs Ha != 5, a = .05, two sided
+>   # Part b)
+> rootN <- sqrt(length(x))
+> testStatistic <- rootN*(mean(x) - 5) / xSampleStDev
+> testStatistic
+\end{Sinput}
+\begin{Soutput}
+[1] 1.202676
+\end{Soutput}
+\begin{Sinput}
+>   # Part c) Distribution of test statistic is t under H0, n < 30
+>   # Part d) Reject when test statistic is less than Prob(testStat < t), Prob(testStat > t)
+>   # or when p-value (2*Prob(T > testStat) < 0.05)
+> 
+> pValue <- 2*(1-pt(testStatistic, 9))
+> pValue
+\end{Sinput}
+\begin{Soutput}
+[1] 0.2597861
+\end{Soutput}
+\begin{Sinput}
+> # Can't reject H0, the pop. mean is probably not different form 5 based on this test
+\end{Sinput}
+\end{Schunk}
+\includegraphics{stat210hw1-box}
+
+
+\section*{Part b}
+\begin{enumerate}
+  \item Draw side by side box plots, 
+  
+\begin{Schunk}
+\begin{Sinput}
+> # Part B
+> library(ggplot2)
+> library(reshape2)
+>   # 1 side by side boxplots
+> males <- c(5,5,6,4,6,7,3,4,5,5)
+> females <- c(4,5,4,3,3,5,4,4,2,6)
+> mfData <- data.frame(cbind(males, females))
+> mfData <- melt(mfData)
+> ggplot(mfData, aes(variable, value)) + geom_boxplot()
+\end{Sinput}
+\end{Schunk}
+\includegraphics{stat210hw1-boxes}
+
+\item The 95\% confidence interval is $[-0.08491148,  2.08491148]$, 
+\begin{Schunk}
+\begin{Sinput}
+> # Part B
+> library(ggplot2)
+> library(reshape2)
+>   # 1 side by side boxplots
+> males <- c(5,5,6,4,6,7,3,4,5,5)
+> females <- c(4,5,4,3,3,5,4,4,2,6)
+> mfData <- data.frame(cbind(males, females))
+> mfData <- melt(mfData)
+> ggplot(mfData, aes(variable, value)) + geom_boxplot()
+>   # 2 95% CI
+> varMale <- var(males)
+> varFemale <- var(females)
+> nM <- length(males)
+> nF <- length(females)
+> sp <- sqrt(((nM - 1)*varMale + (nF - 1)*varFemale) / (nM + nF - 2))
+> rootNobs <- sqrt((1/nM) + (1/nF))
+> den <- sp * rootNobs
+> meanMales <- mean(males)
+> meanFemales <- mean(females)
+> diffMeans <- meanMales - meanFemales
+> degFreedom <- (nM + nF) - 2
+> tVal <- -1*qt(.025, degFreedom)
+> lowb <- diffMeans - tVal *den
+> upb <- diffMeans + tVal * den
+> interval <- c(lowb, upb)
+> interval
+\end{Sinput}
+\begin{Soutput}
+[1] -0.08491148  2.08491148
+\end{Soutput}
+\end{Schunk}
+
+\item Null and alternative, $ H_0: \delta = 0 $ vs $ H_a: \delta \neq 0 $ \\
+Test statistic, testStat = 1.936492, which is distributed t with 18 degrees of freedom. Rejection and acceptance region = testStat < t = -2.1009, testStat > t = 2.1009. Decision based on p-value = 0.06866816, cannot reject $H_0$, that there is a difference in means, p-value greater than level $\alpha$. 
+\begin{Schunk}
+\begin{Sinput}
+> # Part B
+> library(ggplot2)
+> library(reshape2)
+>   # 1 side by side boxplots
+> males <- c(5,5,6,4,6,7,3,4,5,5)
+> females <- c(4,5,4,3,3,5,4,4,2,6)
+> mfData <- data.frame(cbind(males, females))
+> mfData <- melt(mfData)
+> ggplot(mfData, aes(variable, value)) + geom_boxplot()
+>   # 2 95% CI
+> varMale <- var(males)
+> varFemale <- var(females)
+> nM <- length(males)
+> nF <- length(females)
+> sp <- sqrt(((nM - 1)*varMale + (nF - 1)*varFemale) / (nM + nF - 2))
+> rootNobs <- sqrt((1/nM) + (1/nF))
+> den <- sp * rootNobs
+> meanMales <- mean(males)
+> meanFemales <- mean(females)
+> diffMeans <- meanMales - meanFemales
+> degFreedom <- (nM + nF) - 2
+> tVal <- -1*qt(.025, degFreedom)
+> lowb <- diffMeans - tVal *den
+> upb <- diffMeans + tVal * den
+> interval <- c(lowb, upb)
+> interval
+\end{Sinput}
+\begin{Soutput}
+[1] -0.08491148  2.08491148
+\end{Soutput}
+\begin{Sinput}
+>   # 3 H0 = difference is 0 vs Ha = it is not 0
+>   # b test statistic
+> testStat <- diffMeans / den
+> testStat
+\end{Sinput}
+\begin{Soutput}
+[1] 1.936492
+\end{Soutput}
+\begin{Sinput}
+>   # c Distribution is t under null
+>   # d Rejection and acceptance regions: when testStat < t= -2.1009, t > 2.1009
+> pVal <- 2*(1-pt(testStat, degFreedom))
+> pVal
+\end{Sinput}
+\begin{Soutput}
+[1] 0.06866816
+\end{Soutput}
+\begin{Sinput}
+>   # e Fail to reject when pVal > 0.05
+> # t.test(males,females, var.equal=TRUE, paired=FALSE)
+\end{Sinput}
+\end{Schunk}
+
+\item Linear model, the setup in matrix notation: \\
+$ \begin{bmatrix}
+Y_{0,1} \\
+Y_{0,1} \\
+\vdots \\
+Y_{0,10} \\
+\hline \\
+Y_{1,1} \\
+Y_{1,2} \\
+\vdots \\
+Y_{1,10} \\
+\end{bmatrix} $ = 
+$ \begin{bmatrix}
+X_{0,1} \\
+X_{0,1} \\
+\vdots \\
+X_{0,10} \\
+\hline \\
+X_{1,1} \\
+X_{1,2} \\
+\vdots \\
+X_{1,10} \\
+\end{bmatrix} \beta $ + 
+$ \begin{bmatrix}
+\epsilon_{1} \\
+\epsilon_{2} \\
+\vdots \\
+\epsilon_{10} \\
+\hline \\
+\epsilon_{1} \\
+\epsilon_{2} \\
+\vdots \\
+\epsilon_{10} \\
+\end{bmatrix} $ 
+$ \beta = \begin{bmatrix} 
+\beta_0 & \beta_1 & \dots & \beta_k
+\end{bmatrix} $ 
+and $ X_i,j = \begin{bmatrix}
+1 & x_{i,1,j} & x_{i,2,j} & \dots & x_{i,k,j} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & x_{10, 1, j} & x_{10, 2, j} & \hdots & x_{10,k,j} 
+\end{bmatrix}  $ \\
+we assume $ \epsilon_i \sim N(\mu, \sigma^2) $.
+
+\item Least squares estimate, 
+$$ \hat{\beta} = \text{arg min}  |Y - Xb|^2 $$
+$$ = \frac{\partial}{\partial b} Y'Y -Y'Xb - (Xb)'Y + (Xb)(Xb)  $$
+$$  -2X' (Y - Xb) = 0 $$
+$$ \hat{\beta} = (X'X)^{-1} X'Y $$
+The estimate for this dataset is:
+\begin{Schunk}
+\begin{Sinput}
+> males <- c(5,5,6,4,6,7,3,4,5,5)
+> females <- c(4,5,4,3,3,5,4,4,2,6)
+> x <- matrix(data=c(rep(0,10), rep(1,10)), nrow=20,ncol=2)
+> x[1:20,1] <- rep(1, 20)
+> y <- c(males,females)
+> estimate <- solve(t(x)%*%x) %*% (t(x) %*%y)
+> estimate
+\end{Sinput}
+\begin{Soutput}
+     [,1]
+[1,]    5
+[2,]   -1
+\end{Soutput}
+\end{Schunk}
+\item Likelihood approach:
+$$ \hat{\theta} = \text{arg max} L(m) $$
+because $ \epsilon $ is normally distributed, 
+$$ \prod_{i=1}^n \frac{1}{\sqrt{2\pi\sigma}} \exp \{ -\frac{1}{2 \sigma^2}[\sum_{i=1}^{10} (Y_i - \mu_0)^2] \} \frac{1}{\sqrt{2\pi\sigma}} \exp \{ -\frac{1}{2\sigma^2}[\sum_{i=1}^{10} (Y_i - \mu_1)^2] \}  $$
+$$ = \prod_{i=1}^n \frac{1}{2\pi\sigma}^{-N/2}  \exp \{ -\frac{1}{2\sigma^2}[\sum_{i=1}^{10} (Y_i - \mu_0)^2] +  \sum_{i=1}^{10} (Y_i - \mu_1)^2] $$
+But the inside can be rewritten in matrix form, 
+$$ 
+= \prod_{i=1}^{20} \frac{1}{2\pi\sigma}^{-20/2}  \exp \{ -\frac{1}{2\sigma^2}[\sum_{i=1}^{20}(Y_i - X\theta)'(Y - X\theta)] 
+$$
+Take the log and derivative w.r.t. $ \theta $, 
+$$
+\frac{\partial}{\partial \theta} \Big(\frac{N}{2} 2\pi\sigma)\Big)  + \Big(-\frac{1}{2\pi\sigma^2}(Y'Y - Y'(X\theta) - (X\theta)'Y + \theta'X'X\theta) \Big) = 0 
+$$
+$$
+ - 2X'(Y  - X\theta)  = 0 
+$$
+$$
+\hat{\theta} = (X'X)^{-1} X'Y
+$$
+\item The reason why these two estimates are the same is because the maximization is exactly the same. Consider the MLE approach. The mathematical setup is saying `what is the estimator which will give the largest likelihood to the residual between Y and Xb being 0?'. The least squarers estimator is saying the same thing, `what is the estimator which will minimize the residuals?' Under the Guassian setting this leads to the same maximization problem and because the least squares estimator is the best linear unbiased estimator we would expect M.L. to give the same best linear estimator, provided the MLE was unbiased which it happens to be in this case. 
+\end{enumerate}
+\section*{Part C}
+\begin{enumerate}
+\item Plot y versus x reveals a positive trend. It appears as though teams with higher payrolls win more often. Therefore, there appears to be a trend on the conditional mean. \\  \includegraphics{payrollvwins}
+\item The summaries are in the R output below:
+\begin{Schunk}
+\begin{Sinput}
+> baseball <- readRDS( '/Users/dillonflannery-valadez/Coding/R/Stat210/baseball.rds')
+> sumXi <- sum(baseball$payroll)
+> sumSqdXi <- sum(baseball$payroll^2)
+> avgPay <- mean(baseball$payroll)
+> sumSqdDevXi <- sum((baseball$payroll - avgPay)^2)
+> sumXiYi <-baseball$payroll %*% baseball$wins
+> sumYi <- sum(baseball$wins)
+> sumSqdYi <- sum(baseball$wins^2)
+> avgWins <- mean(baseball$wins)
+> sumSqdDevYi <- sum( (baseball$wins-avgWins)^2 )
+> covXiYi <- sum( (baseball$payroll - avgPay)*(baseball$wins- avgWins) )
+> cat(sprintf(paste(' sumXi = %.3f\n sumSqdXi = %.3f\n avgPay = %.3f\n sumSqdDevXi = %.3f\n', 
++             'sumXiYi = %.3f\n sumYi = %.3f\n sumSqdYi = %.3f\n avgWins = %.3f\n',
++             'sumSqdDevYi = %.3f\n covXiYi = %.3f\n'), sumXi, sumSqdXi, avgPay, sumSqdDevXi, 
++             sumXiYi, sumYi, sumSqdYi, avgWins, sumSqdDevYi, covXiYi)) 
+\end{Sinput}
+\begin{Soutput}
+ sumXi = 2657.000
+ sumSqdXi = 268469.000
+ avgPay = 88.567
+ sumSqdDevXi = 33147.367
+ sumXiYi = 220490.000
+ sumYi = 2430.000
+ sumSqdYi = 200616.000
+ avgWins = 81.000
+ sumSqdDevYi = 3786.000
+ covXiYi = 5273.000
+\end{Soutput}
+\end{Schunk}
+\item The least squares regression line is $ y = 66.9110  + 0.1591 x $ where y=wins and x=payroll. This output is also below. 
+\begin{Schunk}
+\begin{Sinput}
+>   # 3 Find the LS Regression line using the summaries
+> lsLine <- function(yi,xi, level=0.05i, dispYn=1){
++   n <- length(yi)
++   alpha2 <- level/2
++   tval <- qt(1-alpha2, n-2)
++   df <- n - 2
++   xbar <- mean(xi)
++   xbarSqd <- xbar^2
++   sxx <- sum( (xi - xbar)^2 )
++   wi <- (xi - xbar) / sxx
++   b1 <- wi %*% yi
++   b0 <- mean(yi) - b1*xbar
++   yhat <- b0 + b1*xi
++   residuals <- yi - yhat
++   rss <- residuals %*% residuals
++   sigmaSqdHat <- rss * (1/df)
++   stdevb1 <- sqrt(sigmaSqdHat / sxx)
++   stdevb0 <- sqrt(sigmaSqdHat*(1/n + xbarSqd/sxx))
++   tStatb1 <- b1 / stdevb1
++   tStatb0 <- b0 / stdevb0
++   tStats <- c(tStatb0,tStatb1)
++   margin <- stdevb1 * tval
++   slopeCi <- c(b1 - margin, b1 + margin)
++   if (dispYn == 1) {
++     cat('Regression Results:\n')
++     cat('\t  \t  Estimate   t-statistic (Two-sided)\n')
++     cat(sprintf('\tIntercept  %.4f    %.4f\n', b0, tStats[1]))
++     cat(sprintf('\tSlope      %.4f     %.4f\n', b1, tStats[2]))
++     cat(sprintf('\tCritical t-value %.4f with %i degrees of freedom. Level=%.3f\n', 
++               tval, n-2, alpha2))
++     cat(sprintf('\tSlope confidence interval: [%.4f, %.4f]\n\n', slopeCi[1], slopeCi[2]))
++   }    
++   list(c(b0,b1), yhat, residuals, tStats, slopeCi, rss, sxx, xbar, sigmaSqdHat, tval, 
++        n, level)
++ }
+> get_prediction <- function(regline, predict, dispYn=1){
++   sigmaSqdHat <- regline[[9]]
++   n <- regline[[11]]
++   alpha2 <- regline[[12]] / 2
++   tval <- regline[[10]]
++   fval <- qf(1-alpha2, 2, n-2)
++   xbar <- regline[[8]]
++   sxx <- regline[[7]]
++   n <- regline[[11]]
++   sefit <- sqrt(sigmaSqdHat*( 1/n + ((predict - xbar)^2 / sxx) ) ) 
++   sepred <- sqrt(sigmaSqdHat) + sefit
++   b0 <- regline[[1]][1]
++   b1 <- regline[[1]][2]
++   ypred <- b0 + b1 * predict
++   predCi <- c(ypred - sepred*tval, ypred + sepred*tval)
++   expectationCi <- c(ypred - sefit * sqrt(2 * fval), ypred + sefit * sqrt(2 * fval))
++   if(dispYn == 1){
++   cat(sprintf('Predicted response given %.2f\n', predict))
++   cat(paste('\ty value =', round(ypred, 4), '\n'))
++   cat(paste('\tConfidence Interval for prediction = [', round(predCi[1], 4), ',',
++                      round(predCi[2], 4), ']\n' )) 
++   cat(sprintf('\tE[Y|X = x] confidence interval = [%.4f, %.4f]', expectationCi[1], 
++               expectationCi[2]))
++   }
++   list(ypred, predCi, expectationCi)
++ }
+> lsl <- lsLine(baseball$wins, baseball$payroll, .05, 1)
+\end{Sinput}
+\begin{Soutput}
+Regression Results:
+	  	  Estimate   t-statistic (Two-sided)
+	Intercept  66.9110    12.5519
+	Slope      0.1591     2.8230
+	Critical t-value 2.0484 with 28 degrees of freedom. Level=0.025
+	Slope confidence interval: [0.0436, 0.2745]
+\end{Soutput}
+\begin{Sinput}
+> # Verify rss is 2947.18
+> lsl[[6]]
+\end{Sinput}
+\begin{Soutput}
+         [,1]
+[1,] 2947.184
+\end{Soutput}
+\begin{Sinput}
+> baseball <- readRDS( '/Users/dillonflannery-valadez/Coding/R/Stat210/baseball.rds')
+>   # 1
+> plot(baseball$payroll, baseball$wins, ylim=c(30, 150), xlim=c(30, 200), 
++      xlab='Payroll', ylab='Wins')
+> xspace <- 1:max(baseball$payroll)
+> expecLine <- matrix(nrow=length(xspace), ncol=2)
+> predLine <- matrix(nrow=length(xspace), ncol = 2)
+> yfit <- numeric(length(xspace))
+> for(i in 1:length(xspace)){
++   predout <- get_prediction(lsl, xspace[i], 0)
++   expecLine[i, 1] <- predout[[3]][2]  
++   expecLine[i, 2] <- predout[[3]][1]
++   predLine[i, 1] <- predout[[2]][1]
++   predLine[i, 2] <- predout[[2]][2]
++   yfit[i] <- predout[[1]]
++ }
+> lines(expecLine[,1], col="red", lty=2)                                    
+> lines(expecLine[,2], col="red", lty=2)
+> lines(predLine[,1], col="blue", lty=2)
+> lines(predLine[,2], col='blue', lty=2)
+> lines(yfit, col="118")
+> legend(30, 150, c("Fitted Value CI", "Prediction interval", "y-fitted"), 
++        col=c('red', 'blue', "118"), lty=c(2, 2, 1), cex=0.7)
+> slope <- lsl[[1]][2]
+> slope * (100)
+\end{Sinput}
+\begin{Soutput}
+[1] 15.90775
+\end{Soutput}
+\begin{Sinput}
+> t <- lsl[[10]]
+> se <- 100*lsl[[9]] /lsl[[7]] 
+> ci <- c(slope*100 - se*t, slope*100 + se*t)
+> ci
+\end{Sinput}
+\begin{Soutput}
+[1] 15.2573 16.5582
+\end{Soutput}
+\end{Schunk}
+\includegraphics{stat210hw1-lsLine}
+\item From the results above we can verify that the the residual sum of squares is 2947.18. The t-statistic is also reported above. The critical value for the two-sided test was 2.0484 ($\alpha/2 = 0.025$ df = 28) which was less than the absolute value of the test statistic, 2.8230. This indicates that we can reject the null hypothesis that the trend is 0. This indicates there is a positive relationship between payroll and wins. 
+\item The slope confidence interval is also reported in the output above. The lower and upper bounds are $[0.0436, 0.2745]$. The true population parameter will be in 95 out of 100 intervals created in this way. The slope is with great certainty positive. 
+\item The output above shows the difference between these confidence bands. The inner bands are the confidence intervals on the expectation of the population wins for all teams with a given payroll. The outer bands are the prediction intervals. These are different from the confidence intervals of the fitted values because they include an extra source of variablity besides the variability of estimating the intercept and slope parameters, namely the variability of the future value itself, which we have assumed is distributed $N(0,\sigma^2$). 
+\item I calculate this as follows:
+$$ E[\hat{y_1} - \hat{y_2}|X_1=x_1, X_2=x_2] $$ where $ x_1 $ and $ x_2 $ are 200 and 100 Million dollar payrolls. 
+$$ E[\hat{y_1} - \hat{y_2}|X_1=x_1, X_2=x_2] = \beta_1 (x_1-x_2) = 100 * \beta_1 $$
+which is, according to the output above, 15.90775. 
+The variance of the above quantity is:
+$$ V[\beta_1 ( x_1 - x_2)|x] = (x_1 - x_2) ^2 V[\beta_1|x] = \frac{(x_1 - x_2)^2}{sxx}\hat{\sigma}^2 $$
+This gives $ 100 * \frac{\hat{\sigma}}{sxx} $. Using the t-value for 28 degrees of freedom and assuming a level of 5\% the confidence interval is reported in the output above and is equal to [15.2573, 16.5582]. 
+\item I would say that his reasoning is not correct. Looking at isolated examples as proof to contradict a strong statistical trend will backfire. The trend suggest with high levels of confidence that there is a trend and in fact increasing payroll by as little as 4.5 million will result in more than one win per year ($ 0.15x = 1, x = 4.4...$). On average, if the commissioner there is no trend, he will be wrong. There are always possibilities for aberations from the trend, however, the results from this exercise show that there certainly is one. Higher payrolls result in more wins. 
+\end{enumerate}
+
+\section*{Part D}
+\begin{enumerate}
+  \item The first order conditions for minimizing the sum of squred residuals, 
+  $$
+  \text{min} \sum_{i=1}^n (Y_i  - (\hat{\beta}_0 + \hat{\beta}_1 X))^2
+  $$
+  $$
+  0 = -2 \sum_{i=1}^n (Y_i  - (\hat{\beta}_0 + \hat{\beta}_1 X)) 
+  $$
+  $$
+  0 = \sum_{i=1}^n (Y_i  - (\hat{\beta}_0 + \hat{\beta}_1 X)) = R_i
+  $$
+  $$
+  0 =  \sum_{i=1}^n (Y_i  - (\hat{\beta}_0 + \hat{\beta}_1 X))X_i = R_i X_i
+  $$
+  
+  \item The quantity $ \sum_{i=1}^{n} R_i Y_i = \sum_{i=1}^{n} (Y_i - \hat{Y}_i) Y_i $ by definition. The first order conditions specify that   $ 0 = \sum_{i=1}^n (Y_i  - (\hat{\beta}_0 + \hat{\beta}_1 X)) = R_i $ or rearranging $$  \sum_{i=1}^n Y_i  = \sum_{i=1}^n  \hat{\beta}_0 + \hat{\beta}_1 X  $$ Therefore, $ Y_i - \hat{Y}_i = 0 $ because $ \hat{Y}_i = \hat{\beta}_0 + \hat{\beta}_1 X $, and  $ \sum_{i=1}^{n} R_i Y_i = 0 $
+  
+  \item Begin with hint:
+  $$
+  \sumin (y_i - \hat{y}) \yibar
+  $$
+  $$
+  \sumin \big(  y_i - \bar{y} + \hat{\beta}_1 \bar{x} - \hat{\beta}_1x_i \big) \yibar
+  $$
+  $$
+  \sumin \big(  \yibar - \hat{\beta}_1 \xibar \big) \yibar
+  $$
+  $$
+  \sumin \yibar^2 - \frac{\covxy}{\sumin \xibar^2} \xibar\yibar
+  $$
+  $$
+  \sumin \yibar^2 - \frac{[\covxy]^2}{\sumin \xibar^2}
+  $$
+  $$
+  \sumin \yibar^2\Big(  1 - \frac{[\covxy]^2}{\sumin \xibar^2 \sumin\yibar^2}  \Big)
+  $$
+  $r^2$ is the rightmost term. 
+  $$
+  \sumin \yibar^2 (1 - r^2) 
+  $$
+\end{enumerate}
+
+\section*{Part E}
+\begin{enumerate}
+  \item The assumptions on $\epsilon $ are the same in each case. We stil assume $\epsilon \sim N(\mu, \sigma^2)$ even though there is a quadratic term. Linear regression is still valid with a quadratic $x$. I would select the model based on, 1) a plot of y on x. If there appeared to truly be a quadratic term then the term should be included. 2) If that did not show any obvious promise then I would look at the $R^2$ improvement, and the test statistics. A good rule of thumb is to only use another regressor when there are enough observations to do so, 15-20 per estimator. There are only 30 observations in the baseball example so it is close. It is possible to overfit a model. Some downsides would be more fewer degrees of freedom and decreased statistical power in our t-tests. 
+  \item It is not always advantageous. The power of the statisical tests decrease with each parameter, therefore there is more uncertainty for every predictor. Also polynomial regressor terms can cause strange results because a polymial if it has real zeros must pass through the x-axis at least as many times as it has real zeros. This can cause swining behavior that, if it is not presesnt in the data, should not be included in the model just because it fits better. Mathworks gave this example with population an using a sixth-degree polynomial. Here is the plot, 
+\includegraphics[scale=.9]{population} \\
+The model predicts every person will be dead by the year 2050. This is clearly not a good model. 
+\end{enumerate}
+
+\section*{Part F}
+\begin{enumerate}
+  \item Plotting $y$ vs $x$ and looking for trend,
+\begin{Schunk}
+\begin{Sinput}
+> setwd('/Users/dillonflannery-valadez/Coding/R/Stat210/')
+> out <-  matrix(ncol = 4, scan('dataHW1.txt'), byrow = F)
+> plot(out[,3], out[,4], pch=19, xlab='x', ylab='y')
+\end{Sinput}
+\end{Schunk}
+\includegraphics{stat210hw1-p1}
+This shows no sign of a trend, it appears to be random noise. 
+
+\item Side by side plots of $y$ and $x$ , clearly a trend in both now. 
+\begin{Schunk}
+\begin{Sinput}
+> setwd('/Users/dillonflannery-valadez/Coding/R/Stat210/')
+> out <-  matrix(ncol = 4, scan('dataHW1.txt'), byrow = F)
+> g1 <- c(out[,2] == 0)
+> group1 <- out[out[,2] == 0,]
+> group2 <- out[out[,2] != 0, ]
+> par(mfrow = c(1,2))
+> plot(group1[,3], group1[,4], pch=19, col='blue', xlab='x', ylab='y',
++      main='Group 1')
+> plot(group2[,3], group2[,4], pch=19, col='red', xlab='x', ylab='y', 
++      main = "Group 2")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{stat210hw1-p2}
+
+\item Least squares estimate using both groups. The parameters used are $ \beta_{00} $ for intercept population 0, $\beta_{01}$ slope population 0, $\beta_{10}$ intercept population 1, $\beta_{11}$ slope population 1.  
+\begin{Schunk}
+\begin{Sinput}
+> setwd('/Users/dillonflannery-valadez/Coding/R/Stat210/')
+> out <-  matrix(ncol = 4, scan('dataHW1.txt'), byrow = F)
+> g1 <- c(out[,2] == 0)
+> group1 <- out[out[,2] == 0,]
+> group2 <- out[out[,2] != 0, ]
+> # ls estimator
+> # stack matrix 
+> y <- c(group1[,4], group2[,4])
+> x_1 <- group1[,3]
+> x_2 <- group2[,3]
+> X <- rbind(cbind(rep(1, length(x_1)), x_1, matrix(0, nrow=length(x_1), ncol=2)),
++       cbind(matrix(0, nrow=length(x_2), ncol=2), rep(1, length(x_2)), x_2)  )
+> ls_estimate <- solve(t(X) %*% X) %*% (t(X) %*% y)
+> rownames(ls_estimate) <- c('b00', 'b01', 'b10', 'b11')
+> ls_estimate
+\end{Sinput}
+\begin{Soutput}
+          [,1]
+b00  0.9473009
+b01  0.9430970
+b10  0.8737235
+b11 -1.2700585
+\end{Soutput}
+\end{Schunk}
+\item Testing, $H_0: \beta_{01} - \beta_{11} = 0 $ vs $H_a: \beta_{01} - \beta_{11} \neq 0 $ for differences using test statistic $ t = \frac{\hat{\beta}_{01} - \hat{\beta}_{11} } {\sqrt{ V(\hat{\beta}_{01}) + V(\hat{\beta}_{11}) } }  $. The test shows there are statistically significant reasons at the 5\% level to reject the hypothesis that the slopes are the same.
+\begin{Schunk}
+\begin{Sinput}
+> setwd('/Users/dillonflannery-valadez/Coding/R/Stat210/')
+> out <-  matrix(ncol = 4, scan('dataHW1.txt'), byrow = F)
+> g1 <- c(out[,2] == 0)
+> group1 <- out[out[,2] == 0,]
+> group2 <- out[out[,2] != 0, ]
+> # ls estimator
+> # stack matrix 
+> y <- c(group1[,4], group2[,4])
+> x_1 <- group1[,3]
+> x_2 <- group2[,3]
+> X <- rbind(cbind(rep(1, length(x_1)), x_1, matrix(0, nrow=length(x_1), ncol=2)),
++       cbind(matrix(0, nrow=length(x_2), ncol=2), rep(1, length(x_2)), x_2)  )
+> ls_estimate <- solve(t(X) %*% X) %*% (t(X) %*% y)
+> b1 <- ls_estimate[2]
+> b2 <- ls_estimate[4]
+> sxx <- sum((X - mean(X))^2)
+> yfit <- X %*% ls_estimate
+> res <- y - yfit
+> sigmasqdhat <- t(res) %*% res / (nrow(X) - 4)
+> seb <- sqrt(sigmasqdhat / sxx )
+> testDiff <- (b1-b2) / sqrt(2*seb^2)
+> cat(testDiff)
+\end{Sinput}
+\begin{Soutput}
+12.31961
+\end{Soutput}
+\begin{Sinput}
+> if(abs(testDiff) > abs(qt(.025, nrow(X) - 4))){
++   cat('significant')
++ }
+\end{Sinput}
+\begin{Soutput}
+significant
+\end{Soutput}
+\end{Schunk}
+\end{enumerate}
+\end{document}
