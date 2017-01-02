@@ -1,7 +1,7 @@
-homeDirectory <- '/Users/dillonflannery-valadez/Google Drive/Coding/R/Rprojects/finalproject/HAL/'
-source('/Users/dillonflannery-valadez/Google Drive/Coding/R/Rprojects/finalproject/HAL/finalproject_functions.R')
-source('/Users/dillonflannery-valadez/Google Drive/Coding/R/Rprojects/finalproject/HAL/load_libraries.R')
-fds <- readRDS("/Users/dillonflannery-valadez/Google Drive/Coding/R/Rprojects/finalproject/project_data/fds.rds")
+homeDirectory <- '/Users/dillonflannery-valadez/Google Drive/CodeProjects/R/Rprojects/finalproject/HAL/'
+source('/Users/dillonflannery-valadez/Google Drive/CodeProjects/R/Rprojects/finalproject/HAL/finalproject_functions.R')
+source('/Users/dillonflannery-valadez/Google Drive/CodeProjects/R/Rprojects/finalproject/HAL/load_libraries.R')
+fds <- readRDS("/Users/dillonflannery-valadez/Google Drive/CodeProjects/R/Rprojects/finalproject/project_data/fds.rds")
 
 # Goal of this script is to run a hierarchical linear model with cruise day as a random slope. 
 
@@ -73,6 +73,8 @@ spaHcoefs <- coef(spaHier)[[1]]
 casinoHcoefs <- coef(casinoHier)[[1]]
 miscHcoefs <- coef(miscHier)[[1]]
 commHcoefs <- coef(commHier)[[1]]
+
+shorexHier
 
 
 # Linear model
@@ -157,3 +159,6 @@ rMSESpa[[1]]
 rMSECasino[[1]]
 rMSEMisc[[1]]
 rMSEComm[[1]]
+
+shorexHier
+shorex_hierarchical_coefs
