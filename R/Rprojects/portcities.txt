@@ -1,0 +1,39 @@
+Amsterdam, The Netherlands
+Anchorage, Alaska, US
+Auckland, New Zealand
+Barcelona, Spain
+Boston, Massachusetts, US
+Bridgetown, Barbados
+Brisbane, Australia
+Buenos Aires, Argentina
+Callao (Lima), Peru
+Cape Town, South Africa
+Civitavecchia (Rome), Italy
+Copenhagen, Denmark
+Fairbanks, Alaska
+Fort Lauderdale, Florida, US
+Fremantle (Perth), Australia
+Hong Kong, China
+Honolulu, Hawaii, US
+Ijmuiden (Amsterdam), NL
+Istanbul, Turkey
+Melbourne, Australia
+Montreal, Quebec, Canada
+New York, New York, US
+Osaka, Japan
+Piraeus (Athens), Greece
+Quebec City, Quebec, Canada
+Rio de Janeiro, Brazil
+Rotterdam, The Netherlands
+San Diego, California, US
+San Francisco, California, US
+Seattle, Washington, US
+Seward (Anchorage), Alaska, US
+Shanghai, China
+Singapore
+Sydney, Australia
+Tampa, Florida, US
+Valparaiso (Santiago), Chile
+Vancouver, B.C., CA
+Venice, Italy
+Yokohama, Japan

@@ -1,0 +1,329 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+
+\usepackage{comment} 
+\usepackage[utf8]{inputenc}
+ 
+ 
+%Information to be included in the title page:
+\title{Full Model}
+\author{Dillon Flannery-Valadez}
+
+
+\usetheme{Madrid}
+\usecolortheme{orchid}
+\begin{document}
+	\titlepage
+	\begin{frame}{Estimates}
+		\begin{columns}
+
+			\begin{column}{.5\textwidth}
+				Bayesian
+			\scalebox{.7}{
+				\begin{tabular}{rrr}
+					            & Estimate & Std. Err. \\ 
+					            \hline 
+					(Intercept) & 19.74098 & 0.4598143 \\
+					NTR PCD & 0.03972 & 0.0005283 \\
+					AGE & -0.10390 & 0.0032555 \\
+					Booking to Cruise & 0.02459 & 0.0004776 \\
+					\hline
+					Eurodam & 7.71883 & 0.3386436 \\
+					Koningsdam & 3.74856 & 0.4983908 \\
+					Maasdam & 5.30080 & 0.3768428 \\
+					Nieuw  Amsterdam & 5.03136 & 0.3227616 \\
+					Noordam & 6.16895 & 0.3130593 \\
+					Oosterdam & 8.26267 & 0.3200014 \\
+					Prinsendam & 11.08617 & 0.4703732 \\
+					Rotterdam & 5.98090 & 0.4059406 \\
+					Ryndam & 6.03325 & 0.3793548 \\
+					Statendam & 7.23373 & 0.3848898 \\
+					Veendam & 4.97384 & 0.3867368 \\
+					Volendam & 6.55654 & 0.3373380 \\
+					Westerdam & 2.10897 & 0.3053751 \\
+					Zaandam & 6.36222 & 0.3385181 \\
+					Zuiderdam & 8.85605 & 0.3226076 \\
+				\end{tabular}
+			}
+			\end{column}
+			\begin{column}{.5\textwidth}
+				Classical
+				\scalebox{.7}{
+					\begin{tabular}{rrr}
+						           & Estimate & Std. Err. \\
+						           \hline 
+						(Intercept) & 19.73793 & 0.4641712336 \\
+						NTR PCD & 0.03972 & 0.0005235563 \\
+						 AGE & -0.10385 & 0.0032301527 \\
+						Booking to Cruise & 0.02458 & 0.0004787291 \\
+						\hline 
+						Eurodam & 7.72246 & 0.3371797116 \\
+						Koningsdam & 3.75099 & 0.4974468103 \\
+						Maasdam & 5.30357 & 0.3797037143 \\
+						Nieuw  Amsterdam & 5.03436 & 0.3217926798 \\
+						Noordam & 6.17216 & 0.3141398906 \\
+						Oosterdam & 8.26405 & 0.3200709836 \\
+						Prinsendam & 11.09120 & 0.4707124555 \\
+						Rotterdam & 5.98454 & 0.4037520431 \\
+						Ryndam & 6.03569 & 0.3799232511 \\
+						Statendam & 7.23394 & 0.3864669663 \\
+						Veendam & 4.98006 & 0.3908193901 \\
+						Volendam & 6.55998 & 0.3367859621 \\
+						Westerdam & 2.11025 & 0.3039113895 \\
+						Zaandam & 6.36180 & 0.3383402230 \\
+						Zuiderdam & 8.85836 & 0.3220613022 \\
+					\end{tabular}
+				}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Estimates}
+		\begin{columns}
+			\begin{column}{.5\textwidth}
+				Bayesian
+				\scalebox{.7}{
+				\begin{tabular}{rrr}
+					            & Estimate & Std. Err. \\ 
+					            \hline 
+					(Intercept) & 19.74098 & 0.4598143 \\
+					ARABIA  AFRICA & -1.87966 & 1.5636166 \\
+					ASIA  ORIENT & -0.97462 & 0.3731279 \\
+					BERMUDA & -22.52836 & 0.6475487 \\
+					CANADA N.E. & -9.50497 & 0.3119414 \\
+					CARIBBEAN & -19.11883 & 0.1661595 \\
+					COASTAL & -21.43225 & 0.5150353 \\
+					EUROPE & -6.52390 & 0.1912616 \\
+					HAWAII & -14.01753 & 0.4640010 \\
+					MEXICO & -21.84518 & 0.5155319 \\
+					PANAMA  CANAL & -12.26220 & 0.3518514 \\
+					SOUTH  AMERICA & -1.00365 & 0.3776576 \\
+					SOUTH  PACIFIC & -11.63005 & 0.2997618 \\
+					WORLD VOYAGE      &            1.26911 & 0.5905				
+				\end{tabular}
+				}					
+			\end{column}
+						\begin{column}{.5\textwidth}
+							Classical
+							\scalebox{.7}{
+								\begin{tabular}{rrr}
+									& Estimate & Std. Err. \\ 
+									\hline 
+									(Intercept)     & 19.73793     &   0.4641712336 \\
+									ARABIA  AFRICA & -1.90917 & 1.5771607089 \\
+									ASIA  ORIENT & -0.96881 & 0.3745505562 \\
+									BERMUDA & -22.52631 & 0.6532355932 \\
+									CANADA N.E. & -9.51105 & 0.3150214849 \\
+									CARIBBEAN & -19.11913 & 0.1660615237 \\
+									COASTAL & -21.43629 & 0.5109048811 \\
+									EUROPE & -6.52446 & 0.1916951686 \\
+									HAWAII & -14.01735 & 0.4706455123 \\
+									MEXICO & -21.84819 & 0.5178371415 \\
+									PANAMA  CANAL & -12.26558 & 0.3521610710 \\
+									SOUTH  AMERICA & -1.00404 & 0.3749360444 \\
+									SOUTH  PACIFIC & -11.63034 & 0.3008012370 \\
+									WORLD  VOYAGE & 1.62573 & 0.9789522575 \\
+								\end{tabular}
+							}
+						\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Estimates}
+		\begin{columns}
+			\begin{column}{.5\textwidth}
+				Bayesian
+				\scalebox{.65}{
+				\begin{tabular}{rrr}
+					            & Estimate & Std. Err. \\ 
+					            \hline 
+					(Intercept) & 19.74098 & 0.4598143 \\
+					GERMANY  & -4.07464 & 0.4523576 \\
+					GREAT  BRITAIN & -0.94930 & 0.2588971 \\
+					NETHERLANDS & -2.78523 & 0.3009009 \\
+					UNITED  STATES & 6.37976 & 0.1403042 \\
+					Other & 0.69025 & 0.1846186 \\
+					\hline
+					METAI & -4.45335 & 0.1651251 \\
+					METAO & -1.95043 & 0.1489052 \\
+					METAS & 1.04366 & 0.1555615 \\
+				\end{tabular}
+				}
+			\end{column}
+			\begin{column}{.5\textwidth}
+				Classical
+				\scalebox{.65}{
+				\begin{tabular}{rrr}
+	& Estimate & Std. Err. \\ 
+\hline 
+		(Intercept)     & 19.73793     &   0.46417 \\
+					GERMANY  (Deutschland) & -4.07543 & 0.4539 \\
+					GREAT  BRITAIN & -0.94695 & 0.2564 \\
+					NETHERLANDS & -2.78405 & 0.3009 \\
+					UNITED  STATES & 6.38022 & 0.1407 \\
+					Other & 0.69075 & 0.18498 \\
+					\hline 
+					METAI & -4.45445 & 0.16359 \\
+					METAO & -1.95239 & 0.14878 \\
+					METAS & 1.04260 & 0.1560 \\
+				\end{tabular}
+			}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+	\begin{frame}{Estimates}
+		\begin{columns}
+
+			\begin{column}{.5\textwidth}
+			Bayesian
+			\scalebox{.8}{
+				\begin{tabular}{rrr}
+					   & Estimates & Std. Err. \\
+					   \hline 
+					(Intercept) & 19.74098 & 0.4598143 \\					    
+					0S & 1.80981 & 0.2709211 \\
+					1S & 1.21891 & 0.2764476 \\
+					2S & 0.48667 & 0.2909380 \\
+					3S & -1.17223 & 0.3108417 \\
+					4S & -4.62110 & 0.3727187 \\
+					5S & -7.05785 & 0.6198281 \\
+					NH & 2.29559 & 0.3858940 \\
+					P1 & -22.85622 & 2.8376279 \\
+					\hline 
+					Male & 0.04092 & 0.0954773 \\
+				\end{tabular}
+			}
+			\end{column}
+			\begin{column}{.5\textwidth}
+				Classical
+				\scalebox{.8}{
+\begin{tabular}{rrr}
+		& Estimate & Std. Err. \\ 
+		\hline 
+		(Intercept)     & 19.73793     &   0.46417 \\
+	0S & 1.80879 & 0.2718 \\
+	1S & 1.21847 & 0.2779 \\
+	2S & 0.48441 & 0.29403 \\
+	3S & -1.17248 & 0.30904 \\
+	4S & -4.61941 & 0.37017 \\
+	5S & -7.05990 & 0.62727 \\
+	NH & 2.29221 & 0.3915 \\
+	P1 & -22.84048 & 2.83932 \\
+	\hline 
+	Male & 0.03977 & 0.09634 \\
+\end{tabular}
+}
+			\end{column}
+		\end{columns}
+	\end{frame}
+	
+\begin{frame}{Classical/OLS}
+	\begin{itemize}
+		\item The estimator \[ B_1[\sigma^{-2} X'y + B_0^{-1} ]^{-1} \beta_0 \]
+		 if you notice is a weighted average of the OLS estimator and the term on the RHS. 
+		 \item With a large sample size the estimator simply converges to the OLS estimator
+		 \item For this reason Bayesian regression with large samples will give exactly the same results as Maximum Likelihood (OLS). 
+		 \item The Bayesian method for purely linear regression models with many observations does not add any predictive benefit. 
+	\end{itemize}
+\end{frame}
+	
+\begin{frame}{Lift Charts}
+	\begin{itemize}
+		\item Predicted data and actuals are partioned into evenly spaced bins and the mean is taken. The graph represents a line connecting ten such means.
+	\end{itemize}
+	\centering
+	\includegraphics[scale=.15]{shorexLift} \includegraphics[scale=.15]{barLift} \includegraphics[scale=.15]{retailLift} \includegraphics[scale=.15]{casinoLift} \\
+	\includegraphics[scale=.15]{photoLift} \includegraphics[scale=.15]{spaLift} \includegraphics[scale=.15]{miscLift} \includegraphics[scale=.15]{commLift} 
+\end{frame}	
+
+	
+\begin{frame}{Expanding the model to prediciton}
+	\begin{itemize}
+		\item The models described do well predicting individual behavior. 
+		\item We can get an idea of how much a US male going to Alaska upon a certain ship will spend on Shore excursions (26 PCD)
+		\item Extrapolating this model out to predict an entire cruise is not a good idea. There is too much individual variation.
+		\item Suggestion for accurately predicting future department speding more accurately is to get department level data and use time series. 
+	\end{itemize}
+\end{frame}	
+	
+\begin{frame}{Model results}
+	\begin{itemize}
+		\item Results when aggregated show that the fit is far from perfect, especially for certain departments 
+		\item Some explanation why the fits are bad for Comm and Casino is they have the most missing observations of all the revenue variables, very little information is being used to predict, \\
+		
+		\centering
+		\begin{tabular}{rrr}
+			Dept. & NA's & Percent \\
+			\hline 
+			Casino & 1,643,958 & 87\% \\
+			Spa & 1,582,582 & 83\% \\
+			Photo & 1,568,223 & 82\% \\
+			Misc   & 1,209,880 & 64\% \\
+			Shorex    & 586,427 & 31\% \\
+		\end{tabular}
+	\end{itemize}
+\end{frame}	
+
+\begin{frame}{Fitted Actual}
+		\centering
+		\includegraphics[scale=.15]{shorex_fit_act} \includegraphics[scale=.15]{bar_fit_act} \includegraphics[scale=.15]{retail_fit_act} \includegraphics[scale=.15]{photo_fit_act} \\
+		\includegraphics[scale=.15]{spa_fit_act} \includegraphics[scale=.15]{misc_fit_act} \includegraphics[scale=.15]{comm_fit_act} \includegraphics[scale=.15]{casino_fit_act}
+\end{frame}
+
+\begin{frame}{Time Series}
+	\begin{itemize}
+		\item Possibilities of time series data...
+	\end{itemize}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+	\begin{tabular}{lrr}
+		Dept & 2014 & 2015 \\
+		\hline 
+		Shorex & 168,367,315 & 162,267,713 \\
+		Bar & 55,972,876 & 67,981,523 \\
+		Retail & 47,907,988 & 46,021,665 \\
+		Misc & 33,400,383 & 36,555,821 \\
+		Spa & 26,446,801 & 27,699,270 \\
+		Casino & 24,719,690 & 26,166,236 \\
+		Photo & 13,407,304 & 12,015,768 \\
+		Comm & 8,923,681 & 8,872,420 \\
+	\end{tabular} 
+			\end{column}
+			\begin{column}{.5\textwidth}
+	\centering
+	\includegraphics[scale=.35]{yearCompare}
+					\end{column}
+		\end{columns}					
+\end{frame}
+
+\begin{frame}
+			\centering
+	\includegraphics[scale=.4]{tsShorex}
+	\begin{itemize}
+		\item Therefore predicted revenue in shorex for September-December:
+\centering
+		\begin{tabular}{lr}
+			Date & Predicted \\
+			\hline 
+			September & 6,490,449 \\
+			October & 6,836,458 \\
+			November & 5,794,428 \\
+			December & 6,173,049 \\
+		\end{tabular}
+		
+	\end{itemize}
+\end{frame}
+
+	
+	
+	
+	
+	
+	
+	
+\end{document}

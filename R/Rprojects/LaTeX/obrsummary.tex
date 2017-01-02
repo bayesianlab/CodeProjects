@@ -1,0 +1,250 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.4 (15/5/16)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com) with extensive modifications by
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside,twocolumn]{article}
+
+\usepackage{blindtext} % Package to generate dummy text throughout this template 
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[english]{babel} % Language hyphenation and typographical rules
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+
+\usepackage{enumitem} % Customized lists
+\setlist[itemize]{noitemsep} % Make itemize lists more compact
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\roman{subsection}} % roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+%\fancyhead[C]{Running title $\bullet$ May 2016 $\bullet$ Vol. XXI, No. 1} % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+\usepackage{titling} % Customizing the title section
+
+\usepackage{hyperref} % For hyperlinks in the PDF
+
+\setlength{\intextsep}{0pt}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\setlength{\droptitle}{-4\baselineskip} % Move the title up
+
+\pretitle{\begin{center}\Huge\bfseries} % Article title formatting
+\posttitle{\end{center}} % Article title closing formatting
+\title{On Board Revenue} % Article title
+\author{%
+\textsc{Dillon Flannery}
+\normalsize \href{mailto:DFlannery@hollandamericagroup.com}{DFlannery@hollandamericagroup.com}
+}
+
+\renewcommand{\maketitlehookd}{}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+% Print the title
+\maketitle
+\section{Introduction}
+The goal of this project was to investigate the casual factors of on board revenue. Guests on Holland America cruise ships have access to a variety of services while touring which generate revenue beyond the ticket price. This project had a twofold intention, one was to answer the question: what factors about our guests are most valuable for predicting revenue on board? This information is desirable for a variety of reasons. One of the most important is the potential importance such information has on marketing. If a subgroup of guests was found to be particularly willing to spend marketing may shift its campaign to focus on that subgroup. Additionally, if finding that particular services or aspects of their cruises are not profitable it may be desirable to discontinue those altogether. The next goal was to investigate the improvements or differences based upon a Bayesian approach. The Bayesian framework to statistics allows the researcher to utilize ``prior" knowledge or information that he has gained from experience to inform the posertior distributions of the parameters. It is also more intuitively apealing (for some) in that the likelihood function is based upon the \textit{data observed} rather than all unobserved that one could have seen but did not which would be the case in the frequentist approach. 
+
+\section{Description of Data}
+The data available for this project was 141,292 observations on guests that had voyages on Holland America ships between 2014 and 2016. From these records information available included their spending in various departments, ticket revenue, gender, age, income etc. From this data a few additional categories were made like getting the amount guests per day strictly while on board and how much they spent per day including their ticket. From this information a few summary statistics will be presented. \\
+
+The data included information about nationality and the following plot is valuable for visualizing the global spread of our guests and how many cruise from each country represented in our sample:
+\begin{figure}[H]
+\includegraphics[scale=.5]{freqcountry}
+\caption{Frequency of Visits Across the World}
+\end{figure}
+The United States clearly dominates the sample as the map shows. The largest frequencies come from more developed nations which is not a big surprise. The following table shows the actual numerical values of the countries: 
+\begin{table}[H]
+	\centering
+\begin{tabular}{r r}
+	Country & Count \\
+	\hline
+	United States &  94,670 \\               
+	Canada &  25,024 \\                
+	Australia &   8,098 \\                
+	Great Britain &  5,825 \\                 
+	Netherlands &  3,370  \\
+	Germany & 921 \\
+\end{tabular}
+\caption{Top 6 countries}
+\end{table}
+The United States has more guests than the other top 5 combined, therefore it would be interesting to know more about the distribution of guests within the United states. The next map shows how our guests are distributed across the US by state: 
+\begin{figure}[H]
+	\includegraphics[scale=.5]{usaheat}
+	\caption{Heat map by state of U.S. guests}
+\end{figure}
+The states with close access to ports appear to prefer cruises. Florida, Washington, California and Texas all have easy access to ports which could explain the higher frequency of guests from those areas. The numerical values of the top states appear below:
+\begin{table}[H]
+	\centering
+	\begin{tabular}{rr}
+		State & Count \\
+		\hline 
+Florida & 15,676 \\
+California & 12,061 \\
+Washington & 4,972 \\
+Texas  & 4,606 \\
+New York &  3,537 \\
+ Arizona  & 3,041 \\
+	\end{tabular}
+	\caption{Top 6 states}
+\end{table}
+
+The next data issue that came up were the multiple missing values in the survey data. Many people did not answer the question, what is your annual income? Therefore, approximately 50\% of the sample did not volutarily supply that information. It would not be wise to simply throw out all these observations, therefore multiple imputation was used to approximate the correct value. The R package MICE was used to run the multiple imputation algorithm. The basics of the algorithm are to use the complete cases to predict income using the other variables. Then use the same variables for which there is information existing for the NA cases to predict income and based on a nearest match to someone in the sample with a similar reported income fill the data in with that value. Below are the distributions of income before and after the imputation was done:
+
+\begin{figure}[H]
+	\includegraphics[scale=.5]{nonimpute}
+	\includegraphics[scale=.5]{impute}
+\caption{Histrograms of income before and after multiple imputation}
+\end{figure}
+
+The next plot shows a dot plot of spending by age. There is an interesting bell shape to the distribution of spending. It is also color-coded to income.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.3]{agedots}
+	\caption{Distribution of spending by age}
+\end{figure}
+
+Further investigation into spending by age revealed that approximately 75\% of spending comes from individuals between the ages of 50-72 in our dataset. 
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.25]{agefreq}
+	\caption{Frequency of age groups on board}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=.35]{bigagespend}
+	\caption{Percentage of on board spending by key age groups}
+\end{figure}
+
+The importance of high customer satisfaction is show by the next plot. Customer satisfaction has a correlation on spending, people more satisfied with the services on board generally spend more:
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[scale=.3]{candles}
+	\caption{Custormer satisfaction and on board spending}
+\end{figure}
+There also seems to be a connection between customer satisfaction and ticket revenue, people spending more on their tickets tend to be more satisfied overall with their cruise. 
+\begin{figure}[H]
+	\centering 
+	\includegraphics[scale=.3]{candles2}
+	\caption{Customer satisfaction and ticket revenue}
+\end{figure}
+
+There also appear to be some desinations that generate more revenue than others. The Caribbean, Europe and Alaska tours appear as though they generate higher revenues.
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[scale=.25]{tradespend}
+	\caption{Destination and on board spending}
+\end{figure}
+The means across these groups are reported here, 
+\begin{table}[H]
+	\centering 
+	\begin{tabular}{ll}
+		Destination & Mean On Board Spending \\
+		\hline 
+		Alaska & 71.72486 \\
+		Europe & 64.68346 \\
+		Mexico & 57.85823 \\
+		Canada (N.E.) & 57.16666 \\
+	\end{tabular}
+	\caption{Spending by destination}
+\end{table}
+
+The next plot visualizes the on board spending by cruise length. From this plot it appears that there are sweet spots of cruise length appearing approximately in multiples of weeks, 
+\begin{figure}[H]
+	\centering 
+	\includegraphics[scale=.4]{crlen}
+	\caption{Cruise length and on board spending}
+\end{figure}
+
+This relationship is more apparent when the means of each category are plotted. 
+\begin{figure}[H]
+	\centering 
+	\includegraphics[scale=.4]{crlenmean}
+	\caption{Cruise length and mean on board spending}
+\end{figure}
+
+This dot plot shows in black dots the average total amount spent (including ticket revenue)  by cruise length. The black dots show a maximum at the 116 day cruise. However, the blue dots represent how much potential revenue would have been made if instead of going on 1 X day cruise it had gone on 116/X cruises and made the same average amount. 
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[scale=.6]{whatif}
+	\caption{Cruise length and spending}
+\end{figure}
+
+This plot unsurprisingly shows a decrease in on board spending with cruise length. Not much can be made of this plot, however, because it only stands to reason that as peoples on board spending is divided by a larger cruiselength that amount will decrease. 
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[scale=.4]{obrntr}
+	\caption{On board revenue vs. ticket revenue}
+\end{figure}
+
+This plot shows the relationship holds across many levels of cruiselength, even combining the cruises from 22-116 days into one still shows an average spending nearly half that of the average spending from 3-9 days. 
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[scale=.5]{shortertrips}
+	\caption{Aggregation of cruiselength to three levels}
+\end{figure}
+
+Average on board spending is examined according to loyalty next. It is unfortunate that in the data the `other' category was unknown. There was no information available what the other categories corresponded to, the only information available was the star system. Searches for the meaning of the other categories were fruitless. The loyalty appears to have a negative effect on spending, higher star cruisers on average spend slightly less than the lower star cruisers. 
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[scale=.5]{loyalty}
+	\caption{Loyalty and on board spending}
+\end{figure}
+
+\section{Summary}
+From the descriptive analysis of the data some trends arise. It appears that some of the important factors to on board spending are age, customer satisfaction, trade and cruise length. The next step will be to examine these relationships using regression analysis to see how much these factors actually effect on board spending. 
+
+
+\end{document}

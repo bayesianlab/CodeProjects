@@ -1,0 +1,546 @@
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+
+\usepackage{comment} 
+\usepackage[utf8]{inputenc}
+ 
+ 
+%Information to be included in the title page:
+\title{}
+\author{Dillon Flannery-Valadez}
+\institute{}
+
+\usetheme{Madrid}
+\usecolortheme{orchid}
+\begin{document}
+	
+\titlepage
+
+\begin{frame}{Comparison of shipname coefficients-Bar dependent}
+\begin{columns}
+	\begin{column}{0.5\textwidth}
+		\centering
+		Classical
+		\scalebox{.8}{
+		\begin{tabular}{lll}
+			Shipname & Estimate & Std. Err. \\
+			\hline 
+	(Intercept) & 10.49 & 4.596 \\
+	Eurodam & 1.251 & 0.04103 \\
+	Koningsdam & 0.3216 & 0.6460 \\
+	Maasdam & 0.254 & 0.4045 \\
+	Nieuw Amsterdam & 0.8410 & 38.69 \\
+	Noordam & -0.4583 & 36.16 \\
+	Veendam & 0.5136 & 43.10 \\
+		\end{tabular}
+		}
+	\end{column}
+\begin{column}{0.5\textwidth}
+	\centering
+	Bayesian
+		\scalebox{0.8}{
+\begin{tabular}{lll}
+	Trade & Estimate & Std. Err. \\
+	\hline 
+	(Intercept) & 10.55 & 4.634 \\
+	Eurodam & 1.254 & 0.4104 \\
+	Koningsdam & 0.3273 & 0.6459 \\
+	Maasdam & 0.2609 & 0.4026 \\
+	Nieuw Amsterdam & 0.8463 & 0.3894 \\
+	Noordam & -0.4574 & 0.3605 \\
+	Veendam & 0.5163 & 0.4316 \\
+\end{tabular}
+		}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Comparison of trade coefficients-Bar dependent}
+	\begin{columns}
+	\begin{column}{0.5\textwidth}
+		\centering
+				Classical
+	\scalebox{.8}{
+\begin{tabular}{lll}
+			Trade & Estimate & Std. Err. \\
+			\hline 
+			(Intercept) & 10.49 & 4.596 \\
+	BERMUDA & 0.6589 & 55.77 \\
+	CANADA N.E. & 0.1371 & 40.21 \\
+	CARIBBEAN & -1.338 & 30.72 \\
+	COASTAL & -1.164 & 83.70 \\
+	EUROPE & -1.455 & 44.42 \\
+	HAWAII & -2.020 & 69.62 \\
+	MEXICO & -0.4669 & 59.09 \\
+	PANAMA CAN. & 0.5311 & 54.92 \\
+	SOUTH AM & -4.278 & 98.74 \\
+	SOUTH P. & 1.746 & 57.68 \\
+	WORLD VOY. & -10.54 & 1.138 \\
+\end{tabular}
+}
+	\end{column}
+\begin{column}{0.5\textwidth}
+	\centering
+	Bayesian
+	\scalebox{.8}{
+	\begin{tabular}{lll}
+			Trade & Estimate & Std. Err. \\
+			\hline 
+				(Intercept) & 10.55 & 4.634 \\
+		BERMUDA & 0.6498 & 0.5581 \\
+		CANADA N.E. & 0.1365 & 0.4012 \\
+		CARIBBEAN & -1.341 & 0.3064 \\
+		COASTAL & -1.171 & 0.8414 \\
+		EUROPE & -1.461 & 0.4442 \\
+		HAWAII  &-2.007 & 0.7029 \\
+		MEXICO  &-0.4643 & 0.5884 \\
+		PANAMA CAN. & 0.5336 & 0.5512 \\
+		SOUTH  AM. & -4.273 & 0.9869 \\
+		SOUTH  P. & 1.748 & 0.5784 \\
+		WORLD VOY. & -10.52 & 1.143 \\
+	\end{tabular}
+}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Comparison of income coefficients-Bar dependent}
+	\begin{columns}
+	\begin{column}{.5\textwidth}
+		\centering
+				Classical
+		\scalebox{.7}{
+\begin{tabular}{lll}
+			Income & Estimate & Std. Err. \\
+			\hline 
+			(Intercept) & 10.49 & 4.596 \\
+	20000-29999 & 1.078 & 79.73 \\
+	30000-49999 & 1.620 & 68.85 \\
+	50000-69999 & 2.471 & 67.13 \\
+	70000-99999 & 2.885 & 66.02 \\
+	100000-124999 & 3.790 & 66.31 \\
+	125000-250000 & 5.342 & 65.97 \\
+	Over 250000 & 8.067 & 67.78 \\
+\end{tabular}
+	}
+	\end{column}
+	\begin{column}{0.5\textwidth}
+		\centering Bayesian
+		
+		\scalebox{.7}{
+\begin{tabular}{lll}
+				Income & Estimate & Std. Err. \\
+				\hline 
+				(Intercept) & 10.55 & 4.634 \\
+	20000-29999 & 1.098 & 0.7899 \\
+	30000-49999 & 1.630 & 0.6900 \\
+	50000-69999 & 2.479 & 0.6698 \\
+	70000-99999 & 2.899 & 0.6580 \\
+	100000-124999 & 3.801 & 0.6587 \\
+	125000-250000 & 5.351 & 0.6592 \\
+	Over 250000 & 8.075 & 0.6749 \\
+\end{tabular}
+}
+	\end{column}
+	\end{columns}	
+\end{frame}
+\begin{comment}
+\begin{frame}{Comparison of continuous variables-Bar dependent}
+	\begin{columns}
+			\begin{column}{.5\textwidth}
+				\centering
+				Bayesian
+				\scalebox{.9}{
+					\begin{tabular}{lll}
+						Continuous \\Vars. & Estimate & Std. Err. \\
+						\hline 
+						(Intercept) & 57.30 & 47.54 \\
+						Bar rating & 2.686 & 0.4949 \\
+						Age & -0.4844 & 0.0558 \\
+						Net Ticket Rev. & 0.01104 & 0.001063 \\
+					\end{tabular}
+				}
+			\end{column}
+	\begin{column}{.5\textwidth}
+		\centering
+		Classical
+		\scalebox{.8}{
+	\begin{tabular}{lll}
+		Continuous \\Vars. & Estimate & Std. Err. \\
+			\hline 
+			(Intercept) & 57.30 & 47.54 \\
+		Bar rating & 2.68737 & 0.49531 \\
+		Age & -0.48371 & 0.05552 \\
+		Net Ticket Rev. & 0.01104 & 0.00106 \\
+	\end{tabular}
+}
+		\end{column}
+	\end{columns}
+\end{frame}
+\end{comment}
+
+\begin{frame}{Comparison shipname coefficients-Shorex dependent}
+	\begin{columns}
+				\begin{column}{.5\textwidth}
+					\centering 
+					Classical 
+					\scalebox{.8}{
+\begin{tabular}{lll}
+	Shipname & Estimate & Std. Err. \\
+	\hline 
+	(Intercept) & 15.39 & 12.31 \\
+	Eurodam & 0.3703 & 1.639 \\
+	Maasdam & 0.9913 & 1.552 \\
+	Nieuw Amsterdam & 0.9910 & 1.632 \\
+	Noordam & 1.818 & 1.482 \\
+	Veendam & 4.551 & 1.605 \\
+\end{tabular}
+					}
+				\end{column}
+		\begin{column}{.5\textwidth}
+			\centering	Bayesian
+			\scalebox{.8}{
+\begin{tabular}{lll}
+	Shipname & Estimate & Std. Err \\
+	\hline 
+	(Intercept) & 15.300270 & 12.48 \\
+	Eurodam & 0.362857 & 1.617 \\
+	Maasdam & 0.984527 & 1.531 \\
+	Nieuw Amsterdam & 0.978741 & 1.611 \\
+	Noordam & 1.810948 & 1.469 \\
+	Veendam & 4.554667 & 1.589 \\
+\end{tabular}
+			}
+		\end{column}
+
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Comparison trade coefficients- Shorex dependent}
+	\begin{columns}
+		
+		\begin{column}{.5\textwidth}
+			\centering Classical
+			\scalebox{.7}{
+				\begin{tabular}{lll}
+					Trade & Estimate & Std. Err. \\
+					\hline 
+					(Intercept) & 15.39 & 12.31 \\
+					EUROPE & -3.633 & 1.813 \\
+					HAWAII & -4.066 & 2.282 \\
+					MEXICO & -3.675 & 2.502 \\
+					PANAMA CAN. & 0.2300 & 1.78 \\
+					SOUTH AM. & -11.69 & 3.076 \\
+					WORLD VOY. & -5.036 & 2.522 \\
+				\end{tabular}
+			}
+		\end{column}
+		
+		\begin{column}{.5\textwidth}
+			\centering Bayesian
+			\scalebox{.7}{
+				\begin{tabular}{lll}
+					Trade & Estimate & Std. Err \\
+					\hline 
+					(Intercept) & 15.300270 & 12.48 \\
+					EUROPE & -3.624980 & 1.824 \\
+					HAWAII & -4.062958 & 2.266 \\
+					MEXICO & -3.687767 & 2.490 \\
+					PANAMA CAN. & 0.217988 & 1.782 \\
+					SOUTH AM. & -11.640000 & 3.071 \\
+					WORLD VOY. & -5.018878 & 2.519 \\
+				\end{tabular}
+			}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Comparison income coefficients-Shorex dependent}
+	\begin{columns}
+
+		\begin{column}{.5\textwidth}
+			\centering Classical
+			\scalebox{.8}{
+\begin{tabular}{lll}
+		Income & Estimate & Std. Err. \\
+		\hline 
+		(Intercept) & 15.39 & 12.31 \\
+	20000-29999 & 1.527 & 1.581 \\
+	30000-49999 & 2.035 & 1.415 \\
+	50000-69999 & 1.954 & 1.384 \\
+	70000-99999 & 2.667 & 1.365 \\
+	100000-124999 & 2.641 & 1.368 \\
+	125000-250000 & 3.214 & 1.358 \\
+	Over 250000 & 5.070 & 1.384 \\
+	
+\end{tabular}
+		}
+		\end{column}
+				\begin{column}{.5\textwidth}
+					\centering 
+					Bayesian
+					\scalebox{.8}{
+							\begin{tabular}{lll}
+								Income & Estimate & Std. Err \\
+								\hline 
+								(Intercept) & 15.300270 & 12.48 \\
+								20000-29999 & 1.540086 & 1.582 \\
+								30000-49999 & 2.021636 & 1.432 \\
+								50000-69999 & 1.964791 & 1.400 \\
+								70000-99999 & 2.672691 & 1.388 \\
+								100000-124999 & 2.635302 & 1.384 \\
+								125000-250000 & 3.218751 & 1.376 \\
+								Over 250000 & 5.082324 & 1.405 \\
+						\end{tabular}
+					}
+				\end{column}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}{Comparison shipname coeffients-Retail dependent}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\centering Classical
+			\scalebox{.7}{
+\begin{tabular}{lll}
+	Shipname & Estimate & Std. Err. \\
+	\hline
+	(Intercept) & -10.93 & 20.77 \\
+	Eurodam & 0.09371 & 1.885 \\
+	Koningsdam & 3.831 & 2.945 \\
+	Maasdam & -2.459 & 1.857 \\
+	NieuwAmsterdam & 1.412 & 1.792 \\
+	Noordam & -1.365 & 1.658 \\
+	Veendam & 0.5501 & 1.966 \\
+\end{tabular}
+}
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\centering Bayesian
+			\scalebox{.7}{
+			\begin{tabular}{lll}
+				Trade & Estimate & Std. Err \\
+				\hline 
+				(Intercept) & -10.63 & 20.91 \\
+				Eurodam & 0.1100 & 1.884 \\
+				Koningsdam & 3.861 & 2.946 \\
+				Maasdam & -2.428 & 1.847 \\
+				Nieuw Amsterdam & 1.438 & 1.802 \\
+				Noordam & -1.361 & 1.653 \\
+				Veendam & 0.5676 & 1.968 \\
+				\end{tabular}
+				}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Comparison trade coefficients-Retail dependent}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+		\centering	Classical
+		\scalebox{.7}{
+\begin{tabular}{lll}
+		Shipname & Estimate & Std. Err. \\
+		\hline
+		(Intercept) & -10.93 & 20.77 \\
+	BERMUDA & -4.036 & 2.601 \\
+	CANADA N.E. & -3.118 & 1.869 \\
+	CARIBBEAN & -3.293 & 1.418 \\
+	COASTAL & -3.069 & 4.069 \\
+	EUROPE & -2.028 & 2.057 \\
+	HAWAII & -6.314 & 3.089 \\
+	MEXICO & -2.338 & 2.721 \\
+	PANAMA CAN. & -3.278 & 2.490 \\
+	SOUTH AM. & -5.395 & 4.448 \\
+	SOUTH P. & 0.8090 & 2.531 \\
+	WORLD VOY. & -11.85 & 4.944 \\
+\end{tabular}
+}
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\centering Bayesian
+			\scalebox{.7}{
+\begin{tabular}{lll}
+					Trade & Estimate & Std. Err \\
+					\hline 
+					(Intercept) & -10.63 & 20.91 \\
+	BERMUDA & -4.088 & 2.604 \\
+	CANADA N.E. & -3.125 & 1.866 \\
+	CARIBBEAN & -3.309 & 1.413 \\
+	COASTAL & -3.102 & 4.091 \\
+	EUROPE & -2.060 & 2.060 \\
+	HAWAII & -6.262 & 3.117 \\
+	MEXICO & -2.333 & 2.719 \\
+	PANAMA CAN. & -3.267 & 2.497 \\
+	SOUTH AM. & -5.376 & 4.431 \\
+	SOUTH P. & 0.8197 & 2.541 \\
+	WORLD VOY. & -11.79 & 4.954 \\
+\end{tabular}
+}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Comparison income coefficients- Retail dependent}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+					\centering Classical
+					\scalebox{.7}{
+\begin{tabular}{lll}
+			Income  & Estimate & Std. Err. \\
+			\hline
+			(Intercept) & -10.93 & 20.77 \\
+	20000-29999 & 3.122 & 3.484 \\
+	30000-49999 & 2.859 & 3.044 \\
+	50000-69999 & 1.124 & 2.975 \\
+	70000-99999 & 1.921 & 2.929 \\
+	100000-124999 & 2.935 & 2.947 \\
+	125000-250000 & 4.611 & 2.934 \\
+	Over 250000   & 8.952 &  3.033 \\
+\end{tabular}
+}
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\centering Bayesian
+			\scalebox{.7}{
+			\begin{tabular}{lll}
+									Income  & Estimate & Std. Err \\
+									\hline 
+									(Intercept) & -10.63 & 20.91 \\
+				20000-29999 & 3.214 & 3.465 \\
+				30000-49999 & 2.906 & 3.064 \\
+				50000-69999 & 1.164 & 2.979 \\
+				70000-99999 & 1.988 & 2.934 \\
+				100000-124999 & 2.991 & 2.939 \\
+				125000-250000 & 4.657 & 2.946 \\
+				Over 250000 & 8.989 & 3.030 \\
+			\end{tabular}
+		}
+		\end{column}
+		
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Comparison continuous variables-Retail dependent}
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\begin{tabular}{lll}
+				Income  & Estimate & Std. Err. \\
+				\hline 
+				(Intercept) & -108.5 & 176.9 \\
+				Retail rating& 14.30 & 1.512 \\
+				Age & 0.2162 & 0.2160 \\
+				Net Ticket rev. & 0.01924 & 0.004023 \\
+				\end{tabular}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Bayesian Done Right}
+	Specifing priors,\\
+	Assuming $ N_K(\beta_0, B_0) $ and $ IG(\alpha_0/2, \delta_0/2) $ priors \\
+	$ \beta_0  $ are the coefficient estimates $ B_0 $ is the standard deviaiton of the estimates. \\
+	 The inverse gamma functions similarly to \textit{mean of sum of squared residuals} It is the variance of the error term $ u $. 
+	\begin{itemize}
+		\item Means of coefficients, the linear regression estimates
+		\item $ B_0 $ is set to $ 1e-6 $ to give flexibility
+		\item $ \alpha_0 $ is set to 6 to give flexibility
+		\item $ \delta_0 $ is set to 80,000 (Roughly 90\% of the data is less than 326, the mean is 128 which means $ \sigma = 198 $, $ E(\sigma^2) = 198^2 $, the mean of the inverse gamma is $ 198^2 = \frac{\delta_0 /2}{(\alpha_0 / 2) - 1} $)
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Fitted Versus Actual-Bar}
+	Validation set produced these results:
+	\begin{figure}
+	\includegraphics[scale=.2]{bayes_fitted_actual} \ \includegraphics[scale=.2]{classical_fitted_actual}
+\caption{Bayesian, Classical}
+\end{figure}
+Training set = .75\% of sample. 
+\end{frame}
+
+
+\begin{frame}{Actual and Predicted Averages-Bayesian}
+	Averages for the Bar Revenue by 10 quantiles, 
+	\begin{figure}
+		\includegraphics[scale=.4]{bayes_ap}
+		\caption{Quantiles 10\%, 20\%, etc and averaged}
+	\end{figure}
+\end{frame}
+
+
+\begin{frame}{Actual and Predicted Averages-Classical}
+	Averages for the Bar Revenue by 10 quantiles, 
+	\begin{figure}
+	\includegraphics[scale=.4]{classical_ap}
+	\caption{Quantiles 10\%, 20\%, etc and averaged}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Hierarchical Model}
+	Level 1 regression: \\
+	\[ y_{ij} = \beta_{0j} + \beta_{1j}x_{ij} + e_{ij} \]
+	Level 2 regression:
+	\[ \beta_{0j} = \gamma_{00} + u_{0j} \]
+	$ e_{ij} \sim N(0, \sigma^2) $ and $ u_{0j} \sim N(0, \nu^2)$
+	This is a random intercepts model. \\
+	Assuming a random trade we will have different intercepts for each trade. 
+\end{frame}
+
+\begin{frame}{Trade and random intercepts}
+	\begin{figure}
+		\centering
+		\includegraphics[scale=.48]{trade_box_shorex}
+		\caption{Shorex and trade}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Sample output from random intercepts model}
+	\centering
+\begin{tabular}{lll}
+	 Variable & ALASKA & CANADA  NEW NGLAND \\
+	\hline 
+	(Intercept) & 15.600110120 & 6.076986907 \\
+	NTR & 0.001064399 & 0.001064399 \\
+	Eurodam & 4.296289544 & 4.296289544 \\
+	Koningsdam & 2.005180924 & 2.005180924 \\
+	Maasdam & 0.215273824 & 0.215273824 \\
+	NieuwAmsterdam & 3.465829444 & 3.465829444 \\
+	Noordam & 6.560143935 & 6.560143935 \\
+	Veendam & 1.516348657 & 1.516348657 \\
+	Age & -0.168146770 & -0.168146770 \\
+	CANADA & -0.327036987 & -0.327036987 \\
+	GREATBRITAIN & -2.163229676 & -2.163229676 \\
+	NETHERLANDS & -6.247446439 & -6.247446439 \\
+	UNITEDSTATES & 3.513165144 & 3.513165144 \\
+	Other & -2.332766511 & -2.332766511 \\
+	\hline 
+\end{tabular}
+	\begin{itemize}
+		\item There are 34 esimates for 12 trades, making 408 different coefficient estimates.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Next}
+	\begin{itemize}
+		\item Analysis of fit
+		\item Visuals of fit
+		\item Predictions of revenue per department
+	\end{itemize}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+\end{document}
