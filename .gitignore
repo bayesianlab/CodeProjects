@@ -1,0 +1,82 @@
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+# Vim files #
+*.swp
+
+# R files
+*.RData
+*.Rhistory
+*.rds
+*.csv
+/adv_macro/
+/smets_wouters/
+
+*.Rapp.history
+*.png
+*.jpg
+*.dta
+*.webarchive
+*.xlsx
+*.docx
+*.pptx
+*.m~
+*.xml
+*.mat
+*.xls
+*.fig
+*.eps
+*.pdf
+*.db
+*.rtf
+
+/IdeaProjects/commons-math3-3.6.1-src/**
+
+/IdeaProjects/lib/**
+
+/R/Rprojects/finalproject/project_data/**
+
+PycharmProjects/Stochastic files/**
+CProjects/cmake-3.6.0-rc3/**
+
+IdeaProjects/ValueFunction/**
+IdeaProjects/ValueFunction2/**
+
+PycharmProjects/mypythonprojects/HebrewLexicon/**
+PycharmProjects/mypythonprojects/strongs-dictionary-xml/**
+PycharmProjects/mypythonprojects/build/**
+
