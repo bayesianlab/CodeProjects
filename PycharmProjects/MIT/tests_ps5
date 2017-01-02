@@ -1,0 +1,53 @@
+Python 2.5.4 (r254:67916, Dec 23 2008, 15:10:54) [MSC v.1310 32 bit (Intel)] on win32
+Type "copyright", "credits" or "license()" for more information.
+
+    ****************************************************************
+    Personal firewall software may warn about the connection IDLE
+    makes to its subprocess using this computer's internal loopback
+    interface.  This connection is not visible on any external
+    interface and no data is sent to or received from the Internet.
+    ****************************************************************
+    
+IDLE 1.2.4      ==== No Subprocess ====
+>>> 
+Loading word list from file...
+   83667 words loaded.
+----------------------------------------------------------------------
+Testing get_word_score...
+FAILURE: test_get_word_score()
+	Expected 62 points but got 'None' for word 'outgnawn', n=8
+FAILURE: test_get_word_score()
+	Expected 9 points but got 'None' for word 'scored', n=7
+FAILURE: test_get_word_score()
+	Expected 2 points but got 'None' for word 'it', n=7
+FAILURE: test_get_word_score()
+	Expected 0 points but got 'None' for word '', n=7
+FAILURE: test_get_word_score()
+	Expected 61 points but got 'None' for word 'outgnaw', n=7
+FAILURE: test_get_word_score()
+	Expected 6 points but got 'None' for word 'was', n=7
+FAILURE: test_get_word_score()
+	Expected 65 points but got 'None' for word 'waybill', n=7
+----------------------------------------------------------------------
+Testing update_hand...
+FAILURE: test_update_hand('quail', {'a': 1, 'i': 1, 'm': 1, 'l': 2, 'q': 1, 'u': 1})
+	Returned:  None -- but expected: {'m': 1, 'l': 1} or {'a': 0, 'i': 0, 'm': 1, 'l': 1, 'q': 0, 'u': 0}
+----------------------------------------------------------------------
+Testing is_valid_word...
+FAILURE: test_is_valid_word()
+	Expected True, but got False for word: 'hello' and hand: {'h': 1, 'e': 1, 'l': 2, 'o': 1}
+FAILURE: test_is_valid_word()
+	Expected True, but got False for word: 'honey' and hand: {'e': 2, 'd': 1, 'h': 1, 'o': 1, 'n': 1, 'w': 1, 'y': 1}
+FAILURE: test_is_valid_word()
+	Expected True, but got False for word: 'evil' and hand: {'i': 1, 'n': 1, 'e': 1, 'l': 2, 'v': 2}
+----------------------------------------------------------------------
+All done!
+>>> 
+Loading word list from file...
+Traceback (most recent call last):
+  File "C:\Documents and Settings\valadez\Desktop\contents\assignments\test_ps5.py", line 192, in <module>
+    word_list = load_words()
+  File "C:\Documents and Settings\valadez\Desktop\contents\assignments\ps5.py", line 33, in load_words
+    inFile = open(WORDLIST_FILENAME, 'r', 0)
+IOError: [Errno 2] No such file or directory: 'words.txt'
+>>> 

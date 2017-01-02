@@ -1,0 +1,3 @@
+triangle,4,5
+circle, 100
+square, 1.414
