@@ -57,7 +57,7 @@ class BreakdownVerse:
             return False
 
     def isBlank(self, tagText):
-        if tagText == '':
+        if not tagText.strip():
             return True
         else:
             return False
@@ -78,13 +78,6 @@ class BreakdownVerse:
                     verse.append(tagText + ' ')
                     AttributeError
         return ''.join(verse)
-
-    def isVerse(self,tag):
-        if tag.name == 'verse':
-
-            return True
-        else:
-            return False
 
     def isStrongsNumber(self, char):
         if char == ' ':
@@ -107,7 +100,7 @@ class BreakdownVerse:
             counter += 1
             if i == '0' and strongsNumbers[counter-1] == 'H':
                 del strongsNumbers[counter]
-        return ''.join(strongsNumbers)
+        return ''.join(strongsNumbers).decode()
 
     def isTag(self, check):
         if '<' in check:
@@ -132,7 +125,7 @@ class BreakdownVerse:
                 newWord += '-'
             else:
                 newWord += str(i)
-        return newWord
+        return newWord.decode()
 
     def capitalizeGodAndLord(self, godLordText):
         if godLordText == 'God' or godLordText == 'Lord':
@@ -158,10 +151,8 @@ class BreakdownVerse:
                 strList.append(self.capitalizeGodAndLord(i.divineName.text))
             else:
                 strList.append(i)
-        return ''.join(strList)
+        return ''.join(strList).decode()
 
-    def handleInscriptions(self, inscriptionTag):
-        pass
 
     def hasStrongsNumber(self, tagAttrs):
         try:
@@ -284,6 +275,135 @@ class BreakdownVerse:
         con.commit()
         con.close()
 
+
+    def putWTagInSqlTable(self, wTag, bookID, chapNum, verseCounter, cursor):
+        try:
+            str(wTag.text)
+            self.putEncodableWtagIntoSql(wTag, bookID, chapNum, verseCounter, cursor)
+        except UnicodeEncodeError:
+            self.putNonEncodableWtagIntoSql(wTag, bookID, chapNum, verseCounter, cursor)
+
+
+    def putEncodableWtagIntoSql(self, wTag, bookID, chapNum, verseCounter, cursor):
+        wAttributes = wTag.attrs
+        if self.wTagHasDivineName(wTag):
+            textInTag = self.handleDivineNames(wTag)
+            if self.hasStrongsNumber(wAttributes):
+                cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                               (bookID, chapNum, verseCounter, '',
+                                self.strongNumberFinder(wAttributes['lemma']), wTag.text))
+            else:
+                cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)', (bookID, chapNum,
+                                                                         verseCounter, '', '', wTag.text))
+        else:
+            if self.hasStrongsNumber(wAttributes):
+                cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                            (bookID, chapNum, verseCounter, '',
+                             self.strongNumberFinder(wAttributes['lemma']), wTag.text))
+            else:
+                cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)', (bookID, chapNum,
+                                                                      verseCounter, '', '', wTag.text))
+
+    def putNonEncodableWtagIntoSql(self, wTag, bookID, chapNum, verseCounter, cursor):
+        wAttributes = wTag.attrs
+        if self.wTagHasDivineName(wTag):
+            if self.hasStrongsNumber(wAttributes):
+                textInTag = self.handleDivineNames(wTag)
+                cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                            (bookID, chapNum, verseCounter, '', self.strongNumberFinder(wAttributes['lemma']),
+                             self.removeProblemHyphens(textInTag)))
+            else:
+                print "Verse has text but no strongs number?"
+                self.keepTrackOfLocation(wTag, bookID, chapNum, verseCounter)
+                textInTag = str(wTag.text)
+                cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                            (bookID, chapNum, verseCounter, '', '', self.removeProblemHyphens(textInTag)))
+        else:
+            if self.hasStrongsNumber(wAttributes):
+                cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                            (bookID, chapNum, verseCounter, '', self.strongNumberFinder(wAttributes['lemma']),
+                             self.removeProblemHyphens(wTag.text)))
+            else:
+                print "Verse has text but no strongs number??"
+                self.keepTrackOfLocation(wTag, bookID, chapNum, verseCounter)
+                textInTag = str(wTag.text)
+                cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                            (bookID, chapNum, verseCounter, '', '',
+                             self.removeProblemHyphens(textInTag)))
+
+
+    def handleInscriptions(self, inscriptionTag, bookID, chapNum, verseCounter, cursor):
+        for i in inscriptionTag.contents:
+            if not isinstance(i, NavigableString):
+                inscripAttrs = i.attrs
+                if self.wTagHasDivineName(inscriptionTag):
+                    if self.hasStrongsNumber(inscripAttrs):
+                        textInTag = self.handleDivineNames(i)
+                        cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                                    (bookID, chapNum, verseCounter, '', self.strongNumberFinder(inscripAttrs['lemma']),
+                                     textInTag))
+                    else:
+                        cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                                    (bookID, chapNum, verseCounter, '', '', textInTag))
+
+                else:
+                    textInTag = i.text
+                    if self.hasStrongsNumber(inscripAttrs):
+                        cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                                    (bookID, chapNum, verseCounter, '', self.strongNumberFinder(inscripAttrs['lemma']),
+                                     textInTag))
+                    else:
+                        cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                                    (bookID, chapNum, verseCounter, '', '', textInTag))
+            elif len(i) > 1:
+                self.somethingUnexpectedOccuredWarning(i, bookID, chapNum, verseCounter)
+            else:
+                pass
+
+    def handleTextOutOfTags(self, tag, bookID, chapNum, verseCounter, cursor):
+        textOutOfTags = str(self.removeProblemHyphens(tag)).strip()
+        if not self.isBlank(textOutOfTags):
+            if self.isWordOutsideTag(tag):
+                cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                            (bookID, chapNum, verseCounter, '', '', textOutOfTags.decode()))
+            else:
+                self.somethingUnexpectedOccuredWarning(tag, bookID, chapNum, verseCounter)
+                pass
+
+    def handleSuppliedWordTags(self, tag, bookID, chapNum, verseCounter, cursor):
+        textInSuppliedTag = self.removeProblemHyphens(tag.text)
+        cursor.execute('INSERT INTO Bible VALUES(?,?,?,?,?,?)',
+                    (bookID, chapNum, verseCounter, 'supplied',
+                     '', textInSuppliedTag))
+
+
+    def buildDatabase2(self,initChapter, chapNum, bookID):
+        con = sqlite3.connect('mydb.sqlite')
+        csr = con.cursor()
+        tag = initChapter
+        verseCounter = 1
+        for t in tag.next_siblings:
+            if not isinstance(t, NavigableString):
+                if t.has_attr('sID'):
+                    verseCounter +=1
+                elif t.has_attr('eID'):
+                    pass
+                elif t.name == 'note':
+                    pass
+                elif t.name == 'milestone':
+                    pass
+                elif t.name == 'w':
+                    self.putWTagInSqlTable(t, bookID, chapNum, verseCounter, csr)
+                elif t.name == 'transChange':
+                    self.handleSuppliedWordTags(t, bookID,chapNum, verseCounter, csr)
+                elif t.name == 'inscription':
+                    self.handleInscriptions(t, bookID, chapNum, verseCounter, csr)
+            else:
+                self.handleTextOutOfTags(t, bookID, chapNum, verseCounter, csr)
+        con.commit()
+        con.close()
+
+
     def somethingUnexpectedOccuredWarning(self, t, bookId, chapNum, verseCounter):
         print 'SOMETHING UNEXPECTED OCCURED'
         print t
@@ -300,7 +420,7 @@ class BreakdownVerse:
             try:
                 if c.verse:
                     chapterCounter += 1
-                    self.buildDatabase(c.verse, chapterCounter, bookID)
+                    self.buildDatabase2(c.verse, chapterCounter, bookID)
             except AttributeError:
                 pass
 
@@ -317,9 +437,13 @@ class BreakdownVerse:
                 self.iterateOverChapters(b, bookCounter)
 
 
-bv = BreakdownVerse(filename)
 
+bv = BreakdownVerse(filename)
 bv.iterateOverBooks()
+
+
+
+
 
 
 
