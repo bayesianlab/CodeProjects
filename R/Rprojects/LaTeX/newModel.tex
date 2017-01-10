@@ -10,6 +10,9 @@
 \usepackage{subcaption}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
 \usepackage[utf8]{inputenc}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
@@ -47,6 +50,8 @@
 	\path [->] (alaska) edge [bend left=50]  (randomAlas);
 	\path [->] (arabia) edge [bend left=50]  (randomArab);
 	\path [->] (caribbean) edge [bend left=50]  (randomCar);
+	\path [<->] (fixedAlaska) edge (fixedArabia) ;
+	\path [<->] (fixedArabia) edge (fixedCaribbean);
 	\end{tikzpicture}\\
 		
 	\begin{table}[H]
@@ -89,7 +94,7 @@
 		ARABIA AFRICA & 4672.251 & 4682.04 & 68.354 & 68.425 & -0.072 \\
 		ASIA ORIENT & 10321170.363 & 10326980.769 & 3212.658 & 3213.562 & -0.904 \\
 		BERMUDA & 7103609.713 & 7104066.687 & 2665.26 & 2665.346 & -0.086 \\
-		CANADA NEW ENGLAND & 31504693.65 & 31505735.507 & 5612.904 & 5612.997 & -0.093 \\
+		CANADA N.E. & 31504693.65 & 31505735.507 & 5612.904 & 5612.997 & -0.093 \\
 		CARIBBEAN & 126320125.114 & 126323576.699 & 11239.223 & 11239.376 & -0.154 \\
 		COASTAL & 5003924.131 & 5028522.272 & 2236.945 & 2242.437 & -5.491 \\
 		EUROPE & 141897357.176 & 141899187.712 & 11912.068 & 11912.145 & -0.077 \\
@@ -117,7 +122,7 @@
 	ARABIA AFRICA & 15001.574 & 15079.954 & 122.481 & 122.8 & -0.32 \\
 	ASIA ORIENT & 1911799.143 & 1920337.17 & 1382.678 & 1385.762 & -3.084 \\
 	BERMUDA & 609549.859 & 609552.545 & 780.737 & 780.738 & -0.002 \\
-	CANADA NEW ENGLAND & 3872751.55 & 3873709.73 & 1967.931 & 1968.174 & -0.243 \\
+	CANADA N.E. & 3872751.55 & 3873709.73 & 1967.931 & 1968.174 & -0.243 \\
 	CARIBBEAN & 23048651.907 & 23056581.128 & 4800.901 & 4801.727 & -0.826 \\
 	COASTAL & 584269.77 & 645273.642 & 764.375 & 803.289 & -38.914 \\
 	EUROPE & 16793292.503 & 16800296.89 & 4097.962 & 4098.817 & -0.855 \\
@@ -144,7 +149,7 @@
 	ARABIA AFRICA & 577.015 & 579.498 & 24.021 & 24.073 & -0.052 \\
 	ASIA ORIENT & 387935.542 & 388133.181 & 622.845 & 623.003 & -0.159 \\
 	BERMUDA & 220804.13 & 220804.174 & 469.898 & 469.898 & 0 \\
-	CANADA NEW ENGLAND & 2213951.281 & 2214276.777 & 1487.935 & 1488.045 & -0.109 \\
+	CANADA N.E. & 2213951.281 & 2214276.777 & 1487.935 & 1488.045 & -0.109 \\
 	CARIBBEAN & 15129241.553 & 15130222.811 & 3889.633 & 3889.759 & -0.126 \\
 	COASTAL & 200623.503 & 201899.169 & 447.91 & 449.332 & -1.422 \\
 	EUROPE & 4811353.604 & 4811251.719 & 2193.48 & 2193.457 & 0.023 \\
@@ -172,7 +177,7 @@
 		ARABIA AFRICA & 3635.325 & 3638.538 & 60.294 & 60.32 & -0.027 \\
 		ASIA ORIENT & 772111.977 & 772413.547 & 878.699 & 878.871 & -0.172 \\
 		BERMUDA & 620609.464 & 620661.744 & 787.788 & 787.821 & -0.033 \\
-		CANADA NEW ENGLAND & 4531158.14 & 4531068.247 & 2128.652 & 2128.631 & 0.021 \\
+		CANADA N.E. & 4531158.14 & 4531068.247 & 2128.652 & 2128.631 & 0.021 \\
 		CARIBBEAN & 35530160.334 & 35530543.576 & 5960.718 & 5960.75 & -0.032 \\
 		COASTAL & 381029.149 & 383361.541 & 617.276 & 619.162 & -1.886 \\
 		EUROPE & 13148368.928 & 13148758.185 & 3626.068 & 3626.122 & -0.054 \\
@@ -199,7 +204,7 @@
 			ARABIA AFRICA & 12004.325 & 12052.797 & 109.564 & 109.785 & -0.221 \\
 			ASIA ORIENT & 4640462.365 & 4641074.998 & 2154.173 & 2154.315 & -0.142 \\
 			BERMUDA & 5214243.69 & 5214570.167 & 2283.472 & 2283.543 & -0.071 \\
-			CANADA NEW ENGLAND & 26740206.426 & 26736872.885 & 5171.093 & 5170.771 & 0.322 \\
+			CANADA N.E. & 26740206.426 & 26736872.885 & 5171.093 & 5170.771 & 0.322 \\
 			CARIBBEAN & 143569178.581 & 143570853.151 & 11982.036 & 11982.106 & -0.07 \\
 			COASTAL & 603650.714 & 605519.956 & 776.95 & 778.152 & -1.202 \\
 			EUROPE & 42590381.051 & 42587082.782 & 6526.131 & 6525.878 & 0.253 \\
@@ -226,7 +231,7 @@
 		ARABIA AFRICA & 7498.77 & 7250.219 & 86.595 & 85.148 & 1.447 \\
 		ASIA ORIENT & 7464883.767 & 7465158.583 & 2732.194 & 2732.244 & -0.05 \\
 		BERMUDA & 1729303.907 & 1729207.977 & 1315.03 & 1314.994 & 0.036 \\
-		CANADA NEW ENGLAND & 22020526.647 & 22018732.949 & 4692.603 & 4692.412 & 0.191 \\
+		CANADA N.E. & 22020526.647 & 22018732.949 & 4692.603 & 4692.412 & 0.191 \\
 		CARIBBEAN & 327610666.497 & 327611779.128 & 18100.018 & 18100.049 & -0.031 \\
 		COASTAL & 5190114.92 & 5187731.884 & 2278.182 & 2277.659 & 0.523 \\
 		EUROPE & 320840352.626 & 320839143.867 & 17912.017 & 17911.983 & 0.034 \\
@@ -253,7 +258,7 @@
 	ARABIA AFRICA & 1468.999 & 1468.805 & 38.328 & 38.325 & 0.003 \\
 	ASIA ORIENT & 199566.454 & 199611.615 & 446.729 & 446.779 & -0.051 \\
 	BERMUDA & 74559.427 & 74559.829 & 273.056 & 273.056 & -0.001 \\
-	CANADA NEW ENGLAND & 543899.442 & 543892.466 & 737.495 & 737.491 & 0.005 \\
+	CANADA N.E. & 543899.442 & 543892.466 & 737.495 & 737.491 & 0.005 \\
 	CARIBBEAN & 2303085.489 & 2303160.86 & 1517.592 & 1517.617 & -0.025 \\
 	COASTAL & 11954.467 & 11941.28 & 109.336 & 109.276 & 0.06 \\
 	EUROPE & 1842347.267 & 1842465.494 & 1357.331 & 1357.374 & -0.044 \\
@@ -269,32 +274,213 @@
 		}
 		\caption{Comm estimations} 
 \end{table}
+% % % % % % % % % % % %
+% % % % % % % % % % % %
+
 
 \begin{table}[H]
 	\centering 
-	\begin{tabular}{rr}
-		Trade & Cruiselength\\
-		\hline 
-		\hline 
-		ALASKA & -0.895 \\
-		ARABIA AFRICA & 0.217 \\
-		ASIA ORIENT & -0.188 \\
-		BERMUDA & 0.2 \\
-		CANADA NEW ENGLAND & 0.036 \\
-		CARIBBEAN & 0.467 \\
-		COASTAL & -0.042 \\
-		EUROPE & -0.129 \\
-		HAWAII & -0.026 \\
-		MEXICO & -0.147 \\
-		PANAMA CANAL & 0.116 \\
-		SOUTH AMERICA & -0.499 \\
-		SOUTH PACIFIC & -0.578 \\
-		WORLD VOYAGE & 0.15 \\
-		\hline 
-		\hline 
-	\end{tabular}
-	\caption{Random effects-Shorex}
+\begin{tabular}{rrr}
+	Trade & Intercept & Cruiselength \\ 
+	\hline 
+	\hline 
+	ALASKA & 25.625 & -0.895 \\
+	ARABIA  AFRICA & -11.002 & 0.217 \\
+	ASIA ORIENT & 20.247 & -0.188 \\
+	BERMUDA & -5.247 & 0.2 \\
+	CANADA N.E. & 8.306 & 0.036 \\
+	CARIBBEAN & -4.515 & 0.467 \\
+	COASTAL & -3.455 & -0.042 \\
+	EUROPE & 13.143 & -0.129 \\
+	HAWAII & 2.558 & -0.026 \\
+	MEXICO & -2.486 & -0.147 \\
+	PANAMA CANAL & 2.92 & 0.116 \\
+	SOUTH AMERICA & 26.668 & -0.499 \\
+	SOUTH PACIFIC & 16.243 & -0.578 \\
+	WORLD VOYAGE & -1.553 & 0.15 \\
+	\hline 
+	\hline 
+\end{tabular}
+\caption{Shorex random effects}
 \end{table}
+
+	\begin{table}[H]\centering
+\begin{tabular}{rrr}
+		Trade & Intercept & Cruiselength \\ 
+		\hline 
+		\hline 
+	ALASKA & 5.522 & -0.183 \\
+	ARABIA AFRICA & 2.564 & -0.048 \\
+	ASIA ORIENT & 0.869 & -0.026 \\
+	BERMUDA & 2.896 & -0.072 \\
+	CANADA N.E. & 1.896 & -0.001 \\
+	CARIBBEAN & 4.11 & -0.092 \\
+	COASTAL & 8.791 & -0.373 \\
+	EUROPE & 2.061 & -0.063 \\
+	HAWAII & 2.452 & -0.028 \\
+	MEXICO & 4.346 & -0.129 \\
+	PANAMA CANAL & 3.42 & -0.061 \\
+	SOUTH AMERICA & 5.449 & -0.125 \\
+	SOUTH PACIFIC & 7.546 & -0.235 \\
+	WORLD VOYAGE &0.138 & 0.001 \\
+		\hline 
+		\hline 
+\end{tabular}
+		\caption{Retail random effects}
+	\end{table}
+	
+	\begin{table}[H]\centering 
+	\begin{tabular}{rrr}
+	Trade & Intercept  & Cruiselength \\ 
+	\hline 
+	\hline 
+	ALASKA & 7.134 & -0.186 \\
+	ARABIA AFRICA & 4.058 & -0.062 \\
+	ASIA ORIENT & 5.244 & -0.071 \\
+	BERMUDA & 11.263 & -0.343 \\
+	CANADA N.E. & 6.898 & -0.149 \\
+	CARIBBEAN & 9.495 & -0.267 \\
+	COASTAL & 15.146 & -0.574 \\
+	EUROPE & 6.981 & -0.159 \\
+	HAWAII & 4.049 & -0.01 \\
+	MEXICO & 9.868 & -0.321 \\
+	PANAMA CANAL & 5.305 & -0.05 \\
+	SOUTH AMERICA & 6.491 & -0.126 \\
+	SOUTH PACIFIC & 8.46 & -0.185 \\
+	WORLD VOYAGE & 0.27 & -0.012 \\
+	\hline 
+	\hline 
+	\end{tabular}
+	\caption{Bar random effects}
+	\end{table}
+	
+	\begin{table}[H]\centering
+		\begin{tabular}{rrr}
+			Trade & Intercept & Cruiselength \\
+			\hline 
+			\hline 
+			ALASKA & 3.039 & -0.109 \\
+			ARABIA AFRICA & 0.924 & -0.005 \\
+			ASIA ORIENT & 1.118 & -0.008 \\
+			BERMUDA & 1.303 & -0.028 \\
+			CANADA N.E. & 1.341 & -0.038 \\
+			CARIBBEAN & 1.946 & -0.075 \\
+			COASTAL & 1.46 & -0.056 \\
+			EUROPE & 0.553 & -0.008 \\
+			HAWAII & 1.278 & -0.014 \\
+			MEXICO & 2.502 & -0.081 \\
+			PANAMA CANAL & 0.719 & 0.002 \\
+			SOUTH AMERICA & 1.43 & -0.016 \\
+			SOUTH PACIFIC & 1.4 & -0.02 \\
+			WORLD VOYAGE & 0.671 & 0.001 \\
+			\hline 
+			\hline 
+		\end{tabular}
+		\caption{Photo random effects}
+	\end{table}
+	
+	\begin{table}[H]
+		\centering 
+		\begin{tabular}{rrr}
+			Trade & Intercept & Cruiselength \\ 
+			\hline 
+			\hline 
+			ALASKA & 5.849 & -0.106 \\
+			ARABIA AFRICA & 4.258 & -0.002 \\
+			ASIA ORIENT & 4.378 & -0.005 \\
+			BERMUDA & 4.164 & -0.007 \\
+			CANADA N.E. & 4.035 & 0.014 \\
+			CARIBBEAN & 5.45 & -0.054 \\
+			COASTAL & 5.607 & -0.124 \\
+			EUROPE & 3.716 & -0.005 \\
+			HAWAII & 4.466 & -0.01 \\
+			MEXICO & 6.373 & -0.127 \\
+			PANAMA CANAL & 3.622 & 0.028 \\
+			SOUTH AMERICA & 5.206 & -0.036 \\
+			SOUTH PACIFIC & 5.046 & -0.02 \\
+			WORLD VOYAGE & 3.737 & 0.009 \\
+			\hline 
+			\hline 
+		\end{tabular}
+		\caption{Spa random effects}
+	\end{table}
+	
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{rrr}
+			Trade & Intercept & Cruiselength \\ 
+			\hline 
+			\hline 
+			ALASKA & 5.288 & -0.059 \\
+			ARABIA  AFRICA & 4.765 & -0.02 \\
+			ASIA ORIENT & 4.736 & -0.024 \\
+			BERMUDA & 4.823 & -0.036 \\
+			CANADA N.E. & 3.909 & 0.017 \\
+			CARIBBEAN & 8.511 & -0.238 \\
+			COASTAL & 5.07 & -0.103 \\
+			EUROPE & 4.638 & -0.038 \\
+			HAWAII & 5.932 & -0.043 \\
+			MEXICO & 10.663 & -0.3 \\
+			PANAMA CANAL & 4.741 & -0.027 \\
+			SOUTH AMERICA & 5.098 & -0.041 \\
+			SOUTH PACIFIC & 6.446 & -0.093 \\
+			WORLD VOYAGE & 4.94 & -0.03 \\
+			\hline 
+			\hline 
+		\end{tabular}
+		\caption{Casino random effects}
+	\end{table}
+	
+	\begin{table}[H]
+		\centering 
+		\begin{tabular}{rrr}
+			Trade & Intercept & Cruiselength \\
+			\hline 
+			\hline 
+			ALASKA & 3.242 & -0.017 \\
+			ARABIA AFRICA & 3.352 & -0.018 \\
+			ASIA ORIENT & 8.327 & -0.07 \\
+			BERMUDA & 1.747 & -0.002 \\
+			CANADA N.E. & 1.935 & -0.003 \\
+			CARIBBEAN & 2.53 & -0.01 \\
+			COASTAL & -0.045 & 0.017 \\
+			EUROPE & 2.784 & -0.012 \\
+			HAWAII & 2.934 & -0.014 \\
+			MEXICO & 4.071 & -0.026 \\
+			PANAMA CANAL & 2.55 & -0.01 \\
+			SOUTH AMERICA & 3.955 & -0.025 \\
+			SOUTH PACIFIC & 4.327 & -0.029 \\
+			WORLD VOYAGE & 3.565 & -0.021 \\
+			\hline 
+			\hline 
+		\end{tabular}
+		\caption{Miscellaneous random effects}
+	\end{table}
+	
+	\begin{table}[H]\centering 
+		\begin{tabular}{rrr}
+			Trade & Intercept & Cruiselength \\ 
+			\hline 
+			\hline 
+			ALASKA & 0.836 & 0.01 \\
+			ARABIA AFRICA & 1.046 & 0.007 \\
+			ASIA ORIENT & 1.792 & -0.003 \\
+			BERMUDA & 1.039 & 0.006 \\
+			CANADA N.E. & 1.091 & 0.007 \\
+			CARIBBEAN & 1.158 & 0.012 \\
+			COASTAL & 0.749 & 0.001 \\
+			EUROPE & 1.303 & 0.006 \\
+			HAWAII & 1.058 & 0.009 \\
+			MEXICO & 1.319 & 0.002 \\
+			PANAMA CANAL & 1.511 & 0 \\
+			SOUTH AMERICA & 2.325 & -0.021 \\
+			SOUTH PACIFIC & 1.398 & 0.001 \\
+			WORLD VOYAGE & 0.816 & 0.006 \\
+			\hline 
+			\hline 
+		\end{tabular}
+		\caption{Comm random effects}
+	\end{table}
 
 \begin{table}[H]
 	\centering 
@@ -341,32 +527,7 @@
 	\end{tabular}
 	\caption{Fixed effects Shorex model}
 \end{table}
-	
-\begin{table}[H]
-	\centering
-	\begin{tabular}{rrr}
-		Trade & Random intercept &  Cruiselength \\
-		\hline 
-		\hline 
-		ALASKA & -0.183 & 5.522 \\
-		ARABIA  AFRICA & -0.048 & 2.564 \\
-		ASIA ORIENT & -0.026 & 0.869 \\
-		BERMUDA & -0.072 & 2.896 \\
-		CANADA NEW ENGLAND & -0.001 & 1.896 \\
-		CARIBBEAN & -0.092 & 4.11 \\
-		COASTAL & -0.373 & 8.791 \\
-		EUROPE & -0.063 & 2.061 \\
-		HAWAII & -0.028 & 2.452 \\
-		MEXICO & -0.129 & 4.346 \\
-		PANAMA CANAL & -0.061 & 3.42 \\
-		SOUTH AMERICA & -0.125 & 5.449 \\
-		SOUTH PACIFIC & -0.235 & 7.546 \\
-		WORLD VOYAGE & 0.001 & 0.138 \\
-		\hline 
-		\hline 
-	\end{tabular}
-	\caption{Random effects-Retail}
-\end{table}
+
 	
 \begin{table}[H]
 	\centering
@@ -411,34 +572,9 @@
 	\hline 
 	\hline   
 \end{tabular}  
-\caption{Fixed effects-Retail} 
+\caption{Retail fixed effects } 
 \end{table}
 
-\begin{table}[H]
-	\centering
-\begin{tabular}{rrr}
-	Trade & Intercept  & Cruiselength \\ 
-	\hline 
-	\hline 
-	ALASKA & 7.134 & -0.186 \\
-	ARABIA AFRICA & 4.058 & -0.062 \\
-	ASIA ORIENT & 5.244 & -0.071 \\
-	BERMUDA & 11.263 & -0.343 \\
-	CANADA NEW ENGLAND & 6.898 & -0.149 \\
-	CARIBBEAN & 9.495 & -0.267 \\
-	COASTAL & 15.146 & -0.574 \\
-	EUROPE & 6.981 & -0.159 \\
-	HAWAII & 4.049 & -0.01 \\
-	MEXICO & 9.868 & -0.321 \\
-	PANAMA CANAL & 5.305 & -0.05 \\
-	SOUTH AMERICA & 6.491 & -0.126 \\
-	SOUTH PACIFIC & 8.46 & -0.185 \\
-	WORLD VOYAGE & 0.27 & -0.012 \\
-	\hline 
-	\hline 
-\end{tabular}
-\caption{Bar random effects}
-\end{table}
 
 \begin{table}[H]
 	\centering 
@@ -486,32 +622,6 @@
 	\caption{Bar fixed effects} 
 \end{table}
 
-\begin{table}[H]
-	\centering 
-	\begin{tabular}{rrr}
-		Trade & Intercept & Cruiselength \\
-		\hline 
-		\hline 
-		ALASKA & 3.039 & -0.109 \\
-		ARABIA AFRICA & 0.924 & -0.005 \\
-		ASIA ORIENT & 1.118 & -0.008 \\
-		BERMUDA & 1.303 & -0.028 \\
-		CANADA NEW ENGLAND & 1.341 & -0.038 \\
-		CARIBBEAN & 1.946 & -0.075 \\
-		COASTAL & 1.46 & -0.056 \\
-		EUROPE & 0.553 & -0.008 \\
-		HAWAII & 1.278 & -0.014 \\
-		MEXICO & 2.502 & -0.081 \\
-		PANAMA CANAL & 0.719 & 0.002 \\
-		SOUTH AMERICA & 1.43 & -0.016 \\
-		SOUTH PACIFIC & 1.4 & -0.02 \\
-		WORLD VOYAGE & 0.671 & 0.001 \\
-		\hline 
-		\hline 
-	\end{tabular}
-	\caption{Photo random effects}
-\end{table}
-
 
 \begin{table}[H]
 	\centering 
@@ -557,32 +667,6 @@
 		\hline 
 	\end{tabular}
 	\caption{Photo fixed effects}
-\end{table}
-
-\begin{table}[H]
-	\centering 
-	\begin{tabular}{rrr}
-		Trade & Intercept & Cruiselength \\ 
-		\hline 
-		\hline 
-		ALASKA & 5.849 & -0.106 \\
-		ARABIA AFRICA & 4.258 & -0.002 \\
-		ASIA ORIENT & 4.378 & -0.005 \\
-		BERMUDA & 4.164 & -0.007 \\
-		CANADA NEW ENGLAND & 4.035 & 0.014 \\
-		CARIBBEAN & 5.45 & -0.054 \\
-		COASTAL & 5.607 & -0.124 \\
-		EUROPE & 3.716 & -0.005 \\
-		HAWAII & 4.466 & -0.01 \\
-		MEXICO & 6.373 & -0.127 \\
-		PANAMA CANAL & 3.622 & 0.028 \\
-		SOUTH AMERICA & 5.206 & -0.036 \\
-		SOUTH PACIFIC & 5.046 & -0.02 \\
-		WORLD VOYAGE & 3.737 & 0.009 \\
-		\hline 
-		\hline 
-	\end{tabular}
-	\caption{Spa random effects}
 \end{table}
 
 
@@ -633,33 +717,6 @@
 \caption{Spa fixed effects}
 \end{table}
 
-
-\begin{table}[H]
-	\centering
-	\begin{tabular}{rrr}
-		Trade & Intercept & Cruiselength \\ 
-		\hline 
-		\hline 
-		ALASKA & 5.288 & -0.059 \\
-		ARABIA  AFRICA & 4.765 & -0.02 \\
-		ASIA ORIENT & 4.736 & -0.024 \\
-		BERMUDA & 4.823 & -0.036 \\
-		CANADA NEW ENGLAND & 3.909 & 0.017 \\
-		CARIBBEAN & 8.511 & -0.238 \\
-		COASTAL & 5.07 & -0.103 \\
-		EUROPE & 4.638 & -0.038 \\
-		HAWAII & 5.932 & -0.043 \\
-		MEXICO & 10.663 & -0.3 \\
-		PANAMA CANAL & 4.741 & -0.027 \\
-		SOUTH AMERICA & 5.098 & -0.041 \\
-		SOUTH PACIFIC & 6.446 & -0.093 \\
-		WORLD VOYAGE & 4.94 & -0.03 \\
-		\hline 
-		\hline 
-	\end{tabular}
-	\caption{Casino random effects}
-\end{table}
-
 \begin{table}[H]
 	\centering 
 	\begin{tabular}{rr}
@@ -707,24 +764,94 @@
 \end{table}
 
 \begin{table}
-	
+	\centering 
+	\begin{tabular}{rr}
+		Variable & Estimation \\
+		\hline \hline 
+		NTR\_PCD & 0.01 \\
+		PAX\_AGE & 0 \\
+		BOOK\_TO\_CRUISE\_TIME\_DIFF & -0.003 \\
+		SHIPNAMEEurodam & 2.181 \\
+		SHIPNAMEKoningsdam & 1.24 \\
+		SHIPNAMEMaasdam & -0.516 \\
+		SHIPNAMENieuw  Amsterdam & 0.493 \\
+		SHIPNAMENoordam & -0.07 \\
+		SHIPNAMEOosterdam & -0.329 \\
+		SHIPNAMEPrinsendam & -2.563 \\
+		SHIPNAMERotterdam & -1.532 \\
+		SHIPNAMERyndam & -0.285 \\
+		SHIPNAMEStatendam & -0.994 \\
+		SHIPNAMEVeendam & -0.372 \\
+		SHIPNAMEVolendam & -0.352 \\
+		SHIPNAMEWesterdam & 2.021 \\
+		SHIPNAMEZaandam & -0.742 \\
+		SHIPNAMEZuiderdam & -0.11 \\
+		NATIONALITYGERMANY & -1.12 \\
+		NATIONALITYGREAT BRITAIN & -0.313 \\
+		NATIONALITYNETHERLANDS & 0.023 \\
+		NATIONALITYUNITED STATES & 1.196 \\
+		NATIONALITYOther & 0.111 \\
+		X\_METAI & -1.306 \\
+		X\_METAO & -0.837 \\
+		X\_METAS & 0.593 \\
+		PAX\_LOYALTY1S & -0.724 \\
+		PAX\_LOYALTY2S & -0.435 \\
+		PAX\_LOYALTY3S & -0.4 \\
+		PAX\_LOYALTY4S & 1.502 \\
+		PAX\_LOYALTY5S & 2.902 \\
+		PAX\_LOYALTYNH & 0.618 \\
+		PAX\_LOYALTY0S & -1.096 \\
+		PAX\_GENDERM & 2.153 \\
+		\hline 
+		\hline 
+	\end{tabular}
+	\caption{Miscellaneous fixed effects}
 \end{table}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\begin{table}[H]\centering
+	\begin{tabular}{rr}
+		Variable & Estimation \\
+		\hline 
+		\hline 
+		NTR\_PCD & 0.004 \\
+		PAX\_AGE & -0.019 \\
+		BOOK\_TO\_CRUISE\_TIME\_DIFF & -0.001 \\
+		SHIPNAMEEurodam & 0.106 \\
+		SHIPNAMEKoningsdam & 0.184 \\
+		SHIPNAMEMaasdam & -0.112 \\
+		SHIPNAMENieuwAmsterdam & 0.263 \\
+		SHIPNAMENoordam & 0.162 \\
+		SHIPNAMEOosterdam & 0.186 \\
+		SHIPNAMEPrinsendam & -0.066 \\
+		SHIPNAMERotterdam & -0.272 \\
+		SHIPNAMERyndam & -0.101 \\
+		SHIPNAMEStatendam & -0.103 \\
+		SHIPNAMEVeendam & -0.155 \\
+		SHIPNAMEVolendam & -0.063 \\
+		SHIPNAMEWesterdam & -0.064 \\
+		SHIPNAMEZaandam & -0.064 \\
+		SHIPNAMEZuiderdam & 0.1 \\
+		NATIONALITYGERMANY  & -0.428 \\
+		NATIONALITYGREAT BRITAIN & -0.264 \\
+		NATIONALITYNETHERLANDS & -0.333 \\
+		NATIONALITYUNITED STATES & 0.189 \\
+		NATIONALITYOther & -0.018 \\
+		X\_METAI & -0.18 \\
+		X\_METAO & -0.001 \\
+		X\_METAS & 0.62 \\
+		PAX\_LOYALTY1S & 0.011 \\
+		PAX\_LOYALTY2S & 0.082 \\
+		PAX\_LOYALTY3S & 0.15 \\
+		PAX\_LOYALTY4S & 0.252 \\
+		PAX\_LOYALTY5S & 0.66 \\
+		PAX\_LOYALTYNH & 0.217 \\
+		PAX\_LOYALTY0S & 0.064 \\
+		PAX\_GENDERM & 0.606 \\
+		\hline 
+		\hline 
+	\end{tabular}
+\end{table}
 
 \end{document}

@@ -63,6 +63,7 @@ Thumbs.db
 *.pdf
 *.db
 *.rtf
+*.dat
 
 /IdeaProjects/commons-math3-3.6.1-src/**
 
