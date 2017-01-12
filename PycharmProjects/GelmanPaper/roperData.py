@@ -1,4 +1,5 @@
 import csv
+from collections import Counter
 
 class RoperData:
 
@@ -15,7 +16,7 @@ class RoperData:
         self.file = open(self.filename)
         totalCases = self.nLines / numCasesPerObs
         print "There are %i cases in this file." % totalCases
-        rowMappedToVariableName = self.whereToExtract(colNames, rowOfColName)
+        rowMappedToVariableName = self.whichRows(colNames, rowOfColName)
         whatToExtractInRow = {name: indices for name, indices in zip(colNames, self.indicesToExtract(begIndices, endIndices))}
         extractedData = {name: [] for name in colNames}
         for case in range(0,totalCases):
@@ -35,21 +36,32 @@ class RoperData:
             indicesForExtraction.append((i,j))
         return indicesForExtraction
 
-    def whereToExtract(self, names, rowWhereNameIs):
+    def whichRows(self, names, rowWhereNameIs):
         whereColumnsAreInCase = {(c): [] for c in rowWhereNameIs}
         for index, row in enumerate(rowWhereNameIs):
             whereColumnsAreInCase[row].append(names[index])
         return whereColumnsAreInCase
 
-    def dataToCSV(self, numCasesPerObs, colNames, begIndices, endIndices, rowOfColName, csvfile):
+    def dataToCSV(self, numCasesPerObs, colNames, begIndices, endIndices, rowOfColName, weightIndex, csvfile):
         data = self.getCases(numCasesPerObs, colNames, begIndices, endIndices, rowOfColName)
-        print data['weights']
-        print self.decimalWeights(data, 1)['weights']
-        zd = zip(*data.values())
-        with open(csvfile + '.csv', 'w') as file:
-            writer = csv.writer(file, delimiter=',')
-            writer.writerow(data.keys())
-            writer.writerows(zd)
+        if weightIndex != 0:
+            self.decimalWeights(data, weightIndex)['weights']
+            self.summaryData(data)
+            data['weights'] = [float(w) for w in data['weights']]
+            zd = zip(*data.values())
+            with open(csvfile + '.csv', 'w') as file:
+                writer = csv.writer(file, delimiter=',')
+                writer.writerow(data.keys())
+                writer.writerows(zd)
+        else:
+            self.summaryData(data)
+            zd = zip(*data.values())
+            with open(csvfile + '.csv', 'w') as file:
+                writer = csv.writer(file, delimiter=',')
+                writer.writerow(data.keys())
+                writer.writerows(zd)
+
+
 
     def splitString(self, string, index):
         a = string[:index]
@@ -65,17 +77,17 @@ class RoperData:
             print "No weights key, rename weights variable"
             return -1
 
+    def summaryData(self, data):
 
-file = 'feb8_1999.dat'
+        count = {}
+        for k in data:
+            cnt = Counter()
+            for elem in data[k]:
+                cnt[elem] += 1
+            count[k] = cnt
+        print count
+        print
 
-rd = RoperData(file)
-d = {'weights':['012', '658']}
-print rd.decimalWeights(d, 1)
 
-colNames = ['weights', 'gender', 'age', 'educ', 'race', 'state']
-beginIndices = [12, 43, 44, 46, 13, 77]
-endIndices = [14, 43, 45, 46, 14, 78]
-whatRow = [0, 0, 0, 0, 4, 0]
 
-print rd.getCases(7, colNames, beginIndices, endIndices, whatRow)
-# rd.dataToCSV(7, colNames, beginIndices, endIndices, whatRow, 'feb8_1999')
+
