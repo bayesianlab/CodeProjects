@@ -78,3 +78,56 @@ from roperData import RoperData
 # whatRow =[0, 0, 0, 0, 0, 0, 0]
 # june13_1991.dataToCSV(1, colNames, beginIndices, endIndices, whatRow, 2, 'june13_1991')
 
+# # Gallup poll
+# file_march3_1972 = 'march3_1972.dat'
+# march3_1972 = RoperData(file_march3_1972)
+# colNames = ['question', 'educ', 'state', 'age', 'genderrace', 'weight']
+# beginIndices = [11, 63, 71, 64, 67, 73]
+# endIndices = [11, 63, 72, 65,67,73]
+# whatRow =[0, 0, 0, 0, 0, 0]
+# march3_1972.dataToCSV(1, colNames, beginIndices, endIndices, whatRow, 0, 'march3_1972')
+
+# # Gallup poll
+# file_march3_1978 = 'march3_1978.dat'
+# march3_1978 = RoperData(file_march3_1978)
+# colNames = ['weights', 'educ', 'age', 'question', 'genderrace', 'state']
+# beginIndices = [0, 25, 26, 4, 29, 38]
+# endIndices = [0,25,26, 4, 29,39]
+# whatRow = [0,0, 0, 0, 0, 0]
+# march3_1978.dataToCSV(1, colNames, beginIndices, endIndices, whatRow, 0, 'march3_1978')
+
+# # Gallup poll
+# file_may11_1995 = 'may11_1995.dat'
+# may11_1995 = RoperData(file_may11_1995)
+# colNames = ['state', 'question', 'gender', 'age', 'educ', 'race', 'weights']
+# begIndices = [77, 52, 43, 44, 46, 75, 12]
+# endIndices = [78, 52, 43, 45, 46, 76,14]
+# whatRow = [0, 4, 0, 0, 0, 5, 0]
+# may11_1995.dataToCSV(6, colNames, begIndices, endIndices, whatRow, 1, 'may11_1995')
+
+# # Gallup poll
+# file_nov10_1972 = 'nov10_1972.dat'
+# nov10_1972 = RoperData(file_nov10_1972)
+# colNames = ['state', 'educ', 'age', 'genderrace', 'question', 'weights']
+# begIndices = [63, 43, 44, 47, 22, 66]
+# endIndices = [64, 43, 45, 47, 22,66]
+# whatRow = [1, 1, 1, 1, 1, 1]
+# nov10_1972.dataToCSV(2, colNames, begIndices, endIndices, whatRow, 0, 'nov10_1972')
+
+# # Gallup poll
+# file_oct29_1971 = 'oct29_1971.dat'
+# oct29_1971 = RoperData(file_oct29_1971)
+# colNames = ['state', 'educ', 'question', 'genderrace', 'age', 'weights']
+# begIndices = [12, 77, 61, 9, 78, 14]
+# endIndices = [13, 77, 61, 9, 79, 14]
+# whatRow = [1, 0, 0, 1, 0, 1]
+# oct29_1971.dataToCSV(2, colNames, begIndices, endIndices, whatRow, 0 , 'oct29_1971')
+
+# # Gallup poll
+# file_sept6_1994 = 'sept6_1994.dat'
+# sept6_1994 = RoperData(file_sept6_1994)
+# colNames = ['state', 'question', 'gender', 'age', 'educ', 'race', 'weights']
+# begIndices = [77, 61, 43, 44, 46, 75, 12]
+# endIndices = [78, 61, 43, 45,46,76, 14]
+# whatRow = [0, 4, 0, 0, 0, 5, 0]
+# sept6_1994.dataToCSV(6, colNames, begIndices, endIndices, whatRow, 1, 'sept6_1994')

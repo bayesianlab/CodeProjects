@@ -1,6 +1,11 @@
 import csv
 from collections import Counter
 
+class InputError(Exception):
+
+    def __init__(self):
+        self.message = "Number of inputs not the same."
+
 class RoperData:
 
     def __init__(self, filename):
@@ -43,6 +48,13 @@ class RoperData:
         return whereColumnsAreInCase
 
     def dataToCSV(self, numCasesPerObs, colNames, begIndices, endIndices, rowOfColName, weightIndex, csvfile):
+        lenBegIndices = len(begIndices)
+        lenEndIndices = len(endIndices)
+        lenColNames = len(colNames)
+        lenRowOfColName = len(rowOfColName)
+        indicesCheck = (lenBegIndices, lenEndIndices, lenColNames, lenRowOfColName)
+        if indicesCheck.count(indicesCheck[0]) != len(indicesCheck):
+            raise InputError()
         data = self.getCases(numCasesPerObs, colNames, begIndices, endIndices, rowOfColName)
         if weightIndex != 0:
             self.decimalWeights(data, weightIndex)['weights']
@@ -78,7 +90,6 @@ class RoperData:
             return -1
 
     def summaryData(self, data):
-
         count = {}
         for k in data:
             cnt = Counter()

@@ -24,9 +24,16 @@
 \tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, text width=3cm, draw=black, fill=orange]
 \tikzstyle{fixedEffects} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, node distance=3cm, fill=green!30]
 \tikzstyle{arrow} = [thick,->,>=stealth]
+\author{Dillon Flannery}
+\title{Hierarchical Model For Holland America Cruises}
+
 
 \begin{document}
-	
+
+	\maketitle
+		\tableofcontents
+		\newpage
+	\section{Introduction} So far I have tried to fit a variety of different models to the data from Holland America which includes passenger information for about 1.8 million passengers that came on Holland Cruises for the last 3 years. An general linear regression was found to fit the data reasonably well. Using a Bayesian linear regression did not improve the fit of the model significantly to warrant the extensive procedure necessary for specifying prior distributions. However, Bayesian techniques are not without merit as the following results show. Using hierarchical models produced demonstrably better fit measured by root mean squared error. These types of models work by breaking the sample into a set of groups. There are what is termed `fixed effects' and `random effects' for each of the groups. The fixed effects are shared across groups and the parameter esitmates are the same, hence the name, they are `fixed' for the entire model. There are also random parameters. These are specific to each group. They are estimated using the data only for one group, so they should theoretically fit the data better. The graphic below is trying to get at this idea. The horizontal lines between the fixed effects is showing that those are shared between models. The entire dataset is used to generate those effects. The curved lines connecting each trade to a random effect is attempting to show that each trade has its own cruiselength parameter. \\
 	\begin{tikzpicture}[node distance=2cm][line/.style={<->,shorten >=0.4cm,shorten <=0.4cm},thick]
 	
 	\node (model) [startstop] {Hierarchical Model};
@@ -53,7 +60,27 @@
 	\path [<->] (fixedAlaska) edge (fixedArabia) ;
 	\path [<->] (fixedArabia) edge (fixedCaribbean);
 	\end{tikzpicture}\\
-		
+	
+	\section{Model} The model I chose to estimate for the data is the following, 
+	\[
+	Y = \beta_{0i} + \beta_{1}\text{NTR P.C.D.}\footnote{Book to cruise day} + \beta_2 \text{AGE} + \beta_3 \text{B.C.T.D.} + \beta_{4i} \text{CRUISELENGTH} + \beta_{5}\text{SHIPNAME} + \beta_6 \text{NATION} + \beta_7 
+	\]
+	\[
+	\text{ROOM} + \beta_8 \text{LOYALTY} + \beta_9 \text{GENDER} + \text{RANDOM ERROR} 
+	\]
+	
+	\[ 
+	\beta_{0i} \sim N(\gamma_0 + \gamma_1 x_i,\sigma^2_i), \  \beta_{4i} \sim N(\phi_0 + \phi_1 z_i, \epsilon^2_i), i = 1, 2...14 \footnote{Each random component (intercept and cruise length here) has an overall group mean and a component specific to its trade. Each random component in effect has its own regression with error term labelled above as $ \sigma $ and $ \epsilon $. The interpretation of $ x_i $ is daily revenue for trade $ i $, and similarly $ z_i $  is the cruise length for trade $ i $. }
+	\]
+	
+	For each trade we will have a random intercept. This is comparable to a dummy variable for trade in normal linear regression. What is novel in the Bayesian hierarchical approach is the ability to predict a random slope intercept for cruise length This should allow us to fit the data better since the cruise length is tailored to that specific trade. \\
+	
+	Note, the output from these models is verbose! When one of these models is run a separate regression is made for each of the 14 trades in our dataset. Then there are 8 different departments. For each of the departments there are 34 fixed effects and 28 random effects, totalling 62 different parameters for each model so multiplied by 8 that makes 496 different parameter estimates So to be complete I have included everything that is possible, the full model for each of the 8 departments but it is a lot of information. The estimations are also costly in terms of computing power. To run all the models once took over 8 hours on my machine. \\
+	
+	\section{Results} Below is a result of the model fit. For our dataset 80\% of the dataset was used to get parameter estimates, the other 20\% for validation. The measure of goodness-of-fit used was mean squared error and root mean squared error. This is calculated by taking the actual and subtracting the predicted value, squaring it so under predictions are also penalized, then summing the total. The square root is taken to represent a quasi-standard deviation of the error. In the table below these are shown, MSE stands for `mean-squared error' and H-model stands for hierarchical model. The L-model is the regular linear regression model, and the `Root MSE' is the square root of the MSE. The difference is also taken between the hierarchical and the linear model. Negative values would indicate that the root MSE of the hierarchical model was smaller, and therefore a better fit (its predictions were closer to the actuals). For each department these statistics were calculated and tabulated below. 
+	
+	
+			
 	\begin{table}[H]
 		\centering
 		\scalebox{.8}{
@@ -276,7 +303,8 @@
 \end{table}
 % % % % % % % % % % % %
 % % % % % % % % % % % %
-
+\section{Parameter estimates} 
+This section shows the results from each hierarchical regression. To save space all the random intercepts are shown by themselves and all the fixed effects for each trade by themselves. Therefore, each trade should have its own random intercept and cruiselength estimate, and for each department there are shared fixed effects. 
 
 \begin{table}[H]
 	\centering 
@@ -525,7 +553,7 @@
 		\hline 
 		\hline 
 	\end{tabular}
-	\caption{Fixed effects Shorex model}
+	\caption{Shorex fixed effects}
 \end{table}
 
 	
@@ -852,6 +880,18 @@
 		\hline 
 		\hline 
 	\end{tabular}
+	\caption{Comm fixed effects}
 \end{table}
+
+\section{Summary}
+The hierarchical model performed better than the linear model with no random effects. However, the improvement was not as large as I had hoped it would be. The difference in magnitude between root MSE was always small. However, and reasonably so, the root MSE of the hierarchical regression was always smaller, indicating a better fit. Yet the difference between the linear model and the hierarchical root MSE's was not a startling difference. This is most likely due to the fact that the actual difference between the cruise length estimates between the two models was not very great, although it may have been slightly nearer the truth in the hierarchical regression case. This resulted in a slight improvement but not one that was very different. I hypothesize that the more random effects that one uses the better the overall fit would be. However, another added difficulty is the costly computing power necessary to estimate this type of model. To run all of these models took approximately nine hours. Mistakes made were very costly, if something went wrong I would have to recompute the models and wait nine hours until the results came back. This was only with one random intercept and one random slope. If more random terms were added the computing-complexity would increase and I am not certain of the order, but from my experience with these models it is not linear. That is to say, adding another random intercept does not linearly increase the time of estimation, rather it is far worse, it seems to exponentially increase the time of estimation. \\
+
+R has never been a language that was meant for speed, rather it was meant for ease. One could conceivably speed up these routines by using a lower-level language, perhaps C++, Java, C, FORTRAN, or another comparable low level language. However, there is difficulty in writing ones own code in those languages. I imagine the best alternative would be C++, since it is widely used for scientific computing and decently fast. The speed up between a program like R and C++ is 1:100 at the very worst, and more than likely 1:200 or 300 in some cases. Yet that might be overstating the potential benefits, since the package used `lmer' may have already been written in C++. It remains to be seen if it was optimized well, and if not then it is possible that writing the regression straight into C++ could help time issues.  \\
+
+One easy computational problem would be parallel processing. There is no reason why one processor should be choked down with all the work of estimating these models when one could easily chain processors together
+
+If these time issues were solvable then I would estimate all the parameters as random, since this is most likely the truth, different trades probably effect all of the variables in some unique way. The improvement would probably be a modest amount over the linear regression with no random effects. The reason being is that there are no many continuous variables that would benefit from being estimated randomly in any event. Most of our variables are dummy variables and already are group specific. \\
+
+There are still other methods available to use. The field of machine learning is one that shows promise for data of this kind. I would like to investigate the possibilities of machine learning techniques by conducting a few interviews with people who are very skilled here at UC Irvine at those techniques, including Matthew Hardinge, Ivan Jeliazkov and David Brownstone. I hope that with their input I am able to improve the modelling of this data to get an improved fit over what I have done up to this date. 
 
 \end{document}
