@@ -33,9 +33,19 @@ from roperData import RoperData
 # feb14_2000.dataToCSV(1, colNames, begIndices, endIndices, whatRow, 0, 'feb14_2000')
 
 
-# file_feb14_2000 has SPSS file
+# feb14_2000 = RoperData('feb14_2000.dat')
+# colNames = ['gender', 'age', 'educ', 'state', 'race', 'question']
+# begIndices = [42, 46, 48, 12, 10, 149]
+# endIndices = [42, 47, 48, 13, 10, 149]
+# whatRow = [0, 0, 0, 0, 0, 0]
+# feb14_2000.dataToCSV(1, colNames, begIndices, endIndices, whatRow, 0, "feb14_2000")
 
-# file_feb19_2001 has SPSS file
+# feb19_2001 = RoperData('feb19_2001.dat')
+# colNames = ['gender', 'educ', 'question', 'age', 'race', 'state']
+# begIndices = [55, 58, 98, 56, 10, 12]
+# endIndices = [55, 58, 98, 57, 10, 13]
+# whatRow = [0, 0, 0, 0, 0, 0]
+# feb19_2001.dataToCSV(1, colNames, begIndices ,endIndices, whatRow, 0 , 'feb19_2001')
 
 # # Gallup poll, no weights
 # file_jan7_1965 = 'jan7_1965.dat'
@@ -129,12 +139,12 @@ from roperData import RoperData
 # march3_1978.dataToCSV(1, colNames, beginIndices, endIndices, whatRow, 0, 'march3_1978')
 
 # Gallup poll race white/nonwhite
-march29_1956 = RoperData('march29_1956.dat')
-colNames = ['question', 'age', 'educ', 'gender', 'race', 'state']
-begIndices = [18, 26, 14, 28, 29, 36]
-endIndices = [18, 27, 15, 28, 29, 37]
-whatRow = [0, 1, 1, 1, 1, 1]
-march29_1956.dataToCSV(2, colNames, begIndices, endIndices, whatRow, 0, 'march29_1956')
+# march29_1956 = RoperData('march29_1956.dat')
+# colNames = ['question', 'age', 'educ', 'gender', 'race', 'state']
+# begIndices = [18, 26, 14, 28, 29, 36]
+# endIndices = [18, 27, 15, 28, 29, 37]
+# whatRow = [0, 1, 1, 1, 1, 1]
+# march29_1956.dataToCSV(2, colNames, begIndices, endIndices, whatRow, 0, 'march29_1956')
 
 # may5 2006 SPSS file
 
@@ -156,6 +166,13 @@ march29_1956.dataToCSV(2, colNames, begIndices, endIndices, whatRow, 0, 'march29
 # may19_1966.dataToCSV(2, colNames, begIndices, endIndices, whatRow, 0, 'may19_1966')
 
 # may19 2003 SPSS file
+
+# may5_2006 = RoperData('may5_2006.dat')
+# colNames = ['gender', 'age', 'educ', 'question', 'race', 'state']
+# begIndices = [76, 77, 79, 118, 10, 12]
+# endIndices = [76, 78, 79, 118, 10, 13]
+# whatRow = [0,0,0,0,0,0]
+# may5_2006.dataToCSV(1, colNames, begIndices, endIndices, whatRow, 0, 'may5_2006')
 
 # # Gallup poll
 # nov1_1953 = RoperData('nov1_1953.dat')
