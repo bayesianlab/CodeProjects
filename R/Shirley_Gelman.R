@@ -57,8 +57,9 @@ ggplot(timeSpan, aes(x=Date.x, y =ProportionFavor)) + geom_pointrange(lims)+
         panel.border = element_rect(fill=NA) ) + xlab('Year') + 
   ylab('Proportion Support') + ylim(.4, .9)
 
+summary(inFavor$ProportionFavor)
 
-menWomenInFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 7))
+menWomenInFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 13))
 for(i in 1:length(allData)){
   menWomenInFavor[i, 1] <- dfNames[i]
   frame <- subset(allData[[i]], select=c('gender', 'question'))
@@ -68,12 +69,31 @@ for(i in 1:length(allData)){
   menWomenInFavor[i, 5] <- table(frame$gender == 0 & frame$question == 2)["TRUE"]
   menWomenInFavor[i, 6] <- menWomenInFavor[i, 2] / (menWomenInFavor[i, 2] + menWomenInFavor[i, 3])
   menWomenInFavor[i, 7] <- menWomenInFavor[i, 4] / (menWomenInFavor[i, 4] + menWomenInFavor[i, 5])
-  colnames(menWomenInFavor) <- c("date", "f favor", "f no", "m favor", "m no", "f p", "m p")
+  women <- table(frame$gender == 1)["TRUE"]
+  men <- table(frame$gender == 0)["TRUE"]
+  menWomenInFavor[i, 8] <- sqrt(menWomenInFavor[i, 6] * (1 - menWomenInFavor[i,6]) * 1/women)
+  menWomenInFavor[i, 9] <- menWomenInFavor[i, 6] + menWomenInFavor[i, 8]*qnorm(.95, 0 , 1)
+  menWomenInFavor[i, 10] <- menWomenInFavor[i, 6] - menWomenInFavor[i, 8]*qnorm(.95, 0 , 1)
+  menWomenInFavor[i, 11] <- sqrt(menWomenInFavor[i, 7] * (1 - menWomenInFavor[i,7]) * 1/men)
+  menWomenInFavor[i, 12] <- menWomenInFavor[i, 7] + menWomenInFavor[i, 11]*qnorm(.95, 0 , 1)
+  menWomenInFavor[i, 13] <- menWomenInFavor[i, 7] - menWomenInFavor[i, 11]*qnorm(.95, 0 , 1)
+  colnames(menWomenInFavor) <- c("date", "fFavor", "fNo", "mFavor", "mNo", "fp", "mp", "sdw",
+                                 "upw", "loww", "sdm", "upm", "lowm")
 }
-proportionFavor <- as.data.frame(matrix(0, nrow=1, ncol=12))
+proportionFavor <- as.data.frame(matrix(0, nrow=3, ncol=12))
 mfSupport <- apply(menWomenInFavor[2:5], 2, sum)
-proportionFavor[1,1] <-  mfSupport[1] / (mfSupport[1] + mfSupport[2])
-proportionFavor[1, 2] <- mfSupport[3] / (mfSupport[3] + mfSupport[4])
+women <- (mfSupport[1] + mfSupport[2])
+men <-  (mfSupport[3] + mfSupport[4])
+proportionFavor[1,1] <-  mfSupport[1] / women
+proportionFavor[1, 2] <- mfSupport[3] / men
+proportionFavor[2,1] <- proportionFavor[1,1] + 
+  qnorm(.975, 0, 1)*sqrt(proportionFavor[1,1] * (1 - proportionFavor[1,1]) *(1/women))
+proportionFavor[3,1] <- proportionFavor[1,1] - 
+  qnorm(.975, 0, 1)*sqrt(proportionFavor[1,1] * (1 - proportionFavor[1,1]) *(1/women))
+proportionFavor[2,2] <- proportionFavor[1,2] + 
+  qnorm(.975, 0, 1)*sqrt(proportionFavor[1,2] * (1 - proportionFavor[1,2]) *(1/men))
+proportionFavor[3,2] <- proportionFavor[1,2] - 
+  qnorm(.975, 0, 1)*sqrt(proportionFavor[1,2] *(1 - proportionFavor[1,2]) *(1/men))
 
 blacksInFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 7))
 for(i in 1:length(allData)){
@@ -86,11 +106,18 @@ for(i in 1:length(allData)){
 }
 
 blackSupport <- apply(blacksInFavor[2:5], 2, sum)
-blackSupport
-proportionFavor[1,3] <- blackSupport[1] / (blackSupport[1] + blackSupport[2])
-proportionFavor[1,4] <- blackSupport[3] / (blackSupport[3] + blackSupport[4])
-
-
+blacks <- blackSupport[1] + blackSupport[2]
+nonBlacks <- (blackSupport[3] + blackSupport[4])
+proportionFavor[1,3] <- blackSupport[1] / blacks
+proportionFavor[1,4] <- blackSupport[3] / nonBlacks
+proportionFavor[2,3] <- proportionFavor[1,3] +
+  qnorm(.95, 0, 1)*sqrt(proportionFavor[1,3] * (1 - proportionFavor[1,3]) *(1/blacks))
+proportionFavor[3,3] <- proportionFavor[1,3] - qnorm(.95, 0, 1)*sqrt(proportionFavor[1,3] * 
+                                                                       (1 - proportionFavor[1,3]) *(1/blacks))
+proportionFavor[2,4] <- proportionFavor[1,4] + qnorm(.95, 0, 1)*sqrt(proportionFavor[1,4] * 
+                                                                       (1 - proportionFavor[1,4]) *(1/nonBlacks))
+proportionFavor[3,4] <- proportionFavor[1,4] - qnorm(.95, 0, 1)*sqrt(proportionFavor[1,4] * 
+                                                                       (1 - proportionFavor[1,4]) *(1/nonBlacks))
 ageFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 9))
 for(i in 1:length(allData)){
   ageFavor[i, 1] <- dfNames[i]
@@ -105,10 +132,32 @@ for(i in 1:length(allData)){
   ageFavor[i ,9] <- table(frame$age == 3 & frame$question == 2)['TRUE']
 }
 ageSupport <- apply(ageFavor[2:9], 2, sum)
-proportionFavor[1, 5] <- ageSupport[1] / (ageSupport[1] + ageSupport[2])
-proportionFavor[1, 6] <- ageSupport[3] / (ageSupport[3] + ageSupport[4])
-proportionFavor[1, 7] <- ageSupport[5] / (ageSupport[5] + ageSupport[6])
-proportionFavor[1, 8] <- ageSupport[7] / (ageSupport[7] + ageSupport[8])
+young <- (ageSupport[1] + ageSupport[2])
+workingAge <- (ageSupport[3] + ageSupport[4])
+mature <- (ageSupport[5] + ageSupport[6])
+old <- (ageSupport[7] + ageSupport[8])
+proportionFavor[1, 5] <- ageSupport[1] / young 
+proportionFavor[1, 6] <- ageSupport[3] / workingAge
+proportionFavor[1, 7] <- ageSupport[5] / mature
+proportionFavor[1, 8] <- ageSupport[7] / old
+
+proportionFavor[2, 5] <- proportionFavor[1, 5] + 
+  qnorm(.95,0, 1) * sqrt(proportionFavor[1,5]*(1 - proportionFavor[1,5])*(1/young))
+proportionFavor[3, 5] <- proportionFavor[1, 5] - 
+  qnorm(.95,0, 1) * sqrt(proportionFavor[1,5]*(1 - proportionFavor[1,5])*(1/young))
+proportionFavor[2, 6] <- proportionFavor[1, 6] + 
+  qnorm(.95,0, 1) * sqrt(proportionFavor[1,6]*(1 - proportionFavor[1,6])*(1/workingAge))
+proportionFavor[3, 6] <- proportionFavor[1, 6] -
+  qnorm(.95,0, 1) * sqrt(proportionFavor[1,6]*(1 - proportionFavor[1,6])*(1/workingAge))
+proportionFavor[2, 7] <- proportionFavor[1, 7] +
+  qnorm(.95,0, 1) * sqrt(proportionFavor[1,7]*(1 - proportionFavor[1,7])*(1/mature))
+proportionFavor[3, 7] <- proportionFavor[1, 7] -
+  qnorm(.95,0, 1) * sqrt(proportionFavor[1,7]*(1 - proportionFavor[1,7])*(1/mature))
+proportionFavor[2, 8] <- proportionFavor[1, 8] +
+  qnorm(.95,0, 1) * sqrt(proportionFavor[1,8]*(1 - proportionFavor[1,8])*(1/old))
+proportionFavor[3, 8] <- proportionFavor[1, 8] - 
+  qnorm(.95,0, 1) * sqrt(proportionFavor[1,8]*(1 - proportionFavor[1,8])*(1/old))
+
 
 
 educFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 9))
@@ -126,24 +175,43 @@ for(i in 1:length(allData)){
   educFavor[i,9] <- table(frame$educ == 3 & frame$question == 2)['TRUE']
 }
 educSupport <- apply(educFavor[,2:9], 2, sum)
-educSupport
-proportionFavor[1, 9] <- educSupport[1] / (educSupport[1]+educSupport[2])
-proportionFavor[1, 10] <- educSupport[3] / (educSupport[3]+educSupport[4])
-proportionFavor[1, 11] <- educSupport[5] / (educSupport[5]+educSupport[6])
-proportionFavor[1, 12] <- educSupport[7] / (educSupport[7]+educSupport[8])
+noSchool <- educSupport[1]+educSupport[2]
+highSchool <- educSupport[3]+educSupport[4]
+noDegree <- educSupport[5]+educSupport[6]
+degree <- educSupport[7]+educSupport[8]
+proportionFavor[1, 9] <- educSupport[1] / noSchool
+proportionFavor[1, 10] <- educSupport[3] / highSchool
+proportionFavor[1, 11] <- educSupport[5] / noDegree
+proportionFavor[1, 12] <- educSupport[7] / degree
+
+proportionFavor[2, 9] <- proportionFavor[1, 9] + qnorm(.95,0, 1) *sqrt(proportionFavor[1, 9]*(1 - proportionFavor[1, 9]) * (1/noSchool))
+proportionFavor[3, 9] <- proportionFavor[1, 9] - qnorm(.95,0, 1) *sqrt(proportionFavor[1, 9]*(1 - proportionFavor[1, 9]) * (1/noSchool))
+proportionFavor[2, 10] <- proportionFavor[1, 10] + qnorm(.95, 0, 1) *sqrt(proportionFavor[1, 10]*(1 - proportionFavor[1, 10]) * (1/highSchool))
+proportionFavor[3, 10] <- proportionFavor[1, 10] - qnorm(.95, 0, 1) *sqrt(proportionFavor[1, 10]*(1 - proportionFavor[1, 10]) * (1/highSchool))
+proportionFavor[2, 11] <- proportionFavor[1, 11] + qnorm(.95,0, 1) *sqrt(proportionFavor[1, 11]*(1 - proportionFavor[1, 11]) * (1/noDegree))
+proportionFavor[3, 11] <- proportionFavor[1, 11] - qnorm(.95,0, 1) *sqrt(proportionFavor[1, 11]*(1 - proportionFavor[1, 11]) * (1/noDegree))
+proportionFavor[2, 12] <- proportionFavor[1, 12] + qnorm(.95,0, 1) *sqrt(proportionFavor[1, 12]*(1 - proportionFavor[1, 12]) * (1/degree))
+proportionFavor[3, 12] <- proportionFavor[1, 12] - qnorm(.95,0, 1) *sqrt(proportionFavor[1, 12]*(1 - proportionFavor[1, 12]) * (1/degree))
 
 proportionFavor <- t(proportionFavor)
-proportionFavor <- as.data.frame(cbind( c("Women", "Men", "Black", 'Non-black', '18-29', '30-44', 
-         '45-64', '65 +', 'Less than High School', 'High School', 'Less than College',
-         'College or more'), proportionFavor))
-# colnames(proportionFavor) <- c("women", "men", "black", 'nonblack', '18-29', '30-44', 
-#                                '45-64', '65 +', '<HS', 'HS', '<C', 'C+')
+
+# There is a reason for doing this!
+proportionFavor <- as.data.frame(cbind(c("Women", "Men", "Black", 'Non-black', '18-29', '30-44', 
+                               '45-64', '65 +', 'Less than High School', 'High School', 'Less than College',
+                               'College or more'), proportionFavor))
+proportionFavor <- proportionFavor[c(2,1,3,4,5,6,7,8,9,10,11,12), ]
 proportionFavor$V1 <- factor(proportionFavor$V1, 
                              levels=rev(unique(as.character(proportionFavor$V1))))
-proportionFavor$V2 <- round(as.numeric(as.character(proportionFavor$V2)),2)
 
-
-ggplot() + geom_point(data=proportionFavor, aes(x=V2, y=V1))
+colnames(proportionFavor) <- c("breaks", "favor", "upB", "lowB")
+proportionFavor$upB <- as.numeric(as.character(proportionFavor$upB))
+proportionFavor$lowB <- as.numeric(as.character(proportionFavor$lowB))
+proportionFavor$favor <- as.numeric(as.character(proportionFavor$favor))
+lims <- aes(ymax=upB, ymin = lowB)
+ggplot(data=proportionFavor, aes(x=breaks, y = favor)) +  geom_pointrange(lims) + 
+  theme(panel.background=element_rect(fill='white'), axis.text = element_text(size= 20),
+        panel.border = element_rect(fill=NA) ) +
+  ylab("Proportion Favor Death Penalty") + xlab('') + coord_flip()
 
 
 

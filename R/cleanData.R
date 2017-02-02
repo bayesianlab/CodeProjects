@@ -11,6 +11,12 @@ library(ggplot2)
 library(rockchalk)
 library(dplyr)
 library(matrixStats)
+orderData <- function(df)
+{
+  dfCopy <- df
+  dfCopy <- select(df, question, race, gender, age, educ, state, time)
+}
+
 cutAges <- function(df, ageNum){
   df <- df[df[,ageNum] >= 18, ]
   y  <- cut(df[,ageNum], c(18,29, 44, 64, 150), labels= c(0,1,2,3))
@@ -34,6 +40,15 @@ handleGenderRaceCol <- function(df, grCol, maleNums, blackNums){
 fixData <- function(df, ageNum, grCol, maleNums, blackNums){
   df <- cutAges(df, ageNum)
   df <- handleGenderRaceCol(df, grCol, maleNums, blackNums)
+}
+
+bindDate <- function(df, year){
+  t1 <- -27:26
+  t2 <- 1953:2006
+  dateSeq <- as.data.frame(cbind(t1, t2))
+  df <- cbind(df, rep(dateSeq[dateSeq[,2]==year,1], nrow(df)))
+  colnames(df)[ncol(df)] <- 'time'
+  df
 }
 
 dataFiles <- "/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/GelmanPaper/"
@@ -480,3 +495,56 @@ sept6_1994$educ <- combineLevels(sept6_1994$educ, levs=c('1', '2', '3'), newLabe
 sept6_1994$educ <- combineLevels(sept6_1994$educ, levs=c('4','5'), newLabel='1')
 sept6_1994$educ <- combineLevels(sept6_1994$educ, levs=c('6', '7'), newLabel='2')
 sept6_1994$educ <- combineLevels(sept6_1994$educ, levs=c('8'), newLabel='3')
+
+
+
+
+april19_1976 <- bindDate(april19_1976,  1976)
+august29_1957 <- bindDate(august29_1957, 1957)
+feb14_2000 <- bindDate(feb14_2000,  2000)
+feb19_2001 <- bindDate(feb19_2001,  2001)
+feb8_1999 <- bindDate(feb8_1999, 1999)
+jan10_1986 <- bindDate(jan10_1986, 1986)
+jan11_1985 <- bindDate(jan11_1985, 1985)
+jan23_1969 <- bindDate(jan23_1969, 1969)
+jan30_1981 <- bindDate(jan30_1981, 1981)
+jan7_1965 <- bindDate(jan7_1965, 1965)
+june13_1991 <- bindDate(june13_1991, 1991)
+june2_1967 <- bindDate(june2_1967, 1967)
+march2_1960 <- bindDate(march2_1960, 1960)
+march29_1956 <- bindDate(march29_1956, 1956)
+march3_1972 <- bindDate(march3_1972, 1972)
+march3_1978 <- bindDate(march3_1978, 1978)
+may11_1995 <- bindDate(may11_1995, 1995)
+may19_1966 <- bindDate(may19_1966, 1966)
+may19_2003 <- bindDate(may19_2003, 2003)
+may5_2006 <- bindDate(may5_2006, 2006)
+nov1_1953 <-bindDate(nov1_1953, 1953)
+nov10_1972 <- bindDate(nov10_1972, 1972)
+oct29_1971 <- bindDate( oct29_1971, 1971)
+sept6_1994 <- bindDate(sept6_1994, 1994)
+
+# Remove unsures in question
+april19_1976 <- april19_1976[-which(april19_1976$question == 3), ]
+april19_1976 <- april19_1976[-which(is.na(april19_1976$age)), ]
+april19_1976$question <-factor(april19_1976$question)
+april19_1976$race <- factor(april19_1976$race)
+april19_1976$gender <- factor(april19_1976$gender)
+
+april1976 <- select(april19_1976, question, race, gender, age, educ, state, time)
+april1976 <- orderData(april19_1976)
+
+cleanData <- 
+
+
+
+
+
+
+
+
+
+
+
+
+
