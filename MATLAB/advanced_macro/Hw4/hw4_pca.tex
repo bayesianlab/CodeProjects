@@ -25,14 +25,34 @@
 \definecolor{mylilas}{RGB}{170,55,241}
 
 %opening
-\title{}
-\author{}
-\date{}
+\title{HW4}
+\author{Dilon Flannery}
+
 \begin{document}
 
 \maketitle
 
+\section*{3}
+Part a) was done in MATLAB, 
+\lstinputlisting{pcomp.m}
+\subsection*{b)}
+From the table below  we see that the top row is about constant across the columns. This indicates that it is the level. The next row goes from negative to positive which indicates slope, and the last row is the curvature.
+\begin{table}[H]
+	\scalebox{.8}{
+	\begin{tabular}{rrrrrrrrrrrrr}
+		& SVENY01 &	SVENY02	& SVENY03	& SVENY04&	SVENY05 &	SVENY06 &	SVENY07 &	SVENY08	& SVENY09 &	SVENY10 \\
+		\hline 
+		\hline 
+PC1 &		0.9772 & 0.9912 & 0.9969 & 0.9992 & 0.9996 & 0.9990 & 0.9977 & 0.9960 & 0.9940 & 0.9920 \\
+	PC2 &	0.2075 & 0.1319 & 0.0738 & 0.0276 & -0.0101 & -0.0413 & -0.0672 & -0.0889 & -0.1070 & -0.1222 \\
+		PC3 & 0.0435 & -0.0059 & -0.0252 & -0.0288 & -0.0239 & -0.0146 & -0.0033 & 0.0086 & 0.0201 & 0.0306 \\
+		\hline \hline 
+	\end{tabular}
+}
+\end{table}
+\subsection*{c)}
 
+From looking at the output of the \mcode{extract.m} code it looks like the most recent maturity, the 1 year yield, has about what we would have expected from class notes, 95\% explained by the level, about 4\% in slope and a small amount in curvature. The other columns have almost all explained by level and very little by the other two. The yield curve for the other columns must not have as much variation in slope and curvature as the 1-year zero. 
 \begin{table}[H]
 	\scalebox{.8}{
 \begin{tabular}{rrrrrrrrrrrr}
@@ -41,12 +61,21 @@
 PC1 &	0.9549 & 0.9824 & 0.9938 & 0.9983 & 0.9992 & 0.9979 & 0.9954 & 0.9919 & 0.9881 & 0.9840 \\
 PC2&	0.0431 & 0.0174 & 0.0054 & 0.0008 & 0.0001 & 0.0017 & 0.0045 & 0.0079 & 0.0115 & 0.0149 \\
 	PC3 & 0.0019 & 0.0000 & 0.0006 & 0.0008 & 0.0006 & 0.0002 & 0.0000 & 0.0001 & 0.0004 & 0.0009 \\
+	\hline 
+	\hline 
 \end{tabular}
 }
 \caption{For each maturity of the zero-coupon yield up to 10-year maturity the table above shows the amount of variance each principal component explains}
 \end{table}	
 
-The average for each principal component above gives PC1 = 0.9886, PC2 = 0.0107 and PC3 = 0.0006.	
+The average for each principal component above gives PC1 = 0.9886, PC2 = 0.0107 and PC3 = 0.0006. The cumulative amount of variance explained by each principal component was 0.9886 for just 1, 0.9993 for 2 and 0.9999	for all three. There are diminishing returns to additional principal components, hardly any variance is explained by the third additional component. 
+\begin{figure}[H]
+	\centering
+	\caption{Very little additional variance explained beyond three PCA's}
+	\includegraphics[scale=.5]{pcas}
+\end{figure}
+
+
 	
 	
 	
