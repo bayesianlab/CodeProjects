@@ -199,6 +199,7 @@ proportionFavor <- t(proportionFavor)
 proportionFavor <- as.data.frame(cbind(c("Women", "Men", "Black", 'Non-black', '18-29', '30-44', 
                                '45-64', '65 +', 'Less than High School', 'High School', 'Less than College',
                                'College or more'), proportionFavor))
+# Men first
 proportionFavor <- proportionFavor[c(2,1,3,4,5,6,7,8,9,10,11,12), ]
 proportionFavor$V1 <- factor(proportionFavor$V1, 
                              levels=rev(unique(as.character(proportionFavor$V1))))

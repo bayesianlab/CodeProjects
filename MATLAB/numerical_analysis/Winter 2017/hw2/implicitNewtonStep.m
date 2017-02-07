@@ -1,36 +1,25 @@
-function [ X_0, c ] = implicitNewtonStep( guess, F, J, epsilon, maxIterations,...
-    dispOn, realRoot)
+function [ newY0 ] = implicitNewtonStep(ts, yGuess, F, DF, fnq, Dfnq, nSteps, h,...
+    epsilon, maxIterations)
 iterationCount = 0;
-X_0 = guess;
-
+[~, col] = size(yGuess);
+yNew = yGuess(nSteps+1, 1:col);
 while iterationCount < maxIterations
     iterationCount = iterationCount + 1;
-    
-    if abs(det(J(X_0))) < 10^(-14) || abs(det(J(X_0))) > 10^14
-        fprintf('Matrix singular. Iterations stopped.\n')
-        return
-    end
     if iterationCount == maxIterations
-        fprintf('Did not converge to solution.\n')
+        fprintf('Did not converge\n\n')
+        newY0 = [yPrevious;yNew];
         return
     end
-    eN = norm(realRoot - X_0)^2;
-    H = -linsolve(J( X_0), F(X_0));
-    X_Next = X_0 + H;
-    X_0 = X_Next;
-    if dispOn == 1
-        fprintf('Value of function at iteration %i \n', iterationCount)
-        disp(F(X_0))
-    end
-    if norm(F(X_0)) < epsilon 
-        fprintf('Convergence to solution. Iterations = %i \n', iterationCount)
-        fprintf('F(X_0)\n')
-        disp(F(X_0))
-        fprintf('Solutions \n')
-        disp(X_0)
+    yPrevious = yGuess(1:nSteps, 1:col);
+    funcVal = F(ts, yNew, yPrevious, fnq, h);
+    jacobian = DF(Dfnq, ts, yNew, h);
+    H = -linsolve(jacobian, funcVal);
+    canidate = yNew + H';
+    if norm(canidate - yNew) <= epsilon
+        newY0 = [yPrevious;yNew];
         return
     end
-    eNext = norm(realRoot - X_0);
-    c(iterationCount) = eNext;
+    yNew = canidate;
 end
+newY0 = canidate;
 end

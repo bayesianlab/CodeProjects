@@ -11,10 +11,59 @@ library(ggplot2)
 library(rockchalk)
 library(dplyr)
 library(matrixStats)
-orderData <- function(df)
+
+handleNas <- function(df, questionNum)
+{
+  {
+    if(dim(table(is.na(df[,questionNum]))) == 1)
+    {
+      df
+    }
+    else
+    {
+      df <- df[-which(is.na(df[,questionNum])), ]
+      df
+    }
+  }
+}
+
+handle3s <- function(df, questionNum)
+{
+  if(dim(table(df[,questionNum] == 3)) == 1)
+  {
+    df
+  }
+  else
+  {
+    df <- df[-which(df[, questionNum] == 3), ]
+  }
+}
+
+handle4s <- function(df, questionNum)
+{
+  if(dim(table(df[,questionNum] == 4)) == 1)
+  {
+    df
+  }
+  else
+  {
+    df <- df[-which(df[, questionNum] == 3), ]
+  }
+}
+
+
+cleanData <- function(df, questionNum)
+{
+  df <- handleNas(df,questionNum)
+  df <- handle3s(df, questionNum)
+  df <- handle4s(df, questionNum)
+}
+orderAndCleanData <- function(df, questionNum)
 {
   dfCopy <- df
-  dfCopy <- select(df, question, race, gender, age, educ, state, time)
+  dfCopy <- cleanData(dfCopy, questionNum)
+  dfCopy <- select(dfCopy, question, race, gender, age, educ, state, time)
+  return(dfCopy)
 }
 
 cutAges <- function(df, ageNum){
@@ -55,7 +104,6 @@ dataFiles <- "/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmPro
 may19_2003 <- read.spss(paste(dataFiles, 'may19_2003.por', sep =''), to.data.frame = TRUE)
 
 may19_2003 <- subset(may19_2003, select = c( WTFCTR, RACE, STATE, D3, D2, S3, Q13 ))
-may5 <- read.spss(paste(dataFiles, 'may6_2006.por', sep =''), to.data.frame = TRUE)
 may5_2006 <- read.csv(paste(dataFiles, 'may5_2006.csv', sep =''))
 colnames(may19_2003) <- c('weights', 'race', 'state', 'educ', 'age', 'gender', 'question')
 april19_1976 <- read.csv(paste(dataFiles, 'april19_1976.csv', sep =''))
@@ -525,18 +573,41 @@ oct29_1971 <- bindDate( oct29_1971, 1971)
 sept6_1994 <- bindDate(sept6_1994, 1994)
 
 # Remove unsures in question
-april19_1976 <- april19_1976[-which(april19_1976$question == 3), ]
-april19_1976 <- april19_1976[-which(is.na(april19_1976$age)), ]
+
 april19_1976$question <-factor(april19_1976$question)
 april19_1976$race <- factor(april19_1976$race)
 april19_1976$gender <- factor(april19_1976$gender)
 
-april1976 <- select(april19_1976, question, race, gender, age, educ, state, time)
-april1976 <- orderData(april19_1976)
 
-cleanData <- 
+table(april19_1976$question == 4)
+april1976 <- orderAndCleanData(april19_1976, 2)
+# august1957 <- orderAndCleanData(august29_1957, 3)
+# feb2000 <- orderAndCleanData(feb14_2000, 3)
+# feb2001 <- orderAndCleanData(feb19_2001, 3)
+# feb1999 <- orderAndCleanData(feb8_1999, 3)
+# jan1986 <- orderAndCleanData(jan10_1986, 3)
+# jan1985 <- orderAndCleanData(jan11_1985, 3)
+# jan1969 <- orderAndCleanData(jan23_1969, 2)
+# jan1981 <- orderAndCleanData(jan30_1981, 2)
+# jan1965 <- orderAndCleanData(jan7_1965, 3)
+# june1991 <- orderAndCleanData(june13_1991, 3)
+# june1967 <- orderAndCleanData(june2_1967, 3)
+# march1960 <- orderAndCleanData(march2_1960, 1)
+# march1956 <- orderAndCleanData(march29_1956, 3)
+# march1972 <- orderAndCleanData(march3_1972, 3)
+# march1978 <- orderAndCleanData(march3_1978, 2)
+# may1995 <- orderAndCleanData(may11_1995, 3)
+# may1966 <- orderAndCleanData(may19_1966, 1)
+# may2003 <- orderAndCleanData(may19_2003, 7)
+# may2006 <- orderAndCleanData(may5_2006, 3)
+# nov1953 <- orderAndCleanData(nov1_1953, 3)
+# nov1972 <- orderAndCleanData(nov10_1972, 1)
+# oct1971 <- orderAndCleanData(oct29_1971, 2)
+# sept1994 <- orderAndCleanData(sept6_1994, 3)
 
-
+# rm(april19_1976, august29_1957, feb14_2000, feb19_2001, feb8_1999, jan10_1986, jan11_1985, jan23_1969,
+#    jan30_1981, jan7_1965, june13_1991, june2_1967, march2_1960, march29_1956, march3_1972, march3_1978,
+#    may11_1995, may19_1966, may19_2003, may5_2006, nov1_1953, nov10_1972, oct29_1971, sept6_1994)
 
 
 

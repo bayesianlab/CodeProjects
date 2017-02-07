@@ -1,0 +1,62 @@
+\documentclass[]{article}
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+%opening
+\title{}
+\author{}
+\date{}
+\begin{document}
+
+\maketitle
+The stability region is the region outside the circles. This was done by finding the roots of the stability polynomial $ x^2 + (\frac{3z^2}{4}-1)x + \frac{z^2}{4} = 0 $ and plotting over values of $ z $. The real part of the roots was greater than 1 inside the circles but less than outside the circles. 
+\begin{figure}[H]
+	\caption{Stability plot for method 2, Imaginary (y) and real axis (x)}
+	\centering
+\includegraphics[scale=.5]{sb2}	
+\end{figure}
+
+Solving the equation using method 1, the fourth order method. I compare this to the true solution which I found analytically. \\
+The analytic solution I found to be: \\
+\[ 
+y_1 = 52.9565e^{-3.899t} -0.6666e^{-297.0101t}
+\]
+\[
+y_2 = 17.831e^{-3.899t} -0.662e^{-297.0101t}
+\]
+with the given initial values. 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+\end{document}
