@@ -11,6 +11,8 @@ library(ggplot2)
 library(rockchalk)
 library(dplyr)
 library(matrixStats)
+library(coda)
+library(rjags)
 
 handleNas <- function(df, questionNum)
 {
@@ -47,7 +49,7 @@ handle4s <- function(df, questionNum)
   }
   else
   {
-    df <- df[-which(df[, questionNum] == 3), ]
+    df <- df[-which(df[, questionNum] == 4), ]
   }
 }
 
@@ -99,7 +101,10 @@ bindDate <- function(df, year){
   colnames(df)[ncol(df)] <- 'time'
   df
 }
-
+usStates <- read_csv("~/Google Drive/CodeProjects/R/us_states.csv")
+colnames(usStates) <- c('s', 'c', 'state', 'legality')
+usStates <- usStates[,3:4]
+usStates <- usStates[-52,]
 dataFiles <- "/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/GelmanPaper/"
 may19_2003 <- read.spss(paste(dataFiles, 'may19_2003.por', sep =''), to.data.frame = TRUE)
 
@@ -581,41 +586,505 @@ april19_1976$gender <- factor(april19_1976$gender)
 
 table(april19_1976$question == 4)
 april1976 <- orderAndCleanData(april19_1976, 2)
-# august1957 <- orderAndCleanData(august29_1957, 3)
-# feb2000 <- orderAndCleanData(feb14_2000, 3)
-# feb2001 <- orderAndCleanData(feb19_2001, 3)
-# feb1999 <- orderAndCleanData(feb8_1999, 3)
-# jan1986 <- orderAndCleanData(jan10_1986, 3)
-# jan1985 <- orderAndCleanData(jan11_1985, 3)
-# jan1969 <- orderAndCleanData(jan23_1969, 2)
-# jan1981 <- orderAndCleanData(jan30_1981, 2)
-# jan1965 <- orderAndCleanData(jan7_1965, 3)
-# june1991 <- orderAndCleanData(june13_1991, 3)
-# june1967 <- orderAndCleanData(june2_1967, 3)
-# march1960 <- orderAndCleanData(march2_1960, 1)
-# march1956 <- orderAndCleanData(march29_1956, 3)
-# march1972 <- orderAndCleanData(march3_1972, 3)
-# march1978 <- orderAndCleanData(march3_1978, 2)
-# may1995 <- orderAndCleanData(may11_1995, 3)
-# may1966 <- orderAndCleanData(may19_1966, 1)
-# may2003 <- orderAndCleanData(may19_2003, 7)
-# may2006 <- orderAndCleanData(may5_2006, 3)
-# nov1953 <- orderAndCleanData(nov1_1953, 3)
-# nov1972 <- orderAndCleanData(nov10_1972, 1)
-# oct1971 <- orderAndCleanData(oct29_1971, 2)
-# sept1994 <- orderAndCleanData(sept6_1994, 3)
+august1957 <- orderAndCleanData(august29_1957, 3)
+feb2000 <- orderAndCleanData(feb14_2000, 3)
+feb2001 <- orderAndCleanData(feb19_2001, 3)
+feb1999 <- orderAndCleanData(feb8_1999, 3)
+jan1986 <- orderAndCleanData(jan10_1986, 3)
+jan1985 <- orderAndCleanData(jan11_1985, 3)
+jan1969 <- orderAndCleanData(jan23_1969, 2)
+jan1981 <- orderAndCleanData(jan30_1981, 2)
+jan1965 <- orderAndCleanData(jan7_1965, 3)
+june1991 <- orderAndCleanData(june13_1991, 3)
+june1967 <- orderAndCleanData(june2_1967, 3)
+march1960 <- orderAndCleanData(march2_1960, 1)
+march1956 <- orderAndCleanData(march29_1956, 3)
+march1972 <- orderAndCleanData(march3_1972, 3)
+march1978 <- orderAndCleanData(march3_1978, 2)
+may1995 <- orderAndCleanData(may11_1995, 3)
+may1966 <- orderAndCleanData(may19_1966, 1)
+may2003 <- orderAndCleanData(may19_2003, 7)
+may2006 <- orderAndCleanData(may5_2006, 3)
+nov1953 <- orderAndCleanData(nov1_1953, 3)
+nov1972 <- orderAndCleanData(nov10_1972, 1)
+oct1971 <- orderAndCleanData(oct29_1971, 2)
+sept1994 <- orderAndCleanData(sept6_1994, 3)
 
-# rm(april19_1976, august29_1957, feb14_2000, feb19_2001, feb8_1999, jan10_1986, jan11_1985, jan23_1969,
-#    jan30_1981, jan7_1965, june13_1991, june2_1967, march2_1960, march29_1956, march3_1972, march3_1978,
-#    may11_1995, may19_1966, may19_2003, may5_2006, nov1_1953, nov10_1972, oct29_1971, sept6_1994)
+rm(april19_1976, august29_1957, feb14_2000, feb19_2001, feb8_1999, jan10_1986, jan11_1985, jan23_1969,
+   jan30_1981, jan7_1965, june13_1991, june2_1967, march2_1960, march29_1956, march3_1972, march3_1978,
+   may11_1995, may19_1966, may19_2003, may5_2006, nov1_1953, nov10_1972, oct29_1971, sept6_1994)
+
+august1957$question <- factor(august1957$question)
+august1957$race <- factor(august1957$race)
+august1957$gender <-  factor(august1957$gender)
+
+feb1999$question <- factor(feb1999$question)
+
+feb2001$question <- factor(feb2001$question)
+
+jan1965$question <- factor(jan1965$question)
+jan1965$race <- factor(jan1965$race)
+jan1965$gender <- factor(jan1965$gender)
+
+jan1969$question <- factor(jan1969$question)
+jan1969$race <- factor(jan1969$race)
+jan1969$gender <- factor(jan1969$gender)
+
+jan1981$question <- factor(jan1981$question)
+jan1981$race <- factor(jan1981$race)
+jan1981$gender <- factor(jan1981$gender)
+
+jan1985$question <- factor(jan1985$question)
+jan1985$educ <- factor(jan1985$educ)
+
+jan1986$question <- factor(jan1986$question)
+
+june1967$question <- factor(june1967$question)
+june1967$race <- factor(june1967$race)
+june1967$gender <- factor(june1967$gender)
+
+june1991$question <- factor(june1991$question)
+
+march1956$question <- factor(march1956$question)
+
+march1960$question <- factor(march1960$question)
+march1960$race <- factor(march1960$race)
+march1960$gender <- factor(march1960$gender)
+
+march1972$question <- factor(march1972$question)
+march1972$race <- factor(march1972$race)
+march1972$gender <- factor(march1972$gender)
+
+march1978$question <- factor(march1978$question)
+march1978$race <- factor(march1978$race)
+march1978$gender <- factor(march1978$gender)
+
+may1966$question <- factor(may1966$question)
+may1966$race <- factor(may1966$race)
+may1966$gender <- factor(may1966$gender)
+
+may1995$question <- factor(may1995$question)
+
+levels(may2003$state) <- c("11", "12", "13", "14", "15", "16", "21", "22", "23", "24", "25",
+                           "26", "27", "31", "32", "33", "34", "41", "42", "43", "44", "45",
+                           "46", "47", "48", "51", "52", "53", "54", "55", "56", "57", "58",
+                           "59", "61", "62", "63", "64", "71", "72", "73", "74", "75", "76",
+                           "77", "78", "81", "82", "83", "84", "85")
+may2003$state <- as.integer(as.character(may2003$state))
+
+may2006$question <- factor(may2006$question)
+
+nov1953$question <- factor(nov1953$question)
+
+nov1972$question <- factor(nov1972$question)
+nov1972$race <- factor(nov1972$race)
+nov1972$gender <- factor(nov1972$gender)
+
+oct1971$question <- factor(oct1971$question)
+oct1971$race <- factor(oct1971$race)
+oct1971$gender <- factor(oct1971$gender)
+
+sept1994$question <- factor(sept1994$question)
+
+allData <- as.data.frame(rbind(april1976, august1957, feb1999, feb2000, feb2001, jan1965, jan1969, jan1986, jan1981, 
+                 jan1985, jan1986, june1967, june1991, march1956, march1960, march1972, march1978,
+                 may1966, may1995, may2003, may2006, nov1953, nov1972, oct1971, sept1994))
+
+allData <- allData[complete.cases(allData), ]
+
+# standarize variables
+mRace <- mean(as.numeric(as.character(allData$race)))
+sdRace <- sd(as.numeric(as.character(allData$race)))
+allData$race <-  (as.numeric(as.character(allData$race)) - mRace) / sdRace
+
+mGender <- mean(as.numeric(as.character(allData$gender)))
+sdGender <- sd(as.numeric(as.character(allData$gender)))
+allData$gender <- (as.numeric(as.character(allData$gender)) - mGender) /sdGender
+
+# paste in legality
+allData <- merge(allData, usStates, by='state')
 
 
+region <- ''
+for(i in 1:nrow(allData)){
+    region[i] <- substr(as.character(allData[i,1]), 1, 1)
+}
+allData <- cbind(allData, region)
+
+# republican share
+library(readxl)
+election1952 <- read_excel("~/Google Drive/CodeProjects/R/election1952.xlsx")
+election1952 <- election1952[-c(49:52), ]
+election1956 <- read_excel("~/Google Drive/CodeProjects/R/election1956.xlsx")
+election1956 <- election1956[-c(49:52), ]
+election1956 <- election1956[, -c(7:8)]
+election1960 <- read_excel("~/Google Drive/CodeProjects/R/election1960.xlsx")
+election1960 <- election1960[-c(51:53), -c(7:8)]
+election1964 <- read_excel("~/Google Drive/CodeProjects/R/election1964.xlsx")
+election1964 <- election1964[-c(52:55), ]
+election1964 <- election1964[,-c(7,8)]
+election1968 <- read_excel("~/Google Drive/CodeProjects/R/election1968.xlsx")
+election1968 <- election1968[-c(52:54), -c(7:11)]
+election1972 <- read_excel("~/Google Drive/CodeProjects/R/election1972.xlsx")
+election1972 <- election1972[-c(52:55), ]
+election1976 <- read_excel("~/Google Drive/CodeProjects/R/election1976.xlsx")
+election1976 <- election1976[-c(52:55), -c(7:8)]
+election1980 <- read_excel("~/Google Drive/CodeProjects/R/election1980.xlsx")
+election1980 <- election1980[-c(52:54), -c(7:11)]
+election1984 <- read_excel("~/Google Drive/CodeProjects/R/election1984.xlsx")
+election1984 <- election1984[-c(52:53), -c(7:8)]
+election1988 <- read_excel("~/Google Drive/CodeProjects/R/election1988.xlsx")
+election1988 <- election1988[-c(52:55), -c(7:8)]
+election1992 <- read_excel("~/Google Drive/CodeProjects/R/election1992.xlsx")
+election1992 <- election1992[-c(52:55), -c(7:11)]
+election1996 <- read_excel("~/Google Drive/CodeProjects/R/election1996.xlsx")
+election1996 <- election1996[-c(52:53), -c(7:11)]
+election2000 <- read_excel("~/Google Drive/CodeProjects/R/election2000.xlsx")
+election2000 <- election2000[-c(52:53), -c(7:11)]
+election2004 <- read_excel("~/Google Drive/CodeProjects/R/election2004.xlsx")
+election2004 <- election2004[-c(52:54), -c(7:8)]
+
+election1952 <- subset(election1952, select = c('state', 'percentR'))
+election1956 <- subset(election1956, select = c('state', 'percentR'))
+election1960 <- subset(election1960, select = c('state', 'percentR'))
+election1964 <- subset(election1964, select = c('state', 'percentR'))
+election1968 <- subset(election1968, select = c('state', 'percentR'))
+election1972 <- subset(election1972, select = c('state', 'percentR'))
+election1976 <- subset(election1976, select = c('state', 'percentR'))
+election1980 <- subset(election1980, select = c('state', 'percentR'))
+election1984 <- subset(election1984, select = c('state', 'percentR'))
+election1988 <- subset(election1988, select = c('state', 'percentR'))
+election1992 <- subset(election1992, select = c('state', 'percentR'))
+election1996 <- subset(election1996, select = c('state', 'percentR'))
+election2000 <- subset(election2000, select = c('state', 'percentR'))
+election2004 <- subset(election2004, select = c('state', 'percentR'))
 
 
+allElections <- list(election1952, election1956, election1960, election1964, election1968,
+                     election1972, election1976, election1980, election1984, election1988,
+                     election1992, election1996, election2000, election2004)
+
+al <- 0
+alas <- 0
+az <- 0
+ar <- 0
+ca <- 0
+co <- 0
+conn <- 0
+del <- 0
+flor <- 0
+ge <- 0
+ida <- 0
+ill <- 0
+ha <-0 
+ind <- 0
+iowa <- 0
+kan <- 0
+ken <- 0
+lous <- 0
+maine <- 0
+mary <- 0
+ma <- 0
+mich <-0 
+min <- 0
+miss <-0
+missouri <- 0
+mon <- 0
+neb <- 0
+nev <- 0
+nh <- 0
+nj <- 0
+nm <- 0
+ny <- 0
+nc <- 0
+nd <- 0
+ohio <- 0
+ok <- 0
+ore <- 0
+penn <- 0
+ri <- 0
+sc <- 0
+southd <- 0
+tenn <- 0
+tex <- 0
+utah <- 0
+ver <- 0
+vir <- 0
+wash <- 0
+wv <- 0
+wis <- 0
+wy <- 0
+dc <-0
+for(i in 1:length(allElections)){
+  frame <- allElections[[i]]
+  al[i] <- unlist(frame[1,2])
+  if(i < 3){
+    az[i] <- unlist(frame[2,2])  
+    ar[i] <- unlist(frame[3,2])
+    ca[i] <- unlist(frame[4,2])
+    co[i] <- unlist(frame[5,2])
+    conn[i] <- unlist(frame[6,2])
+    del[i] <- unlist(frame[7,2])
+    flor[i] <- unlist(frame[8,2])
+    ge[i] <- unlist(frame[9,2])
+    ida[i] <- unlist(frame[10,2])
+    ill[i] <- unlist(frame[11,2])
+    ind[i] <- unlist(frame[12,2])
+    iowa[i] <- unlist(frame[13,2])
+    kan[i] <- unlist(frame[14,2])
+    ken[i] <- unlist(frame[15,2])
+    lous[i] <- unlist(frame[16,2])
+    maine[i] <- unlist(frame[17,2])
+    mary[i] <- unlist(frame[18,2]) 
+    ma[i] <- unlist(frame[19,2]) 
+    mich[i] <- unlist(frame[20,2])
+    min[i] <- unlist(frame[21,2])
+    miss[i] <- unlist(frame[22,2])
+    missouri[i] <- unlist(frame[23, 2])
+    mon[i] <- unlist(frame[24, 2])
+    neb[i] <- unlist(frame[25, 2])
+    nev[i] <- unlist(frame[26,2])
+    nh[i] <- unlist(frame[27, 2])
+    nj[i] <- unlist(frame[28 ,2])
+    nm[i] <- unlist(frame[29, 2])
+    ny[i] <- unlist(frame[30 ,2])
+    nc[i] <- unlist(frame[31 ,2])
+    nd[i] <- unlist(frame[32,2])
+    ohio[i] <- unlist(frame[34, 2])
+    ok[i] <- unlist(frame[34, 2])
+    ore[i] <- unlist(frame[35, 2])
+    penn[i] <- unlist(frame[36, 2])
+    ri[i] <- unlist(frame[37, 2])
+    sc[i] <- unlist(frame[38, 2])
+    southd[i] <- unlist(frame[39, 2])
+    tenn[i] <- unlist(frame[40, 2])
+    tex[i] <- unlist(frame[41, 2])
+    utah[i] <- unlist(frame[42, 2])
+    ver[i] <- unlist(frame[43, 2])
+    vir[i] <- unlist(frame[44, 2])
+    wash[i] <- unlist(frame[45, 2])
+    wv[i] <- unlist(frame[46, 2])
+    wis[i] <- unlist(frame[47, 2])
+    wy[i] <- unlist(frame[48 , 2])
+  }
+  else if(i == 2) {
+    alas[i -2] <- unlist(frame[2,2]) 
+    az[i] <- unlist(frame[3,2])
+    ar[i] <- unlist(frame[4,2])
+    ca[i] <- unlist(frame[5,2])
+    co[i] <- unlist(frame[6,2])
+    conn[i] <- unlist(frame[7,2])
+    del[i] <- unlist(frame[7,2])
+    flor[i] <- unlist(frame[9,2])
+    ge[i] <- unlist(frame[10,2])
+    ha[i-2] <- unlist(frame[11,2])
+    ida[i] <- unlist(frame[12,2])
+    ill[i] <- unlist(frame[13,2])
+    ind[i] <- unlist(frame[14,2])
+    iowa[i] <- unlist(frame[15,2])
+    kan[i] <- unlist(frame[16,2])
+    ken[i] <- unlist(frame[17,2])
+    lous[i] <- unlist(frame[18,2])
+    maine[i] <- unlist(frame[19,2])
+    mary[i] <- unlist(frame[20,2]) 
+    ma[i] <- unlist(frame[21,2]) 
+    mich[i] <- unlist(frame[22,2]) 
+    min[i] <- unlist(frame[23,2])
+    miss[i] <- unlist(frame[24,2])
+    missouri[i] <- unlist(frame[25, 2])
+    mon[i] <- unlist(frame[26, 2])
+    neb[i] <- unlist(frame[27, 2])
+    nev[i] <- unlist(frame[28,2])
+    nh[i] <- unlist(frame[29, 2])
+    nj[i] <- unlist(frame[30 ,2])
+    nm[i] <- unlist(frame[31, 2])
+    ny[i] <- unlist(frame[32 ,2])
+    nc[i] <- unlist(frame[33 ,2])
+    nd[i] <- unlist(frame[34,2])
+    ohio[i] <- unlist(frame[35, 2])
+    ok[i] <- unlist(frame[36, 2])
+    ore[i] <- unlist(frame[37, 2])
+    penn[i] <- unlist(frame[38, 2])
+    ri[i] <- unlist(frame[39, 2])
+    sc[i] <- unlist(frame[40, 2])
+    southd[i] <- unlist(frame[41, 2])
+    tenn[i] <- unlist(frame[42, 2])
+    tex[i] <- unlist(frame[43, 2])
+    utah[i] <- unlist(frame[44, 2])
+    ver[i] <- unlist(frame[45, 2])
+    vir[i] <- unlist(frame[46, 2])
+    wash[i] <- unlist(frame[47, 2])
+    wv[i] <- unlist(frame[48, 2])
+    wis[i] <- unlist(frame[49, 2])
+    wy[i] <- unlist(frame[50, 2])
+  }
+  else{
+    alas[i -2] <- unlist(frame[2,2]) 
+    az[i] <- unlist(frame[3,2])
+    ar[i] <- unlist(frame[4,2])
+    ca[i] <- unlist(frame[5,2])
+    co[i] <- unlist(frame[6,2])
+    conn[i] <- unlist(frame[7,2])
+    del[i] <- unlist(frame[7,2])
+    
+    dc[i] <- unlist(frame[9, 2])
+    flor[i] <- unlist(frame[10,2])
+    ge[i] <- unlist(frame[11,2])
+    ha[i-2] <- unlist(frame[12,2])
+    ida[i] <- unlist(frame[13,2])
+    ill[i] <- unlist(frame[14,2])
+    ind[i] <- unlist(frame[15,2])
+    iowa[i] <- unlist(frame[16,2])
+    kan[i] <- unlist(frame[17,2])
+    ken[i] <- unlist(frame[18,2])
+    lous[i] <- unlist(frame[19,2])
+    maine[i] <- unlist(frame[20,2])
+    mary[i] <- unlist(frame[21,2]) 
+    ma[i] <- unlist(frame[22,2]) 
+    mich[i] <- unlist(frame[23,2]) 
+    min[i] <- unlist(frame[24,2])
+    miss[i] <- unlist(frame[25,2])
+    missouri[i] <- unlist(frame[26, 2])
+    mon[i] <- unlist(frame[27, 2])
+    neb[i] <- unlist(frame[28, 2])
+    nev[i] <- unlist(frame[29,2])
+    nh[i] <- unlist(frame[30, 2])
+    nj[i] <- unlist(frame[31 ,2])
+    nm[i] <- unlist(frame[32, 2])
+    ny[i] <- unlist(frame[33 ,2])
+    nc[i] <- unlist(frame[34 ,2])
+    nd[i] <- unlist(frame[35,2])
+    ohio[i] <- unlist(frame[36, 2])
+    ok[i] <- unlist(frame[37, 2])
+    ore[i] <- unlist(frame[38, 2])
+    penn[i] <- unlist(frame[39, 2])
+    ri[i] <- unlist(frame[40, 2])
+    sc[i] <- unlist(frame[41, 2])
+    southd[i] <- unlist(frame[42, 2])
+    tenn[i] <- unlist(frame[43, 2])
+    tex[i] <- unlist(frame[44, 2])
+    utah[i] <- unlist(frame[45, 2])
+    ver[i] <- unlist(frame[46, 2])
+    vir[i] <- unlist(frame[47, 2])
+    wash[i] <- unlist(frame[48, 2])
+    wv[i] <- unlist(frame[49, 2])
+    wis[i] <- unlist(frame[50, 2])
+    wy[i] <- unlist(frame[51, 2])
+  }
+}
+t0 = 1:14
+t1 = 1:12
+allm <- lm(al ~ t0)
+alaslm <- lm(alas ~ t1)
+azlm <- lm(az ~ t0)
+arlm <- lm(ar ~ t0)
+calm <- lm(ca ~ t0) 
+colm <- lm(co~t0)
+connlm <- lm(conn~t0)
+dellm <- lm(del~t0)
+florlm <- lm(flor~t0)
+gelm <- lm(ge~t0)
+ida <- lm(ida~t0)
+illlm <- lm(ill~t0)
+ha <- lm(ha~t1) 
+indlm <- lm(ind~t0)
+iowalm <- lm(iowa~t0)
+kanlm <- lm(kan~t0)
+kenlm <- lm(ken~t0)
+louslm <- lm(lous~t0)
+mainelm <- lm(maine~t0)
+marylm <- lm(mary~t0)
+malm <- lm(ma~t0)
+michlm <- lm(mich~t0)
+minlm <- lm(min~t0)
+misslm <- lm(miss~t0)
+missourilm <- lm(missouri~t0)
+monlm <- lm(mon~t0)
+neblm <- lm(neb~t0)
+nevlm <- lm(nev~t0)
+nhlm <-  lm(nh~t0)
+njlm <- lm(nj~t0)
+nmlm <- lm(nm~t0)
+nylm <- lm(ny~t0)
+nclm <- lm(nc~t0)
+ndlm <- lm(nd~t0)
+ohiolm <- lm(ohio~t0)
+oklm <- lm(ok~t0)
+orelm <- lm(ore~t0)
+pennlm <- lm(penn~t0)
+rilm <- lm(ri~t0)
+sclm <- lm(sc~t0)
+southdlm <- lm(southd~t0)
+tennlm <- lm(tenn~t0)
+texlm <- lm(tex~t0)
+utahlm <- lm(utah~t0)
+verlm <- lm(ver~t0)
+virlm <- lm(vir~t0)
+washlm <- lm(wash~t0)
+wvlm <- lm(wv~t0)
+wislm <- lm(wis~t0)
+wylm <- lm(wy~t0)
+dclm <-lm(dc~t0)
+
+allregs <- list(allm, 
+alaslm,
+azlm,
+arlm,
+calm,
+colm,
+connlm,
+dellm,dclm,
+florlm,
+gelm,
+ida ,
+illlm,
+ha,
+indlm, 
+iowalm,
+kanlm ,
+kenlm ,
+louslm ,
+mainelm,
+marylm,
+malm ,
+michlm, 
+minlm ,
+misslm ,
+missourilm, 
+monlm ,
+neblm ,
+nevlm ,
+nhlm ,
+njlm ,
+nmlm ,
+nylm ,
+nclm ,
+ndlm ,
+ohiolm, 
+oklm ,
+orelm ,
+pennlm ,
+rilm,
+sclm ,
+southdlm,
+tennlm,
+texlm,
+utahlm,
+verlm ,
+virlm,
+washlm, 
+wvlm ,
+wislm ,
+wylm)
 
 
-
-
-
-
-
+repShare <- as.data.frame(matrix(0, nrow=51, ncol=2))
+for(i in 1:length(allregs)){
+  repShare[i, ] <- allregs[[i]][[1]]
+}
+repShare <- as.data.frame(cbind(election1964$state, repShare))
+xState <- as.data.frame(cbind(repShare$V1, usStates$legality))
+zStatet <- as.data.frame(cbind(repShare$V2, usStates$legality))
+allData <- allData[-which(allData$question == 5), ]
+allData <- allData[-which(allData$question == 0), ]
+saveRDS(allData, "~/Google Drive/CodeProjects/R/allData.rds")

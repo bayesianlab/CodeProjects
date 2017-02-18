@@ -15,12 +15,12 @@ class RoperData:
             pass
         self.nLines = n + 1
         self.file.close()
-        print 'File %s has %s lines ' % (self.filename, self.nLines)
+        print ('File %s has %s lines ' % (self.filename, self.nLines))
 
     def getCases(self, numCasesPerObs, colNames, begIndices, endIndices, rowOfColName):
         self.file = open(self.filename)
         totalCases = self.nLines / numCasesPerObs
-        print "There are %i cases in this file." % totalCases
+        print ("There are %i cases in this file." % totalCases)
         rowMappedToVariableName = self.whichRows(colNames, rowOfColName)
         whatToExtractInRow = {name: indices for name, indices in zip(colNames, self.indicesToExtract(begIndices, endIndices))}
         extractedData = {name: [] for name in colNames}
@@ -86,7 +86,7 @@ class RoperData:
             casesDictionary['weights'] = [self.splitString(w, index) for w in weights]
             return casesDictionary
         except KeyError:
-            print "No weights key, rename weights variable"
+            print("No weights key, rename weights variable")
             return -1
 
     def summaryData(self, data):
@@ -96,8 +96,8 @@ class RoperData:
             for elem in data[k]:
                 cnt[elem] += 1
             count[k] = cnt
-        print count
-        print
+        print(count)
+        print()
 
 
 

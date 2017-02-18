@@ -45,7 +45,7 @@ y(2,1) = 83.82;
 % getInitialPoints(5, 1, py, @practiceFnq, h)
 % predictorCorrector([1,2], py, @practiceFnq, @dPracticeFnq, h, eps, maxIterations)
 
-h = .000002;
+h = .00002;
 maxIterations = 10;
 eps = 10^-3;
 y(1,1) = 52.29;

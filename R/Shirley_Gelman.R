@@ -1,19 +1,19 @@
 path = "~/Google Drive/CodeProjects/R/"
 source(paste(path, "cleanData.R", sep=""))
 
-allData <- list(nov1_1953, march29_1956, august29_1957, march2_1960, jan7_1965, may19_1966, june2_1967, 
-            jan23_1969, oct29_1971, march3_1972, nov10_1972, april19_1976, march3_1978, jan30_1981, 
-            jan11_1985, jan10_1986, june13_1991, sept6_1994, may11_1995, feb8_1999, feb14_2000,
-            feb19_2001, may19_2003, may5_2006)
+listAllData <- list(nov1953, march1956, august1957, march1960, jan1965, may1966, june1967, 
+            jan1969, oct1971, march1972, nov1972, april1976, march1978, jan1981, 
+            jan1985, jan1986, june1991, sept1994, may1995, feb1999, feb2000,
+            feb2001, may2003, may2006)
 
 dfNames <- c('nov1_1953', 'march29_1956', 'august29_1957', 'march2_1960', 'jan7_1965', 'may19_1966',
              'june2_1967', 'jan23_1969', 'oct29_1971', 'march3_1972', 'nov10_1972', 'april19_1976',
              'march3_1978', 'jan30_1981', 'jan11_1985', 'jan10_1986', 'june13_1991', 'sept6_1994',
              'may11_1995', 'feb8_1999', 'feb14_2000', 'feb19_2001', 'may19_2003', 'may5_2006')
 
-inFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 7))
-for(i in 1:length(allData)){
-  frame <- as.data.frame(allData[i])$question
+inFavor <- as.data.frame(matrix(0, nrow = length(listAllData), ncol = 7))
+for(i in 1:length(listAllData)){
+  frame <- as.data.frame(listAllData[i])$question
   inFavor[i, 1] <- dfNames[i]
   inFavor[i, 2] <- table(frame == 1)['TRUE']
   inFavor[i, 3] <- table(frame == 2)['TRUE']
@@ -59,10 +59,10 @@ ggplot(timeSpan, aes(x=Date.x, y =ProportionFavor)) + geom_pointrange(lims)+
 
 summary(inFavor$ProportionFavor)
 
-menWomenInFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 13))
-for(i in 1:length(allData)){
+menWomenInFavor <- as.data.frame(matrix(0, nrow = length(listAllData), ncol = 13))
+for(i in 1:length(listAllData)){
   menWomenInFavor[i, 1] <- dfNames[i]
-  frame <- subset(allData[[i]], select=c('gender', 'question'))
+  frame <- subset(listAllData[[i]], select=c('gender', 'question'))
   menWomenInFavor[i, 2] <- table(frame$gender == 1 & frame$question == 1)["TRUE"]
   menWomenInFavor[i, 3] <- table(frame$gender == 1 & frame$question == 2)["TRUE"]
   menWomenInFavor[i, 4] <- table(frame$gender == 0 & frame$question == 1)["TRUE"]
@@ -95,10 +95,10 @@ proportionFavor[2,2] <- proportionFavor[1,2] +
 proportionFavor[3,2] <- proportionFavor[1,2] - 
   qnorm(.975, 0, 1)*sqrt(proportionFavor[1,2] *(1 - proportionFavor[1,2]) *(1/men))
 
-blacksInFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 7))
-for(i in 1:length(allData)){
+blacksInFavor <- as.data.frame(matrix(0, nrow = length(listAllData), ncol = 7))
+for(i in 1:length(listAllData)){
   blacksInFavor[i, 1] <- dfNames[i]
-  frame <- subset(allData[[i]], select=c('race', 'question'))
+  frame <- subset(listAllData[[i]], select=c('race', 'question'))
   blacksInFavor[i, 2] <- table(frame$race == 1 & frame$question == 1)['TRUE']
   blacksInFavor[i, 3] <- table(frame$race == 1 & frame$question == 2)['TRUE']
   blacksInFavor[i, 4] <- table(frame$race == 0 & frame$question == 1)['TRUE']
@@ -118,10 +118,10 @@ proportionFavor[2,4] <- proportionFavor[1,4] + qnorm(.95, 0, 1)*sqrt(proportionF
                                                                        (1 - proportionFavor[1,4]) *(1/nonBlacks))
 proportionFavor[3,4] <- proportionFavor[1,4] - qnorm(.95, 0, 1)*sqrt(proportionFavor[1,4] * 
                                                                        (1 - proportionFavor[1,4]) *(1/nonBlacks))
-ageFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 9))
-for(i in 1:length(allData)){
+ageFavor <- as.data.frame(matrix(0, nrow = length(listAllData), ncol = 9))
+for(i in 1:length(listAllData)){
   ageFavor[i, 1] <- dfNames[i]
-  frame <- subset(allData[[i]], select=c('age', 'question'))
+  frame <- subset(listAllData[[i]], select=c('age', 'question'))
   ageFavor[i ,2] <- table(frame$age == 0 & frame$question == 1)['TRUE']
   ageFavor[i ,3] <- table(frame$age == 0 & frame$question == 2)['TRUE']
   ageFavor[i ,4] <- table(frame$age == 1 & frame$question == 1)['TRUE']
@@ -160,11 +160,11 @@ proportionFavor[3, 8] <- proportionFavor[1, 8] -
 
 
 
-educFavor <- as.data.frame(matrix(0, nrow = length(allData), ncol = 9))
-for(i in 1:length(allData)){
+educFavor <- as.data.frame(matrix(0, nrow = length(listAllData), ncol = 9))
+for(i in 1:length(listAllData)){
 
   educFavor[i, 1] <- dfNames[i]
-  frame <- subset(allData[[i]], select=c('educ', 'question'))
+  frame <- subset(listAllData[[i]], select=c('educ', 'question'))
   educFavor[i, 2] <- table(frame$educ == 0 & frame$question == 1)['TRUE']
   educFavor[i,3] <- table(frame$educ == 0 & frame$question == 2)['TRUE']
   educFavor[i, 4] <- table(frame$educ == 1 & frame$question == 1)['TRUE']
