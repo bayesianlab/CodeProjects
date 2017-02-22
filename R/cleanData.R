@@ -1,3 +1,4 @@
+
 # clean data
 # Shirley and Gelman paper
 # 1 Female, 0 Male
@@ -11,8 +12,7 @@ library(ggplot2)
 library(rockchalk)
 library(dplyr)
 library(matrixStats)
-library(coda)
-library(rjags)
+library(gdata)
 
 handleNas <- function(df, questionNum)
 {
@@ -549,9 +549,7 @@ sept6_1994$educ <- combineLevels(sept6_1994$educ, levs=c('4','5'), newLabel='1')
 sept6_1994$educ <- combineLevels(sept6_1994$educ, levs=c('6', '7'), newLabel='2')
 sept6_1994$educ <- combineLevels(sept6_1994$educ, levs=c('8'), newLabel='3')
 
-
-
-
+# Standarizing date
 april19_1976 <- bindDate(april19_1976,  1976)
 august29_1957 <- bindDate(august29_1957, 1957)
 feb14_2000 <- bindDate(feb14_2000,  2000)
@@ -664,12 +662,13 @@ may1966$race <- factor(may1966$race)
 may1966$gender <- factor(may1966$gender)
 
 may1995$question <- factor(may1995$question)
-
+levels(may2003$state)
 levels(may2003$state) <- c("11", "12", "13", "14", "15", "16", "21", "22", "23", "24", "25",
                            "26", "27", "31", "32", "33", "34", "41", "42", "43", "44", "45",
                            "46", "47", "48", "51", "52", "53", "54", "55", "56", "57", "58",
                            "59", "61", "62", "63", "64", "71", "72", "73", "74", "75", "76",
                            "77", "78", "81", "82", "83", "84", "85")
+
 may2003$state <- as.integer(as.character(may2003$state))
 
 may2006$question <- factor(may2006$question)
@@ -704,10 +703,60 @@ allData$gender <- (as.numeric(as.character(allData$gender)) - mGender) /sdGender
 # paste in legality
 allData <- merge(allData, usStates, by='state')
 
+# Get states by region
+south <- c(58, 61, 25,27, 55,54,58,56, 62, 24, 59, 63, 53, 57, 64, 26, 52)
+west <- c(72, 73, 74, 71, 77, 82, 83, 75, 76, 85, 84, 78, 81)
+midwest <- c(48, 44, 34, 33, 43, 32, 42, 47, 45, 31, 46, 41)
+north <- c(11, 13, 12, 23, 22, 14, 16, 15, 21)
+length(north)
+length(south)
+length(north) + length(south)
+length(midwest)
+length(north) + length(south) + length(midwest)
+length(west)
+length(north) + length(south) + length(midwest) +length(west)
+region <- 0
+regionKeys <- as.data.frame(matrix(0, nrow=51, ncol=2))
+k <- 0
+u <- 0
+m <- 0
+for(i in 1:51){
+  if( i <= 17){
+    regionKeys[i,1] <- 1
+    regionKeys[i, 2] <- south[i]
+  }
+  else if((i > 17) & (i <= 30)){
+    k <- k + 1
+    regionKeys[i, 1] <- 2
+    regionKeys[i, 2] <- west[k]
+  }
+  else if((i > 31) & (i <= 43)){
+    u <- u + 1
+    regionKeys[i, 1] <- 3
+    regionKeys[i, 2] <- midwest[u]
+  }
+  else{
+    m <- m + 1
+    regionKeys[i, 1] <- 4
+    regionKeys[i, 2] <- north[m]
+  }
+}
 
-region <- ''
+regionKeys <- regionKeys[order(regionKeys$V2), ]
+colnames(regionKeys) <- c('region', 'statecodes')
 for(i in 1:nrow(allData)){
-    region[i] <- substr(as.character(allData[i,1]), 1, 1)
+  if(is.element(allData[i, 1], north)){
+    region[i] <- 1
+  }
+  else if(is.element(allData[i, 1], south)){
+    region[i] <- 2
+  }
+  else if(is.element(allData[i, 1], midwest)){
+    region[i] <- 3
+  }
+  else{
+    region[i] <- 4
+  }
 }
 allData <- cbind(allData, region)
 
@@ -1077,14 +1126,37 @@ wvlm ,
 wislm ,
 wylm)
 
-
 repShare <- as.data.frame(matrix(0, nrow=51, ncol=2))
+
 for(i in 1:length(allregs)){
   repShare[i, ] <- allregs[[i]][[1]]
 }
+
 repShare <- as.data.frame(cbind(election1964$state, repShare))
-xState <- as.data.frame(cbind(repShare$V1, usStates$legality))
-zStatet <- as.data.frame(cbind(repShare$V2, usStates$legality))
+statecodes <- read_csv("~/Google Drive/CodeProjects/R/statecodes.csv", col_names = FALSE)
+statecodes
+repShare <- cbind(statecodes$X2, repShare)
+
 allData <- allData[-which(allData$question == 5), ]
 allData <- allData[-which(allData$question == 0), ]
+zState <- repShare[,c(1,3)]
+xState <- repShare[, c(1, 4)]
+xState <- as.data.frame(cbind(zState, usStates$legality))
+zState <- as.data.frame(cbind(xState, usStates$legality))
+
+table(allData$educ)
+allData$educ[allData$educ == 5] = 2
+allData$educ[allData$educ == 6] = 3
+allData$educ[allData$educ == 7] = 3
+allData$educ[allData$educ == 8] = 3
+allData$educ[allData$educ == 4] = 2
+
+allData$educ <- factor(allData$educ)
+levels(allData$educ) <- c(1:4)
 saveRDS(allData, "~/Google Drive/CodeProjects/R/allData.rds")
+saveRDS(xState, "~/Google Drive/CodeProjects/R/xState.rds")
+saveRDS(zState, "~/Google Drive/CodeProjects/R/zState.rds")
+
+keep(xState, zState, allData, regionKeys, sure=TRUE)
+
+

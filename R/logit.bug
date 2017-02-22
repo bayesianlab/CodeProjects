@@ -1,0 +1,166 @@
+
+model{
+for(i in 1:N)
+{
+  asy[i] <- alphaStateYear[dataTime[i,2], state[i]]
+  aes[i] <- alphaEdState[ed[i], rData[i], state[i]]
+  aas[i] <- alphaAgeState[age[i], rData[i], state[i]]
+
+  bbs[i] <- betaBlackState[race[i,3], rData[i], state[i]]
+  bgs[i] <- betaGenderState[g[i,3], rData[i], state[i]]
+  bbfs[i] <- betaBlackFemaleState[g[i,3], race[i,3], rData[i], state[i]]
+  
+  das[i] <- deltaAgeState[age[i], rData[i], state[i]] 
+  dbs[i] <- deltaBlackState[race[i,3], rData[i], state[i]]
+  dgs[i] <- deltaGenderState[g[i,3], rData[i], state[i]]
+  dbfs[i] <- deltaBlackFemaleState[g[i,3], race[i,3], rData[i], state[i]]
+  
+  eta[i] <- (asy[i] +  aes[i] + aas[i])  +  
+            (das[i] * dataTime[i, 1]) + 
+            (bbs[i] * race[i, 2]) + (dbs[i] * race[i,2] * dataTime[i, 1]) +
+            (bgs[i] * g[i,2]) + (dgs[i]*g[i,2]*dataTime[i,1]) + 
+            (bbfs[i]*race[i,2]*dataTime[i,1]) + (dbfs[i] * race[i,2] * g[i,2] * dataTime[i,1])
+            
+  pi[i] = 1/(1 + exp(-eta[i]))
+  
+  y[i] ~ dbern(pi[i])
+}
+
+
+for( r in 1:4){
+  alphaRegion[r] ~ dnorm(0, .0001)
+  deltaRegion[r] ~ dnorm(0, .0001)
+  sigiRegion[r] ~ dt(0,5,3)I(0,)
+}
+
+for( k in 1:51){
+  mu[k] <- alphaRegion[region[k]] + inprod(beta[1:2],xState[k, 1:2])
+  alphaState[k] ~ dnorm(mu[k], sigiRegion[region[k]])
+}
+
+beta[1] ~ dnorm(0, .04)
+beta[2] ~ dnorm(0, .04)
+
+
+nationalMu ~ dnorm(0, .04)
+muDelta ~ dnorm(0, .04)
+phi ~ dunif(-1,1)
+sigma ~ dt(0, 5, 3)I(0,)
+mu1[1] <- nationalMu + muDelta * timeAndIndex[1, 2]
+
+alphaYear[1] ~ dnorm(mu1[1], pow( pow(sigma,2)/ (1- pow(phi,2)), -1))
+for( t in 2:54 ){
+  mu1[t] <- nationalMu + muDelta * timeAndIndex[t, 2] + phi*(alphaYear[t-1] - nationalMu - muDelta * timeAndIndex[t-1, 2])
+  alphaYear[t] ~ dnorm(mu1[t], pow(sigma,-2))
+}
+
+sigmaStateYear ~ dt(0, 5, 3)I(0,)
+for(yr in 1:54){
+  for(st in 1:51){
+    alphaStateYear[yr, st] ~ dnorm(mu2[yr, st], sigmaStateYear)
+    mu2[yr, st] <- alphaYear[yr] + alphaState[st] + deltaState[st] * timeAndIndex[yr, 2]
+  }
+}
+
+
+tauStateYear[1] ~ dt(0, 5, 3)I(0,)
+tauStateYear[2] ~ dt(0, 5, 3)I(0,)
+tauStateYear[3] ~ dt(0, 5, 3)I(0,)
+tauStateYear[4] ~ dt(0, 5, 3)I(0,)
+for(q in 1:51){
+  deltaState[q] ~ dnorm(mu3[q], tauStateYear[region[q]])
+  mu3[q] <- deltaRegion[region[q]] + inprod(gamma[1:2], zState[q, 1:2])
+}
+
+gamma[1] ~ dnorm(0, .04)
+gamma[2] ~ dnorm(0, .04)
+
+
+for( a in 1:4){
+  nationalAge[a] ~ dnorm(0, .04)
+  nationalAge1[a] ~ dnorm(0, .04)
+  nationalTau[a] ~ dt(0, 5, 3)I(0,)
+  nationalSigma[a] ~ dt(0, 5, 3)I(0,)
+  for(indx in 1:4){
+    regionalAge[a, indx] ~ dnorm(nationalAge[a], pow(nationalSigma[a],-2))
+    regionalAge1[a, indx] ~ dnorm(nationalAge1[a], pow(nationalTau[a],-2))
+    regionalTau[a, indx] ~ dt(0, 5, 3)I(0,)
+    regionalSigma[a, indx] ~ dt(0, 5, 3)I(0,)
+    for(indx2 in 1:51){
+      alphaAgeState[a, indx, indx2] ~ dnorm(regionalAge[a, indx], pow(regionalSigma[a, indx],-2))
+      deltaAgeState[a, indx, indx2] ~ dnorm(regionalAge[a, indx], pow(regionalTau[a, indx],-2))
+    }
+  }
+}
+
+for( e in 1:4){
+  nationalEd[e] ~ dnorm(0, .04)
+  nationalSigmaEd[e] ~ dt(0, 5, 3)I(0,)
+  for(indxA in 1:4){
+    regionalEd[e, indxA] ~ dnorm(nationalEd[e], pow(nationalSigmaEd[e],-2))
+    regionalSigmaEd[e, indxA] ~ dt(0, 5, 3)I(0,)
+    for(indxB in 1:51){
+      alphaEdState[e, indxA, indxB] ~ dnorm(regionalEd[e, indxA], pow(regionalSigmaEd[e, indxA],-2))
+    }
+  }
+}
+
+for(blackNonBlack in 1:2){
+  blackGrandMean[blackNonBlack] ~ dnorm(0, sig)
+  deltaGrandMean[blackNonBlack] ~ dnorm(0, sig)
+  nationalSigmaBlack[blackNonBlack] ~ dt(0, 5, 3)I(0,)
+  nationalTauBlack[blackNonBlack] ~ dt(0, 5, 3)I(0,)
+  for(reg in 1:4){
+    blackReg[blackNonBlack, reg] ~ dnorm(blackGrandMean[blackNonBlack], nationalSigmaBlack[blackNonBlack])
+    deltaReg[blackNonBlack, reg] ~ dnorm(deltaGrandMean[blackNonBlack], nationalTauBlack[blackNonBlack])
+    regionalSigmaBlack[blackNonBlack, reg] ~ dt(0, 5, 3)I(0,)
+    regionalTauBlack[blackNonBlack, reg] ~ dt(0, 5, 3)I(0,)
+    for(sta in 1:51){
+      betaBlackState[blackNonBlack, reg, sta] ~ dnorm(blackReg[blackNonBlack, reg], regionalSigmaBlack[blackNonBlack, reg])
+      deltaBlackState[blackNonBlack, reg, sta] ~ dnorm(deltaReg[blackNonBlack, reg], regionalTauBlack[blackNonBlack, reg])
+    }
+  }
+}
+
+for(gender in 1:2){
+  genderGrandMean[gender] ~ dnorm(0 , .04)
+  deltaGenderGrandMean[gender] ~ dnorm(0, .04)
+  nationalGenderSigma[gender] ~ dt(0, 5, 3)I(0,)
+  nationalGenderTau[gender] ~ dt(0, 5, 3)I(0,)
+  for(regi in 1:4){
+    genderReg[gender, regi] ~ dnorm(genderGrandMean[gender], nationalGenderSigma[gender])
+    deltaGenderReg[gender, regi] ~  dnorm(deltaGenderGrandMean[gender], sig)
+    regionalGenderSigma[gender, regi] ~ dt(0, 5, 3)I(0,)
+    regionalGenderTau[gender, regi] ~ dt(0, 5, 3)I(0,)
+    for(place in 1:51){
+      betaGenderState[gender, regi, place] ~ dnorm(genderReg[gender, regi], regionalGenderSigma[gender, regi])
+      deltaGenderState[gender, regi, place] ~ dnorm(deltaGenderReg[gender, regi], regionalGenderTau[gender, regi])
+    }
+  }
+}
+
+sig <- .1
+for (gen in 1:2){
+  ggm[gen] ~ dnorm(0, sig)
+  dggm[gen] ~ dnorm(0, sig)
+  nationalGenSigma[gen] ~ dt(0, 5, 3)I(0,)
+  nationalGenTau[gen] ~ dt(0, 5, 3)I(0,)
+  for(ra in 1:2){
+    imBlack[gen, ra] ~ dnorm(ggm[gen], nationalGenSigma[gen])
+    deltaImBlack[gen, ra] ~ dnorm(dggm[gen], nationalGenTau[gen])
+    genderRaceSigma[gen, ra] ~ dt(0, 5, 3)I(0,)
+    genderRaceTau[gen, ra] ~ dt(0, 5, 3)I(0,)
+    for(part in 1:4){
+      imBlackInPart[gen, ra, part] ~ dnorm(imBlack[gen, ra], genderRaceSigma[gen, ra])
+      deltaImBlackPart[gen, ra, part] ~ dnorm(deltaImBlack[gen, ra], genderRaceTau[gen, ra])
+      genderRaceRegionSigma[gen, ra, part] ~ dt(0, 5, 3)I(0,)
+      genderRaceRegionTau[gen, ra, part] ~ dt(0, 5, 3)I(0,)
+      for(estado in 1:51){
+        betaBlackFemaleState[gen, ra, part, estado] ~ dnorm(imBlackInPart[gen, ra, part], genderRaceRegionSigma[gen, ra, part])
+        deltaBlackFemaleState[gen, ra, part, estado] ~ dnorm(deltaImBlackPart[gen, ra, part], genderRaceRegionTau[gen, ra, part])
+      }
+    }
+  }
+}
+
+}

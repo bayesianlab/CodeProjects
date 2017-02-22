@@ -2,7 +2,6 @@ from collections import Counter
 import csv
 import matplotlib.pyplot as plt
 import pandas as pd
-from ggplot import*
 import numpy as np
 
 def newPackage(previousPacakgeID, currentPackageID):
@@ -62,8 +61,8 @@ def searchForMatch(file, borrowerIdCol, lenderIdCol, packageIdCol, allocationCol
         previousLender = ''
         borrowerCompanyID = ''
         for row in scanReader:
-            if d==10:
-                break
+            # if d==10:
+            #     break
             if c == 0:
                 c += 1
                 d += 1
@@ -82,7 +81,17 @@ def searchForMatch(file, borrowerIdCol, lenderIdCol, packageIdCol, allocationCol
                     else:
                         try:
                             lendAllocTup = searchAndDropDups(lenders, allocation)
-                            # tempL = removeDuplicates(lendIdBorrowerId[borrowerCompanyID])
+                            lendIdBorrowerId[borrowerCompanyID] += lendAllocTup[0]
+                            allocationDict[borrowerCompanyID] += lendAllocTup[1]
+                            borrowerCompanyID = charToInt(row[borrowerIdCol])
+                            previousPackageID = row[packageIdCol]
+                            previousLender = row[lenderIdCol]
+                            lenders = []
+                            allocation = []
+                            lenders.append(row[lenderIdCol])
+                            allocation.append(row[allocationCol])
+                        except KeyError:
+                            lendAllocTup = searchAndDropDups(lenders, allocation)
                             lendIdBorrowerId[borrowerCompanyID] = lendAllocTup[0]
                             allocationDict[borrowerCompanyID] = lendAllocTup[1]
                             borrowerCompanyID = charToInt(row[borrowerIdCol])
@@ -92,27 +101,18 @@ def searchForMatch(file, borrowerIdCol, lenderIdCol, packageIdCol, allocationCol
                             allocation = []
                             lenders.append(row[lenderIdCol])
                             allocation.append(row[allocationCol])
-                        except KeyError as e:
-                            lendAllocTup = searchAndDropDups(lenders, allocation)
-                            lendIdBorrowerId[borrowerCompanyID] = [lendAllocTup[0], lendAllocTup[1]]
-                            allocationDict[borrowerCompanyID] = lendAllocTup[1]
-                            borrowerCompanyID = charToInt(row[borrowerIdCol])
-                            previousPackageID = row[packageIdCol]
-                            previousLender = row[lenderIdCol]
-                            lenders = []
-                            allocation = []
-                            lenders.append(row[lenderIdCol])
-                            allocation.append(row[allocationCol])
+
                 c += 1
                 d += 1
         try:
             lendAllocTup = searchAndDropDups(lenders, allocation)
-            lendIdBorrowerId[borrowerCompanyID] = lendAllocTup[0]
-            allocationDict[borrowerCompanyID] = lendAllocTup[1]
+            lendIdBorrowerId[borrowerCompanyID] += lendAllocTup[0]
+            allocationDict[borrowerCompanyID] += lendAllocTup[1]
         except KeyError:
             lendAllocTup = searchAndDropDups(lenders, allocation)
             lendIdBorrowerId[borrowerCompanyID] = lendAllocTup[0]
             allocationDict[borrowerCompanyID] = lendAllocTup[1]
+
     return (lendIdBorrowerId, allocationDict)
 
 
@@ -127,27 +127,69 @@ def countRepeats(lenderDict):
         cnt = Counter()
     return countList
 
-# lendIdBorrowerId = searchForMatch('flend.csv', 2, 4, 1, 6)
-# cl = countRepeats(lendIdBorrowerId)
-# print(cl)
-
-
-# frame = pd.DataFrame(cl, columns=['count'])
-
-# h1 = ggplot(frame, aes(x='count')) + geom_histogram(binwidth=.5) + \
-#     xlab('Number of times loans repeated') + ylab('Frequency') + \
-#      ggtitle('Companies that borrowed from the same lender')
-# print(h1)
-
 lendIdBorrowerId = searchForMatch('flend.csv', 2, 4, 1, 6)
+relationships = lendIdBorrowerId[0]
+numberRelationships = []
+for k in relationships:
+    numberRelationships.append(len(relationships[k]))
+lenderRelationships = np.array(numberRelationships)
+
+f = pd.DataFrame(numberRelationships)
+print(f.describe())
+print(np.std(lenderRelationships))
+cl = countRepeats(lendIdBorrowerId[0])
+
+# for i, item in enumerate(lendIdBorrowerId[1]):
+#     print(lendIdBorrowerId[1][item])
+#     if i == 15:
+#         break
 
 
-# fake = pd.DataFrame({'A':[1, 5, 2,1,4, 1, 5], "B":[0, 1, 2,3,4, 5, 6] })
-# print(fake)
-# print(fake.drop(dropDups(fake['A'], 0)))
-# fake = fake.drop(dropDups(fake['A'], 0))
-# print(fake.drop(dropDups(fake['A'], 1)))
+        # frame = pd.DataFrame(cl, columns=['count'])
+#
+# frame.drop(frame.idxmax())
+#
+# fig, ax = plt.subplots()
+# bins = [1,2, 3, 4, 5, 10]
+# freqCount = pd.DataFrame(frame['count'].value_counts())
+# freqCount.to_csv('freqCount.csv', ',')
+#
+# subset1 = frame[frame['count'] < 11]
+# ax.hist(subset1['count'], histtype='stepfilled', edgecolor='black',rwidth=.8)
+# ax.set_title('Borrowers with relationships less than or equal to 10')
+#
+# fig1, ax1 = plt.subplots()
+# subset2 = frame[(frame['count'] > 11) & (frame['count'] < 21)]
+#
+# ax1.hist(subset2['count'], histtype='stepfilled', edgecolor='black', bins=8)
+# ax1.set_title('Borrowers with relationships between 11 and 20')
+#
+# fig2, ax2 = plt.subplots()
+# subset3 = frame[(frame['count'] >= 21)]
+# bins = [21, 40, 41, 60, 61, 80, 81, 420 ]
+# ax2.hist(subset3['count'], bins, edgecolor='black')
+# ax2.set_title('All other borrowers (21-419)')
 
-x1 = [1, 2, 3, 2, 4]
-x2 = [5, 6, 3, 2, 1]
-# print(searchAndDropDups(x1, x2))
+# plt.show()
+
+lenderBorrower = searchForMatch('flendDroppedAllocations.csv', 2, 4, 1, 6)
+
+moreThan50 = 0
+moreThan50Repeat = 0
+for i, item in enumerate(lenderBorrower[1]):
+    cnt = Counter()
+    numBanks = len(lenderBorrower[1][item])
+    for j in range(numBanks):
+        bankAlloc = lenderBorrower[1][item][j]
+        if float(bankAlloc) > 50:
+            bankId = lenderBorrower[0][item][j]
+            # print(bankId, bankAlloc)
+            # print(int(float(bankId)))
+            cnt[bankId] += 1
+            moreThan50 += 1
+    for key in cnt:
+        if cnt[key] > 1:
+            moreThan50Repeat += 1
+
+print(moreThan50)
+print(moreThan50Repeat)
