@@ -1,4 +1,3 @@
-
 # clean data
 # Shirley and Gelman paper
 # 1 Female, 0 Male
@@ -673,7 +672,16 @@ may2003$state <- as.integer(as.character(may2003$state))
 
 may2006$question <- factor(may2006$question)
 
+table(nov1953$question == 1)["TRUE"] /( table(nov1953$question == 1)["TRUE"] + table(nov1953$question ==2)["TRUE"])
+test <- nov1953$question - 1
+table(nov1953$question == 1)["TRUE"]
+length(which(test == 1))
+test
+nov1953$question == 1
+length(which(test == 0)) / (length(which(test == 0))  + length(which(test == 1)))
 nov1953$question <- factor(nov1953$question)
+
+
 
 nov1972$question <- factor(nov1972$question)
 nov1972$race <- factor(nov1972$race)
@@ -691,6 +699,8 @@ allData <- as.data.frame(rbind(april1976, august1957, feb1999, feb2000, feb2001,
 
 allData <- allData[complete.cases(allData), ]
 
+test <- allData[allData$time== -27, ]
+mean(as.numeric(as.character(test$question)) - 1)
 # standarize variables
 mRace <- mean(as.numeric(as.character(allData$race)))
 sdRace <- sd(as.numeric(as.character(allData$race)))
@@ -1157,6 +1167,6 @@ saveRDS(allData, "~/Google Drive/CodeProjects/R/allData.rds")
 saveRDS(xState, "~/Google Drive/CodeProjects/R/xState.rds")
 saveRDS(zState, "~/Google Drive/CodeProjects/R/zState.rds")
 
-keep(xState, zState, allData, regionKeys, sure=TRUE)
+
 
 

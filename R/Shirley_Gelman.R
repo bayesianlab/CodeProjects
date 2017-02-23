@@ -47,7 +47,6 @@ for(i in 1:nrow(timeSpan)){
 }
 inFavor <- cbind(ids, inFavor)
 colnames(inFavor)[1] <- "id"
-replace(timeSpan,which(is.na(x)),0)
 timeSpan <- merge(timeSpan, inFavor, by ="id", all.x=TRUE)
 lims <- aes(ymax=timeSpan$Upper, ymin = timeSpan$Lower)
 
@@ -55,7 +54,7 @@ lims <- aes(ymax=timeSpan$Upper, ymin = timeSpan$Lower)
 ggplot(timeSpan, aes(x=Date.x, y =ProportionFavor)) + geom_pointrange(lims)+
   theme(panel.background=element_rect(fill='white'), axis.text = element_text(size= 20),
         panel.border = element_rect(fill=NA) ) + xlab('Year') + 
-  ylab('Proportion Support') + ylim(.4, .9)
+  ylab('Proportion Support') + ylim(.4, .9) + geom_hline(yintercept=mean(inFavor$ProportionFavor), linetype=2)
 
 summary(inFavor$ProportionFavor)
 
@@ -208,11 +207,12 @@ colnames(proportionFavor) <- c("breaks", "favor", "upB", "lowB")
 proportionFavor$upB <- as.numeric(as.character(proportionFavor$upB))
 proportionFavor$lowB <- as.numeric(as.character(proportionFavor$lowB))
 proportionFavor$favor <- as.numeric(as.character(proportionFavor$favor))
+
 lims <- aes(ymax=upB, ymin = lowB)
 ggplot(data=proportionFavor, aes(x=breaks, y = favor)) +  geom_pointrange(lims) + 
   theme(panel.background=element_rect(fill='white'), axis.text = element_text(size= 20),
-        panel.border = element_rect(fill=NA) ) +
-  ylab("Proportion Favor Death Penalty") + xlab('') + coord_flip()
+        panel.border = element_rect(fill=NA), axis.title.x = element_text(size=20) ) +
+  ylab("Proportion Favor Death Penalty") + xlab('') + coord_flip() + geom_hline(yintercept=mean(mean(proportionFavor$favor)), linetype=2)
 
 
 

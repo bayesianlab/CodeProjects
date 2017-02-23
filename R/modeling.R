@@ -1,85 +1,76 @@
 # modeling
-library(coda)
-library(dummies)
-library(rjags)
-
 # Women .8607...
 # women 2, men 1
 # nonblack -.31...
-
-# example
-# set.seed(123)
-# beta.0 <- 0
-# sigma.sq <- 1
-# n <- 1500
-# y <- rnorm(n, beta.0, sigma.sq)
-# data <- list(y=y,n=n)
-# inits <- list(beta.0=0, sigma.sq=1)
-# jags_m <- jags.model(file="~/Google Drive/CodeProjects/R/x1.bug", data=data, inits=inits, n.chains=1, n.adapt = 100)
-# cs <- coda.samples(jags_m, c('beta.0', 'sigma.sq'), n.iter = 1000)
-# plot(cs)
-# summary(cs)
-
-
-allData <- readRDS('~/Google Drive/CodeProjects/R/allData.rds')
+# 0 means favor for question!
+library(coda)
+library(dummies)
+library(rjags)
+# keep(xState, zState, allData, regionKeys, sure=TRUE)
+path = '~/Google Drive/CodeProjects/R/'
+source(paste(path, 'prepForJags.R', sep=''))
+keep(N,y, dataTime, race, g, age, r, educ, state, region, xState, timeAndIndex, zState, allData, path, sure=TRUE)
 # allData <- allData[sample(1:nrow(allData), 1000), ]
-time <- -27:26
-timeAndIndex <- as.data.frame(cbind(1:54, time))
-allData <-merge(allData, timeAndIndex, by="time")
-colnames(allData)[10] <- 'timeIndex'
-allData <- allData[,c('question', 'race', 'gender', 'age', 'educ', 'region', 'time', 'state', 'legality', 'timeIndex')]
-N <- nrow(allData)
-y <- allData$question 
-y <- as.numeric(as.character(y)) - 1
-x <- allData$region
-g <- allData$gender
-dataTime <- as.data.frame(allData[, c('time', 'timeIndex')])
-state <- allData$state
-state <- factor(state)
-levels(state)
-levels(state) <- c(1:51)
-state <- as.numeric(as.character(state))
-region <- regionKeys$region
 
-r <- allData$region
-age <- allData$age
-levels(age) <- c(1:4)
-age  <- as.numeric(as.character(age))
-educ  <- allData$educ
-g <- allData$gender
-g <- as.data.frame(cbind(1:length(g), g))
-colnames(g)[1] <- 'id'
-g$g <- factor(g$g)
-levels(g$g)
-genderDex <- rbind(cbind(which(g[,2] == "-1.16172173588625"), rep(1, length(which(g[,2] == "-1.16172173588625")))), 
-cbind(which(g[,2] != "-1.16172173588625"), rep(2, length(which(g[,2] != "-1.16172173588625")))))
-colnames(genderDex) <- c('id', 'val')
-g <- merge(g, genderDex, by='id')
-
-race <- allData$race
-id <- 1:length(race)
-race <- as.data.frame(cbind(id, allData$race))
-race$V2 <- factor(race$V2)
-levels(race$V2)
-raceDex <- rbind(cbind(which(race[,2] =="-0.31276992801118"), rep(1, length(which(race[,2]=="-0.31276992801118")))), 
-            cbind(which(race[,2]!="-0.31276992801118"), rep(2, length(which(race[,2]!="-0.31276992801118")))))
-colnames(raceDex) <-  c('id', 'val')
-race <- merge(race, raceDex, by ='id')
-race$V2 <- as.numeric(as.character(race$V2))
-g$g <-  as.numeric(as.character(g$g))
-
-jagsVars <- list('N'=N, 'y'= y, 'dataTime'=dataTime, 'race'=race, 'g'=g, 'age'=age, 'rData'=r, 'ed'=educ, 'state'= state, 
+# Careful!! Dont uncomment this!
+jagsVars <- list('N'=N, 'y'= y, 'dataTime'=dataTime, 'race'=race, 'g'=g, 'age'=age, 'rData'=r, 'ed'=educ, 'state'= state,
                  'region'=region, 'xState'=xState, 'timeAndIndex'=timeAndIndex, 'zState'=zState)
-js <- jags.model('~/Google Drive/CodeProjects/R/logit.bug', data=jagsVars, n.chains = 3, n.adapt=10000)
-# js <- readRDS('~/Google Drive/CodeProjects/R/js.rds')
-cs <- coda.samples(js, c('alphaYear', 'nationalMu', 'muDelta', 'phi'), n.iter=10000, n.burnin=5000 thin=5)
+# js <- jags.model('~/Google Drive/CodeProjects/R/logit.bug', data=jagsVars, n.chains = 3, n.adapt=10000)
 
-summary(cs)
+# cs <- coda.samples(js, c('alphaStateYear', 'nationalMu', 'muDelta', 'phi'), n.iter=5000, n.burnin=5000, thin=5)
+
+pis <- readRDS('~/Google Drive/CodeProjects/R/pis.rds')
+pis <- as.data.frame(cbind(y, allData$time, pis))
+colnames(pis)[1:2] <- c('question', 'time')
+
+# Fitted actual
+pistimes <- factor(pis$time)
+levs <- levels(pistimes)
+inFavFit <- as.data.frame(matrix(0, nrow=length(levs), ncol=2))
+for(i in 1:length(levs)){
+  fits <- pis[pis[,2] == levs[i],c(1,3)]
+  inFavFit[i, 1:2] <- 1-apply(fits, 2, mean)
+}
+
+dates <- as.Date(c("1953/11/1", '1956/3/1', "1957/8/1", "1960/3/1", "1965/1/1", "1966/5/1", 
+                   "1967/6/1", "1969/1/1", "1971/10/1", "1972/3/1", "1972/11/1", "1976/4/1", "1978/3/1",
+                   "1981/1/1", "1985/1/1", "1986/1/1", "1991/6/1", "1994/9/1", "1995/5/1", "1999/2/1", 
+                   '2000/2/1', "2001/2/1", "2003/5/1", "2006/5/1"))
+
+dates <- dates[-which(dates=="1972/3/1")]
+inFavFit <- cbind(dates, inFavFit)
+colnames(inFavFit) <- c("Date", "favorActual", 'favorEst')
+tSpan <- as.data.frame(seq(as.Date("1953/11/01"), to=as.Date("2006/5/1"), by = "month"))
+id <- 1:nrow(tSpan)
+tSpan <- cbind(id, tSpan)
+colnames(tSpan) <- c("id", "Date")
+c <- 1
+ids <- as.data.frame(matrix(0, nrow = nrow(inFavFit), ncol=1))
+for(i in 1:nrow(tSpan)){
+  if(as.character(tSpan$Date[i]) == as.character(inFavFit$Date[c])){
+    ids[c, 1] <- i
+    c <- c + 1
+  }
+}
+inFavFit <- cbind(ids, inFavFit)
+colnames(inFavFit)[1] <- "id"
+tSpan <- merge(tSpan, inFavFit, by ="id", all.x=TRUE)
+
+# proportion support plot 
+
+g <- ggplot(tSpan, aes(x=Date.x)) + theme(panel.background=element_rect(fill='white'), axis.text = element_text(size= 20),
+                                          panel.border = element_rect(fill=NA) )
+g + geom_point(shape=5,aes(y=favorActual))  + geom_jitter(aes(y=favorEst), shape=20, color='red') + xlab('Time') + ylab('Proportion in favor')
+
 # means <- summary(cs)
 # frame <- as.data.frame(means[[1]])
-# frame <- as.data.frame(cbind(row.names(frame), frame))
-# write_csv(frame, "~/Desktop/deltaBlackFemaleState.csv")
-# plot(cs)
-# gelman.diag(cs)
-# gelman.plot(cs)
- 
+
+# cs2 <- readRDS('~/Google Drive/CodeProjects/R/cs3.rds')
+# js <- readRDS('~/Google Drive/CodeProjects/R/js.rds')
+# saveRDS(js, '~/Google Drive/CodeProjects/R/js.rds')
+# saveRDS(cs, '~/Google Drive/CodeProjects/R/cs.rds')
+length(readLines(paste(path, 'prepForJags.R', sep=''))) +
+length(readLines(paste(path, 'modeling.R', sep=''))) +
+length(readLines(paste(path, 'Shirley_Gelman.R', sep=''))) +
+length(readLines(paste(path, 'cleanData.R', sep=''))) +
+211 + 100

@@ -3,6 +3,7 @@ import csv
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+import datetime
 
 def newPackage(previousPacakgeID, currentPackageID):
     if previousPacakgeID != currentPackageID:
@@ -16,8 +17,15 @@ def newLender(previousLender, currentLender):
     else:
         return False
 
-def charToInt(char):
-    return int(float(char))
+def charToInt(chars):
+    return int(float(chars))
+
+def charToIntToStr(chars):
+    return str(charToInt(chars))
+
+def makeStrDate(someStr):
+    return datetime.datetime.strptime(charToIntToStr(someStr), '%Y%m%d')
+
 
 def removeDuplicates(someList):
     return list(set(someList))
@@ -31,7 +39,7 @@ def dropDups(someList, indx):
         j += 1
     return duplicateIndxs
 
-def searchAndDropDups(lenders, allocation):
+def searchAndDropDups(lenders, allocation, startEndDates):
     lenLenders = len(lenders)
     k = 0
     while k < lenLenders:
@@ -39,82 +47,94 @@ def searchAndDropDups(lenders, allocation):
         for i in reversed(drops):
             del lenders[i]
             del allocation[i]
+            del startEndDates[i]
         lenLenders = len(lenders)
         if lenLenders == 1:
             break
         k += 1
-    return (lenders, allocation)
+    return (lenders, allocation, startEndDates)
 
-
-
-
-def searchForMatch(file, borrowerIdCol, lenderIdCol, packageIdCol, allocationCol):
+def searchForMatch(file, borrowerIdCol, lenderIdCol, packageIdCol, allocationCol, startDateCol, endDateCol):
     with open(file) as csvfile:
         scanReader = csv.reader(csvfile, delimiter=',')
         lendIdBorrowerId = {}
         allocationDict = {}
+        dateDict = {}
         c = 0
         d = 0
         lenders = []
         allocation = []
+        startEndDates = []
         previousPackageID = ''
-        previousLender = ''
         borrowerCompanyID = ''
         for row in scanReader:
-            # if d==10:
-            #     break
+            if d==20:
+                break
             if c == 0:
                 c += 1
                 d += 1
                 continue
             else:
                 if c == 1:
-                    borrowerCompanyID = charToInt(row[borrowerIdCol])
-                    previousLender = row[lenderIdCol]
+                    borrowerCompanyID = charToIntToStr(row[borrowerIdCol])
                     previousPackageID = row[packageIdCol]
                     lenders.append(row[lenderIdCol])
                     allocation.append(row[allocationCol])
+                    timeElapsed = (makeStrDate(row[endDateCol]) - makeStrDate(row[startDateCol])).days
+                    startEndDates.append(timeElapsed)
                 else:
                     if not newPackage(previousPackageID, row[packageIdCol]):
                         lenders.append(row[lenderIdCol])
                         allocation.append(row[allocationCol])
+                        timeElapsed = (makeStrDate(row[endDateCol])-makeStrDate(row[startDateCol])).days
+                        startEndDates.append(timeElapsed)
+
                     else:
                         try:
-                            lendAllocTup = searchAndDropDups(lenders, allocation)
+                            lendAllocTup = searchAndDropDups(lenders, allocation, startEndDates)
                             lendIdBorrowerId[borrowerCompanyID] += lendAllocTup[0]
                             allocationDict[borrowerCompanyID] += lendAllocTup[1]
-                            borrowerCompanyID = charToInt(row[borrowerIdCol])
+                            dateDict[borrowerCompanyID] += lendAllocTup[2]
+                            borrowerCompanyID = charToIntToStr(row[borrowerIdCol])
                             previousPackageID = row[packageIdCol]
-                            previousLender = row[lenderIdCol]
+                            # Reset searches!
                             lenders = []
                             allocation = []
+                            startEndDates = []
                             lenders.append(row[lenderIdCol])
                             allocation.append(row[allocationCol])
+                            timeElapsed = (makeStrDate(row[endDateCol]) - makeStrDate(row[startDateCol])).days
+                            startEndDates.append(timeElapsed)
                         except KeyError:
-                            lendAllocTup = searchAndDropDups(lenders, allocation)
+                            lendAllocTup = searchAndDropDups(lenders, allocation, startEndDates)
                             lendIdBorrowerId[borrowerCompanyID] = lendAllocTup[0]
                             allocationDict[borrowerCompanyID] = lendAllocTup[1]
-                            borrowerCompanyID = charToInt(row[borrowerIdCol])
+                            dateDict[borrowerCompanyID] = lendAllocTup[2]
+                            borrowerCompanyID = charToIntToStr(row[borrowerIdCol])
                             previousPackageID = row[packageIdCol]
-                            previousLender = row[lenderIdCol]
+                            # Reset searches!
                             lenders = []
                             allocation = []
+                            startEndDates = []
                             lenders.append(row[lenderIdCol])
                             allocation.append(row[allocationCol])
+                            timeElapsed = (makeStrDate(row[endDateCol]) - makeStrDate(row[startDateCol])).days
+                            startEndDates.append(timeElapsed)
 
                 c += 1
                 d += 1
         try:
-            lendAllocTup = searchAndDropDups(lenders, allocation)
+            lendAllocTup = searchAndDropDups(lenders, allocation, startEndDates)
             lendIdBorrowerId[borrowerCompanyID] += lendAllocTup[0]
             allocationDict[borrowerCompanyID] += lendAllocTup[1]
+            dateDict[borrowerCompanyID] += lendAllocTup[2]
         except KeyError:
-            lendAllocTup = searchAndDropDups(lenders, allocation)
+            lendAllocTup = searchAndDropDups(lenders, allocation, startEndDates)
             lendIdBorrowerId[borrowerCompanyID] = lendAllocTup[0]
             allocationDict[borrowerCompanyID] = lendAllocTup[1]
+            dateDict[borrowerCompanyID] = lendAllocTup[2]
 
-    return (lendIdBorrowerId, allocationDict)
-
+    return (lendIdBorrowerId, allocationDict, dateDict)
 
 def countRepeats(lenderDict):
     cnt = Counter()
@@ -127,37 +147,38 @@ def countRepeats(lenderDict):
         cnt = Counter()
     return countList
 
-lendIdBorrowerId = searchForMatch('flend.csv', 2, 4, 1, 6)
-relationships = lendIdBorrowerId[0]
-numberRelationships = []
-for k in relationships:
-    numberRelationships.append(len(relationships[k]))
-lenderRelationships = np.array(numberRelationships)
-
-f = pd.DataFrame(numberRelationships)
-print(f.describe())
-print(np.std(lenderRelationships))
-cl = countRepeats(lendIdBorrowerId[0])
-
-# for i, item in enumerate(lendIdBorrowerId[1]):
-#     print(lendIdBorrowerId[1][item])
-#     if i == 15:
-#         break
-
-
-        # frame = pd.DataFrame(cl, columns=['count'])
+"""
+This chunk of code gets the statistics about the number of lenders
+per company, but it does not search for repeated relationships
+"""
 #
-# frame.drop(frame.idxmax())
+# lendIdBorrowerId = searchForMatch('flend.csv', 2, 4, 1, 6)
+# relationships = lendIdBorrowerId[0]
+# numberRelationships = []
+# for k in relationships:
+#     numberRelationships.append(len(relationships[k]))
+# lenderRelationships = np.array(numberRelationships)
+# f = pd.DataFrame(numberRelationships)
+# print(f.describe())
+# print(np.std(lenderRelationships))
+
+"""
+This code converts the relationships to a dataframe. Counting
+repeated relationships.
+"""
+
+# cl = countRepeats(lendIdBorrowerId[0])
+# frame = pd.DataFrame(cl, columns=['count'])
 #
 # fig, ax = plt.subplots()
 # bins = [1,2, 3, 4, 5, 10]
 # freqCount = pd.DataFrame(frame['count'].value_counts())
 # freqCount.to_csv('freqCount.csv', ',')
-#
+
 # subset1 = frame[frame['count'] < 11]
 # ax.hist(subset1['count'], histtype='stepfilled', edgecolor='black',rwidth=.8)
 # ax.set_title('Borrowers with relationships less than or equal to 10')
-#
+
 # fig1, ax1 = plt.subplots()
 # subset2 = frame[(frame['count'] > 11) & (frame['count'] < 21)]
 #
@@ -172,24 +193,35 @@ cl = countRepeats(lendIdBorrowerId[0])
 
 # plt.show()
 
-lenderBorrower = searchForMatch('flendDroppedAllocations.csv', 2, 4, 1, 6)
+"""
+This code looks for banks that gave more than 50%.
+The dataset droppoed all obs that did not have any data about allocations.
+"""
 
-moreThan50 = 0
-moreThan50Repeat = 0
-for i, item in enumerate(lenderBorrower[1]):
-    cnt = Counter()
-    numBanks = len(lenderBorrower[1][item])
-    for j in range(numBanks):
-        bankAlloc = lenderBorrower[1][item][j]
-        if float(bankAlloc) > 50:
-            bankId = lenderBorrower[0][item][j]
-            # print(bankId, bankAlloc)
-            # print(int(float(bankId)))
-            cnt[bankId] += 1
-            moreThan50 += 1
-    for key in cnt:
-        if cnt[key] > 1:
-            moreThan50Repeat += 1
+# lenderBorrower = searchForMatch('flendDroppedAllocations.csv', 2, 4, 1, 6)
 
-print(moreThan50)
-print(moreThan50Repeat)
+# moreThan50 = 0
+# moreThan50Repeat = 0
+# for i, item in enumerate(lenderBorrower[1]):
+#     cnt = Counter()
+#     numBanks = len(lenderBorrower[1][item])
+#     for j in range(numBanks):
+#         bankAlloc = lenderBorrower[1][item][j]
+#         if float(bankAlloc) > 50:
+#             bankId = lenderBorrower[0][item][j]
+#             # print(bankId, bankAlloc)
+#             # print(int(float(bankId)))
+#             cnt[bankId] += 1
+#             moreThan50 += 1
+#     for key in cnt:
+#         if cnt[key] > 1:
+#             moreThan50Repeat += 1
+
+# print(moreThan50)
+# print(moreThan50Repeat)
+
+work = searchForMatch('flend.csv', 2, 4, 1, 8, 6, 7)
+print(work[0])
+print(work[1])
+print(work[2])
+

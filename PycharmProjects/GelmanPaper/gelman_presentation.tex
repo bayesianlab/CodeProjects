@@ -29,28 +29,27 @@
 		\begin{itemize}
 			\item Data used in the paper
 		\end{itemize}
-	\end{frame}
-	
-	\begin{frame}{Descriptive analysis match}
-		From the authors paper:
 		\begin{figure}
-			\centering
-		\includegraphics[scale=.4]{descriptive1}
+			\centering 
+			\includegraphics[scale=.4]{fwf}
 		\end{figure}
 	\end{frame}
 	
 	\begin{frame}{Descriptive analysis match}
-		My results:
-		
+		From the authors paper:
+		\begin{tabular}{cc}
+				\includegraphics[scale=.2]{descriptive1} & 						\includegraphics[scale=.15]{mydescriptive1} \\
+		\end{tabular}
+		\begin{figure}
+			\centering
+
+		\end{figure}
 	\end{frame}
 	
 	\begin{frame}{Descriptive analysis match}
-		From authors paper:
-		\includegraphics[scale=.4]{descriptive2}
-	\end{frame}
-	
-	\begin{frame}{Descriptive analysis match}
-		My results:
+		\begin{tabular}{cc}
+		\includegraphics[scale=.22]{descriptive2}&\includegraphics[scale=.15]{mydescriptive2} \\
+		\end{tabular}
 	\end{frame}
 	
 	\begin{frame}{Predicting support-Level 1}
@@ -129,16 +128,9 @@
 		Republican Share...
 		\begin{itemize}
 			\item To get the values $ k_1, k_2, \dots, k_{50} $ I had to run 50 regressions! 
-			\item Each regression different because some of the states were not even part of the united states in 1953!
 			\item And find the data for how each state voted...
-
-		\end{itemize}
-	\end{frame}
-	
-	\begin{frame}{Republican share}
-		\begin{itemize}
-						\item The regressions are \[ \text{Republican share} = k + \lambda t \] $ t $ a time vector 
-						\item Each of these 50 regressions form the elements of $ \bm{X_}{state }$
+									\item The regressions are \[ \text{Republican share} = k + \lambda t \] $ t $ a time vector 
+									\item Each of these 50 regressions form the elements of $ \bm{X_}{state }$
 		\end{itemize}
 	\end{frame}
 	
@@ -185,6 +177,36 @@
 		\end{frame}
 	\begin{frame}{JAGS}
 		Model run in JAGS for 10,000 iterations, 3 chains and thinned by 5. 
+		\begin{itemize}
+			\item Strategy to get predicted in sample fits
+			\item There are so many parameters! Predicting $ p(y_i =1) $ for each data point would be very difficult
+			\item Possible, and I did, obtain every posterior mean (all 8,000+)
+			\item However, JAGS is able to monitor specific values
+			\item Idea is to monitor the estimated probabilties $ \hat{\pi} $, 
+			\[
+			\hat{\pi} = \frac{1}{1 + \exp^{-\eta_i} }
+			\]
+			\item Compare with the mean of the observed values
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}{Author's results}
+		\begin{figure}
+			\includegraphics[scale=.16]{results1}
+		\end{figure}
+		\begin{figure}
+			\includegraphics[scale=.3]{myresults}
+			\caption{Actual vs. estimated in sample fit, Red Dots = In sample fits}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}{In summary}
+		\begin{itemize}
+			\item I could not (because of time constraints) replicate \textbf{everything}
+			\item However, so far I have replicated what I have attempted
+			\item Fill in data for non-sampled years...take the coefficients corresponding to these years and multiply them by that part of the data
+			\item 2,000 lines of code
+		\end{itemize}
 	\end{frame}
 	
 \end{document}
