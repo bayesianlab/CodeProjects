@@ -1,34 +1,68 @@
 # dealscan
+library(readxl)
+library(readr)
+library(sqldf)
 package <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/package.xlsx")
 facility <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan//facility.xlsx")
 lenders <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/lenders.xlsx")
 facility_price <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/current_facility_pricing.xlsx")
 
-p <- package[, c(1,2,3)]
-f <- facility[, c(1, 2,3, 5:7)]
+p <- package[, c(1,2)]
+f <- facility[, c(1,2,3, 5:7)]
 lend <- lenders[, c(1,2,3, 5, 7)]
+fp <- facility_price[, c(1,2)]
 
+flend[flend$PackageID==1000,]
+lend <- lend[which(lend$LeadArrangerCredit == "Yes"),]
 flend <- merge(f, lend, by="FacilityID")
-flendp <- merge(flend, facility_price, by ="FacilityID")
-orgOfCols <- c('FacilityID', 'PackageID', 'BorrowerCompanyID', 'Company', 'CompanyID', 'Lender', 'FacilityStartDate', 
-  'FacilityEndDate', 'BankAllocation', 'LeadArrangerCredit')
-flend <- flend[, orgOfCols]
-write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan//flend.csv")
+flend <- merge(flend, fp, by="FacilityID")
 flend <- flend[-which(is.na(flend$BankAllocation)), ]
-write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/flendDroppedAllocations.csv")
+flend <- flend[-which(is.na(flend$FacilityEndDate)), ]
+flend <- flend[which(flend$LeadArrangerCredit == 'Yes'), ]
+fp <- fp[which(fp$BaseRate == 'Fixed Rate'), ]
+ffp <- merge(f, fp, by ='FacilityID')
 
 
-flend$PackageID <- factor(flend$PackageID)
-flend$BorrowerCompanyID <- factor(flend$BorrowerCompanyID)
+orgOfCols <- c('FacilityID', 'PackageID', 'BorrowerCompanyID', 'Company', 'CompanyID', 'Lender', 'FacilityStartDate', 
+  'FacilityEndDate', 'BankAllocation', 'LeadArrangerCredit', 'BaseRate')
 
-table(flend[flend$BorrowerCompanyID == '3804', 'CompanyID'])
-flend[flend$BorrowerCompanyID == '3782', ]
+fr <- fp[which(fp$BaseRate == 'Fixed Rate'), ]
 
-fakeDealScan <- as.data.frame(matrix(0, nrow=10, ncol=8))
-colnames(fakeDealScan) <- colnames(flend)
-fakeDealScan$FacilityID <- 1:10
-fakeDealScan$PackageID <- c(100, 100, 100, 200, 200, 400, 400, 600, 600, 900)
-fakeDealScan$BorrowerCompanyID <- c(21,21,21, 22, 22, 23, 23, 24, 24, 21)
-fakeDealScan$CompanyID <- c(1,2,1,2,2,3,3,4,4,1)
+flend <- flend[, orgOfCols]
+res <- rbind(res, flend[flend$CompanyID == 9075, ])
+res <- res[, orgOfCols]
+write_csv(res, "~/Google Drive/CodeProjects/PycharmProjects/DealScan/pythonTest.csv")
+flend$PackageID <- as.integer(flend$PackageID)
+flend$FacilityID <- as.integer(flend$FacilityID)
+flend$BorrowerCompanyID <- as.integer(flend$BorrowerCompanyID)
+flend$CompanyID <- as.integer(flend$CompanyID)
+flend$FacilityEndDate <- as.integer(flend$FacilityEndDate)
+flend$FacilityStartDate <- as.integer(flend$FacilityStartDate)
+
+yes <- flend[which(flend$LeadArrangerCredit == 'Yes'), ]
+write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/flendMessyTime.csv")
+write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/flendNoDrops.csv")
+
+# flend$PackageID <- factor(flend$PackageID)
+# flend$BorrowerCompanyID <- factor(flend$BorrowerCompanyID)
+
+
+fakeDealScan <- flend[1:100, ]
+fakeDealScan$FacilityID <- as.integer(fakeDealScan$FacilityID)
+fakeDealScan$PackageID <- as.integer(fakeDealScan$PackageID)
+fakeDealScan$BorrowerCompanyID <- as.integer(fakeDealScan$BorrowerCompanyID)
+fakeDealScan$CompanyID <- as.integer(fakeDealScan$CompanyID)
+fakeDealScan$FacilityStartDate <- as.integer(fakeDealScan$FacilityStartDate)
+fakeDealScan$FacilityEndDate <- as.integer(fakeDealScan$FacilityEndDate)
+
+fakeDealScan[100, 3] <- as.integer(33181)
+fakeDealScan[100, 5] <- as.integer(6827)
+fakeDealScan[12, 3] <- as.integer(1)
+fakeDealScan[12, 5] <- as.integer(7827)
+fakeDealScan[5, 10] <- "Yes"
 write_csv(fakeDealScan, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/fake.csv")
-fakeDealScan[fakeDealScan$BorrowerCompanyID ==1 , 'CompanyID']
+fakeDealScan[which(fakeDealScan$PackageID %in% keepThese$keep), ]
+head(flend)
+flend[flend$CompanyID == 5893 & flend$BorrowerCompanyID == 24, c('PackageID', 'CompanyID', 'BorrowerCompanyID')]
+factor(x$PackageID)
+x

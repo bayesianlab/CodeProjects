@@ -73,4 +73,4 @@ length(readLines(paste(path, 'prepForJags.R', sep=''))) +
 length(readLines(paste(path, 'modeling.R', sep=''))) +
 length(readLines(paste(path, 'Shirley_Gelman.R', sep=''))) +
 length(readLines(paste(path, 'cleanData.R', sep=''))) +
-211 + 100
+165 + 211 + 100
