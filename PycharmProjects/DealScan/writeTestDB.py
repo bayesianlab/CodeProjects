@@ -16,3 +16,13 @@ eng = sql.create_engine('sqlite:///testdb3.db')
 con = eng.connect()
 testdb2 = pd.read_csv('testdb3.csv')
 testdb2.to_sql('testdb3', con, if_exists='replace')
+
+eng = sql.create_engine('sqlite:///newtest.db')
+con = eng.connect()
+newtest = pd.read_csv('testdb4.csv')
+newtest.to_sql('newtest', con, if_exists='replace')
+
+eng = sql.create_engine('sqlite:///flend.db')
+con = eng.connect()
+newtest = pd.read_csv('flend.csv')
+newtest.to_sql('flend', con, if_exists='replace')

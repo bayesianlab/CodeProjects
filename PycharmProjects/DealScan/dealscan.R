@@ -6,16 +6,18 @@ package <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/pack
 facility <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan//facility.xlsx")
 lenders <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/lenders.xlsx")
 facility_price <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/current_facility_pricing.xlsx")
-
+company <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/company.xlsx")
 p <- package[, c(1,2)]
 f <- facility[, c(1,2,3, 5:7)]
 lend <- lenders[, c(1,2,3, 5, 7)]
 fp <- facility_price[, c(1,2)]
-
+comp <- company[,c("CompanyID", "PrimarySICCode")]
+colnames(comp)[1] <- "BorrowerCompanyID"
 flend[flend$PackageID==1000,]
 lend <- lend[which(lend$LeadArrangerCredit == "Yes"),]
 flend <- merge(f, lend, by="FacilityID")
 flend <- merge(flend, fp, by="FacilityID")
+flend <- merge(flend, comp, by="BorrowerCompanyID")
 flend <- flend[-which(is.na(flend$BankAllocation)), ]
 flend <- flend[-which(is.na(flend$FacilityEndDate)), ]
 flend <- flend[which(flend$LeadArrangerCredit == 'Yes'), ]
@@ -38,9 +40,10 @@ flend$BorrowerCompanyID <- as.integer(flend$BorrowerCompanyID)
 flend$CompanyID <- as.integer(flend$CompanyID)
 flend$FacilityEndDate <- as.integer(flend$FacilityEndDate)
 flend$FacilityStartDate <- as.integer(flend$FacilityStartDate)
-
+flend$PrimarySICCode <- as.integer(flend$PrimarySICCode)
 yes <- flend[which(flend$LeadArrangerCredit == 'Yes'), ]
 write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/flendMessyTime.csv")
+write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/flend.csv")
 write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/flendNoDrops.csv")
 
 # flend$PackageID <- factor(flend$PackageID)
@@ -65,4 +68,28 @@ fakeDealScan[which(fakeDealScan$PackageID %in% keepThese$keep), ]
 head(flend)
 flend[flend$CompanyID == 5893 & flend$BorrowerCompanyID == 24, c('PackageID', 'CompanyID', 'BorrowerCompanyID')]
 factor(x$PackageID)
-x
+fixedAndRelation <- read_csv("~/Google Drive/CodeProjects/PycharmProjects/DealScan/fixedAndRelation.csv")
+tab <- fixedAndRelation
+tab$n <- tab$n - 1
+p <- tab$numberFixed/tab$relationships 
+tab <- as.data.frame(cbind(tab, p))
+write_csv(tab, "~/Google Drive/CodeProjects/PycharmProjects/DealScan/res.csv")
+x <- flend[flend$BorrowerCompanyID == 7831 & flend$CompanyID == 78248, c('PackageID', 'BorrowerCompanyID', 'CompanyID', 'BaseRate')]
+c <-0 
+x$PackageID <- factor(x$PackageID)
+for(el in levels(x$PackageID)){
+  print(el)
+  z <- factor(x[x$PackageID==el, "BaseRate"])
+  for(i in levels(z)){
+    if(i == "Fixed Rate"){
+      print(i)
+      c<-c+1
+    }
+  }
+}
+
+print(c)
+"Fixed Rate Fixed Rate" == "Fixed Rate"
+manuCounts <- read_csv("~/Google Drive/CodeProjects/PycharmProjects/DealScan/manuCounts.csv")
+manuCounts$num <- manuCounts$num - 1
+write_csv(manuCounts, "~/Google Drive/CodeProjects/PycharmProjects/DealScan/manuCounts.csv")

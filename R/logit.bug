@@ -1,3 +1,9 @@
+# interactions should have regional means which have 
+# their own national means! make a national mean for each one.
+# example black-state has black-region prior
+# black-region (4 regions) each have prior around black
+# black has a national average N(0,25). I suppose nonblack
+# needs a national average too. 
 model{
 for(i in 1:N)
 {
@@ -25,10 +31,10 @@ for(i in 1:N)
   y[i] ~ dbern(pi[i])
 }
 
-
+# made a change not sure if it will work!! should be centered around national mean 
 for( r in 1:4){
-  alphaRegion[r] ~ dnorm(0, .0001)
-  deltaRegion[r] ~ dnorm(0, .0001)
+  alphaRegion[r] ~ dnorm(nationalMu, .001)
+  deltaRegion[r] ~ dnorm(nationalMu, .001)
   sigiRegion[r] ~ dt(0,5,3)I(0,)
 }
 
