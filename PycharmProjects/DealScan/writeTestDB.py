@@ -23,17 +23,17 @@ import os
 # newtest = pd.read_csv('testdb4.csv')
 # newtest.to_sql('newtest', con, if_exists='replace')
 
-colnames = ["BorrowerCompanyID",  "FacilityID","PackageID","FacilityStartDate","FacilityEndDate", \
-"CompanyID","PrimarySICCode"]
-print(colnames)
+# colnames = ["BorrowerCompanyID",  "FacilityID","PackageID","FacilityStartDate","FacilityEndDate", \
+# "CompanyID","PrimarySICCode"]
+# print(colnames)
 eng = sql.create_engine('sqlite:///dealscanSQL/flend.db')
 con = eng.connect()
 newtest = pd.read_csv('dealscanSQL/flend.csv')
-
 # print(newtest)
-# newtest.to_sql('flend', con, if_exists='replace')
+newtest.to_sql('flend', con, if_exists='replace')
 
-# eng = sql.create_engine('sqlite:///xtest321.db')
+# eng = sql.create_engine('sqlite:///dealscanSQL/tooMany.db')
 # con = eng.connect()
-# newtest = pd.read_csv('xtest321.csv')
-# newtest.to_sql('xtest321', con, if_exists='replace')
+# newtest = pd.read_csv('dealscanSQL/tooManyLeads.csv')
+# newtest.to_sql('tooMany', con, if_exists='replace')
+

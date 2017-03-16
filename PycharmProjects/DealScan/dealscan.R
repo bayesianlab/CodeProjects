@@ -7,19 +7,24 @@ facility <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan//fa
 lenders <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/lenders.xlsx")
 facility_price <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/current_facility_pricing.xlsx")
 company <- read_excel("~/Google Drive/CodeProjects/PycharmProjects/DealScan/company.xlsx")
-p <- package[, c(1,2)]
+p <- package[, c('PackageID','BorrowerCompanyID', 'DealPurpose')]
 f <- facility[, c(1,2,3, 5:7)]
 lend <- lenders[, c(1,2,3, 5, 7)]
 fp <- facility_price[, c(1,2)]
-comp <- company[,c("CompanyID", "PrimarySICCode")]
+comp <- company[,c("CompanyID", "PrimarySICCode", "Country", "Sales")]
 colnames(comp)[1] <- "BorrowerCompanyID"
-flend[flend$PackageID==1000,]
-lend <- lend[which(lend$LeadArrangerCredit == "Yes"),]
 flend <- merge(f, lend, by="FacilityID")
 flend <- merge(flend, fp, by="FacilityID")
 flend <- merge(flend, comp, by="BorrowerCompanyID")
-
-colnames(flend)
+flend <- merge(flend, p[, c('PackageID', 'DealPurpose')], by="PackageID")
+flend$PackageID <- as.integer(flend$PackageID)
+flend$FacilityID <- as.integer(flend$FacilityID)
+flend$BorrowerCompanyID <- as.integer(flend$BorrowerCompanyID)
+flend$CompanyID <- as.integer(flend$CompanyID)
+flend$FacilityEndDate <- as.integer(flend$FacilityEndDate)
+flend$FacilityStartDate <- as.integer(flend$FacilityStartDate)
+flend$PrimarySICCode <- as.integer(flend$PrimarySICCode)
+write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/dealscanSQL/flend.csv")
 
 sel <- c('CompanyID', 'BaseRate', 'PackageID')
 orgOfCols <- c('FacilityID', 'PackageID', 'BorrowerCompanyID', 'Company', 'CompanyID', 'Lender', 'FacilityStartDate', 
@@ -37,7 +42,7 @@ flend$FacilityStartDate <- as.integer(flend$FacilityStartDate)
 flend$PrimarySICCode <- as.integer(flend$PrimarySICCode)
 yes <- flend[which(flend$LeadArrangerCredit == 'Yes'), ]
 write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/flendMessyTime.csv")
-write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/dealscanSQL/flend.csv")
+
 write_csv(flend, path="/Users/dillonflannery-valadez/Google Drive/CodeProjects/PycharmProjects/DealScan/flendNoDrops.csv")
 
 # flend$PackageID <- factor(flend$PackageID)
@@ -94,5 +99,20 @@ testJoin <- as.data.frame(matrix(cbind(1:25, seq(10, 250, 10), as.integer(runif(
 colnames(testJoin) <- c('BorrowerCompanyID', 'CompanyID', 'fixedRates')
 testJoin2 <- as.data.frame(matrix(cbind(1:50, seq(10, 250, 50), as.integer(runif(50, 500, 1000))), ncol = 3))
 
+flend[flend$PackageID == 102, ]
 
-       
+tooManyLeadsTest <- as.data.frame(matrix(cbind(rep(566, 10), c(rep(2,5), rep(6,5)), rep(102, 10), rep('Yes', 10)  ), ncol = 4)  )
+colnames(tooManyLeadsTest) <-c('BorrowerCompanyID', 'CompanyID', 'PackageID',  'LeadArrangerCredit')
+write_csv(tooManyLeadsTest, "~/Google Drive/CodeProjects/PycharmProjects/DealScan/dealscanSQL/tooManyLeads.csv")
+
+
+library(ggplot2)
+rel_fix <-  read_csv("~/Google Drive/CodeProjects/PycharmProjects/DealScan/dealscanSQL/rel_fix.csv")
+relation <- rel_fix$nRelationships
+share <- rel_fix$ShareFixed
+lm(share~ relation)
+qplot(relation, share) + geom_jitter()
+
+ggplot(rel_fix) + geom_point(aes(x=rel_fix$nRelationships, y=rel_fix$ShareFixed))
+
+
