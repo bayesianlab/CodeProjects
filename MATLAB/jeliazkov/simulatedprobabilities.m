@@ -24,13 +24,13 @@ beta = [post1;post2];
 qi = 2.*y-1;
 eps = normrnd(0,1,N,Sims);
 
-fun = @(b)ARmethodSimulateMoments(b, eps);
+fun = @(b)ARmethodSimulateMoments(b);
 % options = optimset('Display', 'iter', 'MaxFunEvals', 100, 'TolFun', 1e-4);
 % [x,fval] = fminsearch(fun, [0;.1295], options) 
 i = 1;
 reps = 5;
 storage = zeros(2,reps);
-b = [0.08;0.09];
+b = [0.02;0.1];
 storage(:,1) = b;
 while i < 5
     [fx, x] = nelderMeadMin(storage(:,i),fun, 100, .05, 1e-6, 1)

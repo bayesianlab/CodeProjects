@@ -1,10 +1,12 @@
-function [ LL ] = ARmethodSimulateMoments(beta,eps)
+function [ LL ] = ARmethodSimulateMoments(beta)
 load '/Users/dillonflannery-valadez/Google Drive/CodeProjects/MATLAB/jeliazkov/x1' ...
     x1 
 load '/Users/dillonflannery-valadez/Google Drive/CodeProjects/MATLAB/jeliazkov/x2' ...
     x2
 load '/Users/dillonflannery-valadez/Google Drive/CodeProjects/MATLAB/jeliazkov/y' ...
     y
+load '/Users/dillonflannery-valadez/Google Drive/CodeProjects/MATLAB/jeliazkov/eps' ...
+    eps
 X = [x1,x2];
 simP = ARsimulator(X,beta,eps);
 indx = find(simP == 0 | simP == 1);

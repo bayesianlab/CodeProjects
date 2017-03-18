@@ -16,9 +16,9 @@ while iterationCount < maxIterations
     X_Next = X_0 + H;
     X_0 = X_Next;
     if dispOn == 1
-        fprintf('Value of function at iteration %i \n', iterationCount)
+        fprintf('X_0 Value at iteration %i \n', iterationCount)
         disp(X_0)
-%         disp(F(y,x,X_0))
+        disp(F(X_0))
     end
     if norm(F(X_0)) < epsilon
         return
