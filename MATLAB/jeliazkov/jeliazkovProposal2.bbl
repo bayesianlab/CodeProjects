@@ -1,0 +1,43 @@
+\begin{thebibliography}{1}
+
+\bibitem{chib1995}
+Siddartha Chib.
+\newblock Marginal likelihood from the {G}ibbs output.
+\newblock {\em Journal of the American Statistical Association}, 1995.
+
+\bibitem{nelderMeadAdaptive}
+Lixing~Han Fuchang~Gao.
+\newblock Implementing the {N}elder-{M}ead simplex algorithm with adaptive
+  parameters.
+\newblock {\em Computational Optimization and Applications}, 2012.
+
+\bibitem{jeliazkovLee}
+Esther~Lee Ivan~Jeliazkov.
+\newblock Mcmc perspectives on simulated likelihood estimation.
+\newblock {\em Advances in Econometrics}, 2010.
+
+\bibitem{jeliazkov2008}
+Martin~Kutzbach Ivan~Jeliazkov, Jennifer~Graves.
+\newblock Fitting and comparison of models for multivariate ordinal outcomes.
+\newblock {\em Bayesian Econometrics}, 2008.
+
+\bibitem{numericalMatlab}
+Kurtis K.~Fink John H.~Matthews.
+
+\bibitem{stern1992}
+Steven Stern.
+\newblock A method for smoothing simulated moments of discrete probabilities in
+  multinomial.
+\newblock {\em Econometrica}, 1992.
+
+\bibitem{sternSimulation}
+Steven Stern.
+\newblock Simulation-based estimation.
+\newblock {\em Journal of Economic Literature}, 1997.
+
+\bibitem{train}
+Kenneth Train.
+\newblock {\em Discrete Choice Models with Simulation}.
+\newblock Cambridge University Press, 2002.
+
+\end{thebibliography}

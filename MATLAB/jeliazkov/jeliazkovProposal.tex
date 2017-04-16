@@ -1,0 +1,172 @@
+\documentclass[]{article}
+ 
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+%opening
+\title{Topics in econometrics}
+\author{Dillon Flannery}
+
+\begin{document}
+
+\maketitle
+\section*{Proposal topic} Certain limited dependent variable (LDV) models are difficult to estimate by traditional maximization methods. The multivariate probit, for instance, cannot be estimated by maximum likelihood estimation because the demands of estimating the high dimensional integrals on current processors is too high. There are other similar discrete choice models that suffer from similar issues so methods to get around evaluating the integrals in these models make estimation of parameters and other related quantities possible. 
+
+To motivate this further the quantity that needs to be evaluated to recover such things as parameter estimates is the probability of $ y_i = 1 $ that is the probability person $ i $ has an observed outcome $ y $. Alternatively, $ y_i $ could equal $ j $ where $ j  $ is one of many choices available or $ y_{ik} = j $ for many choices and many outcomes \cite{jeliazkov2008}. It is assumed that $ y_i = 1 $ or $ j $ based on an underlying model $ z_i = X\beta + \epsilon $, $ \epsilon \sim N(0, \sigma^2) $. Therefore the probability of observing the choice of $ y_i $ is given by 
+\[ P(y_i=1|X) = P(X\beta + \epsilon > 0 ) \]
+\[  = F(X\beta) \]
+Where $ F(\cdot) $ is the correct c.d.f. 
+
+The c.d.f. is an integral over the correct domain. In models of higher dimensionality the integral is not feasible to estimate so simulation methods must be used in order to maximize the log-likelihood function, which depends upon the probabilities. Jeliazkov and Lee \cite{jeliazkovLee} give a summary of many different methods and compare them. One of the methods given is Stern's (1992) method. 
+
+My proposal is based upon this method, Stern 1992. In this paper Stern details a way of overcoming the typical problems associated with AR simulators (non-differentiability, discontinuities and end points of the interval). His idea was to decompose the underlying latent data model as, 
+\[ z_i = \nu_i + \omega_i \]
+where $ \nu_i \sim N(X\beta, \Sigma - \Lambda) $ and $ \omega_i \sim N(0, \Lambda) $ and $ \Lambda = \lambda I $. Then by laws of probability \\
+\begin{table}[H]
+\centering
+\begin{tabular}{rr}
+ $ P(Z < z) $ = & $ P(V + \Omega < z) $ \\ 
+ = &  $ P(V < z - \Omega) $ \\
+  = &  $ P(V < z - \Omega) $ \\
+= & $ \int_{\Omega} P(V < z - \omega|\omega)f_{\Omega}(\omega|\Omega - \Lambda)d\omega $\\
+(because) & $ F_Z(z) = P(V + \Omega < z)  $    \\
+& $ F_Z(z) = P(V < z - \Omega)  $ \\
+& $ F_Z(z) = P(V < z - \Omega)  $ \\
+& $ F_Z(z) = E(P(V < z - \omega|\Omega=\omega))  $ \\
+(independence) & $ F_Z(z) = E(P(V < z - \Omega))  $ \\
+& $ F_Z(z) = \int_{\Omega}F_V(z - \omega|\Omega= \omega)f(\omega|\Omega - \Lambda)d\omega   $ \\
+(then by independence)  & $ \int_{\Omega} \{\prod_i P(V_i < z_i - \omega_i|\omega_i)\}f_{\Omega}(\omega|\Omega - \Lambda)d\omega $\\
+\end{tabular}
+\end{table}
+Then the equation can be rewritten,
+
+\[  P(Z < z)  = \int_{\Omega} \Phi\Big( \frac{\nu_i - \omega_i}{\sqrt{\lambda_i} )}\Big) f_{\Omega}(\omega|\Omega - \Lambda)  d\omega \]
+
+$ \Phi(\cdot) $ is the standard normal c.d.f. $ \lambda_i $ is  the $ ith $ diagonal of the matrix $ \lambda $, usually taken to be as big as possible such that $ \Omega - \Lambda $ is positive definite. The smallest eigenvalue of the matrix $ \Omega $ was suggested by Stern (1992). The simulated probability is found by drawing $ z $ from 
+\[ z \sim N(0,  \Omega - \Lambda ) \]
+
+Jeliazkov and Lee noticed that the simulated probabilities are similar to marginal likelihoods. Given the latent data model above, 
+
+\[ P(y_i | X\beta) = \frac{ 1\{z_i\in B_i\} f_N(z_i|X\beta)  } { f_{TN}(z_i|X\beta) }    \]
+
+The probabilities are essentially marginal likelihoods. Chib (1995) \cite{chib1995} used something similar to the equation above to develop his method of evaluating marginal likelihoods.
+
+My proposal would be to investigate the possibilities of Stern's method of evaluating marginal likelihoods for other models. Models with restricted parameters are a class of models that has been suggested I research. 
+
+\section*{Current Progress} To get started with this project I started by investigating what was involved in simulating probabilities. To make it easy to get into this project I simulated a simple binary probit. The following MATLAB code simulates binary probit data, estimates the parameters by Newton-Raphson, and then also simulates the posterior estimates of the parameters by Metropolis-Hastings. 
+
+\lstinputlisting{probit.m}
+\lstinputlisting{optimizeNewton.m}
+
+The correct estimates, after scaling were .07 each. The MATLAB code correctly solved the maximum likelihood estimates. 
+
+Next, following Stern's 1992 \cite{stern1992} paper I attempted to get the skills together to estimate a model pretending that I could evaluate the normal c.d.f. The method of simulated likelihood (MSL) and method of simulated moments (MSM) was what I tried next. Following Train \cite{train}  I simulated the maximum likelihood by a simple accept reject method. This method was plagued with the usual problems described already. The AR method for the MSL estimator simulates the probabilities $ P(y_i=j) $. The log-likelihood function is $ \sum_{i=1}^{N} \ln P(y_i=j) $. The following MATLAB code simulates these probabilities, 
+
+\lstinputlisting{ARsimulator.m}
+\lstinputlisting{ARmethodSimulateMoments.m}
+
+Care had to be taken to eliminate the actual 0's and 1's from the log likelihood equation, or else NaN's would arise in the estimation. This is one of the serious downsides of this method. Next because the function is not easily differentiable (technically not differentiable at all) I had to write my own Nelder-Mead optimization algorithm in order to estimate this model and recover parameter estimates to see how performance was affected by the lack of continuity and differentiability of the AR method. Below is my Nelder-Mead code \cite{nelderMeadAdaptive} \cite{numericalMatlab}, 
+
+\lstinputlisting{nelderMeadMin.m}
+
+Through a series of simplex operations, shrinking, contracting and expanding this method will find an unconstrained global min without a derivative. The output in MATLAB looks something like this, 
+\begin{table}[H]
+	\centering 
+\begin{tabular}{rrr}
+	Iterations & FunctionValue & Method\\
+	\hline 
+	\hline 
+	1 & 543.535002 & Reflection \\
+	2 & 543.535002 & Expansion \\
+	3 & 511.025947 & Expansion \\
+	4 & 507.923607 & Outside contraction \\
+	5 & 507.923607 & Inside  contraction \\
+	6 & 505.838792 & Inside  contraction \\
+	7 & 505.410080 & Inside  contraction \\
+	8 & 504.450371 & Inside  contraction \\
+	9 & 504.450371 & Reflection \\
+	10 & 504.450371 & Inside  contraction \\
+	11 & 504.164873 & Inside  contraction \\
+	12 & 504.164873 & Inside  contraction \\
+	\vdots & \vdots & \vdots \\
+	\hline 
+	\hline 
+\end{tabular}
+\end{table}
+
+It is important to restart the Nelder-Mead algorithm from a variety of starting places, and to use the previous values found in one run of Nelder-Mead again. After using 5 iterations of this, restarting and optimizing again the Nelder-Mead output found with the simluated log likelihood function the following, 
+
+\begin{table}[H]
+	\centering 
+	\begin{tabular}{rrr}
+			Iteration  & $ \beta_1 $ & $ \beta_2 $ \\
+			\hline \hline 
+			  1 & 0.0669 & 0.0684 \\
+			  2 & 0.0669 & 0.0684 \\
+			  \vdots & \vdots & \vdots \\ 
+	\end{tabular}
+\end{table}
+
+ So the simulated probability using the accept reject method was very close to the actual method of maximum likelihood estimators. 
+ 
+ The MSM estimator is a simulated version of the maximum likelihood estimator. Taking derivatives of the log-likelihood function of a probit one obtains the familiar first order conditions for the MSE, 
+ 
+ \[ 0 = Q(y - P) \]
+ 
+ $ Q = \frac{\partial P}{\partial\beta} \frac{1}{P} $ Root finding methods utilizing a derivative can be used to solve this equation. The simulated version is simply, 
+ \[ 0 = \hat{Q}(y - \hat{P}) \]
+ Where simulated probabilities replace the actual \cite{sternSimulation}. 
+ 
+ However, this is where AR falls apart. Finding a derivative of an simple AR has problems. The most obvious is, its not differentiable. Trying to do this anyway resulted in simply verifying this. The simulating the $ \hat{P} $ the usual way was possible, but then to proceed further one needs to take another derivative to find a Hessian. Since it is not analytically possible from any method I know of the get a closed form solution for the Hessian using simulated probabilities a numerical Hessian must be used. Newton-Raphson will no longer work, instead the multivariate version of the secant method must be used, Broyed-Fletcher-Goldfarb-Shanno. There is no MATLAB version of a solver for systems of nonlinear equations so I had to write my own code for BFGS, 
+ 
+ \lstinputlisting{broydensMethod.m}
+ 
+ The BFGS method is faster if one uses the Sherman-Morrison formula which computes the inverse of the Hessian directly instead of inverting it in each iteration. The Sherman-Morrison gives the inverse of the Hessian as ,
+ 
+ \[ H_{k+1} = H_k - \frac{H_ky_ky_k^{T}H_k}{y_k^{T}H_k y_k} + \frac{s_ks_k^{T}}{y_k^{T}s_k  }\]
+ $ s_k = x_{k+1} - x_{k} $, $ y_k = f_{k+1} - f_k $. 
+ 
+ This method is also equipped with a backstepping line-search because pretending to be ignorant about the true value of the Hessian and giving it a initial value of identity, the method quickly shoots off to infinity. For this reason a scaling parameter $ \tau $ and $ \beta $ were used to scale the step size and the initial identity matrix initially. A better way would be to approximate the numerical Hessian using finite difference methods, however, this needs further research and time. 
+ 
+ This code is able to recover the parameter estimates of the regular probit, however it fails to optimize the simulated first order condition above. Here is the simulated version of the first order condition, 
+ 
+ \lstinputlisting{probitSimulatedScore.m}
+ 
+ In this method a finite difference calculation was used to approximate the numerical derivative of the probabilities. According to Train this was bound to be difficult, 
+ 
+ \begin{quotation}
+ 	Usually, Pˇnj is constant with respect to small changes in the parameters. Its derivative with respect to the parameters is zero in this range. If the parameters change in a way that a reject becomes an accept, then Pˇnj rises by a discrete amount, from M/R to (M +1)/R where M is the number of accepts at the original parameter values. Pˇnj is constant (zero slope) until an accept becomes a reject or vice versa, at which point Pˇnj jumps by 1/R. Its slope at this point is undefined. The first derivative of Pˇnj with respect to the parameters is either zero or undefined.\cite{train}
+ \end{quotation}
+ 
+ I found this to be the case. The MSM estimator would not converge to anything using Broyden's method. The derivatives were not meaningful. The $ \epsilon $ that produced a meaningful difference in the log likelihood was too large and the iterations of Broyden's method jumped around wildly not converging to anything meaningful.
+ 
+ At this point, I have an much better understanding of simulation methods to estimate these types of models, Stern's method being only one of them. Now I need to tweak Stern's method of simulating probabilities to use it on a different type of model completely. Future research time will be spent in these areas. 
+
+ 
+ \bibliography{jeliazkovProposal}
+ \bibliographystyle{plain} 
+ 
+	
+\end{document}

@@ -26,8 +26,5 @@ end
 P1MPinv = (centeredP.*(1-centeredP)).^(-1);
 Q = (derivLL.*P1MPinv);
 sumDLL = Q'*(y-centeredP);
-% Q =( (P1MPinv .* (y-centeredP))'*derivLL )';
-% quadForm = ((y-centeredP).*sum(Q.*Q, 1)')'*(y-centeredP);
-
 end
 

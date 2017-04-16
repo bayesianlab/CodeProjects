@@ -1,0 +1,55 @@
+This is BibTeX, Version 0.99d (TeX Live 2015)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: jeliazkovProposal.aux
+The style file: plain.bst
+Database file #1: jeliazkovProposal.bib
+I was expecting a `,' or a `}'---line 52 of file jeliazkovProposal.bib
+ :  
+ :  title = {Numerical Methods Using Matlab}
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--empty title in numericalMatlab
+Warning--empty publisher in numericalMatlab
+Warning--empty year in numericalMatlab
+You've used 8 entries,
+            2118 wiz_defined-function locations,
+            536 strings with 4943 characters,
+and the built_in function-call counts, 1667 in all, are:
+= -- 153
+> -- 56
+< -- 0
++ -- 25
+- -- 16
+* -- 72
+:= -- 314
+add.period$ -- 22
+call.type$ -- 8
+change.case$ -- 30
+chr.to.int$ -- 0
+cite$ -- 11
+duplicate$ -- 84
+empty$ -- 147
+format.name$ -- 16
+if$ -- 334
+int.to.chr$ -- 0
+int.to.str$ -- 8
+missing$ -- 10
+newline$ -- 41
+num.names$ -- 16
+pop$ -- 46
+preamble$ -- 1
+purify$ -- 24
+quote$ -- 0
+skip$ -- 52
+stack$ -- 0
+substring$ -- 41
+swap$ -- 7
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 28
+warning$ -- 3
+while$ -- 16
+width$ -- 9
+write$ -- 77
+(There was 1 error message)

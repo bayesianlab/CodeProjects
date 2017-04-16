@@ -57,20 +57,17 @@ colnames(inFavFit)[1] <- "id"
 tSpan <- merge(tSpan, inFavFit, by ="id", all.x=TRUE)
 
 # proportion support plot 
-
 g <- ggplot(tSpan, aes(x=Date.x)) + theme(panel.background=element_rect(fill='white'), axis.text = element_text(size= 20),
                                           panel.border = element_rect(fill=NA) )
 g + geom_point(shape=5,aes(y=favorActual))  + geom_jitter(aes(y=favorEst), shape=20, color='red') + xlab('Time') + ylab('Proportion in favor')
 
-# means <- summary(cs)
-# frame <- as.data.frame(means[[1]])
 
-# cs2 <- readRDS('~/Google Drive/CodeProjects/R/cs3.rds')
+# cs3 <- readRDS('~/Google Drive/CodeProjects/R/cs3.rds')
 # js <- readRDS('~/Google Drive/CodeProjects/R/js.rds')
-# saveRDS(js, '~/Google Drive/CodeProjects/R/js.rds')
-# saveRDS(cs, '~/Google Drive/CodeProjects/R/cs.rds')
+
 length(readLines(paste(path, 'prepForJags.R', sep=''))) +
 length(readLines(paste(path, 'modeling.R', sep=''))) +
 length(readLines(paste(path, 'Shirley_Gelman.R', sep=''))) +
-length(readLines(paste(path, 'cleanData.R', sep=''))) +
-165 + 211 + 100
+length(readLines(paste(path, 'cleanData.R', sep=''))) + 165 + 211 + 100
+
+(51*54) + (4*51) + (4*51) + (4*51) + (2*51) + (2*51) + (2*51) + (2*51) + (8*51) + (8*51)

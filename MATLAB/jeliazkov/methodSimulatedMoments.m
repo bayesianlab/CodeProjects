@@ -22,35 +22,24 @@ Sims = 1000;
 qi = 2.*y-1;
 
 
-delta = .01;
-tol = 1e-3
+delta = .00001;
+tol = 1e-3;
 
 gp = @(b)probitLL(y,X, b);
 hp = @(b)probitJ(y,X,b);
 ll = @(b)probitL(y,X, b);
 t = @(b)test(b,ll,gp);
 
-% [yi, ARsimulator(X, beta, eps)];
-b = [.01; .02];
-format
-% simulatedDerivative(b,eps,delta)
+b = [1; 1];
 
 pSS = @(b)probitSimulatedScore(b,delta);
-% aRMSM = @(b)ARmethodSimulateMoments(b);
-% sPWG = @(b)simulatedProbitWithGrad(b, aRMSM, pSS);
-% optimizeNewton(b,gp,hp,1e-3,20,1)
-% pSS(beta)
+f = @(x)fake(x);
+fh = @(x)fakeH(x);
 
 
-% options = optimset('Display', 'iter', 'MaxFunEvals', 100, 'TolX', 1e-8, 'TolFun', 1e-8);
+% broydensMethod(pSS, b, eye(2)*.00001, 1e-4, 1e-7, .5, 20, 20)
 
 
-% simulatedDerivative(beta, eps, delta)
-% simulatedHessian(beta, eps, delta);
-% simd = @(b)simulatedDerivative(b,eps, delta);
-% simh = @(b)simulatedHessian(b,eps,delta);
 
-% newtonMSM([0;0], simd, simh, 1e-3, 500, 1)
 
-% simd(beta)
 

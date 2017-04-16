@@ -14,6 +14,11 @@ while iterationCount < maxIterations
     end
     H = -linsolve(J(X_0), F(X_0));
     X_Next = X_0 + H;
+    if norm(X_Next - X_0) < epsilon
+        fprintf('X guess not changing with Newton iterations:\n')
+        disp(X_Next)
+        return
+    end
     X_0 = X_Next;
     if dispOn == 1
         fprintf('X_0 Value at iteration %i \n', iterationCount)
@@ -21,6 +26,7 @@ while iterationCount < maxIterations
         disp(F(X_0))
     end
     if norm(F(X_0)) < epsilon
+        fprintf('Function value 0')
         return
     end
 end
