@@ -1,5 +1,8 @@
-function [ simP ] = arkMethod( X,beta, sims)
-[r,~] = size(X);
-simP = mean(0 < normrnd(repmat(X*beta, 1, sims), 1,r,sims),2)
-end
-
+% Accept Reject Kernal Estimator
+clear;clc;
+sims = 10000;
+burnin = floor(.1*sims);
+arkSimulations(3,sims,burnin)
+% arkSimulations(6,sims,burnin)
+% arkSimulations(9,sims,burnin)
+% arkSimulations(12,sims,burnin)

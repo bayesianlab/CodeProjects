@@ -1,4 +1,4 @@
-function [xv,it]=broyden(x,f,n,tol)
+function [xv,it]=tb(x,f,n,tol)
 % Broyden's method for solving a system of n non-linear equations
 % in n variables.
 %
