@@ -17,10 +17,10 @@ for j = 1:3
     fprintf('mu %s\n', names{j})
     for i = 1:length(rho)
         sigmai = createSigma(rho(i), J);
-        [marginalLikelihood,v ] = askSimulator(0,Inf, muj, sigmai, sims,...
+        [marginalLikelihood,se ] = askSimulator(0,Inf, muj, sigmai, sims,...
             burnin);
         fprintf('rho = %.1f (Marginal Likelihood, NSE) = (%.4f, %.4f)\n',...
-            rho(i), marginalLikelihood, v)
+            rho(i), marginalLikelihood, 100*se)
     end
     fprintf('\n')
 end

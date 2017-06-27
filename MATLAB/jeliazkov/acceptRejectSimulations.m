@@ -18,8 +18,8 @@ for j = 1:3
     for i = 1:length(rho)
         sigmai = createSigma(rho(i), J);
         [marginalLikelihood, v ] = acceptRejectSimulator(sims,1, muj, sigmai);
-        fprintf(' rho = %.1f\n (Marginal Likelihood, NSE) = (%.4f, %4f)\n\n',...
-            rho(i), marginalLikelihood, v)
+        fprintf(' rho = %.1f (Marginal Likelihood, NSE) = (%.4f, %4f)\n',...
+            rho(i), marginalLikelihood, 100*v)
     end
     fprintf('\n')
 end

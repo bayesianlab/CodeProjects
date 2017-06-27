@@ -1,4 +1,4 @@
-function [  ] = arkSimulations(J, sims, burnin)
+function [  ] = arkSimulations(J, sims)
 muA1 = [0, .5, 1];
 muB1 = [-.5, 0, .5];
 muC1 = [-1, -.5, 0];
@@ -20,8 +20,9 @@ for j = 1:3
     fprintf('mu %s\n', names{j})
     for i = 1:length(rho)
         sigmai = createSigma(rho(i), J);
-        [marginalLikelihood ] = arkSimulator(0,Inf, muj, sigmai, sims, bd, lim);
-        fprintf('rho = %.1f Marginal Likelihood = %.4f\n', rho(i), marginalLikelihood)
+        [marginalLikelihood, se ] = arkSimulator(0,Inf, muj, sigmai, sims, bd, lim);
+        fprintf('rho = %.1f (Marginal Likelihood, NSE) = (%.4f, %.4f)\n',...
+            rho(i), marginalLikelihood, 100*se)
     end
     fprintf('\n')
 end

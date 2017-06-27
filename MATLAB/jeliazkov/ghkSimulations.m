@@ -1,4 +1,4 @@
-function [ output_args ] = ghkSimulations( J, sims )
+function [  ] = ghkSimulations( J, sims )
 fprintf('GHK simulations\n')
 muA1 = [0, .5, 1];
 muB1 = [-.5, 0, .5];
@@ -18,8 +18,9 @@ for j = 1:3
     fprintf('mu %s\n', names{j})
     for i = 1:length(rho)
         sigmai = createSigma(rho(i), J);
-        [marginalLikelihood ] = ghk(1, sims, J, muj, sigmai);
-        fprintf('rho = %.1f Marginal Likelihood = %.4f\n', rho(i), marginalLikelihood)
+        [marginalLikelihood, se ] = ghk(sims, J, muj, sigmai);
+        fprintf('rho = %.1f (Marginal Likelihood, se) = (%.4f %.4f)\n',...
+            rho(i), marginalLikelihood, 100*se)
     end
     fprintf('\n')
 end

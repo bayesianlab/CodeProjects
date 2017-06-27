@@ -1,4 +1,4 @@
-function [ml] = crtSimulator(a, b, mu, sigma, sims, burnin, varargin)
+function [ml, se] = crtSimulator(a, b, mu, sigma, sims, burnin, varargin)
 J = length(mu);
 precision = inv(sigma);   
 conditionalVars = diag(precision);
@@ -26,6 +26,7 @@ for sim = 2:(sims)
 end
 sample = sample(burnin+1:sims,:,:);
 zStar = squeeze(mean(sample(:, 1, :)))';
-ml = log(mvnpdf(zStar, mu, sigma)/mean(prod(transitionKernel(a,b,zStar,...
-    sample, mu, precision, conditionalVars),2)));
+K = transitionKernel(a,b,zStar, sample, mu, precision, conditionalVars);
+ml = log(mvnpdf(zStar, mu, sigma)/mean(prod(K,2)));
+se = lpVarCRT(sample, 25, a,b,mu,sigma,precision);
 end

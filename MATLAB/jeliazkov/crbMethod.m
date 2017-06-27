@@ -1,7 +1,7 @@
 % Gibbs truncated multivariate normal
+% verified
 clear;clc;
-% rng(4.5);
-sims = 10000;
+sims = 11000;
 burnin = 1000;
 
 crbSimulations(3, sims, burnin)

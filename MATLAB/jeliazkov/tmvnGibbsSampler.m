@@ -3,7 +3,7 @@ function [ sample] = tmvnGibbsSampler(a, b, mu, sigma,...
 % Geweke 1991, not really. Draws from a truncated multivariate normal
 % distribution. 
 J = length(mu);
-precision = inv(sigma);   
+precision = inv(sigma);  
 conditionalVars = diag(precision);
 yDim = 1:J;
 sample = zeros(sims, 3, J);
@@ -11,7 +11,7 @@ if nargin > 6
     sample(1,1,:) = varargin{1};
 else
     disp('using random draws')
-    sample(1,1,:) = mvnrnd(mu, precision);
+    sample(1,1,:) = mvnrnd(mu, sigma);
 end
 for sim = 2:(sims)
     for j = yDim
@@ -19,7 +19,8 @@ for sim = 2:(sims)
         Hxx = conditionalVars(j);
         Hyx = precision(j, blockIndices);
         sigmaxx = sqrt(Hxx^(-1));
-        % why sim-1?
+        % why sim-1? because you would overwrite the current
+        % row. you can change this later.
         xNotj = squeeze(sample(sim-1, 1, blockIndices))';
         muNotj = mu(blockIndices);
         muj = conditionalMeanMVN(mu(j), Hxx, Hyx, xNotj, muNotj);
