@@ -1,4 +1,4 @@
-function [ kernel ] = arkMarginalLikelihood( a, b, mu, sigma, draws )
+function [ kernel,zStar ] = arkMarginalLikelihood( a, b, mu, sigma, draws )
 J = length(mu);
 precision = inv(sigma);   
 conditionalVars = diag(precision);

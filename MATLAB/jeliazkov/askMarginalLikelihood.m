@@ -1,4 +1,4 @@
-function [ Kernel ] = askMarginalLikelihood( a,b, mu, sigma, sims, burnin )
+function [ Kernel, zStar ] = askMarginalLikelihood( a,b, mu, sigma, sims, burnin )
 eta = askGibbs(a,b,mu, sigma,sims,burnin);
 L = chol(sigma, 'lower');
 z = mu + (L*eta')';

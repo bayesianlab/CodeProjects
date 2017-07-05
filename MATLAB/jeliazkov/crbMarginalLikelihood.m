@@ -1,5 +1,5 @@
 function [zStar, fzStar] = crbMarginalLikelihood(a,b,mu, precision, X,sims)
-% X is the main run results, stored X(dim1->sims, dim2->[draw, mu,sigma], dim3->variable) <- z
+% X is the main run results, stored X(dim1->sims, dim2->[draw, mu,sigma], dim3->variable) 
 [~,~,J] = size(X);
 zStar = zeros(1,J);
 means = reshape(mean(X(:, 1, :)), [1,J]);

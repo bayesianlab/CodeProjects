@@ -1,4 +1,4 @@
-function [ K ] = crtMarginalLikelihood(a, b, mu, sigma, sims, burnin, varargin)
+function [ K, zStar ] = crtMarginalLikelihood(a, b, mu, sigma, sims, burnin, varargin)
 J = length(mu);
 precision = inv(sigma);   
 conditionalVars = diag(precision);

@@ -16,6 +16,7 @@ sSqd = (e'*e)/N;
 thetaMLE = [sSqd; bMLE];
 
 invFisher = [(2*sSqd^2)/N, [0,0];...
+    
     [0;0], sSqd*XpXinv];
 variances = diag(invFisher);
 C = chol(invFisher, 'lower');
@@ -41,7 +42,6 @@ importance = mean(lrLikelihood(y,X,betaDraws, sigmaDraws) +...
 
 
 % samp = tmvnGibbsSampler(0,Inf, thetaMLE', invFisher, 100,10, [0,0,0]);
-% 
 % [z, fz] = crbMarginalLikelihood(0, Inf, thetaMLE', inv(invFisher), samp, 100);
 % b = z(2:3)';
 % s = z(1);
@@ -51,7 +51,7 @@ importance = mean(lrLikelihood(y,X,betaDraws, sigmaDraws) +...
 % K = crtMarginalLikelihood(0,Inf, thetaMLE', invFisher, 100, 10, [0,0,0]);
 % crt = lrLikelihood(y,X, b, s)  + log(mvnpdf(b', [0,0], eye(2))) +...
 %     log(invgampdf(s, 3,6)) - log(mean(prod(K,2)))
-% 
+
 % K = arkMarginalLikelihood(0, Inf, thetaMLE', invFisher, 1000);
 % ark = lrLikelihood(y,X, b, s)  + log(mvnpdf(b', [0,0], eye(2))) +...
 %     log(invgampdf(s, 3,6)) - log(mean(prod(K,2)))
