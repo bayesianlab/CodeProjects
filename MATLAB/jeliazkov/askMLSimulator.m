@@ -20,8 +20,8 @@ for i = 1:Sims
     [K, z] = askMarginalLikelihood(0, Inf, thetaMLE', invFisher, 2200, 200);
     b = z(2:3)';
     s = z(1);
-    ask(i) = lrLikelihood(y,x, b, s)  + log(mvnpdf(b', [0,0], eye(2))) +...
-        log(invgampdf(s, 3,6)) - log(mean(prod(K,2)));
+    ask(i) = lrLikelihood(y,x, b, s)  + logmvnpdf(b', [0,0], eye(2)) +...
+        loginvgampdf(s, 3,6) - log(mean(prod(K,2)));
 end
 askStd = batchMeans(batches, ask);
 askMean = mean(ask);
