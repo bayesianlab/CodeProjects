@@ -1,8 +1,5 @@
-function [] = importanceMLSimulation()
-rng(105)
+function [] = importanceMLSimulation(N, Sims, batches)
 
-N = 10;
-Sims = 30;
 importance = zeros(Sims, 1);
 X = normrnd(1,1,N,2, Sims);
 er = normrnd(0,1,N, Sims);
@@ -21,8 +18,7 @@ for i = 1:Sims
         [0;0], sSqd*XpXinv];
     importance(i) = lrmlRestricted(0, Inf, y, x, 3, 6, thetaMLE, invFisher, 1100, 100);
 end
-
-importanceStd = batchMeans(15, importance);
+importanceStd = batchMeans(batches, importance);
 importanceMean = mean(importance);
 fprintf('Importance sampling mean, std: %f, %f\n', importanceMean, importanceStd);
 

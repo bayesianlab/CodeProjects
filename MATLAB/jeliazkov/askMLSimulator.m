@@ -1,17 +1,18 @@
-function [] = askMLSimulator()
+function [] = askMLSimulator(N, Sims, batches)
 
-N = 50;
-Sims = 1000;
+
 ask = zeros(Sims, 1);
+X = normrnd(1,1,N,2, Sims);
+er = normrnd(0,1,N, Sims);
 for i = 1:Sims
-    X = normrnd(1,1, N,2);
-    y = X*[.25;.45]  + normrnd(0,1, N,1);
-    [N, p] = size(X);
-    XpX = (X'*X);
+    x = X(:,:, i);
+    y = x*[.25;.45]  + er(:,i);
+    [N, ~] = size(x);
+    XpX = (x'*x);
     XpXinv = (XpX)^(-1);
-    Xpy = X'*y;
+    Xpy = x'*y;
     bMLE = XpX^(-1) * Xpy;
-    e = y - X*bMLE;
+    e = y - x*bMLE;
     sSqd = (e'*e)/N;
     thetaMLE = [sSqd; bMLE];
     invFisher = [(2*sSqd^2)/N, [0,0];...
@@ -19,11 +20,10 @@ for i = 1:Sims
     [K, z] = askMarginalLikelihood(0, Inf, thetaMLE', invFisher, 2200, 200);
     b = z(2:3)';
     s = z(1);
-    ask(i) = lrLikelihood(y,X, b, s)  + log(mvnpdf(b', [0,0], eye(2))) +...
+    ask(i) = lrLikelihood(y,x, b, s)  + log(mvnpdf(b', [0,0], eye(2))) +...
         log(invgampdf(s, 3,6)) - log(mean(prod(K,2)));
-
 end
-askStd = batchMeans(15, ask);
+askStd = batchMeans(batches, ask);
 askMean = mean(ask);
 fprintf('ASK mean, std: %f, %f\n', askMean, askStd);
 
