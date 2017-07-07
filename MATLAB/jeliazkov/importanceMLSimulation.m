@@ -1,22 +1,20 @@
 function [] = importanceMLSimulation(N, Sims, batches)
 
 importance = zeros(Sims, 1);
-X = normrnd(1,1,N,2, Sims);
-er = normrnd(0,1,N, Sims);
-for i = 1:Sims
-    x = X(:,:, i);
-    y = x*[.25;.45]  + er(:,i);
-    [N, ~] = size(x);
-    XpX = (x'*x);
-    XpXinv = (XpX)^(-1);
-    Xpy = x'*y;
-    bMLE = XpX^(-1) * Xpy;
-    e = y - x*bMLE;
-    sSqd = (e'*e)/N;
-    thetaMLE = [sSqd; bMLE];
-    invFisher = [(2*sSqd^2)/N, [0,0];...
+X = normrnd(1,1,N,2);
+er = normrnd(0,1,N,1);
+y = X*[.25;.45]  + er;
+XpX = (X'*X);
+XpXinv = (XpX)^(-1);
+Xpy = X'*y;
+bMLE = XpX^(-1) * Xpy;
+e = y - X*bMLE;
+sSqd = (e'*e)/N;
+thetaMLE = [sSqd; bMLE];
+invFisher = [(2*sSqd^2)/N, [0,0];...
         [0;0], sSqd*XpXinv];
-    importance(i) = lrmlRestricted(0, Inf, y, x, 3, 6, thetaMLE, invFisher, 1100, 100);
+for i = 1:Sims
+    importance(i) = lrmlRestricted(0, Inf, y, X, 3, 6, thetaMLE, invFisher, 1100, 100);
 end
 importanceStd = batchMeans(batches, importance);
 importanceMean = mean(importance);
