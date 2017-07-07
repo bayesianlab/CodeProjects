@@ -1,19 +1,21 @@
-function [] = crbMLSimulator(N, Sims, batches)
+function [] = crbMLSimulator(N, coefs, Sims, batches)
 
 
 crb = zeros(Sims, 1);
-X = normrnd(1,1,N,2);
+p = length(coefs);
+X = normrnd(1,1,N,p);
 er = normrnd(0,1,N,1);
-y = X*[.25;.45]  + er;
+y = X*coefs  + er;
 XpX = (X'*X);
 XpXinv = (XpX)^(-1);
 Xpy = X'*y;
 bMLE = XpX^(-1) * Xpy;
 e = y - X*bMLE;
-sSqd = (e'*e)/N;
+sSqd = (e'*e)/N;  
 thetaMLE = [sSqd; bMLE];
-invFisher = [(2*sSqd^2)/N, [0,0];...
-    [0;0], sSqd*XpXinv];
+empty = zeros(p,1);
+invFisher = [(2*sSqd^2)/N, empty' ;...
+        empty, sSqd*XpXinv];
 
 for i = 1:Sims
     samp = tmvnGibbsSampler(0,Inf, thetaMLE', invFisher, 100,10, [0,0,0]);
@@ -27,6 +29,4 @@ crbStd = batchMeans(batches, crb);
 crbMean= mean(crb);
 fprintf('CRB mean, std: %f, %f\n', crbMean, crbStd);
 
-WarnWave = [sin(1:.6:400), sin(1:.7:400), sin(1:.4:400)];
-Audio = audioplayer(WarnWave, 22050);
-play(Audio);
+

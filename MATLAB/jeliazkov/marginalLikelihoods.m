@@ -4,14 +4,14 @@ rng(101)
 
 
 N = 2000;
-Sims = 1100;
-batches = 100;
+Sims = 1000;
+batches = 15;
 coefs = [.25; .45];
-importanceMLSimulation(N, coefs, Sims, batches)
-% crtMLSimulations(N, Sims, batches)
-% crbMLSimulator(N, Sims, batches)
-% arkMLSimulator(N, Sims, batches)
-% askMLSimulator(N, Sims, batches)
+% importanceMLSimulation(N, coefs, Sims, batches)
+% crtMLSimulations(N, coefs, Sims, batches)
+crbMLSimulator(N, coefs, Sims, batches)
+arkMLSimulator(N, coefs, Sims, batches)
+askMLSimulator(N, coefs, Sims, batches)
 
 % mu = [0,.5,1];
 % sigma = createSigma(.7,3)
