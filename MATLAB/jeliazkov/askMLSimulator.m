@@ -1,6 +1,6 @@
-function [] = askMLSimulator(N, coefs, Sims, batches)
+function [] = askMLSimulator(N, coefs, Sims, batches,seed)
 
-
+rng(seed);
 ask = zeros(Sims, 1);
 p = length(coefs);
 X = normrnd(1,1,N,p);
@@ -20,7 +20,7 @@ for i = 1:Sims
     [K, z] = askMarginalLikelihood(0, Inf, thetaMLE', invFisher, 2200, 200);
     b = z(2:3)';
     s = z(1);
-    ask(i) = lrLikelihood(y,X, b, s)  + logmvnpdf(b', [0,0], eye(2)) +...
+    ask(i) = lrLikelihood(y,X, b, s)  + logmvnpdf(b', empty', eye(p)) +...
         loginvgampdf(s, 3,6) - log(mean(prod(K,2)));
 end
 askStd = batchMeans(batches, ask);

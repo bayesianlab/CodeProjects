@@ -1,5 +1,5 @@
-function [  ] = crtMLSimulations(N, coefs, Sims, batches)
-
+function [  ] = crtMLSimulations(N, coefs, Sims, batches,seed)
+rng(seed);
 crt= zeros(Sims, 1);
 p = length(coefs);
 X = normrnd(1,1,N,p);
@@ -17,12 +17,12 @@ invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
 
 for i = 1:Sims
-    [K, z] = crtMarginalLikelihood(0, Inf, thetaMLE', invFisher, 1100, 100,...
-        [0, 0, 0]);
+    [K, z] = crtMarginalLikelihood(0, Inf, thetaMLE', invFisher, 2200, 200,...
+        zeros(1,p+1));
     b = z(2:3)';
     s = z(1);
     crt(i) = lrLikelihood(y,X, b, s)...
-        + logmvnpdf(b', [0,0], eye(2))...
+        + logmvnpdf(b', empty', eye(2))...
         + loginvgampdf(s, 3,6)...
         - log(mean(prod(K,2)));  
 end

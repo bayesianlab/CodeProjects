@@ -1,5 +1,6 @@
-function [] = importanceMLSimulation(N, coefs, Sims, batches)
+function [] = importanceMLSimulation(N, coefs, Sims, batches,seed)
 % coefs as column
+rng(seed)
 p = length(coefs);
 importance = zeros(Sims, 1);
 X = normrnd(1,1,N,p);
@@ -22,6 +23,3 @@ importanceStd = batchMeans(batches, importance);
 importanceMean = mean(importance);
 fprintf('Importance sampling mean, std: %f, %f\n', importanceMean, importanceStd);
 
-WarnWave = [sin(1:.6:400), sin(1:.7:400), sin(1:.4:400)];
-Audio = audioplayer(WarnWave, 22050);
-play(Audio);

@@ -1,26 +1,53 @@
 clear; clc;
 
-rng(101)
+
 
 
 N = 2000;
 Sims = 1000;
 batches = 15;
-coefs = [.25; .45];
-% importanceMLSimulation(N, coefs, Sims, batches)
-% crtMLSimulations(N, coefs, Sims, batches)
-crbMLSimulator(N, coefs, Sims, batches)
-arkMLSimulator(N, coefs, Sims, batches)
-askMLSimulator(N, coefs, Sims, batches)
+seed = 101;
+rng(seed)
+coefs = unifrnd(0,1,40,1);
+c=coefs(1:4);
+fprintf('Coefs\n')
+fprintf('======\n')
+fprintf('%.2f\n', c)
+% importanceMLSimulation(N, c, Sims, batches, seed)
+% crtMLSimulations(N, c, Sims, batches,seed)
+% crbMLSimulator(N, c, Sims, batches,seed)
+% arkMLSimulator(N, c, Sims, batches, seed)
+% askMLSimulator(N, c, Sims, batches,seed)
 
-% mu = [0,.5,1];
-% sigma = createSigma(.7,3)
-% ev = min(eig(sigma))
-% sigma - eye(3)*ev
+fprintf('\n')
+c = coefs(5:12);
+fprintf('Coefs\n')
+fprintf('======\n')
+fprintf('%.2f\n', c)
+% importanceMLSimulation(N, c, Sims, batches, seed)
+% crtMLSimulations(N, c, Sims, batches,seed)
+% crbMLSimulator(N, c, Sims, batches,seed)
+% arkMLSimulator(N, c, Sims, batches, seed)
+% askMLSimulator(N, c, Sims, batches,seed)
 
+fprintf('\n')
+c = coefs(13:24);
+fprintf('Coefs\n')
+fprintf('======\n')
+fprintf('%.2f\n', c)
+% importanceMLSimulation(N, c, Sims, batches, seed)
+% crtMLSimulations(N, c, Sims, batches,seed)
+% crbMLSimulator(N, c, Sims, batches,seed)
+% arkMLSimulator(N, c, Sims, batches, seed)
+% askMLSimulator(N, c, Sims, batches,seed)
 
-
-% newMethodSimulator(0,Inf,mu,sigma,10000,1000)
-% crtSimulations(3, 1000,100)
-% askSimulations(3, 1000,100)
-% arkSimulations(3, 1000)
+fprintf('\n')
+c = coefs(25:40);
+fprintf('Coefs\n')
+fprintf('======\n')
+fprintf('%.2f\n', c)
+% importanceMLSimulation(N, c, Sims, batches, seed)
+% crtMLSimulations(N, c, Sims, batches,seed)
+% crbMLSimulator(N, c, Sims, batches,seed)
+% arkMLSimulator(N, c, Sims, batches, seed)
+% askMLSimulator(N, c, Sims, batches,seed)

@@ -1,6 +1,6 @@
-function [] = crbMLSimulator(N, coefs, Sims, batches)
+function [] = crbMLSimulator(N, coefs, Sims, batches, seed)
 
-
+rng(seed);
 crb = zeros(Sims, 1);
 p = length(coefs);
 X = normrnd(1,1,N,p);
@@ -18,11 +18,11 @@ invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
 
 for i = 1:Sims
-    samp = tmvnGibbsSampler(0,Inf, thetaMLE', invFisher, 100,10, [0,0,0]);
+    samp = tmvnGibbsSampler(0,Inf, thetaMLE', invFisher, 2200,200, zeros(1,p+1));
     [z, fz] = crbMarginalLikelihood(0, Inf, thetaMLE', inv(invFisher), samp, 2000);
     b = z(2:3)';
     s = z(1);
-    crb(i) = lrLikelihood(y,X, b, s)  + log(mvnpdf(b', [0,0], eye(2))) + ...
+    crb(i) = lrLikelihood(y,X, b, s)  + log(mvnpdf(b', empty', eye(p))) + ...
         log(invgampdf(s, 3,6)) - log(prod(fz,2));
 end
 crbStd = batchMeans(batches, crb);

@@ -1,5 +1,5 @@
-function [] = arkMLSimulator(N, coefs, Sims, batches)
-
+function [] = arkMLSimulator(N, coefs, Sims, batches, seed)
+rng(seed);
 ark = zeros(Sims, 1);
 p = length(coefs);
 X = normrnd(1,1,N,p);
