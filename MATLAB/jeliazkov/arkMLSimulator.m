@@ -18,7 +18,7 @@ invFisher = [(2*sSqd^2)/N, empty' ;...
 
 for i = 1:Sims
     [K, z] = arkMarginalLikelihood(0, Inf, thetaMLE', invFisher, 2000);
-    b = z(2:3)';
+    b = z(2:p)';
     s = z(1);
     ark(i) = lrLikelihood(y,X, b, s)  + logmvnpdf(b', [0,0], eye(2)) +...
         loginvgampdf(s, 3,6) - log(mean(prod(K,2)));

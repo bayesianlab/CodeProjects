@@ -17,7 +17,8 @@ empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
 for i = 1:Sims
-    importance(i) = lrmlRestricted(0, Inf, y, X, 3, 6, thetaMLE, invFisher, 1100, 100);
+    importance(i) = lrmlRestricted(0, Inf, y, X, 3, 6, thetaMLE, invFisher,...
+        1100, 100);
 end
 importanceStd = batchMeans(batches, importance);
 importanceMean = mean(importance);

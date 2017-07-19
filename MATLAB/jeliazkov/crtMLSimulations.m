@@ -2,27 +2,29 @@ function [  ] = crtMLSimulations(N, coefs, Sims, batches,seed)
 rng(seed);
 crt= zeros(Sims, 1);
 p = length(coefs);
-X = normrnd(1,1,N,p);
-er = normrnd(0,1,N,1);
+L = chol(createSigma(.7, p), 'lower');
+X =  2 + normrnd(0,1, N,p)*L ;
+% X = normrnd(1,1,N,p);
+er = normrnd(0,.5,N,1);
 y = X*coefs  + er;
-XpX = (X'*X);
+XpX = X'*X;
 XpXinv = (XpX)^(-1);
 Xpy = X'*y;
 bMLE = XpX^(-1) * Xpy;
 e = y - X*bMLE;
-sSqd = (e'*e)/N;  
-thetaMLE = [sSqd; bMLE];
+sSqd = (e'*e)/(N-p);  
+thetaMLE = [sSqd; bMLE]
 empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
-        empty, sSqd*XpXinv];
-
+        empty, sSqd.*XpXinv]
+    
 for i = 1:Sims
-    [K, z] = crtMarginalLikelihood(0, Inf, thetaMLE', invFisher, 2200, 200,...
-        zeros(1,p+1));
-    b = z(2:3)';
+    [K, z] = crtMarginalLikelihood(0, Inf, thetaMLE', invFisher, 50, 1,...
+        thetaMLE);
+    b = z(2:p+1)';
     s = z(1);
     crt(i) = lrLikelihood(y,X, b, s)...
-        + logmvnpdf(b', empty', eye(2))...
+        + logmvnpdf(b', empty', eye(p))...
         + loginvgampdf(s, 3,6)...
         - log(mean(prod(K,2)));  
 end
@@ -30,10 +32,6 @@ end
 crtStd = batchMeans(batches, crt);
 crtMean = mean(crt);
 fprintf('CRT mean, std: %f, %f\n', crtMean, crtStd);
-
-WarnWave = [sin(1:.6:400), sin(1:.7:400), sin(1:.4:400)];
-Audio = audioplayer(WarnWave, 22050);
-play(Audio);
 
 end
 

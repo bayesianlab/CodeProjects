@@ -1,6 +1,6 @@
 function [ K, zStar ] = crtMarginalLikelihood(a, b, mu, sigma, sims, burnin, varargin)
 J = length(mu);
-precision = inv(sigma);   
+precision = inv(sigma);
 conditionalVars = diag(precision);
 yDim = 1:J;
 sample = zeros(sims, 3, J);
@@ -20,10 +20,15 @@ for sim = 2:(sims)
         sigmaxx = sqrt(Hxx^(-1));
         xNotj = squeeze(sample(sim-1, 1, blockIndices))';
         muNotj = mu(blockIndices);
-        muj = conditionalMeanMVN(mu(j), Hxx, Hyx, xNotj, muNotj);
+        muj = conditionalMeanMVN(mu(j), Hxx, Hyx, xNotj, muNotj, a);
+        if muj == -10
+            sample
+            return
+        end
         sample(sim, :, j) = [tnormrnd(a,b, muj, sigmaxx), muj, sigmaxx];
     end
 end
+sample
 sample = sample(burnin+1:sims,:,:);
 zStar = squeeze(mean(sample(:, 1, :)))';
 K = transitionKernel(a,b,zStar, sample, mu, precision, conditionalVars);
