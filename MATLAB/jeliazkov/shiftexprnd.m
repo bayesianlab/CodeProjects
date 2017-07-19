@@ -1,4 +1,4 @@
-function [ rv ] = shiftexprnd(mu, shift, N)
-rv = (shift*mu - (log(exp(mu*shift) - unifrnd(shift,1,N,1)))) ./ mu;
+function [ rv ] = shiftexprnd(mu, shift, N, p)
+rv = (shift.*mu - (log(1 - unifrnd(0,1,N,p)))) ./ mu;
 end
 

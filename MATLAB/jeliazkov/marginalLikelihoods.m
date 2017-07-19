@@ -55,9 +55,4 @@ c = coefs(25:40);
 % arkMLSimulator(N, c, Sims, batches, seed)
 % askMLSimulator(N, c, Sims, batches,seed)
 
-exppdf(0:.1:2, .5)
-figure(1)
-hist(exprnd(.5, 1000,1))
-figure(2)
-hist(shiftexprnd(2, 1, 1000))
-shiftexppdf(2, 1, 1:.1:2)
+hist(robertRandVars(1, 1, 150, 1))
