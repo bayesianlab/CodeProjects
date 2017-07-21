@@ -1,20 +1,14 @@
-function [ y ] = robertRandVars( mu, alpha, N, p )
-z = shiftexprnd(mu, alpha, N, p);
-
-if mu < alpha
-    rv = exp(((-(alpha - z).^2))./2);
-else
-    rv = exp( ((mu - alpha).^2)./2) .* exp(-((alpha - z).^2)./2 );
-end
-u = unifrnd(0,1,N,p);
-logicalVector = u <= rv;
-len = sum(logicalVector);
-y = -rv(logicalVector, :);
-resample = N - len;
-if resample >= 1
-    y = vertcat(y, robertRandVars(mu, alpha, resample, p));
-else
-    return
+function [ x ] = robertRandVars( a, b, N, p )
+lambda = (a + sqrt(a^2 + 4)) / 2;
+c = 0;
+x = zeros(N,p);
+while  c < N
+    u = unifrnd(0,1,1);
+    z = shiftexprnd(a,b, lambda, 1, p);
+    if u <= exp( (z - lambda)^2  / 2)
+        c = c + 1;
+        x(c,:) = z;
+    end
 end
 end
 
