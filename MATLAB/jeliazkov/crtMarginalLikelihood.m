@@ -20,12 +20,11 @@ for sim = 2:(sims)
         sigmaxx = sqrt(Hxx^(-1));
         xNotj = squeeze(sample(sim-1, 1, blockIndices))';
         muNotj = mu(blockIndices);
-        muj = conditionalMeanMVN(mu(j), Hxx, Hyx, xNotj, muNotj, a);
+        muj = conditionalMeanMVN(mu(j), Hxx, Hyx, xNotj, muNotj);
         sample(sim, :, j) = [tnormrnd(a,b, muj, sigmaxx), muj, sigmaxx];
     end
 end
 sample = sample(burnin+1:sims,:,:);
-sample
 zStar = squeeze(mean(sample(:, 1, :)))';
 K = transitionKernel(a,b,zStar, sample, mu, precision, conditionalVars);
 end

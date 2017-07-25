@@ -1,4 +1,4 @@
-function [ cmu ] = conditionalMeanMVN(mu, Hxx, Hyx, xNotj, muNotj, varargin)
+function [ cmu ] = conditionalMeanMVN(mu, Hxx, Hyx, xNotj, muNotj)
 % expect mu as a row vector
 [~, c1] = size(xNotj);
 [~, c2] = size(muNotj);
