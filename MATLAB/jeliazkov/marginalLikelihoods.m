@@ -4,7 +4,7 @@ clear; clc;
 
 rng(9)
 N = 1000;
-Sims = 5;
+Sims = 20;
 batches = 2;
 seed = 101;
 % rng(seed)
@@ -15,7 +15,7 @@ fprintf('======\n')
 fprintf('%.2f\n', c)
 importanceMLSimulation(N, c, Sims, batches, seed)
 crtMLSimulations(N, c, Sims, batches,seed)
-crbMLSimulator(N, c, Sims, batches,seed)
+% crbMLSimulator(N, c, Sims, batches,seed)
 % arkMLSimulator(N, c, Sims, batches, seed)
 % askMLSimulator(N, c, Sims, batches,seed)
 
