@@ -3,7 +3,7 @@ function [ sample] = tmvnGibbsSampler(a, b, mu, sigma,...
 % Geweke 1991, not really. Draws from a truncated multivariate normal
 % distribution. 
 J = length(mu);
-precision = inv(sigma);  
+precision = inv(sigma);
 conditionalVars = diag(precision);
 yDim = 1:J;
 sample = zeros(sims, 3, J);

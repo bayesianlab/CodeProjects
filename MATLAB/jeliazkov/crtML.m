@@ -1,10 +1,7 @@
 function [ K, zStar ] = crtML(a, b, mu, sigma, sims, burnin, varargin)
 J = length(mu);
 L = chol(sigma, 'lower');
-alpha = ones(J,1).*a - (inv(L)*mu');
-beta = ones(J,1).*b - (inv(L)*mu');
 H = inv(sigma);
-yDim = 1:J;
 notj = notJindxs(J);
 sample = zeros(sims, 3, J);
 
@@ -15,7 +12,7 @@ else
     sample(1,1,:) = mvnrnd(mu, sigma);
 end
 
-sample(:,1,:) = (L*truncNormStandardized(alpha, beta, sims, J)' + mu')';
+sample(:,1,:) = (L*ghkGibbsSampler(a, b, mu, sigma, sims)' + mu')';
 sample = sample(burnin+1:sims,:,:);
 for s = 1:sims-burnin
     for j = 1:J
