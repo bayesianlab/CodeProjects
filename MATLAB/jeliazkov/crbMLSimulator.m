@@ -18,8 +18,8 @@ invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
 
 for i = 1:Sims
-    samp = tmvnGibbsSampler(0,Inf, thetaMLE', invFisher, 2200,200, zeros(1,p+1));
-    [z, fz] = crbMarginalLikelihood(0, Inf, thetaMLE', inv(invFisher), samp, 2000);
+    samp = tmvnGibbsSampler(0,Inf, thetaMLE', invFisher, 550,50, zeros(1,p+1));
+    [z, fz] = crbMarginalLikelihood(0, Inf, thetaMLE', inv(invFisher), samp, 500);
     b = z(2:p+1)';
     s = z(1);
     crb(i) = lrLikelihood(y,X, b, s)  + logmvnpdf(b', empty', eye(p)) + ...
