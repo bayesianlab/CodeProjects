@@ -22,8 +22,8 @@ for i = 1:Sims
     [z, fz] = crbMarginalLikelihood(0, Inf, thetaMLE', inv(invFisher), samp, 2000);
     b = z(2:p+1)';
     s = z(1);
-    crb(i) = lrLikelihood(y,X, b, s)  + log(mvnpdf(b', empty', eye(p))) + ...
-        log(invgampdf(s, 3,6)) - log(prod(fz,2));
+    crb(i) = lrLikelihood(y,X, b, s)  + logmvnpdf(b', empty', eye(p)) + ...
+        loginvgampdf(s, 3,6) - log(prod(fz,2));
 end
 crbStd = batchMeans(batches, crb);
 crbMean= mean(crb);
