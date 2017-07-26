@@ -15,10 +15,8 @@ thetaMLE = [sSqd; bMLE];
 empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
-
 for i = 1:Sims
-    [K, z] = crtML(0, Inf, thetaMLE', invFisher, 550, 50,...
-        thetaMLE');
+    [K, z] = crtML(0, Inf, thetaMLE', invFisher, 10, 1, thetaMLE');
     b = z(2:p+1)';
     s = z(1);
     crt(i) = lrLikelihood(y,X, b, s)...

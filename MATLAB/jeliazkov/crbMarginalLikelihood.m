@@ -11,7 +11,6 @@ fzStar = zeros(1,J);
 conditionalVars = diag(precision);
 notJIndices = notJindxs(J);
 fzStar(1) = mean(tnormpdf(a,b,X(:,2,1), X(:,3,1),zStar(1)));
-
 for rr = 1:nReducedRuns
     zNoStars = rr+1:J;
     for s = 2:sims

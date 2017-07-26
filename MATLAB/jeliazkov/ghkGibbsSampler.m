@@ -1,4 +1,4 @@
-function [ eta ] = ghkGibbsSampler( a,b, mu, sigma, sims )
+function [ z ] = ghkGibbsSampler( a,b, mu, sigma, sims )
 % draw from truncated normal(0,1) with linear constraints
 [J,~] = size(sigma);
 L = chol(sigma, 'lower');
@@ -15,5 +15,6 @@ for sim = 2:(sims)
         eta(sim,j) = norminv(unifrnd(0,1,1)*(Fb-Fa) + Fa);
     end
 end
+z = (L*eta' + mu')';
 end
 

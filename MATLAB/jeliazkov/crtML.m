@@ -12,7 +12,7 @@ else
     sample(1,1,:) = mvnrnd(mu, sigma);
 end
 
-sample(:,1,:) = (L*ghkGibbsSampler(a, b, mu, sigma, sims)' + mu')';
+sample(:,1,:) = ghkGibbsSampler(a, b, mu, sigma, sims);
 sample = sample(burnin+1:sims,:,:);
 for s = 1:sims-burnin
     for j = 1:J
