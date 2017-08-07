@@ -1,4 +1,5 @@
-function [] = crbMLSimulator(N, coefs, Sims, batches, seed)
+function [] = crbMLSimulator(N, coefs, sampSize, sampBurn, redRunSize,...
+    redRunBurn, Sims, batches, seed)
 
 rng(seed);
 crb = zeros(Sims, 1);
@@ -16,14 +17,11 @@ thetaMLE = [sSqd; bMLE];
 empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
-
-
 alpha = 0;
 beta = Inf;
-
 for i = 1:Sims
-    
-    [z,fz] = crbML(alpha,beta,thetaMLE',invFisher,5,1, 10, 1);
+    [z,fz] = crbML(alpha,beta,thetaMLE',invFisher, sampSize,sampBurn,...
+        redRunSize, redRunBurn);
     b = z(2:p+1)';
     s = z(1);
     crb(i) = lrLikelihood(y,X, b, s)  + logmvnpdf(b', empty', eye(p)) + ...

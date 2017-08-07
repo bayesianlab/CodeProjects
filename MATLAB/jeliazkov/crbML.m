@@ -15,6 +15,6 @@ for s = 1:sims-burnin
         sample(s, 2, j) = mu(j) - (1/H(j,j))*H(j,tnj)*(tsamp - mu(tnj)');
     end
 end
-% [z, fz] = crbReducedRun(0, Inf, mu, sigma, sample,redrunsims, redburn);
+[z, fz] = crbReducedRun(0, Inf, mu, sigma, sample,redrunsims, redburn);
 end
 

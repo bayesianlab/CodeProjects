@@ -1,4 +1,5 @@
-function [] = importanceMLSimulation(N, coefs, Sims, batches,seed)
+function [] = importanceMLSimulation(N, coefs, sampleSize, burnin, Sims,...
+    batches,seed)
 % coefs as column
 rng(seed)
 p = length(coefs);
@@ -17,8 +18,8 @@ empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
 for i = 1:Sims
-    importance(i) = lrmlRestricted(0, Inf, y, X, 3, 6, thetaMLE, invFisher,...
-        550, 50);
+    importance(i) = lrmlRestricted(0, Inf, y, X, 3, 6, thetaMLE', invFisher,...
+        sampleSize, burnin);
 end
 importanceStd = batchMeans(batches, importance);
 importanceMean = mean(importance);

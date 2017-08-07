@@ -3,18 +3,24 @@ format long
 [J, ~] = size(hess);
 variances = diag(hess);
 Chol = chol(hess, 'lower');
-z = askGibbs(0,Inf, mle, hess, draws, burnin);
-theta = mle + Chol*z';
+theta = ghkGibbsSampler(0, Inf, mle, hess, draws);
+theta = theta(burnin+1:draws,:);
+% size(z)
+% z = askGibbs(0,Inf, mle, hess, draws, burnin);
+% size(z)
+% theta = mle + Chol*z';
 sampLength = draws - burnin;
 univariateDensities = zeros(sampLength, J);
+
 for j = 1:J
     univariateDensities(:,j) = tnormpdf(a, b, mle(j), sqrt(variances(j)),...
-        theta(j, :)')';
+        theta(:,j)')';
 end
 hTheta = prod(univariateDensities,2);
-likelihoods = lrLikelihood(y,X, theta(2:J, :), theta(1,:))...
-    + logmvnpdf(theta(2:J, :)', zeros(1,J-1), eye(J-1))...
-    + loginvgampdf(theta(1,:), a0, d0)...
+
+likelihoods = lrLikelihood(y,X, theta(:, 2:J)', theta(:,1)')...
+    + logmvnpdf(theta(:,2:J), zeros(1,J-1), eye(J-1))...
+    + loginvgampdf(theta(:,1), a0, d0)'...
     - log(hTheta);
 importance = mean(likelihoods);
 end
