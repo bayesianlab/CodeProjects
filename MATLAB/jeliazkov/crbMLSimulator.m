@@ -30,6 +30,6 @@ for i = 1:Sims
 end
 crbStd = batchMeans(batches, crb);
 crbMean= mean(crb);
-fprintf('CRB mean, std: %f, %f\n', crbMean, crbStd);
+fprintf('CRB mean, std: %.4f & %.4f\n', crbMean, crbStd);
 
 

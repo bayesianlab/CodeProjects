@@ -2,13 +2,8 @@ function [ importance  ] = lrmlRestricted( a,b, y, X, a0, d0, mle, hess, draws, 
 format long
 [J, ~] = size(hess);
 variances = diag(hess);
-Chol = chol(hess, 'lower');
 theta = ghkGibbsSampler(0, Inf, mle, hess, draws);
 theta = theta(burnin+1:draws,:);
-% size(z)
-% z = askGibbs(0,Inf, mle, hess, draws, burnin);
-% size(z)
-% theta = mle + Chol*z';
 sampLength = draws - burnin;
 univariateDensities = zeros(sampLength, J);
 

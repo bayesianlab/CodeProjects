@@ -1,6 +1,5 @@
 function [ K, zStar ] = crtML(a, b, mu, sigma, sims, burnin, varargin)
 J = length(mu);
-L = chol(sigma, 'lower');
 H = inv(sigma);
 notj = notJindxs(J);
 sample = zeros(sims, 3, J);
@@ -18,7 +17,7 @@ for s = 1:sims-burnin
     for j = 1:J
         tnj = notj(j,:);
         tsamp = squeeze(sample(s, 1, tnj));
-        sample(s, 2, j) = mu(j) - (1/H(j,j))*H(j,tnj)*(tsamp - mu(tnj)');
+        sample(s, 2, j) = mu(j) - ((1/H(j,j))*H(j,tnj)*(tsamp - mu(tnj)'));
     end
 end
 precisionDiag = diag(H);

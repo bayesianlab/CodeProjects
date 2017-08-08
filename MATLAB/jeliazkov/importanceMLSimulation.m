@@ -23,5 +23,5 @@ for i = 1:Sims
 end
 importanceStd = batchMeans(batches, importance);
 importanceMean = mean(importance);
-fprintf('IMS mean, std: %f, %f\n', importanceMean, importanceStd);
+fprintf('IMS mean, std: %.4f & %.4f\n', importanceMean, importanceStd);
 

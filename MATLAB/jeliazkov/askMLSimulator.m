@@ -25,7 +25,7 @@ for i = 1:Sims
 end
 askStd = batchMeans(batches, ask);
 askMean = mean(ask);
-fprintf('ASK mean, std: %f, %f\n', askMean, askStd);
+fprintf('ASK mean, std: %.4f & %.4f\n', askMean, askStd);
 
 
 

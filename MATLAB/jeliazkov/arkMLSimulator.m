@@ -25,6 +25,6 @@ for i = 1:Sims
 end
 arkStd = batchMeans(batches, ark);
 arkMean = mean(ark);
-fprintf('ARK mean, std: %f, %f\n', arkMean, arkStd);
+fprintf('ARK mean, std: %.4f & %.4f\n', arkMean, arkStd);
 
 

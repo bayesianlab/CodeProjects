@@ -27,6 +27,6 @@ end
 
 crtStd = batchMeans(batches, crt);
 crtMean = mean(crt);
-fprintf('CRT mean, std: %f, %f\n', crtMean, crtStd);
+fprintf('CRT mean, std: %.4f & %.4f\n', crtMean, crtStd);
 
 end
