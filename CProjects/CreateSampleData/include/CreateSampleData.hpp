@@ -1,3 +1,6 @@
+#ifndef CSD
+#define CSD
+
 #include <Eigen/Dense>
 #include "Dist.hpp"
 using namespace Eigen;
@@ -17,3 +20,4 @@ class CreateSampleData:public Dist{
 		int dimension;
 		
 };
+#endif

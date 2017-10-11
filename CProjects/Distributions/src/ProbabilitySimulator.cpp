@@ -21,7 +21,8 @@ void ProbabilitySimulator::fillSigmaVect(VectorXd& sv, VectorXd& Hxx){
 	} 
 } 
 
-double ProbabilitySimulator::getfzStarMeanAtCol(double a, double b, MatrixXd& sample, int col, double sigma, double zStar){
+double ProbabilitySimulator::getfzStarMeanAtCol(double a, double b, MatrixXd& sample, int col,
+	   	double sigma, double zStar){
 	VectorXd temp(sample.rows());
 	for(int i = 0; i < sample.rows(); i++){
 		temp(i) = distributionObject.tnormpdf(a,b,sample(i,col), sigma, zStar);

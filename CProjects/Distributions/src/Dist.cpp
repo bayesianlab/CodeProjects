@@ -12,7 +12,6 @@
 #include <ctime>
 #include <assert.h>
 #include <cstdint>
-#include <boost/random/mersenne_twister.hpp>
 #include "Dist.hpp"
 
 using namespace Eigen;
@@ -77,27 +76,8 @@ void Dist::unifrnd(double a, double b, VectorXd& unifVector){
 	
 } 
 
-void Dist::tnormrndTEST(double a, double b, double mu, double sigma, VectorXd& variates){
-	// Deprecated
-    boost::math::normal s;
-    boost::random::uniform_01<> u;
-    double alpha = (a - mu) / sigma;
-    double beta = (b - mu) / sigma;
-    double Fa = cdf(s, alpha);
-    double Fb = cdf(s, beta);
-    int N = variates.size();
-    VectorXd u01(N);
-    for(int i = 0; i < N; i++){
-        u01(i) = u(rseed);
-    } 
-    for(int i = 0; i < N; i++){
-        double q = Fa + u01(i)*(Fb - Fa);
-        variates(i) = mu + sigma*quantile(s, q);
-    } 
-} 
-
 double Dist::tnormrnd(double a, double b, double mu, double sigma){
-	// Deprecated: replaced with truncNormalRnd
+	// Still used in truncNormalRnd, KEEP
     boost::math::normal s;
     boost::random::uniform_01<> u;
     double alpha = (a - mu) / sigma;
@@ -222,6 +202,43 @@ double Dist::truncNormalRnd(double a, double b, double mu, double sigma){
 
 } 
 
+void Dist::tmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, MatrixXd& sample,
+        VectorXd& sigmaVect){
+	/* 
+	 * Uses both inversion and ar sampling
+	 */
+	if(sample.cols() != 2*mu.size()){
+		cout << "Error: Sample size needs to be 2x size of mu" << endl;
+	}
+	else{
+	   int J = sigma.cols();
+	   int nSims = sample.rows();
+	   MatrixXd precision = sigma.inverse();
+	   VectorXd Hxx = precision.diagonal();
+	   VectorXd Hxy(J-1);
+	   VectorXd xNotJ(J-1);
+	   VectorXd muNotJ(J-1);
+	   for(int j = 0; j < J; j++){
+			sigmaVect(j) = sqrt(1./Hxx(j)); 
+	   } 
+	   for(int sim = 1; sim < nSims; sim ++){
+		   for(int j = 0; j < J; j++){
+			   int c = 0;
+			   for(int k = 0; k < J; k++){
+					if(j != k ){
+					   Hxy(c) = precision(j, k); 
+					   xNotJ(c) = sample(sim-1, k);
+					   muNotJ(c) = mu(k);
+					   c++;
+					} 
+			   } 
+			   sample(sim, j + J) = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
+			   sample(sim, j) = truncNormalRnd(a(j), b(j), sample(sim, j + J), sigmaVect(j)); 
+		   } 
+	   }
+	}
+}
+
 double Dist::ghkTruncNormRnd(double a, double b, double mu, double sigma){
 	// Keep this method
 	double Z;
@@ -262,81 +279,6 @@ double Dist::conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotJ, Vector
     return muxx - (1./Hxx)*Hxy.dot(xNotJ - muNotJ);
 } 
 
-void Dist::inversionTMVN(double a, double b, VectorXd& mu, MatrixXd& sigma, MatrixXd& sample,
-        VectorXd& sigmaVect){
-	// Deprecated: replaced with tmvnrand
-	/* 
-	 * Fills sample with random numbers from trunc. dist. 
-	 * And with the remaining cols. contain the conditional
-	 * means. 
-	 * The variances are stored in a smaller vector because
-	 * they can be calculated without any conditioning. 
-	 */
-   int J = sigma.cols();
-   int nSims = sample.rows();
-   MatrixXd precision = sigma.inverse();
-   VectorXd Hxx = precision.diagonal();
-   VectorXd Hxy(J-1);
-   VectorXd xNotJ(J-1);
-   VectorXd muNotJ(J-1);
-  for(int j = 0; j < J; j++){
-    sigmaVect(j) = sqrt(1./Hxx(j)); 
-  } 
-   for(int sim = 1; sim < nSims; sim ++){
-       for(int j = 0; j < J; j++){
-           int c = 0;
-           for(int k = 0; k < J; k++){
-                if(j != k ){
-                   Hxy(c) = precision(j, k); 
-                   xNotJ(c) = sample(sim-1, k);
-                   muNotJ(c) = mu(k);
-                   c++;
-                } 
-           } 
-           sample(sim, j + J) = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
-           sample(sim, j) = tnormrnd(a, b, sample(sim, j + J), sigmaVect(j)); 
-       } 
-   }
-} 
-
-void Dist::tmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, MatrixXd& sample,
-        VectorXd& sigmaVect){
-	/* 
-	 * Uses both inversion and ar sampling
-	 */
-	if(sample.cols() != 2*mu.size()){
-		cout << "Error: Sample size needs to be 2x size of mu" << endl;
-	}
-	else{
-	   int J = sigma.cols();
-	   int nSims = sample.rows();
-	   MatrixXd precision = sigma.inverse();
-	   VectorXd Hxx = precision.diagonal();
-	   VectorXd Hxy(J-1);
-	   VectorXd xNotJ(J-1);
-	   VectorXd muNotJ(J-1);
-	   for(int j = 0; j < J; j++){
-			sigmaVect(j) = sqrt(1./Hxx(j)); 
-	   } 
-	   for(int sim = 1; sim < nSims; sim ++){
-		   for(int j = 0; j < J; j++){
-			   int c = 0;
-			   for(int k = 0; k < J; k++){
-					if(j != k ){
-					   Hxy(c) = precision(j, k); 
-					   xNotJ(c) = sample(sim-1, k);
-					   muNotJ(c) = mu(k);
-					   c++;
-					} 
-			   } 
-			   sample(sim, j + J) = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
-			   sample(sim, j) = truncNormalRnd(a(j), b(j), sample(sim, j + J), sigmaVect(j)); 
-		   } 
-	   }
-	}
-}
- 
-
 double Dist::tnormpdf(double a, double b, double mu, double sigma, double x){
 	/*sigmaZ = sigma.* (normcdf((b-mu)./sigma) - normcdf( (a-mu)./sigma ));
 	 * tOrdinate = normpdf((x-mu)./sigma)./sigmaZ;
@@ -359,32 +301,6 @@ double Dist::standardDev(VectorXd& v){
 	ArrayXd t(v.size());
 	t = v.array() - v.mean();
 	return sqrt(t.square().sum()/(v.size()-1));
-} 
-
-void Dist::ghkSampler(double a, double b, VectorXd& mu, MatrixXd& Sigma, int sims){
-	// Deprecated: replaced with ghkLinearConstraints
-	int J = Sigma.cols();
-	MatrixXd lowerC = Sigma.llt().matrixL();
-	MatrixXd offDiagMat = lowerC;
-	offDiagMat.diagonal() = VectorXd::Zero(J);
-	VectorXd unifVariates(J*sims);
-	unifrnd(0,1, unifVariates);
-	double update, aj, bj, Fa, Fb;
-	int c = 0;
-	ghkDraws = MatrixXd::Zero(sims, J);
-	for(int sim = 0; sim < sims; sim++){
-		for(int j = 0; j < J; j++){
-			update = mu(j) + offDiagMat.row(j) * ghkDraws.row(sim).transpose(); 
-			aj = (a - update)/lowerC(j,j);
-			bj = (b - update)/lowerC(j,j);
-			Fa = cdf(normalDistribution, aj);
-			Fb = cdf(normalDistribution, bj);
-			ghkDraws(sim,j) = quantile(normalDistribution, unifVariates(c)*(Fb-Fa) + Fa); 
-			c++;
-		} 
-	}
-	ghkDraws = (lowerC*ghkDraws.transpose()).transpose();
-	ghkDraws.rowwise() += mu.transpose();
 } 
 
 void Dist::ghkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& Sigma, 

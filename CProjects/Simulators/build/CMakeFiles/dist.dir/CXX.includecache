@@ -6,29 +6,7 @@
 
 #IncludeRegexTransform: 
 
-../include/Dist.hpp
-iostream
--
-Eigen/Dense
--
-ctime
--
-cstdint
--
-boost/random/mersenne_twister.hpp
--
-boost/math/distributions/normal.hpp
--
-limits
--
-
-../include/MarginalLikelihoodCalculator.hpp
-Eigen/Dense
--
-Dist.hpp
-../include/Dist.hpp
-
-../include/ProbabilitySimulator.hpp
+../include/CRT.hpp
 Eigen/Dense
 -
 Dist.hpp
@@ -47,6 +25,34 @@ iostream
 -
 CreateSampleData.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.hpp
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/include/Dist.hpp
+iostream
+-
+Eigen/Dense
+-
+ctime
+-
+cstdint
+-
+boost/random/mersenne_twister.hpp
+-
+boost/math/distributions/normal.hpp
+-
+limits
+-
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/include/MarginalLikelihoodCalculator.hpp
+Eigen/Dense
+-
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/include/Dist.hpp
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/include/ProbabilitySimulator.hpp
+Eigen/Dense
+-
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/include/Dist.hpp
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp
 Eigen/Dense
@@ -106,7 +112,23 @@ iostream
 math.h
 -
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/mainchib.cpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CRT.cpp
+Eigen/Dense
+-
+iostream
+-
+math.h
+-
+CRT.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CRT.hpp
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/Dist.hpp
+ProbabilitySimulator.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/ProbabilitySimulator.hpp
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/crtmain.cpp
+Eigen/Dense
+-
 iostream
 -
 fstream
@@ -117,14 +139,16 @@ limits
 -
 ctime
 -
-Eigen/Dense
--
+MarginalLikelihoodCalculator.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/MarginalLikelihoodCalculator.hpp
 Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/Dist.hpp
 ProbabilitySimulator.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/ProbabilitySimulator.hpp
 CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/CreateSampleData.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CreateSampleData.hpp
+CRT.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CRT.hpp
 
 /usr/local/include/boost_1_64_0/boost/array.hpp
 boost/detail/workaround.hpp
