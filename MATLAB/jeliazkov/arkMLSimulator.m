@@ -15,7 +15,7 @@ thetaMLE = [sSqd; bMLE];
 empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
-
+rng(randi(100))
 for i = 1:Sims
     [K, z] = arkMarginalLikelihood(0, Inf, thetaMLE', invFisher, 2000);
     b = z(2:p+1)';

@@ -15,6 +15,8 @@ thetaMLE = [sSqd; bMLE];
 empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
+eig(invFisher)
+all(eig(invFisher) > 0 )
 for i = 1:Sims
     [K, z] = crtML(0, Inf, thetaMLE', invFisher, sampSize, sampBurn, thetaMLE');
     b = z(2:p+1)';

@@ -17,6 +17,8 @@ thetaMLE = [sSqd; bMLE];
 empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
+rng(randi(100));
+
 for i = 1:Sims
     importance(i) = lrmlRestricted(0, Inf, y, X, 3, 6, thetaMLE', invFisher,...
         sampleSize, burnin);

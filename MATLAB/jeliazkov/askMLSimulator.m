@@ -16,6 +16,7 @@ thetaMLE = [sSqd; bMLE];
 empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
+rng(randi(100))
 for i = 1:Sims
     [K, z] = askMarginalLikelihood(0, Inf, thetaMLE', invFisher, sampSize, sampBurn);
     b = z(2:p+1)';

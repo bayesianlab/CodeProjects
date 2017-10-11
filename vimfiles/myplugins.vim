@@ -13,9 +13,9 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'scrooloose/nerdTree'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'easymotion/vim-easymotion'
-"Plugin 'davidhalter/jedi-vim'
 Plugin 'jalvesaq/Nvim-R'			
 Plugin 'Valloric/YouCompleteMe'
+Plugin 'auto-pairs'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 

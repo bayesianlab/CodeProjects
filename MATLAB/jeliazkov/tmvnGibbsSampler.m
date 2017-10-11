@@ -1,6 +1,6 @@
 function [ sample] = tmvnGibbsSampler(a, b, mu, sigma,...
     sims, burnin, varargin)
-% Geweke 1991, not really. Draws from a truncated multivariate normal
+% Geweke 1991. Draws from a truncated multivariate normal
 % distribution. 
 J = length(mu);
 precision = inv(sigma);

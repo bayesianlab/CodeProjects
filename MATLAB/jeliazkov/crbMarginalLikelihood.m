@@ -1,4 +1,4 @@
-function [zStar, fzStar] = crbMarginalLikelihood(a,b,mu, precision, X,sims)
+function [zStar, fzStar] = crbMarginalLikelihood(a,b,mu, precision, X,sims, burn)
 % X is the main run results, stored X(dim1->sims, dim2->[sims, mu,sigma], dim3->variable) 
 [~,~,J] = size(X);
 zStar = zeros(1,J);
@@ -11,6 +11,8 @@ fzStar = zeros(1,J);
 conditionalVars = diag(precision);
 notJIndices = notJindxs(J);
 fzStar(1) = mean(tnormpdf(a,b,X(:,2,1), X(:,3,1),zStar(1)));
+% No point in first dimension in redRunSample because 
+% zstar 1 is already calc.ed.
 for rr = 1:nReducedRuns
     zNoStars = rr+1:J;
     for s = 2:sims
@@ -26,12 +28,12 @@ for rr = 1:nReducedRuns
         end
     end
     if rr == nReducedRuns
-        zStar(rr+1:J) = squeeze(mean(redRunSample(2:sims, 1, rr:J-1, rr)));
+        zStar(rr+1:J) = squeeze(mean(redRunSample(burn+1:sims, 1, rr:J-1, rr)));
     else
-        zStar(rr+1) = mean(redRunSample(2:sims, 1, rr, rr));
+        zStar(rr+1) = mean(redRunSample(burn+1:sims, 1, rr, rr));
     end
 end
-redRunSample = redRunSample(2:sims, :,:,:);
+redRunSample = redRunSample(burn+1:sims, :,:,:);
 for i = 1:nReducedRuns
     fzStar(i+1) = mean( tnormpdf(a,b,redRunSample(:, 2, i, i),...
         redRunSample(:,3,i,i), zStar(i+1)));
