@@ -18,10 +18,11 @@ CRT::CRT(VectorXd& lowerlim, VectorXd& upperlim, VectorXd& theta, MatrixXd& sigm
 	J = sigma.cols();
 	Rows = sims-burnin;
 	Jminus1 = J -1 ;
-	truncatedSample = MatrixXd::Zero(sims, 2*sigma.cols());
+	MatrixXd tempsample(sims, 2*J);
+	truncatedSample = MatrixXd::Zero(sims, 2*J);
 	sigmaVector = MatrixXd::Zero(sigma.cols(), 1);
-	tmvnrand(lowerlim, upperlim, mu, sigma, truncatedSample, sigmaVector);
-	truncatedSample = truncatedSample.bottomRows(sims-burnin); 
+	tmvnrand(lowerlim, upperlim, mu, sigma, tempsample, sigmaVector);
+	truncatedSample = tempsample.bottomRows(sims-burnin); 
 	zStar = truncatedSample.leftCols(J).colwise().mean();
 	Kernel = MatrixXd::Zero(Rows, J);
 	xNotj = MatrixXd::Zero(Rows,Jminus1);
@@ -37,9 +38,13 @@ void CRT::gibbsKernel(){
 	
 	VectorXd tempk(Rows);
 	VectorXd cmeanVect(Rows);
-	
-
+//	cout << truncatedSample << endl;	
+//	cout << truncatedSample.col(J) << endl;
 	cmeanVect = truncatedSample.col(J);
+	cout << "zStar" << endl;
+	cout << zStar.transpose() << endl;
+//	cout << "cmean"<<endl;
+//	cout << cmeanVect << endl;
 	tnormpdf(ll(0),ul(0), cmeanVect, sigmaVector(0), zStar(0), tempk); 
 	Kernel.col(0) = tempk;
 
@@ -59,6 +64,7 @@ void CRT::gibbsKernel(){
 	tnormpdf(ll(Jminus1), ul(Jminus1), cmeanVect, sigmaVector(Jminus1), zStar(Jminus1), 
 			tempk);
 	Kernel.col(Jminus1) = tempk;
+	cout << Kernel.colwise().mean() << endl;
 }
 
 void CRT::fillSigmaVect(VectorXd& sv, VectorXd& Hxx){

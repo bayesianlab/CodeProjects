@@ -14,7 +14,7 @@ using namespace std;
 using namespace Eigen;
 
 int main(){
-	double a = 0;
+	double a = 0.;
 	double inf = numeric_limits<double>::max();
 	cout << "Gibbs kernel" << endl;
 	VectorXd crbmu(3);
@@ -44,6 +44,7 @@ int main(){
 		cout << "CRT Test FAILED" << endl;
 		cout << ans << " " << testval << " " << endl;
 	}
+
 	
 	
 }
