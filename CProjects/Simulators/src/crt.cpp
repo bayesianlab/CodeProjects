@@ -8,6 +8,87 @@
 using namespace Eigen;
 using namespace std;
 
-void CRT::hello(){
-	cout << "\n\tCRT Begin" << endl;
+CRT::CRT(VectorXd& lowerlim, VectorXd& upperlim, VectorXd& theta, MatrixXd& sigma, int sims,
+		int burnin){
+	cout << "\n\tCRT Begin\n" << endl;
+	ll = lowerlim;
+	ul = upperlim;
+	mu = theta;
+	Sigma = sigma;
+	J = sigma.cols();
+	Rows = sims-burnin;
+	Jminus1 = J -1 ;
+	truncatedSample = MatrixXd::Zero(sims, 2*sigma.cols());
+	sigmaVector = MatrixXd::Zero(sigma.cols(), 1);
+	tmvnrand(lowerlim, upperlim, mu, sigma, truncatedSample, sigmaVector);
+	truncatedSample = truncatedSample.bottomRows(sims-burnin); 
+	zStar = truncatedSample.leftCols(J).colwise().mean();
+	Kernel = MatrixXd::Zero(Rows, J);
+	xNotj = MatrixXd::Zero(Rows,Jminus1);
+	xNotj.rightCols(Jminus1-1) = truncatedSample.middleCols(2, J-2);
+	muNotj = MatrixXd::Zero(Jminus1, 1);
+	Hxy = MatrixXd::Zero(Jminus1, 1);
+	precision = sigma.inverse();
+	Hxx = precision.diagonal();
+	conditionalVariances = MatrixXd::Zero(J, 1);
+	fillSigmaVect(conditionalVariances, Hxx);
+
+
 }
+
+void CRT::hello(){
+}
+
+void CRT::gibbsKernel(){
+	
+	VectorXd tempk(Rows);
+	VectorXd cmeanVect(Rows);
+	
+
+	cmeanVect = truncatedSample.col(J);
+	tnormpdf(ll(0),ul(0), cmeanVect, conditionalVariances(0), zStar(0), tempk); 
+	Kernel.col(0) = tempk;
+
+	for(int j = 1; j < Jminus1; j++){
+		muNotj << mu.head(j), mu.tail(Jminus1-j);
+		Hxy << precision.row(j).head(j).transpose(), precision.row(j).tail(Jminus1-j).transpose(); 
+		xNotj.col(j-1).fill(zStar(j-1));
+		conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j), cmeanVect);
+		tnormpdf(ll(j), ul(j), cmeanVect, conditionalVariances(j), zStar(j), tempk);
+		Kernel.col(j) = tempk;
+
+	}
+	
+	Hxy << precision.row(Jminus1).head(Jminus1).transpose(); 
+	muNotj = mu.head(Jminus1);
+	xnotJ = zStar.head(Jminus1);
+	cmeanVect.fill(Dist::conditionalMean(conditionalVariances(Jminus1), Hxy, muNotj, 
+			xnotJ, mu(Jminus1)));
+	tnormpdf(ll(Jminus1), ul(Jminus1), cmeanVect, conditionalVariances(Jminus1), zStar(Jminus1), 
+			tempk);
+	Kernel.col(Jminus1) = tempk;
+}
+
+void CRT::fillSigmaVect(VectorXd& sv, VectorXd& Hxx){
+	for(int j = 0; j < sv.size(); j++){
+		sv(j) = sqrt(1/Hxx(j));
+	} 
+} 
+
+void CRT::conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotj, MatrixXd& xNotj, 
+        double muxx, VectorXd& conditionalMeanVector){
+	xNotj.rowwise() -= muNotj.transpose(); 
+	conditionalMeanVector = muxx - ((1/Hxx)*xNotj*Hxy).array(); 
+} 
+
+void CRT::tnormpdf(double a, double b, VectorXd& mu, double sigma, double x, 
+		VectorXd& k){
+	boost::math::normal normalDist;
+	double Fa, Fb;
+	for(int i = 0;i < mu.size(); i++){
+		Fa = cdf(normalDist, (a-mu(i))/sigma);
+		Fb = cdf(normalDist, (b-mu(i))/sigma);
+		double sigmaZ = sigma * (Fb - Fa);
+		k(i) = pdf(normalDist, (x - mu(i))/sigma)/sigmaZ;
+	}
+} 

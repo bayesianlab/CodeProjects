@@ -143,6 +143,12 @@ Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/Dist.hpp
 CRT.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CRT.hpp
+ProbabilitySimulator.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/ProbabilitySimulator.hpp
+CreateSampleData.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CreateSampleData.hpp
+MarginalLikelihoodCalculator.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/MarginalLikelihoodCalculator.hpp
 
 /usr/local/include/boost_1_64_0/boost/array.hpp
 boost/detail/workaround.hpp

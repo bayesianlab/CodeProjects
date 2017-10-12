@@ -199,7 +199,6 @@ double Dist::truncNormalRnd(double a, double b, double mu, double sigma){
 			return tnormrnd(a,b,mu,sigma);
 		}
 	}
-
 } 
 
 void Dist::tmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, MatrixXd& sample,
@@ -274,6 +273,7 @@ double Dist::ghkTruncNormRnd(double a, double b, double mu, double sigma){
 		}
 	}
 }
+
 double Dist::conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotJ, VectorXd& xNotJ, 
         double muxx){
     return muxx - (1./Hxx)*Hxy.dot(xNotJ - muNotJ);
