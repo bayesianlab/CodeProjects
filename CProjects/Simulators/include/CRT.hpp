@@ -12,7 +12,6 @@ class CRT:public Dist{
 		MatrixXd xNotj;
 		VectorXd muNotj;
 		VectorXd Hxy;
-		VectorXd conditionalVariances;
 		int J;
 		int Rows;
 		int Jminus1;
@@ -24,7 +23,6 @@ class CRT:public Dist{
 	public:
 		CRT(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, int, int);
 		
-		void hello();
 		
 		void gibbsKernel();
 

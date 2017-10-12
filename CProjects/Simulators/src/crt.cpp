@@ -30,13 +30,7 @@ CRT::CRT(VectorXd& lowerlim, VectorXd& upperlim, VectorXd& theta, MatrixXd& sigm
 	Hxy = MatrixXd::Zero(Jminus1, 1);
 	precision = sigma.inverse();
 	Hxx = precision.diagonal();
-	conditionalVariances = MatrixXd::Zero(J, 1);
-	fillSigmaVect(conditionalVariances, Hxx);
-
-
-}
-
-void CRT::hello(){
+	xnotJ = zStar.head(Jminus1);
 }
 
 void CRT::gibbsKernel(){
@@ -46,7 +40,7 @@ void CRT::gibbsKernel(){
 	
 
 	cmeanVect = truncatedSample.col(J);
-	tnormpdf(ll(0),ul(0), cmeanVect, conditionalVariances(0), zStar(0), tempk); 
+	tnormpdf(ll(0),ul(0), cmeanVect, sigmaVector(0), zStar(0), tempk); 
 	Kernel.col(0) = tempk;
 
 	for(int j = 1; j < Jminus1; j++){
@@ -54,17 +48,15 @@ void CRT::gibbsKernel(){
 		Hxy << precision.row(j).head(j).transpose(), precision.row(j).tail(Jminus1-j).transpose(); 
 		xNotj.col(j-1).fill(zStar(j-1));
 		conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j), cmeanVect);
-		tnormpdf(ll(j), ul(j), cmeanVect, conditionalVariances(j), zStar(j), tempk);
+		tnormpdf(ll(j), ul(j), cmeanVect, sigmaVector(j), zStar(j), tempk);
 		Kernel.col(j) = tempk;
-
 	}
 	
 	Hxy << precision.row(Jminus1).head(Jminus1).transpose(); 
 	muNotj = mu.head(Jminus1);
-	xnotJ = zStar.head(Jminus1);
-	cmeanVect.fill(Dist::conditionalMean(conditionalVariances(Jminus1), Hxy, muNotj, 
+	cmeanVect.fill(Dist::conditionalMean(sigmaVector(Jminus1), Hxy, muNotj, 
 			xnotJ, mu(Jminus1)));
-	tnormpdf(ll(Jminus1), ul(Jminus1), cmeanVect, conditionalVariances(Jminus1), zStar(Jminus1), 
+	tnormpdf(ll(Jminus1), ul(Jminus1), cmeanVect, sigmaVector(Jminus1), zStar(Jminus1), 
 			tempk);
 	Kernel.col(Jminus1) = tempk;
 }

@@ -28,7 +28,7 @@ int main(){
 	ll.fill(a);	
 	ul.fill(inf);
 	
-	CRT crt(ll, ul, crbmu, crbsigma, 10000, 1000);
+	CRT crt(ll, ul, crbmu, crbsigma, 11000, 1000);
 	
 	crt.gibbsKernel();
 
