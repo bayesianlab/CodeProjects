@@ -43,6 +43,8 @@ void CRT::gibbsKernel(){
 	cmeanVect = truncatedSample.col(J);
 	cout << "zStar" << endl;
 	cout << zStar.transpose() << endl;
+	cout << "sgiam vectocr" << endl;
+	cout << sigmaVector.transpose() << '\n' <<  endl;
 //	cout << "cmean"<<endl;
 //	cout << cmeanVect << endl;
 	tnormpdf(ll(0),ul(0), cmeanVect, sigmaVector(0), zStar(0), tempk); 
@@ -64,7 +66,6 @@ void CRT::gibbsKernel(){
 	tnormpdf(ll(Jminus1), ul(Jminus1), cmeanVect, sigmaVector(Jminus1), zStar(Jminus1), 
 			tempk);
 	Kernel.col(Jminus1) = tempk;
-	cout << Kernel.colwise().mean() << endl;
 }
 
 void CRT::fillSigmaVect(VectorXd& sv, VectorXd& Hxx){

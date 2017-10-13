@@ -33,7 +33,10 @@ int main(){
 	crt.gibbsKernel();
 
 	double num = crt.mvnpdf( crbmu, crbsigma, crt.zStar); 
+	cout << num << endl;
     double den = crt.Kernel.rowwise().prod().mean(); 
+	cout << num/den << endl;
+	cout << den << endl;
 	double ans = log(num/den); 
 	double testval = abs(ans - (-1.55)) ;	
 	if(testval < .01){

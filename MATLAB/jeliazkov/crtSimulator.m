@@ -26,10 +26,12 @@ for sim = 2:(sims)
 end
 
 sample = sample(burnin+1:sims,:,:);
-zStar = squeeze(mean(sample(:, 1, :)))'
+zStar = squeeze(mean(sample(:, 1, :)))';
 
 K = transitionKernel(a,b,zStar, sample, mu, precision, conditionalVars);
-mean(K)
+mvnpdf(zStar, mu, sigma)
+mean(prod(K,2))
+mvnpdf(zStar, mu, sigma)/mean(prod(K,2))
 ml = log(mvnpdf(zStar, mu, sigma)/mean(prod(K,2)));
 se = lpVarCRT(sample, 25, a,b,mu,sigma,precision);
 end
