@@ -27,8 +27,7 @@ int main(){
 	VectorXd ul(3);
 	ll.fill(a);	
 	ul.fill(inf);
-	
-	CRT crt(ll, ul, crbmu, crbsigma, 11000, 1000);
+	cout << ll << " " << ul <<endl;
 	
 	crt.gibbsKernel();
 

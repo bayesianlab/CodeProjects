@@ -211,26 +211,21 @@ void Dist::tmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, Mat
 	}
 	else{
 	   int J = sigma.cols();
+	   int Jminus1 = J - 1;
 	   int nSims = sample.rows();
 	   MatrixXd precision = sigma.inverse();
 	   VectorXd Hxx = precision.diagonal();
-	   VectorXd Hxy(J-1);
-	   VectorXd xNotJ(J-1);
-	   VectorXd muNotJ(J-1);
+	   VectorXd Hxy(Jminus1);
+	   VectorXd xNotJ(Jminus1);
+	   VectorXd muNotJ(Jminus1);
 	   for(int j = 0; j < J; j++){
 			sigmaVect(j) = sqrt(1./Hxx(j)); 
 	   } 
 	   for(int sim = 1; sim < nSims; sim ++){
 		   for(int j = 0; j < J; j++){
-			   int c = 0;
-			   for(int k = 0; k < J; k++){
-					if(j != k ){
-					   Hxy(c) = precision(j, k); 
-					   xNotJ(c) = sample(sim-1, k);
-					   muNotJ(c) = mu(k);
-					   c++;
-					} 
-			   } 
+			   Hxy << precision.row(j).head(j).transpose(), precision.row(j).tail(Jminus1-j).transpose(); 
+			   muNotJ << mu.head(j), mu.tail(Jminus1-j);
+			   xNotJ << sample.row(sim-1).head(j).transpose(), sample.row(sim-1).segment(j+1, Jminus1-j).transpose();
 			   sample(sim, j + J) = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
 			   sample(sim, j) = truncNormalRnd(a(j), b(j), sample(sim, j + J), sigmaVect(j)); 
 		   } 

@@ -36,8 +36,6 @@ class CRT:public Dist{
 		double getKernelColumn(double a, double b, MatrixXd& sample, int col,
 	   					double sigma, double zStar);
 
-		void fillSigmaVect(VectorXd&, VectorXd&);
-
 		void conditionalMean(double, VectorXd&, VectorXd&, MatrixXd&, 
 				double, VectorXd&);
 

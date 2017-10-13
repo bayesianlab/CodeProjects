@@ -26,7 +26,7 @@ for sim = 2:(sims)
 end
 
 sample = sample(burnin+1:sims,:,:);
-zStar = squeeze(mean(sample(:, 1, :)))';
+zStar = squeeze(mean(sample(:, 1, :)))'
 
 K = transitionKernel(a,b,zStar, sample, mu, precision, conditionalVars);
 mvnpdf(zStar, mu, sigma)

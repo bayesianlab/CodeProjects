@@ -38,15 +38,11 @@ void CRT::gibbsKernel(){
 	
 	VectorXd tempk(Rows);
 	VectorXd cmeanVect(Rows);
-//	cout << truncatedSample << endl;	
-//	cout << truncatedSample.col(J) << endl;
 	cmeanVect = truncatedSample.col(J);
 	cout << "zStar" << endl;
 	cout << zStar.transpose() << endl;
 	cout << "sgiam vectocr" << endl;
 	cout << sigmaVector.transpose() << '\n' <<  endl;
-//	cout << "cmean"<<endl;
-//	cout << cmeanVect << endl;
 	tnormpdf(ll(0),ul(0), cmeanVect, sigmaVector(0), zStar(0), tempk); 
 	Kernel.col(0) = tempk;
 
@@ -58,7 +54,6 @@ void CRT::gibbsKernel(){
 		tnormpdf(ll(j), ul(j), cmeanVect, sigmaVector(j), zStar(j), tempk);
 		Kernel.col(j) = tempk;
 	}
-	
 	Hxy << precision.row(Jminus1).head(Jminus1).transpose(); 
 	muNotj = mu.head(Jminus1);
 	cmeanVect.fill(Dist::conditionalMean(sigmaVector(Jminus1), Hxy, muNotj, 
@@ -68,11 +63,6 @@ void CRT::gibbsKernel(){
 	Kernel.col(Jminus1) = tempk;
 }
 
-void CRT::fillSigmaVect(VectorXd& sv, VectorXd& Hxx){
-	for(int j = 0; j < sv.size(); j++){
-		sv(j) = sqrt(1/Hxx(j));
-	} 
-} 
 
 void CRT::conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotj, MatrixXd& xNotj, 
         double muxx, VectorXd& conditionalMeanVector){
