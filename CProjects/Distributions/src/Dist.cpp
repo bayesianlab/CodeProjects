@@ -21,10 +21,6 @@ using namespace std;
 #define LOG_PI 1.14472988584940017414342735135305871165 
 #define LOG_E_2_PI  0.693147180559945309417232121458 + 1.14472988584940017414342735135305871165 
 
-/*
- * Things to do:
- * Implement Roberts method for truncated draws
- */
 
 Dist::Dist(){
     now = time(0);
