@@ -84,8 +84,9 @@ double Dist::tnormrnd(double a, double b, double mu, double sigma){
     double beta = (b - mu) / sigma;
     double Fa = cdf(s, alpha);
     double Fb = cdf(s, beta);
+	double randomU = u(rseed);
     double q = Fa + u(rseed)*(Fb - Fa);
-    return mu + sigma*quantile(s, q);
+    return mu + (sigma*quantile(s, q));
 } 
 
 double Dist::shiftexprnd(double alpha, double shift){
@@ -218,14 +219,21 @@ void Dist::tmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, Mat
 	   VectorXd Hxy(Jminus1);
 	   VectorXd xNotJ(Jminus1);
 	   VectorXd muNotJ(Jminus1);
+	   cout << precision << endl;
+	   cout << endl;
 	   for(int j = 0; j < J; j++){
 			sigmaVect(j) = sqrt(1./Hxx(j)); 
 	   } 
 	   for(int sim = 1; sim < nSims; sim ++){
 		   for(int j = 0; j < J; j++){
-			   Hxy << precision.row(j).head(j).transpose(), precision.row(j).tail(Jminus1-j).transpose(); 
+			   Hxy << precision.row(j).head(j).transpose(),
+				   precision.row(j).tail(Jminus1-j).transpose(); 
+			   
 			   muNotJ << mu.head(j), mu.tail(Jminus1-j);
-			   xNotJ << sample.row(sim-1).head(j).transpose(), sample.row(sim-1).segment(j+1, Jminus1-j).transpose();
+			   
+			   xNotJ << sample.row(sim-1).head(j).transpose(), 
+					 sample.row(sim-1).segment(j+1, Jminus1-j).transpose();
+			   
 			   sample(sim, j + J) = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
 			   sample(sim, j) = truncNormalRnd(a(j), b(j), sample(sim, j + J), sigmaVect(j)); 
 		   } 

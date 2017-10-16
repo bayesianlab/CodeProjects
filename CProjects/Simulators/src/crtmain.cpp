@@ -18,7 +18,7 @@ int main(){
 	double inf = numeric_limits<double>::max();
 	cout << "Gibbs kernel" << endl;
 	VectorXd crbmu(3);
-    crbmu << 0, .5, 1.;
+    crbmu << 0., .5, 1.;
 	MatrixXd crbsigma(3,3);
     crbsigma << 1, -.7, .49, 
 		 		-.7, 1, -.7,
@@ -27,8 +27,8 @@ int main(){
 	VectorXd ul(3);
 	ll.fill(a);	
 	ul.fill(inf);
-	cout << ll << " " << ul <<endl;
-	
+	CRT crt(ll, ul, crbmu, crbsigma, 11000, 1000);
+
 	crt.gibbsKernel();
 
 	double num = crt.mvnpdf( crbmu, crbsigma, crt.zStar); 

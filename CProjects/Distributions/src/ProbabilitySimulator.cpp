@@ -7,6 +7,10 @@
 using namespace Eigen;
 using namespace std;
 
+ProbabilitySimulator::ProbabilitySimulator(){
+	cout << "Started prob sim" << endl;
+}
+
 int ProbabilitySimulator::getReducedRunSampleColumnDimension(int Jminus1){
 	int rrSampleDim = 0;
 	for(int j = 2; j <= Jminus1; j++){

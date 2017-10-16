@@ -24,7 +24,7 @@ for sim = 2:(sims)
         sample(sim, :, j) = [tnormrnd(a,b, muj, sigmaxx), muj, sigmaxx];
     end
 end
-
+sample
 sample = sample(burnin+1:sims,:,:);
 zStar = squeeze(mean(sample(:, 1, :)))'
 

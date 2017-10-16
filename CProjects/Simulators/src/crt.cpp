@@ -22,6 +22,8 @@ CRT::CRT(VectorXd& lowerlim, VectorXd& upperlim, VectorXd& theta, MatrixXd& sigm
 	truncatedSample = MatrixXd::Zero(sims, 2*J);
 	sigmaVector = MatrixXd::Zero(sigma.cols(), 1);
 	tmvnrand(lowerlim, upperlim, mu, sigma, tempsample, sigmaVector);
+	cout << tempsample << endl;
+	cout <<endl;
 	truncatedSample = tempsample.bottomRows(sims-burnin); 
 	zStar = truncatedSample.leftCols(J).colwise().mean();
 	Kernel = MatrixXd::Zero(Rows, J);
@@ -31,6 +33,8 @@ CRT::CRT(VectorXd& lowerlim, VectorXd& upperlim, VectorXd& theta, MatrixXd& sigm
 	Hxy = MatrixXd::Zero(Jminus1, 1);
 	precision = sigma.inverse();
 	Hxx = precision.diagonal();
+	cout << "precision" << endl;
+	cout << Hxx << endl;
 	xnotJ = zStar.head(Jminus1);
 }
 
@@ -46,6 +50,9 @@ void CRT::gibbsKernel(){
 	tnormpdf(ll(0),ul(0), cmeanVect, sigmaVector(0), zStar(0), tempk); 
 	Kernel.col(0) = tempk;
 
+
+	cout << truncatedSample << endl;
+
 	for(int j = 1; j < Jminus1; j++){
 		muNotj << mu.head(j), mu.tail(Jminus1-j);
 		Hxy << precision.row(j).head(j).transpose(), precision.row(j).tail(Jminus1-j).transpose(); 
@@ -56,11 +63,14 @@ void CRT::gibbsKernel(){
 	}
 	Hxy << precision.row(Jminus1).head(Jminus1).transpose(); 
 	muNotj = mu.head(Jminus1);
-	cmeanVect.fill(Dist::conditionalMean(sigmaVector(Jminus1), Hxy, muNotj, 
-			xnotJ, mu(Jminus1)));
-	tnormpdf(ll(Jminus1), ul(Jminus1), cmeanVect, sigmaVector(Jminus1), zStar(Jminus1), 
-			tempk);
-	Kernel.col(Jminus1) = tempk;
+	double y = Dist::tnormpdf(ll(Jminus1), ul(Jminus1), Dist::conditionalMean(Hxx(Jminus1), Hxy, muNotj, 
+			xnotJ, mu(Jminus1)), sigmaVector(Jminus1), zStar(Jminus1));
+	//cmeanVect.fill(Dist::conditionalMean(sigmaVector(Jminus1), Hxy, muNotj, 
+    // 				xnotJ, mu(Jminus1)));
+	//tnormpdf(ll(Jminus1), ul(Jminus1), cmeanVect, sigmaVector(Jminus1), zStar(Jminus1), 
+	//			tempk);
+	//Kernel.col(Jminus1) = tempk;
+	Kernel.col(Jminus1).fill(y);
 }
 
 

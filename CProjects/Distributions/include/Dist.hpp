@@ -15,7 +15,6 @@ class Dist{
 	private:
 		time_t now; 
 		
-		boost::random::mt19937 rseed; 
 		
 		boost::math::normal normalDistribution;
 		
@@ -24,6 +23,8 @@ class Dist{
     public:
         Dist();
 		
+		boost::random::mt19937 rseed; 
+	
 		void igammarnd(double shape, double scale, VectorXd& igamma);
 		
 		void normrnd(double mu, double sig, MatrixXd& normalMat);

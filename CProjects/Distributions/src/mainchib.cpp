@@ -55,7 +55,7 @@ int main(){
 	VectorXd ul(3);
 	ll << 0,0,0;
 	ul << inf, inf, inf;
-	p.chibRaoBlackwell(ll, ul, crbmu, crbsigma, zs, fzs, 1000, 100, 1000, 100);
+	p.chibRaoBlackwell(ll, ul, crbmu, crbsigma, zs, fzs, 11000, 1000, 11000, 1000);
 	clock_t end = clock();
 	cout << "Time to execute ->" << double(end - begin)/CLOCKS_PER_SEC << endl;
 	cout << " Simulated Prob. " << endl;
