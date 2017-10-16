@@ -12,6 +12,44 @@ Eigen/Dense
 Dist.hpp
 ../include/Dist.hpp
 
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/CRT.cpp
+Eigen/Dense
+-
+iostream
+-
+math.h
+-
+CRT.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/CRT.hpp
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/Dist.hpp
+ProbabilitySimulator.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/ProbabilitySimulator.hpp
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crtmain.cpp
+Eigen/Dense
+-
+iostream
+-
+fstream
+-
+math.h
+-
+limits
+-
+ctime
+-
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/Dist.hpp
+CRT.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/CRT.hpp
+ProbabilitySimulator.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/ProbabilitySimulator.hpp
+CreateSampleData.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/CreateSampleData.hpp
+MarginalLikelihoodCalculator.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/MarginalLikelihoodCalculator.hpp
+
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CreateSampleData/include/CreateSampleData.hpp
 Eigen/Dense
 -
@@ -111,44 +149,6 @@ iostream
 -
 math.h
 -
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CRT.cpp
-Eigen/Dense
--
-iostream
--
-math.h
--
-CRT.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CRT.hpp
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/Dist.hpp
-ProbabilitySimulator.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/ProbabilitySimulator.hpp
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/crtmain.cpp
-Eigen/Dense
--
-iostream
--
-fstream
--
-math.h
--
-limits
--
-ctime
--
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/Dist.hpp
-CRT.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CRT.hpp
-ProbabilitySimulator.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/ProbabilitySimulator.hpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/CreateSampleData.hpp
-MarginalLikelihoodCalculator.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulators/src/MarginalLikelihoodCalculator.hpp
 
 /usr/local/include/boost_1_64_0/boost/array.hpp
 boost/detail/workaround.hpp

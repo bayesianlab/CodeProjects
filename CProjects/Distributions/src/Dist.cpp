@@ -219,8 +219,6 @@ void Dist::tmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, Mat
 	   VectorXd Hxy(Jminus1);
 	   VectorXd xNotJ(Jminus1);
 	   VectorXd muNotJ(Jminus1);
-	   cout << precision << endl;
-	   cout << endl;
 	   for(int j = 0; j < J; j++){
 			sigmaVect(j) = sqrt(1./Hxx(j)); 
 	   } 
