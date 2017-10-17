@@ -241,7 +241,7 @@ double Dist::ghkTruncNormRnd(double a, double b, double mu, double sigma){
 	if(b >= inf){
 		if(a > 5){
 			Z = leftTruncation(a, b);
-			return mu + sigma*Z; 
+			return Z; 
 		}
 		else{
 			return tnormrnd(a,b,mu,sigma);
@@ -250,7 +250,7 @@ double Dist::ghkTruncNormRnd(double a, double b, double mu, double sigma){
 	else if(a <= -inf){
 		if(b < -5){
 			Z = rightTruncation(a, b);
-			return mu + sigma*Z; 
+			return Z; 
 		}
 		else{
 			return tnormrnd(a,b,mu,sigma);
@@ -259,11 +259,11 @@ double Dist::ghkTruncNormRnd(double a, double b, double mu, double sigma){
 	else{
 		if(a > 5){
 			Z = twoSided(a, b);
-			return mu + sigma*Z; 
+			return Z; 
 		}
 		else if(b < -5){
 			Z = twoSided(a, b);
-			return mu + sigma*Z;
+			return Z;
 		}
 		else{
 			return tnormrnd(a,b,mu,sigma);
@@ -271,6 +271,36 @@ double Dist::ghkTruncNormRnd(double a, double b, double mu, double sigma){
 	}
 }
 
+void Dist::ghkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& Sigma, 
+		MatrixXd& sample){
+	/*
+	 * Take into account multiple constraints
+	 */
+	int J = Sigma.cols();
+	if(a.size() != b.size()){
+		cout << "\nError: The number of constraints are not the same." << endl;
+	}
+	else if(a.size() != J){
+		cout << "Error: At least as many constraints as dimension in Sigma are needed."<< endl;
+	}
+	else{
+		int sims = sample.rows();
+		MatrixXd lowerC = Sigma.llt().matrixL();
+		MatrixXd offDiagMat = lowerC;
+		offDiagMat.diagonal() = VectorXd::Zero(J);
+		double update, aj, bj;
+		for(int sim = 0; sim < sims; sim++){
+			for(int j = 0; j < J; j++){
+				update = mu(j) + (offDiagMat.row(j) * sample.row(sim).transpose()); 
+				aj = (a(j) - update)/lowerC(j,j);
+				bj = (b(j) - update)/lowerC(j,j);
+				sample(sim, j) = ghkTruncNormRnd(aj, bj, 0, 1);
+			} 
+		}
+	sample = (lowerC*sample.transpose()).transpose();
+	sample.rowwise() += mu.transpose();
+	}
+} 
 double Dist::conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotJ, VectorXd& xNotJ, 
         double muxx){
     return muxx - (1./Hxx)*Hxy.dot(xNotJ - muNotJ);
@@ -300,36 +330,7 @@ double Dist::standardDev(VectorXd& v){
 	return sqrt(t.square().sum()/(v.size()-1));
 } 
 
-void Dist::ghkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& Sigma, 
-		MatrixXd& sample){
-	/*
-	 * Take into account multiple constraints
-	 */
-	int J = Sigma.cols();
-	if(a.size() != b.size()){
-		cout << "\nError: The number of constraints are not the same." << endl;
-	}
-	else if(a.size() != J){
-		cout << "Error: At least as many constraints as dimension in Sigma are needed."<< endl;
-	}
-	else{
-		int sims = sample.rows();
-		MatrixXd lowerC = Sigma.llt().matrixL();
-		MatrixXd offDiagMat = lowerC;
-		offDiagMat.diagonal() = VectorXd::Zero(J);
-		double update, aj, bj;
-		for(int sim = 0; sim < sims; sim++){
-			for(int j = 0; j < J; j++){
-				update = mu(j) + offDiagMat.row(j) * sample.row(sim).transpose(); 
-				aj = (a(j) - update)/lowerC(j,j);
-				bj = (b(j) - update)/lowerC(j,j);
-				sample(sim, j) = ghkTruncNormRnd(aj, bj, 0, 1);
-			} 
-		}
-	sample = (lowerC*sample.transpose()).transpose();
-	sample.rowwise() += mu.transpose();
-	}
-} 
+
 
 void Dist::lrLikelihood(MatrixXd& betas, VectorXd& sigmasqds, VectorXd& y,
 	   	MatrixXd& X ){

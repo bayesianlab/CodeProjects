@@ -1,11 +1,11 @@
 function [ eta ] = askGibbs(a,b, mu, sigma, sims, burnin)
 % draw from truncated normal(0,1) with linear constraints
 [J,~] = size(sigma);
-L = chol(sigma, 'lower');
-offDiagonals = tril(L, -1);
+L = chol(sigma, 'lower')
+offDiagonals = tril(L, -1)
 yDim = 1:J;
 eta = zeros(sims, J);
-for sim = 2:(sims)
+for sim = 1:(sims)
     for j = yDim
         update = mu(j) + (offDiagonals(j,:)*eta(sim,:)');
         aj = (a - update)/L(j,j);
