@@ -19,6 +19,9 @@ using namespace std;
 
 
 Ask::Ask(VectorXd& lowerConstraint, VectorXd& upperConstraint, VectorXd& theta, MatrixXd& sig, 			int sims, int burnin){
+	// Consider conservativeResize implementation and test to see if works
+	// Review code for places where noalias can be implemented
+	// Test autoCorr function. it is untested
 	cout << "\n\n\tBegin ASK" << endl;
 	J = sig.cols();	
 	Rows = sims - burnin;
@@ -31,7 +34,9 @@ Ask::Ask(VectorXd& lowerConstraint, VectorXd& upperConstraint, VectorXd& theta, 
 	upperTruncPoints = upperConstraint;
 	mu = theta;
 	MatrixXd tempsample(sims, J);
-	adaptiveSampler(.5, sims, 25);
+	weight = MatrixXd::Zero(J,1);
+	weight.fill(.5);
+	adaptiveSampler(.5, sims, 10);
 	/*Dist::ghkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma, 
 			tempsample);
 	sample = tempsample.bottomRows(Rows); 
@@ -57,8 +62,8 @@ void Ask::gibbsKernel(){
 	
 	for(int j = 1; j < Jminus1; j++){
 		muNotj << mu.head(j), mu.tail(Jminus1-j);
-		Hxy << precision.row(j).head(j).transpose(),
-		   	precision.row(j).tail(Jminus1-j).transpose(); 
+		Hxy << precision.row(j).head(j).transpose().eval(),
+		   	precision.row(j).tail(Jminus1-j).transpose().eval(); 
 		xNotj.col(j-1).fill(zStar(j-1));
 		conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j), cmeanVect);
 		tnormpdf(lowerTruncPoints(j), upperTruncPoints(j), cmeanVect, sigmaVector(j), 
@@ -103,36 +108,53 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int sampleBlock){
 	int remainder;
 	VectorXd rz(J);
 	VectorXd reta(J);
+	VectorXd colj(sampleBlock);
 	double peta = initPeta;
 	int nBlocks = floor(sampleSize/sampleBlock);
 	int nBlockCount = nBlocks;
 	remainder = sampleSize - sampleBlock*nBlocks;
-	MatrixXd tempBlock;
+	cout << remainder << endl;
 	MatrixXd tempSample;
 	tempSample = MatrixXd::Zero(sampleSize, J);
-	for(int i = 0; i < nBlockCount; i++){
-		if(i == 0){
-			peta = 1;
-		}
-		else{
-			peta = .5;
-		}
+	MatrixXd tempBlock;
+	tempBlock = MatrixXd::Zero(sampleBlock, J);
+	burninAdaptive(tempBlock, .5);
+	tempSample.topRows(sampleBlock) = tempBlock;
+
+	int retaSampled = 0;
+	int rzSampled = 0;
+	
+	for(int i = 1; i < nBlockCount; i++){
 		tempBlock = MatrixXd::Zero(sampleBlock, J);
 		startingPlace = sampleBlock*i;
 		if(bernoulli(peta) == 1){
 			cout << "sample with ghk" << endl;
 			askGhkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma, 
-				tempBlock, startingPlace);
+				tempBlock);
 			tempSample.middleRows(startingPlace, sampleBlock) = tempBlock;
-		}
-		else{
-			cout << "sample with geweke 91" << endl;
-			VectorXd initVector = tempSample.row(startingPlace-1).transpose();
-			asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma, 
-					tempBlock, sigmaVector, initVector);
-			tempSample.middleRows(startingPlace, sampleBlock) = tempBlock;
-		}	
-	
+			colj.resize(sampleBlock*(i+1));
+			for(int j=0; j < J; j ++){
+				colj =  tempSample.col(j).head(sampleBlock*(i+1)); 
+				reta[j] = 1./(1.-autoCorr(colj));
+			}
+			retaSampled = 1;
+		 }
+		 else{
+			 cout << "sample with geweke 91" << endl;
+			 VectorXd initVector = tempSample.row(startingPlace-1).transpose();
+			 asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma, 
+		    			tempBlock, sigmaVector, initVector);
+			 tempSample.middleRows(startingPlace, sampleBlock) = tempBlock;
+			 colj.resize(sampleBlock*(i+1));
+			 for(int j=0; j < J; j ++){
+				colj =  tempSample.col(j).head(sampleBlock*(i+1)); 
+				rz[j] = 1./(1-autoCorr(colj));
+			}
+			 rzSampled = 1;
+		 }	
+		 if(rzSampled + retaSampled == 2){
+			 peta = calcPeta(rz,reta);
+		 }
 	}
 	if(remainder != 0){
 		startingPlace = sampleBlock*nBlocks;
@@ -140,21 +162,63 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int sampleBlock){
 		MatrixXd remainderTemp;
 		remainderTemp = MatrixXd::Zero(remainder, J);
 		if(bernoulli(peta) == 1){
-			cout << "sample with ghk" << endl;
+			cout << "sample with ghk remainder" << endl;
 			askGhkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma, 
-				remainderTemp, startingPlace);
+				remainderTemp);
 			tempSample.middleRows(startingPlace, remainder) = remainderTemp;
 		}
 		else{
-			cout << "sample with geweke 91" << endl;
+			cout << "sample with geweke 91 remainder" << endl;
 			VectorXd initVector = tempSample.row(startingPlace-1).transpose();
 			asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma, 
 					remainderTemp, sigmaVector, initVector);
 			tempSample.middleRows(startingPlace, remainder) = remainderTemp;
 		}	
 	}
+	cout << "Means" << endl;
 	cout << tempSample.colwise().mean() << endl;
+	cout << tempSample << endl;
+	MatrixXd tsCopy;
+	tsCopy = tempSample;
+	tsCopy = tsCopy.bottomRows(sampleSize - 5);
+	cout << endl;
+	cout << tsCopy << endl;
+	
 }
 
+int Ask::isVectVgreater(VectorXd& v, VectorXd& u) {
+	if( ((v-u).array() > 0).all() ){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
 
+void Ask::burninAdaptive(MatrixXd& sample, double initPeta){
+	VectorXd initVector(J);
+	initVector = MatrixXd::Zero(J,1);
+	if(bernoulli(initPeta)){
+		cout << "sample with ghk init" << endl;
+		askGhkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma, 
+				sample);
+	}
+	else{
+		cout << "sample with geweke 1991 init" << endl;
+		asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma, 
+		    			sample, sigmaVector, initVector);
+	}
+}
 
+double Ask::calcPeta(VectorXd& rz, VectorXd& reta){
+	 if(isVectVgreater(rz, reta) == 1){
+		 return 1.;
+	 } 
+	 else if(isVectVgreater(reta, rz) == 1){
+		 return 0.;
+	 }
+	 else{
+		 double wTrz = weight.transpose()*rz; 
+		 return wTrz/(wTrz + (weight.transpose()* reta));	
+	 }
+}

@@ -305,7 +305,7 @@ void Dist::ghkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd
 } 
 
 void Dist::askGhkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& Sigma, 
-		MatrixXd& sample, int placeHolder){
+		MatrixXd& sample){
 	/*
 	 * Take into account multiple constraints
 	 */
@@ -351,36 +351,27 @@ void Dist::asktmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, 
    VectorXd xNotJ(Jminus1);
    VectorXd muNotJ(Jminus1);
    double muj;
-
    for(int sim = 0; sim < nSims; sim ++){
 	   for(int j = 0; j < J; j++){
 		   if(sim == 0){
-		      Hxy << precision.row(j).head(j).transpose(),
-			   		precision.row(j).tail(Jminus1-j).transpose(); 
-		   
+		      Hxy << precision.row(j).head(j).transpose().eval(),
+			   		precision.row(j).tail(Jminus1-j).transpose().eval(); 
 			  muNotJ << mu.head(j), mu.tail(Jminus1-j);
-			   
 		      xNotJ << initVector.head(j), initVector.tail(Jminus1-j);
-			   
 			  muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
-			  
 			  sample(sim, j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));
 		   }
 		   else{
-			   Hxy << precision.row(j).head(j).transpose(),
-				   precision.row(j).tail(Jminus1-j).transpose(); 
-			   
+			   Hxy << precision.row(j).head(j).transpose().eval(),
+				   precision.row(j).tail(Jminus1-j).transpose().eval(); 
 			   muNotJ << mu.head(j), mu.tail(Jminus1-j);
-			   
-			   xNotJ << sample.row(sim-1).head(j).transpose(), 
-					 sample.row(sim-1).tail(Jminus1-j).transpose();
-			   
+			   xNotJ << sample.row(sim-1).head(j).transpose().eval(), 
+					 sample.row(sim-1).tail(Jminus1-j).transpose().eval();
 			   muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
-			   
 			   sample(sim, j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));   
 		   }
-		    
 	   } 
+		    
    }
 }
 
@@ -459,8 +450,7 @@ int Dist::bernoulli(double p){
 	}
 }
 
-
-double Dist::autoCorr(VectorXd& X){
+double Dist::autoCorr(VectorXd&  X){
 	int nRows = X.size();
 	VectorXd Xt(nRows-1);  
 	Xt = X.head(nRows-1);
@@ -472,3 +462,5 @@ double Dist::autoCorr(VectorXd& X){
 	double sigXtm1 = standardDev(Xtm1);
 	return ((Xt.array() - muxt)*(Xtm1.array() - muxtm1)).sum()/(nRows*sigXt*sigXtm1);
 }
+
+

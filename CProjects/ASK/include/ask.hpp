@@ -32,6 +32,7 @@ class Ask: public Dist{
 		VectorXd zStar;
 		VectorXd Hxx;
 		int Rows;
+		VectorXd weight;
 
 		void conditionalMean(double, VectorXd&, VectorXd&,
 			   	MatrixXd&, double, VectorXd&);
@@ -40,6 +41,10 @@ class Ask: public Dist{
 		VectorXd&);
 
 		void adaptiveSampler(double, int, int );
+		int isVectVgreater(VectorXd&, VectorXd&);
+		void burninAdaptive(MatrixXd&, double);
+		double calcPeta(VectorXd&, VectorXd&);
+
 
 };
 

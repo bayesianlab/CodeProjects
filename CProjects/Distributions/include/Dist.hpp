@@ -79,8 +79,9 @@ class Dist{
 		int bernoulli(double p);
 
 		void askGhkLinearConstraints(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, 
-				MatrixXd&, int);
-
+				MatrixXd&);
+		
 		double autoCorr(VectorXd&);
 };
+
 #endif

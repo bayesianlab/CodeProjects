@@ -31,7 +31,7 @@ int main(){
 	MatrixXd gsamp(11000, 3);
 	VectorXd sv(3);
 
-	Ask ask(ll, ul, mu, sig, 1000, 10);
+	Ask ask(ll, ul, mu, sig, 35, 10);
 	ask.tmvnrand(ll,ul,mu,sig, sample, sv);
 	ask.ghkLinearConstraints(ll,ul,mu,sig,gsamp);
 	MatrixXd g1991(2,3);
