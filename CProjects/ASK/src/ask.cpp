@@ -31,7 +31,7 @@ Ask::Ask(VectorXd& lowerConstraint, VectorXd& upperConstraint, VectorXd& theta, 
 	upperTruncPoints = upperConstraint;
 	mu = theta;
 	MatrixXd tempsample(sims, J);
-	adaptiveSampler(.5, sims, 3);
+	adaptiveSampler(.5, sims, 25);
 	/*Dist::ghkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma, 
 			tempsample);
 	sample = tempsample.bottomRows(Rows); 
@@ -96,6 +96,9 @@ void Ask::tnormpdf(double a, double b, VectorXd& mu, double sigma, double x,
 
 
 void Ask::adaptiveSampler(double initPeta, int sampleSize, int sampleBlock){
+	/*
+	 * Should be similar to the average of GHK and Geweke 1991
+	 */ 
 	startingPlace = 0;
 	int remainder;
 	VectorXd rz(J);
@@ -150,7 +153,7 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int sampleBlock){
 			tempSample.middleRows(startingPlace, remainder) = remainderTemp;
 		}	
 	}
-	cout << tempSample << endl;
+	cout << tempSample.colwise().mean() << endl;
 }
 
 

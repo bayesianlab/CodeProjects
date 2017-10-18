@@ -27,7 +27,23 @@ int main(){
 	ll.fill(a);	
 	ul.fill(inf);
 
-	Ask ask(ll, ul, mu, sig, 11, 1);
+	MatrixXd sample(11000, 6);
+	MatrixXd gsamp(11000, 3);
+	VectorXd sv(3);
+
+	Ask ask(ll, ul, mu, sig, 1000, 10);
+	ask.tmvnrand(ll,ul,mu,sig, sample, sv);
+	ask.ghkLinearConstraints(ll,ul,mu,sig,gsamp);
+	MatrixXd g1991(2,3);
+	// Shows that output of adaptive is similar to average of two methods.
+   	g1991 << sample.colwise().mean().head(3), 
+			 gsamp.colwise().mean();
+	cout << sample.colwise().mean() << endl;
+	cout << gsamp.colwise().mean() <<endl;
+	cout << g1991.colwise().mean() << endl;
+
+	cout << ask.autoCorr(mu) << endl;
+	
 	/*
 	double num = ask.mvnpdf( mu, sig, ask.zStar); 
 	cout << num << endl;

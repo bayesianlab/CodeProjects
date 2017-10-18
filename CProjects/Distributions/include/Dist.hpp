@@ -47,8 +47,6 @@ class Dist{
 
 		double ghkTruncNormRnd(double, double, double, double);
 
-		void etaSample();
-
 		void tmvnrand(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, MatrixXd&, VectorXd&);
 
         double conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotJ, VectorXd& xNotJ, double muxx);
@@ -82,5 +80,7 @@ class Dist{
 
 		void askGhkLinearConstraints(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, 
 				MatrixXd&, int);
+
+		double autoCorr(VectorXd&);
 };
 #endif

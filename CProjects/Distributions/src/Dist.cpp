@@ -215,9 +215,11 @@ void Dist::tmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, Mat
 	   VectorXd Hxy(Jminus1);
 	   VectorXd xNotJ(Jminus1);
 	   VectorXd muNotJ(Jminus1);
-	   for(int j = 0; j < J; j++){
+	   sigmaVect = (1./Hxx.array()).sqrt();
+	   /*for(int j = 0; j < J; j++){
 			sigmaVect(j) = sqrt(1./Hxx(j)); 
-	   } 
+	   }*/ 
+	   
 	   for(int sim = 1; sim < nSims; sim ++){
 		   for(int j = 0; j < J; j++){
 			   Hxy << precision.row(j).head(j).transpose(),
@@ -383,11 +385,6 @@ void Dist::asktmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, 
 }
 
 
-void Dist::etaSample(){
-	cout << "etaSample" << endl;
-
-	
-}
 
 double Dist::conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotJ, VectorXd& xNotJ, 
         double muxx){
@@ -463,3 +460,15 @@ int Dist::bernoulli(double p){
 }
 
 
+double Dist::autoCorr(VectorXd& X){
+	int nRows = X.size();
+	VectorXd Xt(nRows-1);  
+	Xt = X.head(nRows-1);
+	VectorXd Xtm1(nRows-1);  
+	Xtm1 =	X.tail(nRows-1);
+	double muxt = Xt.mean();
+	double muxtm1 = Xtm1.mean();
+	double sigXt = standardDev(Xt);
+	double sigXtm1 = standardDev(Xtm1);
+	return ((Xt.array() - muxt)*(Xtm1.array() - muxtm1)).sum()/(nRows*sigXt*sigXtm1);
+}
