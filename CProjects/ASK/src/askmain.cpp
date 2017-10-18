@@ -27,9 +27,8 @@ int main(){
 	ll.fill(a);	
 	ul.fill(inf);
 
-	Ask ask(ll, ul, mu, sig, 11000, 1000);
-	ask.gibbsKernel();
-	
+	Ask ask(ll, ul, mu, sig, 11, 1);
+	/*
 	double num = ask.mvnpdf( mu, sig, ask.zStar); 
 	cout << num << endl;
     double den = ask.Kernel.rowwise().prod().mean(); 
@@ -45,5 +44,6 @@ int main(){
 		cout << "ASK Test FAILED" << endl;
 		cout << ans << " " << testval << " " << endl;
 	}
+	*/
 
 }

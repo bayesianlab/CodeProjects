@@ -301,6 +301,94 @@ void Dist::ghkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd
 	sample.rowwise() += mu.transpose();
 	}
 } 
+
+void Dist::askGhkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& Sigma, 
+		MatrixXd& sample, int placeHolder){
+	/*
+	 * Take into account multiple constraints
+	 */
+	int J = Sigma.cols();
+	if(a.size() != b.size()){
+		cout << "\nError: The number of constraints are not the same." << endl;
+	}
+	else if(a.size() != J){
+		cout << "Error: At least as many constraints as dimension in Sigma are needed."<< endl;
+	}
+	else{
+		int sims = sample.rows();
+		MatrixXd lowerC = Sigma.llt().matrixL();
+		MatrixXd offDiagMat = lowerC;
+		offDiagMat.diagonal() = VectorXd::Zero(J);
+		double update, aj, bj;
+		for(int sim = 0; sim < sims; sim++){
+			for(int j = 0; j < J; j++){
+				update = mu(j) + (offDiagMat.row(j) * sample.row(sim).transpose()); 
+				aj = (a(j) - update)/lowerC(j,j);
+				bj = (b(j) - update)/lowerC(j,j);
+				sample(sim, j) = ghkTruncNormRnd(aj, bj, 0, 1);
+			} 
+		}
+	sample = (lowerC*sample.transpose()).transpose();
+	sample.rowwise() += mu.transpose();
+	}
+} 
+
+
+void Dist::asktmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, MatrixXd& sample,
+        VectorXd& sigmaVect, VectorXd& initVector){
+	/* 
+	 * Uses both inversion and ar sampling, Geweke 1991
+	 * Deleted calculation of sigma vector, unneeded and better implementation elsewhere
+	 */
+   int J = sigma.cols();
+   int Jminus1 = J - 1;
+   int nSims = sample.rows();
+   MatrixXd precision = sigma.inverse();
+   VectorXd Hxx = precision.diagonal();
+   VectorXd Hxy(Jminus1);
+   VectorXd xNotJ(Jminus1);
+   VectorXd muNotJ(Jminus1);
+   double muj;
+
+   for(int sim = 0; sim < nSims; sim ++){
+	   for(int j = 0; j < J; j++){
+		   if(sim == 0){
+		      Hxy << precision.row(j).head(j).transpose(),
+			   		precision.row(j).tail(Jminus1-j).transpose(); 
+		   
+			  muNotJ << mu.head(j), mu.tail(Jminus1-j);
+			   
+		      xNotJ << initVector.head(j), initVector.tail(Jminus1-j);
+			   
+			  muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
+			  
+			  sample(sim, j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));
+		   }
+		   else{
+			   Hxy << precision.row(j).head(j).transpose(),
+				   precision.row(j).tail(Jminus1-j).transpose(); 
+			   
+			   muNotJ << mu.head(j), mu.tail(Jminus1-j);
+			   
+			   xNotJ << sample.row(sim-1).head(j).transpose(), 
+					 sample.row(sim-1).tail(Jminus1-j).transpose();
+			   
+			   muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
+			   
+			   sample(sim, j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));   
+		   }
+		    
+	   } 
+   }
+}
+
+
+void Dist::etaSample(){
+	cout << "etaSample" << endl;
+
+	
+}
+
 double Dist::conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotJ, VectorXd& xNotJ, 
         double muxx){
     return muxx - (1./Hxx)*Hxy.dot(xNotJ - muNotJ);
@@ -364,5 +452,14 @@ void Dist::loginvgammapdf(VectorXd& y, double alpha, double beta){
 	ligampdf = ligampdf.array() - (y.array()*beta).pow(-1) + C1;
 }
 
+int Dist::bernoulli(double p){
+	boost::random::uniform_01<> u;
+	if(u(rseed) < p){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
 
 

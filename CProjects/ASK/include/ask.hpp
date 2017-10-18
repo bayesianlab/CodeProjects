@@ -13,6 +13,8 @@ class Ask: public Dist{
 		VectorXd Hxy;
 		VectorXd muNotj;
 
+		int startingPlace;
+
 	public:
 		Ask(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, int, int);
 		MatrixXd sample;
@@ -36,6 +38,8 @@ class Ask: public Dist{
 		
 		void tnormpdf(double, double, VectorXd&, double, double, 
 		VectorXd&);
+
+		void adaptiveSampler(double, int, int );
 
 };
 

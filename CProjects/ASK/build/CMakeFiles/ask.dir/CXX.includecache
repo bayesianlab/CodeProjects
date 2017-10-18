@@ -23,6 +23,8 @@ boost/random/variate_generator.hpp
 -
 boost/random/uniform_01.hpp
 -
+boost/math/distributions/bernoulli.hpp
+-
 limits
 -
 math.h
@@ -32,6 +34,8 @@ ctime
 assert.h
 -
 cstdint
+-
+random
 -
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/src/Dist.hpp
@@ -4410,6 +4414,22 @@ boost/type_traits/is_convertible.hpp
 boost/utility/declval.hpp
 -
 boost/math/constants/calculate_constants.hpp
+-
+
+/usr/local/include/boost_1_64_0/boost/math/distributions/bernoulli.hpp
+boost/math/distributions/fwd.hpp
+-
+boost/math/tools/config.hpp
+-
+boost/math/distributions/complement.hpp
+-
+boost/math/distributions/detail/common_error_handling.hpp
+-
+boost/math/special_functions/fpclassify.hpp
+-
+utility
+-
+boost/math/distributions/detail/derived_accessors.hpp
 -
 
 /usr/local/include/boost_1_64_0/boost/math/distributions/complement.hpp

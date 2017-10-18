@@ -47,6 +47,8 @@ class Dist{
 
 		double ghkTruncNormRnd(double, double, double, double);
 
+		void etaSample();
+
 		void tmvnrand(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, MatrixXd&, VectorXd&);
 
         double conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotJ, VectorXd& xNotJ, double muxx);
@@ -72,5 +74,13 @@ class Dist{
 		void loginvgammapdf(VectorXd&, double, double);
 
 		VectorXd ligampdf;
+
+		void asktmvnrand(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, MatrixXd&,
+        VectorXd&, VectorXd&);
+
+		int bernoulli(double p);
+
+		void askGhkLinearConstraints(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, 
+				MatrixXd&, int);
 };
 #endif

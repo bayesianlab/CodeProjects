@@ -3,11 +3,14 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/uniform_01.hpp>
+#include <boost/math/distributions/bernoulli.hpp>
 #include <limits>
 #include <math.h>
 #include <ctime>
 #include <assert.h>
 #include <cstdint>
+#include <random>
+
 #include "Dist.hpp"
 #include "ask.hpp"
 
@@ -21,22 +24,24 @@ Ask::Ask(VectorXd& lowerConstraint, VectorXd& upperConstraint, VectorXd& theta, 
 	Rows = sims - burnin;
 	Jminus1 = J - 1;
 	sigma = sig;
+	precision = sigma.inverse();
+	Hxx = precision.diagonal();
+	sigmaVector = (1./Hxx.array()).sqrt();	
 	lowerTruncPoints = lowerConstraint;	
 	upperTruncPoints = upperConstraint;
 	mu = theta;
-	precision = sigma.inverse();
 	MatrixXd tempsample(sims, J);
-	Dist::ghkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma, 
+	adaptiveSampler(.5, sims, 3);
+	/*Dist::ghkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma, 
 			tempsample);
 	sample = tempsample.bottomRows(Rows); 
 	zStar = sample.colwise().mean();
-	Hxx = precision.diagonal();
-	sigmaVector = (1./Hxx.array()).sqrt();	
 	Kernel = MatrixXd::Zero(Rows, J);
 	muNotj = MatrixXd::Zero(Jminus1, 1);
 	Hxy = MatrixXd::Zero(Jminus1, 1);
 	xNotj = MatrixXd::Zero(Rows,Jminus1);
 	xNotj = sample.rightCols(Jminus1);
+	*/
 }
 void Ask::gibbsKernel(){ 
 	
@@ -87,3 +92,66 @@ void Ask::tnormpdf(double a, double b, VectorXd& mu, double sigma, double x,
 		k(i) = pdf(normalDist, (x - mu(i))/sigma)/sigmaZ;
 	}
 } 
+
+
+
+void Ask::adaptiveSampler(double initPeta, int sampleSize, int sampleBlock){
+	startingPlace = 0;
+	int remainder;
+	VectorXd rz(J);
+	VectorXd reta(J);
+	double peta = initPeta;
+	int nBlocks = floor(sampleSize/sampleBlock);
+	int nBlockCount = nBlocks;
+	remainder = sampleSize - sampleBlock*nBlocks;
+	MatrixXd tempBlock;
+	MatrixXd tempSample;
+	tempSample = MatrixXd::Zero(sampleSize, J);
+	for(int i = 0; i < nBlockCount; i++){
+		if(i == 0){
+			peta = 1;
+		}
+		else{
+			peta = .5;
+		}
+		tempBlock = MatrixXd::Zero(sampleBlock, J);
+		startingPlace = sampleBlock*i;
+		if(bernoulli(peta) == 1){
+			cout << "sample with ghk" << endl;
+			askGhkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma, 
+				tempBlock, startingPlace);
+			tempSample.middleRows(startingPlace, sampleBlock) = tempBlock;
+		}
+		else{
+			cout << "sample with geweke 91" << endl;
+			VectorXd initVector = tempSample.row(startingPlace-1).transpose();
+			asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma, 
+					tempBlock, sigmaVector, initVector);
+			tempSample.middleRows(startingPlace, sampleBlock) = tempBlock;
+		}	
+	
+	}
+	if(remainder != 0){
+		startingPlace = sampleBlock*nBlocks;
+		cout << startingPlace << endl;
+		MatrixXd remainderTemp;
+		remainderTemp = MatrixXd::Zero(remainder, J);
+		if(bernoulli(peta) == 1){
+			cout << "sample with ghk" << endl;
+			askGhkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma, 
+				remainderTemp, startingPlace);
+			tempSample.middleRows(startingPlace, remainder) = remainderTemp;
+		}
+		else{
+			cout << "sample with geweke 91" << endl;
+			VectorXd initVector = tempSample.row(startingPlace-1).transpose();
+			asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma, 
+					remainderTemp, sigmaVector, initVector);
+			tempSample.middleRows(startingPlace, remainder) = remainderTemp;
+		}	
+	}
+	cout << tempSample << endl;
+}
+
+
+
