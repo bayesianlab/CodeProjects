@@ -27,28 +27,24 @@ Ark::Ark(){
 
 MatrixXd Ark::arSample(VectorXd& ll, VectorXd& ul, VectorXd& mu, MatrixXd& sigma, int sSize,
 	   	int maxIterations ){
-	int J,i,n;
+	int J,i,n, maxit;
 	J = sigma.cols();
 	MatrixXd arSample(sSize,J);
 	i = 0;
 	n = 0;	
 	while(n < sSize){
-		while( i < maxIterations+1){
-			MatrixXd t = mvnrnd(mu,sigma,1,J).array();  
-			if( (t.array() > ll.transpose().array()).all() == 1){
-				cout << t << endl;
-				arSample.row(n) = t;
-				n++;
-			}
-			i++;
-		}
-		if(i == maxIterations + 1){
-			arSample.row(n) = MatrixXd::Zero(J,1);	
-			n++;
-			i = 0;
+		MatrixXd t = mvnrnd(mu,sigma,1,J).array();  
+		if( (t.array() > ll.transpose().array()).all() == 1){
+		    arSample.row(n) = t;
+		    n++;
+		    maxit = 0;
+		}		
+		else if(maxit == maxIterations){
+		    arSample.row(n) = MatrixXd::Zero(1,J);
+		    n ++;
 		}
 		else{
-			i = 0;
+			maxit++;
 		}
 	}
 	return arSample;
@@ -62,3 +58,4 @@ int Ark::isVectVgreater(VectorXd& v, VectorXd& u) {
 		return 0;
 	}
 }
+

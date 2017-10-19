@@ -36,6 +36,6 @@ int main(){
 	ll.fill(a);	
 	ul.fill(inf);
 
-	ark.ark(ll,ul, mu,sig, 10, 5, 10);
+	ark.arSample(ll,ul, mu,sig, 10, 5, 10, 10);
  	
 }

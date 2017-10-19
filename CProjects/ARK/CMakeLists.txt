@@ -4,8 +4,8 @@ project(ark)
 get_filename_component(PARENT ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
 set(EIGEN_DIR "/usr/local/include/eigen3/" )
-set(BOOST_DIR "/usr/local/include/boost_1_64_0/")
-
+set(BOOST_DIR "/usr/local/include/boost/")
+set(CMAKE_CXX_STANDARD 11)
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 set(SOURCES 
