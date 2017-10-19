@@ -13,10 +13,9 @@ class Ask: public Dist{
 		VectorXd Hxy;
 		VectorXd muNotj;
 
-		int startingPlace;
 
 	public:
-		Ask(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, int, int);
+		Ask(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, int, int, int);
 		MatrixXd sample;
 		int J;
 		int Jminus1;
@@ -40,9 +39,9 @@ class Ask: public Dist{
 		void tnormpdf(double, double, VectorXd&, double, double, 
 		VectorXd&);
 
-		void adaptiveSampler(double, int, int );
+		void adaptiveSampler(double, int, int, int );
 		int isVectVgreater(VectorXd&, VectorXd&);
-		void burninAdaptive(MatrixXd&, double);
+		MatrixXd burninAdaptive(int, int, double);
 		double calcPeta(VectorXd&, VectorXd&);
 
 

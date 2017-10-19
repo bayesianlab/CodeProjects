@@ -304,17 +304,22 @@ void Dist::ghkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd
 	}
 } 
 
-void Dist::askGhkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& Sigma, 
-		MatrixXd& sample){
+MatrixXd Dist::askGhkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, 
+		MatrixXd& Sigma, int rows){
 	/*
 	 * Take into account multiple constraints
 	 */
 	int J = Sigma.cols();
+	MatrixXd sample(rows, J);
 	if(a.size() != b.size()){
 		cout << "\nError: The number of constraints are not the same." << endl;
+		sample = MatrixXd::Zero(1,1);
+		return sample; 
 	}
 	else if(a.size() != J){
 		cout << "Error: At least as many constraints as dimension in Sigma are needed."<< endl;
+		sample = MatrixXd::Zero(1,1);
+		return sample;
 	}
 	else{
 		int sims = sample.rows();
@@ -332,18 +337,20 @@ void Dist::askGhkLinearConstraints(VectorXd& a, VectorXd& b, VectorXd& mu, Matri
 		}
 	sample = (lowerC*sample.transpose()).transpose();
 	sample.rowwise() += mu.transpose();
+	return sample;
 	}
 } 
 
 
-void Dist::asktmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, MatrixXd& sample,
-        VectorXd& sigmaVect, VectorXd& initVector){
+MatrixXd Dist::asktmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, 
+        VectorXd& sigmaVect, VectorXd& initVector, int sims){
 	/* 
 	 * Uses both inversion and ar sampling, Geweke 1991
 	 * Deleted calculation of sigma vector, unneeded and better implementation elsewhere
 	 */
    int J = sigma.cols();
    int Jminus1 = J - 1;
+   MatrixXd sample(sims, J);
    int nSims = sample.rows();
    MatrixXd precision = sigma.inverse();
    VectorXd Hxx = precision.diagonal();
@@ -371,8 +378,8 @@ void Dist::asktmvnrand(VectorXd& a, VectorXd& b, VectorXd& mu, MatrixXd& sigma, 
 			   sample(sim, j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));   
 		   }
 	   } 
-		    
    }
+   return sample;
 }
 
 

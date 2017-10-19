@@ -31,20 +31,23 @@ int main(){
 	MatrixXd gsamp(11000, 3);
 	VectorXd sv(3);
 
-	Ask ask(ll, ul, mu, sig, 35, 10);
+	Ask ask(ll, ul, mu, sig, 11000, 1000, 1000);
 	ask.tmvnrand(ll,ul,mu,sig, sample, sv);
 	ask.ghkLinearConstraints(ll,ul,mu,sig,gsamp);
 	MatrixXd g1991(2,3);
 	// Shows that output of adaptive is similar to average of two methods.
+	cout << "Geweke 1991" <<endl;
    	g1991 << sample.colwise().mean().head(3), 
 			 gsamp.colwise().mean();
 	cout << sample.colwise().mean() << endl;
+	cout << "GHK" <<endl;
 	cout << gsamp.colwise().mean() <<endl;
+	cout << "Average of two" <<endl;
 	cout << g1991.colwise().mean() << endl;
 
 	cout << ask.autoCorr(mu) << endl;
 	
-	/*
+	
 	double num = ask.mvnpdf( mu, sig, ask.zStar); 
 	cout << num << endl;
     double den = ask.Kernel.rowwise().prod().mean(); 
@@ -60,6 +63,6 @@ int main(){
 		cout << "ASK Test FAILED" << endl;
 		cout << ans << " " << testval << " " << endl;
 	}
-	*/
+	
 
 }

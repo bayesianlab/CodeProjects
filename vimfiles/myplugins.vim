@@ -16,6 +16,8 @@ Plugin 'easymotion/vim-easymotion'
 Plugin 'jalvesaq/Nvim-R'			
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'auto-pairs'
+Plugin 'git://github.com/kana/vim-operator-user'
+Plugin 'git://github.com/rhysd/vim-clang-format'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 
