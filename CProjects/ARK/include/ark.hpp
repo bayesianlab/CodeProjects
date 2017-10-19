@@ -11,6 +11,10 @@ class Ark:public Dist{
 	
 	public:
 		Ark();
+		
+		MatrixXd arSample(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, int, int );
+		
+		int isVectVgreater(VectorXd& v, VectorXd& u);
 };
 
 

@@ -17,8 +17,7 @@ set(SOURCES
 
 message(STATUS "Eigen Directory    " ${EIGEN_DIR})
 message(STATUS "Boost Directory    " ${BOOST_DIR})
-message(STATUS "CProject directory    " ${CPROJECT_DIR})
-message(STATUS "UP one level "${PAR})
+message(STATUS "CProject Directory    " ${PARENT})
 
 include_directories(
 	include

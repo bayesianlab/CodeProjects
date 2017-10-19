@@ -41,26 +41,35 @@ void Dist::igammarnd(double shape, double scale, VectorXd& igamma){
 	} 
 } 
 
-void Dist::normrnd(double mu, double sig, MatrixXd& normalMat){
-	boost::random::normal_distribution<> normalvar(mu, sig) ;
-	int rows = normalMat.rows();
-	int cols = normalMat.cols();
-	for(int i=0; i<rows;i++ ){
-		for(int j=0; j < cols;j++){
-			double variate = normalvar(rseed);
-			normalMat(i, j) = variate;
-		}
-	}
+double Dist::normrnd(double mu, double sig){
+	boost::random::normal_distribution<> normalDist;
+	return normalDist(rseed);
 }
 
-void Dist::mvnrnd(VectorXd mu, MatrixXd& sig, MatrixXd& mvnMatrix){
+VectorXd Dist::normrnd(double mu, double sig, int N){
+	VectorXd Z(N);
+	for(int i = 0; i < N; i ++){
+		Z(i) = normrnd(mu, sig); 
+	}
+	return Z;
+}
+
+MatrixXd Dist::normrnd(double mu, double sig, int N, int J){
+	MatrixXd Z(N, J);
+	for(int i = 0; i < N; i ++){
+		for(int j = 0; j < J; j ++){
+			Z(i, j) = normrnd(mu, sig); 
+		}
+	}
+	return Z;
+}
+MatrixXd Dist::mvnrnd(VectorXd mu, MatrixXd& sig, int N, int J){
+	MatrixXd Z = normrnd(0., 1., N, J);
 	LLT<MatrixXd> lltOfA(sig);	
 	MatrixXd L = lltOfA.matrixL();
-	normrnd(0, 1, mvnMatrix);
-	L = L*mvnMatrix.transpose();
-	for(int i = 0; i < L.cols(); i ++){
-		mvnMatrix.transpose().col(i) = mu + L.col(i);
-	}
+	Z = (L*Z.transpose()).transpose();
+	Z.rowwise() += mu.transpose();
+	return Z;
 }
 
 void Dist::unifrnd(double a, double b, VectorXd& unifVector){

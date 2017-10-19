@@ -6,7 +6,7 @@ using namespace std;
 using namespace Eigen;
 
 CreateSampleData::CreateSampleData(int sampleSize, VectorXd& betas){
-	dimension = betas.size();
+	/*dimension = betas.size();
 	X = MatrixXd::Zero(sampleSize, dimension);		
 	epsilon = VectorXd::Zero(sampleSize); 
 	normrnd(0, 1, X);
@@ -23,5 +23,5 @@ CreateSampleData::CreateSampleData(int sampleSize, VectorXd& betas){
 	inverseFisher(0,0) = 2*pow(sigmaSqdHat, 2)/sampleSize;
 	inverseFisher.block(1,1,dimension, dimension) = sigmaSqdHat*XpXinv;
 	theta = VectorXd::Zero(dimension+1);
-	theta << sigmaSqdHat, mles;
+	theta << sigmaSqdHat, mles;*/
 }

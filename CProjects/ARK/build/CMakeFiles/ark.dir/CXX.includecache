@@ -15,26 +15,6 @@ Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/ark.cpp
 Eigen/Dense
 -
-iostream
--
-fstream
--
-math.h
--
-limits
--
-ctime
--
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/Dist.hpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/CreateSampleData.hpp
-ark.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/ark.hpp
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkmain.cpp
-Eigen/Dense
--
 boost/math/distributions/normal.hpp
 -
 boost/random/mersenne_twister.hpp
@@ -59,6 +39,26 @@ random
 -
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/Dist.hpp
+ark.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/ark.hpp
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkmain.cpp
+Eigen/Dense
+-
+iostream
+-
+fstream
+-
+math.h
+-
+limits
+-
+ctime
+-
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/Dist.hpp
+CreateSampleData.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/CreateSampleData.hpp
 ark.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/ark.hpp
 

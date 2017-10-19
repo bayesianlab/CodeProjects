@@ -168,7 +168,7 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int burnin, int sampl
 }
 
 int Ask::isVectVgreater(VectorXd& v, VectorXd& u) {
-	if( ((v-u).array() > 0).all() ){
+	if( (v.array() > u.array()).all() == 1 ){
 		return 1;
 	}
 	else{

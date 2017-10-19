@@ -15,7 +15,6 @@ class Dist{
 	private:
 		time_t now; 
 		
-		
 		boost::math::normal normalDistribution;
 		
 		double inf;
@@ -27,9 +26,13 @@ class Dist{
 	
 		void igammarnd(double shape, double scale, VectorXd& igamma);
 		
-		void normrnd(double mu, double sig, MatrixXd& normalMat);
-		
-		void mvnrnd(VectorXd mu, MatrixXd& sig, MatrixXd& mvnMatrix);
+		double normrnd(double mu, double sig);
+
+		VectorXd normrnd(double, double, int);
+
+		MatrixXd normrnd(double, double, int, int);
+
+		MatrixXd mvnrnd(VectorXd mu, MatrixXd& sig, int, int);
 
 		double tnormrnd(double, double, double, double);
 

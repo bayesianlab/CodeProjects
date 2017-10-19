@@ -2902,7 +2902,6 @@ CMakeFiles/ark.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProje
 
 CMakeFiles/ark.dir/src/ark.cpp.o: ../include/ark.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: ../src/ark.cpp
-CMakeFiles/ark.dir/src/ark.cpp.o: /Users/dillonflannery-valadez/Google\ Drive/CodeProjects/CProjects/CreateSampleData/include/CreateSampleData.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /Users/dillonflannery-valadez/Google\ Drive/CodeProjects/CProjects/Distributions/include/Dist.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/array.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/assert.hpp
@@ -3303,6 +3302,7 @@ CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/lexical_
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/limits.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/math/constants/calculate_constants.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/math/constants/constants.hpp
+CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/math/distributions/bernoulli.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/math/distributions/complement.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/math/distributions/detail/common_error_handling.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/math/distributions/detail/derived_accessors.hpp
@@ -3989,6 +3989,8 @@ CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/random/d
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/random/detail/signed_unsigned_tools.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/random/mersenne_twister.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/random/traits.hpp
+CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/random/uniform_01.hpp
+CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/random/variate_generator.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/range/algorithm/equal.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/range/begin.hpp
 CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/boost_1_64_0/boost/range/concepts.hpp
@@ -4348,6 +4350,7 @@ CMakeFiles/ark.dir/src/ark.cpp.o: /usr/local/include/eigen3/Eigen/src/plugins/Ma
 
 CMakeFiles/ark.dir/src/arkmain.cpp.o: ../include/ark.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: ../src/arkmain.cpp
+CMakeFiles/ark.dir/src/arkmain.cpp.o: /Users/dillonflannery-valadez/Google\ Drive/CodeProjects/CProjects/CreateSampleData/include/CreateSampleData.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /Users/dillonflannery-valadez/Google\ Drive/CodeProjects/CProjects/Distributions/include/Dist.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/array.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/assert.hpp
@@ -4748,7 +4751,6 @@ CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/lexi
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/limits.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/math/constants/calculate_constants.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/math/constants/constants.hpp
-CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/math/distributions/bernoulli.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/math/distributions/complement.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/math/distributions/detail/common_error_handling.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/math/distributions/detail/derived_accessors.hpp
@@ -5435,8 +5437,6 @@ CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/rand
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/random/detail/signed_unsigned_tools.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/random/mersenne_twister.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/random/traits.hpp
-CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/random/uniform_01.hpp
-CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/random/variate_generator.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/range/algorithm/equal.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/range/begin.hpp
 CMakeFiles/ark.dir/src/arkmain.cpp.o: /usr/local/include/boost_1_64_0/boost/range/concepts.hpp

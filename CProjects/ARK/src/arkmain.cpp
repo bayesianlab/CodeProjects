@@ -1,22 +1,41 @@
 #include <Eigen/Dense>
-#include <boost/math/distributions/normal.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/variate_generator.hpp>
-#include <boost/random/uniform_01.hpp>
-#include <boost/math/distributions/bernoulli.hpp>
-#include <limits>
+#include <iostream>
+#include <fstream>
 #include <math.h>
+#include <limits> 
 #include <ctime>
-#include <assert.h>
-#include <cstdint>
-#include <random>
-
 #include "Dist.hpp"
+#include "CreateSampleData.hpp"
 #include "ark.hpp"
 
-using namespace Eigen;
 using namespace std;
+using namespace Eigen;
 
-Ark::Ark(){
-	cout << "\n\n\tARK begin" << endl;
+int main(){
+	Ark ark;
+	double a = 0.;
+	double inf = numeric_limits<double>::max();
+
+	VectorXd mu(3);
+	MatrixXd sig(3,3);
+   	mu << 0., .5, 1.;
+    sig << 1, -.7, .49, 
+	 		-.7, 1, -.7,
+			 .49, -.7, 1;	
+
+
+	VectorXd m(3);
+	MatrixXd s;
+	s = MatrixXd::Identity(3,3);
+	m << .5,.5,.5;
+	cout << "Mvn rnd test, should all be .5" << endl;
+	cout << ark.mvnrnd(m, s, 10000,3).colwise().mean() << endl;
+	
+	VectorXd ll(3);
+	VectorXd ul(3);
+	ll.fill(a);	
+	ul.fill(inf);
+
+	ark.ark(ll,ul, mu,sig, 10, 5, 10);
+ 	
 }
