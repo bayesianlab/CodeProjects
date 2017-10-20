@@ -1,90 +1,93 @@
 #ifndef DIST_H
 #define DIST_H
-#include <iostream>
 #include <Eigen/Dense>
-#include <ctime>
-#include <cstdint>
-#include <boost/random/mersenne_twister.hpp>
 #include <boost/math/distributions/normal.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#include <cstdint>
+#include <ctime>
+#include <iostream>
 #include <limits>
 
 using namespace Eigen;
 using namespace std;
 
-class Dist{
-	private:
-		time_t now; 
-		
-		boost::math::normal normalDistribution;
-		
-		double inf;
-		
-    public:
-        Dist();
-		
-		boost::random::mt19937 rseed; 
-	
-		void igammarnd(double shape, double scale, VectorXd& igamma);
-		
-		double normrnd(double mu, double sig);
+class Dist {
+private:
+  time_t now;
+  
+  boost::math::normal normalDistribution;
 
-		VectorXd normrnd(double, double, int);
 
-		MatrixXd normrnd(double, double, int, int);
+public:
+  double inf;
+  Dist();
 
-		MatrixXd mvnrnd(VectorXd mu, MatrixXd& sig, int, int);
+  boost::random::mt19937 rseed;
 
-		double tnormrnd(double, double, double, double);
+  void igammarnd(double shape, double scale, VectorXd &igamma);
 
-		double shiftexprnd(double, double);
+  double normrnd(double mu, double sig);
 
-		double shiftexppdf(double, double, double);
+  VectorXd normrnd(double, double, int);
 
-		double leftTruncation(double, double);
+  MatrixXd normrnd(double, double, int, int);
 
-		double rightTruncation(double, double);
+  MatrixXd mvnrnd(VectorXd mu, MatrixXd &sig, int, int);
 
-		double twoSided(double, double);
-		
-		double truncNormalRnd(double, double, double, double);
+  double tnormrnd(double, double, double, double);
 
-		double ghkTruncNormRnd(double, double, double, double);
+  double shiftexprnd(double, double);
 
-		void tmvnrand(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, MatrixXd&, VectorXd&);
+  double shiftexppdf(double, double, double);
 
-        double conditionalMean(double Hxx, VectorXd& Hxy, VectorXd& muNotJ, VectorXd& xNotJ, double muxx);
+  double leftTruncation(double, double);
 
-		double tnormpdf(double a, double b, double mu, double sigma, double x);
+  double rightTruncation(double, double);
 
-		double mvnpdf(VectorXd, MatrixXd, VectorXd);
+  double twoSided(double, double);
 
-		double standardDev(VectorXd&);
+  double truncNormalRnd(double, double, double, double);
 
-		void ghkLinearConstraints(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, MatrixXd&);
+  double ghkTruncNormRnd(double, double, double, double);
 
-		void unifrnd(double, double, VectorXd&);
+  void tmvnrand(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, MatrixXd &,
+                VectorXd &);
 
-		void lrLikelihood(MatrixXd&, VectorXd&, VectorXd&, MatrixXd&);
+  double conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
+                         VectorXd &xNotJ, double muxx);
 
-		VectorXd linreglike;
+  double tnormpdf(double a, double b, double mu, double sigma, double x);
 
-		void logmvnpdf(MatrixXd&, VectorXd&, MatrixXd&);
+  double mvnpdf(VectorXd, MatrixXd, VectorXd);
 
-		VectorXd lmvnpdf;
+  double standardDev(VectorXd &);
 
-		void loginvgammapdf(VectorXd&, double, double);
+  void ghkLinearConstraints(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
+                            MatrixXd &);
 
-		VectorXd ligampdf;
+  void unifrnd(double, double, VectorXd &);
 
-		MatrixXd asktmvnrand(VectorXd&, VectorXd&, VectorXd&, MatrixXd&, 
-        VectorXd&, VectorXd&, int );
+  void lrLikelihood(MatrixXd &, VectorXd &, VectorXd &, MatrixXd &);
 
-		int bernoulli(double p);
+  VectorXd linreglike;
 
-		MatrixXd askGhkLinearConstraints(VectorXd&, VectorXd&, VectorXd&, MatrixXd&,
-				int);
-		
-		double autoCorr(VectorXd&);
+  void logmvnpdf(MatrixXd &, VectorXd &, MatrixXd &);
+
+  VectorXd lmvnpdf;
+
+  void loginvgammapdf(VectorXd &, double, double);
+
+  VectorXd ligampdf;
+
+  MatrixXd asktmvnrand(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
+                       VectorXd &, VectorXd &, int);
+
+  int bernoulli(double p);
+
+  MatrixXd askGhkLinearConstraints(VectorXd &, VectorXd &, VectorXd &,
+                                   MatrixXd &, int);
+
+  double autoCorr(VectorXd &);
 };
 
 #endif
