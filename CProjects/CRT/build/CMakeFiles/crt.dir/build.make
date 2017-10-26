@@ -81,57 +81,9 @@ CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProje
 CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o.provides.build: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o
 
 
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o: CMakeFiles/crt.dir/flags.make
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o: /Users/dillonflannery-valadez/Google\ Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp"
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp" > CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.i
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp" -o CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.s
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o.requires:
-
-.PHONY : CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o.requires
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o.provides: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o.requires
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o.provides.build
-.PHONY : CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o.provides
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o.provides.build: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o
-
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o: CMakeFiles/crt.dir/flags.make
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o: /Users/dillonflannery-valadez/Google\ Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp"
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp" > CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.i
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp" -o CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.s
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o.requires:
-
-.PHONY : CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o.requires
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o.provides: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o.requires
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o.provides.build
-.PHONY : CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o.provides
-
-CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o.provides.build: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o
-
-
 CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o: CMakeFiles/crt.dir/flags.make
 CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o: /Users/dillonflannery-valadez/Google\ Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o"
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp"
 
 CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.i: cmake_force
@@ -153,75 +105,71 @@ CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProje
 CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o.provides.build: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o
 
 
-CMakeFiles/crt.dir/src/CRT.cpp.o: CMakeFiles/crt.dir/flags.make
-CMakeFiles/crt.dir/src/CRT.cpp.o: ../src/CRT.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/crt.dir/src/CRT.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/crt.dir/src/CRT.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/CRT.cpp"
+CMakeFiles/crt.dir/src/crt.cpp.o: CMakeFiles/crt.dir/flags.make
+CMakeFiles/crt.dir/src/crt.cpp.o: ../src/crt.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/crt.dir/src/crt.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/crt.dir/src/crt.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crt.cpp"
 
-CMakeFiles/crt.dir/src/CRT.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/crt.dir/src/CRT.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/CRT.cpp" > CMakeFiles/crt.dir/src/CRT.cpp.i
+CMakeFiles/crt.dir/src/crt.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/crt.dir/src/crt.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crt.cpp" > CMakeFiles/crt.dir/src/crt.cpp.i
 
-CMakeFiles/crt.dir/src/CRT.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/crt.dir/src/CRT.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/CRT.cpp" -o CMakeFiles/crt.dir/src/CRT.cpp.s
+CMakeFiles/crt.dir/src/crt.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/crt.dir/src/crt.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crt.cpp" -o CMakeFiles/crt.dir/src/crt.cpp.s
 
-CMakeFiles/crt.dir/src/CRT.cpp.o.requires:
+CMakeFiles/crt.dir/src/crt.cpp.o.requires:
 
-.PHONY : CMakeFiles/crt.dir/src/CRT.cpp.o.requires
+.PHONY : CMakeFiles/crt.dir/src/crt.cpp.o.requires
 
-CMakeFiles/crt.dir/src/CRT.cpp.o.provides: CMakeFiles/crt.dir/src/CRT.cpp.o.requires
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/CRT.cpp.o.provides.build
-.PHONY : CMakeFiles/crt.dir/src/CRT.cpp.o.provides
+CMakeFiles/crt.dir/src/crt.cpp.o.provides: CMakeFiles/crt.dir/src/crt.cpp.o.requires
+	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crt.cpp.o.provides.build
+.PHONY : CMakeFiles/crt.dir/src/crt.cpp.o.provides
 
-CMakeFiles/crt.dir/src/CRT.cpp.o.provides.build: CMakeFiles/crt.dir/src/CRT.cpp.o
+CMakeFiles/crt.dir/src/crt.cpp.o.provides.build: CMakeFiles/crt.dir/src/crt.cpp.o
 
 
-CMakeFiles/crt.dir/src/crtmain.cpp.o: CMakeFiles/crt.dir/flags.make
-CMakeFiles/crt.dir/src/crtmain.cpp.o: ../src/crtmain.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/crt.dir/src/crtmain.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/crt.dir/src/crtmain.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crtmain.cpp"
+CMakeFiles/crt.dir/src/crtml.cpp.o: CMakeFiles/crt.dir/flags.make
+CMakeFiles/crt.dir/src/crtml.cpp.o: ../src/crtml.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/crt.dir/src/crtml.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/crt.dir/src/crtml.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crtml.cpp"
 
-CMakeFiles/crt.dir/src/crtmain.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/crt.dir/src/crtmain.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crtmain.cpp" > CMakeFiles/crt.dir/src/crtmain.cpp.i
+CMakeFiles/crt.dir/src/crtml.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/crt.dir/src/crtml.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crtml.cpp" > CMakeFiles/crt.dir/src/crtml.cpp.i
 
-CMakeFiles/crt.dir/src/crtmain.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/crt.dir/src/crtmain.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crtmain.cpp" -o CMakeFiles/crt.dir/src/crtmain.cpp.s
+CMakeFiles/crt.dir/src/crtml.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/crt.dir/src/crtml.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/src/crtml.cpp" -o CMakeFiles/crt.dir/src/crtml.cpp.s
 
-CMakeFiles/crt.dir/src/crtmain.cpp.o.requires:
+CMakeFiles/crt.dir/src/crtml.cpp.o.requires:
 
-.PHONY : CMakeFiles/crt.dir/src/crtmain.cpp.o.requires
+.PHONY : CMakeFiles/crt.dir/src/crtml.cpp.o.requires
 
-CMakeFiles/crt.dir/src/crtmain.cpp.o.provides: CMakeFiles/crt.dir/src/crtmain.cpp.o.requires
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crtmain.cpp.o.provides.build
-.PHONY : CMakeFiles/crt.dir/src/crtmain.cpp.o.provides
+CMakeFiles/crt.dir/src/crtml.cpp.o.provides: CMakeFiles/crt.dir/src/crtml.cpp.o.requires
+	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crtml.cpp.o.provides.build
+.PHONY : CMakeFiles/crt.dir/src/crtml.cpp.o.provides
 
-CMakeFiles/crt.dir/src/crtmain.cpp.o.provides.build: CMakeFiles/crt.dir/src/crtmain.cpp.o
+CMakeFiles/crt.dir/src/crtml.cpp.o.provides.build: CMakeFiles/crt.dir/src/crtml.cpp.o
 
 
 # Object files for target crt
 crt_OBJECTS = \
 "CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o" \
-"CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o" \
-"CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o" \
 "CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o" \
-"CMakeFiles/crt.dir/src/CRT.cpp.o" \
-"CMakeFiles/crt.dir/src/crtmain.cpp.o"
+"CMakeFiles/crt.dir/src/crt.cpp.o" \
+"CMakeFiles/crt.dir/src/crtml.cpp.o"
 
 # External object files for target crt
 crt_EXTERNAL_OBJECTS =
 
 crt: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o
-crt: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o
-crt: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o
 crt: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o
-crt: CMakeFiles/crt.dir/src/CRT.cpp.o
-crt: CMakeFiles/crt.dir/src/crtmain.cpp.o
+crt: CMakeFiles/crt.dir/src/crt.cpp.o
+crt: CMakeFiles/crt.dir/src/crtml.cpp.o
 crt: CMakeFiles/crt.dir/build.make
 crt: CMakeFiles/crt.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX executable crt"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable crt"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/crt.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -230,11 +178,9 @@ CMakeFiles/crt.dir/build: crt
 .PHONY : CMakeFiles/crt.dir/build
 
 CMakeFiles/crt.dir/requires: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o.requires
-CMakeFiles/crt.dir/requires: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o.requires
-CMakeFiles/crt.dir/requires: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o.requires
 CMakeFiles/crt.dir/requires: CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o.requires
-CMakeFiles/crt.dir/requires: CMakeFiles/crt.dir/src/CRT.cpp.o.requires
-CMakeFiles/crt.dir/requires: CMakeFiles/crt.dir/src/crtmain.cpp.o.requires
+CMakeFiles/crt.dir/requires: CMakeFiles/crt.dir/src/crt.cpp.o.requires
+CMakeFiles/crt.dir/requires: CMakeFiles/crt.dir/src/crtml.cpp.o.requires
 
 .PHONY : CMakeFiles/crt.dir/requires
 

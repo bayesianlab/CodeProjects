@@ -15,17 +15,11 @@ Eigen/Dense
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/ark.cpp
 Eigen/Dense
 -
-assert.h
--
 boost/math/distributions/bernoulli.hpp
 -
 boost/math/distributions/normal.hpp
 -
-boost/random/mersenne_twister.hpp
--
 boost/random/uniform_01.hpp
--
-boost/random/variate_generator.hpp
 -
 cstdint
 -
@@ -35,14 +29,12 @@ limits
 -
 math.h
 -
-random
--
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/Dist.hpp
 ark.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/ark.hpp
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkmain.cpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkml.cpp
 CreateSampleData.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/CreateSampleData.hpp
 Dist.hpp
@@ -63,10 +55,10 @@ math.h
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CreateSampleData/include/CreateSampleData.hpp
-Eigen/Dense
--
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CreateSampleData/include/Dist.hpp
+Eigen/Dense
+-
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp
 Eigen/Dense
@@ -83,6 +75,10 @@ boost/math/distributions/normal.hpp
 -
 boost/random/mersenne_twister.hpp
 -
+boost/random/normal_distribution.hpp
+-
+boost/random/uniform_01.hpp
+-
 cstdint
 -
 ctime
@@ -96,8 +92,6 @@ limits
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/Dist.hpp
 Eigen/Dense
--
-assert.h
 -
 boost/math/distributions/exponential.hpp
 -

@@ -21,7 +21,7 @@ int main(){
 	int dim = 4;
 	double a = 0;
 	double inf = numeric_limits<double>::max();
-	VectorXd betas(4);
+/*	VectorXd betas(4);
 	betas << .75, .55, .35, .15;
 	CreateSampleData csd(testN, betas);
 	VectorXd lowerLimit(dim+1); 
@@ -31,10 +31,10 @@ int main(){
 
 	lowerLimit << .99, -inf, -inf, -inf, -inf;
 	upperLimit <<  1., inf, inf , inf, inf;
-	CreateSampleData(testN, betas);
+	CreateSampleData(testN, betas)/;
 	p.chibRaoBlackwell(lowerLimit, upperLimit, csd.theta, csd.inverseFisher, zStar, fzStar, 10, 1, 10, 1);
 	
-
+*/
 
 	VectorXd crbmu(3);
     crbmu << 0, .5, 1.;

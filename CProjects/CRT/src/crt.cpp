@@ -8,9 +8,12 @@
 using namespace Eigen;
 using namespace std;
 
-CRT::CRT(VectorXd& lowerlim, VectorXd& upperlim, VectorXd& theta, MatrixXd& sigma, int sims,
-		int burnin){
+CRT::CRT(){
 	cout << "\n\tCRT Begin\n" << endl;
+}
+
+void CRT::crtKernel(VectorXd& lowerlim, VectorXd& upperlim, VectorXd& theta, MatrixXd& sigma, int sims,
+		int burnin){
 	ll = lowerlim;
 	ul = upperlim;
 	mu = theta;
@@ -32,8 +35,13 @@ CRT::CRT(VectorXd& lowerlim, VectorXd& upperlim, VectorXd& theta, MatrixXd& sigm
 	precision = sigma.inverse();
 	Hxx = precision.diagonal();
 	xnotJ = zStar.head(Jminus1);
-}
+	betaPrior = MatrixXd::Zero(Jminus1, 1);
+	sigmaPrior = MatrixXd::Identity(Jminus1, Jminus1);
+	igamA = 3;
+	igamB = 6;
+	gibbsKernel();
 
+}
 void CRT::gibbsKernel(){
 	
 	VectorXd tempk(Rows);
@@ -74,3 +82,44 @@ void CRT::tnormpdf(double a, double b, VectorXd& mu, double sigma, double x,
 		k(i) = pdf(normalDist, (x - mu(i))/sigma)/sigmaZ;
 	}
 } 
+
+double CRT::ml(VectorXd &betas, double sigmas, VectorXd &y, MatrixXd &X) {
+  double mLike = lrLikelihood(betas, sigmas, y, X) +
+                 logmvnpdf(betaPrior, sigmaPrior, betas) +
+                 loginvgammapdf(sigmas, igamA, igamB) -
+                 log(Kernel.rowwise().prod().mean());
+  return mLike;
+}
+
+void CRT::runSim(int nSims, int batches, VectorXd &lowerConstraint,
+            VectorXd &upperConstraint, VectorXd &theta, MatrixXd &sig,
+            VectorXd &y, MatrixXd &X, int sims, int burnin) {
+  VectorXd mLike(nSims);
+  VectorXd b(Jminus1);
+  for (int i = 0; i < nSims; i++) {
+    crtKernel(lowerConstraint, upperConstraint, theta, sig, sims, burnin);
+    b = zStar.tail(Jminus1);
+    mLike(i) = ml(b, zStar(0), y, X);
+  }
+  cout << setprecision(9) << mLike.mean() << endl;
+  int obsInMean = floor(nSims / batches);
+  int remainder = nSims - (batches * obsInMean);
+  if (remainder == 0) {
+    VectorXd yBar(batches);
+    int startIndex = 0;
+    for (int j = 0; j < batches; j++) {
+      yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+      startIndex = startIndex + obsInMean;
+    }
+  } else {
+    VectorXd yBar(batches + 1);
+    int startIndex = 0;
+    for (int j = 0; j < batches; j++) {
+      yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+      startIndex = startIndex + obsInMean;
+    }
+    yBar(batches) = mLike.segment(startIndex, remainder).mean();
+    cout << setprecision(10) << standardDev(yBar) << endl;
+    ;
+  }
+}

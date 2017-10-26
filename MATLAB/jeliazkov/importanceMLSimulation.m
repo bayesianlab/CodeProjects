@@ -1,7 +1,7 @@
 function [] = importanceMLSimulation(N, coefs, sampleSize, burnin, Sims,...
     batches,seed)
 % coefs as column
-rng(seed)
+%rng(seed)
 p = length(coefs);
 importance = zeros(Sims, 1);
 X = normrnd(1,1,N,p);
@@ -17,7 +17,7 @@ thetaMLE = [sSqd; bMLE];
 empty = zeros(p,1);
 invFisher = [(2*sSqd^2)/N, empty' ;...
         empty, sSqd*XpXinv];
-rng(randi(100));
+%rng(randi(100));
 
 for i = 1:Sims
     importance(i) = lrmlRestricted(0, Inf, y, X, 3, 6, thetaMLE', invFisher,...

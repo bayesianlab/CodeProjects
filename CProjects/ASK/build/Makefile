@@ -204,32 +204,32 @@ src/ask.cpp.s:
 	$(MAKE) -f CMakeFiles/ask.dir/build.make CMakeFiles/ask.dir/src/ask.cpp.s
 .PHONY : src/ask.cpp.s
 
-src/askmain.o: src/askmain.cpp.o
+src/askml.o: src/askml.cpp.o
 
-.PHONY : src/askmain.o
+.PHONY : src/askml.o
 
 # target to build an object file
-src/askmain.cpp.o:
-	$(MAKE) -f CMakeFiles/ask.dir/build.make CMakeFiles/ask.dir/src/askmain.cpp.o
-.PHONY : src/askmain.cpp.o
+src/askml.cpp.o:
+	$(MAKE) -f CMakeFiles/ask.dir/build.make CMakeFiles/ask.dir/src/askml.cpp.o
+.PHONY : src/askml.cpp.o
 
-src/askmain.i: src/askmain.cpp.i
+src/askml.i: src/askml.cpp.i
 
-.PHONY : src/askmain.i
+.PHONY : src/askml.i
 
 # target to preprocess a source file
-src/askmain.cpp.i:
-	$(MAKE) -f CMakeFiles/ask.dir/build.make CMakeFiles/ask.dir/src/askmain.cpp.i
-.PHONY : src/askmain.cpp.i
+src/askml.cpp.i:
+	$(MAKE) -f CMakeFiles/ask.dir/build.make CMakeFiles/ask.dir/src/askml.cpp.i
+.PHONY : src/askml.cpp.i
 
-src/askmain.s: src/askmain.cpp.s
+src/askml.s: src/askml.cpp.s
 
-.PHONY : src/askmain.s
+.PHONY : src/askml.s
 
 # target to generate assembly for a file
-src/askmain.cpp.s:
-	$(MAKE) -f CMakeFiles/ask.dir/build.make CMakeFiles/ask.dir/src/askmain.cpp.s
-.PHONY : src/askmain.cpp.s
+src/askml.cpp.s:
+	$(MAKE) -f CMakeFiles/ask.dir/build.make CMakeFiles/ask.dir/src/askml.cpp.s
+.PHONY : src/askml.cpp.s
 
 # Help Target
 help:
@@ -249,9 +249,9 @@ help:
 	@echo "... src/ask.o"
 	@echo "... src/ask.i"
 	@echo "... src/ask.s"
-	@echo "... src/askmain.o"
-	@echo "... src/askmain.i"
-	@echo "... src/askmain.s"
+	@echo "... src/askml.o"
+	@echo "... src/askml.i"
+	@echo "... src/askml.s"
 .PHONY : help
 
 

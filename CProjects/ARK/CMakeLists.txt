@@ -12,7 +12,7 @@ set(SOURCES
 	${PARENT}/Distributions/src/Dist.cpp 
 	${PARENT}/CreateSampleData/src/CreateSampleData.cpp
 	src/ark.cpp
-	src/arkmain.cpp
+	src/arkml.cpp
 	)
 
 message(STATUS "Eigen Directory    " ${EIGEN_DIR})

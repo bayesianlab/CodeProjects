@@ -129,28 +129,28 @@ CMakeFiles/ask.dir/src/ask.cpp.o.provides: CMakeFiles/ask.dir/src/ask.cpp.o.requ
 CMakeFiles/ask.dir/src/ask.cpp.o.provides.build: CMakeFiles/ask.dir/src/ask.cpp.o
 
 
-CMakeFiles/ask.dir/src/askmain.cpp.o: CMakeFiles/ask.dir/flags.make
-CMakeFiles/ask.dir/src/askmain.cpp.o: ../src/askmain.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ask.dir/src/askmain.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ask.dir/src/askmain.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/src/askmain.cpp"
+CMakeFiles/ask.dir/src/askml.cpp.o: CMakeFiles/ask.dir/flags.make
+CMakeFiles/ask.dir/src/askml.cpp.o: ../src/askml.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ask.dir/src/askml.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ask.dir/src/askml.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/src/askml.cpp"
 
-CMakeFiles/ask.dir/src/askmain.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ask.dir/src/askmain.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/src/askmain.cpp" > CMakeFiles/ask.dir/src/askmain.cpp.i
+CMakeFiles/ask.dir/src/askml.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ask.dir/src/askml.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/src/askml.cpp" > CMakeFiles/ask.dir/src/askml.cpp.i
 
-CMakeFiles/ask.dir/src/askmain.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ask.dir/src/askmain.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/src/askmain.cpp" -o CMakeFiles/ask.dir/src/askmain.cpp.s
+CMakeFiles/ask.dir/src/askml.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ask.dir/src/askml.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/src/askml.cpp" -o CMakeFiles/ask.dir/src/askml.cpp.s
 
-CMakeFiles/ask.dir/src/askmain.cpp.o.requires:
+CMakeFiles/ask.dir/src/askml.cpp.o.requires:
 
-.PHONY : CMakeFiles/ask.dir/src/askmain.cpp.o.requires
+.PHONY : CMakeFiles/ask.dir/src/askml.cpp.o.requires
 
-CMakeFiles/ask.dir/src/askmain.cpp.o.provides: CMakeFiles/ask.dir/src/askmain.cpp.o.requires
-	$(MAKE) -f CMakeFiles/ask.dir/build.make CMakeFiles/ask.dir/src/askmain.cpp.o.provides.build
-.PHONY : CMakeFiles/ask.dir/src/askmain.cpp.o.provides
+CMakeFiles/ask.dir/src/askml.cpp.o.provides: CMakeFiles/ask.dir/src/askml.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ask.dir/build.make CMakeFiles/ask.dir/src/askml.cpp.o.provides.build
+.PHONY : CMakeFiles/ask.dir/src/askml.cpp.o.provides
 
-CMakeFiles/ask.dir/src/askmain.cpp.o.provides.build: CMakeFiles/ask.dir/src/askmain.cpp.o
+CMakeFiles/ask.dir/src/askml.cpp.o.provides.build: CMakeFiles/ask.dir/src/askml.cpp.o
 
 
 # Object files for target ask
@@ -158,7 +158,7 @@ ask_OBJECTS = \
 "CMakeFiles/ask.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o" \
 "CMakeFiles/ask.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o" \
 "CMakeFiles/ask.dir/src/ask.cpp.o" \
-"CMakeFiles/ask.dir/src/askmain.cpp.o"
+"CMakeFiles/ask.dir/src/askml.cpp.o"
 
 # External object files for target ask
 ask_EXTERNAL_OBJECTS =
@@ -166,7 +166,7 @@ ask_EXTERNAL_OBJECTS =
 ask: CMakeFiles/ask.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o
 ask: CMakeFiles/ask.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o
 ask: CMakeFiles/ask.dir/src/ask.cpp.o
-ask: CMakeFiles/ask.dir/src/askmain.cpp.o
+ask: CMakeFiles/ask.dir/src/askml.cpp.o
 ask: CMakeFiles/ask.dir/build.make
 ask: CMakeFiles/ask.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ASK/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable ask"
@@ -180,7 +180,7 @@ CMakeFiles/ask.dir/build: ask
 CMakeFiles/ask.dir/requires: CMakeFiles/ask.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o.requires
 CMakeFiles/ask.dir/requires: CMakeFiles/ask.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o.requires
 CMakeFiles/ask.dir/requires: CMakeFiles/ask.dir/src/ask.cpp.o.requires
-CMakeFiles/ask.dir/requires: CMakeFiles/ask.dir/src/askmain.cpp.o.requires
+CMakeFiles/ask.dir/requires: CMakeFiles/ask.dir/src/askml.cpp.o.requires
 
 .PHONY : CMakeFiles/ask.dir/requires
 

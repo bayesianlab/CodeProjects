@@ -177,113 +177,59 @@ Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/s
 	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.s
 .PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.s
 
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.o: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o
+src/crt.o: src/crt.cpp.o
 
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.o
-
-# target to build an object file
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.o
-
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.i: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.i
-
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.i
-
-# target to preprocess a source file
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.i:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.i
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.i
-
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.s: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.s
-
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.s
-
-# target to generate assembly for a file
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.s:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.s
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.cpp.s
-
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.o: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o
-
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.o
+.PHONY : src/crt.o
 
 # target to build an object file
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.o
+src/crt.cpp.o:
+	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crt.cpp.o
+.PHONY : src/crt.cpp.o
 
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.i: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.i
+src/crt.i: src/crt.cpp.i
 
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.i
+.PHONY : src/crt.i
 
 # target to preprocess a source file
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.i:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.i
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.i
+src/crt.cpp.i:
+	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crt.cpp.i
+.PHONY : src/crt.cpp.i
 
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.s: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.s
+src/crt.s: src/crt.cpp.s
 
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.s
+.PHONY : src/crt.s
 
 # target to generate assembly for a file
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.s:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.s
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.cpp.s
+src/crt.cpp.s:
+	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crt.cpp.s
+.PHONY : src/crt.cpp.s
 
-src/CRT.o: src/CRT.cpp.o
+src/crtml.o: src/crtml.cpp.o
 
-.PHONY : src/CRT.o
+.PHONY : src/crtml.o
 
 # target to build an object file
-src/CRT.cpp.o:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/CRT.cpp.o
-.PHONY : src/CRT.cpp.o
+src/crtml.cpp.o:
+	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crtml.cpp.o
+.PHONY : src/crtml.cpp.o
 
-src/CRT.i: src/CRT.cpp.i
+src/crtml.i: src/crtml.cpp.i
 
-.PHONY : src/CRT.i
-
-# target to preprocess a source file
-src/CRT.cpp.i:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/CRT.cpp.i
-.PHONY : src/CRT.cpp.i
-
-src/CRT.s: src/CRT.cpp.s
-
-.PHONY : src/CRT.s
-
-# target to generate assembly for a file
-src/CRT.cpp.s:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/CRT.cpp.s
-.PHONY : src/CRT.cpp.s
-
-src/crtmain.o: src/crtmain.cpp.o
-
-.PHONY : src/crtmain.o
-
-# target to build an object file
-src/crtmain.cpp.o:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crtmain.cpp.o
-.PHONY : src/crtmain.cpp.o
-
-src/crtmain.i: src/crtmain.cpp.i
-
-.PHONY : src/crtmain.i
+.PHONY : src/crtml.i
 
 # target to preprocess a source file
-src/crtmain.cpp.i:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crtmain.cpp.i
-.PHONY : src/crtmain.cpp.i
+src/crtml.cpp.i:
+	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crtml.cpp.i
+.PHONY : src/crtml.cpp.i
 
-src/crtmain.s: src/crtmain.cpp.s
+src/crtml.s: src/crtml.cpp.s
 
-.PHONY : src/crtmain.s
+.PHONY : src/crtml.s
 
 # target to generate assembly for a file
-src/crtmain.cpp.s:
-	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crtmain.cpp.s
-.PHONY : src/crtmain.cpp.s
+src/crtml.cpp.s:
+	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/src/crtml.cpp.s
+.PHONY : src/crtml.cpp.s
 
 # Help Target
 help:
@@ -300,18 +246,12 @@ help:
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.o"
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.i"
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.s"
-	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.o"
-	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.i"
-	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/MarginalLikelihoodCalculator.s"
-	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.o"
-	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.i"
-	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/ProbabilitySimulator.s"
-	@echo "... src/CRT.o"
-	@echo "... src/CRT.i"
-	@echo "... src/CRT.s"
-	@echo "... src/crtmain.o"
-	@echo "... src/crtmain.i"
-	@echo "... src/crtmain.s"
+	@echo "... src/crt.o"
+	@echo "... src/crt.i"
+	@echo "... src/crt.s"
+	@echo "... src/crtml.o"
+	@echo "... src/crtml.i"
+	@echo "... src/crtml.s"
 .PHONY : help
 
 

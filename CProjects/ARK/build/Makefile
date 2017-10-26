@@ -204,32 +204,32 @@ src/ark.cpp.s:
 	$(MAKE) -f CMakeFiles/ark.dir/build.make CMakeFiles/ark.dir/src/ark.cpp.s
 .PHONY : src/ark.cpp.s
 
-src/arkmain.o: src/arkmain.cpp.o
+src/arkml.o: src/arkml.cpp.o
 
-.PHONY : src/arkmain.o
+.PHONY : src/arkml.o
 
 # target to build an object file
-src/arkmain.cpp.o:
-	$(MAKE) -f CMakeFiles/ark.dir/build.make CMakeFiles/ark.dir/src/arkmain.cpp.o
-.PHONY : src/arkmain.cpp.o
+src/arkml.cpp.o:
+	$(MAKE) -f CMakeFiles/ark.dir/build.make CMakeFiles/ark.dir/src/arkml.cpp.o
+.PHONY : src/arkml.cpp.o
 
-src/arkmain.i: src/arkmain.cpp.i
+src/arkml.i: src/arkml.cpp.i
 
-.PHONY : src/arkmain.i
+.PHONY : src/arkml.i
 
 # target to preprocess a source file
-src/arkmain.cpp.i:
-	$(MAKE) -f CMakeFiles/ark.dir/build.make CMakeFiles/ark.dir/src/arkmain.cpp.i
-.PHONY : src/arkmain.cpp.i
+src/arkml.cpp.i:
+	$(MAKE) -f CMakeFiles/ark.dir/build.make CMakeFiles/ark.dir/src/arkml.cpp.i
+.PHONY : src/arkml.cpp.i
 
-src/arkmain.s: src/arkmain.cpp.s
+src/arkml.s: src/arkml.cpp.s
 
-.PHONY : src/arkmain.s
+.PHONY : src/arkml.s
 
 # target to generate assembly for a file
-src/arkmain.cpp.s:
-	$(MAKE) -f CMakeFiles/ark.dir/build.make CMakeFiles/ark.dir/src/arkmain.cpp.s
-.PHONY : src/arkmain.cpp.s
+src/arkml.cpp.s:
+	$(MAKE) -f CMakeFiles/ark.dir/build.make CMakeFiles/ark.dir/src/arkml.cpp.s
+.PHONY : src/arkml.cpp.s
 
 # Help Target
 help:
@@ -249,9 +249,9 @@ help:
 	@echo "... src/ark.o"
 	@echo "... src/ark.i"
 	@echo "... src/ark.s"
-	@echo "... src/arkmain.o"
-	@echo "... src/arkmain.i"
-	@echo "... src/arkmain.s"
+	@echo "... src/arkml.o"
+	@echo "... src/arkml.i"
+	@echo "... src/arkml.s"
 .PHONY : help
 
 

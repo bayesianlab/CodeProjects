@@ -129,28 +129,28 @@ CMakeFiles/ark.dir/src/ark.cpp.o.provides: CMakeFiles/ark.dir/src/ark.cpp.o.requ
 CMakeFiles/ark.dir/src/ark.cpp.o.provides.build: CMakeFiles/ark.dir/src/ark.cpp.o
 
 
-CMakeFiles/ark.dir/src/arkmain.cpp.o: CMakeFiles/ark.dir/flags.make
-CMakeFiles/ark.dir/src/arkmain.cpp.o: ../src/arkmain.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ark.dir/src/arkmain.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ark.dir/src/arkmain.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkmain.cpp"
+CMakeFiles/ark.dir/src/arkml.cpp.o: CMakeFiles/ark.dir/flags.make
+CMakeFiles/ark.dir/src/arkml.cpp.o: ../src/arkml.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/ark.dir/src/arkml.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/ark.dir/src/arkml.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkml.cpp"
 
-CMakeFiles/ark.dir/src/arkmain.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ark.dir/src/arkmain.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkmain.cpp" > CMakeFiles/ark.dir/src/arkmain.cpp.i
+CMakeFiles/ark.dir/src/arkml.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/ark.dir/src/arkml.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkml.cpp" > CMakeFiles/ark.dir/src/arkml.cpp.i
 
-CMakeFiles/ark.dir/src/arkmain.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ark.dir/src/arkmain.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkmain.cpp" -o CMakeFiles/ark.dir/src/arkmain.cpp.s
+CMakeFiles/ark.dir/src/arkml.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/ark.dir/src/arkml.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkml.cpp" -o CMakeFiles/ark.dir/src/arkml.cpp.s
 
-CMakeFiles/ark.dir/src/arkmain.cpp.o.requires:
+CMakeFiles/ark.dir/src/arkml.cpp.o.requires:
 
-.PHONY : CMakeFiles/ark.dir/src/arkmain.cpp.o.requires
+.PHONY : CMakeFiles/ark.dir/src/arkml.cpp.o.requires
 
-CMakeFiles/ark.dir/src/arkmain.cpp.o.provides: CMakeFiles/ark.dir/src/arkmain.cpp.o.requires
-	$(MAKE) -f CMakeFiles/ark.dir/build.make CMakeFiles/ark.dir/src/arkmain.cpp.o.provides.build
-.PHONY : CMakeFiles/ark.dir/src/arkmain.cpp.o.provides
+CMakeFiles/ark.dir/src/arkml.cpp.o.provides: CMakeFiles/ark.dir/src/arkml.cpp.o.requires
+	$(MAKE) -f CMakeFiles/ark.dir/build.make CMakeFiles/ark.dir/src/arkml.cpp.o.provides.build
+.PHONY : CMakeFiles/ark.dir/src/arkml.cpp.o.provides
 
-CMakeFiles/ark.dir/src/arkmain.cpp.o.provides.build: CMakeFiles/ark.dir/src/arkmain.cpp.o
+CMakeFiles/ark.dir/src/arkml.cpp.o.provides.build: CMakeFiles/ark.dir/src/arkml.cpp.o
 
 
 # Object files for target ark
@@ -158,7 +158,7 @@ ark_OBJECTS = \
 "CMakeFiles/ark.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o" \
 "CMakeFiles/ark.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o" \
 "CMakeFiles/ark.dir/src/ark.cpp.o" \
-"CMakeFiles/ark.dir/src/arkmain.cpp.o"
+"CMakeFiles/ark.dir/src/arkml.cpp.o"
 
 # External object files for target ark
 ark_EXTERNAL_OBJECTS =
@@ -166,7 +166,7 @@ ark_EXTERNAL_OBJECTS =
 ark: CMakeFiles/ark.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o
 ark: CMakeFiles/ark.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o
 ark: CMakeFiles/ark.dir/src/ark.cpp.o
-ark: CMakeFiles/ark.dir/src/arkmain.cpp.o
+ark: CMakeFiles/ark.dir/src/arkml.cpp.o
 ark: CMakeFiles/ark.dir/build.make
 ark: CMakeFiles/ark.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable ark"
@@ -180,7 +180,7 @@ CMakeFiles/ark.dir/build: ark
 CMakeFiles/ark.dir/requires: CMakeFiles/ark.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp.o.requires
 CMakeFiles/ark.dir/requires: CMakeFiles/ark.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/CreateSampleData/src/CreateSampleData.cpp.o.requires
 CMakeFiles/ark.dir/requires: CMakeFiles/ark.dir/src/ark.cpp.o.requires
-CMakeFiles/ark.dir/requires: CMakeFiles/ark.dir/src/arkmain.cpp.o.requires
+CMakeFiles/ark.dir/requires: CMakeFiles/ark.dir/src/arkml.cpp.o.requires
 
 .PHONY : CMakeFiles/ark.dir/requires
 

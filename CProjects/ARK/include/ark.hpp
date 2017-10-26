@@ -17,15 +17,15 @@ private:
   VectorXd ul;
   MatrixXd precision;
   MatrixXd sigma;
-  int Rows;
-  int J;
-  int Jminus1;
+  int Rows, J, Jminus1;
   string arkWarning =
       "  Exceed max iterations, use custom constructor to alter maximum.\n";
+  VectorXd betaPrior;
+  MatrixXd sigmaPrior;
+  double igamA, igamB;
 
 public:
-  Ark(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int);
-  Ark(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int);
+  Ark();
 
   MatrixXd arSample(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int);
 
@@ -48,6 +48,11 @@ public:
 
   VectorXd mu;
 
+  double ml(VectorXd &, double, VectorXd &, MatrixXd &);
+  void arkKernel(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int);
+  void runSim(int nSims, int batches, VectorXd &theta, MatrixXd &sigma,
+              VectorXd &y, MatrixXd &X, VectorXd &ll, VectorXd &ul,
+              int sampleSize, int );
 };
 
 #endif

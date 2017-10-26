@@ -1081,15 +1081,22 @@ CMakeFiles/ark.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProje
  /usr/local/include/boost/boost/random/detail/enable_warnings.hpp
  /usr/local/include/boost/boost/random/detail/generator_bits.hpp
  /usr/local/include/boost/boost/random/detail/generator_seed_seq.hpp
+ /usr/local/include/boost/boost/random/detail/int_float_pair.hpp
  /usr/local/include/boost/boost/random/detail/integer_log2.hpp
  /usr/local/include/boost/boost/random/detail/large_arithmetic.hpp
+ /usr/local/include/boost/boost/random/detail/operators.hpp
  /usr/local/include/boost/boost/random/detail/polynomial.hpp
  /usr/local/include/boost/boost/random/detail/ptr_helper.hpp
  /usr/local/include/boost/boost/random/detail/seed.hpp
  /usr/local/include/boost/boost/random/detail/seed_impl.hpp
  /usr/local/include/boost/boost/random/detail/signed_unsigned_tools.hpp
+ /usr/local/include/boost/boost/random/detail/uniform_int_float.hpp
+ /usr/local/include/boost/boost/random/exponential_distribution.hpp
  /usr/local/include/boost/boost/random/mersenne_twister.hpp
+ /usr/local/include/boost/boost/random/normal_distribution.hpp
  /usr/local/include/boost/boost/random/traits.hpp
+ /usr/local/include/boost/boost/random/uniform_01.hpp
+ /usr/local/include/boost/boost/random/uniform_int_distribution.hpp
  /usr/local/include/boost/boost/range/algorithm/equal.hpp
  /usr/local/include/boost/boost/range/begin.hpp
  /usr/local/include/boost/boost/range/concepts.hpp
@@ -3981,17 +3988,22 @@ CMakeFiles/ark.dir/src/ark.cpp.o
  /usr/local/include/boost/boost/random/detail/enable_warnings.hpp
  /usr/local/include/boost/boost/random/detail/generator_bits.hpp
  /usr/local/include/boost/boost/random/detail/generator_seed_seq.hpp
+ /usr/local/include/boost/boost/random/detail/int_float_pair.hpp
  /usr/local/include/boost/boost/random/detail/integer_log2.hpp
  /usr/local/include/boost/boost/random/detail/large_arithmetic.hpp
+ /usr/local/include/boost/boost/random/detail/operators.hpp
  /usr/local/include/boost/boost/random/detail/polynomial.hpp
  /usr/local/include/boost/boost/random/detail/ptr_helper.hpp
  /usr/local/include/boost/boost/random/detail/seed.hpp
  /usr/local/include/boost/boost/random/detail/seed_impl.hpp
  /usr/local/include/boost/boost/random/detail/signed_unsigned_tools.hpp
+ /usr/local/include/boost/boost/random/detail/uniform_int_float.hpp
+ /usr/local/include/boost/boost/random/exponential_distribution.hpp
  /usr/local/include/boost/boost/random/mersenne_twister.hpp
+ /usr/local/include/boost/boost/random/normal_distribution.hpp
  /usr/local/include/boost/boost/random/traits.hpp
  /usr/local/include/boost/boost/random/uniform_01.hpp
- /usr/local/include/boost/boost/random/variate_generator.hpp
+ /usr/local/include/boost/boost/random/uniform_int_distribution.hpp
  /usr/local/include/boost/boost/range/algorithm/equal.hpp
  /usr/local/include/boost/boost/range/begin.hpp
  /usr/local/include/boost/boost/range/concepts.hpp
@@ -4348,9 +4360,9 @@ CMakeFiles/ark.dir/src/ark.cpp.o
  /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
  /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
-CMakeFiles/ark.dir/src/arkmain.cpp.o
+CMakeFiles/ark.dir/src/arkml.cpp.o
  ../include/ark.hpp
- /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkmain.cpp
+ /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/ARK/src/arkml.cpp
  /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CreateSampleData/include/CreateSampleData.hpp
  /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/include/Dist.hpp
  /usr/local/include/boost/boost/array.hpp
@@ -5429,15 +5441,22 @@ CMakeFiles/ark.dir/src/arkmain.cpp.o
  /usr/local/include/boost/boost/random/detail/enable_warnings.hpp
  /usr/local/include/boost/boost/random/detail/generator_bits.hpp
  /usr/local/include/boost/boost/random/detail/generator_seed_seq.hpp
+ /usr/local/include/boost/boost/random/detail/int_float_pair.hpp
  /usr/local/include/boost/boost/random/detail/integer_log2.hpp
  /usr/local/include/boost/boost/random/detail/large_arithmetic.hpp
+ /usr/local/include/boost/boost/random/detail/operators.hpp
  /usr/local/include/boost/boost/random/detail/polynomial.hpp
  /usr/local/include/boost/boost/random/detail/ptr_helper.hpp
  /usr/local/include/boost/boost/random/detail/seed.hpp
  /usr/local/include/boost/boost/random/detail/seed_impl.hpp
  /usr/local/include/boost/boost/random/detail/signed_unsigned_tools.hpp
+ /usr/local/include/boost/boost/random/detail/uniform_int_float.hpp
+ /usr/local/include/boost/boost/random/exponential_distribution.hpp
  /usr/local/include/boost/boost/random/mersenne_twister.hpp
+ /usr/local/include/boost/boost/random/normal_distribution.hpp
  /usr/local/include/boost/boost/random/traits.hpp
+ /usr/local/include/boost/boost/random/uniform_01.hpp
+ /usr/local/include/boost/boost/random/uniform_int_distribution.hpp
  /usr/local/include/boost/boost/range/algorithm/equal.hpp
  /usr/local/include/boost/boost/range/begin.hpp
  /usr/local/include/boost/boost/range/concepts.hpp

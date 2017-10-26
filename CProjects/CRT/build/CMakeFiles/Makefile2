@@ -66,7 +66,7 @@ CMAKE_BINARY_DIR = "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CPro
 CMakeFiles/crt.dir/all:
 	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/depend
 	$(MAKE) -f CMakeFiles/crt.dir/build.make CMakeFiles/crt.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=1,2,3,4,5,6,7 "Built target crt"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" --progress-num=1,2,3,4,5 "Built target crt"
 .PHONY : CMakeFiles/crt.dir/all
 
 # Include target in all.
@@ -76,7 +76,7 @@ all: CMakeFiles/crt.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/crt.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" 7
+	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" 5
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/crt.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/CRT/build/CMakeFiles" 0
 .PHONY : CMakeFiles/crt.dir/rule

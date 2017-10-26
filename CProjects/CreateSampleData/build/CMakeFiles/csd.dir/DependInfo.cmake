@@ -14,7 +14,7 @@ set(CMAKE_CXX_COMPILER_ID "Clang")
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "../include"
   "/usr/local/include/eigen3"
-  "/usr/local/include/boost_1_64_0"
+  "/usr/local/include/boost"
   "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/include"
   )
 

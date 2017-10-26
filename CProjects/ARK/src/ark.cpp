@@ -1,15 +1,11 @@
 #include <Eigen/Dense>
-#include <assert.h>
 #include <boost/math/distributions/bernoulli.hpp>
 #include <boost/math/distributions/normal.hpp>
-#include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_01.hpp>
-#include <boost/random/variate_generator.hpp>
 #include <cstdint>
 #include <ctime>
 #include <limits>
 #include <math.h>
-#include <random>
 
 #include "Dist.hpp"
 #include "ark.hpp"
@@ -17,35 +13,12 @@
 using namespace Eigen;
 using namespace std;
 
-Ark::Ark(VectorXd &lowLim, VectorXd &upLim, VectorXd &theta, MatrixXd &variance,
-         int sims) {
-
+Ark::Ark() {
   cout << "\n\n\tARK begin\n\n" << endl;
-  Rows = sims;
-  sigma = variance;
-  J = sigma.cols();
-  Jminus1 = J - 1;
-  mu = theta;
-  ll = lowLim;
-  ul = upLim;
-  int maxIterations = 10000;
-  precision = sigma.inverse();
-  Hxx = precision.diagonal();
-  sigmaVector = (1. / Hxx.array()).sqrt();
-  arkSample = MatrixXd::Zero(sims, J);
-  arkSample = arSample(lowLim, upLim, mu, sigma, sims, maxIterations);
-  zStar = arkSample.colwise().mean();
-  Kernel = MatrixXd::Zero(Rows, J);
-  muNotj = MatrixXd::Zero(Jminus1, 1);
-  Hxy = MatrixXd::Zero(Jminus1, 1);
-  xNotj = MatrixXd::Zero(Rows, Jminus1);
-  xNotj = arkSample.rightCols(Jminus1);
-  gibbsKernel();
 }
 
-Ark::Ark(VectorXd &lowLim, VectorXd &upLim, VectorXd &theta, MatrixXd &variance,
-         int sims, int maxIterations) {
-  cout << "\n\n\tARK begin: Custom iterations\n\n" << endl;
+void Ark::arkKernel(VectorXd &lowLim, VectorXd &upLim, VectorXd &theta, MatrixXd &variance,
+         int sims, int maxIterations){
   Rows = sims;
   sigma = variance;
   J = sigma.cols();
@@ -64,7 +37,14 @@ Ark::Ark(VectorXd &lowLim, VectorXd &upLim, VectorXd &theta, MatrixXd &variance,
   Hxy = MatrixXd::Zero(Jminus1, 1);
   xNotj = MatrixXd::Zero(Rows, Jminus1);
   xNotj = arkSample.rightCols(Jminus1);
+  betaPrior = MatrixXd::Zero(Jminus1,1);
+  sigmaPrior = MatrixXd::Identity(Jminus1, Jminus1);
+  igamA = 3;
+  igamB = 6;
+  gibbsKernel();
+
 }
+
 
 MatrixXd Ark::arSample(VectorXd &ll, VectorXd &ul, VectorXd &mu,
                        MatrixXd &sigma, int sSize, int maxIterations) {
@@ -151,6 +131,14 @@ int Ark::isVectVgreater(VectorXd &v, VectorXd &u) {
   }
 }
 
+double Ark::ml(VectorXd &betas, double sigmas, VectorXd &y, MatrixXd &X) {
+  double mLike = lrLikelihood(betas, sigmas, y, X) +
+                 logmvnpdf(betaPrior, sigmaPrior, betas) +
+                 loginvgammapdf(sigmas, igamA, igamB) -
+                 log(Kernel.rowwise().prod().mean());
+  return mLike;
+}
+
 void Ark::displayMLike() {
   double num = mvnpdf(mu, sigma, zStar);
   double den = Kernel.rowwise().prod().mean();
@@ -158,3 +146,35 @@ void Ark::displayMLike() {
   cout << "Marginal Likelihood  " << ans << endl;
 }
 
+void Ark::runSim(int nSims, int batches, VectorXd &theta, MatrixXd& sigma,
+                 VectorXd &y, MatrixXd &X, VectorXd &ll, VectorXd &ul,
+                 int sampleSize, int maxIterations) {
+  VectorXd mLike(nSims);
+  VectorXd b(Jminus1);
+  for (int i = 0; i < nSims; i++) {
+    arkKernel(ll, ul, theta, sigma, sampleSize, maxIterations);
+    b = zStar.tail(Jminus1);
+    mLike(i) = ml(b, zStar(0), y, X);
+  }
+  cout << setprecision(9) << mLike.mean() << endl;
+  int obsInMean = floor(nSims / batches);
+  int remainder = nSims - (batches * obsInMean);
+  if (remainder == 0) {
+    VectorXd yBar(batches);
+    int startIndex = 0;
+    for (int j = 0; j < batches; j++) {
+      yBar(j) = mLike.segment(startIndex, obsInMean).mean() ;
+      startIndex = startIndex + obsInMean;
+    }
+  } else {
+    VectorXd yBar(batches + 1);
+    int startIndex = 0;
+    for (int j = 0; j < batches; j++) {
+      yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+      startIndex = startIndex + obsInMean;
+    }
+    yBar(batches) = mLike.segment(startIndex, remainder).mean();
+	cout << setprecision(10) << standardDev(yBar) << endl;;
+  }
+
+}

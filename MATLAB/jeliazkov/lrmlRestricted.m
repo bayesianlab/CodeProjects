@@ -6,13 +6,14 @@ theta = ghkGibbsSampler(0, Inf, mle, hess, draws);
 theta = theta(burnin+1:draws,:);
 sampLength = draws - burnin;
 univariateDensities = zeros(sampLength, J);
-
+sqrt(variances)
 for j = 1:J
     univariateDensities(:,j) = tnormpdf(a, b, mle(j), sqrt(variances(j)),...
         theta(:,j)')';
 end
+
 hTheta = prod(univariateDensities,2);
-logmvnpdf(theta(:,2:J), zeros(1,J-1), eye(J-1))
+lht = log(hTheta)
 likelihoods = lrLikelihood(y,X, theta(:, 2:J)', theta(:,1)')...
     + logmvnpdf(theta(:,2:J), zeros(1,J-1), eye(J-1))...
     + loginvgampdf(theta(:,1), a0, d0)'...
