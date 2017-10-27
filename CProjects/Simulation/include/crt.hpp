@@ -35,8 +35,7 @@ public:
   VectorXd sigmaVector;
   double getKernelColumn(double a, double b, MatrixXd &sample, int col,
                          double sigma, double zStar);
-  void conditionalMean(double, VectorXd &, VectorXd &, MatrixXd &, double,
-                       VectorXd &);
+  VectorXd conditionalMean(double, VectorXd &, VectorXd &, MatrixXd , double);
   void tnormpdf(double, double, VectorXd &, double, double, VectorXd &);
   double ml(VectorXd &, double, VectorXd &, MatrixXd &);
   void runSim(int nSims, int batches, VectorXd &lowerConstraint,

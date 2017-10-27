@@ -1,10 +1,11 @@
 #include <Eigen/Dense>
+#include <boost/math/distributions/bernoulli.hpp>
 #include <boost/math/distributions/normal.hpp>
+#include <boost/random/uniform_01.hpp>
 #include <cstdint>
 #include <ctime>
 #include <limits>
 #include <math.h>
-#include <iostream>
 
 #include "Dist.hpp"
 #include "ark.hpp"
@@ -40,7 +41,7 @@ void Ark::arkKernel(VectorXd &lowLim, VectorXd &upLim, VectorXd &theta, MatrixXd
   sigmaPrior = MatrixXd::Identity(Jminus1, Jminus1);
   igamA = 3;
   igamB = 6;
-  Ark::gibbsKernel();
+  gibbsKernel();
 
 }
 
@@ -52,8 +53,9 @@ MatrixXd Ark::arSample(VectorXd &ll, VectorXd &ul, VectorXd &mu,
   MatrixXd arSample(sSize, J);
   n = 0;
   maxit = 0;
+  MatrixXd t(1, J);
   while (n < sSize) {
-    MatrixXd t = mvnrnd(mu, sigma, 1, J).array();
+    t = mvnrnd(mu, sigma, 1, J).array();
     if ((t.array() > ll.transpose().array()).all() +
             (t.array() < ul.transpose().array()).all() ==
         2) {
@@ -73,24 +75,21 @@ MatrixXd Ark::arSample(VectorXd &ll, VectorXd &ul, VectorXd &mu,
 }
 
 void Ark::gibbsKernel() {
-
-  VectorXd tempk(Rows);
   VectorXd cmeanVect(Rows);
   Hxy = precision.row(0).tail(Jminus1);
   muNotj = mu.tail(Jminus1);
-  conditionalMean(Hxx(0), Hxy, muNotj, xNotj, mu(0), cmeanVect);
-  tnormpdf(ll(0), ul(0), cmeanVect, sigmaVector(0), zStar(0), tempk);
-  Kernel.col(0) = tempk;
+  Kernel.col(0) = Dist::tnormpdfMeanVect(
+      ll(0), ul(0), Dist::conditionalMean(Hxx(0), Hxy, muNotj, xNotj, mu(0)),
+      sigmaVector(0), zStar(0));
   xNotj.rightCols(Jminus1 - 1) = arkSample.rightCols(J - 2);
-
   for (int j = 1; j < Jminus1; j++) {
     muNotj << mu.head(j), mu.tail(Jminus1 - j);
     Hxy << precision.row(j).head(j).transpose().eval(),
         precision.row(j).tail(Jminus1 - j).transpose().eval();
     xNotj.col(j - 1).fill(zStar(j - 1));
-    conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j), cmeanVect);
-    tnormpdf(ll(j), ul(j), cmeanVect, sigmaVector(j), zStar(j), tempk);
-    Kernel.col(j) = tempk;
+    Kernel.col(j) = Dist::tnormpdfMeanVect(
+        ll(j), ul(j), Dist::conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j)),
+        sigmaVector(j), zStar(j));
   }
 
   Hxy << precision.row(Jminus1).head(Jminus1).transpose();
@@ -145,7 +144,7 @@ void Ark::displayMLike() {
   cout << "Marginal Likelihood  " << ans << endl;
 }
 
-void Ark::runSim(int nSims, int batches, VectorXd &theta, MatrixXd& sigma,
+void Ark::runSim(int nSims, int batches, VectorXd &theta, MatrixXd &sigma,
                  VectorXd &y, MatrixXd &X, VectorXd &ll, VectorXd &ul,
                  int sampleSize, int maxIterations) {
   VectorXd mLike(nSims);
@@ -156,24 +155,27 @@ void Ark::runSim(int nSims, int batches, VectorXd &theta, MatrixXd& sigma,
     mLike(i) = ml(b, zStar(0), y, X);
   }
   cout << setprecision(9) << mLike.mean() << endl;
-  int obsInMean = floor(nSims / batches);
-  int remainder = nSims - (batches * obsInMean);
-  if (remainder == 0) {
-    VectorXd yBar(batches);
-    int startIndex = 0;
-    for (int j = 0; j < batches; j++) {
-      yBar(j) = mLike.segment(startIndex, obsInMean).mean() ;
-      startIndex = startIndex + obsInMean;
+  if (batches != 0) {
+    int obsInMean = floor(nSims / batches);
+    int remainder = nSims - (batches * obsInMean);
+    if (remainder == 0) {
+      VectorXd yBar(batches);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    } else {
+      VectorXd yBar(batches + 1);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      yBar(batches) = mLike.segment(startIndex, remainder).mean();
+      cout << setprecision(10) << standardDev(yBar) << endl;
+      ;
     }
-  } else {
-    VectorXd yBar(batches + 1);
-    int startIndex = 0;
-    for (int j = 0; j < batches; j++) {
-      yBar(j) = mLike.segment(startIndex, obsInMean).mean();
-      startIndex = startIndex + obsInMean;
-    }
-    yBar(batches) = mLike.segment(startIndex, remainder).mean();
-	cout << setprecision(10) << standardDev(yBar) << endl;;
   }
-
 }

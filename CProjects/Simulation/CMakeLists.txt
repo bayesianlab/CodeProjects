@@ -10,12 +10,12 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 set(SOURCES 
 	src/Dist.cpp
-	src/ark.cpp
-	src/ask.cpp
-	src/Importance.cpp
-	src/crt.cpp
-	src/CreateSampleData.cpp
 	src/crb.cpp
+	src/ark.cpp
+	src/crt.cpp
+	src/ask.cpp
+	src/CreateSampleData.cpp
+	src/Importance.cpp
 	src/runsim.cpp
 	)
 

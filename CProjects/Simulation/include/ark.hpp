@@ -1,6 +1,7 @@
 #ifndef ARK_H
 #define ARK_H
 
+#include "Dist.hpp"
 #include <Eigen/Dense>
 
 using namespace Eigen;

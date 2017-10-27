@@ -3,6 +3,11 @@
 #include <Eigen/Dense>
 #include <boost/math/distributions/normal.hpp>
 #include <boost/random/mersenne_twister.hpp>
+#include <boost/random/normal_distribution.hpp>
+#include <boost/random/uniform_01.hpp>
+
+#include <iostream>
+#include <limits>
 
 using namespace Eigen;
 using namespace std;
@@ -11,13 +16,13 @@ class Dist {
 private:
   time_t now;
 
-  boost::math::normal normalDistribution;
 
 public:
   double inf;
   Dist();
-
-  boost::random::mt19937 rseed;
+  boost::mt19937 rseed;
+  boost::math::normal normalDistribution;
+  boost::random::uniform_01<> u;
 
   void igammarnd(double shape, double scale, VectorXd &igamma);
 
@@ -49,11 +54,19 @@ public:
 
   void tmvnrand(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, MatrixXd &,
                 VectorXd &);
+  
+  MatrixXd tmultnorm(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int);
 
   double conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
                          VectorXd &xNotJ, double muxx);
+  VectorXd conditionalMean(double, VectorXd &, VectorXd &, MatrixXd, double);
 
   double tnormpdf(double a, double b, double mu, double sigma, double x);
+  VectorXd tnormpdfVect(double a, double b, double mu, double sigma, VectorXd & x);
+  MatrixXd tnormpdfMat(VectorXd &a, VectorXd &b, VectorXd &mu, VectorXd &sigma, MatrixXd &x);
+  template <typename D>
+  VectorXd tnormpdfMeanVect(double a, double b, const MatrixBase<D> &mu,
+                            double sigma, double x);
 
   double mvnpdf(VectorXd, MatrixXd, VectorXd);
 
@@ -93,5 +106,19 @@ public:
   double logmvnpdf(VectorXd&,  MatrixXd&, VectorXd&);
 
 };
+
+template <typename D>
+VectorXd Dist::tnormpdfMeanVect(double a, double b,
+                                const MatrixBase<D> &mu, double sigma,
+                                double x) {
+  VectorXd fx(mu.size());
+  for (int i = 0; i < mu.size(); i++) {
+    fx(i) = Dist::tnormpdf(a, b, mu(i), sigma, x);
+  }
+  return fx;
+}
+
+
+
 
 #endif

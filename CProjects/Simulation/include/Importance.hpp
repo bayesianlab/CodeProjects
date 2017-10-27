@@ -1,6 +1,7 @@
 #ifndef IMP_H
 #define IMP_H
 
+#include "Dist.hpp"
 #include <Eigen/Dense>
 #include <string.h>
 

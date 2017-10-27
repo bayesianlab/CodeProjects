@@ -1,15 +1,9 @@
 #include <Eigen/Dense>
-#include <assert.h>
-#include <boost/math/distributions/bernoulli.hpp>
 #include <boost/math/distributions/normal.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_01.hpp>
-#include <boost/random/variate_generator.hpp>
 #include <cstdint>
 #include <ctime>
 #include <limits>
 #include <math.h>
-#include <random>
 
 #include "CreateSampleData.hpp"
 #include "Dist.hpp"
@@ -71,25 +65,22 @@ void Ask::setTemporaries(VectorXd &ll, VectorXd &ul, VectorXd &m, MatrixXd &S,
 }
 
 void Ask::gibbsKernel() {
-  VectorXd tempk(Rows);
   VectorXd cmeanVect(Rows);
   Hxy = precision.row(0).tail(Jminus1);
   muNotj = mu.tail(Jminus1);
-  conditionalMean(Hxx(0), Hxy, muNotj, xNotj, mu(0), cmeanVect);
-  tnormpdf(lowerTruncPoints(0), upperTruncPoints(0), cmeanVect, sigmaVector(0),
-           zStar(0), tempk);
-  Kernel.col(0) = tempk;
+  Kernel.col(0) =
+      Dist::tnormpdfMeanVect(lowerTruncPoints(0), upperTruncPoints(0),
+               Dist::conditionalMean(Hxx(0), Hxy, muNotj, xNotj, mu(0)),
+               sigmaVector(0), zStar(0));
   xNotj.rightCols(Jminus1 - 1) = sample.rightCols(J - 2);
-
   for (int j = 1; j < Jminus1; j++) {
     muNotj << mu.head(j), mu.tail(Jminus1 - j);
     Hxy << precision.row(j).head(j).transpose().eval(),
         precision.row(j).tail(Jminus1 - j).transpose().eval();
     xNotj.col(j - 1).fill(zStar(j - 1));
-    conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j), cmeanVect);
-    tnormpdf(lowerTruncPoints(j), upperTruncPoints(j), cmeanVect,
-             sigmaVector(j), zStar(j), tempk);
-    Kernel.col(j) = tempk;
+    Kernel.col(j) = Dist::tnormpdfMeanVect(
+        lowerTruncPoints(j), upperTruncPoints(j), Dist::conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j)),
+        sigmaVector(j), zStar(j));
   }
 
   Hxy << precision.row(Jminus1).head(Jminus1).transpose();
@@ -103,12 +94,7 @@ void Ask::gibbsKernel() {
   Kernel.col(Jminus1).fill(y);
 }
 
-void Ask::conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotj,
-                          MatrixXd &xNotj, double muxx,
-                          VectorXd &conditionalMeanVector) {
-  xNotj.rowwise() -= muNotj.transpose();
-  conditionalMeanVector = muxx - ((1 / Hxx) * xNotj * Hxy).array();
-}
+
 
 void Ask::tnormpdf(double a, double b, VectorXd &mu, double sigma, double x,
                    VectorXd &k) {
@@ -147,7 +133,6 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int burnin,
 
   for (int i = 0; i < nBlockCount; i++) {
     if (bernoulli(peta) == 1) {
-      cout << "sample with ghk" << endl;
       tempSample.middleRows(startingPlace, sampleBlockRows) =
           askGhkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma,
                                   sampleBlockRows);
@@ -158,7 +143,6 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int burnin,
       }
       retaSampled = 1;
     } else {
-      cout << "sample with geweke 91" << endl;
       VectorXd initVector = tempSample.row(startingPlace - 1).transpose();
       tempSample.middleRows(startingPlace, sampleBlockRows) =
           asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma,
@@ -178,11 +162,9 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int burnin,
   if (remainder != 0) {
     startingPlace = remainderStartPlace;
     if (bernoulli(peta) == 1) {
-      cout << "sample with ghk remainder" << endl;
       tempSample.middleRows(startingPlace, remainder) = askGhkLinearConstraints(
           lowerTruncPoints, upperTruncPoints, mu, sigma, remainder);
     } else {
-      cout << "sample with geweke 91 remainder" << endl;
       VectorXd initVector = tempSample.row(startingPlace - 1).transpose();
       tempSample.middleRows(startingPlace, remainder) =
           asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma,
@@ -205,12 +187,10 @@ MatrixXd Ask::burninAdaptive(int sims, int J, double initPeta) {
   VectorXd initVector(J);
   initVector = MatrixXd::Zero(J, 1);
   if (bernoulli(initPeta)) {
-    cout << "sample with ghk init" << endl;
     sample = askGhkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu,
                                      sigma, sims);
     return sample;
   } else {
-    cout << "sample with geweke 1991 init" << endl;
     sample = asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma,
                          sigmaVector, initVector, sims);
     return sample;
@@ -248,27 +228,28 @@ void Ask::runSim(int nSims, int batches, VectorXd &lowerConstraint,
     b = zStar.tail(Jminus1);
     mLike(i) = ml(b, zStar(0), y, X);
   }
-  int obsInMean = floor(nSims / batches);
-  int remainder = nSims - (batches * obsInMean);
-  if (remainder == 0) {
-    VectorXd yBar(batches);
-    int startIndex = 0;
-    for (int j = 0; j < batches; j++) {
-      yBar(j) = mLike.segment(startIndex, obsInMean).mean() ;
-      startIndex = startIndex + obsInMean;
+  cout << endl;
+  cout << setprecision(10) << mLike.mean() << endl;
+  if (batches != 0) {
+    int obsInMean = floor(nSims / batches);
+    int remainder = nSims - (batches * obsInMean);
+    if (remainder == 0) {
+      VectorXd yBar(batches);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    } else {
+      VectorXd yBar(batches + 1);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      yBar(batches) = mLike.segment(startIndex, remainder).mean();
+      cout << setprecision(10) << standardDev(yBar) << endl;
     }
-	cout << yBar << endl;
-  } else {
-    VectorXd yBar(batches + 1);
-    int startIndex = 0;
-    for (int j = 0; j < batches; j++) {
-      yBar(j) = mLike.segment(startIndex, obsInMean).mean();
-      startIndex = startIndex + obsInMean;
-    }
-    yBar(batches) = mLike.segment(startIndex, remainder).mean();
-	cout << setprecision(10) << yBar << endl;
-	cout << endl;
-	cout << setprecision(10) << standardDev(yBar) << endl;;
   }
-
 }
