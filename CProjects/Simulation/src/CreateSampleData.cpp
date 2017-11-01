@@ -7,8 +7,8 @@ using namespace Eigen;
 
 CreateSampleData::CreateSampleData(int sampleSize, VectorXd& betas){
 	dimension = betas.size();
-	X = normrnd(0,1,sampleSize, dimension);		
-	epsilon = normrnd(0,1,sampleSize);
+	X = normrnd(0,3,sampleSize, dimension);		
+	epsilon = normrnd(0,3,sampleSize);
 	y = X*betas + epsilon;	
 	MatrixXd XpX = X.transpose() * X;
 	MatrixXd XpXinv = XpX.inverse();

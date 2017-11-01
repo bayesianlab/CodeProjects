@@ -21,22 +21,21 @@ double Importance::importanceSampling(VectorXd &ll, VectorXd &ul,
                                       int burnin, VectorXd &b0, MatrixXd &S0,
                                       int a0, int d0) {
   J = ll.size();
- Jminus1 = J-1; 
+  Jminus1 = J - 1;
   lowerLim = ll;
   upperLim = ul;
-  betaInit = b0; 
-  sigmaInit = S0; 
+  betaInit = b0;
+  sigmaInit = S0;
   igamParamA = a0;
   igamParamB = d0;
-  sample = ghkLinearConstraints(lowerLim, upperLim, betas,
-                                sigma, sampleSize, burnin);
+  sample = ghkLinearConstraints(lowerLim, upperLim, betas, sigma, sampleSize,
+                                burnin);
   lsEsts = sample.rightCols(J - 1);
   sigSqd = sample.col(0);
   diagInverseFish = sigma.diagonal().array().sqrt();
-  importanceDensity =
-      tnormpdf(ll, ul, betas, diagInverseFish, sample);
-  
-  return ml( y, X);
+  importanceDensity = tnormpdf(ll, ul, betas, diagInverseFish, sample);
+
+  return ml(y, X);
 }
 
 double Importance::ml( VectorXd &y, MatrixXd &X) {
@@ -83,6 +82,9 @@ void Importance::runSim(int nSims, int batches, VectorXd &theta, MatrixXd& sigma
 
   for (int i = 0; i < nSims; i++) {
     mLike(i) = importanceSampling(ll, ul, theta, sigma, y, X, sampleSize, burnin, b0, S0, a0, d0);
+	if(isnan(mLike(i)) ==1){
+		break;
+	}
   }
   cout << setprecision(9) << mLike.mean() << endl;
   if (batches != 0) {

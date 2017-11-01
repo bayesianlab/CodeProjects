@@ -11,6 +11,7 @@
 #include <ctime>
 #include <limits>
 #include <math.h>
+#include <assert.h>
 
 using namespace Eigen;
 using namespace std;
@@ -36,6 +37,19 @@ void Dist::igammarnd(double shape, double scale, VectorXd &igamma) {
   for (int i = 0; i < rows; i++) {
     igamma(i) = 1.0 / gammavars(rseed);
   }
+}
+
+VectorXd Dist::igammarnd(double shape, double scale, int N) {
+  /*
+(1/theta^k gamma(k)) x^(k-1) e^(-x/theta) is the gamma
+   parameterization
+*/
+	VectorXd igam;
+  boost::random::gamma_distribution<> gammavars(shape, scale);
+  for (int i = 0; i < N; i++) {
+    igam(i) = 1.0 / gammavars(rseed);
+  }
+  return igam;
 }
 
 double Dist::normrnd(double mu, double sig) {
@@ -301,11 +315,12 @@ MatrixXd Dist::tnormpdfMat(VectorXd &ll, VectorXd &ul, VectorXd &mu,
 double Dist::ghkTruncNormRnd(double a, double b, double mu, double sigma) {
   // Keep this method
   double Z;
-  if (b >= inf) {
+  if (b >= inf ) {
     if (a > 5) {
       Z = leftTruncation(a, b);
       return Z;
     } else {
+
       return tnormrnd(a, b, mu, sigma);
     }
   } else if (a <= -inf) {
@@ -333,6 +348,7 @@ void Dist::ghkLinearConstraints(VectorXd &a, VectorXd &b, VectorXd &mu,
   /*
    * Take into account multiple constraints
    */
+
   int J = Sigma.cols();
   if (a.size() != b.size()) {
     cout << "\nError: The number of constraints are not the same." << endl;
@@ -365,6 +381,7 @@ MatrixXd Dist::ghkLinearConstraints(VectorXd &a, VectorXd &b, VectorXd &mu,
    * Take into account multiple constraints
    * Should replace ghkLinearConstraints
    */
+
   int J = Sigma.cols();
   MatrixXd sample(sims, J);
   MatrixXd lowerC = Sigma.llt().matrixL();
@@ -493,17 +510,25 @@ double Dist::standardDev(VectorXd &v) {
 
 VectorXd Dist::lrLikelihood(MatrixXd &betas, VectorXd &sigmasqds, VectorXd &y,
                         MatrixXd &X) {
+
   int N = X.rows();
-  VectorXd e(X.rows());
-  ArrayXd normConst = -(N / 2) * (sigmasqds.array().log() + LOG_E_2_PI);
-  ArrayXd expNormalizingConst = (-2 * sigmasqds.array()).pow(-1);
-  linreglike = VectorXd::Zero(betas.rows());
-  for (int i = 0; i < betas.rows(); i++) {
-    e = y - X * betas.row(i).transpose();
-    double eTe = e.transpose() * e;
-    linreglike(i) = normConst(i) + eTe * expNormalizingConst(i);
+  if( (sigmasqds.array() < 0).any() == 1){
+	  cout << "Error! lrLikelihood, sigma < 0" << endl;
+	  VectorXd x;
+	  return x;
+  }else{
+    VectorXd e(X.rows());
+    ArrayXd normConst = -(N / 2) * (sigmasqds.array().log() + log(2 * M_PI));
+    ArrayXd expNormalizingConst = (-2 * sigmasqds.array()).pow(-1);
+    linreglike = VectorXd::Zero(betas.rows());
+    for (int i = 0; i < betas.rows(); i++) {
+      e = y - X * betas.row(i).transpose();
+      double eTe = e.transpose() * e;
+      linreglike(i) = normConst(i) + eTe * expNormalizingConst(i);
   }
   return linreglike;
+  }
+  
 }
 
 double Dist::lrLikelihood(VectorXd &betas, double sigmasqd, VectorXd &y,

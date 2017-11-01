@@ -6,25 +6,7 @@
 
 #IncludeRegexTransform: 
 
-../include/CRT.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/Crb.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/CreateSampleData.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/include/Dist.hpp
 Eigen/Dense
 -
 boost/math/distributions/normal.hpp
@@ -35,54 +17,18 @@ boost/random/normal_distribution.hpp
 -
 boost/random/uniform_01.hpp
 -
+cstdint
+-
+ctime
+-
 iostream
 -
 limits
 -
 
-../include/Importance.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/Dist.cpp
 Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-string.h
--
-
-../include/ark.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/ask.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/crb.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/crt.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp
-Eigen/Dense
--
-iostream
--
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Distributions/src/Dist.hpp
 Eigen/Dense
 -
 boost/math/distributions/exponential.hpp
@@ -107,15 +53,11 @@ limits
 -
 math.h
 -
-assert.h
--
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/GelfandDey.cpp
+iostream
+-
 Eigen/Dense
--
-assert.h
--
-boost/math/distributions/normal.hpp
 -
 cstdint
 -
@@ -126,106 +68,12 @@ limits
 math.h
 -
 Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-Importance.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/Dist.hpp
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.cpp
-Eigen/Dense
--
-boost/math/distributions/bernoulli.hpp
--
-boost/math/distributions/normal.hpp
--
-boost/random/uniform_01.hpp
--
-cstdint
--
-ctime
--
-limits
--
-math.h
--
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-ark.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.hpp
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.cpp
-Eigen/Dense
--
-boost/math/distributions/normal.hpp
--
-cstdint
--
-ctime
--
-limits
--
-math.h
--
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-ask.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.hpp
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.cpp
-Crb.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Crb.hpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-Eigen/Dense
--
-iomanip
--
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/gdmain.cpp
+GelfandDey.cpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/GelfandDey.cpp
 iostream
--
-math.h
--
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.cpp
-CRT.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CRT.hpp
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-Eigen/Dense
--
-iostream
--
-math.h
--
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-Importance.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
-ark.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.hpp
-ask.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.hpp
-crb.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.hpp
-crt.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.hpp
-Eigen/Dense
--
-ctime
--
-fstream
--
-iostream
--
-limits
--
-math.h
 -
 
 /usr/local/include/boost/boost/array.hpp
@@ -4518,22 +4366,6 @@ boost/type_traits/is_convertible.hpp
 boost/utility/declval.hpp
 -
 boost/math/constants/calculate_constants.hpp
--
-
-/usr/local/include/boost/boost/math/distributions/bernoulli.hpp
-boost/math/distributions/fwd.hpp
--
-boost/math/tools/config.hpp
--
-boost/math/distributions/complement.hpp
--
-boost/math/distributions/detail/common_error_handling.hpp
--
-boost/math/special_functions/fpclassify.hpp
--
-utility
--
-boost/math/distributions/detail/derived_accessors.hpp
 -
 
 /usr/local/include/boost/boost/math/distributions/complement.hpp

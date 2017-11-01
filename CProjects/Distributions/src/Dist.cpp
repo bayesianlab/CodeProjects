@@ -61,7 +61,7 @@ MatrixXd Dist::normrnd(double mu, double sig, int N, int J) {
   return Z;
 }
 
-MatrixXd Dist::mvnrnd(VectorXd mu, MatrixXd &sig, int N, int J) {
+MatrixXd Dist::<F10>mvnrnd(VectorXd mu, MatrixXd &sig, int N, int J) {
   MatrixXd Z = normrnd(0., 1., N, J);
   LLT<MatrixXd> lltOfA(sig);
   MatrixXd L = lltOfA.matrixL();
