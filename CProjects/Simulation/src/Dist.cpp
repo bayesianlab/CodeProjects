@@ -28,10 +28,6 @@ Dist::Dist() {
 }
 
 void Dist::igammarnd(double shape, double scale, VectorXd &igamma) {
-  /*
-(1/theta^k gamma(k)) x^(k-1) e^(-x/theta) is the gamma
-   parameterization
-*/
   boost::random::gamma_distribution<> gammavars(shape, scale);
   int rows = igamma.rows();
   for (int i = 0; i < rows; i++) {
@@ -39,25 +35,35 @@ void Dist::igammarnd(double shape, double scale, VectorXd &igamma) {
   }
 }
 
-VectorXd Dist::igammarnd(double shape, double scale, int N) {
+double Dist::linearRegLikelihood(const VectorXd &y, const MatrixXd &X,
+                                 const Ref<const MatrixXd> &beta,
+                                 double sigma2) {
+  int N = y.size();
+  return pow(2. * M_PI * sigma2, -N*.5) *
+         exp( -pow(2.*sigma2, -1) * (y - (X * beta)).array().pow(2).sum());
+}
+
+double Dist::igammapdf(double shape, double scale, double y) {
+  return pow(pow(scale, shape) * tgamma(shape), -1) * pow(y, -(shape + 1)) *
+         exp(-pow(scale * y, -1));
+}
+
+double Dist::igammarnd(double shape, double scale) {
   /*
 (1/theta^k gamma(k)) x^(k-1) e^(-x/theta) is the gamma
    parameterization
 */
-	VectorXd igam;
   boost::random::gamma_distribution<> gammavars(shape, scale);
-  for (int i = 0; i < N; i++) {
-    igam(i) = 1.0 / gammavars(rseed);
-  }
-  return igam;
+  return 1.0 / gammavars(rseed);
 }
 
 double Dist::normrnd(double mu, double sig) {
-  boost::random::normal_distribution<> normalDist;
+  boost::random::normal_distribution<> normalDist(mu, sig);
   return normalDist(rseed);
 }
 
 VectorXd Dist::normrnd(double mu, double sig, int N) {
+  boost::random::normal_distribution<> normalDist(mu, sig);
   VectorXd Z(N);
   for (int i = 0; i < N; i++) {
     Z(i) = normrnd(mu, sig);
@@ -66,6 +72,7 @@ VectorXd Dist::normrnd(double mu, double sig, int N) {
 }
 
 MatrixXd Dist::normrnd(double mu, double sig, int N, int J) {
+  boost::random::normal_distribution<> normalDist(mu, sig);
   MatrixXd Z(N, J);
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < J; j++) {
@@ -76,6 +83,16 @@ MatrixXd Dist::normrnd(double mu, double sig, int N, int J) {
 }
 
 MatrixXd Dist::mvnrnd(VectorXd mu, MatrixXd &sig, int N, int J) {
+  MatrixXd Z = normrnd(0., 1., N, J);
+  LLT<MatrixXd> lltOfA(sig);
+  MatrixXd L = lltOfA.matrixL();
+  Z = (L * Z.transpose()).transpose();
+  Z.rowwise() += mu.transpose();
+  return Z;
+}
+
+MatrixXd Dist::mvnrnd2(VectorXd mu, const Ref<const MatrixXd> &sig, int N,
+                      int J) {
   MatrixXd Z = normrnd(0., 1., N, J);
   LLT<MatrixXd> lltOfA(sig);
   MatrixXd L = lltOfA.matrixL();
@@ -492,14 +509,39 @@ VectorXd Dist::conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotj,
   return cm;
 }
 
+double Dist::mvnpdfPrecision(const Ref<const MatrixXd> &mu, const MatrixXd &precision,
+                    const Ref<const MatrixXd> &x) {
+  int muRows = mu.rows();
+  int xRows = x.rows();
+  int xCols = x.cols();
+  if (xRows != muRows) {
+    cout << "Dimension of mu and x must be same: see mvnpdf in Dist" << endl;
+    return -inf;
+  } else if (xCols != 1) {
+    cout << "Must be column vector: see mvnpdf in Dist" << endl;
+    return -inf;
+  } else {
+    return pow(2 * M_PI, -muRows * 0.5) * pow(precision.determinant(), 0.5) *
+           exp((-.5 * (((x - mu).transpose() * precision) * (x - mu))).value());
+  }
+}
 
-double Dist::mvnpdf(VectorXd mu, MatrixXd sigma, VectorXd x) {
-  int size = mu.size();
-  VectorXd temp(size);
-  temp = x - mu;
-  temp = -.5 * temp.transpose() * sigma.inverse() * temp;
-  double constant = pow(2 * M_PI, size);
-  return (1. / sqrt(constant * sigma.determinant())) * exp(temp(0));
+
+double Dist::mvnpdf(const Ref<const MatrixXd> &mu, const MatrixXd &sigma,
+                    const Ref<const MatrixXd> &x) {
+  int muRows = mu.rows();
+  int xRows = x.rows();
+  int xCols = x.cols();
+  if (xRows != muRows) {
+    cout << "Dimension of mu and x must be same: see mvnpdf in Dist" << endl;
+    return -inf;
+  } else if (xCols != 1) {
+    cout << "Must be column vector: see mvnpdf in Dist" << endl;
+    return -inf;
+  } else {
+    return pow(2 * M_PI, -muRows * 0.5) * pow(sigma.determinant(), -0.5) *
+           exp((-.5 * (((x - mu).transpose() * sigma.inverse()) * (x - mu))).value());
+  }
 }
 
 double Dist::standardDev(VectorXd &v) {
