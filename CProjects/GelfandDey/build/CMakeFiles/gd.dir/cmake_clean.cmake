@@ -3,7 +3,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o"
   "CMakeFiles/gd.dir/src/GelfandDey.cpp.o"
   "CMakeFiles/gd.dir/src/LinRegGibbs.cpp.o"
-  "CMakeFiles/gd.dir/src/gdmain.cpp.o"
+  "CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o"
   "gd.pdb"
   "gd"
 )

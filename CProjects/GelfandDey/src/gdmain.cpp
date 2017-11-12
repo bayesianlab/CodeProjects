@@ -21,11 +21,11 @@ int main() {
   cout << csd.maxLikeEsts.transpose() << endl;
 
   cout << "Show gibbs sampler converges to MLE's after burnin: " << endl;
-  MatrixXd B = lrg.gibbsLR(csd.y, csd.X, gs, burnin);
-  cout << B.colwise().mean() << endl;
-  cout << endl;
-  lrg.gelfandDeyML(B, csd.y, csd.X);
-  lrg.analyticalLL(csd.y, csd.X);
+  MatrixXd b0 = MatrixXd::Zero(dim,1);
+  MatrixXd B0 = MatrixXd::Identity(dim,dim)*4;
+  double a0 = 6;
+  double d0 = 2.5;
+  lrg.lrCondPriorsGibbs(csd.y, csd.X, gs, burnin, b0, B0, a0, d0);
   cout << endl;
   return 0;
 }

@@ -153,28 +153,28 @@ CMakeFiles/gd.dir/src/LinRegGibbs.cpp.o.provides: CMakeFiles/gd.dir/src/LinRegGi
 CMakeFiles/gd.dir/src/LinRegGibbs.cpp.o.provides.build: CMakeFiles/gd.dir/src/LinRegGibbs.cpp.o
 
 
-CMakeFiles/gd.dir/src/gdmain.cpp.o: CMakeFiles/gd.dir/flags.make
-CMakeFiles/gd.dir/src/gdmain.cpp.o: ../src/gdmain.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/gd.dir/src/gdmain.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gd.dir/src/gdmain.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/gdmain.cpp"
+CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o: CMakeFiles/gd.dir/flags.make
+CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o: ../src/gibbsRBmain.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/gibbsRBmain.cpp"
 
-CMakeFiles/gd.dir/src/gdmain.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gd.dir/src/gdmain.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/gdmain.cpp" > CMakeFiles/gd.dir/src/gdmain.cpp.i
+CMakeFiles/gd.dir/src/gibbsRBmain.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gd.dir/src/gibbsRBmain.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/gibbsRBmain.cpp" > CMakeFiles/gd.dir/src/gibbsRBmain.cpp.i
 
-CMakeFiles/gd.dir/src/gdmain.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gd.dir/src/gdmain.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/gdmain.cpp" -o CMakeFiles/gd.dir/src/gdmain.cpp.s
+CMakeFiles/gd.dir/src/gibbsRBmain.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gd.dir/src/gibbsRBmain.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/gibbsRBmain.cpp" -o CMakeFiles/gd.dir/src/gibbsRBmain.cpp.s
 
-CMakeFiles/gd.dir/src/gdmain.cpp.o.requires:
+CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o.requires:
 
-.PHONY : CMakeFiles/gd.dir/src/gdmain.cpp.o.requires
+.PHONY : CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o.requires
 
-CMakeFiles/gd.dir/src/gdmain.cpp.o.provides: CMakeFiles/gd.dir/src/gdmain.cpp.o.requires
-	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/gdmain.cpp.o.provides.build
-.PHONY : CMakeFiles/gd.dir/src/gdmain.cpp.o.provides
+CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o.provides: CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o.requires
+	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o.provides.build
+.PHONY : CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o.provides
 
-CMakeFiles/gd.dir/src/gdmain.cpp.o.provides.build: CMakeFiles/gd.dir/src/gdmain.cpp.o
+CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o.provides.build: CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o
 
 
 # Object files for target gd
@@ -183,7 +183,7 @@ gd_OBJECTS = \
 "CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o" \
 "CMakeFiles/gd.dir/src/GelfandDey.cpp.o" \
 "CMakeFiles/gd.dir/src/LinRegGibbs.cpp.o" \
-"CMakeFiles/gd.dir/src/gdmain.cpp.o"
+"CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o"
 
 # External object files for target gd
 gd_EXTERNAL_OBJECTS =
@@ -192,7 +192,7 @@ gd: CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CPr
 gd: CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o
 gd: CMakeFiles/gd.dir/src/GelfandDey.cpp.o
 gd: CMakeFiles/gd.dir/src/LinRegGibbs.cpp.o
-gd: CMakeFiles/gd.dir/src/gdmain.cpp.o
+gd: CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o
 gd: CMakeFiles/gd.dir/build.make
 gd: CMakeFiles/gd.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable gd"
@@ -207,7 +207,7 @@ CMakeFiles/gd.dir/requires: CMakeFiles/gd.dir/Users/dillonflannery-valadez/Googl
 CMakeFiles/gd.dir/requires: CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o.requires
 CMakeFiles/gd.dir/requires: CMakeFiles/gd.dir/src/GelfandDey.cpp.o.requires
 CMakeFiles/gd.dir/requires: CMakeFiles/gd.dir/src/LinRegGibbs.cpp.o.requires
-CMakeFiles/gd.dir/requires: CMakeFiles/gd.dir/src/gdmain.cpp.o.requires
+CMakeFiles/gd.dir/requires: CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o.requires
 
 .PHONY : CMakeFiles/gd.dir/requires
 

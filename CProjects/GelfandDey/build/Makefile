@@ -231,32 +231,32 @@ src/LinRegGibbs.cpp.s:
 	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/LinRegGibbs.cpp.s
 .PHONY : src/LinRegGibbs.cpp.s
 
-src/gdmain.o: src/gdmain.cpp.o
+src/gibbsRBmain.o: src/gibbsRBmain.cpp.o
 
-.PHONY : src/gdmain.o
+.PHONY : src/gibbsRBmain.o
 
 # target to build an object file
-src/gdmain.cpp.o:
-	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/gdmain.cpp.o
-.PHONY : src/gdmain.cpp.o
+src/gibbsRBmain.cpp.o:
+	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/gibbsRBmain.cpp.o
+.PHONY : src/gibbsRBmain.cpp.o
 
-src/gdmain.i: src/gdmain.cpp.i
+src/gibbsRBmain.i: src/gibbsRBmain.cpp.i
 
-.PHONY : src/gdmain.i
+.PHONY : src/gibbsRBmain.i
 
 # target to preprocess a source file
-src/gdmain.cpp.i:
-	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/gdmain.cpp.i
-.PHONY : src/gdmain.cpp.i
+src/gibbsRBmain.cpp.i:
+	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/gibbsRBmain.cpp.i
+.PHONY : src/gibbsRBmain.cpp.i
 
-src/gdmain.s: src/gdmain.cpp.s
+src/gibbsRBmain.s: src/gibbsRBmain.cpp.s
 
-.PHONY : src/gdmain.s
+.PHONY : src/gibbsRBmain.s
 
 # target to generate assembly for a file
-src/gdmain.cpp.s:
-	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/gdmain.cpp.s
-.PHONY : src/gdmain.cpp.s
+src/gibbsRBmain.cpp.s:
+	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/gibbsRBmain.cpp.s
+.PHONY : src/gibbsRBmain.cpp.s
 
 # Help Target
 help:
@@ -279,9 +279,9 @@ help:
 	@echo "... src/LinRegGibbs.o"
 	@echo "... src/LinRegGibbs.i"
 	@echo "... src/LinRegGibbs.s"
-	@echo "... src/gdmain.o"
-	@echo "... src/gdmain.i"
-	@echo "... src/gdmain.s"
+	@echo "... src/gibbsRBmain.o"
+	@echo "... src/gibbsRBmain.i"
+	@echo "... src/gibbsRBmain.s"
 .PHONY : help
 
 

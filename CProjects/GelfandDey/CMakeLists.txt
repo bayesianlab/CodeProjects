@@ -13,7 +13,7 @@ set(SOURCES
 	${PARENT}/Simulation/src/CreateSampleData.cpp
 	src/GelfandDey.cpp
 	src/LinRegGibbs.cpp
-	src/gdmain.cpp
+	src/gibbsRBmain.cpp
 	)
 
 message(STATUS "Eigen Directory    " ${EIGEN_DIR})

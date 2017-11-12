@@ -39,6 +39,7 @@ public:
   MatrixXd normrnd(double, double, int, int);
 
   MatrixXd mvnrnd(VectorXd mu, MatrixXd &sig, int, int);
+  
   MatrixXd mvnrnd2(VectorXd mu, const Ref<const MatrixXd> &sig, int, int);
 
   double tnormrnd(double, double, double, double);
@@ -61,6 +62,12 @@ public:
                 VectorXd &);
 
   MatrixXd tmultnorm(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int);
+
+  MatrixXd tmultnorm(const VectorXd &, const VectorXd &, const VectorXd &,
+                     const MatrixXd &, const int);
+
+  MatrixXd tmultnorm(const VectorXd &, const VectorXd &, const Ref<const MatrixXd> &,
+                     const VectorXd &, const MatrixXd &, const int);
 
   double conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
                          VectorXd &xNotJ, double muxx);
@@ -98,6 +105,9 @@ public:
 
   double lrLikelihood(VectorXd &, double, VectorXd &, MatrixXd &);
 
+  double lrLikelihood(const VectorXd &y, const MatrixXd &X,
+                      const Ref<const MatrixXd> &betas, double sigmasqd);
+
   VectorXd linreglike;
 
   VectorXd lmvnpdf;
@@ -117,6 +127,10 @@ public:
   double autoCorr(VectorXd &);
 
   VectorXd logmvnpdf(VectorXd &, MatrixXd &, MatrixXd &);
+
+  double logmvnpdfPrecision(const VectorXd &mu, const MatrixXd &sigma,
+                            const Ref<const MatrixXd> &x);
+
   double logmvnpdf(VectorXd &, MatrixXd &, VectorXd &);
 };
 
