@@ -6,7 +6,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/runsim.dir/src/ask.cpp.o"
   "CMakeFiles/runsim.dir/src/CreateSampleData.cpp.o"
   "CMakeFiles/runsim.dir/src/Importance.cpp.o"
-  "CMakeFiles/runsim.dir/src/runsim.cpp.o"
+  "CMakeFiles/runsim.dir/src/mvtmain.cpp.o"
   "runsim.pdb"
   "runsim"
 )

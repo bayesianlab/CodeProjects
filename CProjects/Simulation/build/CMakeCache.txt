@@ -128,7 +128,7 @@ CMAKE_OSX_DEPLOYMENT_TARGET:STRING=
 CMAKE_OSX_SYSROOT:STRING=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=runsim
+CMAKE_PROJECT_NAME:STATIC=mvt
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib
@@ -178,6 +178,12 @@ CMAKE_STRIP:FILEPATH=/Applications/Xcode.app/Contents/Developer/Toolchains/Xcode
 // during the make.  This is useful for debugging only. With Visual
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
+
+//Value Computed by CMake
+mvt_BINARY_DIR:STATIC=/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build
+
+//Value Computed by CMake
+mvt_SOURCE_DIR:STATIC=/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation
 
 //Value Computed by CMake
 runsim_BINARY_DIR:STATIC=/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build

@@ -5,7 +5,7 @@
 #include "ask.hpp"
 #include "crb.hpp"
 #include "crt.hpp"
-
+#include "LinRegGibbs.hpp"
 #include <Eigen/Dense>
 #include <ctime>
 #include <fstream>
@@ -56,7 +56,6 @@ void crtTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
 }
 
 void impTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
-
   Importance imp;
   int J = betas.size();
   VectorXd b02 = MatrixXd::Zero(J, 1);
@@ -66,6 +65,16 @@ void impTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
              csd.X, ll, ul, nSims, burnin, b02, S02, 3, 6);
 }
 
+void gelfandDey(VectorXd &betas, VectorXd &ll, VectorXd &ul){
+  MatrixXd b0 = MatrixXd::Zero(dim, 1);
+  MatrixXd B0 = MatrixXd::Identity(dim,dim);
+  double a0 = 6;
+  double d0 = 12;
+  LinRegGibbs lrg;
+  CreateSampleData csd(linRegSS, betas, seed);
+  lrg.runSim(mlSims, batches, ll, ul, csd.maxLikeEsts, csd.inverseFisher, csd.y,
+             csd.X, b0, B0, a0, d0, nSims, burnin);
+}
 int main() {
   cout << "\n\n\tBegan runsim\n" << endl;
   if (linRegSS < 100) {

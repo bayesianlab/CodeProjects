@@ -1,4 +1,5 @@
 #include "Dist.hpp"
+#include <random>
 #include <Eigen/Dense>
 #include <assert.h>
 #include <boost/math/distributions/exponential.hpp>
@@ -724,5 +725,67 @@ double Dist::logmvnpdfPrecision(const VectorXd &mu, const MatrixXd &precision,
   int J = precision.cols();
   double C1 = log( precision.determinant() / (pow(2 * M_PI, J)));
   return .5 * (C1 - ( ((x - mu).transpose() * precision) * (x - mu)).value());
+}
+
+void Dist::mvtrnd(){
+	std::mt19937 gen(now);
+	std::chi_squared_distribution<double> csd(3);
+   	
+	
+}
+
+MatrixXd Dist::selectorMat(int J){
+	int Jm1 = J - 1;
+	MatrixXd I = MatrixXd::Identity(J,J);
+	MatrixXd selectors = MatrixXd::Zero(J*(Jm1), J);
+	for(int j = 0; j < J; j++){
+		if(j == 0){
+			selectors.topRows(J-1) = I.bottomRows(Jm1);
+		}
+		else if(j > 0 & j < Jm1){
+                  selectors.middleRows(j * (Jm1), Jm1) << I.topRows(j),
+                      I.bottomRows((Jm1) - j);
+                }
+		else{
+			selectors.bottomRows(Jm1) = I.topRows(Jm1);
+		}
+	}
+	return selectors;
+}
+
+MatrixXd Dist::geweke91(const VectorXd &a, const VectorXd &b,
+                        const MatrixXd &LinearConstraints,
+                        const Ref<const VectorXd> &mu,
+                        const Ref<const MatrixXd> &sigma, int sims,
+                        int burnin) {
+  /* Trunc. MVNormal according to Geweke 1991 */
+  int J = sigma.cols();
+  int Jm1 = J - 1;
+  MatrixXd T = LinearConstraints * sigma * LinearConstraints.transpose();
+  MatrixXd precisionT = T.inverse();
+  VectorXd Hii = precisionT.diagonal();
+  VectorXd hii = Hii.array().pow(-1).sqrt();
+  MatrixXd notj = selectorMat(J);
+  MatrixXd sample(sims, J);
+  sample.setZero();
+  VectorXd alpha = a - LinearConstraints * mu;
+  VectorXd beta = b - LinearConstraints * mu;
+  double innerProduct;
+  for (int i = 1; i < sims; i++) {
+    for (int j = 0; j < J; j++) {
+      innerProduct =
+          ((-pow(Hii(j), -1) * notj.block(j * (Jm1), 0, Jm1, J) *
+            precisionT.row(j).transpose())
+               .transpose() *
+           (notj.block(j * (Jm1), 0, Jm1, J) * sample.row(i - 1).transpose()))
+              .value();
+      sample(i, j) = innerProduct +
+          hii(j) * truncNormalRnd((alpha(j) - innerProduct) / hii(j),
+                                  (beta(j) - innerProduct) / hii(j), 0, 1);
+    }
+  }
+  sample = (LinearConstraints.inverse() * sample.transpose()).transpose();
+  sample.rowwise() += mu.transpose();
+  return sample.bottomRows(sims - burnin);
 }
 

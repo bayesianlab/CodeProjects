@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.9)
-project(runsim)
+project(mvt)
 
 get_filename_component(PARENT ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
@@ -16,7 +16,7 @@ set(SOURCES
 	src/ask.cpp
 	src/CreateSampleData.cpp
 	src/Importance.cpp
-	src/runsim.cpp
+	src/mvtmain.cpp
 	)
 
 message(STATUS "Eigen Directory    " ${EIGEN_DIR})
@@ -29,4 +29,4 @@ include_directories(
    	${BOOST_DIR}
 	)
 
-add_executable(runsim ${SOURCES})
+add_executable(mvt ${SOURCES})

@@ -132,6 +132,17 @@ public:
                             const Ref<const MatrixXd> &x);
 
   double logmvnpdf(VectorXd &, MatrixXd &, VectorXd &);
+
+  void mvtrnd();
+
+
+  MatrixXd selectorMat(int J);
+
+  MatrixXd geweke91(const VectorXd &a, const VectorXd &b,
+                    const MatrixXd &LinearConstraints,
+                    const Ref<const VectorXd> &mu,
+                    const Ref<const MatrixXd> &CovarianceMatrix, int sims,
+                    int burnin);
 };
 
 template <typename D>
