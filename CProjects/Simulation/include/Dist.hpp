@@ -5,9 +5,9 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/uniform_01.hpp>
-#include <random>
 #include <iostream>
 #include <limits>
+#include <random>
 
 using namespace Eigen;
 using namespace std;
@@ -74,7 +74,7 @@ public:
                          VectorXd &xNotJ, double muxx);
 
   double conditionalMean(double Hxx, const Ref<const VectorXd> &Hxy,
-                               VectorXd &muNotJ, VectorXd &xNotJ, double muxx);
+                         VectorXd &muNotJ, VectorXd &xNotJ, double muxx);
 
   VectorXd conditionalMean(double, VectorXd &, VectorXd &, MatrixXd, double);
 
@@ -100,6 +100,10 @@ public:
 
   void ghkLinearConstraints(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
                             MatrixXd &);
+
+  MatrixXd ghkT(const VectorXd &a, const VectorXd &b,
+                    const MatrixXd &LinearConstraints, const VectorXd &mu,
+                    const MatrixXd &Sigma, int df, int sims, int burnin);
 
   MatrixXd ghkLinearConstraints(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
                                 int, int);
@@ -138,24 +142,23 @@ public:
 
   double logmvnpdf(VectorXd &, MatrixXd &, VectorXd &);
 
-  double truncTrnd(double a , double b , double mu, double sigma, double nu );
-
+  double truncTrnd(double a, double b, double mu, double sigma, double nu);
 
   MatrixXd MVTruncT(const VectorXd &a, const VectorXd &b,
-                const MatrixXd &LinearConstraints, const VectorXd &mu,
-                const MatrixXd &Sigma, const int df, const int sims,
-                const int burnin);
-  
-  MatrixXd SigmayyInverse(const MatrixXd&);
+                    const MatrixXd &LinearConstraints, const VectorXd &mu,
+                    const MatrixXd &Sigma, const int df, const int sims,
+                    const int burnin);
+
+  MatrixXd SigmayyInverse(const MatrixXd &);
 
   MatrixXd mvttgewke91(const VectorXd &a, const VectorXd &b,
-                const MatrixXd &LinearConstraints, const VectorXd &mu,
-                const MatrixXd &Sigma, const int df, const int sims,
-                const int burnin);
+                       const MatrixXd &LinearConstraints, const VectorXd &mu,
+                       const MatrixXd &Sigma, const int df, const int sims,
+                       const int burnin);
 
   MatrixXd selectorMat(int J);
 
-  MatrixXd Hnotj(const MatrixXd & precision);
+  MatrixXd Hnotj(const MatrixXd &precision);
 
   MatrixXd geweke91(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints,
@@ -163,15 +166,12 @@ public:
                     const Ref<const MatrixXd> &CovarianceMatrix, int sims,
                     int burnin);
 
-  MatrixXd precisionNotjMatrix(int J, const MatrixXd &precision, const VectorXd &Hii);
+  MatrixXd precisionNotjMatrix(int J, const MatrixXd &precision,
+                               const VectorXd &Hii);
 
-  MatrixXd newmethod(const VectorXd &a, const VectorXd &b,
-                     const MatrixXd &LinearConstraints,
-                     const Ref<const VectorXd> &mu,
-                     const Ref<const MatrixXd> &CovarianceMatrix, int sims,
-                     int burnin);
-
-  VectorXd generateChiSquaredMat(double df, int rows);
+  VectorXd generateChiSquaredVec(double df, int rows);
+  
+  MatrixXd generateChiSquaredMat(double df, int rows, int cols);
 };
 
 template <typename D>
