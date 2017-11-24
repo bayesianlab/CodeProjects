@@ -177,33 +177,6 @@ Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/
 	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.s
 .PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.s
 
-src/GelfandDey.o: src/GelfandDey.cpp.o
-
-.PHONY : src/GelfandDey.o
-
-# target to build an object file
-src/GelfandDey.cpp.o:
-	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/GelfandDey.cpp.o
-.PHONY : src/GelfandDey.cpp.o
-
-src/GelfandDey.i: src/GelfandDey.cpp.i
-
-.PHONY : src/GelfandDey.i
-
-# target to preprocess a source file
-src/GelfandDey.cpp.i:
-	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/GelfandDey.cpp.i
-.PHONY : src/GelfandDey.cpp.i
-
-src/GelfandDey.s: src/GelfandDey.cpp.s
-
-.PHONY : src/GelfandDey.s
-
-# target to generate assembly for a file
-src/GelfandDey.cpp.s:
-	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/src/GelfandDey.cpp.s
-.PHONY : src/GelfandDey.cpp.s
-
 src/LinRegGibbs.o: src/LinRegGibbs.cpp.o
 
 .PHONY : src/LinRegGibbs.o
@@ -273,9 +246,6 @@ help:
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.o"
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.i"
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.s"
-	@echo "... src/GelfandDey.o"
-	@echo "... src/GelfandDey.i"
-	@echo "... src/GelfandDey.s"
 	@echo "... src/LinRegGibbs.o"
 	@echo "... src/LinRegGibbs.i"
 	@echo "... src/LinRegGibbs.s"

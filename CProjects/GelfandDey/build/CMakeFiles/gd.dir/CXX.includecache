@@ -67,6 +67,8 @@ boost/random/normal_distribution.hpp
 -
 boost/random/uniform_01.hpp
 -
+random
+-
 iostream
 -
 limits
@@ -85,7 +87,7 @@ math.h
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-Eigen/Dense
+random
 -
 assert.h
 -

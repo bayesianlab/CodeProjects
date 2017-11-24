@@ -21,7 +21,8 @@ int main() {
   MatrixXd sigma(3, 3);
   sigma << 1, -.7, .49, -.7, 1, -.7, .49, -.7, 1;
   MatrixXd D = MatrixXd::Identity(3,3);
-  cout << d.geweke91(a, b, D, mu, sigma, 1000, 500).colwise().mean() << endl;
-  cout << d.tmultnorm(a,b,mu,sigma,1000).bottomRows(500).colwise().mean() << endl;
+  cout << d.geweke91(a, b, D, mu, sigma, 100, 50).colwise().mean() << endl;
+  cout << d.tmultnorm(a,b,mu,sigma,100).bottomRows(50).colwise().mean() << endl;
   cout << endl;
+  d.generateChiSquaredMat(3, 10); 
 }

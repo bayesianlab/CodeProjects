@@ -5,7 +5,7 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/uniform_01.hpp>
-
+#include <random>
 #include <iostream>
 #include <limits>
 
@@ -28,7 +28,7 @@ public:
   double igammarnd(double shape, double scale);
 
   double igammapdf(double, double, double);
-  
+
   double linearRegLikelihood(const VectorXd &y, const MatrixXd &X,
                              const Ref<const MatrixXd> &beta, double);
 
@@ -39,7 +39,7 @@ public:
   MatrixXd normrnd(double, double, int, int);
 
   MatrixXd mvnrnd(VectorXd mu, MatrixXd &sig, int, int);
-  
+
   MatrixXd mvnrnd2(VectorXd mu, const Ref<const MatrixXd> &sig, int, int);
 
   double tnormrnd(double, double, double, double);
@@ -66,11 +66,16 @@ public:
   MatrixXd tmultnorm(const VectorXd &, const VectorXd &, const VectorXd &,
                      const MatrixXd &, const int);
 
-  MatrixXd tmultnorm(const VectorXd &, const VectorXd &, const Ref<const MatrixXd> &,
-                     const VectorXd &, const MatrixXd &, const int);
+  MatrixXd tmultnorm(const VectorXd &, const VectorXd &,
+                     const Ref<const MatrixXd> &, const VectorXd &,
+                     const MatrixXd &, const int);
 
   double conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
                          VectorXd &xNotJ, double muxx);
+
+  double conditionalMean(double Hxx, const Ref<const VectorXd> &Hxy,
+                               VectorXd &muNotJ, VectorXd &xNotJ, double muxx);
+
   VectorXd conditionalMean(double, VectorXd &, VectorXd &, MatrixXd, double);
 
   double tnormpdf(double a, double b, double mu, double sigma, double x);
@@ -86,7 +91,7 @@ public:
                             double sigma, double x);
 
   double mvnpdfPrecision(const Ref<const MatrixXd> &, const MatrixXd &,
-                const Ref<const MatrixXd> &);
+                         const Ref<const MatrixXd> &);
 
   double mvnpdf(const Ref<const MatrixXd> &, const MatrixXd &,
                 const Ref<const MatrixXd> &);
@@ -133,16 +138,40 @@ public:
 
   double logmvnpdf(VectorXd &, MatrixXd &, VectorXd &);
 
-  void mvtrnd();
+  double truncTrnd(double a , double b , double mu, double sigma, double nu );
 
+
+  MatrixXd MVTruncT(const VectorXd &a, const VectorXd &b,
+                const MatrixXd &LinearConstraints, const VectorXd &mu,
+                const MatrixXd &Sigma, const int df, const int sims,
+                const int burnin);
+  
+  MatrixXd SigmayyInverse(const MatrixXd&);
+
+  MatrixXd mvttgewke91(const VectorXd &a, const VectorXd &b,
+                const MatrixXd &LinearConstraints, const VectorXd &mu,
+                const MatrixXd &Sigma, const int df, const int sims,
+                const int burnin);
 
   MatrixXd selectorMat(int J);
+
+  MatrixXd Hnotj(const MatrixXd & precision);
 
   MatrixXd geweke91(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints,
                     const Ref<const VectorXd> &mu,
                     const Ref<const MatrixXd> &CovarianceMatrix, int sims,
                     int burnin);
+
+  MatrixXd precisionNotjMatrix(int J, const MatrixXd &precision, const VectorXd &Hii);
+
+  MatrixXd newmethod(const VectorXd &a, const VectorXd &b,
+                     const MatrixXd &LinearConstraints,
+                     const Ref<const VectorXd> &mu,
+                     const Ref<const MatrixXd> &CovarianceMatrix, int sims,
+                     int burnin);
+
+  VectorXd generateChiSquaredMat(double df, int rows);
 };
 
 template <typename D>

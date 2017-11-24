@@ -44,6 +44,10 @@ public:
   double gelfandDeyML(const MatrixXd &, const VectorXd &, const MatrixXd &, 
                       const VectorXd &mle, const MatrixXd &ifish,
                       const VectorXd &, const MatrixXd &, double, double);
+  
+  double modifiedGelfandDeyML(const MatrixXd &, const VectorXd &, const MatrixXd &,
+                      const VectorXd &mle, const MatrixXd &ifish,
+                      const VectorXd &, const MatrixXd &, double, double);
 
   double priorBetaMvnPdf(const VectorXd &mu,
                          const Ref<const MatrixXd> &precision,
@@ -59,13 +63,25 @@ public:
                         const MatrixXd &B0, const double a0, const double d0,
                         const int gibbsSteps, const int burnin);
 
+  double lrRestrictMLModifiedGD(const VectorXd &mu, const MatrixXd &sigma,
+                                const VectorXd &y, const MatrixXd &X,
+                                const VectorXd &a, const VectorXd &b,
+                                const VectorXd &b0, const MatrixXd &B0,
+                                const double a0, const double d0,
+                                const int gibbsSteps, const int burnin);
+
   void runSim(int nSims, int batches, const VectorXd &lowerConstraint,
               const VectorXd &upperConstraint, const VectorXd &theta,
               const MatrixXd &sig, const VectorXd &y, const MatrixXd &X,
               const VectorXd &b0, const MatrixXd &B0, const double a0,
               const double d0,
-
               const int sims, const int burnin);
+
+  void runSimModified(int nSims, int batches, const VectorXd &lowerConstraint,
+                      const VectorXd &upperConstraint, const VectorXd &theta,
+                      const MatrixXd &sig, const VectorXd &y, const MatrixXd &X,
+                      const VectorXd &b0, const MatrixXd &B0, const double a0,
+                      const double d0, const int sims, const int burnin);
 };
 
 
