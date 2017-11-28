@@ -26,15 +26,35 @@ private:
 
 public:
   Importance();
-  double importanceSampling(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, VectorXd&, MatrixXd&,  int,
-                            int,  VectorXd &, MatrixXd &, int, int);
-  double  ml( VectorXd&, MatrixXd&);
-  MatrixXd sample;
-  VectorXd tnormpdf(double, double, double, double, VectorXd&);
-  MatrixXd tnormpdf(VectorXd &, VectorXd &, VectorXd &, VectorXd &, MatrixXd &);
-  MatrixXd importanceDensity;
-  void runSim(int ,int , VectorXd&, MatrixXd&, VectorXd&, MatrixXd&, VectorXd&, VectorXd&, int, int, VectorXd&, MatrixXd&, int, int );
-};
 
+  double importanceSampling(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
+                            VectorXd &, MatrixXd &, int, int, VectorXd &,
+                            MatrixXd &, int, int);
+
+  double ml(VectorXd &, MatrixXd &);
+
+  double mlT(const VectorXd &a, const VectorXd &b,
+             const MatrixXd &LinearConstraints, const VectorXd &mu,
+             const MatrixXd &Sigma, const MatrixXd &y, const MatrixXd &X,
+             double df, int sims, int burnin);
+
+  MatrixXd sample;
+
+  VectorXd tnormpdf(double, double, double, double, VectorXd &);
+
+  MatrixXd tnormpdf(VectorXd &, VectorXd &, VectorXd &, VectorXd &, MatrixXd &);
+
+  MatrixXd importanceDensity;
+
+  VectorXd logtLike(double df, const Ref<const VectorXd> &mu,
+                    const VectorXd &sigmaSqd, MatrixXd X);
+
+  VectorXd logmvtpdf(double df, const Ref<const VectorXd> &mu,
+                     const MatrixXd &Sigma, MatrixXd X);
+
+  void runSim(int, int, VectorXd &, MatrixXd &, VectorXd &, MatrixXd &,
+              VectorXd &, VectorXd &, int, int, VectorXd &, MatrixXd &, int,
+              int);
+};
 #endif
 

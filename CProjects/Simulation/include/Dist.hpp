@@ -80,6 +80,14 @@ public:
 
   double tnormpdf(double a, double b, double mu, double sigma, double x);
 
+  double ttpdf(double a, double b, double df, double mu, double sigma, double x);
+
+  VectorXd ttpdf(double a, double b, double df, double mu, double sigma,
+                 const Ref<const VectorXd> &x);
+
+  MatrixXd ttpdf(const VectorXd &a, const VectorXd &b, double df,
+                 const VectorXd &mu, const VectorXd &sigma, const MatrixXd &X);
+
   VectorXd tnormpdfVect(double a, double b, double mu, double sigma,
                         VectorXd &x);
 
@@ -103,7 +111,7 @@ public:
 
   MatrixXd ghkT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, const VectorXd &mu,
-                    const MatrixXd &Sigma, int df, int sims, int burnin);
+                    const MatrixXd &Sigma, double df, int sims, int burnin);
 
   MatrixXd ghkLinearConstraints(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
                                 int, int);
@@ -111,6 +119,10 @@ public:
   void unifrnd(double, double, VectorXd &);
 
   VectorXd lrLikelihood(MatrixXd &, VectorXd &, VectorXd &, MatrixXd &);
+
+  VectorXd lrLikelihood(const Ref<const MatrixXd> &betas,
+                        const Ref<const VectorXd> &sigmasqds, const VectorXd &y,
+                        const MatrixXd &X);
 
   double lrLikelihood(VectorXd &, double, VectorXd &, MatrixXd &);
 
@@ -135,7 +147,7 @@ public:
 
   double autoCorr(VectorXd &);
 
-  VectorXd logmvnpdf(VectorXd &, MatrixXd &, MatrixXd &);
+  VectorXd logmvnpdf(VectorXd &, MatrixXd &, MatrixXd x);
 
   double logmvnpdfPrecision(const VectorXd &mu, const MatrixXd &sigma,
                             const Ref<const MatrixXd> &x);
@@ -151,7 +163,7 @@ public:
 
   MatrixXd SigmayyInverse(const MatrixXd &);
 
-  MatrixXd mvttgewke91(const VectorXd &a, const VectorXd &b,
+  MatrixXd mvttgeweke91(const VectorXd &a, const VectorXd &b,
                        const MatrixXd &LinearConstraints, const VectorXd &mu,
                        const MatrixXd &Sigma, const int df, const int sims,
                        const int burnin);

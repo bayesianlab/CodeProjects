@@ -10,6 +10,7 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 set(SOURCES 
 	${PARENT}/Simulation/src/Dist.cpp
+	${PARENT}/Simulation/src/Importance.cpp
 	${PARENT}/Simulation/src/CreateSampleData.cpp
 	src/LinRegGibbs.cpp
 	src/gibbsRBmain.cpp

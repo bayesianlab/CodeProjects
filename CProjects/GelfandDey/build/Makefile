@@ -177,6 +177,33 @@ Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/
 	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.s
 .PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.s
 
+Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.o: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.o
+
+.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.o
+
+# target to build an object file
+Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.o:
+	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.o
+.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.o
+
+Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.i: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.i
+
+.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.i
+
+# target to preprocess a source file
+Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.i:
+	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.i
+.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.i
+
+Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.s: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.s
+
+.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.s
+
+# target to generate assembly for a file
+Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.s:
+	$(MAKE) -f CMakeFiles/gd.dir/build.make CMakeFiles/gd.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.s
+.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp.s
+
 src/LinRegGibbs.o: src/LinRegGibbs.cpp.o
 
 .PHONY : src/LinRegGibbs.o
@@ -246,6 +273,9 @@ help:
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.o"
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.i"
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.s"
+	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.o"
+	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.i"
+	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Importance.s"
 	@echo "... src/LinRegGibbs.o"
 	@echo "... src/LinRegGibbs.i"
 	@echo "... src/LinRegGibbs.s"

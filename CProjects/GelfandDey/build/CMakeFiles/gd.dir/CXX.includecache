@@ -6,25 +6,11 @@
 
 #IncludeRegexTransform: 
 
+../include/GelfandDey.hpp
+
 ../include/LinRegGibbs.hpp
 Dist.hpp
 ../include/Dist.hpp
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/GelfandDey.cpp
-iostream
--
-Eigen/Dense
--
-cstdint
--
-ctime
--
-limits
--
-math.h
--
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/Dist.hpp
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/LinRegGibbs.cpp
 LinRegGibbs.hpp
@@ -41,10 +27,12 @@ CreateSampleData.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/CreateSampleData.hpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/Dist.hpp
-GelfandDey.cpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/GelfandDey.cpp
+GelfandDey.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/GelfandDey.hpp
 LinRegGibbs.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/LinRegGibbs.hpp
+Importance.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/Importance.hpp
 Eigen/Dense
 -
 iostream
@@ -74,6 +62,14 @@ limits
 random
 -
 
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include/Importance.hpp
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include/Dist.hpp
+Eigen/Dense
+-
+string.h
+-
+
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp
 CreateSampleData.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
@@ -95,6 +91,8 @@ boost/math/distributions/exponential.hpp
 -
 boost/math/distributions/normal.hpp
 -
+boost/math/distributions/students_t.hpp
+-
 boost/random/gamma_distribution.hpp
 -
 boost/random/mersenne_twister.hpp
@@ -104,6 +102,26 @@ boost/random/normal_distribution.hpp
 boost/random/uniform_01.hpp
 -
 boost/random/variate_generator.hpp
+-
+cstdint
+-
+ctime
+-
+limits
+-
+math.h
+-
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp
+Importance.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
+Eigen/Dense
+-
+assert.h
+-
+boost/math/distributions/normal.hpp
 -
 cstdint
 -
@@ -4472,6 +4490,22 @@ utility
 boost/math/distributions/detail/derived_accessors.hpp
 -
 
+/usr/local/include/boost/boost/math/distributions/students_t.hpp
+boost/math/distributions/fwd.hpp
+-
+boost/math/special_functions/beta.hpp
+-
+boost/math/distributions/complement.hpp
+-
+boost/math/distributions/detail/common_error_handling.hpp
+-
+boost/math/distributions/normal.hpp
+-
+utility
+-
+boost/math/distributions/detail/derived_accessors.hpp
+-
+
 /usr/local/include/boost/boost/math/policies/error_handling.hpp
 stdexcept
 -
@@ -4552,6 +4586,64 @@ boost/math/special_functions/detail/unchecked_bernoulli.hpp
 boost/math/special_functions/detail/bernoulli_details.hpp
 -
 
+/usr/local/include/boost/boost/math/special_functions/beta.hpp
+boost/math/special_functions/math_fwd.hpp
+-
+boost/math/tools/config.hpp
+-
+boost/math/special_functions/gamma.hpp
+-
+boost/math/special_functions/binomial.hpp
+-
+boost/math/special_functions/factorials.hpp
+-
+boost/math/special_functions/erf.hpp
+-
+boost/math/special_functions/log1p.hpp
+-
+boost/math/special_functions/expm1.hpp
+-
+boost/math/special_functions/trunc.hpp
+-
+boost/math/tools/roots.hpp
+-
+boost/static_assert.hpp
+-
+boost/config/no_tr1/cmath.hpp
+-
+boost/math/special_functions/detail/ibeta_inverse.hpp
+-
+boost/math/special_functions/detail/ibeta_inv_ab.hpp
+-
+
+/usr/local/include/boost/boost/math/special_functions/binomial.hpp
+boost/math/special_functions/math_fwd.hpp
+-
+boost/math/special_functions/factorials.hpp
+-
+boost/math/special_functions/beta.hpp
+-
+boost/math/policies/error_handling.hpp
+-
+
+/usr/local/include/boost/boost/math/special_functions/cbrt.hpp
+boost/math/tools/rational.hpp
+-
+boost/math/policies/error_handling.hpp
+-
+boost/math/special_functions/math_fwd.hpp
+-
+boost/math/special_functions/fpclassify.hpp
+-
+boost/mpl/divides.hpp
+-
+boost/mpl/plus.hpp
+-
+boost/mpl/if.hpp
+-
+boost/type_traits/is_convertible.hpp
+-
+
 /usr/local/include/boost/boost/math/special_functions/detail/bernoulli_details.hpp
 boost/config.hpp
 -
@@ -4590,6 +4682,22 @@ boost/math/tools/toms748_solve.hpp
 boost/cstdint.hpp
 -
 
+/usr/local/include/boost/boost/math/special_functions/detail/ibeta_inv_ab.hpp
+boost/math/tools/toms748_solve.hpp
+-
+boost/cstdint.hpp
+-
+
+/usr/local/include/boost/boost/math/special_functions/detail/ibeta_inverse.hpp
+boost/math/special_functions/beta.hpp
+-
+boost/math/special_functions/erf.hpp
+-
+boost/math/tools/roots.hpp
+-
+boost/math/special_functions/detail/t_distribution_inv.hpp
+-
+
 /usr/local/include/boost/boost/math/special_functions/detail/igamma_inverse.hpp
 boost/math/tools/tuple.hpp
 -
@@ -4616,6 +4724,14 @@ boost/math/tools/big_constant.hpp
 boost/config.hpp
 -
 boost/math/tools/promotion.hpp
+-
+
+/usr/local/include/boost/boost/math/special_functions/detail/t_distribution_inv.hpp
+boost/math/special_functions/cbrt.hpp
+-
+boost/math/special_functions/round.hpp
+-
+boost/math/special_functions/trunc.hpp
 -
 
 /usr/local/include/boost/boost/math/special_functions/detail/unchecked_bernoulli.hpp
@@ -4850,6 +4966,16 @@ boost/math/special_functions/expm1.hpp
 boost/math/special_functions/trunc.hpp
 -
 boost/assert.hpp
+-
+
+/usr/local/include/boost/boost/math/special_functions/round.hpp
+boost/math/tools/config.hpp
+-
+boost/math/policies/error_handling.hpp
+-
+boost/math/special_functions/math_fwd.hpp
+-
+boost/math/special_functions/fpclassify.hpp
 -
 
 /usr/local/include/boost/boost/math/special_functions/sign.hpp
@@ -7382,6 +7508,10 @@ boost/mpl/aux_/config/static_constant.hpp
 
 /usr/local/include/boost/boost/mpl/distance_fwd.hpp
 boost/mpl/aux_/common_name_wknd.hpp
+-
+
+/usr/local/include/boost/boost/mpl/divides.hpp
+boost/mpl/aux_/arithmetic_op.hpp
 -
 
 /usr/local/include/boost/boost/mpl/empty_base.hpp
