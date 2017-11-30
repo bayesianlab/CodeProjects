@@ -1,0 +1,6 @@
+function [tnormMean] = truncNormalMean(a,b,mu,sigma)
+tnormMean =  mu + ( ( normpdf( (a-mu)/sigma ) -...
+    normpdf( (b-mu)/sigma ) ) / ( normcdf( (b-mu)/sigma ) -...
+    normcdf( (a-mu)/sigma ) ) ) * sigma;
+end
+
