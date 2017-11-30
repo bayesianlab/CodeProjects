@@ -36,7 +36,8 @@ public:
   double mlT(const VectorXd &a, const VectorXd &b,
              const MatrixXd &LinearConstraints, const VectorXd &mu,
              const MatrixXd &Sigma, const MatrixXd &y, const MatrixXd &X,
-             double df, int sims, int burnin);
+             double df, int sims, int burnin, const VectorXd &b0,
+             const MatrixXd &B0, double a0, double d0);
 
   MatrixXd sample;
 

@@ -760,6 +760,14 @@ VectorXd Dist::loginvgammapdf(VectorXd &y, double alpha, double beta) {
   return ligampdf.array() - (y.array() * beta).pow(-1) + C1;
 }
 
+VectorXd Dist::loginvgammapdf(const Ref<const VectorXd> &y, double alpha,
+                              double beta) {
+  double C1 = -(alpha * log(beta) + lgamma(alpha));
+  VectorXd ligampdf = y.array().log();
+  ligampdf *= -(alpha + 1);
+  return ligampdf.array() - (y.array() * beta).pow(-1) + C1;
+}
+
 double Dist::loginvgammapdf(double y, double alpha, double beta) {
   double C1 = -(alpha * log(beta) + lgamma(alpha));
   double ligampdf = log(y);
@@ -798,7 +806,13 @@ VectorXd Dist::logmvnpdf(VectorXd &mu, MatrixXd &sigma, MatrixXd x) {
          (C1 + ((x * sigma.inverse()).array() * x.array()).rowwise().sum());
 }
 
-
+VectorXd Dist::logmvnpdf(const VectorXd &mu, const MatrixXd &sigma, MatrixXd x) {
+  int J = sigma.cols();
+  double C1 = (J * log(2 * M_PI)) + log(sigma.determinant());
+  x.rowwise() -= mu.transpose();
+  return -.5 *
+         (C1 + ((x * sigma.inverse()).array() * x.array()).rowwise().sum());
+}
 
 double Dist::logmvnpdf(VectorXd &mu, MatrixXd &sigma, VectorXd &x) {
   int J = sigma.cols();

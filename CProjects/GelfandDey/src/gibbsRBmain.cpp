@@ -72,7 +72,9 @@ int main() {
   cout << endl;
   cout << lrg.logmvnpdf(m, i,x ) << endl;
   MatrixXd Y = MatrixXd::Identity(5,5);
-  imp.mlT(rll, rul, Y, csd.maxLikeEsts, csd.inverseFisher, csd.y, csd.X, 5, 10, 1);
+
+  cout << imp.mlT(rll, rul, Y, csd.maxLikeEsts, csd.inverseFisher, csd.y, csd.X, 5, 10000,
+          2000, b0, B0, a0, d0) << endl;
 
   return 0;
 }

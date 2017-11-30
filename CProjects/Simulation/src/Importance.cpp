@@ -50,7 +50,7 @@ double Importance::mlT(const VectorXd &a, const VectorXd &b,
                        const MatrixXd &LinearConstraints, const VectorXd &mu,
                        const MatrixXd &Sigma, const MatrixXd &y,
                        const MatrixXd &X, double df, int sims, int burnin,
-                       const VectorX &b0, const MatrixX &B0, double a0,
+                       const VectorXd &b0, const MatrixXd &B0, double a0,
                        double d0) {
   int J = Sigma.cols();
   MatrixXd sample = ghkT(a, b, LinearConstraints, mu, Sigma, df, sims, burnin);
@@ -58,11 +58,11 @@ double Importance::mlT(const VectorXd &a, const VectorXd &b,
   VectorXd hTheta =
       ttpdf(a, b, df, mu, stdevs, sample).rowwise().prod().array().log();
   VectorXd likelihood =
-      lrLikelihood(sample.rightCols(J - 1), sample.col(0), y, X);
-  cout << loginvgammapdf(sample.col(0), a0*.5, d0*.5) << endl;
-  cout << logmvnpdf()
+      lrLikelihood(sample.rightCols(J - 1), sample.col(0), y, X) +
+      loginvgammapdf(sample.col(0), a0 * .5, d0 * .5) +
+      logmvnpdf(b0, B0, sample.rightCols(J - 1)) - hTheta;
 
-  return 1.0;
+  return likelihood.mean();
 }
 
 VectorXd Importance::tnormpdf(double a, double b, double mu, double sigma,
