@@ -20,10 +20,11 @@ void LinRegGibbs::lrCondPriorsGibbs(const VectorXd &y, const MatrixXd &x,
   analyticalLL(y, x);
 }
 
-MatrixXd LinRegGibbs::gibbsLR(const VectorXd &y, const MatrixXd &x,
-                              const int gibbsSteps, const int burnin,
-                              const VectorXd &b0, const MatrixXd &B0, double a0,
-                              double d0) {
+MatrixXd
+LinRegGibbs::gibbsLRCondtionalPrior(const VectorXd &y, const MatrixXd &x,
+                                    const int gibbsSteps, const int burnin,
+                                    const VectorXd &b0, const MatrixXd &B0,
+                                    double a0, double d0) {
   int J = x.cols();
   int N = x.rows();
   int sampSize = gibbsSteps - burnin;
@@ -35,13 +36,15 @@ MatrixXd LinRegGibbs::gibbsLR(const VectorXd &y, const MatrixXd &x,
   MatrixXd XpX = x.transpose() * x;
   VectorXd sigma2 = MatrixXd::Ones(gibbsSteps, 1);
   MatrixXd beta = MatrixXd::Zero(gibbsSteps, J);
+  MatrixXd SigmaUpdate;
   aG = a0 + N;
   for (int i = 1; i < gibbsSteps; i++) {
-    gibbsBetaUpdates(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0, i);
-    beta.row(i) = mvnrnd(betaBar, B1, 1, J);
+    gibbsBetaUpdatesCondtionalPrior(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0, i);
+	SigmaUpdate = sigma2(i-1)*B1;
+    beta.row(i) = mvnrnd(betaBar, SigmaUpdate, 1, J);
     dG = d0 + y.array().pow(2).sum() + (b0.transpose() * B0inv * b0) -
          (betaBar.transpose() * B1.inverse() * betaBar);
-    sigma2(i) = igammarnd(aG * .5, 1. / (.5 * dG));
+    sigma2(i) = igammarnd(aG * .5, 2. / dG);
   }
   MatrixXd Sample(sampSize, J + 1);
   Sample << sigma2.tail(sampSize), beta.bottomRows(sampSize);
@@ -49,7 +52,7 @@ MatrixXd LinRegGibbs::gibbsLR(const VectorXd &y, const MatrixXd &x,
 }
 
 MatrixXd
-LinRegGibbs::gibbsLRCondtionalPrior(const VectorXd &y, const MatrixXd &x,
+LinRegGibbs::gibbsLR(const VectorXd &y, const MatrixXd &x,
                                     const int gibbsSteps, const int burnin,
                                     const VectorXd &b0, const MatrixXd &B0,
                                     const double a0, const double d0) {
@@ -65,12 +68,10 @@ LinRegGibbs::gibbsLRCondtionalPrior(const VectorXd &y, const MatrixXd &x,
   VectorXd sigma2 = MatrixXd::Ones(gibbsSteps, 1);
   MatrixXd beta = MatrixXd::Zero(gibbsSteps, J);
   aG = a0 + N;
-  MatrixXd store = MatrixXd::Zero(J, J);
   for (int i = 1; i < gibbsSteps; i++) {
-    gibbsBetaUpdatesCondtionalPrior(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0,
+    gibbsBetaUpdates(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0,
                                     i);
-    store = sigma2(i - 1) * B1;
-    beta.row(i) = mvnrnd(betaBar, store, 1, J);
+    beta.row(i) = mvnrnd(betaBar, B1, 1, J);
     dG = d0 + (y - (x * beta.row(i).transpose())).array().pow(2).sum();
     sigma2(i) = igammarnd(aG / 2., 2. / dG);
   }
@@ -108,20 +109,20 @@ MatrixXd LinRegGibbs::gibbsRestrictBeta(const VectorXd &y, const MatrixXd &x,
   return Sample;
 }
 
-void LinRegGibbs::gibbsBetaUpdatesCondtionalPrior(
+void LinRegGibbs::gibbsBetaUpdates(
     MatrixXd &B1, VectorXd &betaBar, const VectorXd &sigma2,
     const MatrixXd &XpX, const VectorXd &Xpy, const MatrixXd &B0inv,
     const VectorXd &b0, int currIteration) {
-  B1 = (XpX + B0inv).inverse();
-  betaBar = B1 * (Xpy + B0inv * b0);
+  B1 = (pow(sigma2(currIteration-1), -1)*XpX + B0inv).inverse();
+  betaBar = B1 * (pow(sigma2(currIteration-1),-1)*Xpy + B0inv * b0);
 }
 
-void LinRegGibbs::gibbsBetaUpdates(MatrixXd &B1, VectorXd &betaBar,
+void LinRegGibbs::gibbsBetaUpdatesCondtionalPrior(MatrixXd &B1, VectorXd &betaBar,
                                    const VectorXd &sigma2, const MatrixXd &XpX,
                                    const VectorXd &Xpy, const MatrixXd &B0inv,
                                    const VectorXd &b0, int currIteration) {
-  B1 = (pow(sigma2(currIteration), -1) * XpX + B0inv).inverse();
-  betaBar = B1 * (pow(sigma2(currIteration), -1) * Xpy + B0inv * b0);
+  B1 = (XpX + B0inv).inverse();
+  betaBar = B1 * ( Xpy + B0inv * b0);
 }
 
 MatrixXd LinRegGibbs::calcOmega(const MatrixXd &theta) {

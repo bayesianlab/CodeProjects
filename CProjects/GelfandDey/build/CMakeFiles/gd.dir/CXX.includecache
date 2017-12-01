@@ -29,10 +29,10 @@ Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/Dist.hpp
 GelfandDey.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/GelfandDey.hpp
-LinRegGibbs.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/LinRegGibbs.hpp
 Importance.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/Importance.hpp
+LinRegGibbs.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/GelfandDey/src/LinRegGibbs.hpp
 Eigen/Dense
 -
 iostream

@@ -26,6 +26,14 @@ fprintf('Analytical expected value:     %.4f\n',...
     truncNormalMean(0,inf,mu,sigma))
 fprintf('Analytical standard deviation: %.4f\n',...
     sqrt(truncNormalVar(a,b,mu,sigma)))
+
+figure(1)
+subplot(2,1,1)
+histogram(proposals)
+subplot(2,1,2)
+hold on
+histogram(normpdf(proposals))
+histogram(gampdf(proposals, alpha, beta))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 N = 40000;
@@ -52,6 +60,14 @@ fprintf('Analytical expected value:     %.4f\n',...
     truncNormalMean(0,inf,mu,sigma))
 fprintf('Analytical standard deviation: %.4f\n',...
     sqrt(truncNormalVar(a,b,mu,sigma)))
+
+figure(2)
+subplot(2,1,1)
+histogram(proposals)
+subplot(2,1,2)
+hold on
+histogram(normpdf(proposals))
+histogram(gampdf(proposals, alpha, beta))
 
 
 

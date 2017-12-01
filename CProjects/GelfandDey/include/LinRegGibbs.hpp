@@ -9,10 +9,11 @@ public:
                          const int, const VectorXd &, const MatrixXd &, double,
                          double);
 
-  MatrixXd gibbsLR(const VectorXd &, const MatrixXd &, const int, const int,
-                   const VectorXd &, const MatrixXd &, double, double);
+  MatrixXd gibbsLRCondtionalPrior(const VectorXd &, const MatrixXd &, const int,
+                                  const int, const VectorXd &, const MatrixXd &,
+                                  double, double);
 
-  MatrixXd gibbsLRCondtionalPrior(const VectorXd &, const MatrixXd &x,
+  MatrixXd gibbsLR(const VectorXd &, const MatrixXd &x,
                                   const int, const int, const VectorXd &b0,
                                   const MatrixXd &B0, const double a0,
                                   const double d0);
@@ -22,11 +23,11 @@ public:
                              const int, const VectorXd &, const MatrixXd &,
                              const double, const double);
 
-  void gibbsBetaUpdatesCondtionalPrior(MatrixXd &, VectorXd &, const VectorXd &,
+  void gibbsBetaUpdates(MatrixXd &, VectorXd &, const VectorXd &,
                                        const MatrixXd &, const VectorXd &,
                                        const MatrixXd &, const VectorXd &, int);
 
-  void gibbsBetaUpdates(MatrixXd &, VectorXd &, const VectorXd &,
+  void gibbsBetaUpdatesCondtionalPrior(MatrixXd &, VectorXd &, const VectorXd &,
                         const MatrixXd &, const VectorXd &, const MatrixXd &,
                         const VectorXd &, int);
 
