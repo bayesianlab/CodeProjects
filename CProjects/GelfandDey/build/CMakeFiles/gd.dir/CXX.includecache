@@ -83,8 +83,6 @@ math.h
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-random
--
 assert.h
 -
 boost/math/distributions/exponential.hpp
@@ -110,6 +108,8 @@ ctime
 limits
 -
 math.h
+-
+random
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp

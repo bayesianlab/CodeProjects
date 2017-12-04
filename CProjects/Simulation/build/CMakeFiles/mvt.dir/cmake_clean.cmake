@@ -4,9 +4,10 @@ file(REMOVE_RECURSE
   "CMakeFiles/mvt.dir/src/ark.cpp.o"
   "CMakeFiles/mvt.dir/src/crt.cpp.o"
   "CMakeFiles/mvt.dir/src/ask.cpp.o"
+  "CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.o"
   "CMakeFiles/mvt.dir/src/CreateSampleData.cpp.o"
   "CMakeFiles/mvt.dir/src/Importance.cpp.o"
-  "CMakeFiles/mvt.dir/src/mvtmain.cpp.o"
+  "CMakeFiles/mvt.dir/src/runsim.cpp.o"
   "mvt.pdb"
   "mvt"
 )

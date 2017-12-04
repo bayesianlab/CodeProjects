@@ -88,11 +88,17 @@ public:
   MatrixXd ttpdf(const VectorXd &a, const VectorXd &b, double df,
                  const VectorXd &mu, const VectorXd &sigma, const MatrixXd &X);
 
+  VectorXd ttpdf(double a, double b, double df, const Ref<const VectorXd> &mu,
+                 double sigma, double x);
+
   VectorXd tnormpdfVect(double a, double b, double mu, double sigma,
                         VectorXd &x);
 
   MatrixXd tnormpdfMat(VectorXd &a, VectorXd &b, VectorXd &mu, VectorXd &sigma,
                        MatrixXd &x);
+
+  MatrixXd tnormpdfMat(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                       const VectorXd &sigma, const MatrixXd &x);
 
   template <typename D>
   VectorXd tnormpdfMeanVect(double a, double b, const MatrixBase<D> &mu,
@@ -124,7 +130,10 @@ public:
                         const Ref<const VectorXd> &sigmasqds, const VectorXd &y,
                         const MatrixXd &X);
 
-  double lrLikelihood(VectorXd &, double, VectorXd &, MatrixXd &);
+  double lrLikelihood(VectorXd &betas, double sigSqd, VectorXd &y, MatrixXd &X);
+
+  double lrLikelihood(const VectorXd &betas, double sigSqd, const VectorXd &y,
+                      const MatrixXd &X);
 
   double lrLikelihood(const VectorXd &y, const MatrixXd &X,
                       const Ref<const MatrixXd> &betas, double sigmasqd);
@@ -152,7 +161,9 @@ public:
   VectorXd logmvnpdf(VectorXd &, MatrixXd &, MatrixXd x);
 
   VectorXd logmvnpdf(const VectorXd &mu, const MatrixXd &Sigma, MatrixXd x);
-  
+
+  double logmvnpdfVect(const VectorXd &mu, const MatrixXd &Sigma, const VectorXd &x);
+
   double logmvnpdfPrecision(const VectorXd &mu, const MatrixXd &sigma,
                             const Ref<const MatrixXd> &x);
 
@@ -168,9 +179,9 @@ public:
   MatrixXd SigmayyInverse(const MatrixXd &);
 
   MatrixXd mvttgeweke91(const VectorXd &a, const VectorXd &b,
-                       const MatrixXd &LinearConstraints, const VectorXd &mu,
-                       const MatrixXd &Sigma, const int df, const int sims,
-                       const int burnin);
+                        const MatrixXd &LinearConstraints, const VectorXd &mu,
+                        const MatrixXd &Sigma, const double df, const int sims,
+                        const int burnin);
 
   MatrixXd selectorMat(int J);
 

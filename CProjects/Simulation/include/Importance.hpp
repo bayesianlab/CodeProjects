@@ -39,6 +39,12 @@ public:
              double df, int sims, int burnin, const VectorXd &b0,
              const MatrixXd &B0, double a0, double d0);
 
+  double mlGeweke91(const VectorXd &a, const VectorXd &b,
+                    const MatrixXd &LinearConstraints, const VectorXd &mu,
+                    const MatrixXd &Sigma, const MatrixXd &y, const MatrixXd &X,
+                    int sims, int burnin, const VectorXd &b0,
+                    const MatrixXd &B0, double a0, double d0);
+
   MatrixXd sample;
 
   VectorXd tnormpdf(double, double, double, double, VectorXd &);
@@ -54,8 +60,14 @@ public:
                      const MatrixXd &Sigma, MatrixXd X);
 
   void runSim(int, int, VectorXd &, MatrixXd &, VectorXd &, MatrixXd &,
-              VectorXd &, VectorXd &, int, int, VectorXd &, MatrixXd &, int,
-              int);
+              VectorXd &, VectorXd &, int, int, VectorXd &, MatrixXd &, double,
+              double);
+
+  void runTsim(int nSims, int batches, const VectorXd &theta,
+               const MatrixXd &sigma, const VectorXd &y, const MatrixXd &X,
+               const VectorXd &a, const VectorXd &b,
+               const MatrixXd &LinearConstraints, double df, int sampleSize,
+               int burnin, const VectorXd &b0, const MatrixXd &B0, double a0, double d0);
 };
 #endif
 

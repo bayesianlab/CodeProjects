@@ -14,9 +14,10 @@ set(SOURCES
 	src/ark.cpp
 	src/crt.cpp
 	src/ask.cpp
+	src/LinRegGibbs.cpp
 	src/CreateSampleData.cpp
 	src/Importance.cpp
-	src/mvtmain.cpp
+	src/runsim.cpp
 	)
 
 message(STATUS "Eigen Directory    " ${EIGEN_DIR})

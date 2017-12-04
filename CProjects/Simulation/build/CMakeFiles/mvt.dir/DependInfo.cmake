@@ -7,11 +7,12 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/CreateSampleData.cpp.o"
   "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/Dist.cpp.o"
   "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/Importance.cpp.o"
+  "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.o"
   "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/ark.cpp.o"
   "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/ask.cpp.o"
   "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/crb.cpp.o"
   "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/crt.cpp.o"
-  "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/mvtmain.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/mvtmain.cpp.o"
+  "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp" "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles/mvt.dir/src/runsim.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "Clang")
 

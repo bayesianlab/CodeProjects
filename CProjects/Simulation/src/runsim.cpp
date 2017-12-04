@@ -17,10 +17,10 @@ using namespace std;
 using namespace Eigen;
 
 #define seed 100
-#define mlSims 500
-#define nSims 12000
-#define burnin 2000
-#define batches 50
+#define mlSims 5
+#define nSims 120
+#define burnin 20
+#define batches 5
 #define linRegSS 5000
 
 
@@ -48,6 +48,19 @@ void crbTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
              burnin, mlSims, batches);
 }
 
+void crbTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul){
+  int dim = betas.size();
+  Crb crb(dim);
+  VectorXd b0 = MatrixXd::Zero(dim, 1);
+  MatrixXd B0 = MatrixXd::Identity(dim,dim);
+  double a0 = 6;
+  double d0 = 12;
+  CreateSampleData csd(linRegSS, betas, seed);
+  crb.runTsim(csd.maxLikeEsts, csd.inverseFisher, dim, csd.y, csd.X, ll, ul,
+              MatrixXd::Identity(dim + 1, dim + 1), b0, B0, a0, d0, nSims,
+              burnin, mlSims, batches);
+}
+
 void crtTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   CreateSampleData csd(linRegSS, betas, seed);
   CRT crt;
@@ -62,10 +75,22 @@ void impTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   MatrixXd S02 = MatrixXd::Identity(J, J);
   CreateSampleData csd(linRegSS, betas, seed);
   imp.runSim(mlSims, batches, csd.maxLikeEsts, csd.inverseFisher, csd.y,
-             csd.X, ll, ul, nSims, burnin, b02, S02, 3, 6);
+             csd.X, ll, ul, nSims, burnin, b02, S02, 6, 12);
+}
+
+void impTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul){
+  Importance imp; 
+  int dim = betas.size();
+  MatrixXd b0 = MatrixXd::Zero(dim, 1);
+  MatrixXd B0 = MatrixXd::Identity(dim,dim);
+  MatrixXd LinearConstraints = MatrixXd::Identity(dim+1, dim+1);
+  CreateSampleData csd(linRegSS, betas, seed);
+  imp.runTsim(mlSims, batches, csd.maxLikeEsts, csd.inverseFisher, csd.y, csd.X,
+              ll, ul, LinearConstraints, dim+1, nSims, burnin, b0, B0, 6, 12);
 }
 
 void gelfandDey(VectorXd &betas, VectorXd &ll, VectorXd &ul){
+  int dim = betas.size();
   MatrixXd b0 = MatrixXd::Zero(dim, 1);
   MatrixXd B0 = MatrixXd::Identity(dim,dim);
   double a0 = 6;
@@ -75,6 +100,7 @@ void gelfandDey(VectorXd &betas, VectorXd &ll, VectorXd &ul){
   lrg.runSim(mlSims, batches, ll, ul, csd.maxLikeEsts, csd.inverseFisher, csd.y,
              csd.X, b0, B0, a0, d0, nSims, burnin);
 }
+
 int main() {
   cout << "\n\n\tBegan runsim\n" << endl;
   if (linRegSS < 100) {
@@ -88,46 +114,31 @@ int main() {
   double inf = numeric_limits<double>::max();
   int dim = 4;
   VectorXd betas(dim);
+  VectorXd betas1(dim);
   
   VectorXd rll(dim + 1);
   VectorXd rul(dim + 1);
-  VectorXd urll(dim + 1);
-  VectorXd urul(dim + 1);
   
   //two restrictions
   cout << "\n\tTwo restriction test, beta1 .99, beta2 .99" << endl;
-  betas << .99, .99, 5.6, 3.2;
+  betas << .99, .99, .75, .85;
   rll << 0., 0., 0., -inf, -inf;
   rul << inf, 1., 1., inf, inf;
-  urll << 0, -inf, -inf, -inf, -inf;
-  urul << inf, inf, inf, inf, inf;
 
-
-  // One restriction
-  /*
-   cout << \n\t One restriction test small dataset << endl; 
-   betas <<  1.2, 5.6, 3.2;
-   rll << 0., 0., -inf, -inf;
-   rul << inf, 1., inf, inf;
-   urll << 0.,  -inf, -inf, -inf;
-   urul << inf, inf, inf, inf; 
-   */
 
    
-  askTest2(betas, rll, rul);
-  askTest2(betas, urll, urul);
+/*  askTest2(betas, rll, rul);
 
-  arkTest2(betas, rll, rul);
-  arkTest2(betas, urll, urul);
+  arkTest2(betas, rll, rul);*/
 
   crbTest2(betas, rll, rul);
-  crbTest2(betas, urll, urul);
 
-  crtTest2(betas, rll, rul);
-  crtTest2(betas, urll, urul);
+  /*crtTest2(betas, rll, rul);
 
-  impTest2(betas, rll, rul);
-  impTest2(betas, urll, urul);
+  impTest2(betas, rll, rul); */
+  impTestT(betas, rll, rul);
+  crbTestT(betas, rll, rul);
+  
   
 
   return 0;

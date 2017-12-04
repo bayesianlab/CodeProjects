@@ -39,8 +39,9 @@ LinRegGibbs::gibbsLRCondtionalPrior(const VectorXd &y, const MatrixXd &x,
   MatrixXd SigmaUpdate;
   aG = a0 + N;
   for (int i = 1; i < gibbsSteps; i++) {
-    gibbsBetaUpdatesCondtionalPrior(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0, i);
-	SigmaUpdate = sigma2(i-1)*B1;
+    gibbsBetaUpdatesCondtionalPrior(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0,
+                                    i);
+    SigmaUpdate = sigma2(i - 1) * B1;
     beta.row(i) = mvnrnd(betaBar, SigmaUpdate, 1, J);
     dG = d0 + y.array().pow(2).sum() + (b0.transpose() * B0inv * b0) -
          (betaBar.transpose() * B1.inverse() * betaBar);
@@ -51,11 +52,10 @@ LinRegGibbs::gibbsLRCondtionalPrior(const VectorXd &y, const MatrixXd &x,
   return Sample;
 }
 
-MatrixXd
-LinRegGibbs::gibbsLR(const VectorXd &y, const MatrixXd &x,
-                                    const int gibbsSteps, const int burnin,
-                                    const VectorXd &b0, const MatrixXd &B0,
-                                    const double a0, const double d0) {
+MatrixXd LinRegGibbs::gibbsLR(const VectorXd &y, const MatrixXd &x,
+                              const int gibbsSteps, const int burnin,
+                              const VectorXd &b0, const MatrixXd &B0,
+                              const double a0, const double d0) {
   int J = x.cols();
   int N = x.rows();
   int sampSize = gibbsSteps - burnin;
@@ -69,8 +69,7 @@ LinRegGibbs::gibbsLR(const VectorXd &y, const MatrixXd &x,
   MatrixXd beta = MatrixXd::Zero(gibbsSteps, J);
   aG = a0 + N;
   for (int i = 1; i < gibbsSteps; i++) {
-    gibbsBetaUpdates(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0,
-                                    i);
+    gibbsBetaUpdates(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0, i);
     beta.row(i) = mvnrnd(betaBar, B1, 1, J);
     dG = d0 + (y - (x * beta.row(i).transpose())).array().pow(2).sum();
     sigma2(i) = igammarnd(aG / 2., 2. / dG);
@@ -109,20 +108,20 @@ MatrixXd LinRegGibbs::gibbsRestrictBeta(const VectorXd &y, const MatrixXd &x,
   return Sample;
 }
 
-void LinRegGibbs::gibbsBetaUpdates(
-    MatrixXd &B1, VectorXd &betaBar, const VectorXd &sigma2,
-    const MatrixXd &XpX, const VectorXd &Xpy, const MatrixXd &B0inv,
-    const VectorXd &b0, int currIteration) {
-  B1 = (pow(sigma2(currIteration-1), -1)*XpX + B0inv).inverse();
-  betaBar = B1 * (pow(sigma2(currIteration-1),-1)*Xpy + B0inv * b0);
-}
-
-void LinRegGibbs::gibbsBetaUpdatesCondtionalPrior(MatrixXd &B1, VectorXd &betaBar,
+void LinRegGibbs::gibbsBetaUpdates(MatrixXd &B1, VectorXd &betaBar,
                                    const VectorXd &sigma2, const MatrixXd &XpX,
                                    const VectorXd &Xpy, const MatrixXd &B0inv,
                                    const VectorXd &b0, int currIteration) {
+  B1 = (pow(sigma2(currIteration - 1), -1) * XpX + B0inv).inverse();
+  betaBar = B1 * (pow(sigma2(currIteration - 1), -1) * Xpy + B0inv * b0);
+}
+
+void LinRegGibbs::gibbsBetaUpdatesCondtionalPrior(
+    MatrixXd &B1, VectorXd &betaBar, const VectorXd &sigma2,
+    const MatrixXd &XpX, const VectorXd &Xpy, const MatrixXd &B0inv,
+    const VectorXd &b0, int currIteration) {
   B1 = (XpX + B0inv).inverse();
-  betaBar = B1 * ( Xpy + B0inv * b0);
+  betaBar = B1 * (Xpy + B0inv * b0);
 }
 
 MatrixXd LinRegGibbs::calcOmega(const MatrixXd &theta) {
@@ -236,7 +235,7 @@ double LinRegGibbs::gelfandDeyML(const MatrixXd &sample, const VectorXd &y,
     post = logmvnpdfPrecision(mle, OmegaInv, sample.row(i).transpose());
     pbeta = logmvnpdfPrecision(b0, sigmaPriorInv,
                                sample.row(i).tail(J - 1).transpose());
-    psigma = loginvgammapdf(sample(i, 0), .5*a0, .5*d0);
+    psigma = loginvgammapdf(sample(i, 0), .5 * a0, .5 * d0);
     like =
         lrLikelihood(y, X, sample.row(i).tail(J - 1).transpose(), sample(i, 0));
     weight(nonZero) = -post + (pbeta + psigma + like);
@@ -263,7 +262,8 @@ double LinRegGibbs::modifiedGelfandDeyML(const MatrixXd &sample,
   int nonZero = 0;
   for (int i = 0; i < N; i++) {
     if (inTheta(sample.row(i), thetaBar.transpose(), Omega) == 1) {
-      post = (1.010101)*logmvnpdfPrecision(mle, OmegaInv, sample.row(i).transpose());
+      post = (1.010101) *
+             logmvnpdfPrecision(mle, OmegaInv, sample.row(i).transpose());
       pbeta = logmvnpdfPrecision(b0, sigmaPriorInv,
                                  sample.row(i).tail(J - 1).transpose());
       psigma = loginvgammapdf(sample(i, 0), .5 * a0, .5 * d0);
@@ -325,12 +325,11 @@ double LinRegGibbs::lrRestrictMLGD(const VectorXd &mu, const MatrixXd &sigma,
   return gelfandDeyML(R, y, X, mu, sigma, b0, B0, a0, d0);
 }
 
-double LinRegGibbs::lrRestrictMLModifiedGD(const VectorXd &mu, const MatrixXd &sigma,
-                                   const VectorXd &y, const MatrixXd &X,
-                                   const VectorXd &a, const VectorXd &b,
-                                   const VectorXd &b0, const MatrixXd &B0,
-                                   const double a0, const double d0,
-                                   const int gibbsSteps, const int burnin) {
+double LinRegGibbs::lrRestrictMLModifiedGD(
+    const VectorXd &mu, const MatrixXd &sigma, const VectorXd &y,
+    const MatrixXd &X, const VectorXd &a, const VectorXd &b, const VectorXd &b0,
+    const MatrixXd &B0, const double a0, const double d0, const int gibbsSteps,
+    const int burnin) {
   int J = sigma.cols();
   MatrixXd R = tmultnorm(a, b, mu, sigma, gibbsSteps);
   R = R.bottomRows(gibbsSteps - burnin).leftCols(J).eval();
@@ -390,8 +389,9 @@ void LinRegGibbs::runSimModified(int nSims, int batches,
   VectorXd mLike(nSims);
   VectorXd b(Jminus1);
   for (int i = 0; i < nSims; i++) {
-    mLike(i) = lrRestrictMLModifiedGD(theta, sig, y, X, lowerConstraint,
-                              upperConstraint, b0, B0, a0, d0, sims, burnin);
+    mLike(i) =
+        lrRestrictMLModifiedGD(theta, sig, y, X, lowerConstraint,
+                               upperConstraint, b0, B0, a0, d0, sims, burnin);
   }
   cout << setprecision(9) << mLike.mean() << endl;
   if (batches != 0) {

@@ -31,15 +31,15 @@ int main() {
   double d0 = 12;
 
 
-  cout << lrg.gibbsLRCondtionalPrior(csd.y, csd.X, 100, 50, b0, B0, a0,d0).colwise().mean() << endl;
-  cout << lrg.gibbsLR(csd.y, csd.X, 100, 50, b0, B0, a0,d0).colwise().mean() << endl;
+ /* cout << lrg.gibbsLRCondtionalPrior(csd.y, csd.X, 100, 50, b0, B0, a0,d0).colwise().mean() << endl;
+  cout << lrg.gibbsLR(csd.y, csd.X, 100, 50, b0, B0, a0,d0).colwise().mean() << endl; */
   /*lrg.runSim(50, 5, rll, rul, csd.maxLikeEsts, csd.inverseFisher, csd.y,
   csd.X, b0, B0, a0, d0, gs, burnin); cout << endl; lrg.runSimModified(50, 5,
   rll, rul, csd.maxLikeEsts, csd.inverseFisher, csd.y, csd.X, b0, B0, a0, d0,
   gs, burnin);
 */
 
-/*  MatrixXd I = MatrixXd::Identity(3, 3);
+  MatrixXd I = MatrixXd::Identity(3, 3);
   MatrixXd i = MatrixXd::Identity(2, 2);
 
   MatrixXd K(3, 3);
@@ -65,7 +65,6 @@ int main() {
   cout << endl;
   Importance imp;
 
-  // cout << imp.logtLike(10, mu.tail(2), X.col(0), X.rightCols(2) ) << endl;
   cout << "log mvt pdf" << endl;
   cout << imp.logmvtpdf(1000, mu.tail(2), i, X.rightCols(2)) << endl;
   VectorXd m = mu.tail(2);
@@ -74,27 +73,15 @@ int main() {
   cout << x << endl;
   cout << endl;
   cout << lrg.logmvnpdf(m, i, x) << endl;
-  MatrixXd Y = MatrixXd::Identity(5, 5);*/
-
- /* cout << imp.mlT(rll, rul, Y, csd.maxLikeEsts, csd.inverseFisher, csd.y, csd.X,
-                  5, 10000, 2000, b0, B0, a0, d0)
-       << endl;*/
-
- /* VectorXd setA;
-  VectorXd subsetB;
-  VectorXd subsetC;
-  setA = VectorXd::Random(10, 1);
-  cout << "New" <<endl;
-  subsetB = setA.head(5);
-  subsetC = subsetB.head(3);
-  cout << setA.transpose() << endl;
-  cout << "Sub B" << endl;
-  cout << subsetB.transpose() << endl;
-  cout << "Sub C " << endl;
-  cout << subsetC.transpose() << endl;*/
-
-
-
-
+  MatrixXd Y = MatrixXd::Identity(5, 5);
+  cout << "Test for importance density with Geweke 91" << endl;
+  cout << imp.mlGeweke91(rll, rul, Y, csd.maxLikeEsts, csd.inverseFisher, csd.y,
+                         csd.X, 10000, 2000, b0, B0, a0, d0)
+       << endl;
+  cout << "ML T" << endl;
+   cout << imp.mlT(rll, rul, Y, csd.maxLikeEsts, csd.inverseFisher, csd.y,
+     csd.X, 5, 10000, 2000, b0, B0, a0, d0)
+        << endl;
+   Dist::tnormpdf
   return 0;
 }

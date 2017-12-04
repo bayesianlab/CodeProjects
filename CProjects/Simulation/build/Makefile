@@ -204,6 +204,33 @@ src/Importance.cpp.s:
 	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Importance.cpp.s
 .PHONY : src/Importance.cpp.s
 
+src/LinRegGibbs.o: src/LinRegGibbs.cpp.o
+
+.PHONY : src/LinRegGibbs.o
+
+# target to build an object file
+src/LinRegGibbs.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.o
+.PHONY : src/LinRegGibbs.cpp.o
+
+src/LinRegGibbs.i: src/LinRegGibbs.cpp.i
+
+.PHONY : src/LinRegGibbs.i
+
+# target to preprocess a source file
+src/LinRegGibbs.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.i
+.PHONY : src/LinRegGibbs.cpp.i
+
+src/LinRegGibbs.s: src/LinRegGibbs.cpp.s
+
+.PHONY : src/LinRegGibbs.s
+
+# target to generate assembly for a file
+src/LinRegGibbs.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.s
+.PHONY : src/LinRegGibbs.cpp.s
+
 src/ark.o: src/ark.cpp.o
 
 .PHONY : src/ark.o
@@ -312,32 +339,32 @@ src/crt.cpp.s:
 	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/crt.cpp.s
 .PHONY : src/crt.cpp.s
 
-src/mvtmain.o: src/mvtmain.cpp.o
+src/runsim.o: src/runsim.cpp.o
 
-.PHONY : src/mvtmain.o
+.PHONY : src/runsim.o
 
 # target to build an object file
-src/mvtmain.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/mvtmain.cpp.o
-.PHONY : src/mvtmain.cpp.o
+src/runsim.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/runsim.cpp.o
+.PHONY : src/runsim.cpp.o
 
-src/mvtmain.i: src/mvtmain.cpp.i
+src/runsim.i: src/runsim.cpp.i
 
-.PHONY : src/mvtmain.i
+.PHONY : src/runsim.i
 
 # target to preprocess a source file
-src/mvtmain.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/mvtmain.cpp.i
-.PHONY : src/mvtmain.cpp.i
+src/runsim.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/runsim.cpp.i
+.PHONY : src/runsim.cpp.i
 
-src/mvtmain.s: src/mvtmain.cpp.s
+src/runsim.s: src/runsim.cpp.s
 
-.PHONY : src/mvtmain.s
+.PHONY : src/runsim.s
 
 # target to generate assembly for a file
-src/mvtmain.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/mvtmain.cpp.s
-.PHONY : src/mvtmain.cpp.s
+src/runsim.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/runsim.cpp.s
+.PHONY : src/runsim.cpp.s
 
 # Help Target
 help:
@@ -357,6 +384,9 @@ help:
 	@echo "... src/Importance.o"
 	@echo "... src/Importance.i"
 	@echo "... src/Importance.s"
+	@echo "... src/LinRegGibbs.o"
+	@echo "... src/LinRegGibbs.i"
+	@echo "... src/LinRegGibbs.s"
 	@echo "... src/ark.o"
 	@echo "... src/ark.i"
 	@echo "... src/ark.s"
@@ -369,9 +399,9 @@ help:
 	@echo "... src/crt.o"
 	@echo "... src/crt.i"
 	@echo "... src/crt.s"
-	@echo "... src/mvtmain.o"
-	@echo "... src/mvtmain.i"
-	@echo "... src/mvtmain.s"
+	@echo "... src/runsim.o"
+	@echo "... src/runsim.i"
+	@echo "... src/runsim.s"
 .PHONY : help
 
 
