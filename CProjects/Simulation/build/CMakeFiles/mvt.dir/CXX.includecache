@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../include/CRT.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
 ../include/Crb.hpp
 Dist.hpp
 ../include/Dist.hpp
@@ -209,8 +203,8 @@ math.h
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.cpp
-CRT.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CRT.hpp
+crt.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.hpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
 Eigen/Dense

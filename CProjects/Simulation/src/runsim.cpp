@@ -18,9 +18,9 @@ using namespace Eigen;
 
 #define seed 100
 #define mlSims 5
-#define nSims 120
-#define burnin 20
-#define batches 5
+#define nSims 12
+#define burnin 2
+#define batches 1
 #define linRegSS 5000
 
 
@@ -63,10 +63,26 @@ void crbTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul){
 
 void crtTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   CreateSampleData csd(linRegSS, betas, seed);
-  CRT crt;
+  Crt crt;
   crt.runSim(mlSims, batches, ll, ul, csd.maxLikeEsts, csd.inverseFisher, csd.y,
              csd.X, nSims, burnin);
 }
+
+void crtTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
+  CreateSampleData csd(linRegSS, betas, seed);
+  Crt crt;
+  VectorXd b0 = MatrixXd::Zero(dim, 1);
+  MatrixXd B0 = MatrixXd::Identity(dim,dim);
+  double a0 = 6;
+  double d0 = 12;
+  int J = betas.size();
+  MatrixXd LinearConstraints = MatrixXd::Identity(J + 1, J + 1);
+  crt.runTsim(mlSims, batches, ll, ul, LinearConstraints, J+1, csd.maxLikeEsts, csd.inverseFisher, csd.y,
+             csd.X, nSims, burnin, b0, B0, a0, d0);
+}
+
+
+
 
 void impTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   Importance imp;
@@ -138,6 +154,7 @@ int main() {
   impTest2(betas, rll, rul); */
   impTestT(betas, rll, rul);
   crbTestT(betas, rll, rul);
+  crtTestT(betas, rll, rul);
   
   
 

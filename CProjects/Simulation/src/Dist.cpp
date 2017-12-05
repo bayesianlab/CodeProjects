@@ -406,6 +406,7 @@ VectorXd Dist::ttpdf(double a, double b, double df, double mu, double sigma,
 VectorXd Dist::ttpdf(double a, double b, double df,
                      const Ref<const VectorXd> &mu, double sigma, double x) {
   VectorXd pdfVals(mu.size());
+  cout << "right ttpdf" <<endl;
   for (int i = 0; i < mu.size(); i++) {
     pdfVals(i) = ttpdf(a, b, df, mu(i), sigma, x);
   }
