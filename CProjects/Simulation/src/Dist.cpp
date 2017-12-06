@@ -406,7 +406,6 @@ VectorXd Dist::ttpdf(double a, double b, double df, double mu, double sigma,
 VectorXd Dist::ttpdf(double a, double b, double df,
                      const Ref<const VectorXd> &mu, double sigma, double x) {
   VectorXd pdfVals(mu.size());
-  cout << "right ttpdf" <<endl;
   for (int i = 0; i < mu.size(); i++) {
     pdfVals(i) = ttpdf(a, b, df, mu(i), sigma, x);
   }
@@ -744,9 +743,7 @@ VectorXd Dist::lrLikelihood(const Ref<const MatrixXd> &betas,
     return x;
   } else {
     VectorXd e(X.rows());
-
     ArrayXd normConst = -(N / 2) * (sigmasqds.array().log() + log(2 * M_PI));
-
     ArrayXd expNormalizingConst = (-2 * sigmasqds.array()).pow(-1);
     linreglike = VectorXd::Zero(betas.rows());
     for (int i = 0; i < betas.rows(); i++) {
@@ -769,17 +766,17 @@ double Dist::lrLikelihood(VectorXd &betas, double sigmasqd, VectorXd &y,
   return normConst + eTe * expNormalizingConst;
 }
 
-double Dist::lrLikelihood(const VectorXd &betas, double sigmasqd, const VectorXd &y,
-                          const MatrixXd &X) {
+double Dist::lrLikelihood(const VectorXd &betas, double sigmasqd,
+                          const VectorXd &y, const MatrixXd &X) {
   int N = X.rows();
   VectorXd e = y - (X * betas);
   double eTe = e.transpose() * e;
-  double normConst =  N * (log(2 * M_PI * sigmasqd));
-  return -.5*(normConst + (eTe * pow(sigmasqd, -1)));
+  double normConst = N * (log(2 * M_PI * sigmasqd));
+  return -.5 * (normConst + (eTe * pow(sigmasqd, -1)));
 }
 
-double Dist::lrLikelihood(const VectorXd &y, const MatrixXd &X,
-                          const Ref<const MatrixXd> &betas, double sigmasqd) {
+/*double Dist::lrLikelihood(const Ref<const MatrixXd> &betas, double sigmasqd,
+                          const VectorXd &y, const MatrixXd &X) {
   int N = X.rows();
   VectorXd e(N);
   double normConst = -(N / 2) * (log(sigmasqd) + log(2 * M_PI));
@@ -787,7 +784,7 @@ double Dist::lrLikelihood(const VectorXd &y, const MatrixXd &X,
   e = y - X * betas;
   double eTe = e.transpose() * e;
   return normConst + eTe * expNormalizingConst;
-}
+}*/
 
 VectorXd Dist::loginvgammapdf(VectorXd &y, double alpha, double beta) {
   double C1 = -(alpha * log(beta) + lgamma(alpha));
@@ -945,6 +942,46 @@ MatrixXd Dist::SigmayyInverse(const MatrixXd &Sigma) {
     c = c + Jm1;
   }
   return syy;
+}
+
+MatrixXd Dist::askMvttgeweke91(const VectorXd &a, const VectorXd &b,
+                               const MatrixXd &LinearConstraints,
+                               const VectorXd &mu, const MatrixXd &Sigma,
+                               const double df, const int sims,
+                               const int burnin, VectorXd &initVector) {
+
+  int J = Sigma.cols();
+  int Jm1 = J - 1;
+  MatrixXd chiSqs = (generateChiSquaredMat(df, sims, J).array() / df).sqrt();
+  MatrixXd T = LinearConstraints * Sigma * LinearConstraints.transpose();
+  MatrixXd precisionT = T.inverse();
+  VectorXd Hii = precisionT.diagonal();
+  VectorXd hii = Hii.array().pow(-1).sqrt();
+  MatrixXd notj = selectorMat(J);
+  MatrixXd precisionNotj = precisionNotjMatrix(J, precisionT, Hii);
+  MatrixXd sample(sims, J);
+  sample.setZero();
+  VectorXd alpha = a - LinearConstraints * mu;
+  VectorXd beta = b - LinearConstraints * mu;
+  double innerProduct;
+  sample.row(0) = initVector.transpose();
+  for (int i = 1; i < sims; i++) {
+    for (int j = 0; j < J; j++) {
+      innerProduct = (precisionNotj.row(j) * (notj.block(j * (Jm1), 0, Jm1, J) *
+                                              sample.row(i - 1).transpose()))
+                         .value();
+      sample(i, j) =
+          innerProduct +
+          hii(j) *
+              truncNormalRnd(
+                  ((alpha(j) - innerProduct) * chiSqs(i, j)) / hii(j),
+                  ((beta(j) - innerProduct) * chiSqs(i, j)) / hii(j), 0, 1) /
+              chiSqs(i, j);
+    }
+  }
+  sample = (LinearConstraints.inverse() * sample.transpose()).transpose();
+  sample.rowwise() += mu.transpose();
+  return sample.bottomRows(sims - burnin);
 }
 
 MatrixXd Dist::mvttgeweke91(const VectorXd &a, const VectorXd &b,

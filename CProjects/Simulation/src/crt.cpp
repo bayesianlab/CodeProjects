@@ -42,7 +42,7 @@ void Crt::crtKernel(VectorXd &lowerlim, VectorXd &upperlim, VectorXd &theta,
 double Crt::crtTML(const VectorXd &a, const VectorXd &b,
                    const MatrixXd &LinearConstraints, const VectorXd &mu,
                    const MatrixXd &Sigma, const VectorXd &y, const MatrixXd &X,
-                   double df, int sims, int burnin, const VectorXd b0,
+                   double df, int sims, int burnin, const VectorXd &b0,
                    const MatrixXd &B0, double a0, double d0) {
   int J = Sigma.cols();
   int Jm1 = J - 1;
@@ -54,9 +54,7 @@ double Crt::crtTML(const VectorXd &a, const VectorXd &b,
   MatrixXd kernel = gibbsTKernel(a, b, LinearConstraints, truncTSample, zstar,
                                  df, mu, Sigma, y, X, sims, burnin);
   VectorXd ztail = zstar.tail(Jm1);
-  cout << "zta" << endl;
-  cout << ztail <<endl;
-  return mlT(ztail, zstar(0), y, X, kernel);
+  return mlT(ztail, zstar(0), y, X, kernel, b0, B0, a0, d0);
 }
 
 MatrixXd Crt::gibbsTKernel(const VectorXd &a, const VectorXd &b,
@@ -67,11 +65,7 @@ MatrixXd Crt::gibbsTKernel(const VectorXd &a, const VectorXd &b,
                            int burnin) {
   int J = Sigma.cols();
   int Jm1 = J - 1;
-  Rows = sims - burnin;/*
-  MatrixXd truncTSample =
-      mvttgeweke91(a, b, LinearConstraints, mu, Sigma, df, sims, burnin)
-          .bottomRows(Rows);
-  VectorXd zstar = truncTSample.leftCols(J).colwise().mean();*/
+  Rows = sims - burnin;
   MatrixXd xnoti = MatrixXd::Zero(Rows, Jm1);
   xnoti.rightCols(Jm1 - 1) = sample.middleCols(2, J - 2);
   MatrixXd precision = Sigma.inverse();
@@ -80,8 +74,8 @@ MatrixXd Crt::gibbsTKernel(const VectorXd &a, const VectorXd &b,
   MatrixXd kernel = MatrixXd::Zero(Rows, J);
   kernel.col(0) =
       Dist::ttpdf(a(0), b(0), df, sample.col(J), sigVect(0), zstar(0));
-  VectorXd Hinoti = MatrixXd::Zero(Jminus1, 1);
-  VectorXd munoti = MatrixXd::Zero(Jminus1, 1);
+  VectorXd Hinoti = MatrixXd::Zero(Jm1, 1);
+  VectorXd munoti = MatrixXd::Zero(Jm1, 1);
   MatrixXd notj = selectorMat(J);
   for (int j = 1; j < Jm1; j++) {
     munoti=  notj.block(j * (Jm1), 0, Jm1, J) *mu;
@@ -126,6 +120,7 @@ void Crt::gibbsKernel() {
 
 double Crt::ml(VectorXd &zStarTail, double zStarHead, VectorXd &y,
                MatrixXd &X) {
+
   double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
                  logmvnpdf(betaPrior, sigmaPrior, zStarTail) +
                  loginvgammapdf(zStarHead, igamA, igamB) -
@@ -133,13 +128,13 @@ double Crt::ml(VectorXd &zStarTail, double zStarHead, VectorXd &y,
   return mLike;
 }
 
-double Crt::mlT(VectorXd &zStarTail, double zStarHead, const VectorXd &y,
-                const MatrixXd &X, MatrixXd &Kernel, const VectorXd &b0,
+double Crt::mlT(const VectorXd &zStarTail, double zStarHead, const VectorXd &y,
+                const MatrixXd &X, MatrixXd &kernel, const VectorXd &b0,
                 const MatrixXd &B0, double a0, double d0) {
   double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
-                 logmvnpdf(b0, B0, zStarTail) +
+                 logmvnpdfVect(b0, B0, zStarTail) +
                  loginvgammapdf(zStarHead, a0, d0) -
-                 log(Kernel.rowwise().prod().mean());
+                 log(kernel.rowwise().prod().mean());
   return mLike;
 }
 
@@ -154,8 +149,8 @@ void Crt::runTsim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
   int Jminus1 = J - 1;
   VectorXd mLike(nSims);
   for (int i = 0; i < nSims; i++) {
-    mLike(i) =
-        crtTML(a, b, LinearConstraints, theta, Sigma, y, X, df, sims, burnin);
+    mLike(i) = crtTML(a, b, LinearConstraints, theta, Sigma, y, X, df, sims,
+                      burnin, b0, B0, a0, d0);
   }
   cout << setprecision(9) << mLike.mean() << endl;
   if (batches != 0) {

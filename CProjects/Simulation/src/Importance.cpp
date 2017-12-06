@@ -59,7 +59,7 @@ double Importance::mlT(const VectorXd &a, const VectorXd &b,
 
   VectorXd likelihood =
       lrLikelihood(sample.rightCols(J - 1), sample.col(0), y, X) +
-      loginvgammapdf(sample.col(0), a0 * .5, d0 * .5) +
+      loginvgammapdf(sample.col(0), a0, d0) +
       logmvnpdf(b0, B0, sample.rightCols(J - 1)) - hTheta;
 
   return likelihood.mean();

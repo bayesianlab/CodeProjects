@@ -17,10 +17,10 @@ using namespace std;
 using namespace Eigen;
 
 #define seed 100
-#define mlSims 5
+#define mlSims 20
 #define nSims 12
 #define burnin 2
-#define batches 1
+#define batches 2
 #define linRegSS 5000
 
 
@@ -29,6 +29,24 @@ void askTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   Ask ask;
   ask.runSim(mlSims, batches, ll, ul, csd.maxLikeEsts, csd.inverseFisher, csd.y,
              csd.X, nSims, burnin, 500);
+}
+
+void askTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
+  int dim = betas.size();
+  CreateSampleData csd(linRegSS, betas, seed);
+  Ask ask;
+  double initPeta = .5;
+  int sbr = 5;
+  MatrixXd LinConst = MatrixXd::Identity(dim + 1, dim + 1);
+  VectorXd b0 = MatrixXd::Zero(dim, 1);
+  MatrixXd B0 = MatrixXd::Identity(dim, dim);
+  double a0 = 6;
+  double d0 = 12;
+  double df = dim;
+  VectorXd weight(dim+1);
+  weight.fill(.5);
+ cout << ask.askKernelT(ll, ul, LinConst, df, csd.maxLikeEsts, csd.inverseFisher, nSims,
+                 burnin, sbr, initPeta, csd.y, csd.X, b0, B0, a0, d0, weight) << endl;
 }
 
 void arkTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
@@ -71,18 +89,15 @@ void crtTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
 void crtTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   CreateSampleData csd(linRegSS, betas, seed);
   Crt crt;
-  VectorXd b0 = MatrixXd::Zero(dim, 1);
-  MatrixXd B0 = MatrixXd::Identity(dim,dim);
+  int J = betas.size();
+  VectorXd b0 = MatrixXd::Zero(J, 1);
+  MatrixXd B0 = MatrixXd::Identity(J,J);
   double a0 = 6;
   double d0 = 12;
-  int J = betas.size();
   MatrixXd LinearConstraints = MatrixXd::Identity(J + 1, J + 1);
   crt.runTsim(mlSims, batches, ll, ul, LinearConstraints, J+1, csd.maxLikeEsts, csd.inverseFisher, csd.y,
              csd.X, nSims, burnin, b0, B0, a0, d0);
 }
-
-
-
 
 void impTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   Importance imp;
@@ -142,7 +157,7 @@ int main() {
   rul << inf, 1., 1., inf, inf;
 
 
-   
+   askTestT(betas, rll, rul);
 /*  askTest2(betas, rll, rul);
 
   arkTest2(betas, rll, rul);*/

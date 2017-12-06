@@ -57,7 +57,7 @@ public:
 
   double ml(VectorXd &, double, VectorXd &, MatrixXd &);
 
-  double mlT(VectorXd &, double, const VectorXd &, const MatrixXd &,
+  double mlT(const VectorXd &, double, const VectorXd &, const MatrixXd &,
              MatrixXd &Kernel, const VectorXd &b0, const MatrixXd &B0,
              double a0, double d0);
 
@@ -68,6 +68,7 @@ public:
   void runTsim(int nsims, int batches, const VectorXd &a, const VectorXd &b,
                const MatrixXd &LinearConstraints, double df,
                const VectorXd &theta, const MatrixXd &Sigma, const VectorXd &y,
-               const MatrixXd &X, int sims, int burnin);
+               const MatrixXd &X, int sims, int burnin, const VectorXd &b0,
+               const MatrixXd &B0, double a0, double d0);
 };
 #endif

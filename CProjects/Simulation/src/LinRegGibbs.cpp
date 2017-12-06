@@ -238,7 +238,7 @@ double LinRegGibbs::gelfandDeyML(const MatrixXd &sample, const VectorXd &y,
                                sample.row(i).tail(J - 1).transpose());
     psigma = loginvgammapdf(sample(i, 0), .5*a0, .5*d0);
     like =
-        lrLikelihood(y, X, sample.row(i).tail(J - 1).transpose(), sample(i, 0));
+        lrLikelihood(sample.row(i).tail(J - 1).transpose(), sample(i, 0), y, X);
     weight(nonZero) = -post + (pbeta + psigma + like);
     nonZero++;
   }

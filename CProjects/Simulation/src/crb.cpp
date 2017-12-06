@@ -17,8 +17,8 @@ Crb::Crb(int Jm1) {
 void Crb::setPriors(int J) {
   betaPrior = MatrixXd::Zero(J, 1);
   sigmaPrior = MatrixXd::Identity(J, J);
-  igamA = 3;
-  igamB = 6;
+  igamA = 6;
+  igamB = 12;
 }
 
 double Crb::getfzStarMeanAtCol(double a, double b, MatrixXd &sample, int col,
@@ -211,7 +211,7 @@ double Crb::mlCRB(const VectorXd &fzStar, const VectorXd &zStarTail,
                   MatrixXd &B0, double a0, double d0) {
   double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
                  logmvnpdfVect(betaPrior, sigmaPrior, zStarTail) +
-                 loginvgammapdf(zStarHead, igamA, igamB) - log(fzStar.prod());
+                 loginvgammapdf(zStarHead, a0, d0) - log(fzStar.prod());
   return mLike;
 }
 

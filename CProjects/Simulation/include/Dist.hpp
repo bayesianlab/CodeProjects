@@ -135,8 +135,8 @@ public:
   double lrLikelihood(const VectorXd &betas, double sigSqd, const VectorXd &y,
                       const MatrixXd &X);
 
-  double lrLikelihood(const VectorXd &y, const MatrixXd &X,
-                      const Ref<const MatrixXd> &betas, double sigmasqd);
+  /*double lrLikelihood(const Ref<const MatrixXd> &betas,
+                      double sigmasqd, const VectorXd &y, const MatrixXd &X);*/
 
   VectorXd linreglike;
 
@@ -182,6 +182,12 @@ public:
                         const MatrixXd &LinearConstraints, const VectorXd &mu,
                         const MatrixXd &Sigma, const double df, const int sims,
                         const int burnin);
+
+  MatrixXd askMvttgeweke91(const VectorXd &a, const VectorXd &b,
+                           const MatrixXd &LinearConstraints,
+                           const VectorXd &mu, const MatrixXd &Sigma,
+                           const double df, const int sims, const int burnin,
+                           VectorXd &initVector);
 
   MatrixXd selectorMat(int J);
 
