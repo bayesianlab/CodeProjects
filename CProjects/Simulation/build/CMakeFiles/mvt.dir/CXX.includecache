@@ -221,6 +221,8 @@ Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
 Importance.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
+LinRegGibbs.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.hpp
 ark.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.hpp
 ask.hpp
@@ -229,8 +231,6 @@ crb.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.hpp
 crt.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.hpp
-LinRegGibbs.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.hpp
 Eigen/Dense
 -
 ctime

@@ -224,8 +224,33 @@ double LinRegGibbs::gelfandDeyML(const MatrixXd &sample, const VectorXd &y,
                                  const double d0) {
   int N = sample.rows();
   int J = sample.cols();
-  /* VectorXd thetaBar = sample.colwise().mean();
-   MatrixXd Omega = calcOmega(sample); */
+  MatrixXd OmegaInv = ifish.inverse();
+  MatrixXd sigmaPriorInv = B0.inverse();
+  double post, pbeta, psigma, like;
+  VectorXd weight = MatrixXd::Zero(N, 1);
+  VectorXd logWeight = MatrixXd::Zero(N, 1);
+  for (int i = 0; i < N; i++) {
+    post = logmvnpdfPrecision(mle, OmegaInv, sample.row(i).transpose());
+    pbeta = logmvnpdfPrecision(b0, sigmaPriorInv,
+                               sample.row(i).tail(J - 1).transpose());
+    psigma = loginvgammapdf(sample(i, 0), a0, d0);
+    like =
+        lrLikelihood(sample.row(i).tail(J - 1).transpose(), sample(i, 0), y, X);
+    weight(i) = -post + (pbeta + psigma + like);
+  }
+  return weight.mean();
+}
+
+double LinRegGibbs::modifiedGelfandDey(const MatrixXd &sample,
+                                       const VectorXd &y, const MatrixXd &X,
+                                       const VectorXd &mle,
+                                       const MatrixXd &ifish,
+                                       const VectorXd &b0, const MatrixXd &B0,
+                                       const double a0, const double d0) {
+  int N = sample.rows();
+  int J = sample.cols();
+  VectorXd thetaBar = sample.colwise().mean();
+  MatrixXd Omega = calcOmega(sample);
   MatrixXd OmegaInv = ifish.inverse();
   MatrixXd sigmaPriorInv = B0.inverse();
   double post, pbeta, psigma, like;
@@ -233,16 +258,19 @@ double LinRegGibbs::gelfandDeyML(const MatrixXd &sample, const VectorXd &y,
   VectorXd logWeight = MatrixXd::Zero(N, 1);
   int nonZero = 0;
   for (int i = 0; i < N; i++) {
-    post = logmvnpdfPrecision(mle, OmegaInv, sample.row(i).transpose());
-    pbeta = logmvnpdfPrecision(b0, sigmaPriorInv,
-                               sample.row(i).tail(J - 1).transpose());
-    psigma = loginvgammapdf(sample(i, 0), .5*a0, .5*d0);
-    like =
-        lrLikelihood(sample.row(i).tail(J - 1).transpose(), sample(i, 0), y, X);
-    weight(nonZero) = -post + (pbeta + psigma + like);
-    nonZero++;
+    if (inTheta(sample.row(i), thetaBar.transpose(), Omega) == 1) {
+      post =
+          logmvnpdfPrecision(mle, OmegaInv, sample.row(i).transpose()) * 1.0101;
+      pbeta = logmvnpdfPrecision(b0, sigmaPriorInv,
+                                 sample.row(i).tail(J - 1).transpose());
+      psigma = loginvgammapdf(sample(i, 0),  a0, d0);
+      like = lrLikelihood(sample.row(i).tail(J - 1).transpose(), sample(i, 0),
+                          y, X);
+      weight(nonZero) = -post + (pbeta + psigma + like);
+      nonZero++;
+    }
   }
-  return weight.mean();
+  return weight.head(nonZero).mean();
 }
 
 double LinRegGibbs::priorBetaMvnPdf(const VectorXd &mu,
@@ -295,6 +323,44 @@ double LinRegGibbs::lrRestrictMLGD(const VectorXd &mu, const MatrixXd &sigma,
   return gelfandDeyML(R, y, X, mu, sigma, b0, B0, a0, d0);
 }
 
+double LinRegGibbs::lrRestrictModifiedGD(
+    const VectorXd &mu, const MatrixXd &sigma, const VectorXd &y,
+    const MatrixXd &X, const VectorXd &a, const VectorXd &b, const VectorXd &b0,
+    const MatrixXd &B0, const double a0, const double d0, const int gibbsSteps,
+    const int burnin) {
+  int J = sigma.cols();
+  MatrixXd R = tmultnorm(a, b, mu, sigma, gibbsSteps);
+  R = R.bottomRows(gibbsSteps - burnin).leftCols(J).eval();
+  return modifiedGelfandDey(R, y, X, mu, sigma, b0, B0, a0, d0);
+}
+
+double LinRegGibbs::lrRestrictGDT(const VectorXd &mu, const MatrixXd &sigma,
+                                  const VectorXd &y, const MatrixXd &X,
+                                  const VectorXd &a, const VectorXd &b,
+                                  const MatrixXd LinearConstraints, double df,
+                                  const VectorXd &b0, const MatrixXd &B0,
+                                  const double a0, const double d0,
+                                  const int gibbsSteps, const int burnin) {
+  int J = sigma.cols();
+  VectorXd iV = MatrixXd::Zero(J,1);
+  MatrixXd R = askMvttgeweke91(a, b, LinearConstraints, mu, sigma, df,
+                               gibbsSteps, burnin, iV);
+  return gelfandDeyML(R, y, X, mu, sigma, b0, B0, a0, d0);
+}
+
+double LinRegGibbs::lrRestrictModifiedGDT(
+    const VectorXd &mu, const MatrixXd &sigma, const VectorXd &y,
+    const MatrixXd &X, const VectorXd &a, const VectorXd &b,
+    const MatrixXd LinearConstraints, double df, const VectorXd &b0,
+    const MatrixXd &B0, const double a0, const double d0, const int gibbsSteps,
+    const int burnin) {
+  int J = sigma.cols();
+  VectorXd iV = MatrixXd::Zero(J, 1);
+  MatrixXd R = askMvttgeweke91(a, b, LinearConstraints, mu, sigma, df,
+                               gibbsSteps, burnin, iV);
+  return modifiedGelfandDey(R, y, X, mu, sigma, b0, B0, a0, d0);
+}
+
 void LinRegGibbs::runSim(int nSims, int batches,
                          const VectorXd &lowerConstraint,
                          const VectorXd &upperConstraint, const VectorXd &theta,
@@ -305,10 +371,128 @@ void LinRegGibbs::runSim(int nSims, int batches,
   int J = sig.cols();
   int Jminus1 = J - 1;
   VectorXd mLike(nSims);
-  VectorXd b(Jminus1);
   for (int i = 0; i < nSims; i++) {
     mLike(i) = lrRestrictMLGD(theta, sig, y, X, lowerConstraint,
                               upperConstraint, b0, B0, a0, d0, sims, burnin);
+  }
+  cout << setprecision(9) << mLike.mean() << endl;
+  if (batches != 0) {
+    int obsInMean = floor(nSims / batches);
+    int remainder = nSims - (batches * obsInMean);
+    if (remainder == 0) {
+      VectorXd yBar(batches);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    } else {
+      VectorXd yBar(batches + 1);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      yBar(batches) = mLike.segment(startIndex, remainder).mean();
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    }
+  }
+}
+
+void LinRegGibbs::runSimModified(int nSims, int batches,
+                                 const VectorXd &lowerConstraint,
+                                 const VectorXd &upperConstraint,
+                                 const VectorXd &theta, const MatrixXd &sig,
+                                 const VectorXd &y, const MatrixXd &X,
+                                 const VectorXd &b0, const MatrixXd &B0,
+                                 const double a0, const double d0,
+                                 const int sims, const int burnin) {
+  int J = sig.cols();
+  int Jminus1 = J - 1;
+  VectorXd mLike(nSims);
+  for (int i = 0; i < nSims; i++) {
+    mLike(i) =
+        lrRestrictModifiedGD(theta, sig, y, X, lowerConstraint,
+                              upperConstraint, b0, B0, a0, d0, sims, burnin);
+  }
+  cout << setprecision(9) << mLike.mean() << endl;
+  if (batches != 0) {
+    int obsInMean = floor(nSims / batches);
+    int remainder = nSims - (batches * obsInMean);
+    if (remainder == 0) {
+      VectorXd yBar(batches);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    } else {
+      VectorXd yBar(batches + 1);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      yBar(batches) = mLike.segment(startIndex, remainder).mean();
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    }
+  }
+}
+
+void LinRegGibbs::runTsim(
+    int nSims, int batches, const VectorXd &lowerConstraint,
+    const VectorXd &upperConstraint, const MatrixXd LinearConstraints,
+    double df, const VectorXd &theta, const MatrixXd &sig, const VectorXd &y,
+    const MatrixXd &X, const VectorXd &b0, const MatrixXd &B0, const double a0,
+    const double d0, const int sims, const int burnin) {
+  int J = sig.cols();
+  int Jminus1 = J - 1;
+  VectorXd mLike(nSims);
+  for (int i = 0; i < nSims; i++) {
+    mLike(i) = lrRestrictGDT(theta, sig, y, X, lowerConstraint,
+                                     upperConstraint, LinearConstraints, df, b0,
+                                     B0, a0, d0, sims, burnin);
+  }
+  cout << setprecision(9) << mLike.mean() << endl;
+  if (batches != 0) {
+    int obsInMean = floor(nSims / batches);
+    int remainder = nSims - (batches * obsInMean);
+    if (remainder == 0) {
+      VectorXd yBar(batches);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    } else {
+      VectorXd yBar(batches + 1);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      yBar(batches) = mLike.segment(startIndex, remainder).mean();
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    }
+  }
+}
+
+void LinRegGibbs::runTsimModified(
+    int nSims, int batches, const VectorXd &lowerConstraint,
+    const VectorXd &upperConstraint, const MatrixXd LinearConstraints,
+    double df, const VectorXd &theta, const MatrixXd &sig, const VectorXd &y,
+    const MatrixXd &X, const VectorXd &b0, const MatrixXd &B0, const double a0,
+    const double d0, const int sims, const int burnin) {
+  int J = sig.cols();
+  int Jminus1 = J - 1;
+  VectorXd mLike(nSims);
+  for (int i = 0; i < nSims; i++) {
+    mLike(i) = lrRestrictModifiedGDT(theta, sig, y, X, lowerConstraint,
+                                     upperConstraint, LinearConstraints, df, b0,
+                                     B0, a0, d0, sims, burnin);
   }
   cout << setprecision(9) << mLike.mean() << endl;
   if (batches != 0) {

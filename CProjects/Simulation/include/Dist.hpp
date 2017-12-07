@@ -171,6 +171,10 @@ public:
 
   double truncTrnd(double a, double b, double mu, double sigma, double nu);
 
+  MatrixXd mvtruncT(const VectorXd &a, const VectorXd &b,
+                    const MatrixXd &LinearConstraints, const VectorXd &mu,
+                    const MatrixXd &Sigma, const int df, const int sims);
+
   MatrixXd MVTruncT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, const VectorXd &mu,
                     const MatrixXd &Sigma, const int df, const int sims,

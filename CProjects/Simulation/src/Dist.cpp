@@ -927,6 +927,32 @@ MatrixXd Dist::MVTruncT(const VectorXd &a, const VectorXd &b,
   return sample;
 }
 
+MatrixXd Dist::mvtruncT(const VectorXd &a, const VectorXd &b,
+                        const MatrixXd &LinearConstraints, const VectorXd &mu,
+                        const MatrixXd &Sigma, const int df, const int sims) {
+  int J = Sigma.cols();
+  double newChi;
+  MatrixXd lowerC = (LinearConstraints * Sigma * LinearConstraints.transpose())
+                        .llt()
+                        .matrixL();
+  VectorXd chiSqs = generateChiSquaredVec(df, sims);
+  VectorXd alpha = a - (LinearConstraints * mu);
+  VectorXd beta = b - (LinearConstraints * mu);
+  MatrixXd sample(sims, J);
+  sample.setZero();
+  for (int i = 0; i < sims; i++) {
+    for (int j = 0; j < J; j++) {
+      newChi = sqrt(chiSqs(i) / df);
+      sample(i, j) =
+          truncNormalRnd((alpha(j) * newChi), (beta(j) * newChi), 0, 1) /
+          newChi;
+    }
+  }
+  sample = (lowerC * sample.transpose()).transpose();
+  sample.rowwise() += mu.transpose();
+  return sample;
+}
+
 MatrixXd Dist::SigmayyInverse(const MatrixXd &Sigma) {
   int J = Sigma.cols();
   int Jm1 = J - 1;

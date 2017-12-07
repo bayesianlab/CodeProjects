@@ -52,16 +52,14 @@ double Importance::mlT(const VectorXd &a, const VectorXd &b,
                        const VectorXd &b0, const MatrixXd &B0, double a0,
                        double d0) {
   int J = Sigma.cols();
-  MatrixXd sample = ghkT(a, b, LinearConstraints, mu, Sigma, df, sims, burnin);
+  MatrixXd draws = ghkT(a, b, LinearConstraints, mu, Sigma, df, sims, burnin);
   VectorXd stdevs = Sigma.diagonal().array().sqrt();
   VectorXd hTheta =
-      ttpdf(a, b, df, mu, stdevs, sample).rowwise().prod().array().log();
-
+      ttpdf(a, b, df, mu, stdevs, draws).rowwise().prod().array().log();
   VectorXd likelihood =
-      lrLikelihood(sample.rightCols(J - 1), sample.col(0), y, X) +
-      loginvgammapdf(sample.col(0), a0, d0) +
-      logmvnpdf(b0, B0, sample.rightCols(J - 1)) - hTheta;
-
+      lrLikelihood(draws.rightCols(J - 1), draws.col(0), y, X) +
+      loginvgammapdf(draws.col(0), a0, d0) +
+      logmvnpdf(b0, B0, draws.rightCols(J - 1)) - hTheta;
   return likelihood.mean();
 }
 
@@ -72,16 +70,39 @@ double Importance::mlGeweke91(const VectorXd &a, const VectorXd &b,
                        const VectorXd &b0, const MatrixXd &B0, double a0,
                        double d0) {
   int J = Sigma.cols();
-  MatrixXd sample = geweke91(a, b, LinearConstraints, mu, Sigma, sims, burnin);
+  MatrixXd draws = geweke91(a, b, LinearConstraints, mu, Sigma, sims, burnin);
   VectorXd stdevs = Sigma.diagonal().array().sqrt();
   VectorXd hTheta =
-      tnormpdfMat(a, b, mu, stdevs, sample).rowwise().prod().array().log();
+      tnormpdfMat(a, b, mu, stdevs, draws).rowwise().prod().array().log();
   VectorXd likelihood =
-      lrLikelihood(sample.rightCols(J - 1), sample.col(0), y, X) +
-      loginvgammapdf(sample.col(0), a0 * .5, d0 * .5) +
-      logmvnpdf(b0, B0, sample.rightCols(J - 1)) - hTheta;
+      lrLikelihood(draws.rightCols(J - 1), draws.col(0), y, X) +
+      loginvgammapdf(draws.col(0), a0 , d0 ) +
+      logmvnpdf(b0, B0, draws.rightCols(J - 1)) - hTheta;
   return likelihood.mean();
 }
+
+double Importance::mlGeweke91T(const VectorXd &a, const VectorXd &b,
+                              const MatrixXd &LinearConstraints,
+                              const VectorXd &mu, const MatrixXd &Sigma,
+                              double df, const MatrixXd &y, const MatrixXd &X,
+                              int sims, int burnin, const VectorXd &b0,
+                              const MatrixXd &B0, double a0, double d0) {
+  int J = Sigma.cols();
+  MatrixXd draws =
+      mvttgeweke91(a, b, LinearConstraints, mu, Sigma, df, sims, burnin);
+  VectorXd stdevs = Sigma.diagonal().array().sqrt();
+  VectorXd hTheta = ttpdf(a, b, df + (J - 1), mu, stdevs, draws)
+                        .rowwise()
+                        .prod()
+                        .array()
+                        .log();
+  VectorXd likelihood =
+      lrLikelihood(draws.rightCols(J - 1), draws.col(0), y, X) +
+      loginvgammapdf(draws.col(0), a0 , d0 ) +
+      logmvnpdf(b0, B0, draws.rightCols(J - 1)) - hTheta;
+  return likelihood.mean();
+}
+
 
 VectorXd Importance::tnormpdf(double a, double b, double mu, double sigma,
                               VectorXd &x) {
@@ -142,7 +163,6 @@ void Importance::runSim(int nSims, int batches, VectorXd &theta,
   int J = sigma.cols();
   int Jminus1 = J - 1;
   VectorXd mLike(nSims);
-  VectorXd b(Jminus1);
   for (int i = 0; i < nSims; i++) {
     mLike(i) = importanceSampling(ll, ul, theta, sigma, y, X, sampleSize,
                                   burnin, b0, S0, a0, d0);
@@ -175,6 +195,50 @@ void Importance::runSim(int nSims, int batches, VectorXd &theta,
   }
 }
 
+void Importance::runSimNew(int nSims, int batches, const VectorXd &theta,
+                           const MatrixXd &sigma, const VectorXd &y,
+                           const MatrixXd &X, const VectorXd &ll,
+                           const VectorXd &ul,
+                           const MatrixXd &LinearConstraints, double df,
+                           int sampleSize, int burnin, const VectorXd &b0,
+                           const MatrixXd &S0, double a0, double d0) {
+  int J = sigma.cols();
+  int Jminus1 = J - 1;
+  VectorXd mLike(nSims);
+  VectorXd b(Jminus1);
+  for (int i = 0; i < nSims; i++) {
+    mLike(i) = mlGeweke91(ll, ul, LinearConstraints, df, theta, sigma, y, X,
+                          sampleSize, burnin, b0, S0, a0, d0);
+    if (isnan(mLike(i)) == 1) {
+      break;
+    }
+  }
+  cout << setprecision(9) << mLike.mean() << endl;
+  if (batches != 0) {
+    int obsInMean = floor(nSims / batches);
+    int remainder = nSims - (batches * obsInMean);
+    if (remainder == 0) {
+      VectorXd yBar(batches);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    } else {
+      VectorXd yBar(batches + 1);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      yBar(batches) = mLike.segment(startIndex, remainder).mean();
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    }
+  }
+}
+
+
 void Importance::runTsim(int nSims, int batches, const VectorXd &theta,
                          const MatrixXd &sigma, const VectorXd &y,
                          const MatrixXd &X, const VectorXd &ll,
@@ -184,9 +248,49 @@ void Importance::runTsim(int nSims, int batches, const VectorXd &theta,
   int J = sigma.cols();
   int Jminus1 = J - 1;
   VectorXd mLike(nSims);
-  VectorXd b(Jminus1);
   for (int i = 0; i < nSims; i++) {
     mLike(i) = mlT(ll, ul, LinearConstraints, theta, sigma, y, X, df,
+                   sampleSize, burnin, b0, S0, a0, d0);
+    if (isnan(mLike(i)) == 1) {
+      break;
+    }
+  }
+  cout << setprecision(9) << mLike.mean() << endl;
+  if (batches != 0) {
+    int obsInMean = floor(nSims / batches);
+    int remainder = nSims - (batches * obsInMean);
+    if (remainder == 0) {
+      VectorXd yBar(batches);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    } else {
+      VectorXd yBar(batches + 1);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      yBar(batches) = mLike.segment(startIndex, remainder).mean();
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    }
+  }
+}
+
+void Importance::runTsimNew(int nSims, int batches, const VectorXd &theta,
+                         const MatrixXd &sigma, const VectorXd &y,
+                         const MatrixXd &X, const VectorXd &ll,
+                         const VectorXd &ul, const MatrixXd &LinearConstraints, double df,
+                         int sampleSize, int burnin, const VectorXd &b0,
+                         const MatrixXd &S0, double a0, double d0) {
+  int J = sigma.cols();
+  int Jminus1 = J - 1;
+  VectorXd mLike(nSims);
+  for (int i = 0; i < nSims; i++) {
+    mLike(i) = mlGeweke91T(ll, ul, LinearConstraints, theta, sigma, y, X, df,
                    sampleSize, burnin, b0, S0, a0, d0);
     if (isnan(mLike(i)) == 1) {
       break;

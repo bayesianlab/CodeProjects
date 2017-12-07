@@ -71,10 +71,11 @@ public:
 
   double askKernelT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, double df,
-                    VectorXd &theta, MatrixXd &Sigma, int sims, int burnin,
-                    int sampleBlockRows, double initPeta, const VectorXd &y,
-                    const MatrixXd &X, const VectorXd b0, const MatrixXd &B0,
-                    double a0, double d0, const VectorXd &weight);
+                    const VectorXd &theta, const MatrixXd &Sigma, int sims,
+                    int burnin, int sampleBlockRows, double initPeta,
+                    const VectorXd &y, const MatrixXd &X, const VectorXd b0,
+                    const MatrixXd &B0, double a0, double d0,
+                    const VectorXd &weight);
 
   double ml(VectorXd &, double, VectorXd &, MatrixXd &);
 
@@ -84,6 +85,14 @@ public:
 
   void runSim(int, int, VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
               VectorXd &, MatrixXd &, int, int, int);
+
+  void runTsim(int nSims, int batches, const VectorXd &lowerConstraint,
+               const VectorXd &upperConstraint,
+               const MatrixXd &LinearConstraints, double df,
+               const VectorXd &theta, const MatrixXd &Sigma, const VectorXd &y,
+               const MatrixXd &X, int sims, int burnin, int sampleBlockRows,
+               double initPeta, const VectorXd &b0, const MatrixXd &B0,
+               double a0, double d0, const VectorXd &weight);
 };
 
 #endif

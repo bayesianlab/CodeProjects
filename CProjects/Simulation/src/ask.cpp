@@ -33,10 +33,11 @@ void Ask::askKernel(VectorXd &lowerConstraint, VectorXd &upperConstraint,
 
 double Ask::askKernelT(const VectorXd &a, const VectorXd &b,
                        const MatrixXd &LinearConstraints, double df,
-                       VectorXd &theta, MatrixXd &Sigma, int sims, int burnin,
-                       int sampleBlockRows, double initPeta, const VectorXd &y,
-                       const MatrixXd &X, const VectorXd b0, const MatrixXd &B0,
-                       double a0, double d0, const VectorXd &weight) {
+                       const VectorXd &theta, const MatrixXd &Sigma, int sims,
+                       int burnin, int sampleBlockRows, double initPeta,
+                       const VectorXd &y, const MatrixXd &X, const VectorXd b0,
+                       const MatrixXd &B0, double a0, double d0,
+                       const VectorXd &weight) {
   int J = Sigma.cols();
   MatrixXd draws =
       adaptiveSamplerT(a, b, LinearConstraints, theta, Sigma, df, initPeta,
@@ -57,8 +58,8 @@ void Ask::setPriors(VectorXd &b0, MatrixXd &S0, double a0, double d0) {
 void Ask::setPriors(int betaDim) {
   betaPrior = MatrixXd::Zero(betaDim, 1);
   sigmaPrior = MatrixXd::Identity(betaDim, betaDim);
-  igamA = 3;
-  igamB = 6;
+  igamA = 6;
+  igamB = 12;
 }
 
 void Ask::setTemporaries(VectorXd &ll, VectorXd &ul, VectorXd &m, MatrixXd &S,
@@ -413,19 +414,20 @@ void Ask::runSim(int nSims, int batches, VectorXd &lowerConstraint,
   }
 }
 
-/*void Ask::runSim(int nSims, int batches, VectorXd &lowerConstraint,
-                 VectorXd &upperConstraint, VectorXd &theta, MatrixXd &sig,
-                 VectorXd &y, MatrixXd &X, int sims, int burnin,
-                 int sampleBlockRows) {
+void Ask::runTsim(int nSims, int batches, const VectorXd &lowerConstraint,
+                  const VectorXd &upperConstraint,
+                  const MatrixXd &LinearConstraints, double df,
+                  const VectorXd &theta, const MatrixXd &Sigma,
+                  const VectorXd &y, const MatrixXd &X, int sims, int burnin,
+                  int sampleBlockRows, double initPeta, const VectorXd &b0,
+                  const MatrixXd &B0, double a0, double d0,
+                  const VectorXd &weight) {
   VectorXd mLike(nSims);
-  VectorXd b(Jminus1);
   for (int i = 0; i < nSims; i++) {
-    askKernel(lowerConstraint, upperConstraint, theta, sig, sims, burnin,
-              sampleBlockRows);
-    b = zStar.tail(Jminus1);
-    mLike(i) = ml(b, zStar(0), y, X);
+    mLike(i) = askKernelT(lowerConstraint, upperConstraint, LinearConstraints,
+                          df, theta, Sigma, sims, burnin, sampleBlockRows,
+                          initPeta, y, X, b0, B0, a0, d0, weight);
   }
-  cout << endl;
   cout << setprecision(10) << mLike.mean() << endl;
   if (batches != 0) {
     int obsInMean = floor(nSims / batches);
@@ -449,4 +451,4 @@ void Ask::runSim(int nSims, int batches, VectorXd &lowerConstraint,
       cout << setprecision(10) << standardDev(yBar) << endl;
     }
   }
-}*/
+}

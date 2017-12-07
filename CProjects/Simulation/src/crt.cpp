@@ -34,8 +34,8 @@ void Crt::crtKernel(VectorXd &lowerlim, VectorXd &upperlim, VectorXd &theta,
   xnotJ = zStar.head(Jminus1);
   betaPrior = MatrixXd::Zero(Jminus1, 1);
   sigmaPrior = MatrixXd::Identity(Jminus1, Jminus1);
-  igamA = 3;
-  igamB = 6;
+  igamA = 6;
+  igamB = 12;
   gibbsKernel();
 }
 

@@ -45,6 +45,12 @@ public:
                       const VectorXd &mle, const MatrixXd &ifish,
                       const VectorXd &, const MatrixXd &, double, double);
 
+  double modifiedGelfandDey(const MatrixXd &sample, const VectorXd &y,
+                            const MatrixXd &X, const VectorXd &mle,
+                            const MatrixXd &ifish, const VectorXd &b0,
+                            const MatrixXd &B0, const double a0,
+                            const double d0);
+
   double priorBetaMvnPdf(const VectorXd &mu,
                          const Ref<const MatrixXd> &precision,
                          const Ref<const MatrixXd> &x);
@@ -59,13 +65,55 @@ public:
                         const MatrixXd &B0, const double a0, const double d0,
                         const int gibbsSteps, const int burnin);
 
+  double lrRestrictModifiedGD(const VectorXd &mu, const MatrixXd &sigma,
+                              const VectorXd &y, const MatrixXd &X,
+                              const VectorXd &a, const VectorXd &b,
+                              const VectorXd &b0, const MatrixXd &B0,
+                              const double a0, const double d0,
+                              const int gibbsSteps, const int burnin);
+
+  double lrRestrictGDT(const VectorXd &mu, const MatrixXd &sigma,
+                       const VectorXd &y, const MatrixXd &X, const VectorXd &a,
+                       const VectorXd &b, const MatrixXd LinearConstraints,
+                       double df, const VectorXd &b0, const MatrixXd &B0,
+                       const double a0, const double d0, const int gibbsSteps,
+                       const int burnin);
+
+  double lrRestrictModifiedGDT(const VectorXd &mu, const MatrixXd &sigma,
+                               const VectorXd &y, const MatrixXd &X,
+                               const VectorXd &a, const VectorXd &b,
+                               const MatrixXd LinearConstraints, double df,
+                               const VectorXd &b0, const MatrixXd &B0,
+                               const double a0, const double d0,
+                               const int gibbsSteps, const int burnin);
+
   void runSim(int nSims, int batches, const VectorXd &lowerConstraint,
               const VectorXd &upperConstraint, const VectorXd &theta,
               const MatrixXd &sig, const VectorXd &y, const MatrixXd &X,
               const VectorXd &b0, const MatrixXd &B0, const double a0,
-              const double d0,
+              const double d0, const int sims, const int burnin);
 
-              const int sims, const int burnin);
+  void runSimModified(int nSims, int batches, const VectorXd &lowerConstraint,
+              const VectorXd &upperConstraint, const VectorXd &theta,
+              const MatrixXd &sig, const VectorXd &y, const MatrixXd &X,
+              const VectorXd &b0, const MatrixXd &B0, const double a0,
+              const double d0, const int sims, const int burnin);
+
+  void runTsim(int nSims, int batches, const VectorXd &lowerConstraint,
+               const VectorXd &upperConstraint,
+               const MatrixXd LinearConstraints, double df,
+               const VectorXd &theta, const MatrixXd &sig, const VectorXd &y,
+               const MatrixXd &X, const VectorXd &b0, const MatrixXd &B0,
+               const double a0, const double d0, const int sims,
+               const int burnin);
+
+  void runTsimModified(int nSims, int batches, const VectorXd &lowerConstraint,
+                       const VectorXd &upperConstraint,
+                       const MatrixXd LinearConstraints, double df,
+                       const VectorXd &theta, const MatrixXd &sig,
+                       const VectorXd &y, const MatrixXd &X, const VectorXd &b0,
+                       const MatrixXd &B0, const double a0, const double d0,
+                       const int sims, const int burnin);
 };
 
 
