@@ -25,7 +25,6 @@ private:
   double igamB, igamA;
 
 public:
-  Crt();
 
   void crtKernel(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int);
 

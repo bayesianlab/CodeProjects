@@ -25,7 +25,6 @@ private:
   double igamA, igamB;
 
 public:
-  Ark();
 
   MatrixXd arSample(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int);
 

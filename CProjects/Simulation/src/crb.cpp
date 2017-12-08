@@ -10,7 +10,6 @@ using namespace Eigen;
 using namespace std;
 
 Crb::Crb(int Jm1) {
-  cout << "\n\n\tCRB Begin\n\n" << endl;
   setPriors(Jm1);
 }
 

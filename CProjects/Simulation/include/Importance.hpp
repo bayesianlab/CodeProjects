@@ -9,7 +9,6 @@ using namespace Eigen;
 
 class Importance : public Dist {
 private:
-  string beginString = "\n\n\tBegin Importance\n";
   string mlEst = "Marginal Likelihood Estimate:    ";
   string newLines = "\n\n";
   VectorXd lowerLim;
@@ -25,7 +24,6 @@ private:
   int igamParamA, igamParamB, Jminus1;
 
 public:
-  Importance();
 
   double importanceSampling(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
                             VectorXd &, MatrixXd &, int, int, VectorXd &,
@@ -48,7 +46,7 @@ public:
   double mlGeweke91T(const VectorXd &a, const VectorXd &b,
                      const MatrixXd &LinearConstraints, const VectorXd &mu,
                      const MatrixXd &Sigma, double df, const MatrixXd &y,
-                     const MatrixXd &X, double df, int sims, int burnin,
+                     const MatrixXd &X, int sims, int burnin,
                      const VectorXd &b0, const MatrixXd &B0, double a0,
                      double d0);
 
@@ -74,14 +72,21 @@ public:
                const MatrixXd &sigma, const VectorXd &y, const MatrixXd &X,
                const VectorXd &a, const VectorXd &b,
                const MatrixXd &LinearConstraints, double df, int sampleSize,
-               int burnin, const VectorXd &b0, const MatrixXd &B0, double a0, double d0);
+               int burnin, const VectorXd &b0, const MatrixXd &B0, double a0,
+               double d0);
 
   void runSimNew(int nSims, int batches, const VectorXd &theta,
                  const MatrixXd &sigma, const VectorXd &y, const MatrixXd &X,
                  const VectorXd &ll, const VectorXd &ul,
+                 const MatrixXd &LinearConstraints, int sampleSize, int burnin,
+                 const VectorXd &b0, const MatrixXd &S0, double a0, double d0);
+
+  void runTsimNew(int nSims, int batches, const VectorXd &theta,
+                 const MatrixXd &sigma, const VectorXd &y, const MatrixXd &X,
+                 const VectorXd &ll, const VectorXd &ul,
                  const MatrixXd &LinearConstraints, double df, int sampleSize,
                  int burnin, const VectorXd &b0, const MatrixXd &S0, double a0,
-                 double d0)
+                 double d0);
 };
 #endif
 

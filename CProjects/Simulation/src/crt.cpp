@@ -7,7 +7,6 @@
 using namespace Eigen;
 using namespace std;
 
-Crt::Crt() { cout << "\n\tCRT Begin\n" << endl; }
 
 void Crt::crtKernel(VectorXd &lowerlim, VectorXd &upperlim, VectorXd &theta,
                     MatrixXd &sigma, int sims, int burnin) {

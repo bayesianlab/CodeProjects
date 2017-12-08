@@ -11,7 +11,6 @@
 using namespace Eigen;
 using namespace std;
 
-Importance::Importance() { cout << beginString << endl; }
 
 double Importance::importanceSampling(VectorXd &ll, VectorXd &ul,
                                       VectorXd &betas, MatrixXd &sigma,
@@ -89,7 +88,8 @@ double Importance::mlGeweke91T(const VectorXd &a, const VectorXd &b,
                               const MatrixXd &B0, double a0, double d0) {
   int J = Sigma.cols();
   MatrixXd draws =
-      mvttgeweke91(a, b, LinearConstraints, mu, Sigma, df, sims, burnin);
+      mvttgeweke91(a, b, LinearConstraints, mu, Sigma, df, sims, burnin)
+          .leftCols(J);
   VectorXd stdevs = Sigma.diagonal().array().sqrt();
   VectorXd hTheta = ttpdf(a, b, df + (J - 1), mu, stdevs, draws)
                         .rowwise()
@@ -199,15 +199,15 @@ void Importance::runSimNew(int nSims, int batches, const VectorXd &theta,
                            const MatrixXd &sigma, const VectorXd &y,
                            const MatrixXd &X, const VectorXd &ll,
                            const VectorXd &ul,
-                           const MatrixXd &LinearConstraints, double df,
-                           int sampleSize, int burnin, const VectorXd &b0,
-                           const MatrixXd &S0, double a0, double d0) {
+                           const MatrixXd &LinearConstraints, int sampleSize,
+                           int burnin, const VectorXd &b0, const MatrixXd &S0,
+                           double a0, double d0) {
   int J = sigma.cols();
   int Jminus1 = J - 1;
   VectorXd mLike(nSims);
   VectorXd b(Jminus1);
   for (int i = 0; i < nSims; i++) {
-    mLike(i) = mlGeweke91(ll, ul, LinearConstraints, df, theta, sigma, y, X,
+    mLike(i) = mlGeweke91(ll, ul, LinearConstraints, theta, sigma, y, X,
                           sampleSize, burnin, b0, S0, a0, d0);
     if (isnan(mLike(i)) == 1) {
       break;
@@ -281,17 +281,18 @@ void Importance::runTsim(int nSims, int batches, const VectorXd &theta,
 }
 
 void Importance::runTsimNew(int nSims, int batches, const VectorXd &theta,
-                         const MatrixXd &sigma, const VectorXd &y,
-                         const MatrixXd &X, const VectorXd &ll,
-                         const VectorXd &ul, const MatrixXd &LinearConstraints, double df,
-                         int sampleSize, int burnin, const VectorXd &b0,
-                         const MatrixXd &S0, double a0, double d0) {
+                            const MatrixXd &sigma, const VectorXd &y,
+                            const MatrixXd &X, const VectorXd &ll,
+                            const VectorXd &ul,
+                            const MatrixXd &LinearConstraints, double df,
+                            int sampleSize, int burnin, const VectorXd &b0,
+                            const MatrixXd &S0, double a0, double d0) {
   int J = sigma.cols();
   int Jminus1 = J - 1;
   VectorXd mLike(nSims);
   for (int i = 0; i < nSims; i++) {
-    mLike(i) = mlGeweke91T(ll, ul, LinearConstraints, theta, sigma, y, X, df,
-                   sampleSize, burnin, b0, S0, a0, d0);
+    mLike(i) = mlGeweke91T(ll, ul, LinearConstraints, theta, sigma, df, y, X,
+                           sampleSize, burnin, b0, S0, a0, d0);
     if (isnan(mLike(i)) == 1) {
       break;
     }

@@ -17,10 +17,10 @@ using namespace std;
 using namespace Eigen;
 
 #define seed 100
-#define mlSims 300
-#define nSims 25000
-#define burnin 5000
-#define batches 20
+#define mlSims 3
+#define nSims 100
+#define burnin 10 
+#define batches 1
 #define linRegSS 2500
 
 void askTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
@@ -135,6 +135,30 @@ void impTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
               ll, ul, LinearConstraints, dim + 1, nSims, burnin, b0, B0, 6, 12);
 }
 
+void impTestNew(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
+  Importance imp;
+  int dim = betas.size();
+  MatrixXd b0 = MatrixXd::Zero(dim, 1);
+  MatrixXd B0 = MatrixXd::Identity(dim, dim);
+  MatrixXd LinearConstraints = MatrixXd::Identity(dim + 1, dim + 1);
+  CreateSampleData csd(linRegSS, betas, seed);
+  imp.runSimNew(mlSims, batches, csd.maxLikeEsts, csd.inverseFisher, csd.y, csd.X,
+              ll, ul, LinearConstraints,  nSims, burnin, b0, B0, 6, 12);
+}
+
+void impTestNewT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
+  Importance imp;
+  int dim = betas.size();
+  MatrixXd b0 = MatrixXd::Zero(dim, 1);
+  MatrixXd B0 = MatrixXd::Identity(dim, dim);
+  MatrixXd LinearConstraints = MatrixXd::Identity(dim + 1, dim + 1);
+  CreateSampleData csd(linRegSS, betas, seed);
+  imp.runTsimNew(mlSims, batches, csd.maxLikeEsts, csd.inverseFisher, csd.y,
+                 csd.X, ll, ul, LinearConstraints, dim + 1, nSims, burnin, b0,
+                 B0, 6, 12);
+}
+
+
 void gelfandDeyTest(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   int dim = betas.size();
   MatrixXd b0 = MatrixXd::Zero(dim, 1);
@@ -187,6 +211,42 @@ void modifiedGelfandDeyTestT(VectorXd &betas, VectorXd &a, VectorXd &b) {
                       a0, d0, nSims, burnin);
 }
 
+void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
+  cout << "Ask method:" << endl;
+  askTest2(betas, a, b);
+  cout << "Ark method:" << endl;
+  arkTest2(betas, a, b);
+  cout << "crb method:" << endl;
+  crbTest2(betas, a, b);
+  cout << "Crt method:" << endl;
+  crtTest2(betas, a, b);
+  cout << "Importance Sampling:" << endl;
+  impTest2(betas, a, b);
+  cout << "Gelfand Dey:" << endl;
+  gelfandDeyTest(betas, a, b);
+  cout << "Modified Gelfand Dey:" << endl;
+  modifiedGelfandDeyTest(betas, a, b);
+  cout << "Importance Sampling New:" << endl;
+  impTestNew(betas, a, b);
+  cout << endl;
+  cout << "Ask method T:" << endl;
+  askTestT(betas, a, b);
+  cout << "Ark method T:" << endl;
+  arkTestT(betas, a, b);
+  cout << "Importance Sampling T:" << endl;
+  impTestT(betas, a, b);
+  cout << "Crb method T:" << endl;
+  crbTestT(betas, a, b);
+  cout << "Crt method T:" << endl;
+  crtTestT(betas, a, b);
+  cout << "Gelfand Dey T:" << endl;
+  gelfandDeyTestT(betas, a, b);
+  cout << "Modified Gelfand Dey T:" << endl;
+  modifiedGelfandDeyTestT(betas, a, b);
+  cout << "Importance Sampling New T:" << endl;
+  impTestNewT(betas, a, b);
+}
+
 int main() {
   cout << "\n\n\tBegan runsim\n" << endl;
   if (linRegSS < 100) {
@@ -210,24 +270,26 @@ int main() {
   betas << .99, .99, .75, .85;
   rll << 0., 0., 0., -inf, -inf;
   rul << inf, 1., 1., inf, inf;
-
-  askTest2(betas, rll, rul);
-  arkTest2(betas, rll, rul);
-  crbTest2(betas, rll, rul);
-  crtTest2(betas, rll, rul);
-  impTest2(betas, rll, rul);
-  gelfandDeyTest(betas, rll, rul);
-  modifiedGelfandDeyTest(betas, rll, rul);
-  
-  askTestT(betas, rll, rul);
-  arkTestT(betas, rll, rul);
-  impTestT(betas, rll, rul);
-  crbTestT(betas, rll, rul);
-  crtTestT(betas, rll, rul);
-  gelfandDeyTestT(betas, rll, rul);
-  modifiedGelfandDeyTestT(betas, rll, rul);
-
-
+  cout << "\tTEST 1" << endl;
+  runTests(betas, rll, rul);
+  betas.resize(7);
+  rll.resize(8);
+  rul.resize(8);
+  betas << .99, .99, .99, .75, .85, -.55, .95;
+  rll << 0, 0, 0, 0, -inf, -inf, -inf, -inf;
+  rul << inf, 1, 1, 1, inf, inf, inf, inf;
+  cout << endl;
+  cout << "\tTEST 2" << endl;
+  runTests(betas, rll, rul);
+  betas.resize(10);
+  rll.resize(11);
+  rul.resize(11);
+  betas << .99, .99, .99, .99, .75, .85, - .55, .95, .45, -.35;
+  rll << 0, 0, 0, 0, 0,  -inf, -inf, -inf, -inf, -inf, -inf;
+  rul << inf, 1, 1, 1, 1, inf, inf, inf, inf, inf, inf;
+  cout << endl;
+  cout << "\tTEST 3" << endl;
+  runTests(betas, rll, rul);
   return 0;
 }
 

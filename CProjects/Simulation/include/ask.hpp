@@ -19,7 +19,6 @@ private:
   void setTemporaries(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int);
 
 public:
-  Ask();
   MatrixXd sample;
   int J;
   int Jminus1;

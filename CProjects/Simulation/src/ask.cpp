@@ -12,13 +12,6 @@
 using namespace Eigen;
 using namespace std;
 
-Ask::Ask() {
-  // Consider conservativeResize implementation and test to see if works
-  // Review code for places where noalias can be implemented
-  // Test autoCorr function. it is untested
-  // sampleBlockRows, how many rows to recheck the probabilities of switching
-  cout << "\n\n\tBegin ASK" << endl;
-}
 
 void Ask::askKernel(VectorXd &lowerConstraint, VectorXd &upperConstraint,
                     VectorXd &theta, MatrixXd &sig, int sims, int burnin,
@@ -375,7 +368,6 @@ double Ask::mlT(VectorXd &betas, double sigma,const  VectorXd &y, const MatrixXd
   return mLike;
 }
 
-
 void Ask::runSim(int nSims, int batches, VectorXd &lowerConstraint,
                  VectorXd &upperConstraint, VectorXd &theta, MatrixXd &sig,
                  VectorXd &y, MatrixXd &X, int sims, int burnin,
@@ -388,7 +380,6 @@ void Ask::runSim(int nSims, int batches, VectorXd &lowerConstraint,
     b = zStar.tail(Jminus1);
     mLike(i) = ml(b, zStar(0), y, X);
   }
-  cout << endl;
   cout << setprecision(10) << mLike.mean() << endl;
   if (batches != 0) {
     int obsInMean = floor(nSims / batches);

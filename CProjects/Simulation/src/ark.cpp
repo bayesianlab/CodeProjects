@@ -13,9 +13,6 @@
 using namespace Eigen;
 using namespace std;
 
-Ark::Ark() {
-  cout << "\n\n\tARK begin\n\n" << endl;
-}
 
 void Ark::arkKernel(VectorXd &lowLim, VectorXd &upLim, VectorXd &theta, MatrixXd &variance,
          int sims, int maxIterations){
