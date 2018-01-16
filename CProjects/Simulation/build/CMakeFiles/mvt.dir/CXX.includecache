@@ -72,6 +72,10 @@ Dist.hpp
 Eigen/Dense
 -
 
+../include/read_csv_to_eigen.hpp
+Eigen/Dense
+-
+
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp
 CreateSampleData.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
@@ -212,6 +216,24 @@ Eigen/Dense
 iostream
 -
 math.h
+-
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.cpp
+read_csv_to_eigen.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.hpp
+Eigen/Dense
+-
+fstream
+-
+iostream
+-
+sstream
+-
+stdio.h
+-
+stdlib.h
+-
+string
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp

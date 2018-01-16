@@ -1,4 +1,4 @@
-#include "Crb.hpp"
+#include "crb.hpp"
 #include "CreateSampleData.hpp"
 #include "Dist.hpp"
 #include <Eigen/Dense>

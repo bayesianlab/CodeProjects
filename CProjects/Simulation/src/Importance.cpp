@@ -37,6 +37,12 @@ double Importance::importanceSampling(VectorXd &ll, VectorXd &ul,
 double Importance::ml(VectorXd &y, MatrixXd &X) {
   VectorXd loghTheta;
   loghTheta = importanceDensity.rowwise().prod().array().log();
+  MatrixXd P(1, 4);
+ P << loghTheta.mean(), logmvnpdf(betaInit, sigmaInit, lsEsts).array().mean(),
+      lrLikelihood(lsEsts, sigSqd, y, X).array().mean(),
+      loginvgammapdf(sigSqd, igamParamA, igamParamB).array().mean();
+
+  cout << P << endl; 
   VectorXd likelihood = lrLikelihood(lsEsts, sigSqd, y, X).array() +
                loginvgammapdf(sigSqd, igamParamA, igamParamB).array() +
                logmvnpdf(betaInit, sigmaInit, lsEsts).array() -

@@ -864,8 +864,8 @@ double Dist::logmvnpdfVect(const VectorXd &mu, const MatrixXd &sigma,
 double Dist::logmvnpdfPrecision(const VectorXd &mu, const MatrixXd &precision,
                                 const Ref<const MatrixXd> &x) {
   int J = precision.cols();
-  double C1 = log(precision.determinant() / (pow(2 * M_PI, J)));
-  return .5 * (C1 - (((x - mu).transpose() * precision) * (x - mu)).value());
+  double C1 = log(precision.determinant()) - (J * log(2 * M_PI));
+  return -.5 * ((((x - mu).transpose() * precision) * (x - mu)).value() - C1);
 }
 
 VectorXd Dist::generateChiSquaredVec(double df, int rows) {
@@ -889,6 +889,9 @@ MatrixXd Dist::generateChiSquaredMat(double df, int rows, int cols) {
   }
   return chiSqs;
 }
+
+/*MatrixXd mvtrnd(const VectorXd &mu, const MatrixXd &Sigma, double nu) {
+}*/
 
 double Dist::truncTrnd(double a, double b, double mu, double sigma, double nu) {
   std::mt19937 gen(now);

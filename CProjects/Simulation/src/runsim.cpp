@@ -17,10 +17,10 @@ using namespace std;
 using namespace Eigen;
 
 #define seed 100
-#define mlSims 3
-#define nSims 100
-#define burnin 10 
-#define batches 1
+#define mlSims 300
+#define nSims 20000
+#define burnin 5000
+#define batches 20
 #define linRegSS 2500
 
 void askTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
@@ -142,8 +142,8 @@ void impTestNew(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   MatrixXd B0 = MatrixXd::Identity(dim, dim);
   MatrixXd LinearConstraints = MatrixXd::Identity(dim + 1, dim + 1);
   CreateSampleData csd(linRegSS, betas, seed);
-  imp.runSimNew(mlSims, batches, csd.maxLikeEsts, csd.inverseFisher, csd.y, csd.X,
-              ll, ul, LinearConstraints,  nSims, burnin, b0, B0, 6, 12);
+  imp.runSimNew(mlSims, batches, csd.maxLikeEsts, csd.inverseFisher, csd.y,
+                csd.X, ll, ul, LinearConstraints, nSims, burnin, b0, B0, 6, 12);
 }
 
 void impTestNewT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
@@ -158,7 +158,6 @@ void impTestNewT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
                  B0, 6, 12);
 }
 
-
 void gelfandDeyTest(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   int dim = betas.size();
   MatrixXd b0 = MatrixXd::Zero(dim, 1);
@@ -171,19 +170,19 @@ void gelfandDeyTest(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
              csd.X, b0, B0, a0, d0, nSims, burnin);
 }
 
-void modifiedGelfandDeyTest(VectorXd &betas, VectorXd &a, VectorXd &b){
-	  int dim = betas.size();
+void modifiedGelfandDeyTest(VectorXd &betas, VectorXd &a, VectorXd &b) {
+  int dim = betas.size();
   MatrixXd b0 = MatrixXd::Zero(dim, 1);
   MatrixXd B0 = MatrixXd::Identity(dim, dim);
   double a0 = 6;
   double d0 = 12;
   LinRegGibbs lrg;
   CreateSampleData csd(linRegSS, betas, seed);
-  lrg.runSimModified(mlSims, batches, a, b, csd.maxLikeEsts, csd.inverseFisher, csd.y,
-             csd.X, b0, B0, a0, d0, nSims, burnin);
+  lrg.runSimModified(mlSims, batches, a, b, csd.maxLikeEsts, csd.inverseFisher,
+                     csd.y, csd.X, b0, B0, a0, d0, nSims, burnin);
 }
 
-void gelfandDeyTestT(VectorXd &betas, VectorXd &a, VectorXd &b){
+void gelfandDeyTestT(VectorXd &betas, VectorXd &a, VectorXd &b) {
   int dim = betas.size();
   MatrixXd b0 = MatrixXd::Zero(dim, 1);
   MatrixXd B0 = MatrixXd::Identity(dim, dim);
@@ -212,22 +211,18 @@ void modifiedGelfandDeyTestT(VectorXd &betas, VectorXd &a, VectorXd &b) {
 }
 
 void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
-  cout << "Ask method:" << endl;
+  /*cout << "Ask method:" << endl;
   askTest2(betas, a, b);
   cout << "Ark method:" << endl;
   arkTest2(betas, a, b);
-  cout << "crb method:" << endl;
+  cout << "Crb method:" << endl;
   crbTest2(betas, a, b);
   cout << "Crt method:" << endl;
   crtTest2(betas, a, b);
   cout << "Importance Sampling:" << endl;
   impTest2(betas, a, b);
-  cout << "Gelfand Dey:" << endl;
-  gelfandDeyTest(betas, a, b);
   cout << "Modified Gelfand Dey:" << endl;
   modifiedGelfandDeyTest(betas, a, b);
-  cout << "Importance Sampling New:" << endl;
-  impTestNew(betas, a, b);
   cout << endl;
   cout << "Ask method T:" << endl;
   askTestT(betas, a, b);
@@ -238,13 +233,9 @@ void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
   cout << "Crb method T:" << endl;
   crbTestT(betas, a, b);
   cout << "Crt method T:" << endl;
-  crtTestT(betas, a, b);
-  cout << "Gelfand Dey T:" << endl;
-  gelfandDeyTestT(betas, a, b);
+  crtTestT(betas, a, b);*/
   cout << "Modified Gelfand Dey T:" << endl;
-  modifiedGelfandDeyTestT(betas, a, b);
-  cout << "Importance Sampling New T:" << endl;
-  impTestNewT(betas, a, b);
+  modifiedGelfandDeyTestT(betas, a, b); 
 }
 
 int main() {
@@ -261,35 +252,39 @@ int main() {
   int dim = 4;
   VectorXd betas(dim);
   VectorXd betas1(dim);
-
   VectorXd rll(dim + 1);
   VectorXd rul(dim + 1);
-
-  // two restrictions
-  cout << "\n\tTwo restriction test, beta1 .99, beta2 .99" << endl;
   betas << .99, .99, .75, .85;
-  rll << 0., 0., 0., -inf, -inf;
-  rul << inf, 1., 1., inf, inf;
+  rll << 0., 0, 0, -inf, -inf;
+  rul << inf, 1, 1, inf, inf;
+  cout << "\nseed " << seed << " mlSims " << mlSims << " nSims  " << nSims
+       << " burnin " << burnin << " batch size " << batches
+       << " linear regression sample size " << linRegSS << " " << batches
+       << endl;
   cout << "\tTEST 1" << endl;
+  cout << "\n\tTwo restriction test, beta1 .99, beta2 .99" << endl;
+  cout << "\nBetas\n" << betas.transpose() << endl;
   runTests(betas, rll, rul);
-  betas.resize(7);
-  rll.resize(8);
-  rul.resize(8);
-  betas << .99, .99, .99, .75, .85, -.55, .95;
-  rll << 0, 0, 0, 0, -inf, -inf, -inf, -inf;
-  rul << inf, 1, 1, 1, inf, inf, inf, inf;
-  cout << endl;
-  cout << "\tTEST 2" << endl;
-  runTests(betas, rll, rul);
-  betas.resize(10);
-  rll.resize(11);
-  rul.resize(11);
-  betas << .99, .99, .99, .99, .75, .85, - .55, .95, .45, -.35;
-  rll << 0, 0, 0, 0, 0,  -inf, -inf, -inf, -inf, -inf, -inf;
-  rul << inf, 1, 1, 1, 1, inf, inf, inf, inf, inf, inf;
-  cout << endl;
-  cout << "\tTEST 3" << endl;
-  runTests(betas, rll, rul);
+   betas.resize(7);
+   rll.resize(8);
+   rul.resize(8);
+   betas << .99, .99, .99, .75, .85, -.55, .95;
+   rll << 0, 0, 0, 0, -inf, -inf, -inf, -inf;
+   rul << inf, 1, 1, 1, inf, inf, inf, inf;
+   cout << endl;
+   cout << "\tTEST 2" << endl;
+   cout << "\nBetas\n" << betas.transpose() << endl;
+   runTests(betas, rll, rul);
+   betas.resize(10);
+   rll.resize(11);
+   rul.resize(11);
+   betas << .99, .99, .99, .99, .75, .85, -.55, .95, .45, -.35;
+   rll << 0, 0, 0, 0, 0, -inf, -inf, -inf, -inf, -inf, -inf;
+   rul << inf, 1, 1, 1, 1, inf, inf, inf, inf, inf, inf;
+   cout << endl;
+   cout << "\tTEST 3" << endl;
+   cout << "\nBetas\n" << betas.transpose() << endl;
+   runTests(betas, rll, rul);
   return 0;
 }
 

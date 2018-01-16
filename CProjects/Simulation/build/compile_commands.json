@@ -1,47 +1,52 @@
 [
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost    -std=gnu++11 -o CMakeFiles/mvt.dir/src/Dist.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/Dist.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost    -std=gnu++11 -o CMakeFiles/mvt.dir/src/crb.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/crb.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost    -std=gnu++11 -o CMakeFiles/mvt.dir/src/ark.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/ark.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost    -std=gnu++11 -o CMakeFiles/mvt.dir/src/crt.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/crt.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost    -std=gnu++11 -o CMakeFiles/mvt.dir/src/ask.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/ask.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost    -std=gnu++11 -o CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost    -std=gnu++11 -o CMakeFiles/mvt.dir/src/CreateSampleData.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/CreateSampleData.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost    -std=gnu++11 -o CMakeFiles/mvt.dir/src/Importance.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/Importance.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost    -std=gnu++11 -o CMakeFiles/mvt.dir/src/runsim.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/runsim.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp"
+},
+{
+  "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost  -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/read_csv_to_eigen.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.cpp\"",
+  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.cpp"
 }
 ]

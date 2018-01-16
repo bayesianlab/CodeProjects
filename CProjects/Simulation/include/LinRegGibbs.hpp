@@ -45,7 +45,8 @@ public:
                       const VectorXd &mle, const MatrixXd &ifish,
                       const VectorXd &, const MatrixXd &, double, double);
 
-  double modifiedGelfandDey(const MatrixXd &sample, const VectorXd &y,
+  double modifiedGelfandDey(const VectorXd &a, const VectorXd &b,
+                            const MatrixXd &sample, const VectorXd &y,
                             const MatrixXd &X, const VectorXd &mle,
                             const MatrixXd &ifish, const VectorXd &b0,
                             const MatrixXd &B0, const double a0,

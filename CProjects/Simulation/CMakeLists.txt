@@ -7,6 +7,7 @@ set(EIGEN_DIR "/usr/local/include/eigen3/" )
 set(BOOST_DIR "/usr/local/include/boost/")
 set(CMAKE_CXX_STANDARD 11)
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
+set(CMAKE_BUILD_TYPE Debug)
 
 set(SOURCES 
 	src/Dist.cpp
@@ -18,6 +19,7 @@ set(SOURCES
 	src/CreateSampleData.cpp
 	src/Importance.cpp
 	src/runsim.cpp
+	src/read_csv_to_eigen.cpp
 	)
 
 message(STATUS "Eigen Directory    " ${EIGEN_DIR})
