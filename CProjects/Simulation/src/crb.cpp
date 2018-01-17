@@ -9,17 +9,6 @@
 using namespace Eigen;
 using namespace std;
 
-Crb::Crb(int Jm1) {
-  setPriors(Jm1);
-}
-
-void Crb::setPriors(int J) {
-  betaPrior = MatrixXd::Zero(J, 1);
-  sigmaPrior = MatrixXd::Identity(J, J);
-  igamA = 6;
-  igamB = 12;
-}
-
 double Crb::getfzStarMeanAtCol(double a, double b, MatrixXd &sample, int col,
                                double sigma, double zStar) {
   VectorXd temp(sample.rows());
@@ -129,8 +118,7 @@ MatrixXd Crb::chibRaoT(const VectorXd &a, const VectorXd &b,
   return fzAndzStar;
 }
 
-/* ***************************** */
-void Crb::chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
+MatrixXd Crb::chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
                   int sims, int burnin, int rrSims, int rrburnin) {
   int J = sigma.cols();
   int Jminus1 = J - 1;
@@ -197,13 +185,14 @@ void Crb::chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
   VectorXd betas = zStar.tail(Jminus1);
   MatrixXd T(J, 2);
   T << fzStar, zStar;
+  return T;
 }
 
-
-double Crb::ml(VectorXd &zStarTail, double zStarHead, VectorXd &y,
-               MatrixXd &X, const double igamA, const double igamB) {
+double Crb::ml(VectorXd &fzStar, VectorXd &zStarTail, double zStarHead,
+               VectorXd &y, MatrixXd &X, VectorXd &b0, MatrixXd &B0,
+               const double igamA, const double igamB) {
   double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
-                 logmvnpdf(betaPrior, sigmaPrior, zStarTail) +
+                 logmvnpdf(b0, B0, zStarTail) +
                  loginvgammapdf(zStarHead, igamA, igamB) - log(fzStar.prod());
   return mLike;
 }
@@ -212,7 +201,7 @@ double Crb::mlCRB(const VectorXd &fzStar, const VectorXd &zStarTail,
                   double zStarHead, VectorXd &y, MatrixXd &X, VectorXd &b0,
                   MatrixXd &B0, double a0, double d0) {
   double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
-                 logmvnpdfVect(betaPrior, sigmaPrior, zStarTail) +
+                 logmvnpdfVect(b0, B0, zStarTail) +
                  loginvgammapdf(zStarHead, a0, d0) - log(fzStar.prod());
   return mLike;
 }
@@ -222,11 +211,16 @@ void Crb::runSim(VectorXd &betas, MatrixXd &sigma, VectorXd &y, MatrixXd &X,
                  int batches) {
   int J = betas.size();
   VectorXd b;
+  VectorXd fz ;
+  MatrixXd fzandz;
   VectorXd mLike(nSims);
+  VectorXd b0 = MatrixXd::Zero(J-1, 1);
+  MatrixXd B0 = MatrixXd::Identity(J-1, J-1);
   for (int i = 0; i < nSims; i++) {
-    chibRao(ll, ul, betas, sigma, sims, burnin, sims, burnin);
-    b = zStar.tail(J - 1);
-    mLike(i) = ml(b, zStar(0), y, X);
+    fzandz = chibRao(ll, ul, betas, sigma, sims, burnin, sims, burnin);
+    b = fzandz.col(1).tail(J - 1);
+    fz = fzandz.col(0);
+    mLike(i) = ml(fz, b, fzandz(0,1), y, X, b0, B0, 6 ,12);
   }
   cout << setprecision(10) << mLike.mean() << endl;
   if (batches != 0) {
@@ -265,6 +259,7 @@ void Crb::runTsim(VectorXd &betas, MatrixXd &sigma, double df, VectorXd &y,
   VectorXd fz;
   VectorXd z;
   for (int i = 0; i < nSims; i++) {
+	  
     fzAndz = chibRaoT(ll, ul, LinearConstraints, betas, sigma, df, sims, burnin,
                       sims, burnin);
 	fz = fzAndz.col(0);

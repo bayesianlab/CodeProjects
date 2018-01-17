@@ -842,13 +842,6 @@ double Dist::loginvgammapdf(double y, double alpha, double beta) {
   return ligampdf - pow(y * beta, -1) + C1;
 }
 
-double Dist::loginvgammapdf(double y, const double alpha, const double beta) {
-  double C1 = -(alpha * log(beta) + lgamma(alpha));
-  double ligampdf = log(y);
-  ligampdf = ligampdf * (-(alpha + 1));
-  return ligampdf - pow(y * beta, -1) + C1;
-}
-
 int Dist::bernoulli(double p) {
   boost::random::uniform_01<> u;
   if (u(rseed) < p) {

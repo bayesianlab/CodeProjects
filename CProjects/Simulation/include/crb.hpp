@@ -1,30 +1,16 @@
 #ifndef LIKELIHOOD
 #define LIKELIHOOD
-
 #include "Dist.hpp"
 #include <Eigen/Dense>
-
 using namespace Eigen;
+
 class Crb : public Dist {
-private:
-  VectorXd betaPrior;
-  MatrixXd sigmaPrior;
-  double igamA, igamB;
-
 public:
-  Crb(int J);
-  void setPriors(int j);
-
-
-  VectorXd betas;
-
-  void setBetas(int);
-
   void chibRaoBlackwell(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
                         VectorXd &zStar, VectorXd &fzStar, int, int, int, int);
 
-  void chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma, int,
-               int, int, int);
+  MatrixXd chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma, int,
+                   int, int, int);
 
   MatrixXd chibRaoT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, const VectorXd &mu,
@@ -42,7 +28,8 @@ public:
   void fillfzStar(VectorXd &, int, VectorXd &, VectorXd &, MatrixXd &,
                   VectorXd &, VectorXd &);
 
-  double ml(VectorXd &, double, VectorXd &, MatrixXd &);
+  double ml(VectorXd &fz, VectorXd &, double, VectorXd &, MatrixXd &,
+            VectorXd &b0, MatrixXd &B0, const double igamA, const double igamB);
 
   double mlCRB(const VectorXd &fzStar, const VectorXd &, double, VectorXd &,
                MatrixXd &, VectorXd &b0, MatrixXd &B0, double a0, double d0);
@@ -62,5 +49,4 @@ public:
                    const VectorXd &b, double df, MatrixXd &cMeans,
                    VectorXd &sigmavect);
 };
-
 #endif

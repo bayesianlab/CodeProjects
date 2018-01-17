@@ -72,7 +72,7 @@ void arkTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
 
 void crbTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   int dim = betas.size();
-  Crb crb(dim);
+  Crb crb;
   VectorXd zStar(dim + 1);
   VectorXd fzStar(dim + 1);
   CreateSampleData csd(linRegSS, betas, seed);
@@ -81,8 +81,8 @@ void crbTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
 }
 
 void crbTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
+	Crb crb;
   int dim = betas.size();
-  Crb crb(dim);
   VectorXd b0 = MatrixXd::Zero(dim, 1);
   MatrixXd B0 = MatrixXd::Identity(dim, dim);
   double a0 = 6;

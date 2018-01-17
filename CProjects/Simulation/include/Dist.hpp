@@ -151,8 +151,9 @@ public:
   VectorXd loginvgammapdf(VectorXd &, double, double);
 
   VectorXd loginvgammapdf(const Ref<const VectorXd> &, double, double);
-  
+
   double loginvgammapdf(double y, double alpha, double beta);
+  
 
   MatrixXd asktmvnrand(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
                        VectorXd &, VectorXd &, int);
