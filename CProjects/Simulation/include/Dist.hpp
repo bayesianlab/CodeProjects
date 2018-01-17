@@ -27,6 +27,10 @@ public:
 
   double igammarnd(double shape, double scale);
 
+  VectorXd gammarnd(double shape, double scale, int N);
+  
+  VectorXd igammarnd(double shape, double scale, int N);
+
   double igammapdf(double, double, double);
 
   double linearRegLikelihood(const VectorXd &y, const MatrixXd &X,
@@ -34,7 +38,7 @@ public:
 
   double normrnd(double mu, double sig);
 
-  VectorXd normrnd(double, double, int);
+  VectorXd normrnd(double mu, double sig, int N);
 
   MatrixXd normrnd(double, double, int, int);
 

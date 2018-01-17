@@ -36,6 +36,22 @@ void Dist::igammarnd(double shape, double scale, VectorXd &igamma) {
   }
 }
 
+VectorXd Dist::gammarnd(double shape, double scale, int N) {
+  VectorXd ig(N);
+  boost::random::gamma_distribution<> g(shape, scale);
+  boost::variate_generator<boost::mt19937 &, boost::gamma_distribution<>>
+      genvars(rseed, g);
+  for (int i = 0; i < N; i++) {
+    ig(i) = genvars();
+  }
+  return ig;
+}
+
+VectorXd Dist::igammarnd(double shape, double scale, int N) {
+  VectorXd g = gammarnd(shape, scale, N);
+  return 1./g.array();
+}
+
 double Dist::linearRegLikelihood(const VectorXd &y, const MatrixXd &X,
                                  const Ref<const MatrixXd> &beta,
                                  double sigma2) {
@@ -63,22 +79,31 @@ double Dist::normrnd(double mu, double sig) {
   return normalDist(rseed);
 }
 
+/*VectorXd Dist::normrnd(double mu, double sig, int N) {
+  boost::random::normal_distribution<> normalDist(mu, sig);
+  VectorXd Z(N);
+  boost::variate_generator< boost::mt19937&, boost::normal_distribution<> > gennorm(rseed, normalDist);
+  for (int i = 0; i < N; i++) {
+    Z(i) = normrnd(mu, sig);
+  }
+  return Z;
+}*/
+
 VectorXd Dist::normrnd(double mu, double sig, int N) {
   boost::random::normal_distribution<> normalDist(mu, sig);
   VectorXd Z(N);
+  boost::variate_generator<boost::mt19937 &, boost::normal_distribution<>>
+      gennorm(rseed, normalDist);
   for (int i = 0; i < N; i++) {
-    Z(i) = normrnd(mu, sig);
+    Z(i) = gennorm();
   }
   return Z;
 }
 
 MatrixXd Dist::normrnd(double mu, double sig, int N, int J) {
-  boost::random::normal_distribution<> normalDist(mu, sig);
   MatrixXd Z(N, J);
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < J; j++) {
-      Z(i, j) = normrnd(mu, sig);
-    }
+  for (int j = 0; j < J; j++) {
+    Z.col(j) = normrnd(mu, sig, N);
   }
   return Z;
 }
@@ -811,6 +836,13 @@ VectorXd Dist::loginvgammapdf(const Ref<const VectorXd> &y, double alpha,
 }
 
 double Dist::loginvgammapdf(double y, double alpha, double beta) {
+  double C1 = -(alpha * log(beta) + lgamma(alpha));
+  double ligampdf = log(y);
+  ligampdf = ligampdf * (-(alpha + 1));
+  return ligampdf - pow(y * beta, -1) + C1;
+}
+
+double Dist::loginvgammapdf(double y, const double alpha, const double beta) {
   double C1 = -(alpha * log(beta) + lgamma(alpha));
   double ligampdf = log(y);
   ligampdf = ligampdf * (-(alpha + 1));

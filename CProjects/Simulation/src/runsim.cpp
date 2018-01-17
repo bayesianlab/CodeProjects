@@ -17,10 +17,10 @@ using namespace std;
 using namespace Eigen;
 
 #define seed 100
-#define mlSims 300
-#define nSims 20000
-#define burnin 5000
-#define batches 20
+#define mlSims 1 
+#define nSims 20
+#define burnin 5
+#define batches 1
 #define linRegSS 2500
 
 void askTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
@@ -211,13 +211,13 @@ void modifiedGelfandDeyTestT(VectorXd &betas, VectorXd &a, VectorXd &b) {
 }
 
 void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
-  /*cout << "Ask method:" << endl;
-  askTest2(betas, a, b);
-  cout << "Ark method:" << endl;
-  arkTest2(betas, a, b);
+ // cout << "Ask method:" << endl;
+  //askTest2(betas, a, b);
+  //cout << "Ark method:" << endl;
+  //arkTest2(betas, a, b);
   cout << "Crb method:" << endl;
   crbTest2(betas, a, b);
-  cout << "Crt method:" << endl;
+  /*cout << "Crt method:" << endl;
   crtTest2(betas, a, b);
   cout << "Importance Sampling:" << endl;
   impTest2(betas, a, b);
@@ -233,9 +233,9 @@ void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
   cout << "Crb method T:" << endl;
   crbTestT(betas, a, b);
   cout << "Crt method T:" << endl;
-  crtTestT(betas, a, b);*/
+  crtTestT(betas, a, b);
   cout << "Modified Gelfand Dey T:" << endl;
-  modifiedGelfandDeyTestT(betas, a, b); 
+  modifiedGelfandDeyTestT(betas, a, b); */
 }
 
 int main() {
@@ -265,26 +265,26 @@ int main() {
   cout << "\n\tTwo restriction test, beta1 .99, beta2 .99" << endl;
   cout << "\nBetas\n" << betas.transpose() << endl;
   runTests(betas, rll, rul);
-   betas.resize(7);
-   rll.resize(8);
-   rul.resize(8);
-   betas << .99, .99, .99, .75, .85, -.55, .95;
-   rll << 0, 0, 0, 0, -inf, -inf, -inf, -inf;
-   rul << inf, 1, 1, 1, inf, inf, inf, inf;
-   cout << endl;
-   cout << "\tTEST 2" << endl;
-   cout << "\nBetas\n" << betas.transpose() << endl;
-   runTests(betas, rll, rul);
-   betas.resize(10);
-   rll.resize(11);
-   rul.resize(11);
-   betas << .99, .99, .99, .99, .75, .85, -.55, .95, .45, -.35;
-   rll << 0, 0, 0, 0, 0, -inf, -inf, -inf, -inf, -inf, -inf;
-   rul << inf, 1, 1, 1, 1, inf, inf, inf, inf, inf, inf;
-   cout << endl;
-   cout << "\tTEST 3" << endl;
-   cout << "\nBetas\n" << betas.transpose() << endl;
-   runTests(betas, rll, rul);
+ /* betas.resize(7);
+  rll.resize(8);
+  rul.resize(8);
+  betas << .99, .99, .99, .75, .85, -.55, .95;
+  rll << 0, 0, 0, 0, -inf, -inf, -inf, -inf;
+  rul << inf, 1, 1, 1, inf, inf, inf, inf;
+  cout << endl;
+  cout << "\tTEST 2" << endl;
+  cout << "\nBetas\n" << betas.transpose() << endl;
+  runTests(betas, rll, rul);
+  betas.resize(10);
+  rll.resize(11);
+  rul.resize(11);
+  betas << .99, .99, .99, .99, .75, .85, -.55, .95, .45, -.35;
+  rll << 0, 0, 0, 0, 0, -inf, -inf, -inf, -inf, -inf, -inf;
+  rul << inf, 1, 1, 1, 1, inf, inf, inf, inf, inf, inf;
+  cout << endl;
+  cout << "\tTEST 3" << endl;
+  cout << "\nBetas\n" << betas.transpose() << endl;
+  runTests(betas, rll, rul);*/
   return 0;
 }
 

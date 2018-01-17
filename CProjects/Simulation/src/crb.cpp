@@ -77,8 +77,8 @@ MatrixXd Crb::chibRaoT(const VectorXd &a, const VectorXd &b,
   VectorXd Hxy(Jminus1);
   VectorXd xNotJ(Jminus1);
   VectorXd muNotJ(Jminus1);
-  zStar = MatrixXd::Zero(J, 1);
-  fzStar = MatrixXd::Zero(J, 1);
+  VectorXd zStar = MatrixXd::Zero(J, 1);
+  VectorXd fzStar = MatrixXd::Zero(J, 1);
   zStar(0) = sample.col(0).mean();
   fzStar(0) = getfzStarMeanAtColT(a(0), b(0), sample, J , sigmaVect(0),
                                   zStar(0), df + Jminus1);
@@ -129,6 +129,7 @@ MatrixXd Crb::chibRaoT(const VectorXd &a, const VectorXd &b,
   return fzAndzStar;
 }
 
+/* ***************************** */
 void Crb::chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
                   int sims, int burnin, int rrSims, int rrburnin) {
   int J = sigma.cols();
@@ -137,6 +138,7 @@ void Crb::chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
   int simsMburin = sims - burnin;
   int rrSimsMburnin = rrSims - rrburnin;
   double muj;
+  MatrixXd notjMat = selectorMat(J);
   MatrixXd precision = sigma.inverse();
   VectorXd Hxx = precision.diagonal();
   VectorXd sigmaVect = (1. / Hxx.array()).sqrt();
@@ -146,8 +148,8 @@ void Crb::chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
   VectorXd Hxy(Jminus1);
   VectorXd xNotJ(Jminus1);
   VectorXd muNotJ(Jminus1);
-  zStar = MatrixXd::Zero(J, 1);
-  fzStar = MatrixXd::Zero(J, 1);
+  VectorXd zStar = MatrixXd::Zero(J, 1);
+  VectorXd fzStar = MatrixXd::Zero(J, 1);
   zStar(0) = sample.col(0).mean();
   fzStar(0) = getfzStarMeanAtCol(a(0), b(0), sample, J, sigmaVect(0), zStar(0));
   MatrixXd newRedRunSample = MatrixXd::Zero(rrSims, J);
@@ -157,11 +159,11 @@ void Crb::chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
     for (int sim = 1; sim < rrSims; sim++) {
       int truej = 0;
       for (int j = rr + 1; j < J; j++) {
-        muNotJ << mu.head(j), mu.tail(Jminus1 - j);
-        xNotJ << newRedRunSample.row(sim - 1).head(j).transpose().eval(),
-            newRedRunSample.row(sim - 1).tail(Jminus1 - j).transpose().eval();
-        Hxy << precision.row(j).head(j).transpose().eval(),
-            precision.row(j).tail(Jminus1 - j).transpose().eval();
+        muNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * mu;
+        xNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) *
+                newRedRunSample.row(sim - 1).transpose();
+        Hxy = notjMat.block(j * (Jminus1), 0, Jminus1, J) *
+              precision.row(j).transpose();
         muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
         newRedRunSample(sim, j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));
         if (truej == 0) {
@@ -191,14 +193,15 @@ void Crb::chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
   muj = conditionalMean(Hxx(Jminus1), Hxy, muNotJ, xNotJ, mu(Jminus1));
   fzStar(Jminus1) =
       tnormpdf(a(Jminus1), b(Jminus1), muj, sigmaVect(Jminus1), zStar(Jminus1));
-  setBetas(Jminus1);
-  MatrixXd T(J,2);T << fzStar, zStar;
+
+  VectorXd betas = zStar.tail(Jminus1);
+  MatrixXd T(J, 2);
+  T << fzStar, zStar;
 }
 
-void Crb::setBetas(int Jm1) { betas = zStar.tail(Jm1); }
 
 double Crb::ml(VectorXd &zStarTail, double zStarHead, VectorXd &y,
-               MatrixXd &X) {
+               MatrixXd &X, const double igamA, const double igamB) {
   double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
                  logmvnpdf(betaPrior, sigmaPrior, zStarTail) +
                  loginvgammapdf(zStarHead, igamA, igamB) - log(fzStar.prod());

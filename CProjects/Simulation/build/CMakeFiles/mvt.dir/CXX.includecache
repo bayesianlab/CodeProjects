@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../include/Crb.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
 ../include/CreateSampleData.hpp
 Dist.hpp
 ../include/Dist.hpp
@@ -191,8 +185,8 @@ ask.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.hpp
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.cpp
-Crb.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Crb.hpp
+crb.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.hpp
 CreateSampleData.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
 Dist.hpp

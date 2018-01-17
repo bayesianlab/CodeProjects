@@ -15,9 +15,6 @@ public:
   Crb(int J);
   void setPriors(int j);
 
-  VectorXd zStar;
-
-  VectorXd fzStar;
 
   VectorXd betas;
 
