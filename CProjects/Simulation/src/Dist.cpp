@@ -83,7 +83,7 @@ MatrixXd Dist::normrnd(double mu, double sig, int N, int J) {
   return Z;
 }
 
-MatrixXd Dist::mvnrnd(VectorXd mu, MatrixXd &sig, int N, int J) {
+MatrixXd Dist::mvnrnd(VectorXd &mu, MatrixXd &sig, int N, int J) {
   MatrixXd Z = normrnd(0., 1., N, J);
   LLT<MatrixXd> lltOfA(sig);
   MatrixXd L = lltOfA.matrixL();
@@ -92,7 +92,16 @@ MatrixXd Dist::mvnrnd(VectorXd mu, MatrixXd &sig, int N, int J) {
   return Z;
 }
 
-MatrixXd Dist::mvnrnd2(VectorXd mu, const Ref<const MatrixXd> &sig, int N,
+MatrixXd Dist::mvnrnd(const VectorXd &mu, const MatrixXd &sig, int N, int J) {
+  MatrixXd Z = normrnd(0., 1., N, J);
+  LLT<MatrixXd> lltOfA(sig);
+  MatrixXd L = lltOfA.matrixL();
+  Z = (L * Z.transpose()).transpose();
+  Z.rowwise() += mu.transpose();
+  return Z;
+}
+
+MatrixXd Dist::mvnrnd2(VectorXd &mu, const Ref<const MatrixXd> &sig, int N,
                        int J) {
   MatrixXd Z = normrnd(0., 1., N, J);
   LLT<MatrixXd> lltOfA(sig);
@@ -890,8 +899,23 @@ MatrixXd Dist::generateChiSquaredMat(double df, int rows, int cols) {
   return chiSqs;
 }
 
-/*MatrixXd mvtrnd(const VectorXd &mu, const MatrixXd &Sigma, double nu) {
-}*/
+MatrixXd Dist::mvtrnd(const VectorXd &mu, const MatrixXd &Sigma,
+                      const double nu, const int N) {
+  int J = Sigma.cols();
+  double c;
+  VectorXd chis = generateChiSquaredVec(nu, N);
+  VectorXd z = MatrixXd::Zero(J,1);
+  MatrixXd Normals = mvnrnd(z, Sigma, N, J);
+  MatrixXd samp(N,J); 
+  for (int i = 0; i < N; i++) {
+	  c = sqrt(chis(i)/nu);
+    for (int j = 0; j < J; j++) {
+		samp(i,j) = Normals(i,j)/c;
+    }
+  }
+  samp.rowwise() += mu.transpose();
+  return samp;
+}
 
 double Dist::truncTrnd(double a, double b, double mu, double sigma, double nu) {
   std::mt19937 gen(now);

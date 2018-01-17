@@ -38,9 +38,11 @@ public:
 
   MatrixXd normrnd(double, double, int, int);
 
-  MatrixXd mvnrnd(VectorXd mu, MatrixXd &sig, int, int);
+  MatrixXd mvnrnd(VectorXd &mu, MatrixXd &sig, int, int);
 
-  MatrixXd mvnrnd2(VectorXd mu, const Ref<const MatrixXd> &sig, int, int);
+  MatrixXd mvnrnd2(VectorXd &mu, const Ref<const MatrixXd> &sig, int, int);
+
+  MatrixXd mvnrnd(const VectorXd &mu, const MatrixXd &sig, int, int);
 
   double tnormrnd(double, double, double, double);
 
@@ -209,6 +211,9 @@ public:
   VectorXd generateChiSquaredVec(double df, int rows);
   
   MatrixXd generateChiSquaredMat(double df, int rows, int cols);
+
+  MatrixXd mvtrnd(const VectorXd &mu, const MatrixXd &Sigma, const double nu,
+                  const int N);
 };
 
 template <typename D>
