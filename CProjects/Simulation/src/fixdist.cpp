@@ -15,6 +15,10 @@
 using namespace std;
 using namespace Eigen;
 
+void pm(const Ref<MatrixXd> x){
+	cout << x << endl;
+}
+
 int main() {
   cout << "fix dist" << endl;
   Dist d;
@@ -30,4 +34,10 @@ int main() {
   cout << d.normrnd(9, 1, 1000).mean() << endl;
   cout << endl;
   cout << d.normrnd(1.3, 1, 10, 3) << endl;
+  MatrixXd X = d.normrnd(0,1,3,3);
+  cout << endl;
+  pm(X.block(1,1, 2, 2));
+  pm(X.col(0));
+  return 0;
+  
 }

@@ -339,6 +339,33 @@ src/crt.cpp.s:
 	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/crt.cpp.s
 .PHONY : src/crt.cpp.s
 
+src/fixdist.o: src/fixdist.cpp.o
+
+.PHONY : src/fixdist.o
+
+# target to build an object file
+src/fixdist.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/fixdist.cpp.o
+.PHONY : src/fixdist.cpp.o
+
+src/fixdist.i: src/fixdist.cpp.i
+
+.PHONY : src/fixdist.i
+
+# target to preprocess a source file
+src/fixdist.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/fixdist.cpp.i
+.PHONY : src/fixdist.cpp.i
+
+src/fixdist.s: src/fixdist.cpp.s
+
+.PHONY : src/fixdist.s
+
+# target to generate assembly for a file
+src/fixdist.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/fixdist.cpp.s
+.PHONY : src/fixdist.cpp.s
+
 src/read_csv_to_eigen.o: src/read_csv_to_eigen.cpp.o
 
 .PHONY : src/read_csv_to_eigen.o
@@ -365,33 +392,6 @@ src/read_csv_to_eigen.s: src/read_csv_to_eigen.cpp.s
 src/read_csv_to_eigen.cpp.s:
 	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/read_csv_to_eigen.cpp.s
 .PHONY : src/read_csv_to_eigen.cpp.s
-
-src/runsim.o: src/runsim.cpp.o
-
-.PHONY : src/runsim.o
-
-# target to build an object file
-src/runsim.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/runsim.cpp.o
-.PHONY : src/runsim.cpp.o
-
-src/runsim.i: src/runsim.cpp.i
-
-.PHONY : src/runsim.i
-
-# target to preprocess a source file
-src/runsim.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/runsim.cpp.i
-.PHONY : src/runsim.cpp.i
-
-src/runsim.s: src/runsim.cpp.s
-
-.PHONY : src/runsim.s
-
-# target to generate assembly for a file
-src/runsim.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/runsim.cpp.s
-.PHONY : src/runsim.cpp.s
 
 # Help Target
 help:
@@ -426,12 +426,12 @@ help:
 	@echo "... src/crt.o"
 	@echo "... src/crt.i"
 	@echo "... src/crt.s"
+	@echo "... src/fixdist.o"
+	@echo "... src/fixdist.i"
+	@echo "... src/fixdist.s"
 	@echo "... src/read_csv_to_eigen.o"
 	@echo "... src/read_csv_to_eigen.i"
 	@echo "... src/read_csv_to_eigen.s"
-	@echo "... src/runsim.o"
-	@echo "... src/runsim.i"
-	@echo "... src/runsim.s"
 .PHONY : help
 
 

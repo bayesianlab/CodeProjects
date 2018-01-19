@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.9)
-project(mvt)
+project(stat)
 
 get_filename_component(PARENT ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
@@ -11,15 +11,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 set(SOURCES 
 	src/Dist.cpp
-	src/crb.cpp
-	src/ark.cpp
-	src/crt.cpp
-	src/ask.cpp
-	src/LinRegGibbs.cpp
-	src/CreateSampleData.cpp
-	src/Importance.cpp
-	src/fixdist.cpp
-	src/read_csv_to_eigen.cpp
+	src/stat225main.cpp
 	)
 
 message(STATUS "Eigen Directory    " ${EIGEN_DIR})
@@ -32,4 +24,4 @@ include_directories(
    	${BOOST_DIR}
 	)
 
-add_executable(mvt ${SOURCES})
+add_executable(stat ${SOURCES})

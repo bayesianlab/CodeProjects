@@ -212,27 +212,7 @@ iostream
 math.h
 -
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.cpp
-read_csv_to_eigen.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.hpp
-Eigen/Dense
--
-fstream
--
-iostream
--
-sstream
--
-stdio.h
--
-stdlib.h
--
-string
--
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/fixdist.cpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
 Importance.hpp
@@ -258,6 +238,24 @@ iostream
 limits
 -
 math.h
+-
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.cpp
+read_csv_to_eigen.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.hpp
+Eigen/Dense
+-
+fstream
+-
+iostream
+-
+sstream
+-
+stdio.h
+-
+stdlib.h
+-
+string
 -
 
 /usr/local/include/boost/boost/array.hpp
