@@ -56,6 +56,52 @@ CMAKE_BINARY_DIR = "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CPro
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -111,17 +157,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named csd
+# Target rules for targets named CreateSampleData
 
 # Build rule for target.
-csd: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 csd
-.PHONY : csd
+CreateSampleData: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 CreateSampleData
+.PHONY : CreateSampleData
 
 # fast build rule for target.
-csd/fast:
-	$(MAKE) -f CMakeFiles/csd.dir/build.make CMakeFiles/csd.dir/build
-.PHONY : csd/fast
+CreateSampleData/fast:
+	$(MAKE) -f CMakeFiles/CreateSampleData.dir/build.make CMakeFiles/CreateSampleData.dir/build
+.PHONY : CreateSampleData/fast
 
 CreateSampleData.o: CreateSampleData.cpp.o
 
@@ -129,7 +175,7 @@ CreateSampleData.o: CreateSampleData.cpp.o
 
 # target to build an object file
 CreateSampleData.cpp.o:
-	$(MAKE) -f CMakeFiles/csd.dir/build.make CMakeFiles/csd.dir/CreateSampleData.cpp.o
+	$(MAKE) -f CMakeFiles/CreateSampleData.dir/build.make CMakeFiles/CreateSampleData.dir/CreateSampleData.cpp.o
 .PHONY : CreateSampleData.cpp.o
 
 CreateSampleData.i: CreateSampleData.cpp.i
@@ -138,7 +184,7 @@ CreateSampleData.i: CreateSampleData.cpp.i
 
 # target to preprocess a source file
 CreateSampleData.cpp.i:
-	$(MAKE) -f CMakeFiles/csd.dir/build.make CMakeFiles/csd.dir/CreateSampleData.cpp.i
+	$(MAKE) -f CMakeFiles/CreateSampleData.dir/build.make CMakeFiles/CreateSampleData.dir/CreateSampleData.cpp.i
 .PHONY : CreateSampleData.cpp.i
 
 CreateSampleData.s: CreateSampleData.cpp.s
@@ -147,7 +193,7 @@ CreateSampleData.s: CreateSampleData.cpp.s
 
 # target to generate assembly for a file
 CreateSampleData.cpp.s:
-	$(MAKE) -f CMakeFiles/csd.dir/build.make CMakeFiles/csd.dir/CreateSampleData.cpp.s
+	$(MAKE) -f CMakeFiles/CreateSampleData.dir/build.make CMakeFiles/CreateSampleData.dir/CreateSampleData.cpp.s
 .PHONY : CreateSampleData.cpp.s
 
 # Help Target
@@ -156,9 +202,13 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... install"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... csd"
+	@echo "... CreateSampleData"
 	@echo "... CreateSampleData.o"
 	@echo "... CreateSampleData.i"
 	@echo "... CreateSampleData.s"

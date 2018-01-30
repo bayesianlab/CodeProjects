@@ -10,13 +10,14 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 set(CMAKE_BUILD_TYPE Debug)
 
 
+set(LIBS libDist.a)
+
 set(SOURCES 
 	src/crb.cpp
 	src/ark.cpp
 	src/crt.cpp
 	src/ask.cpp
 	src/LinRegGibbs.cpp
-	src/CreateSampleData.cpp
 	src/Importance.cpp
 	src/fixdist.cpp
 	src/read_csv_to_eigen.cpp
@@ -25,8 +26,7 @@ set(SOURCES
 message(STATUS "Eigen Directory    " ${EIGEN_DIR})
 message(STATUS "Boost Directory    " ${BOOST_DIR})
 message(STATUS "CProject Directory    " ${PARENT})
-
 include_directories(include ${EIGEN_DIR} ${BOOST_DIR})
+link_directories(lib)
 add_executable(mvt ${SOURCES})
-link_directories()
-target_link_libraries(mvt LINK_PUBLIC Dist)
+target_link_libraries(mvt ${LIBS})

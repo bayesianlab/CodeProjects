@@ -123,46 +123,6 @@ mvt/fast:
 	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/build
 .PHONY : mvt/fast
 
-#=============================================================================
-# Target rules for targets named Dist
-
-# Build rule for target.
-Dist: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Dist
-.PHONY : Dist
-
-# fast build rule for target.
-Dist/fast:
-	$(MAKE) -f DistLib/CMakeFiles/Dist.dir/build.make DistLib/CMakeFiles/Dist.dir/build
-.PHONY : Dist/fast
-
-src/CreateSampleData.o: src/CreateSampleData.cpp.o
-
-.PHONY : src/CreateSampleData.o
-
-# target to build an object file
-src/CreateSampleData.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/CreateSampleData.cpp.o
-.PHONY : src/CreateSampleData.cpp.o
-
-src/CreateSampleData.i: src/CreateSampleData.cpp.i
-
-.PHONY : src/CreateSampleData.i
-
-# target to preprocess a source file
-src/CreateSampleData.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/CreateSampleData.cpp.i
-.PHONY : src/CreateSampleData.cpp.i
-
-src/CreateSampleData.s: src/CreateSampleData.cpp.s
-
-.PHONY : src/CreateSampleData.s
-
-# target to generate assembly for a file
-src/CreateSampleData.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/CreateSampleData.cpp.s
-.PHONY : src/CreateSampleData.cpp.s
-
 src/Importance.o: src/Importance.cpp.o
 
 .PHONY : src/Importance.o
@@ -388,10 +348,6 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... mvt"
-	@echo "... Dist"
-	@echo "... src/CreateSampleData.o"
-	@echo "... src/CreateSampleData.i"
-	@echo "... src/CreateSampleData.s"
 	@echo "... src/Importance.o"
 	@echo "... src/Importance.i"
 	@echo "... src/Importance.s"

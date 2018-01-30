@@ -8,7 +8,6 @@ set(CMAKE_DEPENDS_GENERATOR "Unix Makefiles")
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "../CMakeLists.txt"
-  "../DistLib/CMakeLists.txt"
   "CMakeFiles/3.9.1/CMakeCCompiler.cmake"
   "CMakeFiles/3.9.1/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.9.1/CMakeSystem.cmake"
@@ -43,11 +42,9 @@ set(CMAKE_MAKEFILE_OUTPUTS
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
   "CMakeFiles/CMakeDirectoryInformation.cmake"
-  "DistLib/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/mvt.dir/DependInfo.cmake"
-  "DistLib/CMakeFiles/Dist.dir/DependInfo.cmake"
   )

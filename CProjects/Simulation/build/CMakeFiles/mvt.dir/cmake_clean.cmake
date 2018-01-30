@@ -4,7 +4,6 @@ file(REMOVE_RECURSE
   "CMakeFiles/mvt.dir/src/crt.cpp.o"
   "CMakeFiles/mvt.dir/src/ask.cpp.o"
   "CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.o"
-  "CMakeFiles/mvt.dir/src/CreateSampleData.cpp.o"
   "CMakeFiles/mvt.dir/src/Importance.cpp.o"
   "CMakeFiles/mvt.dir/src/fixdist.cpp.o"
   "CMakeFiles/mvt.dir/src/read_csv_to_eigen.cpp.o"

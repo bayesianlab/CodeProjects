@@ -8,7 +8,7 @@
 #include <iostream>
 #include <limits>
 #include <random>
-
+// NEW
 using namespace Eigen;
 using namespace std;
 
