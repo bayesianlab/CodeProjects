@@ -1,0 +1,12 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+PROJECT(example)
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_CXX_STANDARD 11)
+set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
+get_filename_component(PARENT ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
+set(BOOST_DIR "/usr/local/include/boost/")
+set(SOURCES src/example.cpp)
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+add_executable (example ${SOURCES})
+target_link_libraries (example Eigen3::Eigen)
+

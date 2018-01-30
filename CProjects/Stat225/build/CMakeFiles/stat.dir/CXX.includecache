@@ -1,0 +1,62 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/stat225main.hpp
+
+/Applications/MATLAB_R2017b.app/extern/include/matrix.h
+stdlib.h
+-
+stddef.h
+-
+tmwtypes.h
+/Applications/MATLAB_R2017b.app/extern/include/tmwtypes.h
+stddef.h
+-
+tmwtypes.h
+-
+assert.h
+-
+
+/Applications/MATLAB_R2017b.app/extern/include/mex.h
+matrix.h
+/Applications/MATLAB_R2017b.app/extern/include/matrix.h
+mex/mex_typedefs.hpp
+/Applications/MATLAB_R2017b.app/extern/include/mex/mex_typedefs.hpp
+mex/libmwmex_util.hpp
+/Applications/MATLAB_R2017b.app/extern/include/mex/libmwmex_util.hpp
+version.h
+/Applications/MATLAB_R2017b.app/extern/include/version.h
+matrix.h
+/Applications/MATLAB_R2017b.app/extern/include/matrix.h
+stdio.h
+-
+
+/Applications/MATLAB_R2017b.app/extern/include/tmwtypes.h
+limits.h
+-
+stdbool.h
+-
+float.h
+-
+stddef.h
+-
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/src/stat225main.cpp
+math.h
+-
+iostream
+-
+stat225main.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/src/stat225main.hpp
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/src/statsource.cpp
+stat225main.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/src/stat225main.hpp
+mex.h
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/src/mex.h
+

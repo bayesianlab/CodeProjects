@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/Applications/MATLAB_R2017b.app/extern/include  -g   -std=gnu++11 -o CMakeFiles/stat.dir/src/statsource.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/src/statsource.cpp\"",
+  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/src/statsource.cpp"
+},
+{
+  "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/build",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/Applications/MATLAB_R2017b.app/extern/include  -g   -std=gnu++11 -o CMakeFiles/stat.dir/src/stat225main.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/src/stat225main.cpp\"",
+  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/src/stat225main.cpp"
+}
+]
