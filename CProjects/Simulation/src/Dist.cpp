@@ -26,6 +26,7 @@ Dist::Dist() {
   now = time(0);
   rseed.seed(static_cast<uint32_t>(now));
   inf = numeric_limits<double>::max();
+  ROBERT_LIMIT = 5000000;
 }
 
 void Dist::igammarnd(double shape, double scale, VectorXd &igamma) {
@@ -39,7 +40,7 @@ void Dist::igammarnd(double shape, double scale, VectorXd &igamma) {
 VectorXd Dist::gammarnd(double shape, double scale, int N) {
   VectorXd ig(N);
   boost::random::gamma_distribution<> g(shape, scale);
-  boost::variate_generator<boost::mt19937 &, boost::gamma_distribution<>>
+  boost::variate_generator<boost::mt19937 &, boost::gamma_distribution<> >
       genvars(rseed, g);
   for (int i = 0; i < N; i++) {
     ig(i) = genvars();
@@ -92,7 +93,7 @@ double Dist::normrnd(double mu, double sig) {
 VectorXd Dist::normrnd(double mu, double sig, int N) {
   boost::random::normal_distribution<> normalDist(mu, sig);
   VectorXd Z(N);
-  boost::variate_generator<boost::mt19937 &, boost::normal_distribution<>>
+  boost::variate_generator<boost::mt19937 &, boost::normal_distribution<> >
       gennorm(rseed, normalDist);
   for (int i = 0; i < N; i++) {
     Z(i) = gennorm();
@@ -146,7 +147,6 @@ void Dist::unifrnd(double a, double b, VectorXd &unifVector) {
 
 double Dist::tnormrnd(double a, double b, double mu, double sigma) {
   // Still used in truncNormalRnd, KEEP
-
   double alpha = (a - mu) / sigma;
   double beta = (b - mu) / sigma;
   double Fa = cdf(normalDistribution, alpha);
@@ -169,7 +169,7 @@ double Dist::leftTruncation(double a, double b) {
   boost::random::uniform_01<> u;
   double optimalScale, rho_z, z;
   optimalScale = (a + sqrt(pow(a, 2) + 4)) / 2.;
-  while (maxIterations < 10000) {
+  while (maxIterations < ROBERT_LIMIT) {
     z = shiftexprnd(optimalScale, a);
     rho_z = exp(-pow(z - optimalScale, 2));
     if (u(rseed) <= rho_z) {
@@ -192,7 +192,7 @@ double Dist::rightTruncation(double a, double b) {
   int maxIterations = 0;
   boost::random::uniform_01<> u;
   optimalScale = (a + sqrt(pow(a, 2) + 4)) / 2.;
-  while (maxIterations < 10000) {
+  while (maxIterations < ROBERT_LIMIT) {
     z = shiftexprnd(optimalScale, a);
     rho_z = exp(-pow(z - optimalScale, 2));
     if (u(rseed) <= rho_z) {
@@ -211,25 +211,26 @@ double Dist::twoSided(double a, double b) {
   boost::random::uniform_01<> z;
   boost::random::uniform_01<> u;
   double zdouble, rho_z;
-  while (maxIterations < 10000) {
-    zdouble = a + z(rseed) * (b - a);
-    if (a < 0 && 0 < b) {
-      rho_z = (-pow(zdouble, 2));
-      if (log(u(rseed)) < rho_z) {
+  while (maxIterations < ROBERT_LIMIT) {
+    zdouble = a + (z(rseed) * (b - a));
+    double U = log(u(rseed));
+    if (a <= 0 && 0 <= b) {
+      rho_z = -.5 * pow(zdouble, 2);
+      if (U < rho_z) {
         return zdouble;
       } else {
         maxIterations++;
       }
     } else if (b < 0) {
-      rho_z = ((pow(b, 2) - pow(zdouble, 2)) * .5);
-      if (log(u(rseed)) < rho_z) {
+      rho_z = (pow(b, 2) - pow(zdouble, 2)) * .5;
+      if (U < rho_z) {
         return zdouble;
       } else {
         maxIterations++;
       }
     } else {
-      rho_z = log((pow(a, 2) - pow(zdouble, 2)) / 2.);
-      if (log(u(rseed)) < rho_z) {
+      rho_z = (pow(a, 2) - pow(zdouble, 2)) * .5;
+      if (U < rho_z) {
         return zdouble;
       } else {
         maxIterations++;
@@ -242,7 +243,7 @@ double Dist::twoSided(double a, double b) {
 
 double Dist::truncNormalRnd(double a, double b, double mu, double sigma) {
   double Z;
-  if (b >= inf) {
+  if (b >= 1e6) {
     double standardizedA;
     standardizedA = (a - mu) / sigma;
     if (standardizedA > 5) {
@@ -251,7 +252,8 @@ double Dist::truncNormalRnd(double a, double b, double mu, double sigma) {
     } else {
       return tnormrnd(a, b, mu, sigma);
     }
-  } else if (a <= -inf) {
+  } else if (a <= -1e6) {
+	  cout << a << " " << -inf << endl;
     double standardizedB;
     standardizedB = (b - mu) / sigma;
     if (standardizedB < -5) {
@@ -934,9 +936,7 @@ MatrixXd Dist::mvtrnd(const VectorXd &mu, const MatrixXd &Sigma,
   MatrixXd samp(N,J); 
   for (int i = 0; i < N; i++) {
 	  c = sqrt(chis(i)/nu);
-    for (int j = 0; j < J; j++) {
-		samp(i,j) = Normals(i,j)/c;
-    }
+	  samp.row(i) = Normals.row(i).array()/c;
   }
   samp.rowwise() += mu.transpose();
   return samp;

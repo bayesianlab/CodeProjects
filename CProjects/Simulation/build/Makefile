@@ -56,6 +56,40 @@ CMAKE_BINARY_DIR = "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CPro
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +111,18 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -123,221 +169,190 @@ mvt/fast:
 	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/build
 .PHONY : mvt/fast
 
-src/Importance.o: src/Importance.cpp.o
+#=============================================================================
+# Target rules for targets named CreateSampleData
 
-.PHONY : src/Importance.o
+# Build rule for target.
+CreateSampleData: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 CreateSampleData
+.PHONY : CreateSampleData
 
-# target to build an object file
-src/Importance.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Importance.cpp.o
-.PHONY : src/Importance.cpp.o
+# fast build rule for target.
+CreateSampleData/fast:
+	$(MAKE) -f build/src/CreateSampleDataLib/CMakeFiles/CreateSampleData.dir/build.make build/src/CreateSampleDataLib/CMakeFiles/CreateSampleData.dir/build
+.PHONY : CreateSampleData/fast
 
-src/Importance.i: src/Importance.cpp.i
+#=============================================================================
+# Target rules for targets named Crb
 
-.PHONY : src/Importance.i
+# Build rule for target.
+Crb: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Crb
+.PHONY : Crb
 
-# target to preprocess a source file
-src/Importance.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Importance.cpp.i
-.PHONY : src/Importance.cpp.i
+# fast build rule for target.
+Crb/fast:
+	$(MAKE) -f build/src/CrbLib/CMakeFiles/Crb.dir/build.make build/src/CrbLib/CMakeFiles/Crb.dir/build
+.PHONY : Crb/fast
 
-src/Importance.s: src/Importance.cpp.s
+#=============================================================================
+# Target rules for targets named Ask
 
-.PHONY : src/Importance.s
+# Build rule for target.
+Ask: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Ask
+.PHONY : Ask
 
-# target to generate assembly for a file
-src/Importance.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Importance.cpp.s
-.PHONY : src/Importance.cpp.s
+# fast build rule for target.
+Ask/fast:
+	$(MAKE) -f build/src/AskLib/CMakeFiles/Ask.dir/build.make build/src/AskLib/CMakeFiles/Ask.dir/build
+.PHONY : Ask/fast
 
-src/LinRegGibbs.o: src/LinRegGibbs.cpp.o
+#=============================================================================
+# Target rules for targets named Ark
 
-.PHONY : src/LinRegGibbs.o
+# Build rule for target.
+Ark: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Ark
+.PHONY : Ark
 
-# target to build an object file
-src/LinRegGibbs.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.o
-.PHONY : src/LinRegGibbs.cpp.o
+# fast build rule for target.
+Ark/fast:
+	$(MAKE) -f build/src/ArkLib/CMakeFiles/Ark.dir/build.make build/src/ArkLib/CMakeFiles/Ark.dir/build
+.PHONY : Ark/fast
 
-src/LinRegGibbs.i: src/LinRegGibbs.cpp.i
+#=============================================================================
+# Target rules for targets named Crt
 
-.PHONY : src/LinRegGibbs.i
+# Build rule for target.
+Crt: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Crt
+.PHONY : Crt
 
-# target to preprocess a source file
-src/LinRegGibbs.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.i
-.PHONY : src/LinRegGibbs.cpp.i
+# fast build rule for target.
+Crt/fast:
+	$(MAKE) -f build/src/CrtLib/CMakeFiles/Crt.dir/build.make build/src/CrtLib/CMakeFiles/Crt.dir/build
+.PHONY : Crt/fast
 
-src/LinRegGibbs.s: src/LinRegGibbs.cpp.s
+#=============================================================================
+# Target rules for targets named Imp
 
-.PHONY : src/LinRegGibbs.s
+# Build rule for target.
+Imp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Imp
+.PHONY : Imp
 
-# target to generate assembly for a file
-src/LinRegGibbs.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.s
-.PHONY : src/LinRegGibbs.cpp.s
+# fast build rule for target.
+Imp/fast:
+	$(MAKE) -f build/src/ImpLib/CMakeFiles/Imp.dir/build.make build/src/ImpLib/CMakeFiles/Imp.dir/build
+.PHONY : Imp/fast
 
-src/ark.o: src/ark.cpp.o
+#=============================================================================
+# Target rules for targets named Lrg
 
-.PHONY : src/ark.o
+# Build rule for target.
+Lrg: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Lrg
+.PHONY : Lrg
 
-# target to build an object file
-src/ark.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/ark.cpp.o
-.PHONY : src/ark.cpp.o
+# fast build rule for target.
+Lrg/fast:
+	$(MAKE) -f build/src/LinRegGibbsLib/CMakeFiles/Lrg.dir/build.make build/src/LinRegGibbsLib/CMakeFiles/Lrg.dir/build
+.PHONY : Lrg/fast
 
-src/ark.i: src/ark.cpp.i
+#=============================================================================
+# Target rules for targets named ReadCsv
 
-.PHONY : src/ark.i
+# Build rule for target.
+ReadCsv: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ReadCsv
+.PHONY : ReadCsv
 
-# target to preprocess a source file
-src/ark.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/ark.cpp.i
-.PHONY : src/ark.cpp.i
+# fast build rule for target.
+ReadCsv/fast:
+	$(MAKE) -f build/src/ReadCsvLib/CMakeFiles/ReadCsv.dir/build.make build/src/ReadCsvLib/CMakeFiles/ReadCsv.dir/build
+.PHONY : ReadCsv/fast
 
-src/ark.s: src/ark.cpp.s
+src/Dist.o: src/Dist.cpp.o
 
-.PHONY : src/ark.s
-
-# target to generate assembly for a file
-src/ark.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/ark.cpp.s
-.PHONY : src/ark.cpp.s
-
-src/ask.o: src/ask.cpp.o
-
-.PHONY : src/ask.o
-
-# target to build an object file
-src/ask.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/ask.cpp.o
-.PHONY : src/ask.cpp.o
-
-src/ask.i: src/ask.cpp.i
-
-.PHONY : src/ask.i
-
-# target to preprocess a source file
-src/ask.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/ask.cpp.i
-.PHONY : src/ask.cpp.i
-
-src/ask.s: src/ask.cpp.s
-
-.PHONY : src/ask.s
-
-# target to generate assembly for a file
-src/ask.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/ask.cpp.s
-.PHONY : src/ask.cpp.s
-
-src/crb.o: src/crb.cpp.o
-
-.PHONY : src/crb.o
+.PHONY : src/Dist.o
 
 # target to build an object file
-src/crb.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/crb.cpp.o
-.PHONY : src/crb.cpp.o
+src/Dist.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Dist.cpp.o
+.PHONY : src/Dist.cpp.o
 
-src/crb.i: src/crb.cpp.i
+src/Dist.i: src/Dist.cpp.i
 
-.PHONY : src/crb.i
+.PHONY : src/Dist.i
 
 # target to preprocess a source file
-src/crb.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/crb.cpp.i
-.PHONY : src/crb.cpp.i
+src/Dist.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Dist.cpp.i
+.PHONY : src/Dist.cpp.i
 
-src/crb.s: src/crb.cpp.s
+src/Dist.s: src/Dist.cpp.s
 
-.PHONY : src/crb.s
+.PHONY : src/Dist.s
 
 # target to generate assembly for a file
-src/crb.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/crb.cpp.s
-.PHONY : src/crb.cpp.s
+src/Dist.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Dist.cpp.s
+.PHONY : src/Dist.cpp.s
 
-src/crt.o: src/crt.cpp.o
+src/eigenshorts.o: src/eigenshorts.cpp.o
 
-.PHONY : src/crt.o
+.PHONY : src/eigenshorts.o
 
 # target to build an object file
-src/crt.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/crt.cpp.o
-.PHONY : src/crt.cpp.o
+src/eigenshorts.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.o
+.PHONY : src/eigenshorts.cpp.o
 
-src/crt.i: src/crt.cpp.i
+src/eigenshorts.i: src/eigenshorts.cpp.i
 
-.PHONY : src/crt.i
+.PHONY : src/eigenshorts.i
 
 # target to preprocess a source file
-src/crt.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/crt.cpp.i
-.PHONY : src/crt.cpp.i
+src/eigenshorts.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.i
+.PHONY : src/eigenshorts.cpp.i
 
-src/crt.s: src/crt.cpp.s
+src/eigenshorts.s: src/eigenshorts.cpp.s
 
-.PHONY : src/crt.s
+.PHONY : src/eigenshorts.s
 
 # target to generate assembly for a file
-src/crt.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/crt.cpp.s
-.PHONY : src/crt.cpp.s
+src/eigenshorts.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.s
+.PHONY : src/eigenshorts.cpp.s
 
-src/fixdist.o: src/fixdist.cpp.o
+src/rentalmain.o: src/rentalmain.cpp.o
 
-.PHONY : src/fixdist.o
+.PHONY : src/rentalmain.o
 
 # target to build an object file
-src/fixdist.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/fixdist.cpp.o
-.PHONY : src/fixdist.cpp.o
+src/rentalmain.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/rentalmain.cpp.o
+.PHONY : src/rentalmain.cpp.o
 
-src/fixdist.i: src/fixdist.cpp.i
+src/rentalmain.i: src/rentalmain.cpp.i
 
-.PHONY : src/fixdist.i
-
-# target to preprocess a source file
-src/fixdist.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/fixdist.cpp.i
-.PHONY : src/fixdist.cpp.i
-
-src/fixdist.s: src/fixdist.cpp.s
-
-.PHONY : src/fixdist.s
-
-# target to generate assembly for a file
-src/fixdist.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/fixdist.cpp.s
-.PHONY : src/fixdist.cpp.s
-
-src/read_csv_to_eigen.o: src/read_csv_to_eigen.cpp.o
-
-.PHONY : src/read_csv_to_eigen.o
-
-# target to build an object file
-src/read_csv_to_eigen.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/read_csv_to_eigen.cpp.o
-.PHONY : src/read_csv_to_eigen.cpp.o
-
-src/read_csv_to_eigen.i: src/read_csv_to_eigen.cpp.i
-
-.PHONY : src/read_csv_to_eigen.i
+.PHONY : src/rentalmain.i
 
 # target to preprocess a source file
-src/read_csv_to_eigen.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/read_csv_to_eigen.cpp.i
-.PHONY : src/read_csv_to_eigen.cpp.i
+src/rentalmain.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/rentalmain.cpp.i
+.PHONY : src/rentalmain.cpp.i
 
-src/read_csv_to_eigen.s: src/read_csv_to_eigen.cpp.s
+src/rentalmain.s: src/rentalmain.cpp.s
 
-.PHONY : src/read_csv_to_eigen.s
+.PHONY : src/rentalmain.s
 
 # target to generate assembly for a file
-src/read_csv_to_eigen.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/read_csv_to_eigen.cpp.s
-.PHONY : src/read_csv_to_eigen.cpp.s
+src/rentalmain.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/rentalmain.cpp.s
+.PHONY : src/rentalmain.cpp.s
 
 # Help Target
 help:
@@ -345,33 +360,30 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... install/strip"
+	@echo "... install"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... install/local"
 	@echo "... mvt"
-	@echo "... src/Importance.o"
-	@echo "... src/Importance.i"
-	@echo "... src/Importance.s"
-	@echo "... src/LinRegGibbs.o"
-	@echo "... src/LinRegGibbs.i"
-	@echo "... src/LinRegGibbs.s"
-	@echo "... src/ark.o"
-	@echo "... src/ark.i"
-	@echo "... src/ark.s"
-	@echo "... src/ask.o"
-	@echo "... src/ask.i"
-	@echo "... src/ask.s"
-	@echo "... src/crb.o"
-	@echo "... src/crb.i"
-	@echo "... src/crb.s"
-	@echo "... src/crt.o"
-	@echo "... src/crt.i"
-	@echo "... src/crt.s"
-	@echo "... src/fixdist.o"
-	@echo "... src/fixdist.i"
-	@echo "... src/fixdist.s"
-	@echo "... src/read_csv_to_eigen.o"
-	@echo "... src/read_csv_to_eigen.i"
-	@echo "... src/read_csv_to_eigen.s"
+	@echo "... CreateSampleData"
+	@echo "... Crb"
+	@echo "... Ask"
+	@echo "... Ark"
+	@echo "... Crt"
+	@echo "... Imp"
+	@echo "... Lrg"
+	@echo "... ReadCsv"
+	@echo "... src/Dist.o"
+	@echo "... src/Dist.i"
+	@echo "... src/Dist.s"
+	@echo "... src/eigenshorts.o"
+	@echo "... src/eigenshorts.i"
+	@echo "... src/eigenshorts.s"
+	@echo "... src/rentalmain.o"
+	@echo "... src/rentalmain.i"
+	@echo "... src/rentalmain.s"
 .PHONY : help
 
 

@@ -1,12 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/mvt.dir/src/crb.cpp.o"
-  "CMakeFiles/mvt.dir/src/ark.cpp.o"
-  "CMakeFiles/mvt.dir/src/crt.cpp.o"
-  "CMakeFiles/mvt.dir/src/ask.cpp.o"
-  "CMakeFiles/mvt.dir/src/LinRegGibbs.cpp.o"
-  "CMakeFiles/mvt.dir/src/Importance.cpp.o"
-  "CMakeFiles/mvt.dir/src/fixdist.cpp.o"
-  "CMakeFiles/mvt.dir/src/read_csv_to_eigen.cpp.o"
+  "CMakeFiles/mvt.dir/src/rentalmain.cpp.o"
+  "CMakeFiles/mvt.dir/src/eigenshorts.cpp.o"
+  "CMakeFiles/mvt.dir/src/Dist.cpp.o"
   "mvt.pdb"
   "mvt"
 )

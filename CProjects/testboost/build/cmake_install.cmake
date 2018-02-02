@@ -12,7 +12,7 @@ if(NOT DEFINED CMAKE_INSTALL_CONFIG_NAME)
     string(REGEX REPLACE "^[^A-Za-z0-9_]+" ""
            CMAKE_INSTALL_CONFIG_NAME "${BUILD_TYPE}")
   else()
-    set(CMAKE_INSTALL_CONFIG_NAME "Debug")
+    set(CMAKE_INSTALL_CONFIG_NAME "")
   endif()
   message(STATUS "Install configuration: \"${CMAKE_INSTALL_CONFIG_NAME}\"")
 endif()
@@ -24,6 +24,27 @@ if(NOT CMAKE_INSTALL_COMPONENT)
     set(CMAKE_INSTALL_COMPONENT "${COMPONENT}")
   else()
     set(CMAKE_INSTALL_COMPONENT)
+  endif()
+endif()
+
+if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
+   "/usr/local/lib/libyay.so")
+  if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+  if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
+    message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
+  endif()
+file(INSTALL DESTINATION "/usr/local/lib" TYPE MODULE FILES "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/testboost/build/libyay.so")
+  if(EXISTS "$ENV{DESTDIR}/usr/local/lib/libyay.so" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/usr/local/lib/libyay.so")
+    execute_process(COMMAND /opt/local/bin/install_name_tool
+      -delete_rpath "//anaconda/lib"
+      "$ENV{DESTDIR}/usr/local/lib/libyay.so")
+    if(CMAKE_INSTALL_DO_STRIP)
+      execute_process(COMMAND "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip" "$ENV{DESTDIR}/usr/local/lib/libyay.so")
+    endif()
   endif()
 endif()
 

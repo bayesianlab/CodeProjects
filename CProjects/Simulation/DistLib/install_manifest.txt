@@ -1,2 +1,0 @@
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/lib/libDist.a
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include/Dist.hpp

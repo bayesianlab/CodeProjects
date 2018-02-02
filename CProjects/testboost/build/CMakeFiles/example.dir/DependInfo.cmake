@@ -10,7 +10,10 @@ set(CMAKE_CXX_COMPILER_ID "Clang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "/usr/local/include/boost_1_66_0"
   "/usr/local/include/eigen3"
+  "/usr/include/python2.7"
+  "../include"
   )
 
 # Targets to which this target links.

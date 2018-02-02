@@ -1,0 +1,2 @@
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar qc libAsk.a  CMakeFiles/Ask.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/ask.cpp.o
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib libAsk.a

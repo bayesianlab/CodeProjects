@@ -15,6 +15,7 @@ using namespace std;
 class Dist {
 private:
   time_t now;
+  int ROBERT_LIMIT;
 
 public:
   double inf;
@@ -60,7 +61,7 @@ public:
 
   double twoSided(double, double);
 
-  double truncNormalRnd(double, double, double, double);
+  double truncNormalRnd(double a, double b, double mu, double sigma);
 
   double ghkTruncNormRnd(double, double, double, double);
 

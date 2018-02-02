@@ -56,6 +56,52 @@ CMAKE_BINARY_DIR = "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CPro
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/local/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/local/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -111,44 +157,44 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named example
+# Target rules for targets named yay
 
 # Build rule for target.
-example: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 example
-.PHONY : example
+yay: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 yay
+.PHONY : yay
 
 # fast build rule for target.
-example/fast:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/build
-.PHONY : example/fast
+yay/fast:
+	$(MAKE) -f CMakeFiles/yay.dir/build.make CMakeFiles/yay.dir/build
+.PHONY : yay/fast
 
-src/example.o: src/example.cpp.o
+src/example_ext.o: src/example_ext.cpp.o
 
-.PHONY : src/example.o
+.PHONY : src/example_ext.o
 
 # target to build an object file
-src/example.cpp.o:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/src/example.cpp.o
-.PHONY : src/example.cpp.o
+src/example_ext.cpp.o:
+	$(MAKE) -f CMakeFiles/yay.dir/build.make CMakeFiles/yay.dir/src/example_ext.cpp.o
+.PHONY : src/example_ext.cpp.o
 
-src/example.i: src/example.cpp.i
+src/example_ext.i: src/example_ext.cpp.i
 
-.PHONY : src/example.i
+.PHONY : src/example_ext.i
 
 # target to preprocess a source file
-src/example.cpp.i:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/src/example.cpp.i
-.PHONY : src/example.cpp.i
+src/example_ext.cpp.i:
+	$(MAKE) -f CMakeFiles/yay.dir/build.make CMakeFiles/yay.dir/src/example_ext.cpp.i
+.PHONY : src/example_ext.cpp.i
 
-src/example.s: src/example.cpp.s
+src/example_ext.s: src/example_ext.cpp.s
 
-.PHONY : src/example.s
+.PHONY : src/example_ext.s
 
 # target to generate assembly for a file
-src/example.cpp.s:
-	$(MAKE) -f CMakeFiles/example.dir/build.make CMakeFiles/example.dir/src/example.cpp.s
-.PHONY : src/example.cpp.s
+src/example_ext.cpp.s:
+	$(MAKE) -f CMakeFiles/yay.dir/build.make CMakeFiles/yay.dir/src/example_ext.cpp.s
+.PHONY : src/example_ext.cpp.s
 
 # Help Target
 help:
@@ -156,12 +202,16 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... install"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... example"
-	@echo "... src/example.o"
-	@echo "... src/example.i"
-	@echo "... src/example.s"
+	@echo "... yay"
+	@echo "... src/example_ext.o"
+	@echo "... src/example_ext.i"
+	@echo "... src/example_ext.s"
 .PHONY : help
 
 

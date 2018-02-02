@@ -27,18 +27,7 @@ Eigen::MatrixXd readCSV(std::string file, int rows, int cols) {
       while (getline(buf, field, ',')) {
         colCount++;
         string number;
-        for (int i = 0; i < field.length(); i++) {
-          if (isdigit(field[i]) || field[i] == '.') {
-            stringstream ss;
-            string s;
-            ss << field[i];
-            ss >> s;
-            number.append(s);
-          }
-        }
-        cout << rowCount << " " << colCount << " " << number << endl;
-        X(rowCount, colCount) = atof(number.c_str());
-
+        X(rowCount, colCount) = stod(field);
       }
     }
     fin.close();

@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/DistLib/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/DistLib/include\" -I/usr/local/include/eigen3 -I/usr/local/include/boost -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/DistLib\"  -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Dist.dir/Dist.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/DistLib/Dist.cpp\"",
-  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/DistLib/Dist.cpp"
-}
-]
