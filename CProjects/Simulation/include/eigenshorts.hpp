@@ -8,4 +8,5 @@ void printhead(const MatrixXd &X);
 void printvec(const VectorXd &x);
 void printmat(const MatrixXd &X);
 void printval(double d);
+void msg(string s);
 #endif

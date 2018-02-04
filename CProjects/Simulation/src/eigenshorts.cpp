@@ -27,3 +27,8 @@ void printmat(const MatrixXd &X){
 void printval(double d){
 	cout << d << endl;
 }
+
+void msg(string s){
+	cout << s << endl;
+}
+

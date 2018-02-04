@@ -55,9 +55,9 @@ public:
 
   double shiftexppdf(double, double, double);
 
-  double leftTruncation(double, double);
+  double leftTruncation(double);
 
-  double rightTruncation(double, double);
+  double rightTruncation(double);
 
   double twoSided(double, double);
 
@@ -97,6 +97,12 @@ public:
 
   VectorXd ttpdf(double a, double b, double df, const Ref<const VectorXd> &mu,
                  double sigma, double x);
+double mvtpdf(const VectorXd &x, const VectorXd &mu, const MatrixXd &Variance,
+              int df);
+double mvtpdfHelp(const Ref<const VectorXd> &x, const VectorXd &mu,
+                  const MatrixXd &Variance, int df);
+VectorXd mvtpdf(const MatrixXd &X, const VectorXd &mu, const MatrixXd &Variance,
+                int df);
 
   VectorXd tnormpdfVect(double a, double b, double mu, double sigma,
                         VectorXd &x);
@@ -204,7 +210,9 @@ public:
   MatrixXd selectorMat(int J);
 
   MatrixXd Hnotj(const MatrixXd &precision);
-
+  
+  void cleanP(MatrixXd &P);
+	  
   MatrixXd geweke91(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints,
                     const Ref<const VectorXd> &mu,

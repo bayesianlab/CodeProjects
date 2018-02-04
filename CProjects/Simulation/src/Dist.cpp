@@ -13,6 +13,7 @@
 #include <limits>
 #include <math.h>
 #include <random>
+#include "eigenshorts.hpp"
 
 using namespace Eigen;
 using namespace std;
@@ -164,15 +165,16 @@ double Dist::shiftexppdf(double alpha, double shift, double z) {
   return alpha * exp(-alpha * (z - shift));
 }
 
-double Dist::leftTruncation(double a, double b) {
+double Dist::leftTruncation(double a) {
   int maxIterations = 0;
   boost::random::uniform_01<> u;
-  double optimalScale, rho_z, z;
-  optimalScale = (a + sqrt(pow(a, 2) + 4)) / 2.;
+  double optimalScale, lrho_z, z, lu;
+  optimalScale = (a + sqrt(pow(a, 2) + 4.))*.5;
   while (maxIterations < ROBERT_LIMIT) {
     z = shiftexprnd(optimalScale, a);
-    rho_z = exp(-pow(z - optimalScale, 2));
-    if (u(rseed) <= rho_z) {
+	lu = log(u(rseed));
+    lrho_z = -pow(z - optimalScale, 2)*.5;
+    if (lu <= lrho_z) {
       return z;
     } else {
       maxIterations++;
@@ -184,18 +186,19 @@ double Dist::leftTruncation(double a, double b) {
   return inf;
 }
 
-double Dist::rightTruncation(double a, double b) {
-  double optimalScale, rho_z, z, temp;
+/*double Dist::rightTruncation(double a) {
+  double optimalScale, lrho_z, z, temp, lu;
   temp = b;
   b = -a;
   a = -temp;
   int maxIterations = 0;
   boost::random::uniform_01<> u;
-  optimalScale = (a + sqrt(pow(a, 2) + 4)) / 2.;
+  optimalScale = (a + sqrt(pow(a, 2) + 4.))*.5;
   while (maxIterations < ROBERT_LIMIT) {
     z = shiftexprnd(optimalScale, a);
-    rho_z = exp(-pow(z - optimalScale, 2));
-    if (u(rseed) <= rho_z) {
+    lrho_z = -pow(z - optimalScale, 2)*.5;
+	lu = log(u(rseed));
+    if (lu <= lrho_z) {
       return -z;
     }
     maxIterations++;
@@ -204,7 +207,7 @@ double Dist::rightTruncation(double a, double b) {
           "possible."
        << endl;
   return inf;
-}
+}*/
 
 double Dist::twoSided(double a, double b) {
   int maxIterations = 0;
@@ -242,34 +245,29 @@ double Dist::twoSided(double a, double b) {
 }
 
 double Dist::truncNormalRnd(double a, double b, double mu, double sigma) {
-  double Z;
+  double Z, standardizedA, standardizedB, stdLimit;
+  standardizedA = (a - mu) / sigma;
+  standardizedB = (b - mu) / sigma;
+  stdLimit = 8;
   if (b >= 1e6) {
-    double standardizedA;
-    standardizedA = (a - mu) / sigma;
-    if (standardizedA > 5) {
-      Z = leftTruncation(standardizedA, b);
+    if (standardizedA > stdLimit) {
+      Z = leftTruncation(standardizedA);
       return mu + sigma * Z;
     } else {
       return tnormrnd(a, b, mu, sigma);
     }
   } else if (a <= -1e6) {
-	  cout << a << " " << -inf << endl;
-    double standardizedB;
-    standardizedB = (b - mu) / sigma;
-    if (standardizedB < -5) {
-      Z = rightTruncation(a, standardizedB);
+    if (standardizedB < -stdLimit) {
+      Z = -leftTruncation(-standardizedB);
       return mu + sigma * Z;
     } else {
       return tnormrnd(a, b, mu, sigma);
     }
   } else {
-    double standardizedA, standardizedB;
-    standardizedA = (a - mu) / sigma;
-    standardizedB = (b - mu) / sigma;
-    if (standardizedA > 5) {
+    if (standardizedA > stdLimit) {
       Z = twoSided(standardizedA, standardizedB);
       return mu + sigma * Z;
-    } else if (standardizedB < -5) {
+    } else if (standardizedB < -stdLimit) {
       Z = twoSided(standardizedA, standardizedB);
       return mu + sigma * Z;
     } else {
@@ -430,6 +428,41 @@ double Dist::ttpdf(double a, double b, double df, double mu, double sigma,
   return pow(sigma*(Tb - Ta), -1) * pdf(tdist, (x-mu)/sigma);
 }
 
+double Dist::mvtpdf(const VectorXd &x, const VectorXd &mu, const MatrixXd &Variance,
+              int df) {
+  int J = Variance.cols();
+  double numconst = tgamma((df + J) * .5);
+  double denconst = pow(M_PI * df, J * .5) * tgamma(df * .5) *
+                    pow(Variance.determinant(), .5);
+  VectorXd xMmu = x - mu;
+  double Mahalnobis = ((xMmu.transpose() * Variance.inverse()) * xMmu).value();
+  double kernel = pow(1 + (pow(df, -1) * Mahalnobis), -.5 * (df + J));
+  return numconst * pow(denconst, -1) * kernel;
+}
+
+double Dist::mvtpdfHelp(const Ref<const VectorXd> &x, const VectorXd &mu,
+                  const MatrixXd &Variance, int df) {
+  int J = Variance.cols();
+  double numconst = tgamma((df + J) * .5);
+  double denconst = pow(M_PI * df, J * .5) * tgamma(df * .5) *
+                    pow(Variance.determinant(), .5);
+  VectorXd xMmu = x - mu;
+  double Mahalnobis = ((xMmu.transpose() * Variance.inverse()) * xMmu).value();
+  double kernel = pow(1 + (pow(df, -1) * Mahalnobis), -.5 * (df + J));
+  return numconst * pow(denconst, -1) * kernel;
+}
+
+
+VectorXd Dist::mvtpdf(const MatrixXd &X, const VectorXd &mu, const MatrixXd &Variance,
+                int df) {
+  VectorXd pdf(X.rows());
+  for (int i = 0; i < X.rows(); i++) {
+    pdf(i) = mvtpdfHelp(X.row(i), mu, Variance, df);
+  }
+  return pdf;
+}
+
+
 VectorXd Dist::ttpdf(double a, double b, double df, double mu, double sigma,
                      const Ref<const VectorXd> &x) {
   VectorXd pdfVals(x.size());
@@ -497,14 +530,14 @@ double Dist::ghkTruncNormRnd(double a, double b, double mu, double sigma) {
   double Z;
   if (b >= inf) {
     if (a > 5) {
-      Z = leftTruncation(a, b);
+      Z = leftTruncation(a);
       return Z;
     } else {
       return tnormrnd(a, b, mu, sigma);
     }
   } else if (a <= -inf) {
     if (b < -5) {
-      Z = rightTruncation(a, b);
+      Z = -leftTruncation(-b);
       return Z;
     } else {
       return tnormrnd(a, b, mu, sigma);
@@ -967,8 +1000,8 @@ MatrixXd Dist::MVTruncT(const VectorXd &a, const VectorXd &b,
   MatrixXd sample(sims, J);
   sample.setZero();
   for (int i = 1; i < sims; i++) {
+    newChi = sqrt(chiSqs(i - 1) / df);
     for (int j = 0; j < J; j++) {
-      newChi = sqrt(chiSqs(i - 1) / df);
       sample(i, j) =
           truncNormalRnd((alpha(j) * newChi), (beta(j) * newChi), 0, 1) /
           newChi;
@@ -1030,7 +1063,7 @@ MatrixXd Dist::askMvttgeweke91(const VectorXd &a, const VectorXd &b,
 
   int J = Sigma.cols();
   int Jm1 = J - 1;
-  MatrixXd chiSqs = (generateChiSquaredMat(df, sims, J).array() / df).sqrt();
+  MatrixXd chiSqs = (generateChiSquaredVec(df, sims).array() / df).sqrt();
   MatrixXd T = LinearConstraints * Sigma * LinearConstraints.transpose();
   MatrixXd precisionT = T.inverse();
   VectorXd Hii = precisionT.diagonal();
@@ -1043,19 +1076,22 @@ MatrixXd Dist::askMvttgeweke91(const VectorXd &a, const VectorXd &b,
   VectorXd beta = b - LinearConstraints * mu;
   double innerProduct;
   sample.row(0) = initVector.transpose();
+  VectorXd updateVec(J);
+  updateVec.setZero();
   for (int i = 1; i < sims; i++) {
     for (int j = 0; j < J; j++) {
       innerProduct = (precisionNotj.row(j) * (notj.block(j * (Jm1), 0, Jm1, J) *
-                                              sample.row(i - 1).transpose()))
+                                              updateVec.transpose()))
                          .value();
-      sample(i, j) =
+      updateVec(j) =
           innerProduct +
           hii(j) *
               truncNormalRnd(
                   ((alpha(j) - innerProduct) * chiSqs(i, j)) / hii(j),
                   ((beta(j) - innerProduct) * chiSqs(i, j)) / hii(j), 0, 1) /
-              chiSqs(i, j);
+              chiSqs(i);
     }
+	sample.row(i) = updateVec.transpose();
   }
   sample = (LinearConstraints.inverse() * sample.transpose()).transpose();
   sample.rowwise() += mu.transpose();
@@ -1069,7 +1105,7 @@ MatrixXd Dist::mvttgeweke91(const VectorXd &a, const VectorXd &b,
 
   int J = Sigma.cols();
   int Jm1 = J - 1;
-  MatrixXd chiSqs = (generateChiSquaredMat(df, sims, J).array() / df).sqrt();
+  MatrixXd chiSqs = (generateChiSquaredVec(df, sims).array() / df).sqrt();
   MatrixXd T = LinearConstraints * Sigma * LinearConstraints.transpose();
   MatrixXd precisionT = T.inverse();
   VectorXd Hii = precisionT.diagonal();
@@ -1082,20 +1118,23 @@ MatrixXd Dist::mvttgeweke91(const VectorXd &a, const VectorXd &b,
   VectorXd alpha = a - LinearConstraints * mu;
   VectorXd beta = b - LinearConstraints * mu;
   double innerProduct;
+  VectorXd updateVec(J);
+  updateVec.setZero();
   for (int i = 1; i < sims; i++) {
     for (int j = 0; j < J; j++) {
       innerProduct = (precisionNotj.row(j) * (notj.block(j * (Jm1), 0, Jm1, J) *
-                                              sample.row(i - 1).transpose()))
+                                              updateVec.transpose()))
                          .value();
       cmeans(i, j) = innerProduct;
-      sample(i, j) =
+      updateVec(j) =
           innerProduct +
           hii(j) *
               truncNormalRnd(
                   ((alpha(j) - innerProduct) * chiSqs(i, j)) / hii(j),
                   ((beta(j) - innerProduct) * chiSqs(i, j)) / hii(j), 0, 1) /
-              chiSqs(i, j);
+              chiSqs(i);
     }
+	sample.row(i) = updateVec.transpose();
   }
   sample = (LinearConstraints.inverse() * sample.transpose()).transpose();
   sample.rowwise() += mu.transpose();
@@ -1151,17 +1190,30 @@ MatrixXd Dist::precisionNotjMatrix(int J, const MatrixXd &precision,
   return smReturn;
 }
 
+void Dist::cleanP(MatrixXd &P){
+	int R = P.cols();
+	for(int i=0;i<R;i++){
+		for(int j=0;j<R;j++){
+			if(i!=j){
+				if(P(i,j) < 1e-8){
+					P(i,j) = 0.;
+				}
+			}
+		}
+	}
+}
+
 MatrixXd Dist::geweke91(const VectorXd &a, const VectorXd &b,
                         const MatrixXd &LinearConstraints,
                         const Ref<const VectorXd> &mu,
                         const Ref<const MatrixXd> &sigma, int sims,
                         int burnin) {
   /* Trunc. MVNormal according to Geweke 1991 */
-  /* Tested against MATLAB */
   int J = sigma.cols();
   int Jm1 = J - 1;
   MatrixXd T = LinearConstraints * sigma * LinearConstraints.transpose();
   MatrixXd precisionT = T.inverse();
+  cout << precisionT << endl;
   VectorXd Hii = precisionT.diagonal();
   VectorXd hii = Hii.array().pow(-1).sqrt();
   MatrixXd notj = selectorMat(J);
@@ -1170,17 +1222,20 @@ MatrixXd Dist::geweke91(const VectorXd &a, const VectorXd &b,
   sample.setZero();
   VectorXd alpha = a - (LinearConstraints * mu);
   VectorXd beta = b - (LinearConstraints * mu);
+  VectorXd updateVec(J);
+  updateVec.setZero();
   double innerProduct;
   for (int i = 1; i < sims; i++) {
     for (int j = 0; j < J; j++) {
       innerProduct = (precisionNotj.row(j) * (notj.block(j * (Jm1), 0, Jm1, J) *
-                                              sample.row(i - 1).transpose()))
+                                              updateVec))
                          .value();
-      sample(i, j) =
+      updateVec(j) =
           innerProduct +
           (hii(j) * truncNormalRnd((alpha(j) - innerProduct) / hii(j),
                                    (beta(j) - innerProduct) / hii(j), 0, 1));
     }
+	sample.row(i) = updateVec.transpose();
   }
   sample = (LinearConstraints.inverse() * sample.transpose()).transpose();
   sample.rowwise() += mu.transpose();
