@@ -8,25 +8,13 @@ using namespace Eigen;
 
 class Ark : public Dist {
 private:
-  MatrixXd xNotj;
-  VectorXd muNotj;
-  VectorXd Hxy;
   VectorXd Hxx;
-  VectorXd sigmaVector;
-  VectorXd ll;
-  VectorXd ul;
-  MatrixXd precision;
-  MatrixXd sigma;
-  int Rows, J, Jminus1;
   string arkWarning =
       "  Exceed max iterations, use custom constructor to alter maximum.\n";
-  VectorXd betaPrior;
-  MatrixXd sigmaPrior;
-  double igamA, igamB;
 
 public:
-
-  MatrixXd arSample(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int);
+  MatrixXd arSample(const VectorXd &, const VectorXd &, const VectorXd &,
+                    const MatrixXd &, int, int);
 
   MatrixXd acceptRejectT(const VectorXd &a, const VectorXd &b,
                          const MatrixXd &LinearConstraints,
@@ -35,30 +23,18 @@ public:
 
   int isVectVgreater(VectorXd &v, VectorXd &u);
 
-  void gibbsKernel();
-
   void conditionalMean(double, VectorXd &, VectorXd &, MatrixXd &, double,
                        VectorXd &);
 
   void tnormpdf(double, double, VectorXd &, double, double, VectorXd &);
 
-  void displayMLike();
-
-  MatrixXd arkSample;
-
-  MatrixXd Kernel;
-
-  VectorXd zStar;
-
-  VectorXd mu;
-
-  double ml(VectorXd &, double, VectorXd &, MatrixXd &);
+  double ml(const VectorXd &, double, const VectorXd &, const MatrixXd &X,
+            const MatrixXd &Kernel, const VectorXd &b0, const MatrixXd &B0,
+            double a0, double d0);
 
   double mlT(VectorXd &betas, double sigma, const VectorXd &y,
              const MatrixXd &X, const MatrixXd &kernel, const VectorXd &b0,
              const MatrixXd &B0, double a0, double d0);
-  
-  void arkKernel(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int);
 
   double arkKernelT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, const VectorXd &theta,
@@ -70,9 +46,11 @@ public:
                         const VectorXd &theta, const MatrixXd &Sigma,
                         const MatrixXd &draws, MatrixXd &xnot, VectorXd &zstar);
 
-  void runSim(int nSims, int batches, VectorXd &theta, MatrixXd &sigma,
-              VectorXd &y, MatrixXd &X, VectorXd &ll, VectorXd &ul,
-              int sampleSize, int );
+  void runSim(int nSims, int batches, const VectorXd &theta,
+              const MatrixXd &sigma, const VectorXd &y, const MatrixXd &X,
+              const VectorXd &ll, const VectorXd &ul, int sampleSize,
+              int maxIterations, const VectorXd &b0, const MatrixXd &B0,
+              double a0, double d0);
 
   void runTsim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
                const MatrixXd &LinearConstraints, double df,

@@ -1,0 +1,10 @@
+model{
+p0 ~ dbeta(1,1)
+sigma2 ~ dgamma(.001,.001)
+for(i in 1:N){
+  y[i] ~ dnorm(mu[i]*gamma[i], 1/(sigma2
+  ))
+  mu[i] ~ dnorm(0, 1)
+  gamma[i] ~ dbern(p0)
+}
+}

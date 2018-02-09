@@ -14,9 +14,9 @@ void printhead(const MatrixXd &X) {
   cout << endl;
 }
 
-void printvec(const VectorXd &x){
-	cout << x << endl;
-	cout << endl;
+void printvec(const Ref<const VectorXd> &x) {
+  cout << x << endl;
+  cout << endl;
 }
 
 void printmat(const MatrixXd &X){

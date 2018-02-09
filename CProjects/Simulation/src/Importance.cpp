@@ -38,14 +38,9 @@ double Importance::ml(VectorXd &y, MatrixXd &X) {
   VectorXd loghTheta;
   loghTheta = importanceDensity.rowwise().prod().array().log();
   MatrixXd P(1, 4);
- P << loghTheta.mean(), logmvnpdf(betaInit, sigmaInit, lsEsts).array().mean(),
-      lrLikelihood(lsEsts, sigSqd, y, X).array().mean(),
-      loginvgammapdf(sigSqd, igamParamA, igamParamB).array().mean();
-
-  cout << P << endl; 
   VectorXd likelihood = lrLikelihood(lsEsts, sigSqd, y, X).array() +
                loginvgammapdf(sigSqd, igamParamA, igamParamB).array() +
-               logmvnpdf(betaInit, sigmaInit, lsEsts).array() -
+               logmvnpdfV(betaInit, sigmaInit, lsEsts).array() -
                loghTheta.array();
   return likelihood.mean();
 }
@@ -62,9 +57,9 @@ double Importance::mlT(const VectorXd &a, const VectorXd &b,
   VectorXd hTheta =
       ttpdf(a, b, df, mu, stdevs, draws).rowwise().prod().array().log();
   VectorXd likelihood =
-      lrLikelihood(draws.rightCols(J - 1), draws.col(0), y, X) +
-      loginvgammapdf(draws.col(0), a0, d0) +
-      logmvnpdf(b0, B0, draws.rightCols(J - 1)) - hTheta;
+      lrLikelihood(draws.rightCols(J - 1), draws.col(0), y, X).array() +
+      loginvgammapdf(draws.col(0), a0, d0).array() +
+      logmvnpdfV(b0, B0, draws.rightCols(J - 1)).array() - hTheta.array();
   return likelihood.mean();
 }
 
@@ -80,9 +75,9 @@ double Importance::mlGeweke91(const VectorXd &a, const VectorXd &b,
   VectorXd hTheta =
       tnormpdfMat(a, b, mu, stdevs, draws).rowwise().prod().array().log();
   VectorXd likelihood =
-      lrLikelihood(draws.rightCols(J - 1), draws.col(0), y, X) +
-      loginvgammapdf(draws.col(0), a0 , d0 ) +
-      logmvnpdf(b0, B0, draws.rightCols(J - 1)) - hTheta;
+      lrLikelihood(draws.rightCols(J - 1), draws.col(0), y, X).array() +
+      loginvgammapdf(draws.col(0), a0 , d0 ).array() +
+      logmvnpdfV(b0, B0, draws.rightCols(J - 1)).array() - hTheta.array();
   return likelihood.mean();
 }
 
@@ -103,9 +98,9 @@ double Importance::mlGeweke91T(const VectorXd &a, const VectorXd &b,
                         .array()
                         .log();
   VectorXd likelihood =
-      lrLikelihood(draws.rightCols(J - 1), draws.col(0), y, X) +
-      loginvgammapdf(draws.col(0), a0 , d0 ) +
-      logmvnpdf(b0, B0, draws.rightCols(J - 1)) - hTheta;
+      lrLikelihood(draws.rightCols(J - 1), draws.col(0), y, X).array() +
+      loginvgammapdf(draws.col(0), a0 , d0 ).array() +
+      logmvnpdfV(b0, B0, draws.rightCols(J - 1)).array() - hTheta.array();
   return likelihood.mean();
 }
 

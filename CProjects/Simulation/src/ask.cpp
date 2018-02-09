@@ -12,18 +12,6 @@
 using namespace Eigen;
 using namespace std;
 
-
-void Ask::askKernel(VectorXd &lowerConstraint, VectorXd &upperConstraint,
-                    VectorXd &theta, MatrixXd &sig, int sims, int burnin,
-                    int sampleBlockRows) {
-  setTemporaries(lowerConstraint, upperConstraint, theta, sig, sims, burnin);
-  setPriors(J - 1);
-  adaptiveSampler(.5, sims, burnin, sampleBlockRows);
-  zStar = sample.colwise().mean();
-  xNotj = sample.rightCols(Jminus1);
-  gibbsKernel();
-}
-
 double Ask::askKernelT(const VectorXd &a, const VectorXd &b,
                        const MatrixXd &LinearConstraints, double df,
                        const VectorXd &theta, const MatrixXd &Sigma, int sims,
@@ -42,68 +30,7 @@ double Ask::askKernelT(const VectorXd &a, const VectorXd &b,
   return mlT(betas, zstar(0), y, X, kernel, b0, B0, a0, d0);
 }
 
-void Ask::setPriors(VectorXd &b0, MatrixXd &S0, double a0, double d0) {
-  betaPrior = b0;
-  sigmaPrior = S0;
-  igamA = a0;
-  igamB = d0;
-}
-void Ask::setPriors(int betaDim) {
-  betaPrior = MatrixXd::Zero(betaDim, 1);
-  sigmaPrior = MatrixXd::Identity(betaDim, betaDim);
-  igamA = 6;
-  igamB = 12;
-}
 
-void Ask::setTemporaries(VectorXd &ll, VectorXd &ul, VectorXd &m, MatrixXd &S,
-                         int sims, int burnin) {
-  J = S.cols();
-  Jminus1 = J - 1;
-  sigma = S;
-  precision = sigma.inverse();
-  Hxx = precision.diagonal();
-  sigmaVector = (1. / Hxx.array()).sqrt();
-  lowerTruncPoints = ll;
-  upperTruncPoints = ul;
-  mu = m;
-  Rows = sims - burnin;
-  weight = MatrixXd::Zero(J, 1);
-  weight.fill(.5);
-  Kernel = MatrixXd::Zero(Rows, J);
-  muNotj = MatrixXd::Zero(Jminus1, 1);
-  Hxy = MatrixXd::Zero(Jminus1, 1);
-  xNotj = MatrixXd::Zero(Rows, Jminus1);
-}
-
-void Ask::gibbsKernel() {
-  VectorXd cmeanVect(Rows);
-  Hxy = precision.row(0).tail(Jminus1);
-  muNotj = mu.tail(Jminus1);
-  Kernel.col(0) = Dist::tnormpdfMeanVect(
-      lowerTruncPoints(0), upperTruncPoints(0),
-      Dist::conditionalMean(Hxx(0), Hxy, muNotj, xNotj, mu(0)), sigmaVector(0),
-      zStar(0));
-  xNotj.rightCols(Jminus1 - 1) = sample.rightCols(J - 2);
-  for (int j = 1; j < Jminus1; j++) {
-    muNotj << mu.head(j), mu.tail(Jminus1 - j);
-    Hxy << precision.row(j).head(j).transpose().eval(),
-        precision.row(j).tail(Jminus1 - j).transpose().eval();
-    xNotj.col(j - 1).fill(zStar(j - 1));
-    Kernel.col(j) = Dist::tnormpdfMeanVect(
-        lowerTruncPoints(j), upperTruncPoints(j),
-        Dist::conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j)),
-        sigmaVector(j), zStar(j));
-  }
-  Hxy << precision.row(Jminus1).head(Jminus1).transpose();
-  muNotj = mu.head(Jminus1);
-  VectorXd xnotJ = zStar.head(Jminus1);
-  double muJ =
-      Dist::conditionalMean(Hxx(Jminus1), Hxy, muNotj, xnotJ, mu(Jminus1));
-  double y =
-      Dist::tnormpdf(lowerTruncPoints(Jminus1), upperTruncPoints(Jminus1), muJ,
-                     sigmaVector(Jminus1), zStar(Jminus1));
-  Kernel.col(Jminus1).fill(y);
-}
 
 MatrixXd Ask::gibbsKernelT(const VectorXd &a, const VectorXd &b, double df,
                            const VectorXd &theta, const MatrixXd &Sigma,
@@ -155,33 +82,39 @@ void Ask::tnormpdf(double a, double b, VectorXd &mu, double sigma, double x,
   }
 }
 
-void Ask::adaptiveSampler(double initPeta, int sampleSize, int burnin,
-                          int sampleBlockRows) {
+MatrixXd Ask::adaptiveSampler(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                              const MatrixXd &Sigma, double initPeta,
+                              int sampleSize, int burnin, int sampleBlockRows) {
   /*
    * Should be similar to the average of GHK and Geweke 1991
    */
 
-  VectorXd rz(J), reta(J);
+  int nBlocks, nBlockCount, retaSampled, rzSampled, startingPlace, remainder,
+      remainderStartPlace, J;
+  J = Sigma.cols();
+  VectorXd rz(J);
+  VectorXd reta(J);
   VectorXd colj(sampleBlockRows);
   MatrixXd tempSample;
   double peta = initPeta;
-  int nBlocks, nBlockCount, retaSampled, rzSampled, startingPlace, remainder,
-      remainderStartPlace;
   startingPlace = burnin;
   nBlocks = floor((sampleSize - burnin) / sampleBlockRows);
   nBlockCount = nBlocks;
   remainder = (sampleSize - burnin) - (nBlocks * sampleBlockRows);
   remainderStartPlace = sampleSize - remainder;
+  VectorXd sigmaVector = Sigma.inverse().diagonal().array().pow(-1).sqrt();
   tempSample = MatrixXd::Zero(sampleSize, J);
   // Burnin period
-  tempSample.topRows(burnin) = burninAdaptive(burnin, J, .5);
+  tempSample.topRows(burnin) =
+      burninAdaptive(a, b, mu, Sigma, sigmaVector, burnin, J, .5);
   retaSampled = 0;
   rzSampled = 0;
-
+  VectorXd weight = MatrixXd::Ones(J,1);
+  weight.fill(1);
   for (int i = 0; i < nBlockCount; i++) {
     if (bernoulli(peta) == 1) {
       tempSample.middleRows(startingPlace, sampleBlockRows) =
-          askGhkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu, sigma,
+          askGhkLinearConstraints(a, b, mu, Sigma,
                                   sampleBlockRows);
       colj.resize(sampleBlockRows * (i + 1));
       for (int j = 0; j < J; j++) {
@@ -192,7 +125,7 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int burnin,
     } else {
       VectorXd initVector = tempSample.row(startingPlace - 1).transpose();
       tempSample.middleRows(startingPlace, sampleBlockRows) =
-          asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma,
+          asktmvnrand(a, b, mu, Sigma,
                       sigmaVector, initVector, sampleBlockRows);
       colj.resize(sampleBlockRows * (i + 1));
       for (int j = 0; j < J; j++) {
@@ -202,7 +135,7 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int burnin,
       rzSampled = 1;
     }
     if (rzSampled + retaSampled == 2) {
-      peta = calcPeta(rz, reta);
+      peta = calcPeta(rz, reta, weight);
     }
     startingPlace = startingPlace + sampleBlockRows;
   }
@@ -210,15 +143,15 @@ void Ask::adaptiveSampler(double initPeta, int sampleSize, int burnin,
     startingPlace = remainderStartPlace;
     if (bernoulli(peta) == 1) {
       tempSample.middleRows(startingPlace, remainder) = askGhkLinearConstraints(
-          lowerTruncPoints, upperTruncPoints, mu, sigma, remainder);
+          a, b, mu, Sigma, remainder);
     } else {
       VectorXd initVector = tempSample.row(startingPlace - 1).transpose();
       tempSample.middleRows(startingPlace, remainder) =
-          asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma,
+          asktmvnrand(a, b, mu, Sigma,
                       sigmaVector, initVector, remainder);
     }
   }
-  sample = tempSample.bottomRows(sampleSize - burnin);
+  return tempSample.bottomRows(sampleSize - burnin);
 }
 
 MatrixXd Ask::adaptiveSamplerT(const VectorXd &a, const VectorXd &b,
@@ -297,18 +230,19 @@ int Ask::isVectVgreater(VectorXd &v, VectorXd &u) {
   }
 }
 
-MatrixXd Ask::burninAdaptive(int sims, int J, double initPeta) {
-  MatrixXd sample(sims, J);
+MatrixXd Ask::burninAdaptive(const VectorXd &a, const VectorXd &b,
+                             const VectorXd &mu, const MatrixXd &Sigma,
+                             const VectorXd &sigmaVector, int sims, int J,
+                             double initPeta) {
+  MatrixXd Sample(sims, J);
   VectorXd initVector(J);
   initVector = MatrixXd::Zero(J, 1);
   if (bernoulli(initPeta)) {
-    sample = askGhkLinearConstraints(lowerTruncPoints, upperTruncPoints, mu,
-                                     sigma, sims);
-    return sample;
+    Sample = askGhkLinearConstraints(a, b, mu, Sigma, sims);
+    return Sample;
   } else {
-    sample = asktmvnrand(lowerTruncPoints, upperTruncPoints, mu, sigma,
-                         sigmaVector, initVector, sims);
-    return sample;
+    Sample = asktmvnrand(a, b, mu, Sigma, sigmaVector, initVector, sims);
+    return Sample;
   }
 }
 
@@ -329,7 +263,7 @@ MatrixXd Ask::burninAdaptiveT(const VectorXd &a, const VectorXd &b,
   }
 }
 
-double Ask::calcPeta(VectorXd &rz, VectorXd &reta) {
+double Ask::calcPeta(VectorXd &rz, VectorXd &reta, const VectorXd &weight) {
   if (isVectVgreater(rz, reta) == 1) {
     return 1.;
   } else if (isVectVgreater(reta, rz) == 1) {
@@ -350,11 +284,13 @@ double Ask::calcPetaT(VectorXd &rz, VectorXd &reta, const VectorXd &weight) {
     return wTrz / (wTrz + (weight.transpose() * reta));
   }
 }
-double Ask::ml(VectorXd &betas, double sigmas, VectorXd &y, MatrixXd &X) {
-  double mLike = lrLikelihood(betas, sigmas, y, X) +
-                 logmvnpdf(betaPrior, sigmaPrior, betas) +
-                 loginvgammapdf(sigmas, igamA, igamB) -
-                 log(Kernel.rowwise().prod().mean());
+double Ask::ml(const VectorXd &betas, double sigmas, const VectorXd &y,
+               const MatrixXd &X, const MatrixXd &kernel, const VectorXd &b0,
+               const MatrixXd &B0, double a0, double d0) {
+
+  double mLike = lrLikelihood(betas, sigmas, y, X) + logmvnpdf(b0, B0, betas) +
+                 loginvgammapdf(sigmas, a0, d0) -
+                 log(kernel.rowwise().prod().mean());
   return mLike;
 }
 
@@ -368,17 +304,24 @@ double Ask::mlT(VectorXd &betas, double sigma,const  VectorXd &y, const MatrixXd
   return mLike;
 }
 
-void Ask::runSim(int nSims, int batches, VectorXd &lowerConstraint,
-                 VectorXd &upperConstraint, VectorXd &theta, MatrixXd &sig,
-                 VectorXd &y, MatrixXd &X, int sims, int burnin,
-                 int sampleBlockRows) {
+void Ask::runSim(int nSims, int batches, VectorXd &a, VectorXd &b,
+                 VectorXd &theta, MatrixXd &sig, VectorXd &y, MatrixXd &X,
+                 int sims, int burnin, int sampleBlockRows, const VectorXd &b0,
+                 const MatrixXd &B0, double a0, double d0) {
+  int J = sig.cols();
+  int Jm1 = J - 1;
+  VectorXd zStar(J);
+  VectorXd betas(Jm1);
   VectorXd mLike(nSims);
-  VectorXd b(Jminus1);
+  MatrixXd Sample(sims, burnin);
+  MatrixXd xNotj(sims-burnin, J-1);
   for (int i = 0; i < nSims; i++) {
-    askKernel(lowerConstraint, upperConstraint, theta, sig, sims, burnin,
-              sampleBlockRows);
-    b = zStar.tail(Jminus1);
-    mLike(i) = ml(b, zStar(0), y, X);
+    Sample = adaptiveSampler(a, b, theta, sig, .5, sims, burnin, sampleBlockRows);
+    zStar = Sample.colwise().mean();
+    xNotj = Sample.rightCols(Jm1);
+    MatrixXd K = gibbsKernel(a, b, theta, sig, Sample, zStar);
+    betas = zStar.tail(Jm1);
+    mLike(i) = ml(betas, zStar(0), y, X, K, b0, B0, a0, d0);
   }
   cout << setprecision(10) << mLike.mean() << endl;
   if (batches != 0) {
@@ -405,8 +348,7 @@ void Ask::runSim(int nSims, int batches, VectorXd &lowerConstraint,
   }
 }
 
-void Ask::runTsim(int nSims, int batches, const VectorXd &lowerConstraint,
-                  const VectorXd &upperConstraint,
+void Ask::runTsim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
                   const MatrixXd &LinearConstraints, double df,
                   const VectorXd &theta, const MatrixXd &Sigma,
                   const VectorXd &y, const MatrixXd &X, int sims, int burnin,
@@ -415,9 +357,9 @@ void Ask::runTsim(int nSims, int batches, const VectorXd &lowerConstraint,
                   const VectorXd &weight) {
   VectorXd mLike(nSims);
   for (int i = 0; i < nSims; i++) {
-    mLike(i) = askKernelT(lowerConstraint, upperConstraint, LinearConstraints,
-                          df, theta, Sigma, sims, burnin, sampleBlockRows,
-                          initPeta, y, X, b0, B0, a0, d0, weight);
+    mLike(i) =
+        askKernelT(a, b, LinearConstraints, df, theta, Sigma, sims, burnin,
+                   sampleBlockRows, initPeta, y, X, b0, B0, a0, d0, weight);
   }
   cout << setprecision(10) << mLike.mean() << endl;
   if (batches != 0) {

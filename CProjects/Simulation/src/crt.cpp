@@ -117,9 +117,9 @@ void Crt::gibbsKernel() {
   Kernel.col(Jminus1).fill(y);
 }
 
-double Crt::ml(VectorXd &zStarTail, double zStarHead, VectorXd &y,
-               MatrixXd &X) {
-
+double Crt::ml(const VectorXd &zStarTail, double zStarHead, const VectorXd &y,
+               const MatrixXd &X, const VectorXd &b0, const MatrixXd &B0,
+               double a0, double d0) {
   double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
                  logmvnpdf(betaPrior, sigmaPrior, zStarTail) +
                  loginvgammapdf(zStarHead, igamA, igamB) -
@@ -176,19 +176,25 @@ void Crt::runTsim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
   }
 }
 
-void Crt::runSim(int nSims, int batches, VectorXd &lowerConstraint,
-                 VectorXd &upperConstraint, VectorXd &theta, MatrixXd &sig,
-                 VectorXd &y, MatrixXd &X, int sims, int burnin) {
+void Crt::runSim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
+                 VectorXd &mu, MatrixXd &Sigma, VectorXd &y, MatrixXd &X,
+                 int sims, int burnin, const VectorXd &b0, const MatrixXd &B0,
+                 double a0, double d0) {
 
-  int J = sig.cols();
+  int J = Sigma.cols();
   int Jminus1 = J - 1;
   VectorXd mLike(nSims);
-  VectorXd b(Jminus1);
-
+  VectorXd betas(Jminus1);
+  MatrixXd Sample(sims, J);
+  MatrixXd Kernel(sims,J);
+  VectorXd zStar(J);
   for (int i = 0; i < nSims; i++) {
-    crtKernel(lowerConstraint, upperConstraint, theta, sig, sims, burnin);
-    b = zStar.tail(Jminus1);
+	Sample = tmultnorm(a,b,mu,Sigma,sims);
+	zStar = Sample.colwise().mean();
+	Kernel = Dist::gibbsKernel(a, b, mu, Sigma, Sample, zStar);
+    betas = zStar.tail(Jminus1);
     mLike(i) = ml(b, zStar(0), y, X);
+	cout << "Where FAIL" << endl;
   }
   cout << setprecision(9) << mLike.mean() << endl;
   if (batches != 0) {

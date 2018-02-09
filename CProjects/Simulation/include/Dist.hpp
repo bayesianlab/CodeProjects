@@ -68,14 +68,14 @@ public:
   void tmvnrand(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, MatrixXd &,
                 VectorXd &);
 
-  MatrixXd tmultnorm(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int);
+  MatrixXd tmultnorm(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &Sigma, int nSims);
 
   MatrixXd tmultnorm(const VectorXd &, const VectorXd &, const VectorXd &,
                      const MatrixXd &, const int);
 
   MatrixXd tmultnorm(const VectorXd &, const VectorXd &,
                      const Ref<const MatrixXd> &, const VectorXd &,
-                     const MatrixXd &, const int);
+                     const MatrixXd &, int);
 
   double conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
                          VectorXd &xNotJ, double muxx);
@@ -147,34 +147,30 @@ VectorXd mvtpdf(const MatrixXd &X, const VectorXd &mu, const MatrixXd &Variance,
 
   double lrLikelihood(const VectorXd &betas, double sigSqd, const VectorXd &y,
                       const MatrixXd &X);
-
-  /*double lrLikelihood(const Ref<const MatrixXd> &betas,
-                      double sigmasqd, const VectorXd &y, const MatrixXd &X);*/
+  
+  double lrLikelihoodASK(const VectorXd &betas, double sigSqd, const VectorXd &y,
+                      const MatrixXd &X);
 
   VectorXd linreglike;
 
   VectorXd lmvnpdf;
-
-  VectorXd loginvgammapdf(VectorXd &, double, double);
 
   VectorXd loginvgammapdf(const Ref<const VectorXd> &, double, double);
 
   double loginvgammapdf(double y, double alpha, double beta);
   
 
-  MatrixXd asktmvnrand(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
-                       VectorXd &, VectorXd &, int);
+  MatrixXd asktmvnrand(const VectorXd &a, const VectorXd &b, const VectorXd &mu, const MatrixXd &Sigma,
+                       const VectorXd &sigmavector, const VectorXd &initvector, int);
 
   int bernoulli(double p);
 
-  MatrixXd askGhkLinearConstraints(VectorXd &, VectorXd &, VectorXd &,
-                                   MatrixXd &, int);
+  MatrixXd askGhkLinearConstraints(const VectorXd &, const VectorXd &, const VectorXd &,
+                                   const MatrixXd &, int);
 
   double autoCorr(VectorXd &);
 
-  VectorXd logmvnpdf(VectorXd &, MatrixXd &, MatrixXd x);
-
-  VectorXd logmvnpdf(const VectorXd &mu, const MatrixXd &Sigma, MatrixXd x);
+  VectorXd logmvnpdfV(const VectorXd &mu, const MatrixXd &Sigma, MatrixXd x);
 
   double logmvnpdfVect(const VectorXd &mu, const MatrixXd &Sigma, const VectorXd &x);
 
@@ -182,6 +178,8 @@ VectorXd mvtpdf(const MatrixXd &X, const VectorXd &mu, const MatrixXd &Variance,
                             const Ref<const MatrixXd> &x);
 
   double logmvnpdf(VectorXd &, MatrixXd &, VectorXd &);
+
+  double logmvnpdf(const VectorXd &, const MatrixXd &, const VectorXd &);
 
   double truncTrnd(double a, double b, double mu, double sigma, double nu);
 
@@ -228,6 +226,10 @@ VectorXd mvtpdf(const MatrixXd &X, const VectorXd &mu, const MatrixXd &Variance,
 
   MatrixXd mvtrnd(const VectorXd &mu, const MatrixXd &Sigma, const double nu,
                   const int N);
+
+  MatrixXd gibbsKernel(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                          const MatrixXd &Sigma, const MatrixXd &Sample,
+                          const VectorXd &zStar);
 };
 
 template <typename D>

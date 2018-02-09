@@ -31,7 +31,7 @@ void RobertMethodTests() {
     Dist d;
 	
     for (int i = 0; i < 10; i++) {
-      cout << d.truncNormalRnd(-inf + inf - 10, 0, 10, .1) << endl;
+      cout << d.truncNormalRnd(-inf - 10, 0, 10, .1) << endl;
     }
     for (int i = 0; i < 10; i++) {
       printval(d.truncNormalRnd(0, 10, -10, .01));
@@ -49,6 +49,8 @@ void RobertMethodTests() {
     for (int i = 0; i < 10; i++) {
       printval(d.truncNormalRnd(10, 1e8, 0, .001));
     }
+	msg("Two sided");
+	printval(d.truncNormalRnd(0,1,1,1));
   }
 }
 
@@ -115,7 +117,7 @@ void MvtPdfTests() {
 
 int main() {
   {
-    double inf = numeric_limits<double>::max();
+   /* double inf = numeric_limits<double>::max();
     string filepath = "/Users/dillonflannery-valadez/Google "
                       "Drive/CodeProjects/CProjects/Simulation/"
                       "rentaldata.csv";
@@ -140,16 +142,14 @@ int main() {
     MatrixXd MaximumLikelihoodEstsSigma =
         s2hat * (DATA.transpose() * DATA).inverse();
     cout << "MLES" << endl;
-	printmat(MaximumLikelihoodEstsSigma);
-	cout << MaximumLikelihoodEstsSigma.diagonal().array().sqrt() << endl;
     VectorXd MLES(DATA.cols() + 1);
     MLES << s2hat, MaximumLikelihoodEstsBeta;
+	printvec(MLES);
     MatrixXd V(DATA.cols() + 1, DATA.cols() + 1);
     V.setZero();
     V.block(1, 1, DATA.cols(), DATA.cols()) = MaximumLikelihoodEstsSigma;
     V(0, 0) = (2 * pow(s2hat, 2)) / (DATA.rows());
 
-	
     Dist dist;
     // Constraints
     VectorXd a(DATA.cols() + 1);
@@ -161,10 +161,10 @@ int main() {
 	MatrixXd Iden = I;
 	Iden.array().colwise() *= V.diagonal().array().pow(-.5); 
 	MatrixXd Test = Iden*V*Iden;
-    MatrixXd Sample = dist.geweke91(a, b, I, MLES, V, 150, 50); 
-	cout << Sample << endl;
+    MatrixXd Sample = dist.geweke91(a, b, I, MLES, V, 1500, 50); 
+	printvec(Sample.colwise().mean());*/
   }
   {
-	//RobertMethodTests();  
+	RobertMethodTests();  
   }
 }

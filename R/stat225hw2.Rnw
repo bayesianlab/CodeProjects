@@ -1,0 +1,81 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{times}
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\section*{Question 4}
+Poisson Likelihood gives a Jeffreys Prior by $ (I(\theta))^{\frac{1}{2}} $
+$$
+I(\theta) =  V [ \frac{\partial \log f(x|\theta)}{\partial \theta} ]
+$$
+$$
+V \Big[\frac{\partial \log f(x|\theta)}{\partial \theta}\Big] = \frac{\sum_i^N x_i}{\theta} - N =  \frac{\sum_i^N V(x_i)}{\theta^2} = \frac{N}{\theta} 
+$$
+Jeffreys Prior ($\pi_J(\theta)) $ is 
+$$
+\Big(\frac{N}{\theta}\Big)^{\frac{1}{2}}
+$$
+The posterior will be a Gamma $(Ga(\alpha_n, \beta_n))$ $\alpha_n = \frac{1}{2} + \sum_{i=1}^N x_i $ and $\beta_n = 1/N $
+$$
+\pi(\theta|x) \propto f(x|\theta)\times \pi(\theta) =  \theta^{\sum x_i} e^{N\theta} \times \theta^{-\frac{1}{2}}
+$$
+$$
+\pi(\theta|x) \propto \theta^{\alpha_n} e^{(\theta/\beta_n)}
+$$
+Where $\alpha_n = \frac{1}{2} + \sum_{i=1}^N x_i $ and $\beta_n = 1/N $.
+\\
+In this question, $ \sum_{i=1}^N x_i = 196 $  and $ N = 280 $. The Poisson mean is $ 0.70 $. 
+
+\subsection*{Relative Error Loss i)}
+Minimize expected posterior loss:
+\begin{align*}
+\min E_{\theta|X}[L(\theta, a)] = E \frac{\partial}{\partial a} L(\theta, a) =E[ 2\frac{1}{\theta}(\frac{a}{\theta} - 1)] = 0
+\end{align*}
+\begin{align*}
+a^* = E[\theta|X]
+\end{align*}
+Since the  distribution is $Ga(\alpha_n, \beta_n)$ the posterior mean is $\frac{196.5}{280} \approx 0.7018$
+\subsection*{Squared Error Loss ii)}
+By Robert Proposition 2.5.1 with squared error loss the Bayes estimator is the posterior expectation,
+$$
+a^* = E[\theta|X]
+$$
+Since the  distribution is $Ga(\alpha_n, \beta_n)$ the posterior mean is $\frac{196.5}{280} \approx 0.7018$
+\subsection*{Entopy Loss iii)}
+
+\begin{align*}
+\min E_{\theta|X} [L(\theta, a)] = & E \frac{\partial}{\partial a} L(\theta, a) = 1 -E \frac{\theta}{a} \\
+a^*  =& E[\theta|X] 
+\end{align*}
+\\
+Since the  distribution is $Ga(\alpha_n, \beta_n)$ the posterior mean is $\frac{196.5}{280} \approx 0.7018$
+
+\section*{Part b)}
+For the following let $ \phi(\theta) = \frac{r_0}{\theta + r_0} $ %and $ \frac{\partial }{\partial \theta} \phi(\theta) = -\frac{r_0}{ (\theta + r_0)^2 } $
+\subsection*{b.1)}
+
+\begin{align*} 
+I(\theta) = &  V(\frac{\partial \log(f(x|\phi)}{\partial \phi}) = V \Big[\frac{x}{\phi} - \frac{r_0}{1-\phi} \Big] \\
+I(\theta) = & \frac{r_0}{\phi(1-\phi)}
+\end{align*}
+The Jeffrey's Prior will be $ \sqrt{I(\phi)} = \sqrt{\frac{r_0}{\phi(1-\phi)^2}} $
+
+\subsection*{b.2)} Since the Bayes estimator for i)-iii) is just the posterior expectation, we just need to  find the posterior distribution with this prior. The posterior distribution is a Beta distribution, $ Be(\alpha_n, \beta_n) $ with $\alpha_n = n\bar{x} + \frac{1}{2} $ and $\beta_n = nr_0 $,
+$$ f(x_\phi) ={ {x + r_0 - 1 }\choose{x}}^N  \phi^{n \bar{x} } (1-\phi)^{n r_0}  $$
+$$ \pi(\phi) = \sqrt{I(\phi)} $$
+The posterior is then:
+\begin{align*}
+\pi(\phi|x) \propto & \phi^{\sum x- \frac{1}{2}} (1 - \phi)^{n r_0 - 1} \\
+\pi(\phi|x) \propto &\phi^{\alpha_n - 1}(1 - \phi)^{\beta_n - 1}
+\end{align*}
+This is the kernel of a Beta distribtution with the parameters given above. 
+The posterior mean of this distribtution is:
+$$ 
+E [\phi|x] = \frac{\alpha_n}{\alpha_n + \beta_n} = \frac{196.5}{1120 + 196.5} \approx 0.15
+$$
+
+
+
+\end{document}

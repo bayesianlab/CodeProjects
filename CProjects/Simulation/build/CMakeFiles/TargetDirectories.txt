@@ -19,13 +19,6 @@
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/CrbLib/CMakeFiles/rebuild_cache.dir
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/CrbLib/CMakeFiles/edit_cache.dir
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/CrbLib/CMakeFiles/Crb.dir
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/AskLib/CMakeFiles/install/local.dir
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/AskLib/CMakeFiles/install/strip.dir
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/AskLib/CMakeFiles/Ask.dir
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/AskLib/CMakeFiles/install.dir
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/AskLib/CMakeFiles/list_install_components.dir
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/AskLib/CMakeFiles/rebuild_cache.dir
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/AskLib/CMakeFiles/edit_cache.dir
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/ArkLib/CMakeFiles/install/local.dir
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/ArkLib/CMakeFiles/install/strip.dir
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/ArkLib/CMakeFiles/install.dir

@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/mvt.dir/src/rentalmain.cpp.o"
+  "CMakeFiles/mvt.dir/src/runsim.cpp.o"
   "CMakeFiles/mvt.dir/src/eigenshorts.cpp.o"
+  "CMakeFiles/mvt.dir/src/ask.cpp.o"
   "CMakeFiles/mvt.dir/src/Dist.cpp.o"
   "mvt.pdb"
   "mvt"

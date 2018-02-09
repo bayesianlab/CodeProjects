@@ -186,29 +186,6 @@ double Dist::leftTruncation(double a) {
   return inf;
 }
 
-/*double Dist::rightTruncation(double a) {
-  double optimalScale, lrho_z, z, temp, lu;
-  temp = b;
-  b = -a;
-  a = -temp;
-  int maxIterations = 0;
-  boost::random::uniform_01<> u;
-  optimalScale = (a + sqrt(pow(a, 2) + 4.))*.5;
-  while (maxIterations < ROBERT_LIMIT) {
-    z = shiftexprnd(optimalScale, a);
-    lrho_z = -pow(z - optimalScale, 2)*.5;
-	lu = log(u(rseed));
-    if (lu <= lrho_z) {
-      return -z;
-    }
-    maxIterations++;
-  }
-  cout << "Error rightTruncation: maxIterations exceeded, no truncation "
-          "possible."
-       << endl;
-  return inf;
-}*/
-
 double Dist::twoSided(double a, double b) {
   int maxIterations = 0;
   boost::random::uniform_01<> z;
@@ -249,29 +226,33 @@ double Dist::truncNormalRnd(double a, double b, double mu, double sigma) {
   standardizedA = (a - mu) / sigma;
   standardizedB = (b - mu) / sigma;
   stdLimit = 8;
-  if (b >= 1e6) {
-    if (standardizedA > stdLimit) {
-      Z = leftTruncation(standardizedA);
-      return mu + sigma * Z;
-    } else {
-      return tnormrnd(a, b, mu, sigma);
-    }
-  } else if (a <= -1e6) {
-    if (standardizedB < -stdLimit) {
-      Z = -leftTruncation(-standardizedB);
-      return mu + sigma * Z;
-    } else {
-      return tnormrnd(a, b, mu, sigma);
-    }
+  if (mu > a && mu < b) {
+    return tnormrnd(a, b, mu, sigma);
   } else {
-    if (standardizedA > stdLimit) {
-      Z = twoSided(standardizedA, standardizedB);
-      return mu + sigma * Z;
-    } else if (standardizedB < -stdLimit) {
-      Z = twoSided(standardizedA, standardizedB);
-      return mu + sigma * Z;
+    if (b >= 1e6) {
+      if (standardizedA > stdLimit) {
+        Z = leftTruncation(standardizedA);
+        return mu + sigma * Z;
+      } else {
+        return tnormrnd(a, b, mu, sigma);
+      }
+    } else if (a <= -1e6) {
+      if (standardizedB < -stdLimit) {
+        Z = -leftTruncation(-standardizedB);
+        return mu + sigma * Z;
+      } else {
+        return tnormrnd(a, b, mu, sigma);
+      }
     } else {
-      return tnormrnd(a, b, mu, sigma);
+      if (standardizedA > stdLimit) {
+        Z = twoSided(standardizedA, standardizedB);
+        return mu + sigma * Z;
+      } else if (standardizedB < -stdLimit) {
+        Z = twoSided(standardizedA, standardizedB);
+        return mu + sigma * Z;
+      } else {
+        return tnormrnd(a, b, mu, sigma);
+      }
     }
   }
 }
@@ -341,7 +322,7 @@ MatrixXd Dist::tmultnorm(VectorXd &a, VectorXd &b, VectorXd &mu,
 
 MatrixXd Dist::tmultnorm(const VectorXd &a, const VectorXd &b,
                          const VectorXd &mu, const MatrixXd &sigma,
-                         const int nSims) {
+                         int nSims) {
   /*
    * Uses both inversion and ar sampling
    */
@@ -461,7 +442,6 @@ VectorXd Dist::mvtpdf(const MatrixXd &X, const VectorXd &mu, const MatrixXd &Var
   }
   return pdf;
 }
-
 
 VectorXd Dist::ttpdf(double a, double b, double df, double mu, double sigma,
                      const Ref<const VectorXd> &x) {
@@ -644,8 +624,8 @@ MatrixXd Dist::ghkT(const VectorXd &a, const VectorXd &b,
   return sample.bottomRows(sims - burnin).matrix();
 }
 
-MatrixXd Dist::askGhkLinearConstraints(VectorXd &a, VectorXd &b, VectorXd &mu,
-                                       MatrixXd &Sigma, int rows) {
+MatrixXd Dist::askGhkLinearConstraints(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                                       const MatrixXd &Sigma, int rows) {
   /*
    * Take into account multiple constraints
    */
@@ -681,9 +661,9 @@ MatrixXd Dist::askGhkLinearConstraints(VectorXd &a, VectorXd &b, VectorXd &mu,
   }
 }
 
-MatrixXd Dist::asktmvnrand(VectorXd &a, VectorXd &b, VectorXd &mu,
-                           MatrixXd &sigma, VectorXd &sigmaVect,
-                           VectorXd &initVector, int sims) {
+MatrixXd Dist::asktmvnrand(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                           const MatrixXd &sigma, const VectorXd &sigmaVect,
+                           const VectorXd &initVector, int sims) {
   /*
    * Uses both inversion and ar sampling, Geweke 1991
    * Deleted calculation of sigma vector, unneeded and better implementation
@@ -844,23 +824,6 @@ double Dist::lrLikelihood(const VectorXd &betas, double sigmasqd,
   return -.5 * (normConst + (eTe * pow(sigmasqd, -1)));
 }
 
-/*double Dist::lrLikelihood(const Ref<const MatrixXd> &betas, double sigmasqd,
-                          const VectorXd &y, const MatrixXd &X) {
-  int N = X.rows();
-  VectorXd e(N);
-  double normConst = -(N / 2) * (log(sigmasqd) + log(2 * M_PI));
-  double expNormalizingConst = pow(-2 * sigmasqd, -1);
-  e = y - X * betas;
-  double eTe = e.transpose() * e;
-  return normConst + eTe * expNormalizingConst;
-}*/
-
-VectorXd Dist::loginvgammapdf(VectorXd &y, double alpha, double beta) {
-  double C1 = -(alpha * log(beta) + lgamma(alpha));
-  VectorXd ligampdf = y.array().log();
-  ligampdf *= -(alpha + 1);
-  return ligampdf.array() - (y.array() * beta).pow(-1) + C1;
-}
 
 VectorXd Dist::loginvgammapdf(const Ref<const VectorXd> &y, double alpha,
                               double beta) {
@@ -900,15 +863,8 @@ double Dist::autoCorr(VectorXd &X) {
          (nRows * sigXt * sigXtm1);
 }
 
-VectorXd Dist::logmvnpdf(VectorXd &mu, MatrixXd &sigma, MatrixXd x) {
-  int J = sigma.cols();
-  double C1 = (J * log(2 * M_PI)) + log(sigma.determinant());
-  x.rowwise() -= mu.transpose();
-  return -.5 *
-         (C1 + ((x * sigma.inverse()).array() * x.array()).rowwise().sum());
-}
 
-VectorXd Dist::logmvnpdf(const VectorXd &mu, const MatrixXd &sigma,
+VectorXd Dist::logmvnpdfV(const VectorXd &mu, const MatrixXd &sigma,
                          MatrixXd x) {
   int J = sigma.cols();
   double C1 = (J * log(2 * M_PI)) + log(sigma.determinant());
@@ -917,7 +873,8 @@ VectorXd Dist::logmvnpdf(const VectorXd &mu, const MatrixXd &sigma,
          (C1 + ((x * sigma.inverse()).array() * x.array()).rowwise().sum());
 }
 
-double Dist::logmvnpdf(VectorXd &mu, MatrixXd &sigma, VectorXd &x) {
+
+double Dist::logmvnpdf(const VectorXd &mu, const MatrixXd &sigma, const VectorXd &x) {
   int J = sigma.cols();
   double C1 = (J * log(2 * M_PI)) + log(sigma.determinant());
   return -.5 * (C1 + ((x - mu).transpose() * sigma.inverse()) * (x - mu));
@@ -1081,14 +1038,13 @@ MatrixXd Dist::askMvttgeweke91(const VectorXd &a, const VectorXd &b,
   for (int i = 1; i < sims; i++) {
     for (int j = 0; j < J; j++) {
       innerProduct = (precisionNotj.row(j) * (notj.block(j * (Jm1), 0, Jm1, J) *
-                                              updateVec.transpose()))
-                         .value();
+                                              updateVec)).value();
       updateVec(j) =
           innerProduct +
           hii(j) *
               truncNormalRnd(
-                  ((alpha(j) - innerProduct) * chiSqs(i, j)) / hii(j),
-                  ((beta(j) - innerProduct) * chiSqs(i, j)) / hii(j), 0, 1) /
+                  ((alpha(j) - innerProduct) * chiSqs(i)) / hii(j),
+                  ((beta(j) - innerProduct) * chiSqs(i)) / hii(j), 0, 1) /
               chiSqs(i);
     }
 	sample.row(i) = updateVec.transpose();
@@ -1213,7 +1169,6 @@ MatrixXd Dist::geweke91(const VectorXd &a, const VectorXd &b,
   int Jm1 = J - 1;
   MatrixXd T = LinearConstraints * sigma * LinearConstraints.transpose();
   MatrixXd precisionT = T.inverse();
-  cout << precisionT << endl;
   VectorXd Hii = precisionT.diagonal();
   VectorXd hii = Hii.array().pow(-1).sqrt();
   MatrixXd notj = selectorMat(J);
@@ -1242,3 +1197,42 @@ MatrixXd Dist::geweke91(const VectorXd &a, const VectorXd &b,
   return sample.bottomRows(sims - burnin);
 }
 
+MatrixXd Dist::gibbsKernel(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                          const MatrixXd &Sigma, const MatrixXd &Sample,
+                          const VectorXd &zStar) {
+  VectorXd cmeanVect(Sample.rows());
+  int J = Sigma.cols();
+  int Jm1 = J - 1;
+  MatrixXd precision = Sigma.inverse();
+  VectorXd Hxx =precision.diagonal();
+  VectorXd sigmaVector = Hxx.array().pow(-1).sqrt();
+  VectorXd Hxy = precision.row(0).tail(Jm1);
+  VectorXd muNotj = mu.tail(Jm1);
+  MatrixXd Kernel = MatrixXd::Zero(Sample.rows(), J);
+  MatrixXd xNotj  = Sample.rightCols(Jm1);
+  Kernel.col(0) = Dist::tnormpdfMeanVect(
+      a(0), b(0),
+      Dist::conditionalMean(Hxx(0), Hxy, muNotj, xNotj, mu(0)), sigmaVector(0),
+      zStar(0));
+  xNotj.rightCols(Jm1 - 1) = Sample.rightCols(Jm1 - 1);
+  MatrixXd notjMat = selectorMat(J);
+  for (int j = 1; j < Jm1; j++) {
+    muNotj = notjMat.block(j * (Jm1), 0, Jm1, J) * mu;
+    Hxy = notjMat.block(j * (Jm1), 0, Jm1, J) * precision.row(j).transpose();
+    xNotj.col(j - 1).fill(zStar(j - 1));
+    Kernel.col(j) = Dist::tnormpdfMeanVect(
+        a(j), b(j),
+        Dist::conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j)),
+        sigmaVector(j), zStar(j));
+  }
+  Hxy = precision.row(Jm1).head(Jm1).transpose();
+  muNotj = mu.head(Jm1);
+  VectorXd xnotJ = zStar.head(Jm1);
+  double muJ =
+      Dist::conditionalMean(Hxx(Jm1), Hxy, muNotj, xnotJ, mu(Jm1));
+  double y =
+      Dist::tnormpdf(a(Jm1), b(Jm1), muJ,
+                     sigmaVector(Jm1), zStar(Jm1));
+  Kernel.col(Jm1).fill(y);
+  return Kernel;
+}

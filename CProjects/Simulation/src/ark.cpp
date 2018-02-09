@@ -13,34 +13,6 @@
 using namespace Eigen;
 using namespace std;
 
-
-void Ark::arkKernel(VectorXd &lowLim, VectorXd &upLim, VectorXd &theta, MatrixXd &variance,
-         int sims, int maxIterations){
-  Rows = sims;
-  sigma = variance;
-  J = sigma.cols();
-  Jminus1 = J - 1;
-  mu = theta;
-  ll = lowLim;
-  ul = upLim;
-  precision = sigma.inverse();
-  Hxx = precision.diagonal();
-  sigmaVector = (1. / Hxx.array()).sqrt();
-  arkSample = MatrixXd::Zero(sims, J);
-  arkSample = arSample(lowLim, upLim, mu, sigma, sims, maxIterations);
-  zStar = arkSample.colwise().mean();
-  Kernel = MatrixXd::Zero(Rows, J);
-  muNotj = MatrixXd::Zero(Jminus1, 1);
-  Hxy = MatrixXd::Zero(Jminus1, 1);
-  xNotj = MatrixXd::Zero(Rows, Jminus1);
-  xNotj = arkSample.rightCols(Jminus1);
-  betaPrior = MatrixXd::Zero(Jminus1,1);
-  sigmaPrior = MatrixXd::Identity(Jminus1, Jminus1);
-  igamA = 6;
-  igamB = 12;
-  gibbsKernel();
-}
-
 double Ark::arkKernelT(const VectorXd &a, const VectorXd &b,
                        const MatrixXd &LinearConstraints, const VectorXd &theta,
                        const MatrixXd &Sigma, double df, const VectorXd &y,
@@ -95,8 +67,8 @@ MatrixXd Ark::gibbsKernelT(const VectorXd &a, const VectorXd &b, double df,
   return kernel;
 }
 
-MatrixXd Ark::arSample(VectorXd &ll, VectorXd &ul, VectorXd &mu,
-                       MatrixXd &sigma, int sSize, int maxIterations) {
+MatrixXd Ark::arSample(const VectorXd &ll, const VectorXd &ul, const VectorXd &mu,
+                       const MatrixXd &sigma, int sSize, int maxIterations) {
   int J, n, maxit;
   J = sigma.cols();
   MatrixXd arSample(sSize, J);
@@ -152,34 +124,6 @@ MatrixXd Ark::acceptRejectT(const VectorXd &a, const VectorXd &b,
   return sample;
 }
 
-void Ark::gibbsKernel() {
-  VectorXd cmeanVect(Rows);
-  Hxy = precision.row(0).tail(Jminus1);
-  muNotj = mu.tail(Jminus1);
-  Kernel.col(0) = Dist::tnormpdfMeanVect(
-      ll(0), ul(0), Dist::conditionalMean(Hxx(0), Hxy, muNotj, xNotj, mu(0)),
-      sigmaVector(0), zStar(0));
-  xNotj.rightCols(Jminus1 - 1) = arkSample.rightCols(J - 2);
-  for (int j = 1; j < Jminus1; j++) {
-    muNotj << mu.head(j), mu.tail(Jminus1 - j);
-    Hxy << precision.row(j).head(j).transpose().eval(),
-        precision.row(j).tail(Jminus1 - j).transpose().eval();
-    xNotj.col(j - 1).fill(zStar(j - 1));
-    Kernel.col(j) = Dist::tnormpdfMeanVect(
-        ll(j), ul(j), Dist::conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j)),
-        sigmaVector(j), zStar(j));
-  }
-
-  Hxy << precision.row(Jminus1).head(Jminus1).transpose();
-  muNotj = mu.head(Jminus1);
-  VectorXd xnotJ = zStar.head(Jminus1);
-  double muJ =
-      Dist::conditionalMean(Hxx(Jminus1), Hxy, muNotj, xnotJ, mu(Jminus1));
-  double y = Dist::tnormpdf(ll(Jminus1), ul(Jminus1), muJ, sigmaVector(Jminus1),
-                            zStar(Jminus1));
-  Kernel.col(Jminus1).fill(y);
-}
-
 void Ark::conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotj,
                           MatrixXd &xNotj, double muxx,
                           VectorXd &conditionalMeanVector) {
@@ -207,19 +151,14 @@ int Ark::isVectVgreater(VectorXd &v, VectorXd &u) {
   }
 }
 
-double Ark::ml(VectorXd &betas, double sigmas, VectorXd &y, MatrixXd &X) {
+double Ark::ml(const VectorXd &betas, double sigmas, const VectorXd &y,
+               const MatrixXd &X, const MatrixXd &Kernel, const VectorXd &b0,
+               const MatrixXd &B0, double a0, double d0) {
   double mLike = lrLikelihood(betas, sigmas, y, X) +
-                 logmvnpdf(betaPrior, sigmaPrior, betas) +
-                 loginvgammapdf(sigmas, igamA, igamB) -
+                 logmvnpdf(b0, B0, betas) +
+                 loginvgammapdf(sigmas, a0, d0) -
                  log(Kernel.rowwise().prod().mean());
   return mLike;
-}
-
-void Ark::displayMLike() {
-  double num = mvnpdf(mu, sigma, zStar);
-  double den = Kernel.rowwise().prod().mean();
-  double ans = log(num / den);
-  cout << "Marginal Likelihood  " << ans << endl;
 }
 
 double Ark::mlT(VectorXd &betas, double sigma, const VectorXd &y,
@@ -232,16 +171,24 @@ double Ark::mlT(VectorXd &betas, double sigma, const VectorXd &y,
   return mLike;
 }
 
-
-void Ark::runSim(int nSims, int batches, VectorXd &theta, MatrixXd &sigma,
-                 VectorXd &y, MatrixXd &X, VectorXd &ll, VectorXd &ul,
-                 int sampleSize, int maxIterations) {
+void Ark::runSim(int nSims, int batches, const VectorXd &theta,
+                 const MatrixXd &sigma, const VectorXd &y, const MatrixXd &X,
+                 const VectorXd &ll, const VectorXd &ul, int sampleSize,
+                 int maxIterations, const VectorXd &b0, const MatrixXd &B0,
+                 double a0, double d0) {
+  int J = sigma.cols();
+  int Jm1 = J - 1;
   VectorXd mLike(nSims);
-  VectorXd b(Jminus1);
+  VectorXd b(Jm1);
+  MatrixXd arkSample(sampleSize, J);
+  MatrixXd Kernel(sampleSize, J);
+  VectorXd zStar(J);
   for (int i = 0; i < nSims; i++) {
-    arkKernel(ll, ul, theta, sigma, sampleSize, maxIterations);
-    b = zStar.tail(Jminus1);
-    mLike(i) = ml(b, zStar(0), y, X);
+    arkSample = arSample(ll, ul, theta, sigma, sampleSize, maxIterations);
+    zStar = arkSample.colwise().mean();
+    Kernel = gibbsKernel(ll, ul, theta, sigma, arkSample, zStar);
+    b = zStar.tail(Jm1);
+        mLike(i) = ml(b, zStar(0), y, X, Kernel, b0, B0, a0, d0);
   }
   cout << setprecision(9) << mLike.mean() << endl;
   if (batches != 0) {

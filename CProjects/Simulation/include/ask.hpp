@@ -7,45 +7,22 @@
 using namespace Eigen;
 
 class Ask : public Dist {
-private:
-  MatrixXd xNotj;
-  VectorXd Hxy;
-  VectorXd muNotj;
-  VectorXd betaPrior;
-  MatrixXd sigmaPrior;
-  double igamA, igamB;
-  void setPriors(VectorXd &b0, MatrixXd &S0, double, double);
-  void setPriors(int);
-  void setTemporaries(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int);
 
 public:
-  MatrixXd sample;
-  int J;
-  int Jminus1;
-  VectorXd sigmaVector;
-  VectorXd mu;
-  MatrixXd Kernel;
-  void gibbsKernel();
 
   MatrixXd gibbsKernelT(const VectorXd &a, const VectorXd &b, double df,
                         const VectorXd &theta, const MatrixXd &Sigma,
                         const MatrixXd &draws, MatrixXd &xnot, VectorXd &zstar);
 
-  VectorXd lowerTruncPoints;
-  VectorXd upperTruncPoints;
-  MatrixXd sigma;
-  MatrixXd precision;
-  VectorXd zStar;
-  VectorXd Hxx;
-  int Rows;
-  VectorXd weight;
 
   void conditionalMean(double, VectorXd &, VectorXd &, MatrixXd &, double,
                        VectorXd &);
 
   void tnormpdf(double, double, VectorXd &, double, double, VectorXd &);
 
-  void adaptiveSampler(double, int, int, int);
+  MatrixXd adaptiveSampler(const VectorXd &a, const VectorXd &b, const VectorXd &mu, 
+                           const MatrixXd &Sigma, double initPeta,
+                           int sampleSize, int burnin, int sampleBlockRows);
 
   MatrixXd adaptiveSamplerT(const VectorXd &a, const VectorXd &b,
                             const MatrixXd &LinearConstraints,
@@ -55,18 +32,19 @@ public:
 
   int isVectVgreater(VectorXd &, VectorXd &);
 
-  MatrixXd burninAdaptive(int, int, double);
+  MatrixXd burninAdaptive(const VectorXd &a, const VectorXd &b,
+                          const VectorXd &mu, const MatrixXd &Sigma,
+                          const VectorXd &sigmaVectorint, int sims, int J,
+                          double initPeta);
 
   MatrixXd burninAdaptiveT(const VectorXd &a, const VectorXd &b,
                            const MatrixXd &LinearConstraints,
                            const VectorXd &mu, const MatrixXd &Sigma, double df,
                            int sims, double initPeta);
 
-  double calcPeta(VectorXd &, VectorXd &);
+  double calcPeta(VectorXd &rz, VectorXd &reta, const VectorXd &weight);
 
   double calcPetaT(VectorXd &, VectorXd &, const VectorXd &weight);
-
-  void askKernel(VectorXd &, VectorXd &, VectorXd &, MatrixXd &, int, int, int);
 
   double askKernelT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, double df,
@@ -76,14 +54,18 @@ public:
                     const MatrixXd &B0, double a0, double d0,
                     const VectorXd &weight);
 
-  double ml(VectorXd &, double, VectorXd &, MatrixXd &);
+  double ml(const VectorXd &betas, double sigmas, const VectorXd &y,
+            const MatrixXd &X, const MatrixXd &kernel, const VectorXd &b0,
+            const MatrixXd &B0, double a0, double d0);
 
   double mlT(VectorXd &betas, double sigma, const VectorXd &y,
              const MatrixXd &X, const MatrixXd &kernel, const VectorXd &b0,
              const MatrixXd &B0, double a0, double d0);
 
-  void runSim(int, int, VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
-              VectorXd &, MatrixXd &, int, int, int);
+  void runSim(int nSims, int batches, VectorXd &a, VectorXd &b, VectorXd &theta,
+              MatrixXd &sig, VectorXd &y, MatrixXd &X, int sims, int burnin,
+              int sampleBlockRowsa, const VectorXd &b0, const MatrixXd &B0,
+              double a0, double d0);
 
   void runTsim(int nSims, int batches, const VectorXd &lowerConstraint,
                const VectorXd &upperConstraint,

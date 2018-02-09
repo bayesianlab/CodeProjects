@@ -54,15 +54,17 @@ public:
 
   void tnormpdf(double, double, VectorXd &, double, double, VectorXd &);
 
-  double ml(VectorXd &, double, VectorXd &, MatrixXd &);
+  double ml(const VectorXd &zStarTail, double zStarHead, const VectorXd &y,
+            const MatrixXd &X, const VectorXd &b0, const MatrixXd &B0,
+            double a0, double d0);
 
   double mlT(const VectorXd &, double, const VectorXd &, const MatrixXd &,
              MatrixXd &Kernel, const VectorXd &b0, const MatrixXd &B0,
              double a0, double d0);
 
-  void runSim(int nsims, int batches, VectorXd &lowerconstraint,
-            VectorXd &upperconstraint, VectorXd &theta, MatrixXd &sig,
-            VectorXd &y, MatrixXd &x, int sims, int burnin);
+  void runSim(int nsims, int batches, const VectorXd &a, const VectorXd &b,
+              VectorXd &theta, MatrixXd &sig, VectorXd &y, MatrixXd &x,
+              int sims, int burnin);
 
   void runTsim(int nsims, int batches, const VectorXd &a, const VectorXd &b,
                const MatrixXd &LinearConstraints, double df,

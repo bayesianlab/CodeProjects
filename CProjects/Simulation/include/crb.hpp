@@ -28,8 +28,9 @@ public:
   void fillfzStar(VectorXd &, int, VectorXd &, VectorXd &, MatrixXd &,
                   VectorXd &, VectorXd &);
 
-  double ml(VectorXd &fz, VectorXd &, double, VectorXd &, MatrixXd &,
-            VectorXd &b0, MatrixXd &B0, const double igamA, const double igamB);
+  double ml(const VectorXd &fz, const VectorXd &zStarTail, double zStarHead,
+            const VectorXd &y, const MatrixXd &X, const VectorXd &b0, const MatrixXd &B0,
+            const double igamA, const double igamB);
 
   double mlCRB(const VectorXd &fzStar, const VectorXd &, double, VectorXd &,
                MatrixXd &, VectorXd &b0, MatrixXd &B0, double a0, double d0);

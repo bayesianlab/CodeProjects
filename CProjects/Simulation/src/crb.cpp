@@ -188,8 +188,8 @@ MatrixXd Crb::chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
   return T;
 }
 
-double Crb::ml(VectorXd &fzStar, VectorXd &zStarTail, double zStarHead,
-               VectorXd &y, MatrixXd &X, VectorXd &b0, MatrixXd &B0,
+double Crb::ml(const VectorXd &fzStar, const VectorXd &zStarTail, double zStarHead,
+               const VectorXd &y, const MatrixXd &X, const VectorXd &b0, const MatrixXd &B0,
                const double igamA, const double igamB) {
   double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
                  logmvnpdf(b0, B0, zStarTail) +

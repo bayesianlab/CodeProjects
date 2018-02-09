@@ -24,6 +24,12 @@ limits
 random
 -
 
+../include/eigenshorts.hpp
+Eigen/Dense
+-
+string
+-
+
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
@@ -55,6 +61,8 @@ math.h
 -
 random
 -
+eigenshorts.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.hpp
 
 /usr/local/include/eigen3/Eigen/Cholesky
 Core

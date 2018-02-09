@@ -6,6 +6,12 @@
 
 #IncludeRegexTransform: 
 
+../include/CreateSampleData.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
+-
+
 ../include/Dist.hpp
 Eigen/Dense
 -
@@ -24,20 +30,46 @@ limits
 random
 -
 
-../include/ThreeD.hpp
+../include/Importance.hpp
+Dist.hpp
+../include/Dist.hpp
 Eigen/Dense
 -
-iostream
+string.h
+-
+
+../include/LinRegGibbs.hpp
+Dist.hpp
+../include/Dist.hpp
+
+../include/ark.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
+-
+
+../include/ask.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
+-
+
+../include/crb.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
+-
+
+../include/crt.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
 -
 
 ../include/eigenshorts.hpp
 Eigen/Dense
 -
 string
--
-
-../include/read_csv_to_eigen.hpp
-Eigen/Dense
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp
@@ -74,21 +106,49 @@ random
 eigenshorts.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.hpp
 
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.cpp
+Eigen/Dense
+-
+boost/math/distributions/normal.hpp
+-
+cstdint
+-
+ctime
+-
+limits
+-
+math.h
+-
+CreateSampleData.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
+ask.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.hpp
+
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp
 Eigen/Dense
 -
 iostream
 -
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp
+CreateSampleData.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-ThreeD.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ThreeD.hpp
-eigenshorts.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.hpp
-read_csv_to_eigen.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.hpp
+Importance.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
+LinRegGibbs.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.hpp
+ark.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.hpp
+ask.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.hpp
+crb.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.hpp
+crt.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.hpp
 Eigen/Dense
 -
 ctime
@@ -100,14 +160,6 @@ iostream
 limits
 -
 math.h
--
-sstream
--
-stdio.h
--
-stdlib.h
--
-string
 -
 
 /usr/local/include/boost_1_66_0/boost/array.hpp

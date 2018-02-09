@@ -24,10 +24,15 @@ using namespace Eigen;
 #define linRegSS 2500
 
 void askTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
+	int dim = betas.size();
   CreateSampleData csd(linRegSS, betas, seed);
+  VectorXd b0 = MatrixXd::Zero(dim, 1);
+  MatrixXd B0 = MatrixXd::Identity(dim, dim);
+  double a0 = 6;
+  double d0 = 12;
   Ask ask;
   ask.runSim(mlSims, batches, ll, ul, csd.maxLikeEsts, csd.inverseFisher, csd.y,
-             csd.X, nSims, burnin, 500);
+             csd.X, nSims, burnin, 500, b0, B0, a0, d0);
 }
 
 void askTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
@@ -50,10 +55,15 @@ void askTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
 }
 
 void arkTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
+  int dim = betas.size();
   CreateSampleData csd(linRegSS, betas, seed);
+  VectorXd b0 = MatrixXd::Zero(dim, 1);
+  MatrixXd B0 = MatrixXd::Identity(dim, dim);
+  double a0 = 6;
+  double d0 = 12;
   Ark ark;
   ark.runSim(mlSims, batches, csd.maxLikeEsts, csd.inverseFisher, csd.y, csd.X,
-             ll, ul, nSims, 5000);
+             ll, ul, nSims, 5000, b0, B0, a0, d0);
 }
 
 void arkTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
@@ -211,21 +221,21 @@ void modifiedGelfandDeyTestT(VectorXd &betas, VectorXd &a, VectorXd &b) {
 }
 
 void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
- // cout << "Ask method:" << endl;
-  //askTest2(betas, a, b);
-  //cout << "Ark method:" << endl;
-  //arkTest2(betas, a, b);
+  /*cout << "Ask method:" << endl;
+  askTest2(betas, a, b);
+  cout << "Ark method:" << endl;
+  arkTest2(betas, a, b);
   cout << "Crb method:" << endl;
-  crbTest2(betas, a, b);
-  /*cout << "Crt method:" << endl;
+  crbTest2(betas, a, b);*/
+  cout << "Crt method:" << endl;
   crtTest2(betas, a, b);
-  cout << "Importance Sampling:" << endl;
+ /* cout << "Importance Sampling:" << endl;
   impTest2(betas, a, b);
   cout << "Modified Gelfand Dey:" << endl;
   modifiedGelfandDeyTest(betas, a, b);
-  cout << endl;
+  cout << endl;*/
   cout << "Ask method T:" << endl;
-  askTestT(betas, a, b);
+  askTestT(betas, a, b);/*
   cout << "Ark method T:" << endl;
   arkTestT(betas, a, b);
   cout << "Importance Sampling T:" << endl;
@@ -235,7 +245,7 @@ void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
   cout << "Crt method T:" << endl;
   crtTestT(betas, a, b);
   cout << "Modified Gelfand Dey T:" << endl;
-  modifiedGelfandDeyTestT(betas, a, b); */
+  modifiedGelfandDeyTestT(betas, a, b);*/ 
 }
 
 int main() {
