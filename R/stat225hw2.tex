@@ -3,6 +3,9 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{times}
+\usepackage{float}
+\usepackage{hyperref}
+
 \usepackage{Sweave}
 \begin{document}
 \input{stat225hw2-concordance}
@@ -32,18 +35,32 @@ In this question, $ \sum_{i=1}^N x_i = 196 $  and $ N = 280 $. The Poisson mean 
 \subsection*{Relative Error Loss i)}
 Minimize expected posterior loss:
 \begin{align*}
-\min E_{\theta|X}[L(\theta, a)] = E \frac{\partial}{\partial a} L(\theta, a) =E[ 2\frac{1}{\theta}(\frac{a}{\theta} - 1)] = 0
+\min E_{\theta|X}[L(\theta, a)] = & E \frac{\partial}{\partial a} L(\theta, a) = 0\\ 
+ E[ (\frac{a}{\theta^2} - \frac{1}{\theta})] = & \ 0 \\
+ a E[\frac{1}{\theta^2}] = & E[\frac{1}{\theta}] \\ 
+ a^* = \frac{E \Big[\frac{1}{\theta^2}\Big]  }{E\Big[ \frac{1}{\theta} \Big]}
 \end{align*}
-\begin{align*}
-a^* = E[\theta|X]
-\end{align*}
-Since the  distribution is $Ga(\alpha_n, \beta_n)$ the posterior mean is $\frac{196.5}{280} \approx 0.7018$
+The integration was performed in R, 
+\begin{Schunk}
+\begin{Sinput}
+> parti <- function(theta,k){
++   res <- theta^(-k) * dgamma(theta, 196.5, rate =280)
++ }
+> num <-integrate(parti, 0, Inf, k=1)
+> den <- integrate(parti,0,Inf,k=2)
+> cat("astar = ", num[[1]]/den[[1]])
+\end{Sinput}
+\begin{Soutput}
+astar =  0.6946429
+\end{Soutput}
+\end{Schunk}
+Which is very close to the Poisson mean, 0.70.
 \subsection*{Squared Error Loss ii)}
 By Robert Proposition 2.5.1 with squared error loss the Bayes estimator is the posterior expectation,
 $$
 a^* = E[\theta|X]
 $$
-Since the  distribution is $Ga(\alpha_n, \beta_n)$ the posterior mean is $\frac{196.5}{280} \approx 0.7018$
+Since the  distribution is $Ga(\alpha_n, \beta_n)$ the posterior mean is $\frac{196.5}{280} \approx 0.7018$, no need to use R for this.
 \subsection*{Entopy Loss iii)}
 
 \begin{align*}
@@ -63,8 +80,8 @@ I(\theta) = & \frac{r_0}{\phi(1-\phi)}
 \end{align*}
 The Jeffrey's Prior will be $ \sqrt{I(\phi)} = \sqrt{\frac{r_0}{\phi(1-\phi)^2}} $
 
-\subsection*{b.2)} Since the Bayes estimator for i)-iii) is just the posterior expectation, we just need to  find the posterior distribution with this prior. The posterior distribution is a Beta distribution, $ Be(\alpha_n, \beta_n) $ with $\alpha_n = n\bar{x} + \frac{1}{2} $ and $\beta_n = nr_0 $,
-$$ f(x_\phi) ={ {x + r_0 - 1 }\choose{x}}^N  \phi^{n \bar{x} } (1-\phi)^{n r_0}  $$
+\subsection*{b.2)} Find the posterior distribution with this prior. The posterior distribution is a Beta distribution, $ Be(\alpha_n, \beta_n) $ with $\alpha_n = n\bar{x} + \frac{1}{2} $ and $\beta_n = nr_0 $,
+$$ f(x;\phi) ={ {x + r_0 - 1 }\choose{x}}^N  \phi^{n \bar{x} } (1-\phi)^{n r_0}  $$
 $$ \pi(\phi) = \sqrt{I(\phi)} $$
 The posterior is then:
 \begin{align*}
@@ -72,8 +89,140 @@ The posterior is then:
 \pi(\phi|x) \propto &\phi^{\alpha_n - 1}(1 - \phi)^{\beta_n - 1}
 \end{align*}
 This is the kernel of a Beta distribtution with the parameters given above. 
-The posterior mean of this distribtution is:
+\subsubsection*{b.2.i}
+With R one gets:
+\begin{Schunk}
+\begin{Sinput}
+> partb <- function(theta, k){
++   res <- theta^(-k) * dbeta(theta, 196.5, 1120)
++ }
+> num <- integrate(partb, 0, Inf, k=1)
+> den <- integrate(partb, 0, Inf, k=2)
+> cat(num[[1]]/den[[1]])
+\end{Sinput}
+\begin{Soutput}
+0.147965
+\end{Soutput}
+\end{Schunk}
+\subsubsection*{b.2.ii-iii}
+The posterior mean is 
 $$ 
 E [\phi|x] = \frac{\alpha_n}{\alpha_n + \beta_n} = \frac{196.5}{1120 + 196.5} \approx 0.15
 $$
+\newpage
+
+\section*{Question 3}
+\begin{Schunk}
+\begin{Sinput}
+> Y <- rnorm(10000,0,5)
+> eY <- exp(Y)
+> X <- eY/(1+eY)
+> plot(density(X), main="Density of X")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{stat225hw2-q3}
+\begin{Schunk}
+\begin{Sinput}
+> plot(hist(X))
+\end{Sinput}
+\end{Schunk}
+\includegraphics{stat225hw2-q3a}
+Show (using R) the two densities are the same:
+\begin{enumerate}
+\item Code for partition:
+\begin{Schunk}
+\begin{Sinput}
+> weightedBeta <- function(X,cuts){
++   Fn <- ecdf(X)
++   sto <- Fn(1/cuts)*dbeta(X,1,cuts)
++   for(j in 2:cuts){
++     jm1 <- j-1
++     b <- j/cuts
++     a <- jm1/cuts
++     beta <- cuts - j + 1
++     sto <- sto + ((Fn(b) - Fn(a))*dbeta(X,j,beta))
++   }
++   sto
++ }
+\end{Sinput}
+\end{Schunk}
+\item Densities are the same as the number of partitions increase,
+\begin{figure}[H]
+\centering
+\begin{Schunk}
+\begin{Sinput}
+> par(mfrow=c(1,4))
+> Z <- weightedBeta(X, 3)
+> plot(density(Z), main="Density Z")
+> Z <- weightedBeta(X, 6)
+> plot(density(Z), main="Density Z")
+> Z <- weightedBeta(X, 18)
+> plot(density(Z), main="Density Z")
+> Z <- weightedBeta(X, 24)
+> plot(density(Z), main="Density Z")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{stat225hw2-006}
+\caption{Partions = 3, 6, 18, 24}
+\end{figure}
+\end{enumerate}
+\newpage 
+
+\section*{Question 6}
+We are to test multiple hypothesis for the paramter $ \mu_i $. If it is significantly different than zero then I will reject the null hypothesis $ H_0 $, otherwise I will fail to reject. The code to run the Rjags for this question is here:
+\begin{Schunk}
+\begin{Sinput}
+> library(data.table)
+> library(rjags)
+> X <-fread('http://www.ics.uci.edu/~mguindan/teaching/stats225/zscores.txt')
+> p6data <-  list(y = X$V1, N = length(X$V1))
+> mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug", data = p6data, n.chains=5, n.adapt = 100)
+\end{Sinput}
+\begin{Soutput}
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 200
+   Unobserved stochastic nodes: 402
+   Total graph size: 1608
+
+Initializing model
+\end{Soutput}
+\begin{Sinput}
+> res <- coda.samples(mod, var = c("y", "mu"), n.iter=1000,thin =10)
+> summ <- summary(res)
+> R <- data.frame(as.matrix(res))
+> sto <- numeric(200)
+> for(i in 1:200){
++   sto[i]<-quantile(R[,i],.5)
++ }
+\end{Sinput}
+\end{Schunk}
+And the Jags code itself is here:
+\begin{verbatim}
+model{
+p0 ~ dbeta(1,1)
+sigma2 ~ dgamma(.001,.001)
+for(i in 1:N){
+  y[i] ~ dnorm(mu[i]*gamma[i], 1/(sigma2
+  ))
+  mu[i] ~ dnorm(0, 1)
+  gamma[i] ~ dbern(p0)
+}
+}
+\end{verbatim}
+
+My decision rule needs to be based upon the median model. If the 50\% quantile is significantly far from 0 then this would indicate evidence against the null. With enough such evidence I will reject $H_0$. A plot of the 50\% of $ \mu_i $ is show here:
+\begin{figure}[H]
+\centering
+\begin{Schunk}
+\begin{Sinput}
+> plot(sto, main="50% Percentiles of mean's", ylab ="Percentile", col="blue")
+\end{Sinput}
+\end{Schunk}
+\includegraphics{stat225hw2-008}
+\end{figure}
+For this question I would consider horizontal lines to define the cutoff for the $ \mu_i $'s, say $ \pm  k $, perhaps $ k = \frac{1}{2} $. For those falling above this threshold I would reject the null in favor of the alternative. 
+
 \end{document}

@@ -7,37 +7,6 @@
 using namespace Eigen;
 using namespace std;
 
-
-void Crt::crtKernel(VectorXd &lowerlim, VectorXd &upperlim, VectorXd &theta,
-                    MatrixXd &sigma, int sims, int burnin) {
-  ll = lowerlim;
-  ul = upperlim;
-  mu = theta;
-  Sigma = sigma;
-  J = sigma.cols();
-  Rows = sims - burnin;
-  Jminus1 = J - 1;
-  precision = sigma.inverse();
-  Hxx = precision.diagonal();
-  sigmaVector = MatrixXd::Zero(sigma.cols(), 1);
-  sigmaVector = (1. / Hxx.array()).sqrt();
-  truncatedSample = MatrixXd::Zero(sims, 2 * J);
-  truncatedSample = tmultnorm(lowerlim, upperlim, mu, sigma, sims);
-  truncatedSample = truncatedSample.bottomRows(sims - burnin).eval();
-  zStar = truncatedSample.leftCols(J).colwise().mean();
-  Kernel = MatrixXd::Zero(Rows, J);
-  xNotj = MatrixXd::Zero(Rows, Jminus1);
-  xNotj.rightCols(Jminus1 - 1) = truncatedSample.middleCols(2, J - 2);
-  muNotj = MatrixXd::Zero(Jminus1, 1);
-  Hxy = MatrixXd::Zero(Jminus1, 1);
-  xnotJ = zStar.head(Jminus1);
-  betaPrior = MatrixXd::Zero(Jminus1, 1);
-  sigmaPrior = MatrixXd::Identity(Jminus1, Jminus1);
-  igamA = 6;
-  igamB = 12;
-  gibbsKernel();
-}
-
 double Crt::crtTML(const VectorXd &a, const VectorXd &b,
                    const MatrixXd &LinearConstraints, const VectorXd &mu,
                    const MatrixXd &Sigma, const VectorXd &y, const MatrixXd &X,
@@ -45,7 +14,7 @@ double Crt::crtTML(const VectorXd &a, const VectorXd &b,
                    const MatrixXd &B0, double a0, double d0) {
   int J = Sigma.cols();
   int Jm1 = J - 1;
-  Rows = sims - burnin;
+  int Rows = sims - burnin;
   MatrixXd truncTSample =
       mvttgeweke91(a, b, LinearConstraints, mu, Sigma, df, sims, burnin)
           .bottomRows(Rows);
@@ -64,7 +33,7 @@ MatrixXd Crt::gibbsTKernel(const VectorXd &a, const VectorXd &b,
                            int burnin) {
   int J = Sigma.cols();
   int Jm1 = J - 1;
-  Rows = sims - burnin;
+  int Rows = sims - burnin;
   MatrixXd xnoti = MatrixXd::Zero(Rows, Jm1);
   xnoti.rightCols(Jm1 - 1) = sample.middleCols(2, J - 2);
   MatrixXd precision = Sigma.inverse();
@@ -96,33 +65,12 @@ MatrixXd Crt::gibbsTKernel(const VectorXd &a, const VectorXd &b,
   return kernel;
 }
 
-void Crt::gibbsKernel() {
-  Kernel.col(0) = Dist::tnormpdfMeanVect(
-      ll(0), ul(0), truncatedSample.col(J).matrix(), sigmaVector(0), zStar(0));
-  for (int j = 1; j < Jminus1; j++) {
-    muNotj << mu.head(j), mu.tail(Jminus1 - j);
-    Hxy << precision.row(j).head(j).transpose().eval(),
-        precision.row(j).tail(Jminus1 - j).transpose().eval();
-    xNotj.col(j - 1).fill(zStar(j - 1));
-    Kernel.col(j) = Dist::tnormpdfMeanVect(
-        ll(j), ul(j), Dist::conditionalMean(Hxx(j), Hxy, muNotj, xNotj, mu(j)),
-        sigmaVector(j), zStar(j));
-  }
-  Hxy << precision.row(Jminus1).head(Jminus1).transpose();
-  muNotj = mu.head(Jminus1);
-  double y = Dist::tnormpdf(
-      ll(Jminus1), ul(Jminus1),
-      Dist::conditionalMean(Hxx(Jminus1), Hxy, muNotj, xnotJ, mu(Jminus1)),
-      sigmaVector(Jminus1), zStar(Jminus1));
-  Kernel.col(Jminus1).fill(y);
-}
-
-double Crt::ml(const VectorXd &zStarTail, double zStarHead, const VectorXd &y,
-               const MatrixXd &X, const VectorXd &b0, const MatrixXd &B0,
-               double a0, double d0) {
+double Crt::ml(const VectorXd &zStarTail, double zStarHead,
+               const MatrixXd &Kernel, const VectorXd &y, const MatrixXd &X,
+               const VectorXd &b0, const MatrixXd &B0, double a0, double d0) {
   double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
-                 logmvnpdf(betaPrior, sigmaPrior, zStarTail) +
-                 loginvgammapdf(zStarHead, igamA, igamB) -
+                 logmvnpdf(b0, B0, zStarTail) +
+                 loginvgammapdf(zStarHead, a0, d0) -
                  log(Kernel.rowwise().prod().mean());
   return mLike;
 }
@@ -180,21 +128,20 @@ void Crt::runSim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
                  VectorXd &mu, MatrixXd &Sigma, VectorXd &y, MatrixXd &X,
                  int sims, int burnin, const VectorXd &b0, const MatrixXd &B0,
                  double a0, double d0) {
-
   int J = Sigma.cols();
   int Jminus1 = J - 1;
   VectorXd mLike(nSims);
   VectorXd betas(Jminus1);
   MatrixXd Sample(sims, J);
-  MatrixXd Kernel(sims,J);
+  MatrixXd Kernel(sims, J);
   VectorXd zStar(J);
   for (int i = 0; i < nSims; i++) {
-	Sample = tmultnorm(a,b,mu,Sigma,sims);
-	zStar = Sample.colwise().mean();
-	Kernel = Dist::gibbsKernel(a, b, mu, Sigma, Sample, zStar);
+    Sample =
+        tmultnorm(a, b, mu, Sigma, sims).leftCols(J).bottomRows(sims - burnin);
+    zStar = Sample.colwise().mean();
+    Kernel = Dist::gibbsKernel(a, b, mu, Sigma, Sample, zStar);
     betas = zStar.tail(Jminus1);
-    mLike(i) = ml(b, zStar(0), y, X);
-	cout << "Where FAIL" << endl;
+    mLike(i) = ml(betas, zStar(0), Kernel, y, X, b0, B0, a0, d0);
   }
   cout << setprecision(9) << mLike.mean() << endl;
   if (batches != 0) {

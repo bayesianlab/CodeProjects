@@ -11,25 +11,17 @@ class Importance : public Dist {
 private:
   string mlEst = "Marginal Likelihood Estimate:    ";
   string newLines = "\n\n";
-  VectorXd lowerLim;
-  VectorXd upperLim;
-  VectorXd y;
-  MatrixXd X;
-  int J;
-  VectorXd diagInverseFish;
-  MatrixXd lsEsts;
-  VectorXd sigSqd;
-  VectorXd betaInit;
-  MatrixXd sigmaInit;
-  int igamParamA, igamParamB, Jminus1;
 
 public:
+  double importanceSampling(const VectorXd &ll, const VectorXd &ul,
+                            const VectorXd &betas, const MatrixXd &sigma,
+                            const VectorXd &y, const MatrixXd &X,
+                            int sampleSize, int burnin, const VectorXd &b0,
+                            const MatrixXd &B0, int a0, int d0);
 
-  double importanceSampling(VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
-                            VectorXd &, MatrixXd &, int, int, VectorXd &,
-                            MatrixXd &, int, int);
-
-  double ml(VectorXd &, MatrixXd &);
+  double ml(const MatrixXd &importanceDensity, const VectorXd &y,
+            const MatrixXd &X, const MatrixXd &betas, const VectorXd &sigmas,
+            const VectorXd &b0, const MatrixXd &B0, int a0, int d0);
 
   double mlT(const VectorXd &a, const VectorXd &b,
              const MatrixXd &LinearConstraints, const VectorXd &mu,
@@ -56,7 +48,6 @@ public:
 
   MatrixXd tnormpdf(VectorXd &, VectorXd &, VectorXd &, VectorXd &, MatrixXd &);
 
-  MatrixXd importanceDensity;
 
   VectorXd logtLike(double df, const Ref<const VectorXd> &mu,
                     const VectorXd &sigmaSqd, MatrixXd X);

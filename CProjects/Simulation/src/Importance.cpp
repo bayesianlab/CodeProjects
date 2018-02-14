@@ -11,37 +11,30 @@
 using namespace Eigen;
 using namespace std;
 
-
-double Importance::importanceSampling(VectorXd &ll, VectorXd &ul,
-                                      VectorXd &betas, MatrixXd &sigma,
-                                      VectorXd &y, MatrixXd &X, int sampleSize,
-                                      int burnin, VectorXd &b0, MatrixXd &S0,
-                                      int a0, int d0) {
-  J = ll.size();
-  Jminus1 = J - 1;
-  lowerLim = ll;
-  upperLim = ul;
-  betaInit = b0;
-  sigmaInit = S0;
-  igamParamA = a0;
-  igamParamB = d0;
-  sample = ghkLinearConstraints(lowerLim, upperLim, betas, sigma, sampleSize,
+double Importance::importanceSampling(const VectorXd &ll, const VectorXd &ul,
+                                      const VectorXd &mu,
+                                      const MatrixXd &sigma, const VectorXd &y,
+                                      const MatrixXd &X, int sampleSize,
+                                      int burnin, const VectorXd &b0,
+                                      const MatrixXd &S0, int a0, int d0) {
+  int J = sigma.cols();
+  sample = ghkLinearConstraints(ll, ul, mu, sigma, sampleSize,
                                 burnin);
-  lsEsts = sample.rightCols(J - 1);
-  sigSqd = sample.col(0);
-  diagInverseFish = sigma.diagonal().array().sqrt();
-  importanceDensity = tnormpdf(ll, ul, betas, diagInverseFish, sample);
-  return ml(y, X);
+  MatrixXd betas = sample.rightCols(J-1);
+  VectorXd sigmas = sample.col(0);
+  VectorXd diagInverseFish = sigma.diagonal().array().sqrt();
+  MatrixXd importanceDensity = tnormpdfMat(ll, ul, mu, diagInverseFish, sample);
+  return ml(importanceDensity, y, X, betas, sigmas, b0, S0, a0, d0);
 }
 
-double Importance::ml(VectorXd &y, MatrixXd &X) {
-  VectorXd loghTheta;
-  loghTheta = importanceDensity.rowwise().prod().array().log();
-  MatrixXd P(1, 4);
-  VectorXd likelihood = lrLikelihood(lsEsts, sigSqd, y, X).array() +
-               loginvgammapdf(sigSqd, igamParamA, igamParamB).array() +
-               logmvnpdfV(betaInit, sigmaInit, lsEsts).array() -
-               loghTheta.array();
+double Importance::ml(const MatrixXd &importanceDensity, const VectorXd &y,
+                      const MatrixXd &X, const MatrixXd &betas,
+                      const VectorXd &sigmas, const VectorXd &b0,
+                      const MatrixXd &B0, int a0, int d0) {
+  VectorXd loghTheta = importanceDensity.rowwise().prod().array().log();
+  VectorXd likelihood = lrLikelihood(betas, sigmas, y, X).array() +
+                        loginvgammapdf(sigmas, a0, d0).array() +
+                        logmvnpdfV(b0, B0, betas).array() - loghTheta.array();
   return likelihood.mean();
 }
 

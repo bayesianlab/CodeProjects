@@ -245,9 +245,15 @@ double Dist::truncNormalRnd(double a, double b, double mu, double sigma) {
       }
     } else {
       if (standardizedA > stdLimit) {
+        cout << "two sided a" << endl;
+        cout << standardizedA << " " << standardizedB << endl;
+        cout << endl;
         Z = twoSided(standardizedA, standardizedB);
         return mu + sigma * Z;
       } else if (standardizedB < -stdLimit) {
+        cout << "two sided b" << endl;
+        cout << standardizedA << " " << standardizedB << endl;
+        cout << endl;
         Z = twoSided(standardizedA, standardizedB);
         return mu + sigma * Z;
       } else {
@@ -259,10 +265,6 @@ double Dist::truncNormalRnd(double a, double b, double mu, double sigma) {
 
 void Dist::tmvnrand(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
                     MatrixXd &sample, VectorXd &sigmaVect) {
-  /*
-   * Uses both inversion and ar sampling, should be deprecated in favor
-   * of tmultnorm
-   */
   if (sample.cols() != 2 * mu.size()) {
     cout << "Error: Sample size needs to be 2x size of mu" << endl;
   } else {
@@ -290,42 +292,10 @@ void Dist::tmvnrand(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
   }
 }
 
-MatrixXd Dist::tmultnorm(VectorXd &a, VectorXd &b, VectorXd &mu,
-                         MatrixXd &sigma, int nSims) {
-  /*
-   * Uses both inversion and ar sampling
-   */
-  int J = sigma.cols();
-  int Jminus1 = J - 1;
-  MatrixXd sample = MatrixXd::Zero(nSims, 2 * J);
-  MatrixXd precision = sigma.inverse();
-  VectorXd Hxx = precision.diagonal();
-  VectorXd Hxy(Jminus1);
-  VectorXd xNotJ(Jminus1);
-  VectorXd muNotJ(Jminus1);
-  VectorXd sigmaVect(J);
-  sigmaVect = (1. / Hxx.array()).sqrt();
-  for (int sim = 1; sim < nSims; sim++) {
-    for (int j = 0; j < J; j++) {
-      Hxy << precision.row(j).head(j).transpose().eval(),
-          precision.row(j).tail(Jminus1 - j).transpose().eval();
-      muNotJ << mu.head(j), mu.tail(Jminus1 - j);
-      xNotJ << sample.row(sim - 1).head(j).transpose().eval(),
-          sample.row(sim - 1).segment(j + 1, Jminus1 - j).transpose().eval();
-      sample(sim, j + J) = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
-      sample(sim, j) =
-          truncNormalRnd(a(j), b(j), sample(sim, j + J), sigmaVect(j));
-    }
-  }
-  return sample;
-}
 
 MatrixXd Dist::tmultnorm(const VectorXd &a, const VectorXd &b,
                          const VectorXd &mu, const MatrixXd &sigma,
                          int nSims) {
-  /*
-   * Uses both inversion and ar sampling
-   */
   int J = sigma.cols();
   int Jminus1 = J - 1;
   MatrixXd sample = MatrixXd::Zero(nSims, 2 * J);
@@ -336,17 +306,18 @@ MatrixXd Dist::tmultnorm(const VectorXd &a, const VectorXd &b,
   VectorXd muNotJ(Jminus1);
   VectorXd sigmaVect(J);
   sigmaVect = (1. / Hxx.array()).sqrt();
+  MatrixXd notjMat = selectorMat(J);
+  VectorXd updateVec(J);
   for (int sim = 1; sim < nSims; sim++) {
     for (int j = 0; j < J; j++) {
-      Hxy << precision.row(j).head(j).transpose().eval(),
-          precision.row(j).tail(Jminus1 - j).transpose().eval();
-      muNotJ << mu.head(j), mu.tail(Jminus1 - j);
-      xNotJ << sample.row(sim - 1).head(j).transpose().eval(),
-          sample.row(sim - 1).segment(j + 1, Jminus1 - j).transpose().eval();
+      Hxy = notjMat.block(j * (Jminus1), 0, Jminus1, J) * precision.row(j).transpose();
+	  muNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * mu;
+	  xNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) *updateVec;
       sample(sim, j + J) = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
-      sample(sim, j) =
+      updateVec(j) =
           truncNormalRnd(a(j), b(j), sample(sim, j + J), sigmaVect(j));
     }
+	sample.row(sim).head(J) = updateVec.transpose();
   }
   return sample;
 }
@@ -369,16 +340,16 @@ MatrixXd Dist::tmultnorm(const VectorXd &a, const VectorXd &b,
   VectorXd muNotJ(Jminus1);
   VectorXd sigmaVect(J);
   sigmaVect = (1. / Hxx.array()).sqrt();
+  MatrixXd notjMat = selectorMat(J);
   for (int sim = 1; sim < nSims; sim++) {
     for (int j = 0; j < J; j++) {
-      Hxy << precision.row(j).head(j).transpose().eval(),
-          precision.row(j).tail(Jminus1 - j).transpose().eval();
-      muNotJ << mu.head(j), mu.tail(Jminus1 - j);
-      xNotJ << sample.row(sim - 1).head(j).transpose().eval(),
-          sample.row(sim - 1).segment(j + 1, Jminus1 - j).transpose().eval();
+      Hxy = notjMat.block(j * (Jminus1), 0, Jminus1, J) * precision.row(j).transpose();
+	  muNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * mu;
+	  xNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * sample.row(j).head(J).transpose();
       sample(sim, j + J) = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
       sample(sim, j) =
           truncNormalRnd(a(j), b(j), sample(sim, j + J), sigmaVect(j));
+
     }
   }
   return sample;
@@ -505,70 +476,8 @@ MatrixXd Dist::tnormpdfMat(const VectorXd &ll, const VectorXd &ul, const VectorX
   return fx;
 }
 
-double Dist::ghkTruncNormRnd(double a, double b, double mu, double sigma) {
-  // Keep this method
-  double Z;
-  if (b >= inf) {
-    if (a > 5) {
-      Z = leftTruncation(a);
-      return Z;
-    } else {
-      return tnormrnd(a, b, mu, sigma);
-    }
-  } else if (a <= -inf) {
-    if (b < -5) {
-      Z = -leftTruncation(-b);
-      return Z;
-    } else {
-      return tnormrnd(a, b, mu, sigma);
-    }
-  } else {
-    if (a > 5) {
-      Z = twoSided(a, b);
-      return Z;
-    } else if (b < -5) {
-      Z = twoSided(a, b);
-      return Z;
-    } else {
-      return tnormrnd(a, b, mu, sigma);
-    }
-  }
-}
-
-void Dist::ghkLinearConstraints(VectorXd &a, VectorXd &b, VectorXd &mu,
-                                MatrixXd &Sigma, MatrixXd &sample) {
-  /*
-   * Take into account multiple constraints
-   */
-
-  int J = Sigma.cols();
-  if (a.size() != b.size()) {
-    cout << "\nError: The number of constraints are not the same." << endl;
-  } else if (a.size() != J) {
-    cout << "Error: At least as many constraints as dimension in Sigma are "
-            "needed."
-         << endl;
-  } else {
-    int sims = sample.rows();
-    MatrixXd lowerC = Sigma.llt().matrixL();
-    MatrixXd offDiagMat = lowerC;
-    offDiagMat.diagonal() = VectorXd::Zero(J);
-    double update, aj, bj;
-    for (int sim = 0; sim < sims; sim++) {
-      for (int j = 0; j < J; j++) {
-        update = mu(j) + (offDiagMat.row(j) * sample.row(sim).transpose());
-        aj = (a(j) - update) / lowerC(j, j);
-        bj = (b(j) - update) / lowerC(j, j);
-        sample(sim, j) = ghkTruncNormRnd(aj, bj, 0, 1);
-      }
-    }
-    sample = (lowerC * sample.transpose()).transpose();
-    sample.rowwise() += mu.transpose();
-  }
-}
-
-MatrixXd Dist::ghkLinearConstraints(VectorXd &a, VectorXd &b, VectorXd &mu,
-                                    MatrixXd &Sigma, int sims, int burnin) {
+MatrixXd Dist::ghkLinearConstraints(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                                    const MatrixXd &Sigma, int sims, int burnin) {
   /*
    * Take into account multiple constraints
    * Should replace ghkLinearConstraints
@@ -586,7 +495,7 @@ MatrixXd Dist::ghkLinearConstraints(VectorXd &a, VectorXd &b, VectorXd &mu,
       update = mu(j) + (offDiagMat.row(j) * sample.row(sim).transpose());
       aj = (a(j) - update) / lowerC(j, j);
       bj = (b(j) - update) / lowerC(j, j);
-      sample(sim, j) = ghkTruncNormRnd(aj, bj, 0, 1);
+      sample(sim, j) = truncNormalRnd(aj, bj, 0, 1);
     }
   }
   sample = (lowerC * sample.transpose()).transpose();
@@ -647,12 +556,14 @@ MatrixXd Dist::askGhkLinearConstraints(const VectorXd &a, const VectorXd &b, con
     MatrixXd offDiagMat = lowerC;
     offDiagMat.diagonal() = VectorXd::Zero(J);
     double update, aj, bj;
+	VectorXd alpha = a - mu;
+	VectorXd beta = b - mu;
     for (int sim = 0; sim < sims; sim++) {
       for (int j = 0; j < J; j++) {
-        update = mu(j) + (offDiagMat.row(j) * sample.row(sim).transpose());
-        aj = (a(j) - update) / lowerC(j, j);
-        bj = (b(j) - update) / lowerC(j, j);
-        sample(sim, j) = ghkTruncNormRnd(aj, bj, 0, 1);
+        update =  (offDiagMat.row(j) * sample.row(sim).transpose());
+        aj = (alpha(j) - update) / lowerC(j, j);
+        bj = (beta(j) - update) / lowerC(j, j);
+        sample(sim, j) = truncNormalRnd(aj, bj, 0, 1);
       }
     }
     sample = (lowerC * sample.transpose()).transpose();
@@ -661,8 +572,9 @@ MatrixXd Dist::askGhkLinearConstraints(const VectorXd &a, const VectorXd &b, con
   }
 }
 
-MatrixXd Dist::asktmvnrand(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
-                           const MatrixXd &sigma, const VectorXd &sigmaVect,
+MatrixXd Dist::asktmvnrand(const VectorXd &a, const VectorXd &b,
+                           const VectorXd &mu, const MatrixXd &sigma,
+                           const VectorXd &sigmaVect,
                            const VectorXd &initVector, int sims) {
   /*
    * Uses both inversion and ar sampling, Geweke 1991
@@ -678,26 +590,19 @@ MatrixXd Dist::asktmvnrand(const VectorXd &a, const VectorXd &b, const VectorXd 
   VectorXd Hxy(Jminus1);
   VectorXd xNotJ(Jminus1);
   VectorXd muNotJ(Jminus1);
+  MatrixXd notjMat = selectorMat(J);
   double muj;
+  VectorXd updateVec = initVector;
   for (int sim = 0; sim < nSims; sim++) {
     for (int j = 0; j < J; j++) {
-      if (sim == 0) {
-        Hxy << precision.row(j).head(j).transpose().eval(),
-            precision.row(j).tail(Jminus1 - j).transpose().eval();
-        muNotJ << mu.head(j), mu.tail(Jminus1 - j);
-        xNotJ << initVector.head(j), initVector.tail(Jminus1 - j);
-        muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
-        sample(sim, j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));
-      } else {
-        Hxy << precision.row(j).head(j).transpose().eval(),
-            precision.row(j).tail(Jminus1 - j).transpose().eval();
-        muNotJ << mu.head(j), mu.tail(Jminus1 - j);
-        xNotJ << sample.row(sim - 1).head(j).transpose().eval(),
-            sample.row(sim - 1).tail(Jminus1 - j).transpose().eval();
-        muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
-        sample(sim, j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));
-      }
+      Hxy = notjMat.block(j * (Jminus1), 0, Jminus1, J) *
+            precision.row(j).transpose();
+      muNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * mu;
+      xNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * updateVec;
+      muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
+      updateVec(j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));
     }
+    sample.row(sim) = updateVec.transpose();
   }
   return sample;
 }

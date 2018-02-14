@@ -105,9 +105,14 @@ void crbTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
 
 void crtTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
   CreateSampleData csd(linRegSS, betas, seed);
+  int J = betas.size();
+  VectorXd b0 = MatrixXd::Zero(J, 1);
+  MatrixXd B0 = MatrixXd::Identity(J, J);
+  double a0 = 6;
+  double d0 = 12;
   Crt crt;
   crt.runSim(mlSims, batches, ll, ul, csd.maxLikeEsts, csd.inverseFisher, csd.y,
-             csd.X, nSims, burnin);
+             csd.X, nSims, burnin, b0, B0, a0, d0);
 }
 
 void crtTestT(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
@@ -221,21 +226,21 @@ void modifiedGelfandDeyTestT(VectorXd &betas, VectorXd &a, VectorXd &b) {
 }
 
 void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
-  /*cout << "Ask method:" << endl;
+  cout << "Ask method:" << endl;
   askTest2(betas, a, b);
   cout << "Ark method:" << endl;
   arkTest2(betas, a, b);
   cout << "Crb method:" << endl;
-  crbTest2(betas, a, b);*/
+  crbTest2(betas, a, b);
   cout << "Crt method:" << endl;
   crtTest2(betas, a, b);
- /* cout << "Importance Sampling:" << endl;
-  impTest2(betas, a, b);
+  cout << "Importance Sampling:" << endl;
+  impTest2(betas, a, b);/* 
   cout << "Modified Gelfand Dey:" << endl;
   modifiedGelfandDeyTest(betas, a, b);
-  cout << endl;*/
+  cout << endl;
   cout << "Ask method T:" << endl;
-  askTestT(betas, a, b);/*
+  askTestT(betas, a, b);
   cout << "Ark method T:" << endl;
   arkTestT(betas, a, b);
   cout << "Importance Sampling T:" << endl;

@@ -6,11 +6,8 @@ using namespace Eigen;
 
 class Crb : public Dist {
 public:
-  void chibRaoBlackwell(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma,
-                        VectorXd &zStar, VectorXd &fzStar, int, int, int, int);
-
-  MatrixXd chibRao(VectorXd &a, VectorXd &b, VectorXd &mu, MatrixXd &sigma, int,
-                   int, int, int);
+  MatrixXd chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                   const MatrixXd &sigma, int, int, int, int);
 
   MatrixXd chibRaoT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, const VectorXd &mu,
@@ -43,8 +40,8 @@ public:
                const MatrixXd &LinearConstraints, VectorXd &b0, MatrixXd &B0,
                double a0, double d0, int, int, int, int);
 
-  void calcfzStar(VectorXd &, VectorXd &, VectorXd &, VectorXd &, MatrixXd &,
-                  VectorXd &);
+  void calcfzStar(VectorXd &, const VectorXd &, const VectorXd &,
+                  const VectorXd &, const MatrixXd &, const  VectorXd &);
 
   void calcfzStarT(VectorXd &fzstar, VectorXd &zstar, const VectorXd &a,
                    const VectorXd &b, double df, MatrixXd &cMeans,

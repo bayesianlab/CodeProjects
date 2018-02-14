@@ -284,10 +284,10 @@ double Ask::calcPetaT(VectorXd &rz, VectorXd &reta, const VectorXd &weight) {
     return wTrz / (wTrz + (weight.transpose() * reta));
   }
 }
+
 double Ask::ml(const VectorXd &betas, double sigmas, const VectorXd &y,
                const MatrixXd &X, const MatrixXd &kernel, const VectorXd &b0,
                const MatrixXd &B0, double a0, double d0) {
-
   double mLike = lrLikelihood(betas, sigmas, y, X) + logmvnpdf(b0, B0, betas) +
                  loginvgammapdf(sigmas, a0, d0) -
                  log(kernel.rowwise().prod().mean());
@@ -314,11 +314,9 @@ void Ask::runSim(int nSims, int batches, VectorXd &a, VectorXd &b,
   VectorXd betas(Jm1);
   VectorXd mLike(nSims);
   MatrixXd Sample(sims, burnin);
-  MatrixXd xNotj(sims-burnin, J-1);
   for (int i = 0; i < nSims; i++) {
     Sample = adaptiveSampler(a, b, theta, sig, .5, sims, burnin, sampleBlockRows);
     zStar = Sample.colwise().mean();
-    xNotj = Sample.rightCols(Jm1);
     MatrixXd K = gibbsKernel(a, b, theta, sig, Sample, zStar);
     betas = zStar.tail(Jm1);
     mLike(i) = ml(betas, zStar(0), y, X, K, b0, B0, a0, d0);
