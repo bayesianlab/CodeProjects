@@ -1,6 +1,6 @@
-function [ml] = ask(a,b, alpha, beta, mu,Sigma,y, X, N,burnin,blocks,b0,B0,a0,d0)
+function [ml] = ark(a,b,alpha, beta, mu,Sigma, y,X, N, b0,B0, a0,d0)
 [J,~] = size(Sigma);
-sample = adaptiveSampler(a,b, alpha, beta, mu,Sigma,N, burnin, blocks);
+sample = tmultnormrndEta(a,b, alpha, beta, mu,Sigma,N);
 zs = mean(sample,1)';
 K = gibbsKernel(a,b,mu, Sigma, sample);
 lig = loginvgampdf(zs(1), a0, d0);
