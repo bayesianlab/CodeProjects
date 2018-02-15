@@ -245,15 +245,9 @@ double Dist::truncNormalRnd(double a, double b, double mu, double sigma) {
       }
     } else {
       if (standardizedA > stdLimit) {
-        cout << "two sided a" << endl;
-        cout << standardizedA << " " << standardizedB << endl;
-        cout << endl;
         Z = twoSided(standardizedA, standardizedB);
         return mu + sigma * Z;
       } else if (standardizedB < -stdLimit) {
-        cout << "two sided b" << endl;
-        cout << standardizedA << " " << standardizedB << endl;
-        cout << endl;
         Z = twoSided(standardizedA, standardizedB);
         return mu + sigma * Z;
       } else {

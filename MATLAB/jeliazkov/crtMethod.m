@@ -1,8 +1,8 @@
 % CRT
 % verified
 clear;clc;
-sims = 11000;
-burnin = 1000;
+sims = 1000;
+burnin = 100;
 crtSimulations(3, sims, burnin)
 % crtSimulations(6, sims, burnin)
 % crtSimulations(9, sims, burnin)

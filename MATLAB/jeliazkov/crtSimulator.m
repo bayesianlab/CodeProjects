@@ -24,14 +24,10 @@ for sim = 2:(sims)
         sample(sim, :, j) = [tnormrnd(a,b, muj, sigmaxx), muj, sigmaxx];
     end
 end
-sample
 sample = sample(burnin+1:sims,:,:);
-zStar = squeeze(mean(sample(:, 1, :)))'
+zStar = squeeze(mean(sample(:, 1, :)))';
 
 K = transitionKernel(a,b,zStar, sample, mu, precision, conditionalVars);
-mvnpdf(zStar, mu, sigma)
-mean(prod(K,2))
-mvnpdf(zStar, mu, sigma)/mean(prod(K,2))
 ml = log(mvnpdf(zStar, mu, sigma)/mean(prod(K,2)));
 se = lpVarCRT(sample, 25, a,b,mu,sigma,precision);
 end

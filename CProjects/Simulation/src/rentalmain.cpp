@@ -174,7 +174,7 @@ int main() {
 
     Crb crb;
     cout << "Crb" << endl;
-    MatrixXd fzandz = crb.chibRao(a, b, MLES, V, 150000, 50000, 15000, 5000);
+    MatrixXd fzandz = crb.chibRao(a, b, MLES, V, 15, 5, 15, 5);
     VectorXd fz = fzandz.col(0);
     VectorXd z = fzandz.col(1);
     VectorXd betasCrb = z.tail(J - 1);
