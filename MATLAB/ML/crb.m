@@ -9,6 +9,6 @@ lmvn = logmvnpdf(z(2:J), mu(2:J), 100*B0);
 lig = loginvgampdf(z(1), a0,d0);
 lpfz = log(prod(fz));
 ml = like + lmvn + lig - lpfz;
-fprintf('Log marginal likelihood %f\n', ml)
+fprintf('Crb Log marginal likelihood %f\n', ml)
 end
 

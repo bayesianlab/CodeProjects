@@ -31,25 +31,27 @@ a0 = 6;
 d0 =12;
 init = zeros(J+1,1);
 
-x = normrnd(0,1,10,3);
-autocor(x,1);
 C = chol(V, 'lower');
-
 Cinv = inv(C);
 
-
+s = 1
 alpha = a- mu;
 beta = b - mu;
 alpha(1) = Cinv(1,1)*alpha(1);
 alpha(2:J+1) = -Inf;
 beta(1:J+1) = Inf;
-tmultnormrndEta(a,b,alpha,beta,mu,V,10);
+imp(a,b, mu,V,y,X,5, b0,B0,a0,d0)
 
-ask(a,b, alpha, beta, mu,V,y,X,1000,100, 100, b0,B0,a0,d0);
-ark(a,b,alpha,beta,mu,V, y, X, 1000, b0, B0, a0, d0);
-crt(a,b,mu,V,y,X,1000,100,b0,B0,a0,d0);
-crb(a,b,mu,V,y,X, 1000, 100, 1000,100,  init, b0,B0,a0,d0);
-
-
+simresults = zeros(s,4);
+% for i = 1:s
+%     simresults(i,1) = ask(a,b, mu,V,y,X,5000,500, 100, b0,B0,a0,d0);
+%     simresults(i,2) = ark(a,b,mu,V, y, X, 5000, b0, B0, a0, d0);
+%     simresults(i,3) = crt(a,b,mu,V,y,X,5000,500,b0,B0,a0,d0);
+%     simresults(i,4) = crb(a,b,mu,V,y,X, 5000, 500, 5000, 500, init, b0,B0,a0,d0);
+%     fprintf('\n')
+% end
+% simresults
+% mean(simresults)
+% std(simresults)
 
 

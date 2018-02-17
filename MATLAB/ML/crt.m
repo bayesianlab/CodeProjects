@@ -9,6 +9,6 @@ lmvn = logmvnpdf(zs(2:J+1), mu(2:J+1), 100*B0);
 lmpk = log(mean(prod(K,2)));
 like = lrLikelihood(y, X, zs(2:J+1), zs(1));
 ml = like + lmvn + lig - lmpk;
-fprintf('Log marginal likelihood %f\n', ml)
+fprintf('Crt Log marginal likelihood %f\n', ml)
 end
 

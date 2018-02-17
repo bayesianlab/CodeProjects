@@ -1,7 +1,7 @@
-function [sample] = adaptiveSampler(a,b, alpha, beta, mu, Sigma,N, burnin, blocks)
+function [sample] = adaptiveSampler(a,b,mu, Sigma,N, burnin, blocks)
 [J,~] = size(Sigma);
 sample = zeros(N,J);
-[sample(1:burnin, :), gwk] = warmup(a,b, alpha, beta, mu,Sigma,burnin);
+[sample(1:burnin, :), gwk] = warmup(a,b,mu,Sigma,burnin);
 if gwk == 1
     rz = autocor(sample(1:burnin,:),1);
     ghk = 0;
@@ -20,30 +20,30 @@ for i = 1:switches
     if gwk == 1 && ghk == 1
         if sum(rz > reta) == J
             sample(startIndex:endIndex , :) =...
-                tmultnormrndEta(a,b, alpha, beta, mu,Sigma,blocks);
+                tmultnormrndEta(a,b, mu,Sigma,blocks);
             lastPass = sample(endIndex,:);
-            reta = autocor(sample(burnin:endIndex, :),1);
+            reta = autocor(sample(startIndex:endIndex, :),1);
             startIndex = endIndex + 1;
         elseif sum(reta > rz) == J
             sample(startIndex:endIndex, :) = ...
                 tmultnormrnd(a,b,mu,Sigma,blocks, lastPass);
             lastPass = sample(endIndex,:);
-            rz = autocor(sample(burnin:endIndex, :), 1);
+            rz = autocor(sample(startIndex:endIndex, :), 1);
             startIndex = endIndex + 1;
         else
             peta = (weight'*rz)*(weight'*rz + weight'*reta)^(-1);
             if peta < unifrnd(0,1)
                 sample(startIndex:endIndex , :) =...
-                    tmultnormrndEta(a,b, alpha, beta, mu,Sigma,blocks);
+                    tmultnormrndEta(a,b, mu,Sigma,blocks);
                 lastPass = sample(endIndex,:);
-                reta = autocor(sample(burnin:endIndex, :), 1);
+                reta = autocor(sample(startIndex:endIndex, :), 1);
                 
                 startIndex = endIndex + 1;
             else
                 sample(startIndex:endIndex, :) = ...
                   tmultnormrnd(a,b,mu,Sigma,blocks, lastPass);
                 lastPass = sample(endIndex,:);
-                rz = autocor(sample(burnin:endIndex, :), 1);
+                rz = autocor(sample(startIndex:endIndex, :), 1);
                 startIndex = endIndex + 1;
             end  
         end
@@ -57,7 +57,7 @@ for i = 1:switches
         startIndex = endIndex + 1;
     else
         sample(startIndex:endIndex , :) = ...
-            tmultnormrndEta(a,b, alpha, beta, mu,Sigma,blocks);
+            tmultnormrndEta(a,b, mu,Sigma,blocks);
         reta = autocor(sample(startIndex:endIndex, :), 1);
         lastPass = sample(endIndex,:);
         ghk = 1;
@@ -69,7 +69,7 @@ if remainder > 0
         peta = (weight'*rz)*(weight'*rz + weight'*reta)^(-1);
         if peta < unifrnd(0,1)
             sample(startIndex:(N-burnin) , :) =...
-                tmultnormrndEta(a,b, alpha, beta, mu,Sigma,remainder);
+                tmultnormrndEta(a,b, mu,Sigma,remainder);
         else
             sample(startIndex:(N-burnin), :) = ...
               tmultnormrnd(a,b,mu,Sigma,remainder, lastPass);
@@ -80,7 +80,7 @@ if remainder > 0
             tmultnormrnd(a,b,mu,Sigma,remainder, lastPass);
         else
         sample(startIndex:N-burnin, :) = ...
-            tmultnormrndEta(a,b, alpha, beta, mu,Sigma,remainder);
+            tmultnormrndEta(a,b, mu,Sigma,remainder);
         end
     end
 end
