@@ -43,15 +43,27 @@ library(data.table)
 library(rjags)
 X <-fread('http://www.ics.uci.edu/~mguindan/teaching/stats225/zscores.txt')
 p6data <-  list(y = X$V1, N = length(X$V1))
-mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug", data = p6data, n.chains=5, n.adapt = 100)
-res <- coda.samples(mod, var = c("y", "mu"), n.iter=1000,thin =10)
-summ <- summary(res)
+mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug", data = p6data, n.chains=3, n.adapt = 1000)
+res <- coda.samples(mod, var = c("y", "mu", "gamma"), n.iter=3000)
 R <- data.frame(as.matrix(res))
 sto <- numeric(200)
+D <- dim(R)
 for(i in 1:200){
-  sto[i]<-quantile(R[,i],.5)
+  sto[i] <- sum(R[,i])/D[1]
 }
+
+sort(1 - sto)
 plot(sto, col="blue")
+fdr <- function(k, pi, level){
+  lpi <- length(pi)
+  indicator <- (pi < k)
+  betag <- sum( (1-pi) %*% indicator )
+  den <- sum(indicator)
+  res <- (betag / den) - level
+  res
+}
+
+optimize(fdr, interval=c(min(sto),max(sto)), tol=.0001, pi=sto, level=.05)
 
 # Section 4====
 dgalenshore <- function(x,a,theta){

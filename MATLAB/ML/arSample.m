@@ -10,6 +10,7 @@ while (n <= N) && (maxiterations < Lim)
         if cond == 2*J
             sample(n,:) = z;
             n = n + 1;
+            maxiterations = 0;
         else
             maxiterations = maxiterations + 1;
         end        

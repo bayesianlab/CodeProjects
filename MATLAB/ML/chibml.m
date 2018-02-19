@@ -48,7 +48,7 @@ for rr = 2:reducedRuns + 1
         fzstar(J,1) = mean(tnormpdf(a(J), b(J),...
             muj, sinoti(J), zStar(J)));
     else
-        zStar(rr) = mean(rrSample(burnin:rrSims,rr));
+        zStar(rr) = mean(rrSample(rrBurnin:rrSims,rr));
         fzstar(rr) = mean(tnormpdf(a(rr), b(rr), storemeans(rrBurnin:rrSims),...
             sinoti(rr), zStar(rr)));
     end
