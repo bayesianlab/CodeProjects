@@ -169,14 +169,16 @@ Show (using R) the two densities are the same:
 \newpage 
 
 \section*{Question 6}
-We are to test multiple hypothesis for the paramter $ \mu_i $. If it is significantly different than zero then I will reject the null hypothesis $ H_0 $, otherwise I will fail to reject. The code to run the Rjags for this question is here:
+\subsection*{a)}
+We are to test multiple hypothesis about the paramter $ \mu_i $. If it is significantly different than zero then the null hypothesis $ H_0 $, will be rejected it will be accepted. The code to run the Rjags for this question is here:
 \begin{Schunk}
 \begin{Sinput}
 > library(data.table)
 > library(rjags)
 > X <-fread('http://www.ics.uci.edu/~mguindan/teaching/stats225/zscores.txt')
 > p6data <-  list(y = X$V1, N = length(X$V1))
-> mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug", data = p6data, n.chains=5, n.adapt = 100)
+> mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug",
++                   data = p6data, n.chains=3, n.adapt = 1000)
 \end{Sinput}
 \begin{Soutput}
 Compiling model graph
@@ -190,39 +192,138 @@ Graph information:
 Initializing model
 \end{Soutput}
 \begin{Sinput}
-> res <- coda.samples(mod, var = c("y", "mu"), n.iter=1000,thin =10)
-> summ <- summary(res)
+> res <- coda.samples(mod, var = c("y", "mu", "gamma"), n.iter=3000)
 > R <- data.frame(as.matrix(res))
-> sto <- numeric(200)
-> for(i in 1:200){
-+   sto[i]<-quantile(R[,i],.5)
-+ }
 \end{Sinput}
 \end{Schunk}
 And the Jags code itself is here:
 \begin{verbatim}
 model{
 p0 ~ dbeta(1,1)
-sigma2 ~ dgamma(.001,.001)
+sigma2 ~ dgamma(0.0001,0.0001)
 for(i in 1:N){
-  y[i] ~ dnorm(mu[i]*gamma[i], 1/(sigma2
-  ))
+  y[i] ~ dnorm(mu[i]*gamma[i], tau[i])
   mu[i] ~ dnorm(0, 1)
   gamma[i] ~ dbern(p0)
+  tau[i] = 1 / sigma2
 }
 }
 \end{verbatim}
+Based on the median model I will track the $ \gamma_i$'s and those that are 1 with sufficiently high posterior probability I will reject the null hypothesis. In doing this problem the $\gamma$ values that I tracked with JAGS had high probability, such that it seemed I would reject the null that $\mu_i$ was zero for all the tests. I believe that there is some sort of problem with my implementation, however, I could not solve this issue. 
 
-My decision rule needs to be based upon the median model. If the 50\% quantile is significantly far from 0 then this would indicate evidence against the null. With enough such evidence I will reject $H_0$. A plot of the 50\% of $ \mu_i $ is show here:
-\begin{figure}[H]
-\centering
+\subsection*{b)} For this problem, after reviewing Newton I decided that the best way to attempt this was to try the following code to find the value $\kappa$, 
 \begin{Schunk}
 \begin{Sinput}
-> plot(sto, main="50% Percentiles of mean's", ylab ="Percentile", col="blue")
+> X <-fread('http://www.ics.uci.edu/~mguindan/teaching/stats225/zscores.txt')
+> p6data <-  list(y = X$V1, N = length(X$V1))
+> mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug", data = p6data, n.chains=3, n.adapt = 1000)
 \end{Sinput}
+\begin{Soutput}
+Compiling model graph
+   Resolving undeclared variables
+   Allocating nodes
+Graph information:
+   Observed stochastic nodes: 200
+   Unobserved stochastic nodes: 402
+   Total graph size: 1608
+
+Initializing model
+\end{Soutput}
+\begin{Sinput}
+> res <- coda.samples(mod, var = c("y", "mu", "gamma"), n.iter=3000)
+> R <- data.frame(as.matrix(res))
+> sto <- numeric(200)
+> D <- dim(R)
+> for(i in 1:200){
++   sto[i] <- sum(R[,i])/D[1]
++ }
+> sort(sto)
+\end{Sinput}
+\begin{Soutput}
+  [1] 0.4520000 0.4641111 0.4732222 0.4743333 0.4781111 0.4788889 0.4843333
+  [8] 0.4857778 0.4884444 0.4890000 0.4894444 0.4922222 0.4928889 0.4932222
+ [15] 0.4935556 0.4951111 0.4953333 0.4965556 0.4972222 0.4981111 0.4987778
+ [22] 0.5001111 0.5013333 0.5014444 0.5017778 0.5018889 0.5020000 0.5020000
+ [29] 0.5027778 0.5031111 0.5040000 0.5042222 0.5052222 0.5058889 0.5073333
+ [36] 0.5080000 0.5083333 0.5096667 0.5097778 0.5101111 0.5104444 0.5110000
+ [43] 0.5114444 0.5115556 0.5116667 0.5131111 0.5144444 0.5154444 0.5162222
+ [50] 0.5165556 0.5168889 0.5170000 0.5176667 0.5178889 0.5188889 0.5191111
+ [57] 0.5194444 0.5194444 0.5197778 0.5198889 0.5204444 0.5206667 0.5206667
+ [64] 0.5206667 0.5214444 0.5216667 0.5217778 0.5222222 0.5224444 0.5226667
+ [71] 0.5234444 0.5238889 0.5246667 0.5246667 0.5251111 0.5253333 0.5271111
+ [78] 0.5276667 0.5276667 0.5280000 0.5280000 0.5280000 0.5284444 0.5288889
+ [85] 0.5293333 0.5304444 0.5307778 0.5316667 0.5316667 0.5320000 0.5321111
+ [92] 0.5330000 0.5332222 0.5338889 0.5344444 0.5346667 0.5348889 0.5350000
+ [99] 0.5350000 0.5352222 0.5353333 0.5358889 0.5365556 0.5370000 0.5371111
+[106] 0.5383333 0.5390000 0.5394444 0.5403333 0.5405556 0.5408889 0.5412222
+[113] 0.5415556 0.5415556 0.5422222 0.5424444 0.5425556 0.5426667 0.5440000
+[120] 0.5447778 0.5447778 0.5456667 0.5462222 0.5463333 0.5465556 0.5468889
+[127] 0.5477778 0.5478889 0.5515556 0.5524444 0.5540000 0.5544444 0.5550000
+[134] 0.5551111 0.5554444 0.5570000 0.5575556 0.5576667 0.5587778 0.5591111
+[141] 0.5605556 0.5605556 0.5631111 0.5637778 0.5637778 0.5648889 0.5651111
+[148] 0.5655556 0.5660000 0.5660000 0.5661111 0.5685556 0.5698889 0.5721111
+[155] 0.5723333 0.5724444 0.5733333 0.5752222 0.5753333 0.5758889 0.5804444
+[162] 0.5818889 0.5822222 0.5856667 0.5861111 0.5877778 0.5880000 0.5880000
+[169] 0.5903333 0.5910000 0.5913333 0.5928889 0.5940000 0.5961111 0.6027778
+[176] 0.6040000 0.6043333 0.6045556 0.6087778 0.6131111 0.6148889 0.6171111
+[183] 0.6172222 0.6218889 0.6221111 0.6256667 0.6273333 0.6336667 0.6506667
+[190] 0.6542222 0.6675556 0.6715556 0.6740000 0.6747778 0.6955556 0.7023333
+[197] 0.7266667 0.7394444 0.7595556 0.7891111
+\end{Soutput}
+\begin{Sinput}
+> sort(1 - sto)
+\end{Sinput}
+\begin{Soutput}
+  [1] 0.2108889 0.2404444 0.2605556 0.2733333 0.2976667 0.3044444 0.3252222
+  [8] 0.3260000 0.3284444 0.3324444 0.3457778 0.3493333 0.3663333 0.3726667
+ [15] 0.3743333 0.3778889 0.3781111 0.3827778 0.3828889 0.3851111 0.3868889
+ [22] 0.3912222 0.3954444 0.3956667 0.3960000 0.3972222 0.4038889 0.4060000
+ [29] 0.4071111 0.4086667 0.4090000 0.4096667 0.4120000 0.4120000 0.4122222
+ [36] 0.4138889 0.4143333 0.4177778 0.4181111 0.4195556 0.4241111 0.4246667
+ [43] 0.4247778 0.4266667 0.4275556 0.4276667 0.4278889 0.4301111 0.4314444
+ [50] 0.4338889 0.4340000 0.4340000 0.4344444 0.4348889 0.4351111 0.4362222
+ [57] 0.4362222 0.4368889 0.4394444 0.4394444 0.4408889 0.4412222 0.4423333
+ [64] 0.4424444 0.4430000 0.4445556 0.4448889 0.4450000 0.4455556 0.4460000
+ [71] 0.4475556 0.4484444 0.4521111 0.4522222 0.4531111 0.4534444 0.4536667
+ [78] 0.4537778 0.4543333 0.4552222 0.4552222 0.4560000 0.4573333 0.4574444
+ [85] 0.4575556 0.4577778 0.4584444 0.4584444 0.4587778 0.4591111 0.4594444
+ [92] 0.4596667 0.4605556 0.4610000 0.4616667 0.4628889 0.4630000 0.4634444
+ [99] 0.4641111 0.4646667 0.4647778 0.4650000 0.4650000 0.4651111 0.4653333
+[106] 0.4655556 0.4661111 0.4667778 0.4670000 0.4678889 0.4680000 0.4683333
+[113] 0.4683333 0.4692222 0.4695556 0.4706667 0.4711111 0.4715556 0.4720000
+[120] 0.4720000 0.4720000 0.4723333 0.4723333 0.4728889 0.4746667 0.4748889
+[127] 0.4753333 0.4753333 0.4761111 0.4765556 0.4773333 0.4775556 0.4777778
+[134] 0.4782222 0.4783333 0.4785556 0.4793333 0.4793333 0.4793333 0.4795556
+[141] 0.4801111 0.4802222 0.4805556 0.4805556 0.4808889 0.4811111 0.4821111
+[148] 0.4823333 0.4830000 0.4831111 0.4834444 0.4837778 0.4845556 0.4855556
+[155] 0.4868889 0.4883333 0.4884444 0.4885556 0.4890000 0.4895556 0.4898889
+[162] 0.4902222 0.4903333 0.4916667 0.4920000 0.4926667 0.4941111 0.4947778
+[169] 0.4957778 0.4960000 0.4968889 0.4972222 0.4980000 0.4980000 0.4981111
+[176] 0.4982222 0.4985556 0.4986667 0.4998889 0.5012222 0.5018889 0.5027778
+[183] 0.5034444 0.5046667 0.5048889 0.5064444 0.5067778 0.5071111 0.5077778
+[190] 0.5105556 0.5110000 0.5115556 0.5142222 0.5156667 0.5211111 0.5218889
+[197] 0.5256667 0.5267778 0.5358889 0.5480000
+\end{Soutput}
+\begin{Sinput}
+> plot(sto, col="blue")
+> fdr <- function(k, pi, level){
++   lpi <- length(pi)
++   indicator <- (pi < k)
++   betag <- sum( (1-pi) %*% indicator )
++   den <- sum(indicator)
++   res <- (betag / den) - level
++   res
++ }
+> optimize(fdr, interval=c(min(sto),max(sto)), tol=.0001, pi=sto, level=.05)
+\end{Sinput}
+\begin{Soutput}
+$minimum
+[1] 0.7399703
+
+$objective
+[1] 0.4038148
+\end{Soutput}
 \end{Schunk}
-\includegraphics{stat225hw2-008}
-\end{figure}
-For this question I would consider horizontal lines to define the cutoff for the $ \mu_i $'s, say $ \pm  k $, perhaps $ k = \frac{1}{2} $. For those falling above this threshold I would reject the null in favor of the alternative. 
+The best  I could get was to find a $ \kappa $ equal to 0.96 using this method. The code above is trying to find a the largest $ \kappa $ so that the above was satisfied, but I realize in typing this assignment up that this method is not adequate to solve this problem. 
 
 \end{document}

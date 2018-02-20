@@ -147,42 +147,58 @@ plot(density(Z), main="Density Z")
 \newpage 
 
 \section*{Question 6}
-We are to test multiple hypothesis for the paramter $ \mu_i $. If it is significantly different than zero then I will reject the null hypothesis $ H_0 $, otherwise I will fail to reject. The code to run the Rjags for this question is here:
+\subsection*{a)}
+We are to test multiple hypothesis about the paramter $ \mu_i $. If it is significantly different than zero then the null hypothesis $ H_0 $, will be rejected it will be accepted. The code to run the Rjags for this question is here:
 <<jags>>=
 library(data.table)
 library(rjags)
 X <-fread('http://www.ics.uci.edu/~mguindan/teaching/stats225/zscores.txt')
 p6data <-  list(y = X$V1, N = length(X$V1))
-mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug", data = p6data, n.chains=5, n.adapt = 100)
-res <- coda.samples(mod, var = c("y", "mu"), n.iter=1000,thin =10)
-summ <- summary(res)
+mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug",
+                  data = p6data, n.chains=3, n.adapt = 1000)
+res <- coda.samples(mod, var = c("y", "mu", "gamma"), n.iter=3000)
 R <- data.frame(as.matrix(res))
-sto <- numeric(200)
-for(i in 1:200){
-  sto[i]<-quantile(R[,i],.5)
-}
 @
 And the Jags code itself is here:
 \begin{verbatim}
 model{
 p0 ~ dbeta(1,1)
-sigma2 ~ dgamma(.001,.001)
+sigma2 ~ dgamma(0.0001,0.0001)
 for(i in 1:N){
-  y[i] ~ dnorm(mu[i]*gamma[i], 1/(sigma2
-  ))
+  y[i] ~ dnorm(mu[i]*gamma[i], tau[i])
   mu[i] ~ dnorm(0, 1)
   gamma[i] ~ dbern(p0)
+  tau[i] = 1 / sigma2
 }
 }
 \end{verbatim}
+Based on the median model I will track the $ \gamma_i$'s and those that are 1 with sufficiently high posterior probability I will reject the null hypothesis. In doing this problem the $\gamma$ values that I tracked with JAGS had high probability, such that it seemed I would reject the null that $\mu_i$ was zero for all the tests. I believe that there is some sort of problem with my implementation, however, I could not solve this issue. 
 
-My decision rule needs to be based upon the median model. If the 50\% quantile is significantly far from 0 then this would indicate evidence against the null. With enough such evidence I will reject $H_0$. A plot of the 50\% of $ \mu_i $ is show here:
-\begin{figure}[H]
-\centering
-<<fig=TRUE>>=
-plot(sto, main="50% Percentiles of mean's", ylab ="Percentile", col="blue")
+\subsection*{b)} For this problem, after reviewing Newton I decided that the best way to attempt this was to try the following code to find the value $\kappa$, 
+<<>>=
+X <-fread('http://www.ics.uci.edu/~mguindan/teaching/stats225/zscores.txt')
+p6data <-  list(y = X$V1, N = length(X$V1))
+mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug", data = p6data, n.chains=3, n.adapt = 1000)
+res <- coda.samples(mod, var = c("y", "mu", "gamma"), n.iter=3000)
+R <- data.frame(as.matrix(res))
+sto <- numeric(200)
+D <- dim(R)
+for(i in 1:200){
+  sto[i] <- sum(R[,i])/D[1]
+}
+sort(sto)
+sort(1 - sto)
+plot(sto, col="blue")
+fdr <- function(k, pi, level){
+  lpi <- length(pi)
+  indicator <- (pi < k)
+  betag <- sum( (1-pi) %*% indicator )
+  den <- sum(indicator)
+  res <- (betag / den) - level
+  res
+}
+optimize(fdr, interval=c(min(sto),max(sto)), tol=.0001, pi=sto, level=.05)
 @
-\end{figure}
-For this question I would consider horizontal lines to define the cutoff for the $ \mu_i $'s, say $ \pm  k $, perhaps $ k = \frac{1}{2} $. For those falling above this threshold I would reject the null in favor of the alternative. 
+The best  I could get was to find a $ \kappa $ equal to 0.96 using this method. The code above is trying to find a the largest $ \kappa $ so that the above was satisfied, but I realize in typing this assignment up that this method is not adequate to solve this problem. 
 
 \end{document}
