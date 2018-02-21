@@ -607,9 +607,11 @@ double Dist::conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
 }
 
 double Dist::conditionalMean(double Hxx, const Ref<const VectorXd> &Hxy,
-                             VectorXd &muNotJ, VectorXd &xNotJ, double muxx) {
+                             const Ref<const VectorXd> &muNotJ,
+                             const Ref<const VectorXd> &xNotJ, double muxx) {
   return muxx - (1. / Hxx) * Hxy.dot(xNotJ - muNotJ);
 }
+
 VectorXd Dist::conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotj,
                                MatrixXd xNotj, double muxx) {
   VectorXd cm;

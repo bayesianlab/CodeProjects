@@ -75,12 +75,13 @@ public:
 
   MatrixXd ghkLinearConstraints(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
                                     const MatrixXd &Sigma, int sims, int burnin);
-  
+
   double conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
                          VectorXd &xNotJ, double muxx);
 
   double conditionalMean(double Hxx, const Ref<const VectorXd> &Hxy,
-                         VectorXd &muNotJ, VectorXd &xNotJ, double muxx);
+                         const Ref<const VectorXd> &muNotJ,
+                         const Ref<const VectorXd> &xNotJ, double muxx);
 
   VectorXd conditionalMean(double, VectorXd &, VectorXd &, MatrixXd, double);
 

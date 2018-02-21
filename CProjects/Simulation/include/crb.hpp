@@ -7,6 +7,9 @@ using namespace Eigen;
 class Crb : public Dist {
 public:
   MatrixXd chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                   const MatrixXd &sigma, int, int, int, int, int updatezStar);
+
+  MatrixXd chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
                    const MatrixXd &sigma, int, int, int, int);
 
   MatrixXd chibRaoT(const VectorXd &a, const VectorXd &b,
@@ -26,8 +29,8 @@ public:
                   VectorXd &, VectorXd &);
 
   double ml(const VectorXd &fz, const VectorXd &zStarTail, double zStarHead,
-            const VectorXd &y, const MatrixXd &X, const VectorXd &b0, const MatrixXd &B0,
-            const double igamA, const double igamB);
+            const VectorXd &y, const MatrixXd &X, const VectorXd &b0,
+            const MatrixXd &B0, const double igamA, const double igamB);
 
   double mlCRB(const VectorXd &fzStar, const VectorXd &, double, VectorXd &,
                MatrixXd &, VectorXd &b0, MatrixXd &B0, double a0, double d0);
@@ -41,7 +44,7 @@ public:
                double a0, double d0, int, int, int, int);
 
   void calcfzStar(VectorXd &, const VectorXd &, const VectorXd &,
-                  const VectorXd &, const MatrixXd &, const  VectorXd &);
+                  const VectorXd &, const MatrixXd &, const VectorXd &);
 
   void calcfzStarT(VectorXd &fzstar, VectorXd &zstar, const VectorXd &a,
                    const VectorXd &b, double df, MatrixXd &cMeans,

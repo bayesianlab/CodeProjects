@@ -154,8 +154,8 @@ int main() {
     V.block(1, 1, DATA.cols(), DATA.cols()) = MaximumLikelihoodEstsSigma;
     V(0, 0) = (2 * pow(s2hat, 2)) / (DATA.rows());
     int J = V.cols();
-    MatrixXd b0 = MatrixXd::Zero(J - 1, 1);
-    MatrixXd B0 = MatrixXd::Identity(J - 1, J - 1);
+    MatrixXd b0 = MaximumLikelihoodEstsBeta;
+    MatrixXd B0 = 100*MatrixXd::Identity(J - 1, J - 1);
     double a0 = 6;
     double d0 = 12;
 
@@ -174,14 +174,15 @@ int main() {
 
     Crb crb;
     cout << "Crb" << endl;
-    MatrixXd fzandz = crb.chibRao(a, b, MLES, V, 15, 5, 15, 5);
+    MatrixXd fzandz = crb.chibRao(a, b, MLES, V, 110000, 10000, 110000, 10000, 1);
+	cout << fzandz << endl;
     VectorXd fz = fzandz.col(0);
     VectorXd z = fzandz.col(1);
     VectorXd betasCrb = z.tail(J - 1);
     cout << crb.ml(fz, betasCrb, z(0), y, DATA, b0, B0, a0, d0) << endl;
     cout << endl;
 
-    Crt crt;
+ /*   Crt crt;
     Sample = dist.tmultnorm(a, b, MLES, V, 150000).leftCols(J).bottomRows(100000);
     VectorXd zStar = Sample.colwise().mean();
     MatrixXd Kernel = dist.gibbsKernel(a, b, MLES, V, Sample, zStar);
@@ -215,6 +216,7 @@ int main() {
     MatrixXd arkKernel = dist.gibbsKernel(a, b, MLES, V, arSamp, zark);
     VectorXd bark = zStar.tail(J-1);
     cout<<  ark.ml(bark, zark(0), y, DATA, arkKernel, b0, B0, a0, d0) << endl;
+	*/
 
   }
   {

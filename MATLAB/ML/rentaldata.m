@@ -48,12 +48,12 @@ for i = 1:s
     simresults(i,1) = ask(a,b, mu,V,y,X, N, bn, 100, b0,B0,a0,d0);
     simresults(i,2) = ark(a,b,mu,V, y, X, N, b0, B0, a0, d0);
     simresults(i,3) = imp(a,b, mu,V,y,X, N, bn, b0,B0,a0,d0);
-    simresults(i,3) = crt(a,b,mu,V,y,X,N, bn,b0,B0,a0,d0);
-    simresults(i,4) = crb(a,b,mu,V,y,X, N, bn, N, bn, init, b0,B0,a0,d0);
+    simresults(i,4) = crt(a,b,mu,V,y,X,N, bn,b0,B0,a0,d0);
+    simresults(i,5) = crb(a,b,mu,V,y,X, N, bn, N, bn, init, b0,B0,a0,d0);
     fprintf('\n')
 end
 
-mean(simresults)
+mean(simresults,2)
 std(simresults)
 
 

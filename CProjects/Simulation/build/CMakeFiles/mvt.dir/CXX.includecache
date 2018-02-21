@@ -24,6 +24,12 @@ Dist.hpp
 Eigen/Dense
 -
 
+../include/CreateSampleData.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
+-
+
 ../include/Crt.hpp
 Dist.hpp
 ../include/Dist.hpp
@@ -62,6 +68,12 @@ Eigen/Dense
 iostream
 -
 
+../include/crb.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
+-
+
 ../include/eigenshorts.hpp
 Eigen/Dense
 -
@@ -70,6 +82,22 @@ string
 
 ../include/read_csv_to_eigen.hpp
 Eigen/Dense
+-
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Crb.cpp
+crb.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.hpp
+CreateSampleData.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
+Eigen/Dense
+-
+iomanip
+-
+iostream
+-
+math.h
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp

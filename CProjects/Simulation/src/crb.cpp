@@ -138,12 +138,15 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
   sample = tmultnorm(a, b, mu, sigma, sims);
   sample = sample.bottomRows(simsMburin).eval();
   VectorXd Hxy(Jminus1);
+
   VectorXd xNotJ(Jminus1);
   VectorXd muNotJ(Jminus1);
   VectorXd zStar = MatrixXd::Zero(J, 1);
   VectorXd fzStar = MatrixXd::Zero(J, 1);
   zStar(0) = sample.col(0).mean();
-  fzStar(0) = getfzStarMeanAtCol(a(0), b(0), sample, J, sigmaVect(0), zStar(0));
+  fzStar(0) =
+      tnormpdfMeanVect(a(0), b(0), sample.col(J), sigmaVect(0), zStar(0))
+          .mean();
   MatrixXd newRedRunSample = MatrixXd::Zero(rrSims, J);
   newRedRunSample.col(0).fill(zStar(0));
   MatrixXd conditionalMeanMatrix(rrSims, redRuns);
@@ -154,8 +157,7 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
       int truej = 0;
       for (int j = rr + 1; j < J; j++) {
         muNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * mu;
-        xNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) *
-                updateVec;
+        xNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * updateVec;
         Hxy = notjMat.block(j * (Jminus1), 0, Jminus1, J) *
               precision.row(j).transpose();
         muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
@@ -165,9 +167,10 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
         }
         truej++;
       }
-      newRedRunSample.row(sim) = updateVec.transpose(); 
+      newRedRunSample.row(sim) = updateVec.transpose();
     }
     if (rr == redRuns - 1) {
+
       zStar.tail(2) = newRedRunSample.rightCols(2)
                           .bottomRows(rrSimsMburnin)
                           .colwise()
@@ -176,7 +179,6 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
     } else {
       zStar(rr + 1) = newRedRunSample.col(rr + 1).tail(rrSimsMburnin).mean();
       newRedRunSample.col(rr + 1).fill(zStar(rr + 1));
-	  updateVec(rr+1) = zStar(rr+1);
     }
   }
   newRedRunSample = newRedRunSample.bottomRows(rrSimsMburnin).eval();
@@ -191,6 +193,89 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
       tnormpdf(a(Jminus1), b(Jminus1), muj, sigmaVect(Jminus1), zStar(Jminus1));
 
   VectorXd betas = zStar.tail(Jminus1);
+  MatrixXd T(J, 2);
+  T << fzStar, zStar;
+  return T;
+}
+
+MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                      const MatrixXd &sigma, int sims, int burnin, int rrSims,
+                      int rrburnin, int updatezStar) {
+  int J = sigma.cols();
+  int Jminus1 = J - 1;
+  int redRuns = J - 2;
+  int simsMburin = sims - burnin;
+  int rrSimsMburnin = rrSims - rrburnin;
+  double muj;
+  MatrixXd notjMat = selectorMat(J);
+  MatrixXd precision = sigma.inverse();
+  VectorXd Hxx = precision.diagonal();
+  VectorXd sigmaVect = (1. / Hxx.array()).sqrt();
+  MatrixXd sample = MatrixXd::Zero(sims, 2 * J);
+  sample = tmultnorm(a, b, mu, sigma, sims);
+  sample = sample.bottomRows(simsMburin).eval();
+  MatrixXd Hxy(J, Jminus1);
+  for (int j = 0; j < J; j++) {
+    Hxy.row(j) = notjMat.block(j * (Jminus1), 0, Jminus1, J) *
+                     precision.row(j).transpose();
+  }
+  VectorXd xNotJ(Jminus1);
+  VectorXd muNotJ(Jminus1);
+  VectorXd zStar = MatrixXd::Zero(J, 1);
+  VectorXd fzStar = MatrixXd::Zero(J, 1);
+  zStar(0) = sample.col(0).mean();
+  fzStar(0) =
+      tnormpdfMeanVect(a(0), b(0), sample.col(J), sigmaVect(0), zStar(0))
+          .mean();
+  MatrixXd newRedRunSample = MatrixXd::Zero(rrSims, J);
+  newRedRunSample.col(0).fill(zStar(0));
+  MatrixXd conditionalMeanMatrix(rrSims, redRuns);
+  VectorXd updateVec(J);
+  updateVec = newRedRunSample.row(0).transpose();
+  for (int rr = 0; rr < redRuns; rr++) {
+    for (int sim = 1; sim < rrSims; sim++) {
+      int truej = 0;
+      for (int j = rr + 1; j < J; j++) {
+        muNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * mu;
+        xNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * updateVec;
+        muj = conditionalMean(Hxx(j), Hxy.row(j), muNotJ, xNotJ, mu(j));
+        updateVec(j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));
+        if (truej == 0) {
+          conditionalMeanMatrix(sim, rr) = muj;
+        }
+        truej++;
+      }
+      newRedRunSample.row(sim) = updateVec.transpose();
+    }
+    if (rr == redRuns - 1) {
+      if (updatezStar) {
+        zStar.tail(2) = newRedRunSample.rightCols(2)
+                            .bottomRows(rrSimsMburnin)
+                            .colwise()
+                            .mean();
+      }
+      fzStar(rr + 1) = tnormpdfMeanVect(a(rr + 1), b(rr + 1),
+                                        conditionalMeanMatrix.col(rr).tail(
+                                            rrSims - rrburnin),
+                                        sigmaVect(rr + 1), zStar(rr + 1))
+                           .mean();
+      muj = conditionalMean(Hxx(Jminus1), Hxy.row(Jminus1),
+                            mu.head(Jminus1), zStar.head(Jminus1), mu(Jminus1));
+      fzStar(Jminus1) = tnormpdf(a(Jminus1), b(Jminus1), muj,
+                                 sigmaVect(Jminus1), zStar(Jminus1));
+    } else {
+      if (updatezStar) {
+        zStar(rr + 1) = newRedRunSample.col(rr + 1).tail(rrSimsMburnin).mean();
+      }
+      newRedRunSample.col(rr + 1).fill(zStar(rr + 1));
+      fzStar(rr + 1) =
+          tnormpdfMeanVect(
+              a(rr + 1), b(rr + 1),
+              conditionalMeanMatrix.col(rr).tail(rrSimsMburnin),
+              sigmaVect(rr + 1), zStar(rr + 1))
+              .mean();
+    }
+  }
   MatrixXd T(J, 2);
   T << fzStar, zStar;
   return T;
