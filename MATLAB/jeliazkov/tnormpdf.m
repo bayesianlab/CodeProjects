@@ -1,5 +1,8 @@
 function [ tOrdinate] = tnormpdf(a,b,mu,sigma,x )
-sigmaZ = sigma.* (normcdf((b-mu)./sigma) - normcdf( (a-mu)./sigma ));
-tOrdinate = normpdf((x-mu)./sigma)./sigmaZ;
+Fb = normcdf((b-mu)./sigma);
+Fa = normcdf( (a-mu)./sigma );
+sx = (x-mu)./sigma;
+sigmaZ = sigma.* (Fb - Fa);
+tOrdinate = normpdf(sx)./sigmaZ;
 end
 

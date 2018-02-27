@@ -68,11 +68,15 @@ MatrixXd Crt::gibbsTKernel(const VectorXd &a, const VectorXd &b,
 double Crt::ml(const VectorXd &zStarTail, double zStarHead,
                const MatrixXd &Kernel, const VectorXd &y, const MatrixXd &X,
                const VectorXd &b0, const MatrixXd &B0, double a0, double d0) {
-  double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
-                 logmvnpdf(b0, B0, zStarTail) +
-                 loginvgammapdf(zStarHead, a0, d0) -
-                 log(Kernel.rowwise().prod().mean());
-  return mLike;
+	double Like =  lrLikelihood(zStarTail, zStarHead, y, X);
+	double lmvn = logmvnpdf(b0, B0, zStarTail);
+	double lig = loginvgammapdf(zStarHead, a0, d0);
+	double lkp = log(Kernel.rowwise().prod().mean());
+	cout << Like << endl;
+	cout << lmvn << endl;
+	cout << lig << endl;
+	cout << lkp << endl;
+  return Like + lmvn + lig - lkp;
 }
 
 double Crt::mlT(const VectorXd &zStarTail, double zStarHead, const VectorXd &y,

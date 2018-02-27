@@ -225,6 +225,8 @@ public:
   MatrixXd gibbsKernel(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
                        const MatrixXd &Sigma, const MatrixXd &Sample,
                        const VectorXd &zStar);
+
+  double pdfavg(VectorXd logpdf);
 };
 
 template <typename D>

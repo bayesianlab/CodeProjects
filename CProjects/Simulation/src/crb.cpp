@@ -212,28 +212,26 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
   VectorXd Hxx = precision.diagonal();
   VectorXd sigmaVect = (1. / Hxx.array()).sqrt();
   MatrixXd sample = MatrixXd::Zero(sims, 2 * J);
-  sample = tmultnorm(a, b, mu, sigma, sims);
-  sample = sample.bottomRows(simsMburin).eval();
+  sample = tmultnorm(a, b, mu, sigma, sims).bottomRows(simsMburin);
   MatrixXd Hxy(J, Jminus1);
   for (int j = 0; j < J; j++) {
     Hxy.row(j) = notjMat.block(j * (Jminus1), 0, Jminus1, J) *
-                     precision.row(j).transpose();
+                 precision.row(j).transpose();
   }
   VectorXd xNotJ(Jminus1);
   VectorXd muNotJ(Jminus1);
-  VectorXd zStar = MatrixXd::Zero(J, 1);
+  VectorXd zStar = sample.leftCols(J).colwise().mean();
   VectorXd fzStar = MatrixXd::Zero(J, 1);
-  zStar(0) = sample.col(0).mean();
-  fzStar(0) =
-      tnormpdfMeanVect(a(0), b(0), sample.col(J), sigmaVect(0), zStar(0))
-          .mean();
+  fzStar(0) = tnormpdfMeanVect(a(0), b(0), sample.bottomRows(simsMburin).col(J),
+                               sigmaVect(0), zStar(0))
+                  .mean();
   MatrixXd newRedRunSample = MatrixXd::Zero(rrSims, J);
   newRedRunSample.col(0).fill(zStar(0));
-  MatrixXd conditionalMeanMatrix(rrSims, redRuns);
+  VectorXd conditionalMeanMatrix(rrSims);
   VectorXd updateVec(J);
-  updateVec = newRedRunSample.row(0).transpose();
+  updateVec = zStar;
   for (int rr = 0; rr < redRuns; rr++) {
-    for (int sim = 1; sim < rrSims; sim++) {
+    for (int sim = 0; sim < rrSims; sim++) {
       int truej = 0;
       for (int j = rr + 1; j < J; j++) {
         muNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * mu;
@@ -241,38 +239,34 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
         muj = conditionalMean(Hxx(j), Hxy.row(j), muNotJ, xNotJ, mu(j));
         updateVec(j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));
         if (truej == 0) {
-          conditionalMeanMatrix(sim, rr) = muj;
+          conditionalMeanMatrix(sim) = muj;
         }
         truej++;
       }
       newRedRunSample.row(sim) = updateVec.transpose();
     }
     if (rr == redRuns - 1) {
-      if (updatezStar) {
-        zStar.tail(2) = newRedRunSample.rightCols(2)
-                            .bottomRows(rrSimsMburnin)
-                            .colwise()
-                            .mean();
-      }
-      fzStar(rr + 1) = tnormpdfMeanVect(a(rr + 1), b(rr + 1),
-                                        conditionalMeanMatrix.col(rr).tail(
-                                            rrSims - rrburnin),
-                                        sigmaVect(rr + 1), zStar(rr + 1))
-                           .mean();
-      muj = conditionalMean(Hxx(Jminus1), Hxy.row(Jminus1),
-                            mu.head(Jminus1), zStar.head(Jminus1), mu(Jminus1));
+      zStar.tail(2) = newRedRunSample.rightCols(2)
+                          .bottomRows(rrSimsMburnin)
+                          .colwise()
+                          .mean();
+      fzStar(rr + 1) =
+          tnormpdfMeanVect(a(rr + 1), b(rr + 1),
+                           conditionalMeanMatrix.tail(rrSimsMburnin),
+                           sigmaVect(rr + 1), zStar(rr + 1))
+              .mean();
+      muj = conditionalMean(Hxx(Jminus1), Hxy.row(Jminus1), mu.head(Jminus1),
+                            zStar.head(Jminus1), mu(Jminus1));
       fzStar(Jminus1) = tnormpdf(a(Jminus1), b(Jminus1), muj,
                                  sigmaVect(Jminus1), zStar(Jminus1));
     } else {
-      if (updatezStar) {
-        zStar(rr + 1) = newRedRunSample.col(rr + 1).tail(rrSimsMburnin).mean();
-      }
+      zStar(rr + 1) = newRedRunSample.col(rr + 1).tail(rrSimsMburnin).mean();
       newRedRunSample.col(rr + 1).fill(zStar(rr + 1));
+      updateVec = zStar;
       fzStar(rr + 1) =
-          tnormpdfMeanVect(
-              a(rr + 1), b(rr + 1),
-              conditionalMeanMatrix.col(rr).tail(rrSimsMburnin),
-              sigmaVect(rr + 1), zStar(rr + 1))
+          tnormpdfMeanVect(a(rr + 1), b(rr + 1),
+                           conditionalMeanMatrix.tail(rrSimsMburnin),
+                           sigmaVect(rr + 1), zStar(rr + 1))
               .mean();
     }
   }
@@ -283,12 +277,17 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
 
 double Crb::ml(const VectorXd &fzStar, const VectorXd &zStarTail,
                double zStarHead, const VectorXd &y, const MatrixXd &X,
-               const VectorXd &b0, const MatrixXd &B0, const double igamA,
-               const double igamB) {
-  double mLike = lrLikelihood(zStarTail, zStarHead, y, X) +
-                 logmvnpdf(b0, B0, zStarTail) +
-                 loginvgammapdf(zStarHead, igamA, igamB) - log(fzStar.prod());
-  return mLike;
+               const VectorXd &b0, const MatrixXd &B0, const double a0,
+               const double d0) {
+	double like =  lrLikelihood(zStarTail, zStarHead, y, X);
+	double lmvn = logmvnpdf(b0, B0, zStarTail);
+	double lig = loginvgammapdf(zStarHead, a0, d0);
+	double lfz = log(fzStar.prod());
+	cout << like << endl;
+	cout << lmvn << endl;
+	cout << lig << endl;
+	cout << lfz << endl;
+  return like + lmvn + lig - lfz;
 }
 
 double Crb::mlCRB(const VectorXd &fzStar, const VectorXd &zStarTail,

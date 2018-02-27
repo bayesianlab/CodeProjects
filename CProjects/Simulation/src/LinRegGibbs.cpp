@@ -139,26 +139,16 @@ MatrixXd LinRegGibbs::calcOmega(const MatrixXd &theta) {
 
 int LinRegGibbs::inTheta(const Ref<const MatrixXd> &theta,
                          const Ref<const MatrixXd> &thetaBar,
-                         const MatrixXd &Omega) {
-  int rt = theta.rows();
-  int rtb = thetaBar.rows();
-  if (rt != rtb) {
-    cout << "Rows not equal: see inTheta" << endl;
-    return -1;
-  } else if (rt != 1) {
-    cout << "Should be row vector: see inTheta" << endl;
-    return -1;
+                         const MatrixXd &precision) {
+
+  int J = precision.cols();
+  boost::math::chi_squared chi(J);
+  double chiQuant = quantile(chi, .99);
+  VectorXd xMmu = theta - thetaBar;
+  if ( (xMmu.transpose() * precision * xMmu).value() <= chiQuant) {
+    return 1;
   } else {
-    int J = Omega.cols();
-    boost::math::chi_squared chi(J);
-    double chiQuant = quantile(chi, .99);
-    if ((((theta - thetaBar) * Omega.inverse()) *
-         (theta - thetaBar).transpose())
-            .value() <= chiQuant) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return 0;
   }
 }
 
@@ -201,7 +191,7 @@ double LinRegGibbs::gelfandDeyMLConditionalPrior(
   VectorXd logWeight = MatrixXd::Zero(N, 1);
   int nonZero = 0;
   for (int i = 0; i < N; i++) {
-    if (inTheta(sample.row(i), thetaBar.transpose(), Omega) == 1) {
+    if (inTheta(sample.row(i), thetaBar.transpose(), OmegaInv) == 1) {
       post = mvnpdfPrecision(thetaBar, OmegaInv, sample.row(i).transpose()) *
              1.0101;
       pbeta = priorBetaMvnPdf(b0, sigmaPriorInv, sample(i, 0),
@@ -269,7 +259,7 @@ double LinRegGibbs::modifiedGelfandDey(const VectorXd &a, const VectorXd &b,
   VectorXd mlenot(Jm1);
   double product = 0;
   for (int i = 0; i < N; i++) {
-    if (inTheta(sample.row(i), thetaBar.transpose(), Omega) == 1) {
+    if (inTheta(sample.row(i), thetaBar.transpose(), OmegaInv) == 1) {
       for (int j = 0; j < J; j++) {
         xnot = selMat.block(j * Jm1, 0, Jm1, J) * sample.row(i).transpose();
         Hnot = selMat.block(j * Jm1, 0, Jm1, J) * OmegaInv.row(j).transpose();

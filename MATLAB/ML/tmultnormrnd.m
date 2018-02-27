@@ -15,15 +15,15 @@ for j = 1:J
     notj = I([1:j-1, j+1:J], :);
     Hxy(j,:) = notj * precision(j, :)';
 end
-
 sample = zeros(N, J);
+means = zeros(N, J);
 for i = 1:N
     for j = 1:J
         notj = I([1:j-1, j+1:J], :);
         xnot = notj*init;
         munot = notj*mu;
-        cm = cmean(mu(j), Hxx(j), Hxy(j,:)', xnot, munot);  
-        init(j) = truncNormalRand(a(j), b(j), cm, sii(j));
+        means(i,j) = cmean(mu(j), Hxx(j), Hxy(j,:)', xnot, munot);  
+        init(j) = truncNormalRand(a(j), b(j), means(i,j), sii(j));
     end
     sample(i,:) = init;
 end 

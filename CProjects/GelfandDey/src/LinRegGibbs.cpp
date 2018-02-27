@@ -140,25 +140,15 @@ MatrixXd LinRegGibbs::calcOmega(const MatrixXd &theta) {
 int LinRegGibbs::inTheta(const Ref<const MatrixXd> &theta,
                          const Ref<const MatrixXd> &thetaBar,
                          const MatrixXd &Omega) {
-  int rt = theta.rows();
-  int rtb = thetaBar.rows();
-  if (rt != rtb) {
-    cout << "Rows not equal: see inTheta" << endl;
-    return -1;
-  } else if (rt != 1) {
-    cout << "Should be row vector: see inTheta" << endl;
-    return -1;
+
+  int J = Omega.cols();
+  boost::math::chi_squared chi(J);
+  double chiQuant = quantile(chi, .99);
+  if ((((theta - thetaBar) * Omega.inverse()) * (theta - thetaBar).transpose())
+          .value() <= chiQuant) {
+    return 1;
   } else {
-    int J = Omega.cols();
-    boost::math::chi_squared chi(J);
-    double chiQuant = quantile(chi, .99);
-    if ((((theta - thetaBar) * Omega.inverse()) *
-         (theta - thetaBar).transpose())
-            .value() <= chiQuant) {
-      return 1;
-    } else {
-      return 0;
-    }
+    return 0;
   }
 }
 

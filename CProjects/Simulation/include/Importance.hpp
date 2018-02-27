@@ -19,10 +19,6 @@ public:
                             int sampleSize, int burnin, const VectorXd &b0,
                             const MatrixXd &B0, int a0, int d0);
 
-  double ml(const MatrixXd &importanceDensity, const VectorXd &y,
-            const MatrixXd &X, const MatrixXd &betas, const VectorXd &sigmas,
-            const VectorXd &b0, const MatrixXd &B0, int a0, int d0);
-
   double mlT(const VectorXd &a, const VectorXd &b,
              const MatrixXd &LinearConstraints, const VectorXd &mu,
              const MatrixXd &Sigma, const MatrixXd &y, const MatrixXd &X,

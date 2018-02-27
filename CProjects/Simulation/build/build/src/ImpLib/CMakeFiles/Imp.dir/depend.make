@@ -3,6 +3,7 @@
 
 build/src/ImpLib/CMakeFiles/Imp.dir/__/__/__/src/Importance.cpp.o: ../include/Dist.hpp
 build/src/ImpLib/CMakeFiles/Imp.dir/__/__/__/src/Importance.cpp.o: ../include/Importance.hpp
+build/src/ImpLib/CMakeFiles/Imp.dir/__/__/__/src/Importance.cpp.o: ../include/LinRegGibbs.hpp
 build/src/ImpLib/CMakeFiles/Imp.dir/__/__/__/src/Importance.cpp.o: ../src/Importance.cpp
 build/src/ImpLib/CMakeFiles/Imp.dir/__/__/__/src/Importance.cpp.o: /usr/local/include/eigen3/Eigen/Cholesky
 build/src/ImpLib/CMakeFiles/Imp.dir/__/__/__/src/Importance.cpp.o: /usr/local/include/eigen3/Eigen/Core

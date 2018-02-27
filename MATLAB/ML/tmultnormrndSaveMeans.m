@@ -15,7 +15,7 @@ end
 updateVec = zeros(J,1);
 sample = zeros(N, J);
 means = zeros(N, J);
-for i = 2:N
+for i = 1:N
     for j = 1:J
         notj = I([1:j-1, j+1:J], :);
         muxy = notj*mu';

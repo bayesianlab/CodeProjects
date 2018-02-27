@@ -32,9 +32,15 @@ Eigen/Dense
 string.h
 -
 
+../include/LinRegGibbs.hpp
+Dist.hpp
+../include/Dist.hpp
+
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp
 Importance.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
+LinRegGibbs.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.hpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
 Eigen/Dense

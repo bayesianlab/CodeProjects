@@ -302,7 +302,8 @@ MatrixXd Dist::tmultnorm(const VectorXd &a, const VectorXd &b,
   sigmaVect = (1. / Hxx.array()).sqrt();
   MatrixXd notjMat = selectorMat(J);
   VectorXd updateVec(J);
-  for (int sim = 1; sim < nSims; sim++) {
+  updateVec.setZero();
+  for (int sim = 0; sim < nSims; sim++) {
     for (int j = 0; j < J; j++) {
       Hxy = notjMat.block(j * (Jminus1), 0, Jminus1, J) * precision.row(j).transpose();
 	  muNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * mu;
@@ -603,7 +604,7 @@ MatrixXd Dist::asktmvnrand(const VectorXd &a, const VectorXd &b,
 
 double Dist::conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
                              VectorXd &xNotJ, double muxx) {
-  return muxx - (1. / Hxx) * Hxy.dot(xNotJ - muNotJ);
+  return muxx - ((1. / Hxx) * Hxy.dot(xNotJ - muNotJ));
 }
 
 double Dist::conditionalMean(double Hxx, const Ref<const VectorXd> &Hxy,
@@ -977,7 +978,7 @@ MatrixXd Dist::mvttgeweke91(const VectorXd &a, const VectorXd &b,
   double innerProduct;
   VectorXd updateVec(J);
   updateVec.setZero();
-  for (int i = 1; i < sims; i++) {
+  for (int i = 0; i < sims; i++) {
     for (int j = 0; j < J; j++) {
       innerProduct = (precisionNotj.row(j) * (notj.block(j * (Jm1), 0, Jm1, J) *
                                               updateVec.transpose()))
@@ -1136,4 +1137,9 @@ MatrixXd Dist::gibbsKernel(const VectorXd &a, const VectorXd &b, const VectorXd 
                      sigmaVector(Jm1), zStar(Jm1));
   Kernel.col(Jm1).fill(y);
   return Kernel;
+}
+
+double Dist::pdfavg(VectorXd logpdf){
+	double maxval = logpdf.maxCoeff();
+	return log(exp(logpdf.array() - maxval).mean()) + maxval;
 }

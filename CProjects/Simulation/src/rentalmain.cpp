@@ -154,8 +154,8 @@ int main() {
     V.block(1, 1, DATA.cols(), DATA.cols()) = MaximumLikelihoodEstsSigma;
     V(0, 0) = (2 * pow(s2hat, 2)) / (DATA.rows());
     int J = V.cols();
-    MatrixXd b0 = MaximumLikelihoodEstsBeta;
-    MatrixXd B0 = 100*MatrixXd::Identity(J - 1, J - 1);
+    VectorXd b0 = MaximumLikelihoodEstsBeta;
+    MatrixXd B0 = 1000*MatrixXd::Identity(J - 1, J - 1);
     double a0 = 6;
     double d0 = 12;
 
@@ -170,53 +170,55 @@ int main() {
     MatrixXd Iden = I;
     Iden.array().colwise() *= V.diagonal().array().pow(-.5);
     MatrixXd Test = Iden * V * Iden;
-    MatrixXd Sample = dist.geweke91(a, b, I, MLES, V, 1500, 50);
+
+	int simulations = 1000;
+	int burnin = .1*simulations;
 
     Crb crb;
     cout << "Crb" << endl;
-    MatrixXd fzandz = crb.chibRao(a, b, MLES, V, 110000, 10000, 110000, 10000, 1);
+    MatrixXd fzandz = crb.chibRao(a, b, MLES, V, simulations, burnin, simulations, burnin, 0);
 	cout << fzandz << endl;
+	cout << endl;
     VectorXd fz = fzandz.col(0);
     VectorXd z = fzandz.col(1);
     VectorXd betasCrb = z.tail(J - 1);
     cout << crb.ml(fz, betasCrb, z(0), y, DATA, b0, B0, a0, d0) << endl;
     cout << endl;
 
- /*   Crt crt;
-    Sample = dist.tmultnorm(a, b, MLES, V, 150000).leftCols(J).bottomRows(100000);
+    Crt crt;
+    MatrixXd Sample = dist.tmultnorm(a, b, MLES, V, simulations).leftCols(J).bottomRows(simulations-burnin);
     VectorXd zStar = Sample.colwise().mean();
     MatrixXd Kernel = dist.gibbsKernel(a, b, MLES, V, Sample, zStar);
     VectorXd betas = zStar.tail(J - 1);
     cout << "Crt" << endl;
+	cout << zStar << endl;
     cout << crt.ml(betas, zStar(0), Kernel, y, DATA, b0, B0, a0, d0) << endl;
     cout << endl;
 
-    Ask ask;
+   /* Ask ask;
     cout << "Ask" << endl;
     MatrixXd adaptSample =
-        ask.adaptiveSampler(a, b, MLES, V, .5, 150000, 50000, 5000);
+        ask.adaptiveSampler(a, b, MLES, V, .5, 15000, 5000, 500);
     VectorXd zask = adaptSample.colwise().mean();
     MatrixXd K = ask.gibbsKernel(a, b, MLES, V, adaptSample, zask);
     VectorXd betasask = zask.tail(J - 1);
-    cout << ask.ml(betasask, zask(0), y, DATA, K, b0, B0, a0, d0) << endl;
+    cout << ask.ml(betasask, zask(0), y, DATA, K, b0, B0, a0, d0) << endl;*/
 
     Importance imp;
 	cout << "Importance " << endl;
-	
-    cout << imp.importanceSampling(a, b, MLES, V, y, DATA, 150000, 50000, b0, B0,
+    cout << imp.importanceSampling(a, b, MLES, V, y, DATA, simulations, burnin, b0, B0,
                                    a0, d0)
          << endl;
-	cout << imp.mlGeweke91(a, b, I, MLES, V, y, DATA, 150000, 50000, b0, B0,
-                                   a0, d0) << endl;
+
 	
-	Ark ark;
+/*	Ark ark;
 	cout << "ark" << endl;
 	MatrixXd arSamp = ark.arSample(a, b, MLES, V, 150000, 50000);
     VectorXd zark = arSamp.colwise().mean();
     MatrixXd arkKernel = dist.gibbsKernel(a, b, MLES, V, arSamp, zark);
     VectorXd bark = zStar.tail(J-1);
-    cout<<  ark.ml(bark, zark(0), y, DATA, arkKernel, b0, B0, a0, d0) << endl;
-	*/
+    cout<<  ark.ml(bark, zark(0), y, DATA, arkKernel, b0, B0, a0, d0) << endl;*/
+	
 
   }
   {
