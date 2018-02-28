@@ -16,7 +16,7 @@ public:
   MatrixXd arSample(const VectorXd &, const VectorXd &, const VectorXd &,
                     const MatrixXd &, int, int);
 
-  MatrixXd acceptRejectT(const VectorXd &a, const VectorXd &b,
+  MatrixXd arSampleT(const VectorXd &a, const VectorXd &b,
                          const MatrixXd &LinearConstraints,
                          const VectorXd &theta, const MatrixXd &Sigma,
                          double df, int sSize, int maxIterations);

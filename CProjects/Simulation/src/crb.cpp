@@ -1,5 +1,4 @@
 #include "crb.hpp"
-#include "CreateSampleData.hpp"
 #include "Dist.hpp"
 #include <Eigen/Dense>
 #include <iomanip>
@@ -121,78 +120,76 @@ MatrixXd Crb::chibRaoT(const VectorXd &a, const VectorXd &b,
   return fzAndzStar;
 }
 
-MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
-                      const MatrixXd &sigma, int sims, int burnin, int rrSims,
+MatrixXd Crb::chibRaoStuT(const VectorXd &a, const VectorXd &b, const MatrixXd &LinConstraint, const VectorXd &mu,
+                      const MatrixXd &Sigma, double nu, int sims, int burnin, int rrSims,
                       int rrburnin) {
-  int J = sigma.cols();
+  int J = Sigma.cols();
   int Jminus1 = J - 1;
   int redRuns = J - 2;
   int simsMburin = sims - burnin;
   int rrSimsMburnin = rrSims - rrburnin;
-  double muj;
+  double muj, conditionaDf;
+  conditionaDf = nu + Jminus1;
   MatrixXd notjMat = selectorMat(J);
-  MatrixXd precision = sigma.inverse();
+  MatrixXd precision = Sigma.inverse();
   VectorXd Hxx = precision.diagonal();
   VectorXd sigmaVect = (1. / Hxx.array()).sqrt();
-  MatrixXd sample = MatrixXd::Zero(sims, 2 * J);
-  sample = tmultnorm(a, b, mu, sigma, sims);
-  sample = sample.bottomRows(simsMburin).eval();
-  VectorXd Hxy(Jminus1);
-
+  MatrixXd sample = mvttgeweke91(a, b, LinConstraint, mu, Sigma, nu, sims, burnin);
+  MatrixXd Hxy(J, Jminus1);
+  for (int j = 0; j < J; j++) {
+    Hxy.row(j) = notjMat.block(j * (Jminus1), 0, Jminus1, J) *
+                 precision.row(j).transpose();
+  }
   VectorXd xNotJ(Jminus1);
   VectorXd muNotJ(Jminus1);
-  VectorXd zStar = MatrixXd::Zero(J, 1);
+  VectorXd zStar = sample.leftCols(J).colwise().mean();
   VectorXd fzStar = MatrixXd::Zero(J, 1);
-  zStar(0) = sample.col(0).mean();
   fzStar(0) =
-      tnormpdfMeanVect(a(0), b(0), sample.col(J), sigmaVect(0), zStar(0))
+      ttpdf(a(0), b(0), conditionaDf, sample.col(J), sigmaVect(0), zStar(0))
           .mean();
   MatrixXd newRedRunSample = MatrixXd::Zero(rrSims, J);
   newRedRunSample.col(0).fill(zStar(0));
-  MatrixXd conditionalMeanMatrix(rrSims, redRuns);
+  VectorXd conditionalMeanMatrix(rrSims);
   VectorXd updateVec(J);
-  updateVec = newRedRunSample.row(0).transpose();
+  updateVec = zStar;
   for (int rr = 0; rr < redRuns; rr++) {
-    for (int sim = 1; sim < rrSims; sim++) {
+    for (int sim = 0; sim < rrSims; sim++) {
       int truej = 0;
       for (int j = rr + 1; j < J; j++) {
         muNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * mu;
         xNotJ = notjMat.block(j * (Jminus1), 0, Jminus1, J) * updateVec;
-        Hxy = notjMat.block(j * (Jminus1), 0, Jminus1, J) *
-              precision.row(j).transpose();
-        muj = conditionalMean(Hxx(j), Hxy, muNotJ, xNotJ, mu(j));
+        muj = conditionalMean(Hxx(j), Hxy.row(j), muNotJ, xNotJ, mu(j));
         updateVec(j) = truncNormalRnd(a(j), b(j), muj, sigmaVect(j));
         if (truej == 0) {
-          conditionalMeanMatrix(sim, rr) = muj;
+          conditionalMeanMatrix(sim) = muj;
         }
         truej++;
       }
       newRedRunSample.row(sim) = updateVec.transpose();
     }
     if (rr == redRuns - 1) {
-
       zStar.tail(2) = newRedRunSample.rightCols(2)
                           .bottomRows(rrSimsMburnin)
                           .colwise()
                           .mean();
-      newRedRunSample.col(rr + 1).fill(zStar(rr + 1));
+      fzStar(rr + 1) = ttpdf(a(rr + 1), b(rr + 1), conditionaDf,
+                             conditionalMeanMatrix.tail(rrSimsMburnin),
+                             sigmaVect(rr + 1), zStar(rr + 1))
+                           .mean();
+      muj = conditionalMean(Hxx(Jminus1), Hxy.row(Jminus1), mu.head(Jminus1),
+                            zStar.head(Jminus1), mu(Jminus1));
+      fzStar(Jminus1) = ttpdf(a(Jminus1), b(Jminus1), conditionaDf, muj,
+                              sigmaVect(Jminus1), zStar(Jminus1));
     } else {
       zStar(rr + 1) = newRedRunSample.col(rr + 1).tail(rrSimsMburnin).mean();
       newRedRunSample.col(rr + 1).fill(zStar(rr + 1));
+      updateVec = zStar;
+      fzStar(rr + 1) = ttpdf(a(rr + 1), b(rr + 1), conditionaDf,
+                             conditionalMeanMatrix.tail(rrSimsMburnin),
+                             sigmaVect(rr + 1), zStar(rr + 1))
+                           .mean();
     }
   }
-  newRedRunSample = newRedRunSample.bottomRows(rrSimsMburnin).eval();
-  conditionalMeanMatrix =
-      conditionalMeanMatrix.bottomRows(rrSimsMburnin).eval();
-  calcfzStar(fzStar, zStar, a, b, conditionalMeanMatrix, sigmaVect);
-  Hxy = precision.row(Jminus1).head(Jminus1);
-  muNotJ = mu.head(Jminus1);
-  xNotJ = zStar.head(Jminus1);
-  muj = conditionalMean(Hxx(Jminus1), Hxy, muNotJ, xNotJ, mu(Jminus1));
-  fzStar(Jminus1) =
-      tnormpdf(a(Jminus1), b(Jminus1), muj, sigmaVect(Jminus1), zStar(Jminus1));
-
-  VectorXd betas = zStar.tail(Jminus1);
   MatrixXd T(J, 2);
   T << fzStar, zStar;
   return T;
@@ -200,7 +197,7 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
 
 MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
                       const MatrixXd &sigma, int sims, int burnin, int rrSims,
-                      int rrburnin, int updatezStar) {
+                      int rrburnin) {
   int J = sigma.cols();
   int Jminus1 = J - 1;
   int redRuns = J - 2;
@@ -222,7 +219,7 @@ MatrixXd Crb::chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
   VectorXd muNotJ(Jminus1);
   VectorXd zStar = sample.leftCols(J).colwise().mean();
   VectorXd fzStar = MatrixXd::Zero(J, 1);
-  fzStar(0) = tnormpdfMeanVect(a(0), b(0), sample.bottomRows(simsMburin).col(J),
+  fzStar(0) = tnormpdfMeanVect(a(0), b(0), sample.col(J),
                                sigmaVect(0), zStar(0))
                   .mean();
   MatrixXd newRedRunSample = MatrixXd::Zero(rrSims, J);
@@ -283,10 +280,6 @@ double Crb::ml(const VectorXd &fzStar, const VectorXd &zStarTail,
 	double lmvn = logmvnpdf(b0, B0, zStarTail);
 	double lig = loginvgammapdf(zStarHead, a0, d0);
 	double lfz = log(fzStar.prod());
-	cout << like << endl;
-	cout << lmvn << endl;
-	cout << lig << endl;
-	cout << lfz << endl;
   return like + lmvn + lig - lfz;
 }
 
@@ -299,10 +292,10 @@ double Crb::mlCRB(const VectorXd &fzStar, const VectorXd &zStarTail,
   return mLike;
 }
 
-void Crb::runSim(VectorXd &betas, MatrixXd &sigma, VectorXd &y, MatrixXd &X,
+void Crb::runSim(VectorXd &mu, MatrixXd &sigma, VectorXd &y, MatrixXd &X,
                  VectorXd &ll, VectorXd &ul, int sims, int burnin, int nSims,
                  int batches) {
-  int J = betas.size();
+  int J = mu.size();
   VectorXd b(J);
   VectorXd fz(J);
   MatrixXd fzandz(J,2);
@@ -310,7 +303,7 @@ void Crb::runSim(VectorXd &betas, MatrixXd &sigma, VectorXd &y, MatrixXd &X,
   VectorXd b0 = MatrixXd::Zero(J - 1, 1);
   MatrixXd B0 = MatrixXd::Identity(J - 1, J - 1);
   for (int i = 0; i < nSims; i++) {
-    fzandz = chibRao(ll, ul, betas, sigma, sims, burnin, sims, burnin);
+    fzandz = chibRao(ll, ul, mu, sigma, sims, burnin, sims, burnin);
     b = fzandz.col(1).tail(J - 1);
     fz = fzandz.col(0);
     mLike(i) = ml(fz, b, fzandz(0, 1), y, X, b0, B0, 6, 12);

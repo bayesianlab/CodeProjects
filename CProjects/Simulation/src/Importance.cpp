@@ -1,5 +1,4 @@
 #include "Importance.hpp"
-#include "LinRegGibbs.hpp"
 #include "Dist.hpp"
 #include <Eigen/Dense>
 #include <assert.h>
@@ -15,25 +14,36 @@ using namespace std;
 double Importance::importanceSampling(const VectorXd &ll, const VectorXd &ul,
                                       const VectorXd &mu, const MatrixXd &Sigma,
                                       const VectorXd &y, const MatrixXd &X,
-                                      int sampleSize, int burnin,
-                                      const VectorXd &b0, const MatrixXd &B0,
-                                      int a0, int d0) {
+                                      int sampleSize, const VectorXd &b0,
+                                      const MatrixXd &B0, int a0, int d0) {
   int J = Sigma.cols();
-  LinRegGibbs lrg;
   MatrixXd lowerC = Sigma.llt().matrixL();
   VectorXd lowerCdiag = lowerC.diagonal();
-  MatrixXd precision = Sigma.inverse();
-  VectorXd Hxx = precision.diagonal();
-  VectorXd sigmaxx = Hxx.array().pow(-1).sqrt();
-  sample = ghkLinearConstraints(ll, ul, mu, Sigma, sampleSize, burnin);
+  VectorXd logpdf(sampleSize);
+  sample = ghkLinearConstraints(ll, ul, mu, Sigma, sampleSize, logpdf);
   MatrixXd betas = sample.rightCols(J - 1);
   VectorXd sigmas = sample.col(0);
-  MatrixXd importanceDensity = tnormpdfMat(ll, ul, mu, lowerCdiag, sample);
-  VectorXd loghTheta = importanceDensity.rowwise().prod().array().log();
   return pdfavg(lrLikelihood(betas, sigmas, y, X)) +
          pdfavg(loginvgammapdf(sigmas, a0, d0)) +
-         pdfavg(logmvnpdfV(b0, B0, betas)) - pdfavg(loghTheta);
+         pdfavg(logmvnpdfV(b0, B0, betas)) - pdfavg(logpdf);
 }
+
+double Importance::trunctprop(const VectorXd &a, const VectorXd &b,const MatrixXd &LinearConstraints,
+                              const VectorXd &mu, const MatrixXd &Sigma,
+                              const int nu, const VectorXd &y,
+                              const MatrixXd &X, int sampleSize,
+                              const VectorXd &b0, const MatrixXd &B0, int a0,
+							  int d0){
+  int J = Sigma.cols();
+  VectorXd logpdf(sampleSize);
+  MatrixXd sample = ghkT(a, b, LinearConstraints, mu, Sigma, nu, sampleSize, logpdf);
+  MatrixXd betas = sample.rightCols(J - 1);
+  VectorXd sigmas = sample.col(0);
+  return pdfavg(lrLikelihood(betas, sigmas, y, X)) +
+         pdfavg(loginvgammapdf(sigmas, a0, d0)) +
+         pdfavg(logmvnpdfV(b0, B0, betas)) - pdfavg(logpdf);
+}
+
 
 double Importance::mlT(const VectorXd &a, const VectorXd &b,
                        const MatrixXd &LinearConstraints, const VectorXd &mu,
@@ -42,7 +52,7 @@ double Importance::mlT(const VectorXd &a, const VectorXd &b,
                        const VectorXd &b0, const MatrixXd &B0, double a0,
                        double d0) {
   int J = Sigma.cols();
-  MatrixXd draws = ghkT(a, b, LinearConstraints, mu, Sigma, df, sims, burnin);
+  MatrixXd draws = ghkT(a, b, LinearConstraints, mu, Sigma, df, sims);
   VectorXd stdevs = Sigma.diagonal().array().sqrt();
   VectorXd hTheta =
       ttpdf(a, b, df, mu, stdevs, draws).rowwise().prod().array().log();
@@ -156,7 +166,7 @@ void Importance::runSim(int nSims, int batches, VectorXd &theta,
   VectorXd mLike(nSims);
   for (int i = 0; i < nSims; i++) {
     mLike(i) = importanceSampling(ll, ul, theta, sigma, y, X, sampleSize,
-                                  burnin, b0, S0, a0, d0);
+                                  b0, S0, a0, d0);
     if (isnan(mLike(i)) == 1) {
       break;
     }

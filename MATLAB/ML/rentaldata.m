@@ -29,7 +29,7 @@ mu = [sHat, Mles']';
 b0 = zeros(J-1,1);
 B0 = eye(J-1);
 a0 = 3;
-d0 =6;
+d0 =2;
 init = zeros(J,1);
 
 C = chol(V, 'lower');
@@ -43,7 +43,7 @@ alpha(2:J) = -Inf;
 beta(1:J) = Inf;
 
 simresults = zeros(s,5);
-N = 1000;
+N = 5000;
 bn = max([floor(.1*N), 1]);
 
 % ghkT(a,b,mu,V,J+1,25)

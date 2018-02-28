@@ -20,7 +20,7 @@ double Ark::arkKernelT(const VectorXd &a, const VectorXd &b,
                        double a0, double d0, int sims, int maxIterations) {
   int K = Sigma.cols();
   int Km1 = K - 1;
-  MatrixXd arsamp = acceptRejectT(a, b, LinearConstraints, theta, Sigma, df,
+  MatrixXd arsamp = arSampleT(a, b, LinearConstraints, theta, Sigma, df,
                                   sims, maxIterations);
   VectorXd zstar = arsamp.colwise().mean();
   MatrixXd xnot = arsamp.rightCols(Km1);
@@ -95,17 +95,19 @@ MatrixXd Ark::arSample(const VectorXd &ll, const VectorXd &ul, const VectorXd &m
   return arSample;
 }
 
-MatrixXd Ark::acceptRejectT(const VectorXd &a, const VectorXd &b,
+MatrixXd Ark::arSampleT(const VectorXd &a, const VectorXd &b,
                             const MatrixXd &LinearConstraints,
-                            const VectorXd &theta, const MatrixXd &Sigma,
+                            const VectorXd &mu, const MatrixXd &Sigma,
                             double df, int sSize, int maxIterations) {
   int K = Sigma.cols();
   MatrixXd sample(sSize, K);
   int n = 0;
   int maxit = 0;
   MatrixXd t(1, K);
+  VectorXd m = LinearConstraints*mu;
+  MatrixXd T = LinearConstraints*Sigma*LinearConstraints.transpose();
   while (n < sSize) {
-    t = mvtruncT(a, b, LinearConstraints, theta, Sigma, df, 1).array();
+    t = studenttrnd(m, T, df, 1).array();
     if ((t.array() > a.transpose().array()).all() +
             (t.array() < b.transpose().array()).all() ==
         2) {
@@ -121,6 +123,7 @@ MatrixXd Ark::acceptRejectT(const VectorXd &a, const VectorXd &b,
       maxit++;
     }
   }
+  sample = (LinearConstraints.inverse()*sample.transpose()).transpose();
   return sample;
 }
 

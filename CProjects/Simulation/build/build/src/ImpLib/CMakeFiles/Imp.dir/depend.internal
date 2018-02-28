@@ -4,7 +4,6 @@
 build/src/ImpLib/CMakeFiles/Imp.dir/__/__/__/src/Importance.cpp.o
  ../include/Dist.hpp
  ../include/Importance.hpp
- ../include/LinRegGibbs.hpp
  /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp
  /usr/local/include/eigen3/Eigen/Cholesky
  /usr/local/include/eigen3/Eigen/Core

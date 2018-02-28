@@ -1,9 +1,9 @@
-#include "Ask.hpp"
-#include "Ark.hpp"
-#include "Crb.hpp"
-#include "Crt.hpp"
-#include "Importance.hpp"
+#include "ark.hpp"
+#include "ask.hpp"
+#include "crb.hpp"
+#include "crt.hpp"
 #include "Dist.hpp"
+#include "Importance.hpp"
 #include "ThreeD.hpp"
 #include "eigenshorts.hpp"
 #include "read_csv_to_eigen.hpp"
@@ -74,7 +74,7 @@ void MvtPdfTests() {
     x << 1, 1.1, .8;
     cout << sigma << endl;
     Dist d;
-    cout << d.mvtrnd(mu, sigma, 10, 15) << endl;
+    cout << d.studenttrnd(mu, sigma, 10, 15) << endl;
     cout << "mvtpdf" << endl;
     cout << d.mvtpdf(x, mu, sigma, 10) << endl;
   }
@@ -90,7 +90,7 @@ void MvtPdfTests() {
     sigma(1, 2) = .5;
     sigma(2, 1) = .5;
     MatrixXd x(4, 3);
-    x = d.mvtrnd(mu, sigma, 10, 4);
+    x = d.studenttrnd(mu, sigma, 10, 4);
     cout << "x" << endl;
     cout << x << endl;
     cout << "pdf(x)" << endl;
@@ -112,11 +112,20 @@ void MvtPdfTests() {
     VectorXd b(3);
     a << 0, 0, 0;
     b << inf, inf, inf;
-    MatrixXd X = d.mvtrnd(mu, sigma, 10, 15);
+    MatrixXd X = d.studenttrnd(mu, sigma, 10, 15);
     for (int i = 0; i < X.rows(); i++) {
       cout << indicatorFunction(a, b, X.row(i)) << " " << X.row(i) << endl;
     }
   }
+}
+
+void TrunctTests(){
+	cout << "Truncated T PDF Tests" << endl;
+    double inf = numeric_limits<double>::max();
+	Dist dist;
+	cout << dist.ttpdf(0,1,10 ,0,1,.5) << endl;
+	cout << dist.ttpdf(0, inf, 10, 0, 1, .5) << endl;
+	cout << dist.ttpdf(-inf, 0, 10, -10, 5, -3) << endl;
 }
 
 int main() {
@@ -155,9 +164,9 @@ int main() {
     V(0, 0) = (2 * pow(s2hat, 2)) / (DATA.rows());
     int J = V.cols();
     VectorXd b0 = MaximumLikelihoodEstsBeta;
-    MatrixXd B0 = 1000*MatrixXd::Identity(J - 1, J - 1);
-    double a0 = 6;
-    double d0 = 12;
+    MatrixXd B0 = 1000 * MatrixXd::Identity(J - 1, J - 1);
+    double a0 = 3;
+    double d0 = 5;
 
     Dist dist;
     // Constraints
@@ -171,57 +180,100 @@ int main() {
     Iden.array().colwise() *= V.diagonal().array().pow(-.5);
     MatrixXd Test = Iden * V * Iden;
 
-	int simulations = 1000;
-	int burnin = .1*simulations;
+    int simulations = 100000;
+    int burnin = .1 * simulations;
 
     Crb crb;
     cout << "Crb" << endl;
-    MatrixXd fzandz = crb.chibRao(a, b, MLES, V, simulations, burnin, simulations, burnin, 0);
-	cout << fzandz << endl;
-	cout << endl;
+    MatrixXd fzandz =
+        crb.chibRao(a, b, MLES, V, simulations, burnin, simulations, burnin);
     VectorXd fz = fzandz.col(0);
     VectorXd z = fzandz.col(1);
     VectorXd betasCrb = z.tail(J - 1);
     cout << crb.ml(fz, betasCrb, z(0), y, DATA, b0, B0, a0, d0) << endl;
     cout << endl;
+	crb.runSim(MLES, V, y, DATA, a, b, simulations, burnin, 1000, 50);
+
+    /*cout << "Crb Student T" << endl;
+    fzandz = crb.chibRaoStuT(a, b, I, MLES, V, J + 1, simulations, burnin,
+                             simulations, burnin);
+    fz = fzandz.col(0);
+    z = fzandz.col(1);
+    betasCrb = z.tail(J - 1);
+    cout << crb.ml(fz, betasCrb, z(0), y, DATA, b0, B0, a0, d0) << endl;
+    cout << endl;
 
     Crt crt;
-    MatrixXd Sample = dist.tmultnorm(a, b, MLES, V, simulations).leftCols(J).bottomRows(simulations-burnin);
+    MatrixXd Sample = dist.tmultnorm(a, b, MLES, V, simulations)
+                          .leftCols(J)
+                          .bottomRows(simulations - burnin);
     VectorXd zStar = Sample.colwise().mean();
     MatrixXd Kernel = dist.gibbsKernel(a, b, MLES, V, Sample, zStar);
     VectorXd betas = zStar.tail(J - 1);
     cout << "Crt" << endl;
-	cout << zStar << endl;
     cout << crt.ml(betas, zStar(0), Kernel, y, DATA, b0, B0, a0, d0) << endl;
     cout << endl;
 
-   /* Ask ask;
+    cout << "Crt Student T" << endl;
+    Sample = dist.mvtstudtrnd(a, b, I, MLES, V, J + 1, simulations, burnin)
+                 .bottomRows(simulations - burnin);
+    zStar = Sample.colwise().mean();
+    Kernel = dist.gibbsKernel(a, b, MLES, V, Sample, zStar);
+    betas = zStar.tail(J - 1);
+    cout << crt.ml(betas, zStar(0), Kernel, y, DATA, b0, B0, a0, d0) << endl;
+    cout << endl;
+
+    Ask ask;
     cout << "Ask" << endl;
     MatrixXd adaptSample =
         ask.adaptiveSampler(a, b, MLES, V, .5, 15000, 5000, 500);
     VectorXd zask = adaptSample.colwise().mean();
     MatrixXd K = ask.gibbsKernel(a, b, MLES, V, adaptSample, zask);
     VectorXd betasask = zask.tail(J - 1);
-    cout << ask.ml(betasask, zask(0), y, DATA, K, b0, B0, a0, d0) << endl;*/
+    cout << ask.ml(betasask, zask(0), y, DATA, K, b0, B0, a0, d0) << endl;
+    cout << "Ask Student T" << endl;
+	VectorXd weight(J+1);
+	weight.fill(.5);
+	adaptSample = ask.adaptiveSamplerT(a,b,I,MLES,V,J+1,.5,simulations,burnin,burnin, weight);
+    zask = adaptSample.colwise().mean();
+    K = ask.gibbsKernel(a, b, MLES, V, adaptSample, zask);
+    betasask = zask.tail(J - 1);
+    cout << ask.ml(betasask, zask(0), y, DATA, K, b0, B0, a0, d0) << endl;
+	cout << endl;
+
+	
 
     Importance imp;
-	cout << "Importance " << endl;
-    cout << imp.importanceSampling(a, b, MLES, V, y, DATA, simulations, burnin, b0, B0,
+    cout << "Importance " << endl;
+    cout << imp.importanceSampling(a, b, MLES, V, y, DATA, simulations, b0, B0,
                                    a0, d0)
          << endl;
 
-	
-/*	Ark ark;
-	cout << "ark" << endl;
-	MatrixXd arSamp = ark.arSample(a, b, MLES, V, 150000, 50000);
+    cout << "Importance Student T proposal" << endl;
+    cout << imp.trunctprop(a, b, I, MLES, V, J, y, DATA, simulations, b0, B0,
+                           a0, d0)
+         << endl;
+	cout << endl;
+
+    Ark ark;
+    cout << "Ark" << endl;
+    MatrixXd arSamp = ark.arSample(a, b, MLES, V, simulations, 100000);
     VectorXd zark = arSamp.colwise().mean();
     MatrixXd arkKernel = dist.gibbsKernel(a, b, MLES, V, arSamp, zark);
-    VectorXd bark = zStar.tail(J-1);
-    cout<<  ark.ml(bark, zark(0), y, DATA, arkKernel, b0, B0, a0, d0) << endl;*/
-	
+    VectorXd bark = zark.tail(J - 1);
+    cout << ark.ml(bark, zark(0), y, DATA, arkKernel, b0, B0, a0, d0) << endl;
+	cout << endl;
+	cout << "Ark student t" << endl;
+    arSamp = ark.arSampleT(a, b, I, MLES, V, J+1, simulations, 100000);
+    zark = arSamp.colwise().mean();
+    arkKernel = dist.gibbsKernel(a, b, MLES, V, arSamp, zark);
+    bark = zark.tail(J - 1);
+    cout << ark.ml(bark, zark(0), y, DATA, arkKernel, b0, B0, a0, d0) << endl;
+	cout << endl;*/
 
   }
   {
     // RobertMethodTests();
+    // TrunctTests();
   }
 }

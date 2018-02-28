@@ -7,10 +7,13 @@ using namespace Eigen;
 class Crb : public Dist {
 public:
   MatrixXd chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
-                   const MatrixXd &sigma, int, int, int, int, int updatezStar);
+                   const MatrixXd &sigma, int sims, int burnin, int rrSims,
+                   int rrburnin);
 
-  MatrixXd chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
-                   const MatrixXd &sigma, int, int, int, int);
+  MatrixXd chibRaoStuT(const VectorXd &a, const VectorXd &b,
+                       const MatrixXd &LinConstraint, const VectorXd &mu,
+                       const MatrixXd &Sigma, double nu, int sims, int burnin,
+                       int rrSims, int rrburnin);
 
   MatrixXd chibRaoT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, const VectorXd &mu,
@@ -35,8 +38,9 @@ public:
   double mlCRB(const VectorXd &fzStar, const VectorXd &, double, VectorXd &,
                MatrixXd &, VectorXd &b0, MatrixXd &B0, double a0, double d0);
 
-  void runSim(VectorXd &, MatrixXd &, VectorXd &, MatrixXd &, VectorXd &,
-              VectorXd &, int, int, int, int);
+  void runSim(VectorXd &mu, MatrixXd &sigma, VectorXd &y, MatrixXd &X,
+              VectorXd &ll, VectorXd &ul, int sims, int burnin, int nSims,
+              int batches);
 
   void runTsim(VectorXd &betas, MatrixXd &sigma, double df, VectorXd &y,
                MatrixXd &X, VectorXd &ll, VectorXd &ul,

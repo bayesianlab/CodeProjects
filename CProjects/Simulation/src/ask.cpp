@@ -182,7 +182,7 @@ MatrixXd Ask::adaptiveSamplerT(const VectorXd &a, const VectorXd &b,
   for (int i = 0; i < nBlockCount; i++) {
     if (bernoulli(peta) == 1) {
       tempSample.middleRows(startingPlace, sampleBlockRows) =
-          ghkT(a, b, LinearConstraints, theta, Sigma, df, sampleBlockRows, 0);
+          ghkT(a, b, LinearConstraints, theta, Sigma, df, sampleBlockRows);
       colj.resize(sampleBlockRows * (i + 1));
       for (int j = 0; j < K; j++) {
         colj = tempSample.col(j).head(sampleBlockRows * (i + 1));
@@ -211,7 +211,7 @@ MatrixXd Ask::adaptiveSamplerT(const VectorXd &a, const VectorXd &b,
     startingPlace = remainderStartPlace;
     if (bernoulli(peta) == 1) {
       tempSample.middleRows(startingPlace, remainder) =
-          ghkT(a, b, LinearConstraints, theta, Sigma, df, remainder, 0);
+          ghkT(a, b, LinearConstraints, theta, Sigma, df, remainder);
     } else {
       VectorXd initVector = tempSample.row(startingPlace - 1).transpose();
       tempSample.middleRows(startingPlace, remainder) =
@@ -255,7 +255,7 @@ MatrixXd Ask::burninAdaptiveT(const VectorXd &a, const VectorXd &b,
   VectorXd initVector(dim);
   initVector = MatrixXd::Zero(dim, 1);
   if (bernoulli(initPeta)) {
-    draws = ghkT(a, b, LinearConstraints, mu, Sigma, df, sims, 0);
+    draws = ghkT(a, b, LinearConstraints, mu, Sigma, df, sims);
     return draws;
   } else {
     draws = askMvttgeweke91(a, b, LinearConstraints, mu, Sigma, df, sims+1, 1, initVector);

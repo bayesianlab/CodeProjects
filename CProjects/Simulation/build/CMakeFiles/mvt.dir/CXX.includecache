@@ -6,36 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../include/Ark.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/Ask.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/Crb.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/CreateSampleData.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/Crt.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
 ../include/Dist.hpp
 Eigen/Dense
 -
@@ -68,7 +38,25 @@ Eigen/Dense
 iostream
 -
 
+../include/ark.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
+-
+
+../include/ask.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
+-
+
 ../include/crb.hpp
+Dist.hpp
+../include/Dist.hpp
+Eigen/Dense
+-
+
+../include/crt.hpp
 Dist.hpp
 ../include/Dist.hpp
 Eigen/Dense
@@ -87,8 +75,6 @@ Eigen/Dense
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Crb.cpp
 crb.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.hpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
 Eigen/Dense
@@ -141,18 +127,18 @@ iostream
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp
-Ask.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Ask.hpp
-Ark.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Ark.hpp
-Crb.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Crb.hpp
-Crt.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Crt.hpp
-Importance.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
+ark.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.hpp
+ask.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.hpp
+crb.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.hpp
+crt.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.hpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
+Importance.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
 ThreeD.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ThreeD.hpp
 eigenshorts.hpp

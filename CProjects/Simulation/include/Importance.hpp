@@ -16,8 +16,14 @@ public:
   double importanceSampling(const VectorXd &ll, const VectorXd &ul,
                             const VectorXd &betas, const MatrixXd &sigma,
                             const VectorXd &y, const MatrixXd &X,
-                            int sampleSize, int burnin, const VectorXd &b0,
+                            int sampleSize, const VectorXd &b0,
                             const MatrixXd &B0, int a0, int d0);
+
+  double trunctprop(const VectorXd &ll, const VectorXd &ul,
+                    const MatrixXd &LinearConstraints, const VectorXd &mu,
+                    const MatrixXd &Sigma, const int nu, const VectorXd &y,
+                    const MatrixXd &X, int sampleSize, const VectorXd &b0,
+                    const MatrixXd &B0, int a0, int d0);
 
   double mlT(const VectorXd &a, const VectorXd &b,
              const MatrixXd &LinearConstraints, const VectorXd &mu,

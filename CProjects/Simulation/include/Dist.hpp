@@ -73,8 +73,13 @@ public:
                      const Ref<const MatrixXd> &, const VectorXd &,
                      const MatrixXd &, int);
 
-  MatrixXd ghkLinearConstraints(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
-                                    const MatrixXd &Sigma, int sims, int burnin);
+  MatrixXd ghkLinearConstraints(const VectorXd &a, const VectorXd &b,
+                                const VectorXd &mu, const MatrixXd &Sigma,
+                                int sims);
+
+  MatrixXd ghkLinearConstraints(const VectorXd &a, const VectorXd &b,
+                                const VectorXd &mu, const MatrixXd &Sigma,
+                                int sims, VectorXd &logpdf);
 
   double conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
                          VectorXd &xNotJ, double muxx);
@@ -98,8 +103,10 @@ public:
 
   VectorXd ttpdf(double a, double b, double df, const Ref<const VectorXd> &mu,
                  double sigma, double x);
+  
   double mvtpdf(const VectorXd &x, const VectorXd &mu, const MatrixXd &Variance,
                 int df);
+  
   double mvtpdfHelp(const Ref<const VectorXd> &x, const VectorXd &mu,
                     const MatrixXd &Variance, int df);
   VectorXd mvtpdf(const MatrixXd &X, const VectorXd &mu,
@@ -127,7 +134,12 @@ public:
 
   MatrixXd ghkT(const VectorXd &a, const VectorXd &b,
                 const MatrixXd &LinearConstraints, const VectorXd &mu,
-                const MatrixXd &Sigma, double df, int sims, int burnin);
+                const MatrixXd &Sigma, double df, int sims);
+
+  MatrixXd ghkT(const VectorXd &a, const VectorXd &b,
+                const MatrixXd &LinearConstraints, const VectorXd &mu,
+                const MatrixXd &Sigma, double df, int sims,
+                VectorXd &logpdf);
 
   void unifrnd(double, double, VectorXd &);
 
@@ -219,8 +231,21 @@ public:
 
   MatrixXd generateChiSquaredMat(double df, int rows, int cols);
 
-  MatrixXd mvtrnd(const VectorXd &mu, const MatrixXd &Sigma, const double nu,
-                  const int N);
+  MatrixXd studenttrnd(const VectorXd &mu, const MatrixXd &Sigma, const double nu,
+                       const int N);
+
+  VectorXd studenttrnd(const double mu, const double sigma, const double nu,
+                       const int N, const int J);
+
+  MatrixXd mvtstudtrnd(const VectorXd &a, const VectorXd &b,
+              const MatrixXd &LinearConstraints, const VectorXd &mu,
+              const MatrixXd &Sigma, const double df, const int sims,
+              const int burnin);
+
+  MatrixXd mvtstudtrnd(const VectorXd &a, const VectorXd &b,
+                       const MatrixXd &LinearConstraints, const VectorXd &mu,
+                       const MatrixXd &Sigma, const double df, const int sims,
+                       const int burnin, VectorXd &init);
 
   MatrixXd gibbsKernel(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
                        const MatrixXd &Sigma, const MatrixXd &Sample,
