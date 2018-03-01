@@ -180,7 +180,7 @@ int main() {
     Iden.array().colwise() *= V.diagonal().array().pow(-.5);
     MatrixXd Test = Iden * V * Iden;
 
-    int simulations = 100000;
+    int simulations = 10000;
     int burnin = .1 * simulations;
 
     Crb crb;
@@ -192,7 +192,7 @@ int main() {
     VectorXd betasCrb = z.tail(J - 1);
     cout << crb.ml(fz, betasCrb, z(0), y, DATA, b0, B0, a0, d0) << endl;
     cout << endl;
-	crb.runSim(MLES, V, y, DATA, a, b, simulations, burnin, 1000, 50);
+	crb.runSim(MLES, V, y, DATA, a, b, simulations, burnin, 500, 50);
 
     /*cout << "Crb Student T" << endl;
     fzandz = crb.chibRaoStuT(a, b, I, MLES, V, J + 1, simulations, burnin,

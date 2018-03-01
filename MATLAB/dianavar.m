@@ -1,37 +1,28 @@
 %% Question 1 Part a
 clear
 clc
-
-% [t, pi]  = import_fred_data('CPI.csv', 1,719);
-% [t, int] = import_fred_data('BOND1.csv', 1,719);
-% [t, y]   = import_fred_data('IPI.csv', 1,719);
-% l=719;
-% log_y = log(y);
-% log_y = log_y(2:l)
-% log_pi = log(pi);
-% int = int(2:l);
-% logdiff_pi = diff(log_pi); 
-% X = horzcat(logdiff_pi,log_y,int); % 719*3 
- X =  xlsread('updateddata');
- %X = [logdiff_pi,log_y,int]; 
- 
+X =  xlsread('updateddata'); 
 [beta12 LR SSR omega residvarmatrix resids] = VAR(X,12,0);
+
 beta12; % the first line are beta on last period of the 3 variables
-disp 'Q1 (a) The covariance matrix of residual of the reduced form is '
+
+fprintf('Q1 (a) The covariance matrix of residual of the reduced form is \n')
 residvarmatrix
-C = chol(residvarmatrix) ; 
-S = C' % Cholesky decompo
+S = chol(residvarmatrix,'lower')
 
 %% Question 1 Part b Please also see the writeup
 % S3 vector
 % S1 vector
 I3 = eye(3);
-shock_i = I3(:,3);
-shock_i_effect = S * shock_i
-shock_pi = I3(:,1);
-shock_pi_effect = S * shock_pi 
+shock_i_effect = S * I3(:,3)
+shock_pi_effect = S * I3(:,1) 
 %% Question 1 Part c
 % without shock 
+
+% INCLUDE FUNCTION HERE
+
+size(beta12)
+
 t = 731;
 m=1 ;
 V(m,:) = horzcat(X(t,1:3),X((t-1),1:3),X((t-2),1:3),X((t-3),1:3),X((t-4),1:3),X((t-5),1:3),X((t-6),1:3),...
