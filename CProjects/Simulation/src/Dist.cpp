@@ -81,16 +81,6 @@ double Dist::normrnd(double mu, double sig) {
   return normalDist(rseed);
 }
 
-/*VectorXd Dist::normrnd(double mu, double sig, int N) {
-  boost::random::normal_distribution<> normalDist(mu, sig);
-  VectorXd Z(N);
-  boost::variate_generator< boost::mt19937&, boost::normal_distribution<> > gennorm(rseed, normalDist);
-  for (int i = 0; i < N; i++) {
-    Z(i) = normrnd(mu, sig);
-  }
-  return Z;
-}*/
-
 VectorXd Dist::normrnd(double mu, double sig, int N) {
   boost::random::normal_distribution<> normalDist(mu, sig);
   VectorXd Z(N);

@@ -196,16 +196,10 @@ int main() {
     cout << "Crt" << endl;
     crt.runSim(repititions, batches, a,b,MLES, V, y,X,simulations, burnin, b0,B0,a0,d0);
 
-    /*cout << "Crt Student T" << endl;
-    Sample = dist.mvtstudtrnd(a, b, I, MLES, V, J + 1, simulations, burnin)
-                 .bottomRows(simulations - burnin);
-    zStar = Sample.colwise().mean();
-    Kernel = dist.gibbsKernel(a, b, MLES, V, Sample, zStar);
-    betas = zStar.tail(J - 1);
-    cout << crt.ml(betas, zStar(0), Kernel, y, X, b0, B0, a0, d0) << endl;
-    cout << endl;
+    cout << "Crt Student T" << endl;
+	crt.runTsim(repititions, batches, a, b, I, J+1, MLES, V, y, X, simulations, burnin, b0, B0, a0, d0);
 
-   Ask ask;
+   /*Ask ask;
     cout << "Ask" << endl;
     MatrixXd adaptSample =
         ask.adaptiveSampler(a, b, MLES, V, .5, 15000, 5000, 500);
