@@ -294,19 +294,18 @@ double Crb::mlCRB(const VectorXd &fzStar, const VectorXd &zStarTail,
 
 void Crb::runSim(VectorXd &mu, MatrixXd &sigma, VectorXd &y, MatrixXd &X,
                  VectorXd &ll, VectorXd &ul, int sims, int burnin, int nSims,
-                 int batches) {
+                 int batches, const VectorXd &b0, const MatrixXd &B0,
+                 const double a0, const double d0) {
   int J = mu.size();
   VectorXd b(J);
   VectorXd fz(J);
-  MatrixXd fzandz(J,2);
+  MatrixXd fzandz(J, 2);
   VectorXd mLike(nSims);
-  VectorXd b0 = MatrixXd::Zero(J - 1, 1);
-  MatrixXd B0 = MatrixXd::Identity(J - 1, J - 1);
   for (int i = 0; i < nSims; i++) {
     fzandz = chibRao(ll, ul, mu, sigma, sims, burnin, sims, burnin);
     b = fzandz.col(1).tail(J - 1);
     fz = fzandz.col(0);
-    mLike(i) = ml(fz, b, fzandz(0, 1), y, X, b0, B0, 6, 12);
+    mLike(i) = ml(fz, b, fzandz(0, 1), y, X, b0, B0, a0, d0);
   }
   cout << setprecision(10) << mLike.mean() << endl;
   if (batches != 0) {
@@ -333,20 +332,19 @@ void Crb::runSim(VectorXd &mu, MatrixXd &sigma, VectorXd &y, MatrixXd &X,
   }
 }
 
-void Crb::runTsim(VectorXd &betas, MatrixXd &sigma, double df, VectorXd &y,
+void Crb::runTsim(VectorXd &mu, MatrixXd &Sigma, double df, VectorXd &y,
                   MatrixXd &X, VectorXd &ll, VectorXd &ul,
                   const MatrixXd &LinearConstraints, VectorXd &b0, MatrixXd &B0,
                   double a0, double d0, int sims, int burnin, int nSims,
                   int batches) {
-  int J = betas.size();
+  int J = mu.size();
   VectorXd mLike(nSims);
   MatrixXd fzAndz(J, 2);
   VectorXd fz;
   VectorXd z;
   for (int i = 0; i < nSims; i++) {
-
-    fzAndz = chibRaoT(ll, ul, LinearConstraints, betas, sigma, df, sims, burnin,
-                      sims, burnin);
+    fzAndz = chibRaoStuT(ll, ul, LinearConstraints, mu, Sigma, df, sims,
+                         burnin, sims, burnin);
     fz = fzAndz.col(0);
     z = fzAndz.col(1);
     mLike(i) = mlCRB(fz, z.tail(J - 1), z(0), y, X, b0, B0, a0, d0);

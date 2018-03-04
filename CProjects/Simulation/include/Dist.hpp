@@ -252,6 +252,12 @@ public:
                        const VectorXd &zStar);
 
   double pdfavg(VectorXd logpdf);
+
+  MatrixXd gibbsTKernel(const VectorXd &a, const VectorXd &b,
+               const MatrixXd &LinearConstraints, const MatrixXd &sample,
+               VectorXd &zstar, const double df, const VectorXd &mu,
+               const MatrixXd &Sigma, const VectorXd &y, const MatrixXd &X,
+               const int sims, const int burnin);
 };
 
 template <typename D>

@@ -45,6 +45,7 @@ X <-fread('http://www.ics.uci.edu/~mguindan/teaching/stats225/zscores.txt')
 p6data <-  list(y = X$V1, N = length(X$V1))
 mod <- jags.model("~/Google Drive/CodeProjects/R/p6.bug", data = p6data, n.chains=2, n.adapt = 100)
 res <- coda.samples(mod, var = c("y", "mu", "gamma"), n.iter=5000)
+
 R <- data.frame(as.matrix(res))
 sto <- numeric(200)
 D <- dim(R)

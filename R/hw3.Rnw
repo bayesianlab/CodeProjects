@@ -1,57 +1,15 @@
+\documentclass{article}
+\title{Homework 3}
+\author{Dillon Flannery	}
+\begin{document}
+\maketitle
+\SweaveOpts{concordance=TRUE}
+
+\section*{Q1 a)}
+Generate 200 observations from the mixture distribution, 
+<<>>=
 library(ggplot2)
 library(coda)
-# Q4 ====
-setwd("~/Google Drive/CodeProjects/R/")
-D <- as.data.frame(read.table("coal.txt", header=TRUE))
-rc <- dim()
-D <- cbind(D,seq(1,rc[1], by=1))
-colnames(D)[3] <- "index"
-ggplot(data=D, aes(x=D$year, y=D$disasters)) + geom_point() +xlab("Year") + ylab("Disasters")
-y <- D$disasters
-N <- length(y)
-R <- 10000
-posterior <- data.frame(matrix(0, nrow=R, ncol=3))
-cumulativeSumY <- cumsum(y)
-thetaRange <- 1:N-1
-theta <- sample(thetaRange, 1, replace = TRUE)
-alpha <- 3
-bn <- 1000
-for(i in 1:R){
-  u1 <- sum(y[1:theta]) + 3
-  v1 <- (theta + alpha^(-1))^(-1)
-  u2 <- sum(y[(theta+1):N]) + 3
-  v2 <- (N - theta + alpha^(-1))^(-1)
-  lam1 <- rgamma(1, u1, scale=v1)
-  lam2 <- rgamma(1, u2, scale=v2)
-  unnormalized <- (lam1/lam2)^(cumulativeSumY)*exp(-thetaRange*(lam1-lam2))
-  normalized <- unnormalized/sum(unnormalized)
-  theta <- which(runif(1) < cumsum(normalized))[1]
-  posterior[i,] <- c(lam1, lam2, theta)  
-}
-posterior <- posterior[bn:R,]
-par(mfrow=c(1,3))
-hist(posterior[,1], main="Lambda 1")
-hist(posterior[,2], main = "Lambda 2")
-hist(posterior[,3], main = "Theta")
-par(mfrow=c(3,1))
-plot(posterior[,1], type="l", main="Lambda 1")
-plot(posterior[,2], type="l", main="Lambda 2")
-plot(posterior[,3], type="l", main="Theta")
-par(mfrow=c(1,3))
-plot(density(posterior[,1]), main="Lambda 1")
-plot(density(posterior[,2]), main="Lambda 2")
-plot(density(posterior[,3]), main="Theta")
-par(mfrow=c(1,3))
-summary(posterior)
-boxplot(posterior[,1], main="Lambda 1")
-boxplot(posterior[,2], main="Lambda 2")
-boxplot(posterior[,3], main="Theta")
-HPDinterval(mcmc(posterior))
-summary(posterior)
-par(mfrow=c(1,1))
-plot(y)
-
-# Q1 a ====
 set.seed(6)
 par(mfrow=c(1,1))
 
@@ -78,11 +36,14 @@ mu2 <- 10
 sigma1 <- sigma2 <- .5
 M <- mixtured(.7, 7, .5, 10, .5, 200)
 mdf <- as.data.frame(M, colnames="Mix")
+@
+<<count, fig=TRUE>>=
 ggplot(data=mdf, aes(x=M, colour='b')) + geom_histogram(aes(y=..count..))+ theme(legend.position="none") +
   xlab('200 Obs. From Mixture Distribution')+ylab('Frequency')
-hist(M, breaks = 20)
-
-
+@
+\section*{Q1 b)}
+Implement an independence chain Metropolis-Hastings procedure to draw from posterior of $\delta$:
+<<>>=
 # Q1 b ====
 Runs <- 10000
 burn <- floor(.1*Runs)
@@ -109,10 +70,14 @@ for(c in 1:chains){
 }
 mhsample <- as.data.frame(mhsample[burn:Runs,])
 mcobj <- as.mcmc.list(as.mcmc(mhsample))
+@
+<<diag, fig=TRUE>>=
 plot(mcobj)
 summary(mcobj)
-
-
+@
+\section*{Q1 c)}
+Implement a Random Walk MH procedure to draw from posterior:
+<<>>=
 # Q1 c====
 Runs <- 10000
 burn <- floor(.1*Runs)
@@ -148,11 +113,14 @@ for(c in 1:chains){
 }
 mhsample <- mhsample[burn:Runs,]
 mcobj <- as.mcmc(mhsample)
+@
+<<diag, fig=TRUE>>=
 plot(mcobj)
 summary(mcobj)
-
-
-# Q1 d====
+@
+\section*{Q1 d)}
+Use a logit proposal for the MH algorithm:
+<<>>=
 Runs <- 10000
 burn <- floor(.1*Runs)
 chains <- 3
@@ -189,10 +157,23 @@ for(c in 1:chains){
 }
 mhsample <- mhsample[burn:Runs,]
 mcobj <- as.mcmc(mhsample)
+@
+
+<<diag, fig=TRUE>>=
 plot(mcobj)
 summary(mcobj)
+@
+\section*{Q1 d)}
+Compare all of the results: \\
+Part b) produced results that were  reasonable and conformed to the true model. The densities are centered around the truth, 0.7 with a small standard deviation. The highest posterior densities are tight, all containing the true value of $\delta$. The most extreme quantiles of the posterior are close to the true value, the 2.5\% HPD is .69, .69, .69 for chains 1, 2, 3. \\
+Part c) produced some bias. The histograms show a bimodal density after 10,000 simulations with a burnin of 10\%. The HPD's still contain the truth and are also very tight around the true values. The 95\% HPD's are [0.69, 0.72] with some of the chains going as high as 0.73. These are still good results and show that the RWMH is still converging to the true value. The trace plots show that the acceptance probability is not good, a lot of the draws are being rejected and the chain is not mixing well. This is due to the large variance of the proposal, a uniform from -1 to 1. A large portion of the time unsuitable values will be proposed and the chain will not proceed to the next proposal. Part b) was better at producing acceptable proposals since its support overlapped with that of $\delta$.
+Part d) produced many accepted draws, which can be seen from the trace plots of the chains. Of the three it produced the most accepted draws consistently in the three chains analyzed. The density is also centered on the true value and the HPD's all contain the true value of $\delta$. \\
+As for which one is best, b) and d) are superior to c). d) has a higher acceptance probability than b) and similar means and HPD's. Therefore, it seems that the best proposal is the logit. 
+\newpage
 
-
+\section*{Q2 a)}
+In this problem we start from three different values 0,7 , 15. The issue raised in this question is that the variance of the proposal is very small. Values will tend to be centered around the last accepted draw. Starting from values very far away from the mixture mean of 7.9 will mean that the MH chain will take a long time to arrive at the stationary distribution. The following code and plots illustrate this point:
+<<>>=
 # Q2 a====  
 Runs <- 10000
 burn <- floor(.1*Runs)
@@ -224,9 +205,17 @@ for(c in 1:chains){
   }
 }
 mcobj <- as.mcmc(mhsample)
+@
+
+<<diag,fig=TRUE>>=
 plot(mcobj)
 summary(mcobj)
+@
+The distributions all look different based on the starting value. This is clearly not a good feature of this proposal. If only one sample were available the analysis could be biased. The means are slightly different for the two chains with lower start values. The higher start value chain has a higher mean and a higher upper limit on its HPD. The lower start value chain has a lower lower limit of its HPD. 
 
+\section*{Q2 b)}
+The way to fix this problem is to allow the chain to move more freely. I will change to variance of the proposal and the chain will move more quickly in the direction of the true distribution. With a suitable burnin the inference should be correct. 
+<<>>=
 #Q2 b====
 Runs <- 1000
 burn <- floor(.1*Runs)
@@ -258,5 +247,11 @@ for(c in 1:chains){
 }
 mhsample <- mhsample[burn:Runs,]
 mcobj <- as.mcmc(mhsample)
+@
+<<diag2, fig=TRUE>>=
 plot(mcobj)
 summary(mcobj)
+@
+
+
+\end{document}

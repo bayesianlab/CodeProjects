@@ -15,12 +15,6 @@ public:
                 const MatrixXd &B0, double a0, double d0);
 
 
-  MatrixXd gibbsTKernel(const VectorXd &a, const VectorXd &b,
-                        const MatrixXd &LinearConstraints,
-                        const MatrixXd &sample, VectorXd &zstar, double df,
-                        const VectorXd &mu, const MatrixXd &Sigma,
-                        const VectorXd &y, const MatrixXd &X, int sims,
-                        int burnin);
 
   double getKernelColumn(double a, double b, MatrixXd &sample, int col,
                          double sigma, double zStar);

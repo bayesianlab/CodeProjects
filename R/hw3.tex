@@ -1,0 +1,400 @@
+\documentclass{article}
+\title{Homework 3}
+\author{Dillon Flannery	}
+\usepackage{Sweave}
+\begin{document}
+\maketitle
+\input{hw3-concordance}
+
+\section*{Q1 a)}
+Generate 200 observations from the mixture distribution, 
+\begin{Schunk}
+\begin{Sinput}
+> library(ggplot2)
+> library(coda)
+> set.seed(6)
+> par(mfrow=c(1,1))
+> mixtured <- function(delta,mu1,sigma1, mu2,sigma2, N){
++   delta*rnorm(N, mu1, sigma1) + (1-delta)*rnorm(N,mu2,sigma2)
++ }
+> loglike <- function(delta, mu1, mu2, sigma1, sigma2, x){
++   if( (0 < delta) && (delta <= 1)){
++     lambda <- delta*mu1 + (1-delta)*mu2
++     gamma <- sqrt((delta^2)*sigma1^2 + ((1-delta)^2)*sigma2^2)
++     C <- -length(x)*log(sqrt(2*pi*gamma^2))
++     Mah <- (t(x-lambda)%*%(x-lambda))/(2*gamma^2)
++     L <- C - Mah 
++     L    
++   }else{
++     L <- -Inf
++     L
++   }
++ }
+> mu1 <- 7
+> mu2 <- 10
+> sigma1 <- sigma2 <- .5
+> M <- mixtured(.7, 7, .5, 10, .5, 200)
+> mdf <- as.data.frame(M, colnames="Mix")
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> ggplot(data=mdf, aes(x=M, colour='b')) + geom_histogram(aes(y=..count..))+ theme(legend.position="none") +
++   xlab('200 Obs. From Mixture Distribution')+ylab('Frequency')
+\end{Sinput}
+\end{Schunk}
+\includegraphics{hw3-count}
+\section*{Q1 b)}
+Implement an independence chain Metropolis-Hastings procedure to draw from posterior of $\delta$:
+\begin{Schunk}
+\begin{Sinput}
+> # Q1 b ====
+> Runs <- 10000
+> burn <- floor(.1*Runs)
+> chains <- 3
+> mhsample <- matrix(0, nrow=Runs, ncol=chains)
+> mhsample[1] <- runif(1, 0, 1)
+> for(c in 1:chains){
++   delta <- runif(1)
++   for(i in 2:Runs){
++     loglike_t <- loglike(delta, mu1, mu2, sigma1, sigma2, M)
++     prop_tp1 <- runif(1)
++     loglike_tp1 <- loglike(prop_tp1, mu1, mu2, sigma1, sigma2, M)
++     num <-  loglike_tp1 + log(dunif(mhsample[i-1]))
++     den <- loglike_t + log(dunif(prop_tp1))
++     a <- min(0, num-den)
++     u <- log(runif(1))
++     if(u < a){
++       mhsample[i, c] <- prop_tp1
++       delta <- prop_tp1
++     }else{
++       mhsample[i, c] <- mhsample[i-1, c]
++     }
++   }
++ }
+> mhsample <- as.data.frame(mhsample[burn:Runs,])
+> mcobj <- as.mcmc.list(as.mcmc(mhsample))
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> plot(mcobj)
+> summary(mcobj)
+\end{Sinput}
+\begin{Soutput}
+Iterations = 1:9001
+Thinning interval = 1 
+Number of chains = 1 
+Sample size per chain = 9001 
+
+1. Empirical mean and standard deviation for each variable,
+   plus standard error of the mean:
+
+     Mean       SD  Naive SE Time-series SE
+V1 0.7071 0.008894 9.375e-05      0.0007481
+V2 0.7078 0.008551 9.013e-05      0.0006419
+V3 0.7082 0.010104 1.065e-04      0.0008158
+
+2. Quantiles for each variable:
+
+     2.5%    25%    50%    75%  97.5%
+V1 0.6921 0.7003 0.7069 0.7138 0.7240
+V2 0.6906 0.7017 0.7071 0.7133 0.7261
+V3 0.6864 0.7011 0.7086 0.7156 0.7272
+\end{Soutput}
+\end{Schunk}
+\includegraphics{hw3-diag}
+\section*{Q1 c)}
+Implement a Random Walk MH procedure to draw from posterior:
+\begin{Schunk}
+\begin{Sinput}
+> # Q1 c====
+> Runs <- 10000
+> burn <- floor(.1*Runs)
+> chains <- 3
+> mhsample <- matrix(0, nrow=Runs, ncol=chains)
+> mhsample[1] <- runif(1, 0, 1)
+> for(c in 1:chains){
++   delta <- runif(1)
++   for(i in 2:Runs){
++     logfprevious <- loglike(delta, mu1, mu2, sigma1, sigma2, M)
++     badproposal <- 1
++     while(badproposal == 1){
++       proposal <- delta + runif(1,-1,1)
++       if( (proposal < 0) || (proposal > 1) ){
++         badproposal <- 1
++       }
++       else{
++         badproposal <- 0
++       }
++     }
++     logfproposal <- loglike(proposal, mu1, mu2, sigma1, sigma2, M)
++     num <-  logfproposal + dunif(delta, log=TRUE)
++     den <- logfprevious + dunif(proposal, log=TRUE)
++     a <- min(0, num-den)
++     u <- log(runif(1))
++     if(u < a){
++       mhsample[i, c] <- proposal  
++       delta <- proposal
++     }else{
++       mhsample[i, c] <- delta
++     }
++   }
++ }
+> mhsample <- mhsample[burn:Runs,]
+> mcobj <- as.mcmc(mhsample)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> plot(mcobj)
+> summary(mcobj)
+\end{Sinput}
+\begin{Soutput}
+Iterations = 1:9001
+Thinning interval = 1 
+Number of chains = 1 
+Sample size per chain = 9001 
+
+1. Empirical mean and standard deviation for each variable,
+   plus standard error of the mean:
+
+       Mean       SD  Naive SE Time-series SE
+[1,] 0.7079 0.008893 9.373e-05      0.0006377
+[2,] 0.7087 0.008403 8.857e-05      0.0006362
+[3,] 0.7084 0.009566 1.008e-04      0.0008781
+
+2. Quantiles for each variable:
+
+       2.5%    25%    50%    75%  97.5%
+var1 0.6892 0.7010 0.7082 0.7145 0.7232
+var2 0.6910 0.7040 0.7083 0.7146 0.7255
+var3 0.6916 0.7029 0.7071 0.7148 0.7297
+\end{Soutput}
+\end{Schunk}
+\includegraphics{hw3-diag}
+\section*{Q1 d)}
+Use a logit proposal for the MH algorithm:
+\begin{Schunk}
+\begin{Sinput}
+> Runs <- 10000
+> burn <- floor(.1*Runs)
+> chains <- 3
+> mhsample <- matrix(0, nrow=Runs, ncol=chains)
+> mhsample[1] <- runif(1, 0, 1)
+> for(c in 1:chains){
++   delta <- runif(1)
++   for(i in 2:Runs){
++     logfprevious <- loglike(delta, mu1, mu2, sigma1, sigma2, M)
++     badproposal <- 1
++     while(badproposal == 1){
++       U <- log(delta/(1-delta))
++       Ustar <- U + runif(1,-1,1)
++       proposal <- exp(Ustar)/(1+exp(Ustar))
++       if( (proposal < 0) || (proposal > 1) ){
++         badproposal <- 1
++       }
++       else{
++         badproposal <- 0
++       }
++     }
++     logfproposal <- loglike(proposal, mu1, mu2, sigma1, sigma2, M)
++     num <-  logfproposal + dunif(delta, log=TRUE)
++     den <- logfprevious + dunif(proposal,log=TRUE)
++     a <- min(0, num-den)
++     u <- log(runif(1))
++     if(u < a){
++       mhsample[i, c] <- proposal 
++       delta <- proposal
++     }else{
++       mhsample[i, c] <- delta
++     }
++   }
++ }
+> mhsample <- mhsample[burn:Runs,]
+> mcobj <- as.mcmc(mhsample)
+\end{Sinput}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+> plot(mcobj)
+> summary(mcobj)
+\end{Sinput}
+\begin{Soutput}
+Iterations = 1:9001
+Thinning interval = 1 
+Number of chains = 1 
+Sample size per chain = 9001 
+
+1. Empirical mean and standard deviation for each variable,
+   plus standard error of the mean:
+
+       Mean       SD  Naive SE Time-series SE
+[1,] 0.7081 0.009286 9.788e-05      0.0004457
+[2,] 0.7079 0.008949 9.433e-05      0.0004213
+[3,] 0.7087 0.008498 8.958e-05      0.0004192
+
+2. Quantiles for each variable:
+
+       2.5%    25%    50%    75%  97.5%
+var1 0.6906 0.7015 0.7076 0.7149 0.7265
+var2 0.6911 0.7016 0.7074 0.7144 0.7256
+var3 0.6932 0.7027 0.7093 0.7144 0.7249
+\end{Soutput}
+\end{Schunk}
+\includegraphics{hw3-diag}
+\section*{Q1 d)}
+Compare all of the results: \\
+Part b) produced results that were  reasonable and conformed to the true model. The densities are centered around the truth, 0.7 with a small standard deviation. The highest posterior densities are tight, all containing the true value of $\delta$. The most extreme quantiles of the posterior are close to the true value, the 2.5\% HPD is .69, .69, .69 for chains 1, 2, 3. \\
+Part c) produced some bias. The histograms show a bimodal density after 10,000 simulations with a burnin of 10\%. The HPD's still contain the truth and are also very tight around the true values. The 95\% HPD's are [0.69, 0.72] with some of the chains going as high as 0.73. These are still good results and show that the RWMH is still converging to the true value. The trace plots show that the acceptance probability is not good, a lot of the draws are being rejected and the chain is not mixing well. This is due to the large variance of the proposal, a uniform from -1 to 1. A large portion of the time unsuitable values will be proposed and the chain will not proceed to the next proposal. Part b) was better at producing acceptable proposals since its support overlapped with that of $\delta$.
+Part d) produced many accepted draws, which can be seen from the trace plots of the chains. Of the three it produced the most accepted draws consistently in the three chains analyzed. The density is also centered on the true value and the HPD's all contain the true value of $\delta$. \\
+As for which one is best, b) and d) are superior to c). d) has a higher acceptance probability than b) and similar means and HPD's. Therefore, it seems that the best proposal is the logit. 
+\newpage
+
+\section*{Q2 a)}
+In this problem we start from three different values 0,7 , 15. The issue raised in this question is that the variance of the proposal is very small. Values will tend to be centered around the last accepted draw. Starting from values very far away from the mixture mean of 7.9 will mean that the MH chain will take a long time to arrive at the stationary distribution. The following code and plots illustrate this point:
+\begin{Schunk}
+\begin{Sinput}
+> # Q2 a====  
+> Runs <- 10000
+> burn <- floor(.1*Runs)
+> chains <- 3
+> mhsample <- matrix(0, nrow=Runs, ncol=chains)
+> mhsample[1] <- runif(1, 0, 1)
+> init <- c(0,7,15)
+> Mu <- .7*mu1 + .3*mu2
+> Sig <- sqrt((.7^2)*sigma1^2 + (.3^2)*sigma2^2)
+> propSd <- sqrt(.01)
+> for(c in 1:chains){
++   previous <- init[c]
++   mhsample[1,c] <- init[c]
++   cat("Iteration ", c)
++   for(i in 2:Runs){
++     logfprevious <- dnorm(previous, Mu, Sig, log=TRUE)
++     proposal <- rnorm(1,previous, propSd)
++     logfproposal <- dnorm(proposal, Mu,Sig, log=TRUE)
++     num <-  logfproposal + dnorm(previous, proposal, propSd, log=TRUE)
++     den <- logfprevious + dnorm(proposal, previous, propSd, log=TRUE)
++     a <- min(0, num-den)
++     u <- log(runif(1))
++     if(u < a){
++       mhsample[i, c] <- proposal  
++       previous <- proposal
++     }else{
++       mhsample[i, c] <- previous
++     }
++   }
++ }
+\end{Sinput}
+\begin{Soutput}
+Iteration  1Iteration  2Iteration  3
+\end{Soutput}
+\begin{Sinput}
+> mcobj <- as.mcmc(mhsample)
+\end{Sinput}
+\end{Schunk}
+
+\begin{Schunk}
+\begin{Sinput}
+> plot(mcobj)
+> summary(mcobj)
+\end{Sinput}
+\begin{Soutput}
+Iterations = 1:10000
+Thinning interval = 1 
+Number of chains = 1 
+Sample size per chain = 10000 
+
+1. Empirical mean and standard deviation for each variable,
+   plus standard error of the mean:
+
+      Mean     SD Naive SE Time-series SE
+[1,] 7.785 0.7345 0.007345        0.08970
+[2,] 7.952 0.3729 0.003729        0.03023
+[3,] 7.968 0.7498 0.007498        0.09766
+
+2. Quantiles for each variable:
+
+      2.5%   25%   50%   75% 97.5%
+var1 7.037 7.564 7.848 8.116 8.618
+var2 7.216 7.695 7.953 8.213 8.654
+var3 7.114 7.633 7.898 8.168 8.966
+\end{Soutput}
+\end{Schunk}
+\includegraphics{hw3-diag}
+The distributions all look different based on the starting value. This is clearly not a good feature of this proposal. If only one sample were available the analysis could be biased. The means are slightly different for the two chains with lower start values. The higher start value chain has a higher mean and a higher upper limit on its HPD. The lower start value chain has a lower lower limit of its HPD. 
+
+\section*{Q2 b)}
+The way to fix this problem is to allow the chain to move more freely. I will change to variance of the proposal and the chain will move more quickly in the direction of the true distribution. With a suitable burnin the inference should be correct. 
+\begin{Schunk}
+\begin{Sinput}
+> #Q2 b====
+> Runs <- 1000
+> burn <- floor(.1*Runs)
+> chains <- 3
+> mhsample <- matrix(0, nrow=Runs, ncol=chains)
+> mhsample[1] <- runif(1, 0, 1)
+> init <- c(0,7,15)
+> Mu <- .7*mu1 + .3*mu2
+> Sig <- sqrt((.7^2)*sigma1^2 + (.3^2)*sigma2^2)
+> propSd <- 1
+> for(c in 1:chains){
++   previous <- init[c]
++   cat("Iteration ", c)
++   for(i in 2:Runs){
++     logfprevious <- dnorm(previous, Mu, Sig, log=TRUE)
++     proposal <- rnorm(1,previous, propSd)
++     logfproposal <- dnorm(proposal, Mu,Sig, log=TRUE)
++     num <-  logfproposal + dnorm(previous, proposal, propSd, log=TRUE)
++     den <- logfprevious + dnorm(proposal, previous, propSd, log=TRUE)
++     a <- min(0, num-den)
++     u <- log(runif(1))
++     if(u < a){
++       mhsample[i, c] <- proposal  
++       previous <- proposal
++     }else{
++       mhsample[i, c] <- previous
++     }
++   }
++ }
+\end{Sinput}
+\begin{Soutput}
+Iteration  1Iteration  2Iteration  3
+\end{Soutput}
+\begin{Sinput}
+> mhsample <- mhsample[burn:Runs,]
+> mcobj <- as.mcmc(mhsample)
+\end{Sinput}
+\end{Schunk}
+\begin{Schunk}
+\begin{Sinput}
+> plot(mcobj)
+> summary(mcobj)
+\end{Sinput}
+\begin{Soutput}
+Iterations = 1:901
+Thinning interval = 1 
+Number of chains = 1 
+Sample size per chain = 901 
+
+1. Empirical mean and standard deviation for each variable,
+   plus standard error of the mean:
+
+      Mean     SD Naive SE Time-series SE
+[1,] 7.892 0.3689  0.01229        0.02460
+[2,] 7.925 0.3777  0.01258        0.02779
+[3,] 7.873 0.3786  0.01261        0.02757
+
+2. Quantiles for each variable:
+
+      2.5%   25%   50%   75% 97.5%
+var1 7.214 7.618 7.889 8.138 8.601
+var2 7.097 7.709 7.937 8.168 8.642
+var3 7.086 7.629 7.886 8.129 8.588
+\end{Soutput}
+\end{Schunk}
+\includegraphics{hw3-diag2}
+
+
+\end{document}

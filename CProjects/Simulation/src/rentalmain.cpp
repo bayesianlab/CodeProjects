@@ -134,34 +134,34 @@ int main() {
     string filepath = "/Users/dillonflannery-valadez/Google "
                       "Drive/CodeProjects/CProjects/Simulation/"
                       "rentaldata.csv";
-    MatrixXd X = readCSV(filepath, 32, 6);
-    VectorXd y = X.col(5);
-    VectorXd r = X.col(2);
-    VectorXd rDno = r.array() / X.col(1).array();
-    VectorXd s = X.col(3);
-    VectorXd d = X.col(4);
+    MatrixXd DATA = readCSV(filepath, 32, 6);
+    VectorXd y = DATA.col(5);
+    VectorXd r = DATA.col(2);
+    VectorXd rDno = r.array() / DATA.col(1).array();
+    VectorXd s = DATA.col(3);
+    VectorXd d = DATA.col(4);
     VectorXd srInteraction = s.array() * rDno.array();
     VectorXd girlrInteraction = (1 - s.array()) * rDno.array();
     VectorXd sdInteraction = s.array() * d.array();
     VectorXd girldInteraction = (1 - s.array()) * d.array();
     VectorXd constant = MatrixXd::Ones(32, 1);
-    MatrixXd DATA(32, 5);
-    DATA << constant, srInteraction, girlrInteraction, sdInteraction,
+    MatrixXd X(32, 5);
+    X << constant, srInteraction, girlrInteraction, sdInteraction,
         girldInteraction;
     VectorXd MaximumLikelihoodEstsBeta =
-        (DATA.transpose() * DATA).inverse() * DATA.transpose() * y;
-    VectorXd residuals = y - DATA * MaximumLikelihoodEstsBeta;
-    double s2hat = (residuals.transpose() * residuals).value() / (DATA.rows());
+        (X.transpose() * X).inverse() * X.transpose() * y;
+    VectorXd residuals = y - X * MaximumLikelihoodEstsBeta;
+    double s2hat = (residuals.transpose() * residuals).value() / (X.rows());
     MatrixXd MaximumLikelihoodEstsSigma =
-        s2hat * (DATA.transpose() * DATA).inverse();
+        s2hat * (X.transpose() * X).inverse();
     cout << "MLES" << endl;
-    VectorXd MLES(DATA.cols() + 1);
+    VectorXd MLES(X.cols() + 1);
     MLES << s2hat, MaximumLikelihoodEstsBeta;
     printvec(MLES);
-    MatrixXd V(DATA.cols() + 1, DATA.cols() + 1);
+    MatrixXd V(X.cols() + 1, X.cols() + 1);
     V.setZero();
-    V.block(1, 1, DATA.cols(), DATA.cols()) = MaximumLikelihoodEstsSigma;
-    V(0, 0) = (2 * pow(s2hat, 2)) / (DATA.rows());
+    V.block(1, 1, X.cols(), X.cols()) = MaximumLikelihoodEstsSigma;
+    V(0, 0) = (2 * pow(s2hat, 2)) / (X.rows());
     int J = V.cols();
     VectorXd b0 = MaximumLikelihoodEstsBeta;
     MatrixXd B0 = 1000 * MatrixXd::Identity(J - 1, J - 1);
@@ -170,9 +170,9 @@ int main() {
 
     Dist dist;
     // Constraints
-    VectorXd a(DATA.cols() + 1);
-    VectorXd b(DATA.cols() + 1);
-    MatrixXd I = MatrixXd::Identity(DATA.cols() + 1, DATA.cols() + 1);
+    VectorXd a(X.cols() + 1);
+    VectorXd b(X.cols() + 1);
+    MatrixXd I = MatrixXd::Identity(X.cols() + 1, X.cols() + 1);
     a << 0, -inf, 0, 0, -inf, -inf;
     b << inf, inf, inf, inf, 0, 0;
     MatrixXd Z = MatrixXd::Zero(6, 1);
@@ -180,50 +180,32 @@ int main() {
     Iden.array().colwise() *= V.diagonal().array().pow(-.5);
     MatrixXd Test = Iden * V * Iden;
 
-    int simulations = 10000;
+    int simulations = 100;
     int burnin = .1 * simulations;
+	int repititions = 50;
+	int batches = .1*repititions;
 
     Crb crb;
     cout << "Crb" << endl;
-    MatrixXd fzandz =
-        crb.chibRao(a, b, MLES, V, simulations, burnin, simulations, burnin);
-    VectorXd fz = fzandz.col(0);
-    VectorXd z = fzandz.col(1);
-    VectorXd betasCrb = z.tail(J - 1);
-    cout << crb.ml(fz, betasCrb, z(0), y, DATA, b0, B0, a0, d0) << endl;
-    cout << endl;
-	crb.runSim(MLES, V, y, DATA, a, b, simulations, burnin, 500, 50);
+	crb.runSim(MLES, V, y, X, a, b, simulations, burnin, repititions, batches, b0,B0,a0,d0);
 
-    /*cout << "Crb Student T" << endl;
-    fzandz = crb.chibRaoStuT(a, b, I, MLES, V, J + 1, simulations, burnin,
-                             simulations, burnin);
-    fz = fzandz.col(0);
-    z = fzandz.col(1);
-    betasCrb = z.tail(J - 1);
-    cout << crb.ml(fz, betasCrb, z(0), y, DATA, b0, B0, a0, d0) << endl;
-    cout << endl;
+    cout << "Crb Student T" << endl;
+    crb.runTsim(MLES, V, J+1, y, X, a, b, I, b0, B0, a0, d0, simulations, burnin, simulations, burnin); 
 
     Crt crt;
-    MatrixXd Sample = dist.tmultnorm(a, b, MLES, V, simulations)
-                          .leftCols(J)
-                          .bottomRows(simulations - burnin);
-    VectorXd zStar = Sample.colwise().mean();
-    MatrixXd Kernel = dist.gibbsKernel(a, b, MLES, V, Sample, zStar);
-    VectorXd betas = zStar.tail(J - 1);
     cout << "Crt" << endl;
-    cout << crt.ml(betas, zStar(0), Kernel, y, DATA, b0, B0, a0, d0) << endl;
-    cout << endl;
+    crt.runSim(repititions, batches, a,b,MLES, V, y,X,simulations, burnin, b0,B0,a0,d0);
 
-    cout << "Crt Student T" << endl;
+    /*cout << "Crt Student T" << endl;
     Sample = dist.mvtstudtrnd(a, b, I, MLES, V, J + 1, simulations, burnin)
                  .bottomRows(simulations - burnin);
     zStar = Sample.colwise().mean();
     Kernel = dist.gibbsKernel(a, b, MLES, V, Sample, zStar);
     betas = zStar.tail(J - 1);
-    cout << crt.ml(betas, zStar(0), Kernel, y, DATA, b0, B0, a0, d0) << endl;
+    cout << crt.ml(betas, zStar(0), Kernel, y, X, b0, B0, a0, d0) << endl;
     cout << endl;
 
-    Ask ask;
+   Ask ask;
     cout << "Ask" << endl;
     MatrixXd adaptSample =
         ask.adaptiveSampler(a, b, MLES, V, .5, 15000, 5000, 500);
