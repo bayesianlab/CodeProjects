@@ -19,7 +19,9 @@ add_subdirectory(build/src/ImpLib)
 add_subdirectory(build/src/LinRegGibbsLib)
 add_subdirectory(build/src/ReadCsvLib)
 
-include_directories(include ${Eigen_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS})
+include_directories(include ${Eigen3_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS})
+message(STATUS "EIGEN CONFIG FILE " ${Eigen3_DIR})
+message(STATUS "BOOST INCLUDE  DIRECTORIES " ${Boost_INCLUDE_DIRS})
 
 add_executable(mvt src/rentalmain.cpp src/eigenshorts.cpp )
-target_link_libraries(mvt Dist Crb CreateSampleData Ark Ask Crt Imp Lrg ReadCsv)
+target_link_libraries(mvt Dist Crb CreateSampleData Ark Ask Crt Imp Lrg ReadCsv Eigen3::Eigen)

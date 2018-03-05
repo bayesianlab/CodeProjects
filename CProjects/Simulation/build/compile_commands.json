@@ -1,12 +1,12 @@
 [
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/rentalmain.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -isystem /usr/local/include/eigen3  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/rentalmain.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/eigenshorts.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -isystem /usr/local/include/eigen3  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/eigenshorts.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp"
 },
 {
