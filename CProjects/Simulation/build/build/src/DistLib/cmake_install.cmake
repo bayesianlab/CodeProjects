@@ -52,6 +52,6 @@ if("${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMP
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-file(INSTALL DESTINATION "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include" TYPE FILE FILES "~/Google Drive/CodeProjects/CProjects/Simulation/include/Dist.hpp")
+file(INSTALL DESTINATION "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include" TYPE FILE FILES "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include/Dist.hpp")
 endif()
 
