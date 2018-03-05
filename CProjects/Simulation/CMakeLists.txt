@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8.9 FATAL_ERROR)
 project(mvt)
 
-find_package(Boost 1.66.0 REQUIRED)
+find_package(Boost  REQUIRED)
 find_package(Eigen3 REQUIRED NO_MODULE)
 set(CMAKE_CXX_STANDARD 11)
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
