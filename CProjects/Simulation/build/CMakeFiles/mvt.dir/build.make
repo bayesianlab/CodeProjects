@@ -105,69 +105,19 @@ CMakeFiles/mvt.dir/src/eigenshorts.cpp.o.provides: CMakeFiles/mvt.dir/src/eigens
 CMakeFiles/mvt.dir/src/eigenshorts.cpp.o.provides.build: CMakeFiles/mvt.dir/src/eigenshorts.cpp.o
 
 
-CMakeFiles/mvt.dir/src/Dist.cpp.o: CMakeFiles/mvt.dir/flags.make
-CMakeFiles/mvt.dir/src/Dist.cpp.o: ../src/Dist.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mvt.dir/src/Dist.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mvt.dir/src/Dist.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp"
-
-CMakeFiles/mvt.dir/src/Dist.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mvt.dir/src/Dist.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp" > CMakeFiles/mvt.dir/src/Dist.cpp.i
-
-CMakeFiles/mvt.dir/src/Dist.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mvt.dir/src/Dist.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp" -o CMakeFiles/mvt.dir/src/Dist.cpp.s
-
-CMakeFiles/mvt.dir/src/Dist.cpp.o.requires:
-
-.PHONY : CMakeFiles/mvt.dir/src/Dist.cpp.o.requires
-
-CMakeFiles/mvt.dir/src/Dist.cpp.o.provides: CMakeFiles/mvt.dir/src/Dist.cpp.o.requires
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Dist.cpp.o.provides.build
-.PHONY : CMakeFiles/mvt.dir/src/Dist.cpp.o.provides
-
-CMakeFiles/mvt.dir/src/Dist.cpp.o.provides.build: CMakeFiles/mvt.dir/src/Dist.cpp.o
-
-
-CMakeFiles/mvt.dir/src/Crb.cpp.o: CMakeFiles/mvt.dir/flags.make
-CMakeFiles/mvt.dir/src/Crb.cpp.o: ../src/Crb.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/mvt.dir/src/Crb.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mvt.dir/src/Crb.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Crb.cpp"
-
-CMakeFiles/mvt.dir/src/Crb.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mvt.dir/src/Crb.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Crb.cpp" > CMakeFiles/mvt.dir/src/Crb.cpp.i
-
-CMakeFiles/mvt.dir/src/Crb.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mvt.dir/src/Crb.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Crb.cpp" -o CMakeFiles/mvt.dir/src/Crb.cpp.s
-
-CMakeFiles/mvt.dir/src/Crb.cpp.o.requires:
-
-.PHONY : CMakeFiles/mvt.dir/src/Crb.cpp.o.requires
-
-CMakeFiles/mvt.dir/src/Crb.cpp.o.provides: CMakeFiles/mvt.dir/src/Crb.cpp.o.requires
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Crb.cpp.o.provides.build
-.PHONY : CMakeFiles/mvt.dir/src/Crb.cpp.o.provides
-
-CMakeFiles/mvt.dir/src/Crb.cpp.o.provides.build: CMakeFiles/mvt.dir/src/Crb.cpp.o
-
-
 # Object files for target mvt
 mvt_OBJECTS = \
 "CMakeFiles/mvt.dir/src/rentalmain.cpp.o" \
-"CMakeFiles/mvt.dir/src/eigenshorts.cpp.o" \
-"CMakeFiles/mvt.dir/src/Dist.cpp.o" \
-"CMakeFiles/mvt.dir/src/Crb.cpp.o"
+"CMakeFiles/mvt.dir/src/eigenshorts.cpp.o"
 
 # External object files for target mvt
 mvt_EXTERNAL_OBJECTS =
 
 mvt: CMakeFiles/mvt.dir/src/rentalmain.cpp.o
 mvt: CMakeFiles/mvt.dir/src/eigenshorts.cpp.o
-mvt: CMakeFiles/mvt.dir/src/Dist.cpp.o
-mvt: CMakeFiles/mvt.dir/src/Crb.cpp.o
 mvt: CMakeFiles/mvt.dir/build.make
+mvt: build/src/DistLib/libDist.a
+mvt: build/src/CrbLib/libCrb.a
 mvt: build/src/CreateSampleDataLib/libCreateSampleData.a
 mvt: build/src/ArkLib/libArk.a
 mvt: build/src/AskLib/libAsk.a
@@ -176,7 +126,7 @@ mvt: build/src/ImpLib/libImp.a
 mvt: build/src/LinRegGibbsLib/libLrg.a
 mvt: build/src/ReadCsvLib/libReadCsv.a
 mvt: CMakeFiles/mvt.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable mvt"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable mvt"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mvt.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -186,8 +136,6 @@ CMakeFiles/mvt.dir/build: mvt
 
 CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/src/rentalmain.cpp.o.requires
 CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/src/eigenshorts.cpp.o.requires
-CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/src/Dist.cpp.o.requires
-CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/src/Crb.cpp.o.requires
 
 .PHONY : CMakeFiles/mvt.dir/requires
 

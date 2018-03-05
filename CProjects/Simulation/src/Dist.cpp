@@ -878,7 +878,7 @@ MatrixXd Dist::generateChiSquaredMat(double df, int rows, int cols) {
   return chiSqs;
 }
 
-MatrixXd Dist::studenttrnd(const VectorXd &mu, const MatrixXd &Sigma,
+MatrixXd Dist::mvtrunctrnd(const VectorXd &mu, const MatrixXd &Sigma,
                       const double nu, const int N) {
   int J = Sigma.cols();
   double c;

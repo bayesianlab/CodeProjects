@@ -107,7 +107,7 @@ MatrixXd Ark::arSampleT(const VectorXd &a, const VectorXd &b,
   VectorXd m = LinearConstraints*mu;
   MatrixXd T = LinearConstraints*Sigma*LinearConstraints.transpose();
   while (n < sSize) {
-    t = studenttrnd(m, T, df, 1).array();
+    t = mvtrunctrnd(m, T, df, 1).array();
     if ((t.array() > a.transpose().array()).all() +
             (t.array() < b.transpose().array()).all() ==
         2) {
@@ -191,7 +191,7 @@ void Ark::runSim(int nSims, int batches, const VectorXd &theta,
     zStar = arkSample.colwise().mean();
     Kernel = gibbsKernel(ll, ul, theta, sigma, arkSample, zStar);
     b = zStar.tail(Jm1);
-        mLike(i) = ml(b, zStar(0), y, X, Kernel, b0, B0, a0, d0);
+    mLike(i) = ml(b, zStar(0), y, X, Kernel, b0, B0, a0, d0);
   }
   cout << setprecision(9) << mLike.mean() << endl;
   if (batches != 0) {

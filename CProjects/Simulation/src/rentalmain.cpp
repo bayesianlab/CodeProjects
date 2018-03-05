@@ -74,7 +74,7 @@ void MvtPdfTests() {
     x << 1, 1.1, .8;
     cout << sigma << endl;
     Dist d;
-    cout << d.studenttrnd(mu, sigma, 10, 15) << endl;
+    cout << d.mvtrunctrnd(mu, sigma, 10, 15) << endl;
     cout << "mvtpdf" << endl;
     cout << d.mvtpdf(x, mu, sigma, 10) << endl;
   }
@@ -90,7 +90,7 @@ void MvtPdfTests() {
     sigma(1, 2) = .5;
     sigma(2, 1) = .5;
     MatrixXd x(4, 3);
-    x = d.studenttrnd(mu, sigma, 10, 4);
+    x = d.mvtrunctrnd(mu, sigma, 10, 4);
     cout << "x" << endl;
     cout << x << endl;
     cout << "pdf(x)" << endl;
@@ -112,20 +112,20 @@ void MvtPdfTests() {
     VectorXd b(3);
     a << 0, 0, 0;
     b << inf, inf, inf;
-    MatrixXd X = d.studenttrnd(mu, sigma, 10, 15);
+    MatrixXd X = d.mvtrunctrnd(mu, sigma, 10, 15);
     for (int i = 0; i < X.rows(); i++) {
       cout << indicatorFunction(a, b, X.row(i)) << " " << X.row(i) << endl;
     }
   }
 }
 
-void TrunctTests(){
-	cout << "Truncated T PDF Tests" << endl;
-    double inf = numeric_limits<double>::max();
-	Dist dist;
-	cout << dist.ttpdf(0,1,10 ,0,1,.5) << endl;
-	cout << dist.ttpdf(0, inf, 10, 0, 1, .5) << endl;
-	cout << dist.ttpdf(-inf, 0, 10, -10, 5, -3) << endl;
+void TrunctTests() {
+  cout << "Truncated T PDF Tests" << endl;
+  double inf = numeric_limits<double>::max();
+  Dist dist;
+  cout << dist.ttpdf(0, 1, 10, 0, 1, .5) << endl;
+  cout << dist.ttpdf(0, inf, 10, 0, 1, .5) << endl;
+  cout << dist.ttpdf(-inf, 0, 10, -10, 5, -3) << endl;
 }
 
 int main() {
@@ -152,8 +152,7 @@ int main() {
         (X.transpose() * X).inverse() * X.transpose() * y;
     VectorXd residuals = y - X * MaximumLikelihoodEstsBeta;
     double s2hat = (residuals.transpose() * residuals).value() / (X.rows());
-    MatrixXd MaximumLikelihoodEstsSigma =
-        s2hat * (X.transpose() * X).inverse();
+    MatrixXd MaximumLikelihoodEstsSigma = s2hat * (X.transpose() * X).inverse();
     cout << "MLES" << endl;
     VectorXd MLES(X.cols() + 1);
     MLES << s2hat, MaximumLikelihoodEstsBeta;
@@ -180,73 +179,54 @@ int main() {
     Iden.array().colwise() *= V.diagonal().array().pow(-.5);
     MatrixXd Test = Iden * V * Iden;
 
-    int simulations = 100;
+    int simulations = 11000;
     int burnin = .1 * simulations;
-	int repititions = 50;
-	int batches = .1*repititions;
+    int repititions = 500;
+    int batches = .1 * repititions;
 
     Crb crb;
     cout << "Crb" << endl;
-	crb.runSim(MLES, V, y, X, a, b, simulations, burnin, repititions, batches, b0,B0,a0,d0);
+    crb.runSim(MLES, V, y, X, a, b, simulations, burnin, repititions, batches,
+               b0, B0, a0, d0);
 
     cout << "Crb Student T" << endl;
-    crb.runTsim(MLES, V, J+1, y, X, a, b, I, b0, B0, a0, d0, simulations, burnin, simulations, burnin); 
+    crb.runTsim(MLES, V, J + 1, y, X, a, b, I, b0, B0, a0, d0, simulations,
+                burnin, simulations, burnin);
 
     Crt crt;
     cout << "Crt" << endl;
-    crt.runSim(repititions, batches, a,b,MLES, V, y,X,simulations, burnin, b0,B0,a0,d0);
+    crt.runSim(repititions, batches, a, b, MLES, V, y, X, simulations, burnin,
+               b0, B0, a0, d0);
 
     cout << "Crt Student T" << endl;
-	crt.runTsim(repititions, batches, a, b, I, J+1, MLES, V, y, X, simulations, burnin, b0, B0, a0, d0);
+    crt.runTsim(repititions, batches, a, b, I, J + 1, MLES, V, y, X,
+                simulations, burnin, b0, B0, a0, d0);
 
-   /*Ask ask;
+    Ask ask;
     cout << "Ask" << endl;
-    MatrixXd adaptSample =
-        ask.adaptiveSampler(a, b, MLES, V, .5, 15000, 5000, 500);
-    VectorXd zask = adaptSample.colwise().mean();
-    MatrixXd K = ask.gibbsKernel(a, b, MLES, V, adaptSample, zask);
-    VectorXd betasask = zask.tail(J - 1);
-    cout << ask.ml(betasask, zask(0), y, DATA, K, b0, B0, a0, d0) << endl;
+    ask.runSim(repititions, batches, a, b, MLES, V, y, X, simulations, burnin,
+               burnin, b0, B0, a0, d0);
     cout << "Ask Student T" << endl;
-	VectorXd weight(J+1);
-	weight.fill(.5);
-	adaptSample = ask.adaptiveSamplerT(a,b,I,MLES,V,J+1,.5,simulations,burnin,burnin, weight);
-    zask = adaptSample.colwise().mean();
-    K = ask.gibbsKernel(a, b, MLES, V, adaptSample, zask);
-    betasask = zask.tail(J - 1);
-    cout << ask.ml(betasask, zask(0), y, DATA, K, b0, B0, a0, d0) << endl;
-	cout << endl;
-
-	
+    VectorXd weight(J + 1);
+    weight.fill(.5);
+    ask.runTsim(repititions, batches, a, b, I, J + 1, MLES, V, y, X,
+                simulations, burnin, burnin, .5, b0, B0, a0, d0, weight);
 
     Importance imp;
     cout << "Importance " << endl;
-    cout << imp.importanceSampling(a, b, MLES, V, y, DATA, simulations, b0, B0,
-                                   a0, d0)
-         << endl;
-
+    imp.runSim(repititions, batches, MLES, V, y, X, a, b, simulations, burnin,
+               b0, B0, a0, d0);
     cout << "Importance Student T proposal" << endl;
-    cout << imp.trunctprop(a, b, I, MLES, V, J, y, DATA, simulations, b0, B0,
-                           a0, d0)
-         << endl;
-	cout << endl;
+    imp.runTsim(repititions, batches, MLES, V, y, X, a, b, I, J + 1,
+                simulations, b0, B0, a0, d0);
 
     Ark ark;
     cout << "Ark" << endl;
-    MatrixXd arSamp = ark.arSample(a, b, MLES, V, simulations, 100000);
-    VectorXd zark = arSamp.colwise().mean();
-    MatrixXd arkKernel = dist.gibbsKernel(a, b, MLES, V, arSamp, zark);
-    VectorXd bark = zark.tail(J - 1);
-    cout << ark.ml(bark, zark(0), y, DATA, arkKernel, b0, B0, a0, d0) << endl;
-	cout << endl;
-	cout << "Ark student t" << endl;
-    arSamp = ark.arSampleT(a, b, I, MLES, V, J+1, simulations, 100000);
-    zark = arSamp.colwise().mean();
-    arkKernel = dist.gibbsKernel(a, b, MLES, V, arSamp, zark);
-    bark = zark.tail(J - 1);
-    cout << ark.ml(bark, zark(0), y, DATA, arkKernel, b0, B0, a0, d0) << endl;
-	cout << endl;*/
-
+    ark.runSim(repititions, batches, MLES, V, y, X, a, b, simulations, 100000,
+               b0, B0, a0, d0);
+    cout << "Ark student t" << endl;
+    ark.runTsim(repititions, batches, a, b, I, J + 1, MLES, V, y, X,
+                simulations, 100000, b0, B0, a0, d0);
   }
   {
     // RobertMethodTests();

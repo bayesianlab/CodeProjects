@@ -6,5 +6,5 @@ CXX_FLAGS = -o3 -O3 -DNDEBUG   -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include" -I/usr/local/include/eigen3 -I/usr/local/include/boost_1_66_0 
+CXX_INCLUDES = -I"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include" 
 

@@ -57,15 +57,16 @@ public:
   VectorXd logmvtpdf(double df, const Ref<const VectorXd> &mu,
                      const MatrixXd &Sigma, MatrixXd X);
 
-  void runSim(int, int, VectorXd &, MatrixXd &, VectorXd &, MatrixXd &,
-              VectorXd &, VectorXd &, int, int, VectorXd &, MatrixXd &, double,
-              double);
+  void runSim(int nSims, int batches, VectorXd &theta, MatrixXd &sigma,
+              VectorXd &y, MatrixXd &X, VectorXd &ll, VectorXd &ul,
+              int sampleSize, int burnin, VectorXd &b0, MatrixXd &S0, double a0,
+              double d0);
 
   void runTsim(int nSims, int batches, const VectorXd &theta,
                const MatrixXd &sigma, const VectorXd &y, const MatrixXd &X,
                const VectorXd &a, const VectorXd &b,
                const MatrixXd &LinearConstraints, double df, int sampleSize,
-               int burnin, const VectorXd &b0, const MatrixXd &B0, double a0,
+               const VectorXd &b0, const MatrixXd &B0, double a0,
                double d0);
 
   void runSimNew(int nSims, int batches, const VectorXd &theta,

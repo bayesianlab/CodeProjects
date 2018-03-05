@@ -231,8 +231,8 @@ public:
 
   MatrixXd generateChiSquaredMat(double df, int rows, int cols);
 
-  MatrixXd studenttrnd(const VectorXd &mu, const MatrixXd &Sigma, const double nu,
-                       const int N);
+  MatrixXd mvtrunctrnd(const VectorXd &mu, const MatrixXd &Sigma,
+                       const double nu, const int N);
 
   VectorXd studenttrnd(const double mu, const double sigma, const double nu,
                        const int N, const int J);

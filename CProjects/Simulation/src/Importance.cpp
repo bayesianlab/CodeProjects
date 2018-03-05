@@ -28,22 +28,23 @@ double Importance::importanceSampling(const VectorXd &ll, const VectorXd &ul,
          pdfavg(logmvnpdfV(b0, B0, betas)) - pdfavg(logpdf);
 }
 
-double Importance::trunctprop(const VectorXd &a, const VectorXd &b,const MatrixXd &LinearConstraints,
+double Importance::trunctprop(const VectorXd &a, const VectorXd &b,
+                              const MatrixXd &LinearConstraints,
                               const VectorXd &mu, const MatrixXd &Sigma,
                               const int nu, const VectorXd &y,
                               const MatrixXd &X, int sampleSize,
                               const VectorXd &b0, const MatrixXd &B0, int a0,
-							  int d0){
+                              int d0) {
   int J = Sigma.cols();
   VectorXd logpdf(sampleSize);
-  MatrixXd sample = ghkT(a, b, LinearConstraints, mu, Sigma, nu, sampleSize, logpdf);
+  MatrixXd sample =
+      ghkT(a, b, LinearConstraints, mu, Sigma, nu, sampleSize, logpdf);
   MatrixXd betas = sample.rightCols(J - 1);
   VectorXd sigmas = sample.col(0);
   return pdfavg(lrLikelihood(betas, sigmas, y, X)) +
          pdfavg(loginvgammapdf(sigmas, a0, d0)) +
          pdfavg(logmvnpdfV(b0, B0, betas)) - pdfavg(logpdf);
 }
-
 
 double Importance::mlT(const VectorXd &a, const VectorXd &b,
                        const MatrixXd &LinearConstraints, const VectorXd &mu,
@@ -239,19 +240,18 @@ void Importance::runSimNew(int nSims, int batches, const VectorXd &theta,
   }
 }
 
-
 void Importance::runTsim(int nSims, int batches, const VectorXd &theta,
                          const MatrixXd &sigma, const VectorXd &y,
                          const MatrixXd &X, const VectorXd &ll,
-                         const VectorXd &ul, const MatrixXd &LinearConstraints, double df,
-                         int sampleSize, int burnin, const VectorXd &b0,
+                         const VectorXd &ul, const MatrixXd &LinearConstraints,
+                         double df, int sampleSize, const VectorXd &b0,
                          const MatrixXd &S0, double a0, double d0) {
   int J = sigma.cols();
   int Jminus1 = J - 1;
   VectorXd mLike(nSims);
   for (int i = 0; i < nSims; i++) {
-    mLike(i) = mlT(ll, ul, LinearConstraints, theta, sigma, y, X, df,
-                   sampleSize, burnin, b0, S0, a0, d0);
+    mLike(i) = trunctprop(ll, ul, LinearConstraints, theta, sigma, df, y, X,
+                   sampleSize, b0, S0, a0, d0);
     if (isnan(mLike(i)) == 1) {
       break;
     }
