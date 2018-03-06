@@ -4,14 +4,12 @@ project(readcsvlibrary)
 cmake_policy(SET CMP0042 NEW)
 get_filename_component(PARENT ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)
 
-find_package(Boost REQUIRED)
-find_package(Eigen3 REQUIRED NO_MODULE)
 set(CMAKE_CXX_STANDARD 11)
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 set( CMAKE_BUILD_TYPE Release )
-set(CMAKE_CXX_FLAGS "-o3")
+set(CMAKE_CXX_FLAGS "-O3")
 
-include_directories(${CMAKE_SOURCE_DIR}/include ${Eigen_INCLUDE_DIRS} ${BOOST_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/include )
 
 add_library(ReadCsv STATIC ${CMAKE_SOURCE_DIR}/src/read_csv_to_eigen.cpp)
 install(TARGETS ReadCsv DESTINATION ${CMAKE_SOURCE_DIR}/bin)

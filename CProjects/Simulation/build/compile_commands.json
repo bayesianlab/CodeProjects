@@ -1,57 +1,57 @@
 [
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -isystem /usr/local/include/eigen3  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/rentalmain.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -isystem /usr/local/include/eigen3  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/rentalmain.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -isystem /usr/local/include/eigen3  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/eigenshorts.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -isystem /usr/local/include/eigen3  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/eigenshorts.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/DistLib",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Dist.dir/__/__/__/src/Dist.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Dist.dir/__/__/__/src/Dist.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/CreateSampleDataLib",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/CreateSampleData.dir/__/__/__/src/CreateSampleData.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/CreateSampleData.dir/__/__/__/src/CreateSampleData.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/CrbLib",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Crb.dir/__/__/__/src/crb.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Crb.dir/__/__/__/src/crb.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/AskLib",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Ask.dir/__/__/__/src/ask.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Ask.dir/__/__/__/src/ask.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/ArkLib",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Ark.dir/__/__/__/src/ark.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Ark.dir/__/__/__/src/ark.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/CrtLib",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Crt.dir/__/__/__/src/crt.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Crt.dir/__/__/__/src/crt.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/ImpLib",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Imp.dir/__/__/__/src/Importance.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Imp.dir/__/__/__/src/Importance.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/LinRegGibbsLib",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Lrg.dir/__/__/__/src/LinRegGibbs.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Lrg.dir/__/__/__/src/LinRegGibbs.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/ReadCsvLib",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -o3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/ReadCsv.dir/__/__/__/src/read_csv_to_eigen.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.cpp\"",
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/ReadCsv.dir/__/__/__/src/read_csv_to_eigen.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.cpp"
 }
 ]
