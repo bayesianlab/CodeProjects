@@ -143,7 +143,7 @@ int LinRegGibbs::inTheta(const Ref<const MatrixXd> &theta,
 
   int J = precision.cols();
   boost::math::chi_squared chi(J);
-  double chiQuant = quantile(chi, .99);
+  double chiQuant = quantile(chi, .999);
   VectorXd xMmu = theta - thetaBar;
   if ((xMmu.transpose() * precision * xMmu).value() <= chiQuant) {
     return 1;
@@ -190,10 +190,11 @@ double LinRegGibbs::gelfandDeyMLConditionalPrior(
   VectorXd weight = MatrixXd::Zero(N, 1);
   VectorXd logWeight = MatrixXd::Zero(N, 1);
   int nonZero = 0;
+  double normalizer = 1/.99;
   for (int i = 0; i < N; i++) {
     if (inTheta(sample.row(i), thetaBar.transpose(), OmegaInv) == 1) {
       post = mvnpdfPrecision(thetaBar, OmegaInv, sample.row(i).transpose()) *
-             1.0101;
+             normalizer;
       pbeta = priorBetaMvnPdf(b0, sigmaPriorInv, sample(i, 0),
                               sample.row(i).tail(J - 1).transpose());
       psigma = igammapdf(.5 * a0, 1. / (.5 * d0), sample(i, 0));
@@ -262,6 +263,7 @@ double LinRegGibbs::modifiedGelfandDey(const VectorXd &a, const VectorXd &b,
   VectorXd pbeta(N);
   VectorXd psigma(N);
   VectorXd like(N);
+  double normalizer = 1./.999;
   for (int i = 0; i < N; i++) {
     if (inTheta(sample.row(i), thetaBar.transpose(), oinv) == 1) {
       for (int j = 0; j < J; j++) {
@@ -271,7 +273,7 @@ double LinRegGibbs::modifiedGelfandDey(const VectorXd &a, const VectorXd &b,
         cmu = conditionalMean(omegaInvDiag(j), Hnot, mlenot, xnot, mle(j));
         product = product + log(Dist::tnormpdf(a(j), b(j), cmu, sigmaVect(j),
                                                sample(i, j)) *
-                                1.0101);
+                                normalizer);
       }
       post(nonZero) = product;
       product = 0;
@@ -298,7 +300,7 @@ double LinRegGibbs::modifiedGelfandDeyT(const VectorXd &a, const VectorXd &b,
   int J = sample.cols();
   int Jm1 = J -1;
   MatrixXd selMat = selectorMat(J);
-  VectorXd thetaBar = sample.colwise().mean();
+  VectorXd thetaBar = mle;
   MatrixXd Omega = calcOmega(sample);
   MatrixXd oinv = Omega.inverse();
   MatrixXd OmegaInv = ifish.inverse();
@@ -316,6 +318,7 @@ double LinRegGibbs::modifiedGelfandDeyT(const VectorXd &a, const VectorXd &b,
   VectorXd pbeta(N);
   VectorXd psigma(N);
   VectorXd like(N);
+  double normalizer = 1./.999;
   for (int i = 0; i < N; i++) {
     if (inTheta(sample.row(i), thetaBar.transpose(), oinv) == 1) {
       for (int j = 0; j < J; j++) {
@@ -325,7 +328,7 @@ double LinRegGibbs::modifiedGelfandDeyT(const VectorXd &a, const VectorXd &b,
         cmu = conditionalMean(omegaInvDiag(j), Hnot, mlenot, xnot, mle(j));
         logpdf = logpdf + log(Dist::ttpdf(a(j), b(j), df+Jm1, cmu, sigmaVect(j),
                                                sample(i, j)) *
-                                1.0101);
+                                normalizer);
       }
       post(nonZero) = logpdf;
 	  logpdf = 0;
