@@ -251,7 +251,9 @@ public:
                        const MatrixXd &Sigma, const MatrixXd &Sample,
                        const VectorXd &zStar);
 
-  double pdfavg(VectorXd logpdf);
+  double pdfavg(const Ref<const VectorXd> &logpdf);
+  
+  double pdfmean(const Ref<const VectorXd> &logpdf);
 
   MatrixXd gibbsTKernel(const VectorXd &a, const VectorXd &b,
                const MatrixXd &LinearConstraints, const MatrixXd &sample,

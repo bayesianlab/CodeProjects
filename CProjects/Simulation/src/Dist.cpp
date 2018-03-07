@@ -1292,10 +1292,17 @@ MatrixXd Dist::gibbsKernel(const VectorXd &a, const VectorXd &b, const VectorXd 
   return Kernel;
 }
 
-double Dist::pdfavg(VectorXd logpdf){
-	double maxval = logpdf.maxCoeff();
-	return log(exp(logpdf.array() - maxval).mean()) + maxval;
+double Dist::pdfavg(const Ref<const VectorXd> &logpdf) {
+  double maxval = logpdf.maxCoeff();
+  return log(exp(logpdf.array() - maxval).mean()) + maxval;
 }
+
+double Dist::pdfmean(const Ref<const VectorXd> &logpdf) {
+  double maxval = logpdf.maxCoeff();
+  int N = logpdf.size();
+  return -log(N) + (log(exp(logpdf.array() - maxval).sum()) + maxval);
+}
+
 
 MatrixXd Dist::gibbsTKernel(const VectorXd &a, const VectorXd &b,
                            const MatrixXd &LinearConstraints,

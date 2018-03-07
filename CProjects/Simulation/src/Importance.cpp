@@ -23,9 +23,9 @@ double Importance::importanceSampling(const VectorXd &ll, const VectorXd &ul,
   sample = ghkLinearConstraints(ll, ul, mu, Sigma, sampleSize, logpdf);
   MatrixXd betas = sample.rightCols(J - 1);
   VectorXd sigmas = sample.col(0);
-  return pdfavg(lrLikelihood(betas, sigmas, y, X)) +
-         pdfavg(loginvgammapdf(sigmas, a0, d0)) +
-         pdfavg(logmvnpdfV(b0, B0, betas)) - pdfavg(logpdf);
+  return pdfmean(lrLikelihood(betas, sigmas, y, X) +
+                 loginvgammapdf(sigmas, a0, d0) + logmvnpdfV(b0, B0, betas) -
+                 logpdf);
 }
 
 double Importance::trunctprop(const VectorXd &a, const VectorXd &b,
@@ -41,9 +41,9 @@ double Importance::trunctprop(const VectorXd &a, const VectorXd &b,
       ghkT(a, b, LinearConstraints, mu, Sigma, nu, sampleSize, logpdf);
   MatrixXd betas = sample.rightCols(J - 1);
   VectorXd sigmas = sample.col(0);
-  return pdfavg(lrLikelihood(betas, sigmas, y, X)) +
-         pdfavg(loginvgammapdf(sigmas, a0, d0)) +
-         pdfavg(logmvnpdfV(b0, B0, betas)) - pdfavg(logpdf);
+  return pdfmean(lrLikelihood(betas, sigmas, y, X) +
+                 loginvgammapdf(sigmas, a0, d0) + logmvnpdfV(b0, B0, betas) -
+                 logpdf);
 }
 
 double Importance::mlT(const VectorXd &a, const VectorXd &b,

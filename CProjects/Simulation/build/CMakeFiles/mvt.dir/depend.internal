@@ -217,6 +217,7 @@ CMakeFiles/mvt.dir/src/eigenshorts.cpp.o
 CMakeFiles/mvt.dir/src/rentalmain.cpp.o
  ../include/Dist.hpp
  ../include/Importance.hpp
+ ../include/LinRegGibbs.hpp
  ../include/ThreeD.hpp
  ../include/ark.hpp
  ../include/ask.hpp

@@ -8,6 +8,7 @@ lmvn = logmvnpdf(zs(2:J), mu(2:J), 1000*B0);
 lig = loginvgampdf(zs(1), a0, d0);
 lmpk = log(mean(prod(K,2)));
 ml = like + lmvn + lig - lmpk;
+fprintf('Log Likelihood %f  Log MVNPDF %f Linvgammpdf %f Log product f(zstar) %f\n', like, lmvn, lig, lmpk)
 fprintf('Ark Log marginal likelihood %f\n', ml)
 end
 
