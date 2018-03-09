@@ -180,18 +180,18 @@ int main() {
     Iden.array().colwise() *= V.diagonal().array().pow(-.5);
     MatrixXd Test = Iden * V * Iden;
 
-    int simulations = 11000;
+    int simulations = 110;
     int burnin = .1 * simulations;
-    int repititions = 500;
+    int repititions = 1;
     int batches = .1 * repititions;
 
-    /*cout << "Modified Gelfand Dey" << endl;
+  cout << "Modified Gelfand Dey" << endl;
     LinRegGibbs lrg;
     lrg.runSimModified(repititions, batches, a, b, MLES, V, y, X, b0, B0, a0,
                        d0, simulations, burnin);
     cout << "Modified Gelfand Dey T" << endl;
     lrg.runTsimModified(repititions, batches, a, b, I, J + 1, MLES, V, y, X, b0,
-                        B0, a0, d0, simulations, burnin);*/
+                        B0, a0, d0, simulations, burnin);
    /* Crb crb;
     cout << "Crb" << endl;
     crb.runSim(MLES, V, y, X, a, b, simulations, burnin, repititions, batches,
@@ -220,13 +220,14 @@ int main() {
     ask.runTsim(repititions, batches, a, b, I, J + 1, MLES, V, y, X,
                 simulations, burnin, burnin, .5, b0, B0, a0, d0, weight);*/
 
+	/*
     Importance imp;
      cout << "Importance " << endl;
      imp.runSim(repititions, batches, MLES, V, y, X, a, b, simulations, burnin,
                 b0, B0, a0, d0);
      cout << "Importance Student T proposal" << endl;
      imp.runTsim(repititions, batches, MLES, V, y, X, a, b, I, J + 1,
-                 simulations, b0, B0, a0, d0);
+                 simulations, b0, B0, a0, d0);*/
     /*
         Ark ark;
         cout << "Ark" << endl;

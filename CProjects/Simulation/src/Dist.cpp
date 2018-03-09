@@ -523,6 +523,7 @@ MatrixXd Dist::ghkLinearConstraints(const VectorXd &a, const VectorXd &b,
   return sample.bottomRows(sims).matrix();
 }
 
+
 MatrixXd Dist::ghkT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, const VectorXd &mu,
                     const MatrixXd &Sigma, double df, int sims) {
