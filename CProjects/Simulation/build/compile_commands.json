@@ -1,15 +1,5 @@
 [
 {
-  "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -isystem /usr/local/include/eigen3  -O3 -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/runsim.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp\"",
-  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp"
-},
-{
-  "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -isystem /usr/local/include/eigen3  -O3 -g   -std=gnu++11 -o CMakeFiles/mvt.dir/src/eigenshorts.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp\"",
-  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp"
-},
-{
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/build/build/src/DistLib",
   "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\"  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/Dist.dir/__/__/__/src/Dist.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp"

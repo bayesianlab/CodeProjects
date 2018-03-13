@@ -230,26 +230,26 @@ int main() {
   cout << "\nseed " << seed << " mlSims " << mlSims << " nSims  " << nSims
        << " burnin " << burnin << " batch size " << batches
        << " linear regression sample size " << linRegSS << " " << batches
-       << endl;
-/*  cout << "\tTEST 1" << endl;
+       << endl;/*
+  cout << "\tTEST 1" << endl;
   cout << "\n\tTwo restriction test, beta1 .99, beta2 .99" << endl;
   cout << "\nBetas\n" << betas.transpose() << endl;
-  runTests(betas, rll, rul);
+  runTests(betas, rll, rul);*/
   
-  betas.resize(betas.size() + 2);
-  rll.resize(rll.size() + 2);
-  rul.resize(rul.size() + 2);
+  betas.resize(6);
+  rll.resize(7);
+  rul.resize(7);
   betas << .99, .99, .99, .75, .85, -.55;
   rll << 0, 0, 0, 0, -inf, -inf, -inf;
   rul << inf, 1, 1, 1, inf, inf, inf;
-  cout << endl;*/
+  cout << endl;
   cout << "\tTEST 2" << endl;
   cout << "\nBetas\n" << betas.transpose() << endl;
   runTests(betas, rll, rul);
-  
-  betas.resize(betas.size() + 2);
-  rll.resize(rll.size() + 2);
-  rul.resize(rul.size() + 2);
+ /* 
+  betas.resize(8);
+  rll.resize(9);
+  rul.resize(9);
   betas << .99, .99, .99, .99, .75, .85, -.55, .95;
   rll << 0, 0, 0, 0, 0, -inf, -inf, -inf, -inf;
   rul << inf, 1, 1, 1, 1, inf, inf, inf, inf;
@@ -257,6 +257,6 @@ int main() {
   cout << "\tTEST 3" << endl;
   cout << "\nBetas\n" << betas.transpose() << endl;
   runTests(betas, rll, rul);
-  return 0;
+  return 0; */
 }
 
