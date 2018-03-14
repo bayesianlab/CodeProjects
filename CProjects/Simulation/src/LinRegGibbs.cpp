@@ -215,40 +215,18 @@ double LinRegGibbs::modifiedGelfandDey(const VectorXd &a, const VectorXd &b,
                                        const MatrixXd &ifish,
                                        const VectorXd &b0, const MatrixXd &B0,
                                        const double a0, const double d0) {
+
   int N = sample.rows();
   int J = sample.cols();
-  int Jm1 = J - 1;
-  MatrixXd selMat = selectorMat(J);
-  VectorXd thetaBar = sample.colwise().mean();
-  MatrixXd Omega = calcOmega(sample);
-  MatrixXd oinv = Omega.inverse();
   MatrixXd OmegaInv = ifish.inverse();
-  VectorXd omegaInvDiag = OmegaInv.diagonal();
-  VectorXd sigmaVect = (1. / omegaInvDiag.array()).sqrt();
-  MatrixXd sigmaPriorInv = B0.inverse();
-  VectorXd weight = MatrixXd::Zero(N, 1);
-  double cmu;
   int nonZero = 0;
-  VectorXd xnot(Jm1);
-  VectorXd Hnot(Jm1);
-  VectorXd mlenot(Jm1);
-  double product = 0;
   VectorXd post(N);
   VectorXd pbeta(N);
   VectorXd psigma(N);
   VectorXd like(N);
   double normalizer = 1. / .99;
   for (int i = 0; i < N; i++) {
-    if (inTheta(sample.row(i).transpose(), thetaBar, ifish) == 1) {
-      for (int j = 0; j < J; j++) {
-        xnot = selMat.block(j * Jm1, 0, Jm1, J) * sample.row(i).transpose();
-        Hnot = selMat.block(j * Jm1, 0, Jm1, J) * OmegaInv.row(j).transpose();
-        mlenot = selMat.block(j * Jm1, 0, Jm1, J) * mle;
-        cmu = conditionalMean(omegaInvDiag(j), Hnot, mlenot, xnot, mle(j));
-        product = product + log(Dist::tnormpdf(a(j), b(j), cmu, sigmaVect(j),
-                                               sample(i, j)));
-      }
-      product = 0;
+    if (inTheta(sample.row(i).transpose(), mle, OmegaInv) == 1) {
 	  post(nonZero) =  logpdf(i);
       pbeta(nonZero) = logmvnpdf(
           b0, B0, sample.row(i).tail(J - 1).transpose());
@@ -259,59 +237,33 @@ double LinRegGibbs::modifiedGelfandDey(const VectorXd &a, const VectorXd &b,
     }
   }
   if (nonZero == N) {
-    return pdfmean(-post.head(nonZero) + pbeta.head(nonZero) +
-                   psigma.head(nonZero) + like.head(nonZero));
+    return pdfmean(-post + pbeta + psigma + like);
   } else {
-	  post = log(normalizer) + post.array();
+    post = post.array() + log(normalizer);
     return pdfmean(-post.head(nonZero) + pbeta.head(nonZero) +
                    psigma.head(nonZero) + like.head(nonZero));
   }
 }
 
-double LinRegGibbs::modifiedGelfandDeyT(const VectorXd &a, const VectorXd &b,
-                                        const MatrixXd &sample, const double df,
-                                        const VectorXd &y, const MatrixXd &X,
-                                        const VectorXd &mle,
-                                        const MatrixXd &ifish,
-                                        const VectorXd &b0, const MatrixXd &B0,
-                                        const double a0, const double d0) {
+double LinRegGibbs::modifiedGelfandDeyT(
+    const VectorXd &a, const VectorXd &b, const MatrixXd &sample,
+    VectorXd &logpdf, const double df, const VectorXd &y, const MatrixXd &X,
+    const VectorXd &mle, const MatrixXd &ifish, const VectorXd &b0,
+    const MatrixXd &B0, const double a0, const double d0) {
   int N = sample.rows();
   int J = sample.cols();
-  int Jm1 = J - 1;
-  MatrixXd selMat = selectorMat(J);
-  VectorXd thetaBar = mle;
-  MatrixXd Omega = calcOmega(sample);
-  MatrixXd oinv = Omega.inverse();
   MatrixXd OmegaInv = ifish.inverse();
-  VectorXd omegaInvDiag = OmegaInv.diagonal();
-  VectorXd sigmaVect = (1. / omegaInvDiag.array()).sqrt();
-  MatrixXd sigmaPriorInv = B0.inverse();
-  VectorXd weight = MatrixXd::Zero(N, 1);
-  double cmu;
   int nonZero = 0;
-  VectorXd xnot(Jm1);
-  VectorXd Hnot(Jm1);
-  VectorXd mlenot(Jm1);
-  double logpdf = 0;
   VectorXd post(N);
   VectorXd pbeta(N);
   VectorXd psigma(N);
   VectorXd like(N);
   double normalizer = 1. / .99;
   for (int i = 0; i < N; i++) {
-    if (inTheta(sample.row(i).transpose(), thetaBar, OmegaInv) == 1) {
-      for (int j = 0; j < J; j++) {
-        xnot = selMat.block(j * Jm1, 0, Jm1, J) * sample.row(i).transpose();
-        Hnot = selMat.block(j * Jm1, 0, Jm1, J) * OmegaInv.row(j).transpose();
-        mlenot = selMat.block(j * Jm1, 0, Jm1, J) * mle;
-        cmu = conditionalMean(omegaInvDiag(j), Hnot, mlenot, xnot, mle(j));
-        logpdf = logpdf + log(Dist::ttpdf(a(j), b(j), df + Jm1, cmu,
-                                          sigmaVect(j), sample(i, j)));
-      }
-      post(nonZero) = logpdf;
-      logpdf = 0;
+    if (inTheta(sample.row(i).transpose(), mle, OmegaInv) == 1) {
+      post(nonZero) = logpdf(i);
       pbeta(nonZero) = logmvnpdfPrecision(
-          b0, sigmaPriorInv, sample.row(i).tail(J - 1).transpose());
+          b0, B0.inverse(), sample.row(i).tail(J - 1).transpose());
       psigma(nonZero) = loginvgammapdf(sample(i, 0), a0, d0);
       like(nonZero) = lrLikelihood(sample.row(i).tail(J - 1).transpose(),
                                    sample(i, 0), y, X);
@@ -319,8 +271,7 @@ double LinRegGibbs::modifiedGelfandDeyT(const VectorXd &a, const VectorXd &b,
     }
   }
   if (nonZero == N) {
-    return pdfmean(-post.head(nonZero) + pbeta.head(nonZero) +
-                   psigma.head(nonZero) + like.head(nonZero));
+    return pdfmean(-post + pbeta + psigma + like);
   } else {
     post = post.array() + log(normalizer);
     return pdfmean(-post.head(nonZero) + pbeta.head(nonZero) +
@@ -388,9 +339,9 @@ double LinRegGibbs::lrRestrictModifiedGDT(
     const int burnin) {
   int J = sigma.cols();
   VectorXd iV = MatrixXd::Zero(J, 1);
-  MatrixXd R = mvtstudtrnd(a, b, LinearConstraints, mu, sigma, df,
-                               gibbsSteps, burnin);
-  return modifiedGelfandDeyT(a,b,R, J+1, y, X, mu, sigma, b0, B0, a0, d0);
+  VectorXd logpdf(gibbsSteps);
+  MatrixXd R = ghkT(a, b, LinearConstraints, mu, sigma, df, gibbsSteps, logpdf);
+  return modifiedGelfandDeyT(a,b,R,logpdf, J+1, y, X, mu, sigma, b0, B0, a0, d0);
 }
 
 void LinRegGibbs::runSimModified(int nSims, int batches,

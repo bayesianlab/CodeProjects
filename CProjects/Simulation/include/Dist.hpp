@@ -81,6 +81,15 @@ public:
                                 const VectorXd &mu, const MatrixXd &Sigma,
                                 int sims, VectorXd &logpdf);
 
+  MatrixXd returnNormalizingConstants(const VectorXd &a,
+                                            const VectorXd &b,
+                                            const VectorXd &mu,
+                                            const MatrixXd &Sigma, int sims,
+                                            MatrixXd &normC);
+
+  void runSim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
+              const VectorXd &mu, const MatrixXd &Sigma, int sims);
+
   double conditionalMean(double Hxx, VectorXd &Hxy, VectorXd &muNotJ,
                          VectorXd &xNotJ, double muxx);
 

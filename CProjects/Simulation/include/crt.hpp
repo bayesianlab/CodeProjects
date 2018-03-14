@@ -31,10 +31,16 @@ public:
              MatrixXd &Kernel, const VectorXd &b0, const MatrixXd &B0,
              double a0, double d0);
 
+  double simp(const VectorXd &mu, const MatrixXd &Sigma, VectorXd &zStar,
+              const MatrixXd &Kernel);
+
   void runSim(int nsims, int batches, const VectorXd &a, const VectorXd &b,
               VectorXd &mu, MatrixXd &Sigma, VectorXd &y, MatrixXd &X, int sims,
               int burnin, const VectorXd &b0, const MatrixXd &B0, double a0,
               double d0);
+
+  void runSim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
+              const VectorXd &mu, const MatrixXd &Sigma, int sims, int burnin);
 
   void runTsim(int nsims, int batches, const VectorXd &a, const VectorXd &b,
                const MatrixXd &LinearConstraints, double df,

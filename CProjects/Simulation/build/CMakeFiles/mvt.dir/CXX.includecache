@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../include/CreateSampleData.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
 ../include/Dist.hpp
 Eigen/Dense
 -
@@ -42,6 +36,12 @@ string.h
 Dist.hpp
 ../include/Dist.hpp
 
+../include/ThreeD.hpp
+Eigen/Dense
+-
+iostream
+-
+
 ../include/ark.hpp
 Dist.hpp
 ../include/Dist.hpp
@@ -66,21 +66,31 @@ Dist.hpp
 Eigen/Dense
 -
 
+../include/eigenshorts.hpp
+Eigen/Dense
+-
+string
+-
+
+../include/read_csv_to_eigen.hpp
+Eigen/Dense
+-
+
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.cpp
 Eigen/Dense
 -
 iostream
 -
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/runsim.cpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
 Importance.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
 LinRegGibbs.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.hpp
+ThreeD.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ThreeD.hpp
 ark.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.hpp
 ask.hpp
@@ -89,6 +99,10 @@ crb.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.hpp
 crt.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.hpp
+eigenshorts.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.hpp
+read_csv_to_eigen.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.hpp
 Eigen/Dense
 -
 ctime
@@ -100,6 +114,14 @@ iostream
 limits
 -
 math.h
+-
+sstream
+-
+stdio.h
+-
+stdlib.h
+-
+string
 -
 
 /usr/local/include/eigen3/Eigen/Cholesky

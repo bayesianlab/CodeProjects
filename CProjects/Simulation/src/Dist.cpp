@@ -215,7 +215,7 @@ double Dist::truncNormalRnd(double a, double b, double mu, double sigma) {
   double Z, standardizedA, standardizedB, stdLimit;
   standardizedA = (a - mu) / sigma;
   standardizedB = (b - mu) / sigma;
-  stdLimit = 8;
+  stdLimit = 5;
   if (mu > a && mu < b) {
     return tnormrnd(a, b, mu, sigma);
   } else {
@@ -492,6 +492,8 @@ MatrixXd Dist::ghkLinearConstraints(const VectorXd &a, const VectorXd &b, const 
   return sample.bottomRows(sims).matrix();
 }
 
+
+
 MatrixXd Dist::ghkLinearConstraints(const VectorXd &a, const VectorXd &b,
                                     const VectorXd &mu, const MatrixXd &Sigma,
                                     int sims, VectorXd &logpdf) {
@@ -523,6 +525,70 @@ MatrixXd Dist::ghkLinearConstraints(const VectorXd &a, const VectorXd &b,
   return sample.bottomRows(sims).matrix();
 }
 
+MatrixXd Dist::returnNormalizingConstants(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
+                                    const MatrixXd &Sigma, int sims, MatrixXd &normC) {
+  /*
+   * Take into account multiple constraints
+   * Should replace ghkLinearConstraints
+   * THIS CODE DOES NOT IMPLEMENT LINEAR CONSTRAINTS!!!
+   */
+
+  int J = Sigma.cols();
+  MatrixXd sample(sims, J);
+  MatrixXd lowerC = Sigma.llt().matrixL();
+  MatrixXd offDiagMat = lowerC;
+  offDiagMat.diagonal() = VectorXd::Zero(J);
+  double update, aj, bj;
+  for (int sim = 0; sim < sims; sim++) {
+    for (int j = 0; j < J; j++) {
+      update = mu(j) + (offDiagMat.row(j) * sample.row(sim).transpose());
+      aj = (a(j) - update) / lowerC(j, j);
+      bj = (b(j) - update) / lowerC(j, j);
+      sample(sim, j) = truncNormalRnd(aj, bj, 0, 1);
+      normC(sim,j) =  cdf(normalDistribution, bj) - cdf(normalDistribution,aj); 
+    }
+  }
+  sample = (lowerC * sample.transpose()).transpose();
+  sample.rowwise() += mu.transpose();
+  return sample.bottomRows(sims).matrix();
+}
+
+void Dist::runSim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
+                 const VectorXd &mu, const MatrixXd &Sigma, int sims) {
+  int J = Sigma.cols();
+  int Jminus1 = J - 1;
+  VectorXd mLike(nSims);
+  MatrixXd Sample(sims,J);
+  MatrixXd normC(sims,J);
+  for (int i = 0; i < nSims; i++) {
+	 Sample.setZero(); 
+    returnNormalizingConstants(a,b,mu,Sigma, sims, normC);
+    mLike(i) = pdfmean(normC.array().log().rowwise().sum());
+  }
+  cout << setprecision(9) << mLike.mean() << endl;
+  if (batches != 0) {
+    int obsInMean = floor(nSims / batches);
+    int remainder = nSims - (batches * obsInMean);
+    if (remainder == 0) {
+      VectorXd yBar(batches);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    } else {
+      VectorXd yBar(batches + 1);
+      int startIndex = 0;
+      for (int j = 0; j < batches; j++) {
+        yBar(j) = mLike.segment(startIndex, obsInMean).mean();
+        startIndex = startIndex + obsInMean;
+      }
+      yBar(batches) = mLike.segment(startIndex, remainder).mean();
+      cout << setprecision(10) << standardDev(yBar) << endl;
+    }
+  }
+}
 
 MatrixXd Dist::ghkT(const VectorXd &a, const VectorXd &b,
                     const MatrixXd &LinearConstraints, const VectorXd &mu,

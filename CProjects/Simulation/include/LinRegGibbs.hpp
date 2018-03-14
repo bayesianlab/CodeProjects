@@ -49,11 +49,12 @@ public:
                             const double a0, const double d0);
 
   double modifiedGelfandDeyT(const VectorXd &a, const VectorXd &b,
-                             const MatrixXd &sample, const double df,
-                             const VectorXd &y, const MatrixXd &X,
-                             const VectorXd &mle, const MatrixXd &ifish,
-                             const VectorXd &b0, const MatrixXd &B0,
-                             const double a0, const double d0);
+                             const MatrixXd &sample, VectorXd &logpdf,
+                             const double df, const VectorXd &y,
+                             const MatrixXd &X, const VectorXd &mle,
+                             const MatrixXd &ifish, const VectorXd &b0,
+                             const MatrixXd &B0, const double a0,
+                             const double d0);
 
   double priorBetaMvnPdf(const VectorXd &mu,
                          const Ref<const MatrixXd> &precision,
