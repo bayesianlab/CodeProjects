@@ -1,0 +1,14 @@
+# Used in file final225.R
+model{
+for(j in 1:J){
+  gamma[j] ~ dbern(.5)
+  beta[j] ~ dnorm(0, .01)
+  theta[j] <- gamma[j] * beta[j]
+}
+for(i in 1:N){
+  mu[i]  <- inprod(X[i,], theta)
+  y[i] ~ dnorm(mu[i], 1/sigma2[i])
+  tau[i] ~ dgamma(2, 1)
+  sigma2[i] <- 1/tau[i]
+}
+}
