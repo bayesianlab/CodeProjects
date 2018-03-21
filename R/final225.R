@@ -499,3 +499,15 @@ exp(lpg - lpgrace)
 
 colnames(Xrace) <- c("PSA", "GS", "Race")
 summary(lm(y~Xrace))
+
+#Q3 Part 2===
+nobs <- 50
+a <- 1
+b <- 2
+k <- sample.int(15, nobs, replace=TRUE)
+rho <- rgamma(1,a, b )
+fkp <- beta(rho+1,k)
+
+for(i in 1:sims){
+  for(j in 1:ob)
+}
