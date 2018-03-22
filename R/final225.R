@@ -12,7 +12,7 @@ library(data.table)
 library(rjags)
 library(truncnorm)
 library(SuppDists)
-dev.off()
+library(plot3D)
 data1 <- read_delim("~/Google Drive/CodeProjects/R/prob1.csv", " ", escape_double = FALSE, trim_ws = TRUE)
 
 updateD <- function(gammas, tau, slabConst, unitVec){
@@ -178,19 +178,35 @@ prostatedata <- read_csv("~/Google Drive/CodeProjects/R/prostatedata.csv")
 race <- as.numeric(prostatedata$Race)
 prostatedata <- prostatedata[-which(is.na(race)), ]
 y <- prostatedata$CP
+const <- rep(1,length(y))
 X <- cbind(prostatedata$PSA, prostatedata$GS)
+X2 <- cbind(const ,X )
 rc <- dim(X)
 lsests <- lm(y~X)[[1]]
 sims <- 5000
 betaAC <- as.data.frame(gibbsAlbertChib(y,X,sims))
 betaAC <- betaAC[floor(.1*sims):sims, ]
 plot(mcmc(betaAC))
-summary(mcmc(betaAC))
+betaNoConst <- summary(mcmc(betaAC))[[1]][,1]
+betaNoConst
+# Marginal Effects no constant 
+mean(dnorm(X%*%betaNoConst)*betaNoConst[1])
+mean(dnorm(X%*%betaNoConst)*betaNoConst[2])
+
 plotAC1 <- qplot(betaAC$V1, geom="histogram", fill=I("blue"), col=I("black"), 
       alpha= I(.75), bins=40, xlab="beta 1") 
 plotAC2 <- qplot(betaAC$V2, geom="histogram", bins=40, fill=I("blue"), col=I("black"),
       alpha=I(.75), xlab="beta 2" ) 
-
+betaACWithConstant <- as.data.frame(gibbsAlbertChib(y,X2,sims))
+betaACWithConstant  <- betaACWithConstant[floor(.1*sims):sims, ]
+plot(mcmc(betaACWithConstant))
+summary(mcmc(betaACWithConstant))
+betaConst <- summary(mcmc(betaACWithConstant))[[1]][,1]
+betaConst
+# Marginal Effects With Constant
+mean(dnorm(X2%*%betaConst)*betaConst[1])
+mean(dnorm(X2%*%betaConst)*betaConst[2])
+mean(dnorm(X2%*%betaConst)*betaConst[3])
 #Q2 Part 2====
 gibbsDataAug <- function(y, X, sims){
   rc <- dim(X)
@@ -395,6 +411,7 @@ updatePGVar <- function(priorVarInv, omega, X){
   B <- solve(priorVarInv + (t(X)%*% diag(omega) %*% X))
   B
 }
+
 updatePGBeta <- function(X,z, updateVar, betaPrior, priorVarInv){
   b <- updateVar %*% ( priorVarInv %*% betaPrior + (t(X)%*%z) )
   b
@@ -448,8 +465,18 @@ gibbsNaivePolyaGamma <- function(y, X, sims){
 
 betaMatPG <- as.data.frame(gibbsPolyaGamma(y,X,sims))
 betaMatPG <- betaMatPG[floor(.1*sims):sims,]
+betaPgNoConst <- summary(mcmc(betaMatPG))[[1]][,1]
+mean(plogis(X%*%betaPgNoConst) * (1- plogis(X%*%betaPgNoConst)))*betaPgNoConst[1]
+mean(plogis(X%*%betaPgNoConst) * (1- plogis(X%*%betaPgNoConst)))*betaPgNoConst[2]
 plot(mcmc(betaMatPG))
 summary(mcmc(betaMatPG))
+
+betaMatPG2 <- as.data.frame(gibbsPolyaGamma(y,X2,sims))
+betaMatPG2 <- betaMatPG2[floor(.1*sims):sims,]
+betaPgConst <- summary(mcmc(betaMatPG2))[[1]][,1]
+mean(plogis(X%*%betaPgConst) * (1- plogis(X%*%betaPgConst)))*betaPgConst[1]
+mean(plogis(X%*%betaPgConst) * (1- plogis(X%*%betaPgConst)))*betaPgConst[2]
+
 betaMatNaive <- as.data.frame(gibbsNaivePolyaGamma(y, X, 500))
 pgpsa <- ggplot(data=betaMatPG, aes(x=V1)) + 
   geom_histogram(col=I("black"), fill=I("purple"), alpha=I(.6)) +
@@ -483,6 +510,33 @@ lpml <- function(y,X,betaMatrix){
 race <- as.numeric(prostatedata$Race)
 Xrace <- as.matrix(cbind(X,race))
 
+betaMatPG <- as.data.frame(gibbsPolyaGamma(y,Xrace,sims))
+betaMatPG <- betaMatPG[floor(.1*sims):sims,]
+summary(mcmc(betaMatPG))
+betaPgNoConst <- summary(mcmc(betaMatPG))[[1]][,1]
+Xbar <- colMeans(Xrace)
+XbarRace2 <- Xbar
+XbarRace2[3] <- 2
+XbarRace1 <- Xbar
+XbarRace1[3] <- 1
+plogis(XbarRace2 %*% betaPgNoConst) - plogis( XbarRace1 %*% betaPgNoConst)
+
+
+plot(mcmc(betaMatPG))
+summary(mcmc(betaMatPG))
+
+XraceConst <- as.matrix(cbind(const, X,race))
+betaMatPG2 <- as.data.frame(gibbsPolyaGamma(y,XraceConst,sims))
+betaMatPG2 <- betaMatPG2[floor(.1*sims):sims,]
+XbarConst <- colMeans(XraceConst)
+XbarConstRace2 <- XbarConst
+XbarConstRace1 <- XbarConst 
+XbarConstRace2[4] <- 2
+XbarConstRace1[4] <- 1
+summary(mcmc(betaMatPG2))
+betaPgConst <- summary(mcmc(betaMatPG2))[[1]][,1]
+plogis(XbarConstRace2 %*% betaPgConst) - plogis( XbarConstRace1 %*% betaPgConst)
+
 bac <- gibbsAlbertChib(y,Xrace, 500)
 bda <- gibbsDataAug(y,Xrace, 500)
 bpg <- gibbsPolyaGamma(y,Xrace, 500)
@@ -500,14 +554,213 @@ exp(lpg - lpgrace)
 colnames(Xrace) <- c("PSA", "GS", "Race")
 summary(lm(y~Xrace))
 
-#Q3 Part 2===
-nobs <- 50
-a <- 1
-b <- 2
-k <- sample.int(15, nobs, replace=TRUE)
-rho <- rgamma(1,a, b )
-fkp <- beta(rho+1,k)
-
-for(i in 1:sims){
-  for(j in 1:ob)
+#Q4 ====
+problem4 <- function(x, eta1=4,eta2=5,eta3=5, B=10 ){
+  like <- exp( (.5*(1/(eta1*eta1))*(4 - B*x[1] - x[2]*x[2])^2) - .5*(x[1]*x[1])/(eta2*eta2) - .5*(x[2]*x[2])/(eta3*eta3)   )
+  like
 }
+
+gradient <- function(x, eta1=4,eta2=5,eta3=5, B=10){
+  insideParens <- ( 4 - (B * x[1]) - (x[2]*x[2]))
+  eta1squared <- eta1*eta1
+  eta2squared <- eta2*eta2
+  eta3squared <- eta3*eta3
+  ddx1 <- -((1/eta1squared) * insideParens * B) - (x[1]/eta2squared)
+  ddx2 <- -(2*x[2]/eta1squared) * insideParens - (x[2]/eta3squared)
+  g <- c(ddx1,ddx2)
+  g
+}
+
+logproblem4 <- function(x, eta1=4,eta2=5,eta3=5, B=10 ){
+  loglike <-  (.5*(1/(eta1*eta1))*(4 - B*x[1] - x[2]*x[2])^2) - .5*(x[1]*x[1])/(eta2*eta2) - .5*(x[2]*x[2])/(eta3*eta3)   
+  loglike
+}
+
+dprop <- function(xprime, x, tau, mu){
+  constant <- -.25*(1/tau)
+  val <- constant*(xprime-x -mu)^2
+  val
+}
+
+dimhprop <- function(x, xprime, mu =rep(0,2), sigma = diag(2)){
+  sigmainv <- solve(sigma)
+  val <- -.5*( (xprime-mu)%*%sigmainv%*%t(xprime-mu) - (x-mu)%*%sigmainv%*%t(x-mu))
+  val
+}
+
+dimhprop(yt, t(rep(1,2) ))
+gradient(1*rep(1,2))
+
+v <- seq(-12, 1, by=.01)
+w <- seq(-12, 1, by=.01)
+y <- cbind(v,w)
+z<- apply(y, 1, problem4)/max(apply(y, 1, problem4))
+points3D(v,w,z, theta=25, phi=20)
+plot(v,z)
+plot(w,z)
+
+
+#Q4 RWMH====
+sims<-10000
+yt = t(rep(0,2))
+mu <- rep(0,2)
+sig <- diag(2)
+tau <- .0010
+rwmh <- matrix(0, nrow=sims, ncol=2)
+acceptanceRateRWMH <- 1
+for(i in 1:sims){
+  proposal <- rmvnorm(1, yt, sqrt(tau)*sig)
+  ratioProblem4 <- logproblem4(proposal)-logproblem4(yt)
+  ratioProposals <-dmvnorm(yt-proposal,mu,sig, log=T) - dmvnorm(proposal-yt, mu, sig, log=T) 
+  alpha <- min( ratioProblem4 + ratioProposals, 0)
+  u <- runif(1,0,1)
+  if(log(u) < alpha){
+    acceptanceRateRWMH <- acceptanceRateRWMH + 1
+    yt <- proposal
+    rwmh[i,] <- proposal
+  }else{
+    rwmh[i,] <- yt
+  }
+}
+ar <- acceptanceRateRWMH/sims
+cat("Acceptance rate ", 100*ar, "%\n")
+rwmh <- as.data.frame(rwmh)
+rwmh <- rwmh[floor(.1*sims):sims, ]
+summary(mcmc(rwmh))
+plot(mcmc(rwmh))
+hist(xtP1$V1)
+hist(xtP1$V2)
+
+#Q4 IMH====
+sims<-10000
+yt  <- t(rep(0,2))
+mu <- c(0, 0)
+sig <- diag(2)
+tau <- .0001/10000
+imh <- matrix(0, nrow=sims, ncol=2)
+acceptanceRateIMH <- 1
+for(i in 1:sims){
+  proposal <- rmvnorm(1, mu, sqrt(tau)*sig)
+  ratioProblem4 <- logproblem4(proposal)-logproblem4(yt)
+  ratioProposals <- dmvnorm(yt,mu, sqrt(tau)*sig, log=T) - 
+    dmvnorm(proposal, mu, sqrt(tau)*sig, log=T) 
+  alpha <- min( ratioProblem4 + ratioProposals, 0)
+  u <- runif(1,0,1)
+  if(log(u) < alpha){
+    acceptanceRateIMH <- acceptanceRateIMH + 1
+    yt <- proposal
+    imh[i,] <- proposal
+  }else{
+    imh[i,] <- yt
+  }
+}
+ar <- acceptanceRateIMH/sims
+cat("Acceptance rate ", 100*ar, "%\n")
+imh <- as.data.frame(imh)
+imh <- imh[floor(.1*sims):sims, ]
+plot(mcmc(imh))
+summary(mcmc(imh))
+hist(imh$V1)
+hist(imh$V2)
+
+sims<-10000
+yt  <- t(rep(0,2))
+mu <- c(0, 0)
+sig <- diag(2)
+tau <- .001
+imh <- matrix(0, nrow=sims, ncol=2)
+acceptanceRateIMH <- 1
+for(i in 1:sims){
+  proposal <- rmvnorm(1, mu, sqrt(tau)*sig)
+  ratioProblem4 <- logproblem4(proposal)-logproblem4(yt)
+  ratioProposals <- dimhprop(yt, proposal)
+  alpha <- min( ratioProblem4 + ratioProposals, 0)
+  u <- runif(1,0,1)
+  if(log(u) < alpha){
+    acceptanceRateIMH <- acceptanceRateIMH + 1
+    yt <- proposal
+    imh[i,] <- proposal
+  }else{
+    imh[i,] <- yt
+  }
+}
+ar<- acceptanceRateIMH/sims
+cat("Acceptance rate ", 100*ar, "%\n")
+imh <- as.data.frame(imh)
+imh <- imh[floor(.1*sims):sims, ]
+plot(mcmc(imh))
+summary(mcmc(imh))
+hist(imh$V1)
+hist(imh$V2)
+
+#Q4 MALA====
+
+sims<-10000
+yt = t(rep(0,2))
+tau <- .00025
+mu <- rep(0,2)
+sig <- diag(2)
+mala <- matrix(0, nrow=sims, ncol=2)
+acceptanceRateMALA <- 1
+for(i in 1:sims){
+  propmu <- tau*gradient(yt)
+  proposal <- yt + propmu  + (sqrt(tau*2) * rmvnorm(1,mu,sig))
+  ratioProblem4 <- logproblem4(proposal)-logproblem4(yt)
+  ratioProposals <- dprop(yt,proposal, tau, tau*gradient(proposal)) - dprop(proposal, yt, tau, propmu)
+  alpha <- min( ratioProblem4 + ratioProposals, 0)
+  u <- runif(1,0,1)
+  if(log(u) < alpha){
+    acceptanceRateMALA <- acceptanceRateMALA + 1
+    yt <- proposal
+    mala[i,] <- proposal
+  }else{
+    mala[i,] <- yt
+  }
+}
+ar <- acceptanceRateMALA/sims
+cat("Acceptance rate ", 100*ar, "%\n")
+mala <- as.data.frame(mala)
+mala <- mala[floor(.1*sims):sims, ]
+summary(mcmc(mala))
+plot(mcmc(mala))
+hist(mala[,1])
+hist(mala[,2])
+
+#Q4 HMC====
+leapfrog <- function(theta, r, epsilon){
+  rnew <- r + .5*epsilon * gradient(theta)
+  thetanew <- theta + epsilon*rnew
+  rnew <- rnew + .5*epsilon*gradient(thetanew)
+  out <- list(thetanew, rnew)
+  out
+}
+
+sims <- 10000
+theta <- matrix(0, nrow=sims, ncol=2)
+leaps <- 60
+epsilon <- .0001
+mu <- rep(0,2)
+sigma <- diag(2)
+acceptanceRateHMC <- 1
+for(i in 2:sims){
+  r0 <- rmvnorm(1, mu,sigma)
+  theta[i, ] <- theta[i-1, ]
+  thetanew <- theta[i-1, ]
+  rnew <- r0
+  for(j in 1:leaps){
+    thetaR <- leapfrog(thetanew, rnew, epsilon)
+    thetanew <- thetaR[[1]]
+    rnew <- thetaR[[2]]
+  }
+  alpha <- min(0, (logproblem4(thetanew) - .5*rnew%*%t(rnew)) - (logproblem4(theta[i-1,]) - .5*r0%*%t(r0)) )
+  u <- runif(1,0,1)
+  if(log(u) < alpha){
+    acceptanceRateHMC <- acceptanceRateHMC + 1
+    theta[i, ] <- thetanew
+  }
+}
+ar <- acceptanceRateHMC/sims
+cat("Acceptance rate ", 100*ar, "%\n")
+plot(mcmc(theta))
+hist(theta[,1])
+hist(theta[,2])
