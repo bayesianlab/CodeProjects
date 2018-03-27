@@ -1,3 +1,0 @@
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/build/CMakeFiles/rebuild_cache.dir
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/build/CMakeFiles/edit_cache.dir
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Stat225/build/CMakeFiles/stat.dir

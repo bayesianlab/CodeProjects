@@ -1,4 +1,4 @@
-function [B,LR,SSR,omega,residvar,resids] = VAR(y,p,printfl)
+ function [B,LR,SSR,omega,residvar,resids] = VAR(y,p,printfl)
 % [B,LR,SSR,omega,residvar,resids] = VAR(y,p,printfl)
 % VAR uses equation-by-equation OLS to generate coefficient
 %   estimates for a VAR(p) model of the matrix of time series y.

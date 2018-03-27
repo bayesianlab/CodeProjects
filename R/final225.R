@@ -1,4 +1,6 @@
 #Q1 Part1==== 
+library(BayesFactor)
+library(aod)
 library(horseshoe)
 library(BoomSpikeSlab)
 library(readr)
@@ -117,6 +119,7 @@ cat("Significant X's \n", which(abs(t(mles/ses)) > qt(.95, rows_cols[1] - rows_c
 head(modelFrequency[order(modelFrequency$Freq, decreasing = TRUE),])
 HPDinterval(mcmc(betasMat))
 summary((mcmc(betasMat)))
+plot(mcmc(betasMat))
 #Q1 Part 2====
 
 bugdata <- list(y=as.numeric(y), X=X, N =rows_cols[1], J = rows_cols[2])
@@ -513,6 +516,7 @@ Xrace <- as.matrix(cbind(X,race))
 betaMatPG <- as.data.frame(gibbsPolyaGamma(y,Xrace,sims))
 betaMatPG <- betaMatPG[floor(.1*sims):sims,]
 summary(mcmc(betaMatPG))
+
 betaPgNoConst <- summary(mcmc(betaMatPG))[[1]][,1]
 Xbar <- colMeans(Xrace)
 XbarRace2 <- Xbar
@@ -552,7 +556,8 @@ exp(lag - lagrace)
 exp(lpg - lpgrace)
 
 colnames(Xrace) <- c("PSA", "GS", "Race")
-summary(lm(y~Xrace))
+
+summary(glm(y~Xrace, family=binomial(link="probit")))
 
 #Q4 ====
 problem4 <- function(x, eta1=4,eta2=5,eta3=5, B=10 ){
