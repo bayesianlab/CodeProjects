@@ -8,6 +8,7 @@
 #include <iostream>
 #include <limits>
 #include <random>
+#include <math.h>
 
 using namespace Eigen;
 using namespace std;
@@ -21,6 +22,7 @@ public:
   double inf;
   Dist();
   boost::mt19937 rseed;
+  std::random_device rd;
   boost::math::normal normalDistribution;
   boost::random::uniform_01<> u;
 
@@ -269,6 +271,8 @@ public:
                VectorXd &zstar, const double df, const VectorXd &mu,
                const MatrixXd &Sigma, const VectorXd &y, const MatrixXd &X,
                const int sims, const int burnin);
+
+  MatrixXd wishartrnd(const MatrixXd &Sigma, const int df);
 };
 
 template <typename D>

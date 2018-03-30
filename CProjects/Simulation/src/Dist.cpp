@@ -7,6 +7,7 @@
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/uniform_01.hpp>
+#include <boost/math/distributions/chi_squared.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <cstdint>
 #include <ctime>
@@ -924,7 +925,7 @@ double Dist::logmvnpdfPrecision(const VectorXd &mu, const MatrixXd &precision,
 }
 
 VectorXd Dist::generateChiSquaredVec(double df, int rows) {
-  std::mt19937 gen(now);
+  std::mt19937 gen(rd());
   std::chi_squared_distribution<double> csd(df);
   VectorXd chiSqs(rows);
   for (int i = 0; i < rows; i++) {
@@ -934,7 +935,7 @@ VectorXd Dist::generateChiSquaredVec(double df, int rows) {
 }
 
 MatrixXd Dist::generateChiSquaredMat(double df, int rows, int cols) {
-  std::mt19937 gen(now);
+  std::mt19937 gen(rd());
   std::chi_squared_distribution<double> csd(df);
   MatrixXd chiSqs(rows, cols);
   for (int i = 0; i < rows; i++) {
@@ -973,7 +974,7 @@ VectorXd Dist::studenttrnd(const double mu, const double sigma,
 }
 
 double Dist::truncTrnd(double a, double b, double mu, double sigma, double nu) {
-  std::mt19937 gen(now);
+  std::mt19937 gen(rd());
   std::chi_squared_distribution<double> csd(nu);
   double w = sqrt(csd(gen) / nu);
   double alpha, beta;
@@ -1411,5 +1412,26 @@ MatrixXd Dist::gibbsTKernel(const VectorXd &a, const VectorXd &b,
       sigVect(Jm1), zstar(Jm1));
   kernel.col(Jm1).fill(lastColumn);
   return kernel;
+}
+
+MatrixXd Dist::wishartrnd(const MatrixXd &Sigma, const int df) {
+  std::mt19937 rng(rd());
+  MatrixXd lowerC = Sigma.llt().matrixL();
+  int cols = Sigma.cols();
+  int rows = Sigma.rows();
+  MatrixXd wishartvariates(cols, rows);
+  wishartvariates.setZero();
+  for (int i = 0; i < rows; i++) {
+    std::chi_squared_distribution<double> csd(df - i );
+    for (int j = 0; j <= i; j++) {
+      if (i == j) {
+        wishartvariates(i, j) = sqrt(csd(rng));
+      } else {
+        wishartvariates(i, j) = normrnd(0, 1);
+      }
+    }
+  }
+  return lowerC * wishartvariates * wishartvariates.transpose() *
+         lowerC.transpose();
 }
 

@@ -182,163 +182,59 @@ Dist/fast:
 	$(MAKE) -f build/src/DistLib/CMakeFiles/Dist.dir/build.make build/src/DistLib/CMakeFiles/Dist.dir/build
 .PHONY : Dist/fast
 
-#=============================================================================
-# Target rules for targets named CreateSampleData
+src/timeseries.o: src/timeseries.cpp.o
 
-# Build rule for target.
-CreateSampleData: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 CreateSampleData
-.PHONY : CreateSampleData
-
-# fast build rule for target.
-CreateSampleData/fast:
-	$(MAKE) -f build/src/CreateSampleDataLib/CMakeFiles/CreateSampleData.dir/build.make build/src/CreateSampleDataLib/CMakeFiles/CreateSampleData.dir/build
-.PHONY : CreateSampleData/fast
-
-#=============================================================================
-# Target rules for targets named Crb
-
-# Build rule for target.
-Crb: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Crb
-.PHONY : Crb
-
-# fast build rule for target.
-Crb/fast:
-	$(MAKE) -f build/src/CrbLib/CMakeFiles/Crb.dir/build.make build/src/CrbLib/CMakeFiles/Crb.dir/build
-.PHONY : Crb/fast
-
-#=============================================================================
-# Target rules for targets named Ask
-
-# Build rule for target.
-Ask: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Ask
-.PHONY : Ask
-
-# fast build rule for target.
-Ask/fast:
-	$(MAKE) -f build/src/AskLib/CMakeFiles/Ask.dir/build.make build/src/AskLib/CMakeFiles/Ask.dir/build
-.PHONY : Ask/fast
-
-#=============================================================================
-# Target rules for targets named Ark
-
-# Build rule for target.
-Ark: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Ark
-.PHONY : Ark
-
-# fast build rule for target.
-Ark/fast:
-	$(MAKE) -f build/src/ArkLib/CMakeFiles/Ark.dir/build.make build/src/ArkLib/CMakeFiles/Ark.dir/build
-.PHONY : Ark/fast
-
-#=============================================================================
-# Target rules for targets named Crt
-
-# Build rule for target.
-Crt: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Crt
-.PHONY : Crt
-
-# fast build rule for target.
-Crt/fast:
-	$(MAKE) -f build/src/CrtLib/CMakeFiles/Crt.dir/build.make build/src/CrtLib/CMakeFiles/Crt.dir/build
-.PHONY : Crt/fast
-
-#=============================================================================
-# Target rules for targets named Imp
-
-# Build rule for target.
-Imp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Imp
-.PHONY : Imp
-
-# fast build rule for target.
-Imp/fast:
-	$(MAKE) -f build/src/ImpLib/CMakeFiles/Imp.dir/build.make build/src/ImpLib/CMakeFiles/Imp.dir/build
-.PHONY : Imp/fast
-
-#=============================================================================
-# Target rules for targets named Lrg
-
-# Build rule for target.
-Lrg: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Lrg
-.PHONY : Lrg
-
-# fast build rule for target.
-Lrg/fast:
-	$(MAKE) -f build/src/LinRegGibbsLib/CMakeFiles/Lrg.dir/build.make build/src/LinRegGibbsLib/CMakeFiles/Lrg.dir/build
-.PHONY : Lrg/fast
-
-#=============================================================================
-# Target rules for targets named ReadCsv
-
-# Build rule for target.
-ReadCsv: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ReadCsv
-.PHONY : ReadCsv
-
-# fast build rule for target.
-ReadCsv/fast:
-	$(MAKE) -f build/src/ReadCsvLib/CMakeFiles/ReadCsv.dir/build.make build/src/ReadCsvLib/CMakeFiles/ReadCsv.dir/build
-.PHONY : ReadCsv/fast
-
-src/eigenshorts.o: src/eigenshorts.cpp.o
-
-.PHONY : src/eigenshorts.o
+.PHONY : src/timeseries.o
 
 # target to build an object file
-src/eigenshorts.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.o
-.PHONY : src/eigenshorts.cpp.o
+src/timeseries.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/timeseries.cpp.o
+.PHONY : src/timeseries.cpp.o
 
-src/eigenshorts.i: src/eigenshorts.cpp.i
+src/timeseries.i: src/timeseries.cpp.i
 
-.PHONY : src/eigenshorts.i
+.PHONY : src/timeseries.i
 
 # target to preprocess a source file
-src/eigenshorts.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.i
-.PHONY : src/eigenshorts.cpp.i
+src/timeseries.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/timeseries.cpp.i
+.PHONY : src/timeseries.cpp.i
 
-src/eigenshorts.s: src/eigenshorts.cpp.s
+src/timeseries.s: src/timeseries.cpp.s
 
-.PHONY : src/eigenshorts.s
+.PHONY : src/timeseries.s
 
 # target to generate assembly for a file
-src/eigenshorts.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.s
-.PHONY : src/eigenshorts.cpp.s
+src/timeseries.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/timeseries.cpp.s
+.PHONY : src/timeseries.cpp.s
 
-src/rentalmain.o: src/rentalmain.cpp.o
+src/varmain.o: src/varmain.cpp.o
 
-.PHONY : src/rentalmain.o
+.PHONY : src/varmain.o
 
 # target to build an object file
-src/rentalmain.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/rentalmain.cpp.o
-.PHONY : src/rentalmain.cpp.o
+src/varmain.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/varmain.cpp.o
+.PHONY : src/varmain.cpp.o
 
-src/rentalmain.i: src/rentalmain.cpp.i
+src/varmain.i: src/varmain.cpp.i
 
-.PHONY : src/rentalmain.i
+.PHONY : src/varmain.i
 
 # target to preprocess a source file
-src/rentalmain.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/rentalmain.cpp.i
-.PHONY : src/rentalmain.cpp.i
+src/varmain.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/varmain.cpp.i
+.PHONY : src/varmain.cpp.i
 
-src/rentalmain.s: src/rentalmain.cpp.s
+src/varmain.s: src/varmain.cpp.s
 
-.PHONY : src/rentalmain.s
+.PHONY : src/varmain.s
 
 # target to generate assembly for a file
-src/rentalmain.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/rentalmain.cpp.s
-.PHONY : src/rentalmain.cpp.s
+src/varmain.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/varmain.cpp.s
+.PHONY : src/varmain.cpp.s
 
 # Help Target
 help:
@@ -354,20 +250,12 @@ help:
 	@echo "... install/local"
 	@echo "... mvt"
 	@echo "... Dist"
-	@echo "... CreateSampleData"
-	@echo "... Crb"
-	@echo "... Ask"
-	@echo "... Ark"
-	@echo "... Crt"
-	@echo "... Imp"
-	@echo "... Lrg"
-	@echo "... ReadCsv"
-	@echo "... src/eigenshorts.o"
-	@echo "... src/eigenshorts.i"
-	@echo "... src/eigenshorts.s"
-	@echo "... src/rentalmain.o"
-	@echo "... src/rentalmain.i"
-	@echo "... src/rentalmain.s"
+	@echo "... src/timeseries.o"
+	@echo "... src/timeseries.i"
+	@echo "... src/timeseries.s"
+	@echo "... src/varmain.o"
+	@echo "... src/varmain.i"
+	@echo "... src/varmain.s"
 .PHONY : help
 
 

@@ -6,5 +6,5 @@ CXX_FLAGS = -O3 -O3 -DNDEBUG   -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include" 
+CXX_INCLUDES = -I"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include" -I/usr/local/include/eigen3 
 

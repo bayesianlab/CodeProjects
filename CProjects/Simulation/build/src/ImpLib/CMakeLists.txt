@@ -7,8 +7,9 @@ set(CMAKE_CXX_STANDARD 11)
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 set( CMAKE_BUILD_TYPE Release )
 set(CMAKE_CXX_FLAGS "-O3")
+set(EIGEN "/usr/local/include/eigen3/Eigen")
 
-include_directories(${CMAKE_SOURCE_DIR}/include )
+include_directories(${CMAKE_SOURCE_DIR}/include ${EIGEN})
 
 add_library(Imp STATIC ${CMAKE_SOURCE_DIR}/src/Importance.cpp)
 install(TARGETS Imp DESTINATION ${CMAKE_SOURCE_DIR}/bin)
