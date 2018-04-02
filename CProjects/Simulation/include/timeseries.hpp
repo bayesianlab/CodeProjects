@@ -3,6 +3,8 @@
 #ifndef TIMESERIES_H
 #define TIMESERIES_H
 #include <Eigen/Dense>
+#include "Dist.hpp"
+
 using namespace std;
 using namespace Eigen;
 

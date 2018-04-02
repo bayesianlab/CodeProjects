@@ -1,1 +1,1 @@
-/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/mvt.dir/src/varmain.cpp.o CMakeFiles/mvt.dir/src/timeseries.cpp.o  -o mvt build/src/DistLib/libDist.a 
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  -O3 -g -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/mvt.dir/src/varmain.cpp.o CMakeFiles/mvt.dir/src/timeseries.cpp.o  -o mvt build/src/DistLib/libDist.a 

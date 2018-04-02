@@ -101,16 +101,8 @@ MatrixXd Dist::normrnd(double mu, double sig, int N, int J) {
   return Z;
 }
 
-MatrixXd Dist::mvnrnd(VectorXd &mu, MatrixXd &sig, int N, int J) {
-  MatrixXd Z = normrnd(0., 1., N, J);
-  LLT<MatrixXd> lltOfA(sig);
-  MatrixXd L = lltOfA.matrixL();
-  Z = (L * Z.transpose()).transpose();
-  Z.rowwise() += mu.transpose();
-  return Z;
-}
-
-MatrixXd Dist::mvnrnd(const VectorXd &mu, const MatrixXd &sig, int N, int J) {
+MatrixXd Dist::mvnrnd(const VectorXd &mu, const MatrixXd &sig, int N) {
+  int J = sig.cols();
   MatrixXd Z = normrnd(0., 1., N, J);
   LLT<MatrixXd> lltOfA(sig);
   MatrixXd L = lltOfA.matrixL();
@@ -952,7 +944,7 @@ MatrixXd Dist::mvtrunctrnd(const VectorXd &mu, const MatrixXd &Sigma,
   double c;
   VectorXd chis = generateChiSquaredVec(nu, N);
   VectorXd z = MatrixXd::Zero(J,1);
-  MatrixXd Normals = mvnrnd(z, Sigma, N, J);
+  MatrixXd Normals = mvnrnd(z, Sigma, N);
   MatrixXd samp(N,J); 
   for (int i = 0; i < N; i++) {
 	  c = sqrt(chis(i)/nu);

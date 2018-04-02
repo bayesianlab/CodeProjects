@@ -45,11 +45,9 @@ public:
 
   MatrixXd normrnd(double, double, int, int);
 
-  MatrixXd mvnrnd(VectorXd &mu, MatrixXd &sig, int, int);
-
   MatrixXd mvnrnd2(VectorXd &mu, const Ref<const MatrixXd> &sig, int, int);
 
-  MatrixXd mvnrnd(const VectorXd &mu, const MatrixXd &sig, int, int);
+  MatrixXd mvnrnd(const VectorXd &mu, const MatrixXd &sig, int N);
 
   double tnormrnd(double, double, double, double);
 

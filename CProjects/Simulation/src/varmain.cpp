@@ -1,10 +1,8 @@
 #include "Dist.hpp"
 #include "LinRegGibbs.hpp"
-#include "eigenshorts.hpp"
-#include "read_csv_to_eigen.hpp"
 #include "timeseries.hpp"
 #include <Eigen/Dense>
-#include <ctime>
+#include <unsupported/Eigen/KroneckerProduct>
 #include <fstream>
 #include <iostream>
 #include <limits>
@@ -12,8 +10,6 @@
 #include <random>
 #include <sstream>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string>
 
 using namespace std;
 using namespace Eigen;
@@ -54,5 +50,13 @@ int main() {
     }
     cout << c / 100.0 << endl;
   }
+  MatrixXd A(2,2);
+  A << 1, .5, .5, 1;
+  MatrixXd B = MatrixXd::Identity(2,2); 
+  MatrixXd T = kroneckerProduct(B, A);
+  cout << T << endl;
+  MatrixXd X = d.normrnd(0, 1, 2, 2);
+  Map<VectorXd> y(X.data(), X.size());
+  cout << y << endl;
   return 1;
 }

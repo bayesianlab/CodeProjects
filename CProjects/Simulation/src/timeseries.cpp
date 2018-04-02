@@ -1,23 +1,8 @@
 #include "Dist.hpp"
-#include "Importance.hpp"
-#include "LinRegGibbs.hpp"
-#include "ThreeD.hpp"
-#include "ark.hpp"
-#include "ask.hpp"
-#include "crb.hpp"
-#include "crt.hpp"
 #include "timeseries.hpp"
-#include "read_csv_to_eigen.hpp"
 #include <Eigen/Dense>
-#include <ctime>
-#include <fstream>
-#include <iostream>
-#include <limits>
 #include <math.h>
-#include <sstream>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string>
 
 using namespace std;
 using namespace Eigen;
@@ -37,4 +22,5 @@ MatrixXd TimeSeries::VAR(const MatrixXd &Yt, int lag) {
 	}
 	return Phi;
 }
+
 
