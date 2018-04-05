@@ -3,7 +3,6 @@
 
 build/src/DistLib/CMakeFiles/Dist.dir/__/__/__/src/Dist.cpp.o
  ../include/Dist.hpp
- ../include/eigenshorts.hpp
  /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp
  /usr/local/include/eigen3/Eigen/Cholesky
  /usr/local/include/eigen3/Eigen/Core
@@ -203,6 +202,7 @@ build/src/DistLib/CMakeFiles/Dist.dir/__/__/__/src/Dist.cpp.o
  /usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD_LAPACKE.h
  /usr/local/include/eigen3/Eigen/src/SVD/SVDBase.h
  /usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h
+ /usr/local/include/eigen3/Eigen/src/SparseCore/SparseUtil.h
  /usr/local/include/eigen3/Eigen/src/misc/Image.h
  /usr/local/include/eigen3/Eigen/src/misc/Kernel.h
  /usr/local/include/eigen3/Eigen/src/misc/RealSvd2x2.h
@@ -216,3 +216,5 @@ build/src/DistLib/CMakeFiles/Dist.dir/__/__/__/src/Dist.cpp.o
  /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
  /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+ /usr/local/include/eigen3/unsupported/Eigen/KroneckerProduct
+ /usr/local/include/eigen3/unsupported/Eigen/src/KroneckerProduct/KroneckerTensorProduct.h

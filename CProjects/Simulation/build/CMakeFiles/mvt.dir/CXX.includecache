@@ -31,10 +31,10 @@ Dist.hpp
 ../include/Dist.hpp
 
 ../include/timeseries.hpp
-Eigen/Dense
--
 Dist.hpp
 ../include/Dist.hpp
+Eigen/Dense
+-
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/timeseries.cpp
 Dist.hpp
@@ -42,6 +42,8 @@ Dist.hpp
 timeseries.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/timeseries.hpp
 Eigen/Dense
+-
+unsupported/Eigen/KroneckerProduct
 -
 math.h
 -

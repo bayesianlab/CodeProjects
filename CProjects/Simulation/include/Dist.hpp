@@ -21,6 +21,7 @@ private:
 public:
   double inf;
   Dist();
+  Dist(int x);
   boost::mt19937 rseed;
   std::random_device rd;
   boost::math::normal normalDistribution;
@@ -271,6 +272,9 @@ public:
                const int sims, const int burnin);
 
   MatrixXd wishartrnd(const MatrixXd &Sigma, const int df);
+
+  MatrixXd MatricVariateRnd(const MatrixXd &Mu, const MatrixXd &Sigma,
+                   const MatrixXd &V);
 };
 
 template <typename D>

@@ -202,6 +202,7 @@ CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/SVD
 CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/SVD/JacobiSVD_LAPACKE.h
 CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/SVD/SVDBase.h
 CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h
+CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/SparseCore/SparseUtil.h
 CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/misc/Image.h
 CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/misc/Kernel.h
 CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/misc/RealSvd2x2.h
@@ -215,6 +216,8 @@ CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/plu
 CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
 CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/unsupported/Eigen/KroneckerProduct
+CMakeFiles/mvt.dir/src/timeseries.cpp.o: /usr/local/include/eigen3/unsupported/Eigen/src/KroneckerProduct/KroneckerTensorProduct.h
 
 CMakeFiles/mvt.dir/src/varmain.cpp.o: ../include/Dist.hpp
 CMakeFiles/mvt.dir/src/varmain.cpp.o: ../include/LinRegGibbs.hpp

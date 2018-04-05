@@ -14,7 +14,7 @@
 #include <limits>
 #include <math.h>
 #include <random>
-#include "eigenshorts.hpp"
+#include <unsupported/Eigen/KroneckerProduct>
 
 using namespace Eigen;
 using namespace std;
@@ -27,6 +27,13 @@ using namespace std;
 Dist::Dist() {
   now = time(0);
   rseed.seed(static_cast<uint32_t>(now));
+  inf = numeric_limits<double>::max();
+  ROBERT_LIMIT = 5000000;
+}
+
+Dist::Dist(int x) {
+  now = time(0);
+  rseed.seed(x);
   inf = numeric_limits<double>::max();
   ROBERT_LIMIT = 5000000;
 }
@@ -600,7 +607,6 @@ MatrixXd Dist::ghkT(const VectorXd &a, const VectorXd &b,
   VectorXd beta = b - (LinearConstraints * mu);
   double update, aj, bj;
   for (int sim = 0; sim < sims; sim++) {
-	  double p = 0;
     for (int j = 0; j < J; j++) {
       update = offDiagMat.row(j) * sample.row(sim).transpose();
       aj = (alpha(j) - update) / lowerC(j, j);
@@ -1425,5 +1431,16 @@ MatrixXd Dist::wishartrnd(const MatrixXd &Sigma, const int df) {
   }
   return lowerC * wishartvariates * wishartvariates.transpose() *
          lowerC.transpose();
+}
+
+MatrixXd Dist::MatricVariateRnd(const MatrixXd &Mu, const MatrixXd &Sigma,
+		const MatrixXd &V) {
+  Map<const VectorXd> VecMu(Mu.data(), Mu.size());	
+  int J = Sigma.cols();
+  MatrixXd SigmaV = kroneckerProduct(V, Sigma);
+  cout << SigmaV << endl;
+  VectorXd VecSample = mvnrnd(VecMu, SigmaV, 1).transpose();
+  Map<MatrixXd> Sample(VecSample.data(), J, J) ;
+  return Sample;
 }
 
