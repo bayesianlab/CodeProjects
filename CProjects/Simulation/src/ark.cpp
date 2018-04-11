@@ -76,7 +76,7 @@ MatrixXd Ark::arSample(const VectorXd &ll, const VectorXd &ul, const VectorXd &m
   maxit = 0;
   MatrixXd t(1, J);
   while (n < sSize) {
-    t = mvnrnd(mu, sigma, 1, J).array();
+    t = mvnrnd(mu, sigma, 1).array();
     if ((t.array() > ll.transpose().array()).all() +
             (t.array() < ul.transpose().array()).all() ==
         2) {

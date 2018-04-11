@@ -8,6 +8,12 @@
 using namespace Eigen;
 using namespace std;
 
+Crb::Crb(){};
+
+Crb::Crb(int x){
+	rseed.seed(x);
+}
+
 double Crb::getfzStarMeanAtCol(double a, double b, MatrixXd &sample, int col,
                                double sigma, double zStar) {
   VectorXd temp(sample.rows());

@@ -275,6 +275,8 @@ public:
 
   MatrixXd MatricVariateRnd(const MatrixXd &Mu, const MatrixXd &Sigma,
                    const MatrixXd &V);
+
+  MatrixXd CovToCorr(const MatrixXd &Cov);
 };
 
 template <typename D>

@@ -177,115 +177,96 @@ int main() {
     VectorXd ssdInteraction = ss.array() * sd.array();
     VectorXd sgirldInteraction = (1 - ss.array()) * sd.array();
     MatrixXd sX(32, 4);
-    sX << ssrInteraction, sgirlInteraction, ssdInteraction, sgirldInteraction;
     X << constant, srInteraction, girlrInteraction, sdInteraction,
         girldInteraction;
     VectorXd MaximumLikelihoodEstsBeta =
         (X.transpose() * X).inverse() * X.transpose() * y;
     VectorXd smles = (sX.transpose() * sX).inverse() * sX.transpose() * sy;
-    cout << "Standardized X mles" << endl;
-    cout << smles << endl;
     VectorXd residuals = y - X * MaximumLikelihoodEstsBeta;
-    VectorXd sres = sy - sX * smles;
-    double ss2hat = (sres.transpose() * sres).value() / sX.rows();
     double s2hat = (residuals.transpose() * residuals).value() / (X.rows());
     MatrixXd MaximumLikelihoodEstsSigma = s2hat * (X.transpose() * X).inverse();
-    MatrixXd mleSigma = ss2hat * (sX.transpose() * sX).inverse();
     cout << "MLES" << endl;
     VectorXd MLES(X.cols() + 1);
     VectorXd sMles(smles.size() + 1);
-    sMles << ss2hat, smles;
     MLES << s2hat, MaximumLikelihoodEstsBeta;
     printvec(MLES);
     MatrixXd V(X.cols() + 1, X.cols() + 1);
-    MatrixXd sV(sMles.size(), sMles.size());
-    sV.setZero();
     V.setZero();
     V.block(1, 1, X.cols(), X.cols()) = MaximumLikelihoodEstsSigma;
-    sV.block(1, 1, sX.cols(), sX.cols()) = mleSigma;
-    sV(0, 0) = (2 * pow(ss2hat, 2)) / (sX.rows());
     V(0, 0) = (2 * pow(s2hat, 2)) / (X.rows());
+	MatrixXd Vdiag = V.diagonal().array().pow(-.5).matrix().asDiagonal();
+	MatrixXd Vcorr = Vdiag * V * Vdiag;
+	cout << Vcorr << endl;
     int J = V.cols();
-    int sJ = sV.cols();
-    cout << sV << endl;
     VectorXd b0 = MaximumLikelihoodEstsBeta;
     VectorXd sb0(sX.cols());
     sb0.setZero();
-    MatrixXd B0 = 1000 * MatrixXd::Identity(J - 1, J - 1);
-    MatrixXd sB0 = MatrixXd::Identity(sJ - 1, sJ - 1);
+    MatrixXd B0 = 100 * MatrixXd::Identity(J - 1, J - 1);
     double a0 = 3;
     double d0 = 5;
     // Constraints
     VectorXd a(X.cols() + 1);
     VectorXd b(X.cols() + 1);
-    VectorXd sa(sMles.size());
-    VectorXd sb(sMles.size());
     MatrixXd I = MatrixXd::Identity(X.cols() + 1, X.cols() + 1);
-    MatrixXd sI = MatrixXd::Identity(sX.cols()+1, sX.cols()+1);
     a << 0, -inf, 0, 0, -inf, -inf;
     b << inf, inf, inf, inf, 0, 0;
 
-    sa << 0, 0, 0, -inf, -inf;
-    sb << inf, inf, inf, 0, 0;
     MatrixXd Z = MatrixXd::Zero(6, 1);
-    MatrixXd Iden = I;
-    Iden.array().colwise() *= V.diagonal().array().pow(-.5);
-    MatrixXd Test = Iden * V * Iden;
 
-    int simulations = 11000;
+    int simulations = 1100;
     int burnin = .1 * simulations;
-    int repititions = 500;
+    int repititions = 50;
     int batches = .1 * repititions;
-
+	
     cout << "Modified Gelfand Dey" << endl;
-    LinRegGibbs lrg;
-    lrg.runSimModified(repititions, batches, a, b, MLES, V, y, X, b0,
+    LinRegGibbs lrg(1);
+    lrg.runSimModified(repititions, batches, a, b, MLES, Vcorr, y, X, b0,
                        B0, a0, d0, simulations, burnin);
     cout << "Modified Gelfand Dey T" << endl;
-    lrg.runTsimModified(repititions, batches, a, b, I, J + 1, MLES, V, y, X, b0,
+    lrg.runTsimModified(repititions, batches, a, b, I, J + 1, MLES, Vcorr, y, X, b0,
                         B0, a0, d0, simulations, burnin);
-    Crb crb;
+    Crb crb(1);
     cout << "Crb" << endl;
-    crb.runSim(MLES, V, y, X, a, b, simulations, burnin, repititions, batches,
+    crb.runSim(MLES, Vcorr, y, X, a, b, simulations, burnin, repititions, batches,
                b0, B0, a0, d0);
 
     cout << "Crb Student T" << endl;
-    crb.runTsim(MLES, V, J + 1, y, X, a, b, I, b0, B0, a0, d0, simulations,
+    crb.runTsim(MLES, Vcorr, J + 1, y, X, a, b, I, b0, B0, a0, d0, simulations,
                 burnin, repititions, batches);
 
     Crt crt;
     cout << "Crt" << endl;
-    crt.runSim(repititions, batches, a, b, MLES, V, y, X, simulations,
+    crt.runSim(repititions, batches, a, b, MLES, Vcorr, y, X, simulations,
                burnin, b0, B0, a0, d0);
 
     cout << "Crt Student T" << endl;
-    crt.runTsim(repititions, batches, a, b, I, J + 1, MLES, V, y, X,
+    crt.runTsim(repititions, batches, a, b, I, J + 1, MLES, Vcorr, y, X,
                 simulations, burnin, b0, B0, a0, d0);
 
     Ask ask;
     cout << "Ask" << endl;
-    ask.runSim(repititions, batches, a, b, MLES, V, y, X, simulations, burnin,
+    ask.runSim(repititions, batches, a, b, MLES, Vcorr, y, X, simulations, burnin,
                burnin, b0, B0, a0, d0);
     cout << "Ask Student T" << endl;
     VectorXd weight(J + 1);
     weight.fill(.5);
-    ask.runTsim(repititions, batches, a, b, I, J + 1, MLES, V, y, X,
+    ask.runTsim(repititions, batches, a, b, I, J + 1, MLES, Vcorr, y, X,
                 simulations, burnin, burnin, .5, b0, B0, a0, d0, weight);
 
     Importance imp;
     cout << "Importance " << endl;
-    imp.runSim(repititions, batches, MLES, V, y, X, a, b, simulations, burnin,
+    imp.runSim(repititions, batches, MLES, Vcorr, y, X, a, b, simulations, burnin,
                b0, B0, a0, d0);
     cout << "Importance Student T proposal" << endl;
-    imp.runTsim(repititions, batches, MLES, V, y, X, a, b, I, J + 1,
+    imp.runTsim(repititions, batches, MLES, Vcorr, y, X, a, b, I, J + 1,
                 simulations, b0, B0, a0, d0);
 
     Ark ark;
     cout << "Ark" << endl;
-    ark.runSim(repititions, batches, MLES, V, y, X, a, b, simulations, 100000,
+    ark.runSim(repititions, batches, MLES, Vcorr, y, X, a, b, simulations, 100000,
                b0, B0, a0, d0);
     cout << "Ark student t" << endl;
-    ark.runTsim(repititions, batches, a, b, I, J + 1, MLES, V, y, X,
+    ark.runTsim(repititions, batches, a, b, I, J + 1, MLES, Vcorr, y, X,
                 simulations, 100000, b0,B0, a0, d0);
   }
   {

@@ -6,6 +6,10 @@ using namespace Eigen;
 
 class Crb : public Dist {
 public:
+  Crb();
+  
+  Crb(int x);
+
   MatrixXd chibRao(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
                    const MatrixXd &sigma, int sims, int burnin, int rrSims,
                    int rrburnin);
@@ -40,8 +44,8 @@ public:
 
   void runSim(VectorXd &mu, MatrixXd &sigma, VectorXd &y, MatrixXd &X,
               VectorXd &ll, VectorXd &ul, int sims, int burnin, int nSims,
-              int batches, const VectorXd &b0, const MatrixXd &B0, const double a0,
-               const double d0);
+              int batches, const VectorXd &b0, const MatrixXd &B0,
+              const double a0, const double d0);
 
   void runTsim(VectorXd &betas, MatrixXd &sigma, double df, VectorXd &y,
                MatrixXd &X, VectorXd &ll, VectorXd &ul,

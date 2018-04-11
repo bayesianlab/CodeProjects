@@ -5,6 +5,12 @@
 
 using namespace Eigen;
 
+LinRegGibbs::LinRegGibbs(){};
+
+LinRegGibbs::LinRegGibbs(int x){
+	rseed.seed(x);
+}
+
 void LinRegGibbs::lrCondPriorsGibbs(const VectorXd &y, const MatrixXd &x,
                                     const int gibbsSteps, const int burnin,
                                     const VectorXd &b0, const MatrixXd &B0,
@@ -38,7 +44,7 @@ MatrixXd LinRegGibbs::gibbsLR(const VectorXd &y, const MatrixXd &x,
   aG = a0 + N;
   for (int i = 1; i < gibbsSteps; i++) {
     gibbsBetaUpdates(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0, i);
-    beta.row(i) = mvnrnd(betaBar, B1, 1, J);
+    beta.row(i) = mvnrnd(betaBar, B1, 1);
     dG = d0 + y.array().pow(2).sum() + (b0.transpose() * B0inv * b0) -
          (betaBar.transpose() * B1.inverse() * betaBar);
     sigma2(i) = igammarnd(aG * .5, 1. / (.5 * dG));
@@ -70,7 +76,7 @@ LinRegGibbs::gibbsLRCondtionalPrior(const VectorXd &y, const MatrixXd &x,
     gibbsBetaUpdatesCondtionalPrior(B1, betaBar, sigma2, XpX, Xpy, B0inv, b0,
                                     i);
     store = sigma2(i - 1) * B1;
-    beta.row(i) = mvnrnd(betaBar, store, 1, J);
+    beta.row(i) = mvnrnd(betaBar, store, 1);
     dG = d0 + (y - (x * beta.row(i).transpose())).array().pow(2).sum();
     sigma2(i) = igammarnd(aG / 2., 2. / dG);
   }

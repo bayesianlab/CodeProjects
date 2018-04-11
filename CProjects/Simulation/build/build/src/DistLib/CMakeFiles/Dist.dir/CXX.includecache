@@ -29,6 +29,8 @@ math.h
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
+Eigen/Dense
+-
 assert.h
 -
 boost/math/distributions/exponential.hpp

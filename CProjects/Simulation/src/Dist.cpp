@@ -1,4 +1,5 @@
 #include "Dist.hpp"
+#include <Eigen/Dense>
 #include <assert.h>
 #include <boost/math/distributions/exponential.hpp>
 #include <boost/math/distributions/normal.hpp>
@@ -489,7 +490,7 @@ MatrixXd Dist::ghkLinearConstraints(const VectorXd &a, const VectorXd &b, const 
   }
   sample = (lowerC * sample.transpose()).transpose();
   sample.rowwise() += mu.transpose();
-  return sample.bottomRows(sims).matrix();
+  return sample;
 }
 
 
@@ -522,7 +523,7 @@ MatrixXd Dist::ghkLinearConstraints(const VectorXd &a, const VectorXd &b,
   }
   sample = (lowerC * sample.transpose()).transpose();
   sample.rowwise() += mu.transpose();
-  return sample.bottomRows(sims).matrix();
+  return sample;
 }
 
 MatrixXd Dist::returnNormalizingConstants(const VectorXd &a, const VectorXd &b, const VectorXd &mu,
@@ -550,7 +551,7 @@ MatrixXd Dist::returnNormalizingConstants(const VectorXd &a, const VectorXd &b, 
   }
   sample = (lowerC * sample.transpose()).transpose();
   sample.rowwise() += mu.transpose();
-  return sample.bottomRows(sims).matrix();
+  return sample;
 }
 
 void Dist::runSim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
@@ -617,7 +618,7 @@ MatrixXd Dist::ghkT(const VectorXd &a, const VectorXd &b,
   sample =
       (LinearConstraints.inverse() * (lowerC * sample.transpose())).transpose();
   sample.rowwise() += mu.transpose();
-  return sample.bottomRows(sims ).matrix();
+  return sample;
 }
 
 MatrixXd Dist::ghkT(const VectorXd &a, const VectorXd &b,
@@ -1366,7 +1367,7 @@ double Dist::pdfavg(const Ref<const VectorXd> &logpdf) {
 double Dist::pdfmean(const Ref<const VectorXd> &logpdf) {
   double maxval = logpdf.maxCoeff();
   int N = logpdf.size();
-  return -log(N) + (log(exp(logpdf.array() - maxval).sum()) + maxval);
+  return -log(N) + maxval + log(exp(logpdf.array() - maxval).sum());
 }
 
 
@@ -1442,5 +1443,11 @@ MatrixXd Dist::MatricVariateRnd(const MatrixXd &Mu, const MatrixXd &Sigma,
   VectorXd VecSample = mvnrnd(VecMu, SigmaV, 1).transpose();
   Map<MatrixXd> Sample(VecSample.data(), J, J) ;
   return Sample;
+}
+
+MatrixXd Dist::CovToCorr(const MatrixXd &Cov){
+	MatrixXd CovDiag = Cov.diagonal().array().pow(-.5).matrix().asDiagonal();
+	return CovDiag * Cov * CovDiag;
+
 }
 

@@ -32,18 +32,18 @@ void testVar() {
   Yt(0, 1) = 5;
   Yt(0,2) = 3;
   for (int i = 1; i < N; i++) {
-    Yt(i, 0) = 10 + phi1 * Yt(i - 1, 0) + phi2 * Yt(i - 1, 1) +
-               phi3 * Yt(i - 1, 2) + d.normrnd(0, .25);
-    Yt(i, 1) = -15 + phi4 * Yt(i - 1, 0) + phi5 * Yt(i - 1, 1) +
-               phi6 * Yt(i - 1, 2) + d.normrnd(0, .25);
-    Yt(i, 2) = 45 + phi7 * Yt(i - 1, 0) + phi8 * Yt(i - 1, 1) +
-               phi9 * Yt(i - 1, 2) + d.normrnd(0, .25);
+    Yt(i, 0) = -.5 + phi1 * Yt(i - 1, 0) + phi2 * Yt(i - 1, 1) +
+               phi3 * Yt(i - 1, 2) + d.normrnd(0, 2);
+    Yt(i, 1) = -.2 + phi4 * Yt(i - 1, 0) + phi5 * Yt(i - 1, 1) +
+               phi6 * Yt(i - 1, 2) + d.normrnd(0, 2);
+    Yt(i, 2) = .1 + phi7 * Yt(i - 1, 0) + phi8 * Yt(i - 1, 1) +
+               phi9 * Yt(i - 1, 2) + d.normrnd(0, 2);
   }
   std::ofstream file("yt.txt");
   file << Yt;
   file.close();
   TimeSeries ts;
-  cout << ts.VAR(Yt, 1) << endl;
+  cout << ts.VAR(Yt.leftCols(2), 1) << endl;
   cout << "Sigma Hat Sqd" << endl;
   cout << ts.calcSigmaHatSqd(Yt, 1) << endl;
   MatrixXd Zt(N,1);
@@ -51,7 +51,7 @@ void testVar() {
     Zt(i,0) = 2 + .7 *Zt(i-1, 0) + d.normrnd(0,1);
   }
   cout << "BVAR" <<endl;
-  ts.BVAR(Yt.leftCols(2), 2);
+  ts.BvarConjugate(Yt.leftCols(2), 1);
 
 }
 

@@ -5,6 +5,10 @@
 class LinRegGibbs : public Dist {
 
 public:
+   
+  LinRegGibbs();
+  LinRegGibbs(int x);
+  
   void lrCondPriorsGibbs(const VectorXd &, const MatrixXd &, const int,
                          const int, const VectorXd &, const MatrixXd &, double,
                          double);
