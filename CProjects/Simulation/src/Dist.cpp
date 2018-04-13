@@ -10,6 +10,7 @@
 #include <boost/random/uniform_01.hpp>
 #include <boost/math/distributions/chi_squared.hpp>
 #include <boost/random/variate_generator.hpp>
+#include <boost/math/distributions/logistic.hpp>
 #include <cstdint>
 #include <ctime>
 #include <limits>
@@ -1451,3 +1452,31 @@ MatrixXd Dist::CovToCorr(const MatrixXd &Cov){
 
 }
 
+VectorXd Dist::logisticrnd(int N){
+	boost::random::uniform_01<> u;
+	VectorXd logis(N);
+	for(int i = 0; i < N; i++){
+		double udraw = u(rseed);
+		logis(i) = log(udraw/(1-udraw));
+	}
+	return logis;
+}
+
+VectorXd Dist::logisticcdf(const VectorXd &x){
+	boost::math::logistic L;
+	VectorXd vals(x.size());
+	for(int i = 0; i < x.size(); i++){
+	  vals(i) = cdf(L, x(i));	
+	}
+	return vals;
+}
+
+MatrixXd Dist::mvtrnd(const VectorXd &mu, const MatrixXd &Sigma, int nu, int N) {
+  MatrixXd lowerC = Sigma.llt().matrixL();
+  VectorXd w = (generateChiSquaredVec(nu, N).array()/nu).pow(-.5);
+  MatrixXd Z = normrnd(0,1,N,mu.size());
+  Z = Z.array().colwise() * w.array();
+  MatrixXd T = lowerC* Z.transpose();
+  T.colwise() += mu;
+  return T.transpose();
+}

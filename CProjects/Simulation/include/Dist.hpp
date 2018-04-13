@@ -194,8 +194,6 @@ public:
   double logmvnpdfPrecision(const VectorXd &mu, const MatrixXd &sigma,
                             const Ref<const MatrixXd> &x);
 
-  double logmvnpdf(VectorXd &, MatrixXd &, VectorXd &);
-
   double logmvnpdf(const VectorXd &, const MatrixXd &, const VectorXd &);
 
   double truncTrnd(double a, double b, double mu, double sigma, double nu);
@@ -277,6 +275,12 @@ public:
                    const MatrixXd &V);
 
   MatrixXd CovToCorr(const MatrixXd &Cov);
+
+  VectorXd logisticrnd(int N);
+
+  VectorXd logisticcdf(const VectorXd &x);
+
+  MatrixXd mvtrnd(const VectorXd &mu, const MatrixXd &Sigma, int nu, int N);
 };
 
 template <typename D>
