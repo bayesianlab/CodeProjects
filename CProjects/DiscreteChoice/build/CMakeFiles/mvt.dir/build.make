@@ -57,52 +57,52 @@ include CMakeFiles/mvt.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/mvt.dir/flags.make
 
-CMakeFiles/mvt.dir/src/logitmain.cpp.o: CMakeFiles/mvt.dir/flags.make
-CMakeFiles/mvt.dir/src/logitmain.cpp.o: ../src/logitmain.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mvt.dir/src/logitmain.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mvt.dir/src/logitmain.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/logitmain.cpp"
+CMakeFiles/mvt.dir/src/probitmain.cpp.o: CMakeFiles/mvt.dir/flags.make
+CMakeFiles/mvt.dir/src/probitmain.cpp.o: ../src/probitmain.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mvt.dir/src/probitmain.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mvt.dir/src/probitmain.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/probitmain.cpp"
 
-CMakeFiles/mvt.dir/src/logitmain.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mvt.dir/src/logitmain.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/logitmain.cpp" > CMakeFiles/mvt.dir/src/logitmain.cpp.i
+CMakeFiles/mvt.dir/src/probitmain.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mvt.dir/src/probitmain.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/probitmain.cpp" > CMakeFiles/mvt.dir/src/probitmain.cpp.i
 
-CMakeFiles/mvt.dir/src/logitmain.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mvt.dir/src/logitmain.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/logitmain.cpp" -o CMakeFiles/mvt.dir/src/logitmain.cpp.s
+CMakeFiles/mvt.dir/src/probitmain.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mvt.dir/src/probitmain.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/probitmain.cpp" -o CMakeFiles/mvt.dir/src/probitmain.cpp.s
 
-CMakeFiles/mvt.dir/src/logitmain.cpp.o.requires:
+CMakeFiles/mvt.dir/src/probitmain.cpp.o.requires:
 
-.PHONY : CMakeFiles/mvt.dir/src/logitmain.cpp.o.requires
+.PHONY : CMakeFiles/mvt.dir/src/probitmain.cpp.o.requires
 
-CMakeFiles/mvt.dir/src/logitmain.cpp.o.provides: CMakeFiles/mvt.dir/src/logitmain.cpp.o.requires
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/logitmain.cpp.o.provides.build
-.PHONY : CMakeFiles/mvt.dir/src/logitmain.cpp.o.provides
+CMakeFiles/mvt.dir/src/probitmain.cpp.o.provides: CMakeFiles/mvt.dir/src/probitmain.cpp.o.requires
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/probitmain.cpp.o.provides.build
+.PHONY : CMakeFiles/mvt.dir/src/probitmain.cpp.o.provides
 
-CMakeFiles/mvt.dir/src/logitmain.cpp.o.provides.build: CMakeFiles/mvt.dir/src/logitmain.cpp.o
+CMakeFiles/mvt.dir/src/probitmain.cpp.o.provides.build: CMakeFiles/mvt.dir/src/probitmain.cpp.o
 
 
-CMakeFiles/mvt.dir/src/Logit.cpp.o: CMakeFiles/mvt.dir/flags.make
-CMakeFiles/mvt.dir/src/Logit.cpp.o: ../src/Logit.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mvt.dir/src/Logit.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mvt.dir/src/Logit.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Logit.cpp"
+CMakeFiles/mvt.dir/src/Probit.cpp.o: CMakeFiles/mvt.dir/flags.make
+CMakeFiles/mvt.dir/src/Probit.cpp.o: ../src/Probit.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mvt.dir/src/Probit.cpp.o"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mvt.dir/src/Probit.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Probit.cpp"
 
-CMakeFiles/mvt.dir/src/Logit.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mvt.dir/src/Logit.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Logit.cpp" > CMakeFiles/mvt.dir/src/Logit.cpp.i
+CMakeFiles/mvt.dir/src/Probit.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mvt.dir/src/Probit.cpp.i"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Probit.cpp" > CMakeFiles/mvt.dir/src/Probit.cpp.i
 
-CMakeFiles/mvt.dir/src/Logit.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mvt.dir/src/Logit.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Logit.cpp" -o CMakeFiles/mvt.dir/src/Logit.cpp.s
+CMakeFiles/mvt.dir/src/Probit.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mvt.dir/src/Probit.cpp.s"
+	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Probit.cpp" -o CMakeFiles/mvt.dir/src/Probit.cpp.s
 
-CMakeFiles/mvt.dir/src/Logit.cpp.o.requires:
+CMakeFiles/mvt.dir/src/Probit.cpp.o.requires:
 
-.PHONY : CMakeFiles/mvt.dir/src/Logit.cpp.o.requires
+.PHONY : CMakeFiles/mvt.dir/src/Probit.cpp.o.requires
 
-CMakeFiles/mvt.dir/src/Logit.cpp.o.provides: CMakeFiles/mvt.dir/src/Logit.cpp.o.requires
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Logit.cpp.o.provides.build
-.PHONY : CMakeFiles/mvt.dir/src/Logit.cpp.o.provides
+CMakeFiles/mvt.dir/src/Probit.cpp.o.provides: CMakeFiles/mvt.dir/src/Probit.cpp.o.requires
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Probit.cpp.o.provides.build
+.PHONY : CMakeFiles/mvt.dir/src/Probit.cpp.o.provides
 
-CMakeFiles/mvt.dir/src/Logit.cpp.o.provides.build: CMakeFiles/mvt.dir/src/Logit.cpp.o
+CMakeFiles/mvt.dir/src/Probit.cpp.o.provides.build: CMakeFiles/mvt.dir/src/Probit.cpp.o
 
 
 CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.o: CMakeFiles/mvt.dir/flags.make
@@ -129,47 +129,21 @@ CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProje
 CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.o.provides.build: CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.o
 
 
-CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o: CMakeFiles/mvt.dir/flags.make
-CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o: /Users/dillonflannery-valadez/Google\ Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o -c "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp"
-
-CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.i"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp" > CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.i
-
-CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.s"
-	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp" -o CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.s
-
-CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o.requires:
-
-.PHONY : CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o.requires
-
-CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o.provides: CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o.requires
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o.provides.build
-.PHONY : CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o.provides
-
-CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o.provides.build: CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o
-
-
 # Object files for target mvt
 mvt_OBJECTS = \
-"CMakeFiles/mvt.dir/src/logitmain.cpp.o" \
-"CMakeFiles/mvt.dir/src/Logit.cpp.o" \
-"CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.o" \
-"CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o"
+"CMakeFiles/mvt.dir/src/probitmain.cpp.o" \
+"CMakeFiles/mvt.dir/src/Probit.cpp.o" \
+"CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.o"
 
 # External object files for target mvt
 mvt_EXTERNAL_OBJECTS =
 
-mvt: CMakeFiles/mvt.dir/src/logitmain.cpp.o
-mvt: CMakeFiles/mvt.dir/src/Logit.cpp.o
+mvt: CMakeFiles/mvt.dir/src/probitmain.cpp.o
+mvt: CMakeFiles/mvt.dir/src/Probit.cpp.o
 mvt: CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.o
-mvt: CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o
 mvt: CMakeFiles/mvt.dir/build.make
 mvt: CMakeFiles/mvt.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable mvt"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable mvt"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mvt.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -177,10 +151,9 @@ CMakeFiles/mvt.dir/build: mvt
 
 .PHONY : CMakeFiles/mvt.dir/build
 
-CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/src/logitmain.cpp.o.requires
-CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/src/Logit.cpp.o.requires
+CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/src/probitmain.cpp.o.requires
+CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/src/Probit.cpp.o.requires
 CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.o.requires
-CMakeFiles/mvt.dir/requires: CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o.requires
 
 .PHONY : CMakeFiles/mvt.dir/requires
 

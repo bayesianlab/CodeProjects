@@ -12,7 +12,7 @@ void TimeSeries::lagvars(MatrixXd &Xt, const Ref<const MatrixXd> &Yt, int lag) {
   int C = Yt.cols();
   VectorXd constant = MatrixXd::Ones(Xt.rows(), 1);
   for (int i = 0; i < lag; i++) {
-    Xt.block(0, C * i + 1, Xt.rows(), C) = Yt.block(i, 0, Xt.rows(), C);
+    Xt.block(0, C * i + 1, Xt.rows(), C) = Yt.block((lag-1) - i, 0, Xt.rows(), C);
   }
   Xt.col(0) = constant;
 }

@@ -1,22 +1,17 @@
 [
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/include\" -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/eigen3/unsupported  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/logitmain.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/logitmain.cpp\"",
-  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/logitmain.cpp"
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/include\" -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/eigen3/unsupported  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/probitmain.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/probitmain.cpp\"",
+  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/probitmain.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/include\" -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/eigen3/unsupported  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/Logit.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Logit.cpp\"",
-  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Logit.cpp"
+  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/include\" -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/eigen3/unsupported  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/src/Probit.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Probit.cpp\"",
+  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Probit.cpp"
 },
 {
   "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build",
   "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/include\" -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/eigen3/unsupported  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp\"",
   "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp"
-},
-{
-  "directory": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/build",
-  "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++   -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/include\" -I\"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include\" -I/usr/local/include/eigen3 -I/usr/local/include/eigen3/unsupported  -O3 -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o -c \"/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp\"",
-  "file": "/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp"
 }
 ]

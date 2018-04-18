@@ -6,6 +6,7 @@
 #include <math.h>
 #include <iostream>
 #include <algorithm>
+#include <fstream>
 
 using namespace boost::math;
 using namespace std;
@@ -86,13 +87,6 @@ void Logit::LogitMetropolisHastings(const VectorXd &y, const MatrixXd &X,
   H0 = -H0.inverse();
   for (int i = 0; i < iter; i++) {
     proposal = mvtrnd(beta0, H0, nu, 1).transpose();
-	cout << "proposal" << endl;
-	cout << proposal.transpose() << endl;
-	cout << log(mvtpdf(proposal, beta0, H0, nu)) << endl;
-	cout << "old" << endl;
-	cout << old.transpose() << endl;
-	cout << log(mvtpdf(old, beta0, H0, nu)) << endl;
-	cout << endl;
     num = LogitLogLikelihood(y, X, proposal) +
           logmvnpdf(priorMean, priorVariance, proposal) +
           log(mvtpdf(old, beta0, H0, nu));
@@ -111,5 +105,12 @@ void Logit::LogitMetropolisHastings(const VectorXd &y, const MatrixXd &X,
   cout << "Posterior Distribution Mean: " << endl;
   cout << posterior.bottomRows(iter -burn).colwise().mean() << endl;
   cout << endl;
+  ofstream file("posterior.txt");
+  if(file.is_open()){
+	  file << posterior << endl;
+	  cout << "File written" << endl;
+  }else{
+	  cout << "Error, no file." << endl;
+  }
 }
 

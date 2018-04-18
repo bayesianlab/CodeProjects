@@ -1,0 +1,69 @@
+\documentclass[]{article}
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+
+
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\usepackage{courier}
+\lstset{
+	basicstyle=\footnotesize\ttfamily,
+	backgroundcolor=\color{white},
+	breaklines=true,
+	frame=single,	 
+	keywordstyle=\color{blue},
+	showstringspaces=false, 
+	commentstyle=\color{mygreen},
+	extendedchars=true,
+	numbers=left,
+	tabsize=2,	
+	rulecolor=\color{black},
+	basicstyle=\footnotesize,
+	title=\lstname  }
+
+%opening
+\title{Hw2}
+\author{Dillon Flannery	}
+
+\begin{document}
+
+\maketitle
+\lstinputlisting[language=C]{Probit.hpp}
+\lstinputlisting[language=C]{Probit.cpp}
+\lstinputlisting[language=C]{probitmain.cpp}	
+\centering
+\includegraphics[scale=.5]{probitpost}
+\begin{verbatim}
+Probit Main
+Posterior Means:
+1.08262  0.795392 -0.381129  0.856596
+Bayesian Credible Intervals
+0.909184  0.613017 -0.534828  0.678317
+1.26882    0.9905 -0.235059   1.05503
+\end{verbatim}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+\end{document}

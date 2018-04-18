@@ -6,43 +6,23 @@
 
 #IncludeRegexTransform: 
 
-../include/Logit.hpp
+../include/Probit.hpp
 Dist.hpp
 ../include/Dist.hpp
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Logit.cpp
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Dist.hpp
-Logit.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Logit.hpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/CreateSampleData.hpp
-Eigen/Dense
--
-boost/math/distributions/logistic.hpp
--
-math.h
--
-iostream
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Probit.cpp
+Probit.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Probit.hpp
+fstream
 -
 algorithm
 -
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/logitmain.cpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/probitmain.cpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Dist.hpp
-Logit.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Logit.hpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/CreateSampleData.hpp
-boost/math/distributions/logistic.hpp
--
-Eigen/Dense
--
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include/CreateSampleData.hpp
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/include/Dist.hpp
+Probit.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/DiscreteChoice/src/Probit.hpp
 Eigen/Dense
 -
 
@@ -61,19 +41,9 @@ iostream
 -
 limits
 -
+math.h
+-
 random
--
-math.h
--
-
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp
-CreateSampleData.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.hpp
-Eigen/Dense
--
-iostream
--
-math.h
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp
@@ -83,7 +53,11 @@ Eigen/Dense
 -
 assert.h
 -
+boost/math/distributions/chi_squared.hpp
+-
 boost/math/distributions/exponential.hpp
+-
+boost/math/distributions/logistic.hpp
 -
 boost/math/distributions/normal.hpp
 -
@@ -97,11 +71,7 @@ boost/random/normal_distribution.hpp
 -
 boost/random/uniform_01.hpp
 -
-boost/math/distributions/chi_squared.hpp
--
 boost/random/variate_generator.hpp
--
-boost/math/distributions/logistic.hpp
 -
 cstdint
 -

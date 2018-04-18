@@ -17,7 +17,6 @@ Eigen::MatrixXd readCSV(std::string file, int rows, int cols) {
   fin.open(file);
   string line;
   int rowCount = -1;
-  int c = 0;
   if (fin.is_open()) {
     while (getline(fin, line, '\r') && rowCount < rows-1) {
       rowCount++;

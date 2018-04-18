@@ -7,8 +7,8 @@
 #include <boost/random/uniform_01.hpp>
 #include <iostream>
 #include <limits>
-#include <random>
 #include <math.h>
+#include <random>
 
 using namespace Eigen;
 using namespace std;
@@ -82,11 +82,9 @@ public:
                                 const VectorXd &mu, const MatrixXd &Sigma,
                                 int sims, VectorXd &logpdf);
 
-  MatrixXd returnNormalizingConstants(const VectorXd &a,
-                                            const VectorXd &b,
-                                            const VectorXd &mu,
-                                            const MatrixXd &Sigma, int sims,
-                                            MatrixXd &normC);
+  MatrixXd returnNormalizingConstants(const VectorXd &a, const VectorXd &b,
+                                      const VectorXd &mu, const MatrixXd &Sigma,
+                                      int sims, MatrixXd &normC);
 
   void runSim(int nSims, int batches, const VectorXd &a, const VectorXd &b,
               const VectorXd &mu, const MatrixXd &Sigma, int sims);
@@ -113,12 +111,16 @@ public:
 
   VectorXd ttpdf(double a, double b, double df, const Ref<const VectorXd> &mu,
                  double sigma, double x);
-  
+
   double mvtpdf(const VectorXd &x, const VectorXd &mu, const MatrixXd &Variance,
                 int df);
-  
+
+  VectorXd logmvtpdf(double df, const Ref<const VectorXd> &mu,
+                     const MatrixXd &Sigma, MatrixXd X);
+
   double mvtpdfHelp(const Ref<const VectorXd> &x, const VectorXd &mu,
                     const MatrixXd &Variance, int df);
+
   VectorXd mvtpdf(const MatrixXd &X, const VectorXd &mu,
                   const MatrixXd &Variance, int df);
 
@@ -148,8 +150,7 @@ public:
 
   MatrixXd ghkT(const VectorXd &a, const VectorXd &b,
                 const MatrixXd &LinearConstraints, const VectorXd &mu,
-                const MatrixXd &Sigma, double df, int sims,
-                VectorXd &logpdf);
+                const MatrixXd &Sigma, double df, int sims, VectorXd &logpdf);
 
   void unifrnd(double, double, VectorXd &);
 
@@ -246,9 +247,9 @@ public:
                        const int N, const int J);
 
   MatrixXd mvtstudtrnd(const VectorXd &a, const VectorXd &b,
-              const MatrixXd &LinearConstraints, const VectorXd &mu,
-              const MatrixXd &Sigma, const double df, const int sims,
-              const int burnin);
+                       const MatrixXd &LinearConstraints, const VectorXd &mu,
+                       const MatrixXd &Sigma, const double df, const int sims,
+                       const int burnin);
 
   MatrixXd mvtstudtrnd(const VectorXd &a, const VectorXd &b,
                        const MatrixXd &LinearConstraints, const VectorXd &mu,
@@ -260,19 +261,20 @@ public:
                        const VectorXd &zStar);
 
   double pdfavg(const Ref<const VectorXd> &logpdf);
-  
+
   double pdfmean(const Ref<const VectorXd> &logpdf);
 
   MatrixXd gibbsTKernel(const VectorXd &a, const VectorXd &b,
-               const MatrixXd &LinearConstraints, const MatrixXd &sample,
-               VectorXd &zstar, const double df, const VectorXd &mu,
-               const MatrixXd &Sigma, const VectorXd &y, const MatrixXd &X,
-               const int sims, const int burnin);
+                        const MatrixXd &LinearConstraints,
+                        const MatrixXd &sample, VectorXd &zstar,
+                        const double df, const VectorXd &mu,
+                        const MatrixXd &Sigma, const VectorXd &y,
+                        const MatrixXd &X, const int sims, const int burnin);
 
   MatrixXd wishartrnd(const MatrixXd &Sigma, const int df);
 
   MatrixXd MatricVariateRnd(const MatrixXd &Mu, const MatrixXd &Sigma,
-                   const MatrixXd &V);
+                            const MatrixXd &V);
 
   MatrixXd CovToCorr(const MatrixXd &Cov);
 
@@ -281,6 +283,8 @@ public:
   VectorXd logisticcdf(const VectorXd &x);
 
   MatrixXd mvtrnd(const VectorXd &mu, const MatrixXd &Sigma, int nu, int N);
+
+  MatrixXd CredibleIntervals(MatrixXd & X);
 };
 
 template <typename D>

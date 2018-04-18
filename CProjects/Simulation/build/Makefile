@@ -313,32 +313,59 @@ src/eigenshorts.cpp.s:
 	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.s
 .PHONY : src/eigenshorts.cpp.s
 
-src/rentalmain.o: src/rentalmain.cpp.o
+src/timeseries.o: src/timeseries.cpp.o
 
-.PHONY : src/rentalmain.o
+.PHONY : src/timeseries.o
 
 # target to build an object file
-src/rentalmain.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/rentalmain.cpp.o
-.PHONY : src/rentalmain.cpp.o
+src/timeseries.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/timeseries.cpp.o
+.PHONY : src/timeseries.cpp.o
 
-src/rentalmain.i: src/rentalmain.cpp.i
+src/timeseries.i: src/timeseries.cpp.i
 
-.PHONY : src/rentalmain.i
+.PHONY : src/timeseries.i
 
 # target to preprocess a source file
-src/rentalmain.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/rentalmain.cpp.i
-.PHONY : src/rentalmain.cpp.i
+src/timeseries.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/timeseries.cpp.i
+.PHONY : src/timeseries.cpp.i
 
-src/rentalmain.s: src/rentalmain.cpp.s
+src/timeseries.s: src/timeseries.cpp.s
 
-.PHONY : src/rentalmain.s
+.PHONY : src/timeseries.s
 
 # target to generate assembly for a file
-src/rentalmain.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/rentalmain.cpp.s
-.PHONY : src/rentalmain.cpp.s
+src/timeseries.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/timeseries.cpp.s
+.PHONY : src/timeseries.cpp.s
+
+src/varmain.o: src/varmain.cpp.o
+
+.PHONY : src/varmain.o
+
+# target to build an object file
+src/varmain.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/varmain.cpp.o
+.PHONY : src/varmain.cpp.o
+
+src/varmain.i: src/varmain.cpp.i
+
+.PHONY : src/varmain.i
+
+# target to preprocess a source file
+src/varmain.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/varmain.cpp.i
+.PHONY : src/varmain.cpp.i
+
+src/varmain.s: src/varmain.cpp.s
+
+.PHONY : src/varmain.s
+
+# target to generate assembly for a file
+src/varmain.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/varmain.cpp.s
+.PHONY : src/varmain.cpp.s
 
 # Help Target
 help:
@@ -365,9 +392,12 @@ help:
 	@echo "... src/eigenshorts.o"
 	@echo "... src/eigenshorts.i"
 	@echo "... src/eigenshorts.s"
-	@echo "... src/rentalmain.o"
-	@echo "... src/rentalmain.i"
-	@echo "... src/rentalmain.s"
+	@echo "... src/timeseries.o"
+	@echo "... src/timeseries.i"
+	@echo "... src/timeseries.s"
+	@echo "... src/varmain.o"
+	@echo "... src/varmain.i"
+	@echo "... src/varmain.s"
 .PHONY : help
 
 

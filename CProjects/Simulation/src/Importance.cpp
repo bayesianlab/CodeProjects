@@ -108,10 +108,7 @@ double Importance::mlGeweke91T(const VectorXd &a, const VectorXd &b,
 
 VectorXd Importance::tnormpdf(double a, double b, double mu, double sigma,
                               VectorXd &x) {
-  boost::math::normal normalDist;
   VectorXd fx(x.size());
-  double sigmaZ = sigma * (cdf(normalDist, (b - mu) / sigma) -
-                           cdf(normalDist, (a - mu) / sigma));
   for (int i = 0; i < x.size(); i++) {
     fx(i) = Dist::tnormpdf(a, b, mu, sigma, x(i));
   }
@@ -145,7 +142,6 @@ VectorXd Importance::logtLike(double df, const Ref<const VectorXd> &mu,
 VectorXd Importance::logmvtpdf(double df, const Ref<const VectorXd> &mu,
                                const MatrixXd &Sigma, MatrixXd X) {
   /* Checked against matlab with 0 mean, verified goes to N with df-> inf */
-  int N = X.rows();
   int J = Sigma.cols();
   double detSigma = Sigma.determinant();
   double halfDfPp = (df + J) * .5;
@@ -163,7 +159,6 @@ void Importance::runSim(int nSims, int batches, VectorXd &theta,
                         VectorXd &ul, int sampleSize, int burnin, VectorXd &b0,
                         MatrixXd &S0, double a0, double d0) {
   int J = sigma.cols();
-  int Jminus1 = J - 1;
   VectorXd mLike(nSims);
   for (int i = 0; i < nSims; i++) {
     mLike(i) = importanceSampling(ll, ul, theta, sigma, y, X, sampleSize,
@@ -247,7 +242,6 @@ void Importance::runTsim(int nSims, int batches, const VectorXd &theta,
                          double df, int sampleSize, const VectorXd &b0,
                          const MatrixXd &S0, double a0, double d0) {
   int J = sigma.cols();
-  int Jminus1 = J - 1;
   VectorXd mLike(nSims);
   for (int i = 0; i < nSims; i++) {
     mLike(i) = trunctprop(ll, ul, LinearConstraints, theta, sigma, df, y, X,
@@ -289,7 +283,6 @@ void Importance::runTsimNew(int nSims, int batches, const VectorXd &theta,
                             int sampleSize, int burnin, const VectorXd &b0,
                             const MatrixXd &S0, double a0, double d0) {
   int J = sigma.cols();
-  int Jminus1 = J - 1;
   VectorXd mLike(nSims);
   for (int i = 0; i < nSims; i++) {
     mLike(i) = mlGeweke91T(ll, ul, LinearConstraints, theta, sigma, df, y, X,

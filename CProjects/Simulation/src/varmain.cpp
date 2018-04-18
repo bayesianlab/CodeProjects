@@ -2,7 +2,6 @@
 #include "LinRegGibbs.hpp"
 #include "timeseries.hpp"
 #include <Eigen/Dense>
-#include <unsupported/Eigen/KroneckerProduct>
 #include <fstream>
 #include <iostream>
 #include <limits>
@@ -10,6 +9,7 @@
 #include <random>
 #include <sstream>
 #include <stdio.h>
+#include <unsupported/Eigen/KroneckerProduct>
 
 using namespace std;
 using namespace Eigen;
@@ -30,7 +30,7 @@ void testVar() {
   double phi9 = .2;
   Yt(0, 0) = -1;
   Yt(0, 1) = 5;
-  Yt(0,2) = 3;
+  Yt(0, 2) = 3;
   for (int i = 1; i < N; i++) {
     Yt(i, 0) = -.5 + phi1 * Yt(i - 1, 0) + phi2 * Yt(i - 1, 1) +
                phi3 * Yt(i - 1, 2) + d.normrnd(0, 2);
@@ -46,14 +46,34 @@ void testVar() {
   cout << ts.VAR(Yt.leftCols(2), 1) << endl;
   cout << "Sigma Hat Sqd" << endl;
   cout << ts.calcSigmaHatSqd(Yt, 1) << endl;
-  MatrixXd Zt(N,1);
-  for(int i =1; i < N; i ++){
-    Zt(i,0) = 2 + .7 *Zt(i-1, 0) + d.normrnd(0,1);
+  MatrixXd Zt(N, 1);
+  for (int i = 1; i < N; i++) {
+    Zt(i, 0) = 2 + .7 * Zt(i - 1, 0) + d.normrnd(0, 1);
   }
-  cout << "BVAR" <<endl;
-  ts.BvarConjugate(Yt.leftCols(2), 1);
-
+  cout << "BVAR" << endl;
+  {
+    Dist d(1);
+    int N = 1000;
+    int k = 2;
+    MatrixXd Yt(N, k);
+    double phi1 = .8;
+    double phi2 = -.8;
+    double phi3 = .7;
+    double phi4 = -.7;
+    Yt(0, 0) = 5;
+    Yt(0, 1) = -5;
+    for (int i = 1; i < N; i++) {
+      Yt(i, 0) =
+          .5 + phi1 * Yt(i - 1, 0) + phi2 * Yt(i - 1, 1) + d.normrnd(0, 1);
+      Yt(i, 1) =
+         -.5 + phi3 * Yt(i - 1, 0) + phi4 * Yt(i - 1, 1) + +d.normrnd(0, 1 );
+    }
+    cout << ts.VAR(Yt, 2) << endl;
+	cout << endl;
+	
+  }
 }
+
 
 void testMatricVariateNormal() {
   Dist d(1);
@@ -85,6 +105,17 @@ void testWishart() {
     cout << c / 100.0 << endl;
   }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 int main() {
   cout << "VAR MAIN" << endl;

@@ -123,33 +123,6 @@ mvt/fast:
 	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/build
 .PHONY : mvt/fast
 
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.o: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o
-
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.o
-
-# target to build an object file
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.o
-
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.i: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.i
-
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.i
-
-# target to preprocess a source file
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.i
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.i
-
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.s: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.s
-
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.s
-
-# target to generate assembly for a file
-Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.s
-.PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.cpp.s
-
 Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.o: Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.o
 
 .PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.o
@@ -177,59 +150,59 @@ Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/
 	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.s
 .PHONY : Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.cpp.s
 
-src/Logit.o: src/Logit.cpp.o
+src/Probit.o: src/Probit.cpp.o
 
-.PHONY : src/Logit.o
-
-# target to build an object file
-src/Logit.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Logit.cpp.o
-.PHONY : src/Logit.cpp.o
-
-src/Logit.i: src/Logit.cpp.i
-
-.PHONY : src/Logit.i
-
-# target to preprocess a source file
-src/Logit.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Logit.cpp.i
-.PHONY : src/Logit.cpp.i
-
-src/Logit.s: src/Logit.cpp.s
-
-.PHONY : src/Logit.s
-
-# target to generate assembly for a file
-src/Logit.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Logit.cpp.s
-.PHONY : src/Logit.cpp.s
-
-src/logitmain.o: src/logitmain.cpp.o
-
-.PHONY : src/logitmain.o
+.PHONY : src/Probit.o
 
 # target to build an object file
-src/logitmain.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/logitmain.cpp.o
-.PHONY : src/logitmain.cpp.o
+src/Probit.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Probit.cpp.o
+.PHONY : src/Probit.cpp.o
 
-src/logitmain.i: src/logitmain.cpp.i
+src/Probit.i: src/Probit.cpp.i
 
-.PHONY : src/logitmain.i
+.PHONY : src/Probit.i
 
 # target to preprocess a source file
-src/logitmain.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/logitmain.cpp.i
-.PHONY : src/logitmain.cpp.i
+src/Probit.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Probit.cpp.i
+.PHONY : src/Probit.cpp.i
 
-src/logitmain.s: src/logitmain.cpp.s
+src/Probit.s: src/Probit.cpp.s
 
-.PHONY : src/logitmain.s
+.PHONY : src/Probit.s
 
 # target to generate assembly for a file
-src/logitmain.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/logitmain.cpp.s
-.PHONY : src/logitmain.cpp.s
+src/Probit.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/Probit.cpp.s
+.PHONY : src/Probit.cpp.s
+
+src/probitmain.o: src/probitmain.cpp.o
+
+.PHONY : src/probitmain.o
+
+# target to build an object file
+src/probitmain.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/probitmain.cpp.o
+.PHONY : src/probitmain.cpp.o
+
+src/probitmain.i: src/probitmain.cpp.i
+
+.PHONY : src/probitmain.i
+
+# target to preprocess a source file
+src/probitmain.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/probitmain.cpp.i
+.PHONY : src/probitmain.cpp.i
+
+src/probitmain.s: src/probitmain.cpp.s
+
+.PHONY : src/probitmain.s
+
+# target to generate assembly for a file
+src/probitmain.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/probitmain.cpp.s
+.PHONY : src/probitmain.cpp.s
 
 # Help Target
 help:
@@ -240,18 +213,15 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... mvt"
-	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.o"
-	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.i"
-	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/CreateSampleData.s"
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.o"
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.i"
 	@echo "... Users/dillonflannery-valadez/Google_Drive/CodeProjects/CProjects/Simulation/src/Dist.s"
-	@echo "... src/Logit.o"
-	@echo "... src/Logit.i"
-	@echo "... src/Logit.s"
-	@echo "... src/logitmain.o"
-	@echo "... src/logitmain.i"
-	@echo "... src/logitmain.s"
+	@echo "... src/Probit.o"
+	@echo "... src/Probit.i"
+	@echo "... src/Probit.s"
+	@echo "... src/probitmain.o"
+	@echo "... src/probitmain.i"
+	@echo "... src/probitmain.s"
 .PHONY : help
 
 

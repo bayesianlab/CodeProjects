@@ -40,6 +40,6 @@ int main() {
 
  // cout << logit.logitPrimePrime(X, beta0) << endl;
  VectorXd betaP = MatrixXd::Zero(beta.size(), 1);
- MatrixXd sigmaP = MatrixXd::Identity(beta.size(), beta.size());
- logit.LogitMetropolisHastings(y,X, betaP, sigmaP, 10, 10000, 1000);
+ MatrixXd sigmaP = 10*MatrixXd::Identity(beta.size(), beta.size());
+ logit.LogitMetropolisHastings(y,X, betaP, sigmaP, 10, 1000, 100);
 }

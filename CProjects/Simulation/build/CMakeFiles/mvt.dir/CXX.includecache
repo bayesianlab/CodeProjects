@@ -21,60 +21,18 @@ iostream
 -
 limits
 -
-random
--
 math.h
 -
-
-../include/Importance.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-string.h
+random
 -
 
 ../include/LinRegGibbs.hpp
 Dist.hpp
 ../include/Dist.hpp
 
-../include/ThreeD.hpp
-Eigen/Dense
--
-iostream
--
-
-../include/ark.hpp
+../include/timeseries.hpp
 Dist.hpp
 ../include/Dist.hpp
-Eigen/Dense
--
-
-../include/ask.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/crb.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/crt.hpp
-Dist.hpp
-../include/Dist.hpp
-Eigen/Dense
--
-
-../include/eigenshorts.hpp
-Eigen/Dense
--
-string
--
-
-../include/read_csv_to_eigen.hpp
 Eigen/Dense
 -
 
@@ -84,30 +42,28 @@ Eigen/Dense
 iostream
 -
 
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/rentalmain.cpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/timeseries.cpp
 Dist.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
-Importance.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Importance.hpp
-LinRegGibbs.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.hpp
-ThreeD.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ThreeD.hpp
-ark.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ark.hpp
-ask.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/ask.hpp
-crb.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crb.hpp
-crt.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/crt.hpp
-eigenshorts.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/eigenshorts.hpp
-read_csv_to_eigen.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/read_csv_to_eigen.hpp
+timeseries.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/timeseries.hpp
 Eigen/Dense
 -
-ctime
+unsupported/Eigen/KroneckerProduct
+-
+math.h
+-
+stdio.h
+-
+
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/varmain.cpp
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
+LinRegGibbs.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/LinRegGibbs.hpp
+timeseries.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/timeseries.hpp
+Eigen/Dense
 -
 fstream
 -
@@ -117,13 +73,13 @@ limits
 -
 math.h
 -
+random
+-
 sstream
 -
 stdio.h
 -
-stdlib.h
--
-string
+unsupported/Eigen/KroneckerProduct
 -
 
 /usr/local/include/eigen3/Eigen/Cholesky
@@ -1132,6 +1088,8 @@ cstdint
 
 /usr/local/include/eigen3/Eigen/src/SVD/UpperBidiagonalization.h
 
+/usr/local/include/eigen3/Eigen/src/SparseCore/SparseUtil.h
+
 /usr/local/include/eigen3/Eigen/src/misc/Image.h
 
 /usr/local/include/eigen3/Eigen/src/misc/Kernel.h
@@ -1167,4 +1125,18 @@ lapacke_mangling.h
 /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 
 /usr/local/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
+
+/usr/local/include/eigen3/unsupported/Eigen/KroneckerProduct
+../../Eigen/Core
+/usr/local/include/eigen3/Eigen/Core
+../../Eigen/src/Core/util/DisableStupidWarnings.h
+/usr/local/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h
+../../Eigen/src/SparseCore/SparseUtil.h
+/usr/local/include/eigen3/Eigen/src/SparseCore/SparseUtil.h
+src/KroneckerProduct/KroneckerTensorProduct.h
+/usr/local/include/eigen3/unsupported/Eigen/src/KroneckerProduct/KroneckerTensorProduct.h
+../../Eigen/src/Core/util/ReenableStupidWarnings.h
+/usr/local/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
+
+/usr/local/include/eigen3/unsupported/Eigen/src/KroneckerProduct/KroneckerTensorProduct.h
 

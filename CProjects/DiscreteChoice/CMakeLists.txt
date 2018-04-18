@@ -15,4 +15,4 @@ include_directories(include ${SIM}/include ${BOOST_INCLUDE_DIRS} ${EIGEN} ${UNSU
 message(STATUS "Boost include  dirs  " ${Boost_INCLUDE_DIRS})
 MESSAGE( STATUS "CMAKE_CXX_FLAGS:    " ${CMAKE_CXX_FLAGS} )
 message(STATUS "Eigen3 dir           " ${EIGEN})
-add_executable(mvt src/logitmain.cpp src/Logit.cpp ${SIM}/src/Dist.cpp ${SIM}/src/CreateSampleData.cpp) 
+add_executable(mvt src/probitmain.cpp src/Probit.cpp ${SIM}/src/Dist.cpp ) 
