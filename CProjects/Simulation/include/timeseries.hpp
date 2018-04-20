@@ -16,14 +16,11 @@ public:
 
   VectorXd calcSigmaHatSqd(const MatrixXd &Yt, int lag);
 
-  VectorXd CreateScaledVarDiag(const MatrixXd &Yt, int lag, int C,
+  MatrixXd CreateMinnesotaPrior(const MatrixXd &Yt, int lag,
                                double lambda0, double lambda1, double theta);
 
-  VectorXd CreateLagDiag(int C, int lag);
 
-  MatrixXd MinnesotaPrior(const MatrixXd &Yt, int lag, int C);
-
-  void BvarMinnesota(const MatrixXd &Yt, int lag);
+  void BvarMinnesota(const MatrixXd &Yt, int lag, double constantShrinkage, double totalShrink, double otherShrinkage, int Sims, int burn);
   
   void BvarConjugate(const MatrixXd &Yt, int lag);
 };

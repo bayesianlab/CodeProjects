@@ -53,7 +53,7 @@ void testVar() {
   cout << "BVAR" << endl;
   {
     Dist d(1);
-    int N = 1000;
+    int N = 50;
     int k = 2;
     MatrixXd Yt(N, k);
     double phi1 = .8;
@@ -70,7 +70,7 @@ void testVar() {
     }
     cout << ts.VAR(Yt, 2) << endl;
 	cout << endl;
-	
+        ts.BvarMinnesota(Yt, 2, 1000, .2, .5, 1000, 100);
   }
 }
 

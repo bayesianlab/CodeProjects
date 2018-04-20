@@ -43,17 +43,17 @@ iostream
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/timeseries.cpp
-Dist.hpp
-/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
 timeseries.hpp
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/timeseries.hpp
+Dist.hpp
+/Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/Dist.hpp
 Eigen/Dense
--
-unsupported/Eigen/KroneckerProduct
 -
 math.h
 -
 stdio.h
+-
+unsupported/Eigen/KroneckerProduct
 -
 
 /Users/dillonflannery-valadez/Google Drive/CodeProjects/CProjects/Simulation/src/varmain.cpp
