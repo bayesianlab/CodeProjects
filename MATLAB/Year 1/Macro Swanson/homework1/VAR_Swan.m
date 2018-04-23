@@ -24,8 +24,6 @@ for i=0:p-1
 end
 X(:,p*n+1) = ones(T-p,1); % constant term
 y = y(p+1:T,:) ;
-y
-X
 [B,omega,stats,resids] = ols(y,X,printfl,0) ; % eqn-by-eqn OLS
 residvar = resids'*resids / (T-p-(n*p+1)) ; % unbiased in small samples
 
