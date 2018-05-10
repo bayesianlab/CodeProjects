@@ -1506,3 +1506,34 @@ MatrixXd Dist::CredibleIntervals(MatrixXd &X) {
   }
   return credInts;
 }
+
+MatrixXd Dist::CreateSigma(double rho, int Size){
+	MatrixXd CorrMat = MatrixXd::Identity(Size,Size);
+	for(int i = 0; i < Size; i++){
+		for(int j = 0;j <Size;j++){
+			if(i > j){
+				CorrMat(i,j) = pow(rho, i);
+			}
+			else if(j > i){
+			   CorrMat(i,j) = pow(rho,j);	
+			}
+		}
+	}
+	return CorrMat;
+}
+
+MatrixXd Dist::Cov(const MatrixXd &X, int dim) {
+  if (dim == 0) {
+    VectorXd mu = X.rowwise().mean();
+    MatrixXd temp = X;
+    temp.colwise() -= mu;
+    MatrixXd covmat = temp.transpose() * temp;
+    return covmat;
+  } else {
+    VectorXd mu = X.colwise().mean();
+    MatrixXd temp = X;
+    temp.rowwise() -= mu.transpose();
+    MatrixXd covmat = temp.transpose() * temp;
+    return covmat;
+  }
+}

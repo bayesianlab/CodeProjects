@@ -10,12 +10,8 @@ S = createSigma(-.7, 3);
 N = 5;
 bn = 1;
 
-
-% mean(tmultnormrnd(a,b,mu,S,10000,zeros(3,1)))
-% mean(tmultnormrndEta(a,b,mu,S,10000))
-% mean(studentTGeweke91(a,b,mu,S,10, 10000,100))
-% mean(ghkT(a,b,mu,S,10,10000))
-% [x,y] = ghkT(a,b,mu,S,10,10);
-impT(a,b, mu,S, 3, 1,2, N,  0,0,0,0)
+smoothedkernel(mu,S,.1,10000)
+ghk(10000, 3, mu', S)
+sternSimulator(10000,mu,S)
 
 

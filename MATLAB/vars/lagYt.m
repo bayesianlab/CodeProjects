@@ -7,7 +7,7 @@ for i = 1:lag
     start = K*i + 2;
 end
 Yt = Yt(lag+1:n, :);
-[xn, xc] = size(Xt);
+[xn, ~] = size(Xt);
 Xt(:,1) = ones(xn, 1);
 end
 

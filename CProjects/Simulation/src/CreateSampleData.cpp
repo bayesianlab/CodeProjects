@@ -90,3 +90,24 @@ CreateSampleData::CreateSampleData(int sampleSize, VectorXd &betas,
   maxLikeEsts = VectorXd::Zero(dimension + 1);
   maxLikeEsts << sigmaSqdHat, mles;
 }
+
+void CreateSampleData::CorrData(const VectorXd &b, const MatrixXd &V, const int N){
+  VectorXd xmu = MatrixXd::Zero(V.cols(), 1);
+  VectorXd c = MatrixXd::Ones(N, 1);
+  MatrixXd x = mvnrnd(xmu, V, N);
+  MatrixXd Z(N, V.cols() + 1);
+  Z << c, x;
+  VectorXd f = Z*b + normrnd(0,1,N);
+  cout << f << endl;
+}
+
+VectorXd CreateSampleData::MleLinearReg(const VectorXd &z, const MatrixXd &Covariates){
+  MatrixXd XpX = Covariates.transpose() * Covariates;	
+  MatrixXd Xpy = Covariates.transpose() * z;
+  MatrixXd XpXinv = XpX.inverse();
+  VectorXd betaMles = XpXinv * Xpy;
+  VectorXd residuals = z - X*betaMles;
+  double shat2 = (residuals.transpose() * residuals).value()/z.size();
+  MatrixXd ifish(Covariates.cols() + 1, Covariates.cols() + 1);
+  
+}

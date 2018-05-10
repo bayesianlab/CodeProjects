@@ -285,6 +285,10 @@ public:
   MatrixXd mvtrnd(const VectorXd &mu, const MatrixXd &Sigma, int nu, int N);
 
   MatrixXd CredibleIntervals(MatrixXd & X);
+
+  MatrixXd CreateSigma(double rho, int size);
+
+  MatrixXd Cov(const MatrixXd &X, int dim);
 };
 
 template <typename D>

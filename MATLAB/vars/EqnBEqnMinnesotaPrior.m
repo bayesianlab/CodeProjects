@@ -8,9 +8,10 @@ SigmaU = yt'*P*yt./rm;
 LambdaTheta = lambda1*theta*ones(sr);
 LambdaTheta(logical(eye(sr))) = lambda1;
 LagVec = (1:p).^(-1);
-SigmaMat = diag(SigmaU).*ones(sr);
+SigmaMat = sqrt(diag(SigmaU)).*ones(sr);
 SigmaMat = SigmaMat .* (SigmaMat').^(-1);
-MinnP= [lambda0.*ones(sr, 1), kron(ones(1,p), SigmaMat).*kron(LagVec, LambdaTheta)];
+MinnP= [lambda0.*ones(sr, 1),...
+    kron(ones(1,p), SigmaMat).*kron(LagVec, LambdaTheta)];
 MinnP = MinnP .* MinnP;
 [mr, ~] = size(MinnP);
 Minn = zeros(K*p + 1, K*p + 1, K);

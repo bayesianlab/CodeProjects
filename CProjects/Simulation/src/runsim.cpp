@@ -17,10 +17,10 @@ using namespace std;
 using namespace Eigen;
 
 #define seed 100
-#define nSims 11000
-#define burnin 1000
-#define mlSims  500
-#define batches 50
+#define nSims 110
+#define burnin 10
+#define mlSims  50
+#define batches 5
 #define linRegSS 2500
 
 void askTest2(VectorXd &betas, VectorXd &ll, VectorXd &ul) {
@@ -181,7 +181,7 @@ void modifiedGelfandDeyTestT(VectorXd &betas, VectorXd &a, VectorXd &b) {
 }
 
 void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
- /* cout << "Ask method:" << endl;
+  cout << "Ask method:" << endl;
   askTest2(betas, a, b);
   cout << "Ark method:" << endl;
   arkTest2(betas, a, b);
@@ -190,11 +190,11 @@ void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
   cout << "Crt method:" << endl;
   crtTest2(betas, a, b);
   cout << "Importance Sampling:" << endl;
-  impTest2(betas, a, b);*/
+  impTest2(betas, a, b);
   cout << "Modified Gelfand Dey:" << endl;
   modifiedGelfandDeyTest(betas, a, b);
   cout << endl;
-/*  cout << "Ask method T:" << endl;
+  cout << "Ask method T:" << endl;
   askTestT(betas, a, b);
   cout << "Ark method T:" << endl;
   arkTestT(betas, a, b);
@@ -203,7 +203,7 @@ void runTests(VectorXd &betas, VectorXd &a, VectorXd &b) {
   cout << "Crt method T:" << endl;
   crtTestT(betas, a, b);
   cout << "Importance Sampling T:" << endl;
-  impTestT(betas, a, b);*/
+  impTestT(betas, a, b);
   cout << "Modified Gelfand Dey T:" << endl;
   modifiedGelfandDeyTestT(betas, a, b); 
 }
@@ -230,12 +230,15 @@ int main() {
   cout << "\nseed " << seed << " mlSims " << mlSims << " nSims  " << nSims
        << " burnin " << burnin << " batch size " << batches
        << " linear regression sample size " << linRegSS << " " << batches
-       << endl;/*
+       << endl;
   cout << "\tTEST 1" << endl;
   cout << "\n\tTwo restriction test, beta1 .99, beta2 .99" << endl;
   cout << "\nBetas\n" << betas.transpose() << endl;
-  runTests(betas, rll, rul);*/
-  
+  runTests(betas, rll, rul);
+  CreateSampleData csd(100,betas);
+  MatrixXd C = csd.CreateSigma(.5, 5);
+  csd.CorrData(betas, C, 100);
+/*  
   betas.resize(6);
   rll.resize(7);
   rul.resize(7);
@@ -246,7 +249,7 @@ int main() {
   cout << "\tTEST 2" << endl;
   cout << "\nBetas\n" << betas.transpose() << endl;
   runTests(betas, rll, rul);
- /* 
+  
   betas.resize(8);
   rll.resize(9);
   rul.resize(9);

@@ -286,86 +286,32 @@ ReadCsv/fast:
 	$(MAKE) -f build/src/ReadCsvLib/CMakeFiles/ReadCsv.dir/build.make build/src/ReadCsvLib/CMakeFiles/ReadCsv.dir/build
 .PHONY : ReadCsv/fast
 
-src/eigenshorts.o: src/eigenshorts.cpp.o
+src/runsim.o: src/runsim.cpp.o
 
-.PHONY : src/eigenshorts.o
-
-# target to build an object file
-src/eigenshorts.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.o
-.PHONY : src/eigenshorts.cpp.o
-
-src/eigenshorts.i: src/eigenshorts.cpp.i
-
-.PHONY : src/eigenshorts.i
-
-# target to preprocess a source file
-src/eigenshorts.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.i
-.PHONY : src/eigenshorts.cpp.i
-
-src/eigenshorts.s: src/eigenshorts.cpp.s
-
-.PHONY : src/eigenshorts.s
-
-# target to generate assembly for a file
-src/eigenshorts.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/eigenshorts.cpp.s
-.PHONY : src/eigenshorts.cpp.s
-
-src/timeseries.o: src/timeseries.cpp.o
-
-.PHONY : src/timeseries.o
+.PHONY : src/runsim.o
 
 # target to build an object file
-src/timeseries.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/timeseries.cpp.o
-.PHONY : src/timeseries.cpp.o
+src/runsim.cpp.o:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/runsim.cpp.o
+.PHONY : src/runsim.cpp.o
 
-src/timeseries.i: src/timeseries.cpp.i
+src/runsim.i: src/runsim.cpp.i
 
-.PHONY : src/timeseries.i
-
-# target to preprocess a source file
-src/timeseries.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/timeseries.cpp.i
-.PHONY : src/timeseries.cpp.i
-
-src/timeseries.s: src/timeseries.cpp.s
-
-.PHONY : src/timeseries.s
-
-# target to generate assembly for a file
-src/timeseries.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/timeseries.cpp.s
-.PHONY : src/timeseries.cpp.s
-
-src/varmain.o: src/varmain.cpp.o
-
-.PHONY : src/varmain.o
-
-# target to build an object file
-src/varmain.cpp.o:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/varmain.cpp.o
-.PHONY : src/varmain.cpp.o
-
-src/varmain.i: src/varmain.cpp.i
-
-.PHONY : src/varmain.i
+.PHONY : src/runsim.i
 
 # target to preprocess a source file
-src/varmain.cpp.i:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/varmain.cpp.i
-.PHONY : src/varmain.cpp.i
+src/runsim.cpp.i:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/runsim.cpp.i
+.PHONY : src/runsim.cpp.i
 
-src/varmain.s: src/varmain.cpp.s
+src/runsim.s: src/runsim.cpp.s
 
-.PHONY : src/varmain.s
+.PHONY : src/runsim.s
 
 # target to generate assembly for a file
-src/varmain.cpp.s:
-	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/varmain.cpp.s
-.PHONY : src/varmain.cpp.s
+src/runsim.cpp.s:
+	$(MAKE) -f CMakeFiles/mvt.dir/build.make CMakeFiles/mvt.dir/src/runsim.cpp.s
+.PHONY : src/runsim.cpp.s
 
 # Help Target
 help:
@@ -389,15 +335,9 @@ help:
 	@echo "... Imp"
 	@echo "... Lrg"
 	@echo "... ReadCsv"
-	@echo "... src/eigenshorts.o"
-	@echo "... src/eigenshorts.i"
-	@echo "... src/eigenshorts.s"
-	@echo "... src/timeseries.o"
-	@echo "... src/timeseries.i"
-	@echo "... src/timeseries.s"
-	@echo "... src/varmain.o"
-	@echo "... src/varmain.i"
-	@echo "... src/varmain.s"
+	@echo "... src/runsim.o"
+	@echo "... src/runsim.i"
+	@echo "... src/runsim.s"
 .PHONY : help
 
 
