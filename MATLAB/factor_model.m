@@ -1,29 +1,58 @@
 % Dgp 
 clear;clc;
-
-sigma2 = 1;
-gamma = .5;
+rng(1);
 T = 1000;
-D = eye(2);
-Om = createSigma(-.3, 4);
-ft = zeros(2,T);
-fV = (1/(1-(gamma*gamma))).*D;
-ft(:,1) = mvnrnd(zeros(2,1),D);
-yt = zeros(4,T);
-yt(:,1) = mvnrnd(zeros(4,1), Om);
+dim = 2;
+IT = eye(T);
+IK = eye(dim);
+onesT = ones(T,1);
+sigma2 = 1;
+X = normrnd(0,1,dim,T);
+X = [ones(1,T); X];
+Theta0 = eye(1) * 10;
 
-G = [.1, -.1, .3, -.3; 
-    -.4, .1, .3, .2;
-    .4, 0, .2, -.4;
-    .3, 0, -.2, .3];
+gamma = .5;
+gamma2 = gamma*gamma;
+onePgamma2 = 1 + gamma2;
+OffDiag = [(onesT(1:T)*-gamma)']';
+MainDiag = [1, (onesT(2:T-1).*onePgamma2)', 1]';
+F0 = full(spdiags([OffDiag, MainDiag, OffDiag], [-1,0,1], T, T));
+sigma2F0inv = sigma2*inv(F0);
+f = mvnrnd(zeros(1,T), sigma2.*sigma2F0inv)';
+a = [1, ones(1,dim-1)*.5]';
 
-A = [1, 0,0,0;
-    .2, 1, 0,0;
-    .4, .3,0,0;
-    -.3, .2, 0,0];
 
-for t = 2:T
-    ft(:,t) = mvnrnd(zeros(2,1), D) + ft(:,t-1)';
-    yt(:,t) = G*yt(:,t-1) + A*[ft(:,t);0;0] + mvnrnd([0,0,0,0], Om)';
-end
-plot(yt')
+Sigma = sigma2 * eye(dim);
+Omega = kron(IT, Sigma);
+A = kron(IT, a);
+
+
+V = Omega + (A*sigma2F0inv)*A';
+Vinv = inv(V);
+
+beta = unifrnd(-1,1,dim*(dim+1),1);
+
+surX = repmat(kron(IK, ones(1,dim+1)),T,1).*repmat(X,dim)';
+
+mu = surX*beta;
+latent  =A*f;
+
+
+
+yt = mu + latent + normrnd(0,1,dim*T,1);
+s = yt - mu; 
+
+dLogLikeFactorModel(a,  yt, mu, Sigma, sigma2F0inv);
+gradLL = @(guess)dLogLikeFactorModel(guess, yt, mu, Sigma, sigma2F0inv);
+
+[p,q] = bhhh([.1,.1]', gradLL, 10, 1e-3)
+
+
+
+
+ 
+
+
+
+
+

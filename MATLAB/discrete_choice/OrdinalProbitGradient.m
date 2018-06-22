@@ -12,7 +12,7 @@ for j = 1:NumChoices - 2
     GradVecM = GradOrdProbLike(deltam,y,X,beta);
     GradVecP = GradOrdProbLike(deltap,y,X,beta);
     score(:,j) = (GradVecP - GradVecM)./twoh;
-    Fdel(j) = sum((GradVecP - GradVecM)./twoh)/N;
+    Fdel(j) = sum(score)/N;
 end
 Bt = zeros(NumChoices-2,NumChoices-2);
 for i = 1:N
