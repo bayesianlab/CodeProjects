@@ -22,7 +22,7 @@ for i = 1:N
         notj = I([1:j-1, j+1:J], :);
         xnot = notj*init;
         munot = notj*mu;
-        means(i,j) = cmean(mu(j), Hxx(j), Hxy(j,:)', xnot, munot);  
+        means(i,j) = cmean(mu(j), Hxx(j), Hxy(j,:)', xnot, munot);
         init(j) = truncNormalRand(a(j), b(j), means(i,j), sii(j));
     end
     sample(i,:) = init;

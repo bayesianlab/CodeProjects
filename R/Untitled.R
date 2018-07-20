@@ -9,3 +9,13 @@ Sigma <- matrix(c(1,.3,.4, .3,1,.2, .4,.2,1), ncol=3)
 Sigma
 mu <- c(.2,.3,.3)
 dmvt(c(1,.2,-3), mu,Sigma,log=TRUE  )
+
+y <- data(sample_matrix)
+
+samplexts <- as.xts(sample_matrix)
+
+to.monthly(samplexts)
+to.monthly(sample_matrix)
+
+str(to.monthly(samplexts))
+str(to.monthly(sample_matrix))

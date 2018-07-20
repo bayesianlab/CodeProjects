@@ -1,5 +1,5 @@
-function [meanb, meana, meangamma, meanfactor, ahat, Ahat,Sinv] = ...
-    factorModelGibbs(y, X, initSigma, theta0, Theta0, initGamma,...
+function [meanb, meana, meangamma, meanfactor, meanFactorVar, amle, Amle,Sinv] = ...
+    factorModelGibbsCandJ2009(y, X, initSigma, theta0, Theta0, initGamma,...
     initFactorVar, inita, sims, burnin)
 
 % sample b
@@ -19,19 +19,24 @@ IR = eye(nFacs);
 df = 10;
 gammaVu = 5;
 gammaD = 10;
+a0 = 5;
+delta = 10;
 gammaAlphaUpdate = .5*(gammaVu + T);
 gammaPriorVar = eye(length(initGamma))*10;
 gammaPrior = zeros(length(initGamma),1);
 gammaPriorsProduct = gammaPriorVar * gammaPrior;
 invTheta0 = inv(Theta0);
 priorols = invTheta0*theta0;
-
+fstar = zeros(T,nFacs);
+fhat = zeros(T,nFacs);
+a0update= .5*(a0 + T);
 
 stoB = zeros(sims, length(theta0));
 stoA = zeros(sims,length(inita));
 stoFactor = zeros(sims, T);
 stoSigma = zeros(sims, J);
 stoGamma = zeros(sims, nFacs*nColsGamma);
+stoFactorVar = zeros(sims, nFacs);
 fprintf('Begin Gibbs Sampling\n')
 notj = nonSquareNotj(arows,acols);
 
@@ -46,7 +51,7 @@ for i = 1 : sims
     beta = mvnrnd(theta,Theta, 1);
     stoB(i,:) = beta;
     mu = X*beta';
-    [aProposal,proppdfstar, proppdf, LLstar, LL, ahat, Ahat] = ...
+    [aProposal,proppdfstar, proppdf, LLstar, LL, amle, Amle] = ...
         drawaProposal(y, mu, initSigma,Sinv,inita,df, J,T);
     alpha = min(0, LLstar + proppdf - (LL + proppdfstar));
     if us(i) <= alpha
@@ -79,10 +84,21 @@ for i = 1 : sims
    else
        stoGamma(i, :) = reshape(initGamma, 1, nFacs*nColsGamma);
    end
+   fstar(1) = factor(1)/sqrt(1-initGamma^2);
+   fstar(2:end) = factor(2:end);
+   fhat(2:end) = initGamma*factor(1:end-1)';
+   dif = (fstar - fhat);
+   deltaUpdate = .5*(delta + dif'*dif);
+   initFactorVar = 1/gamrnd(a0update, 1/deltaUpdate);
+   stoFactorVar(i,:) = initFactorVar;
+   
+   
 end
 meanfactor = mean(stoFactor);
 meangamma = mean(stoGamma);
 meansigma = mean(stoSigma);
 meanb = mean(stoB);
 meana = mean(stoA);
+meanFactorVar = mean(stoFactorVar);
 end
+
