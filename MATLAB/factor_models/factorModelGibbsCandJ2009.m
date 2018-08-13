@@ -94,11 +94,11 @@ for i = 1 : sims
    
    
 end
-meanfactor = mean(stoFactor);
-meangamma = mean(stoGamma);
-meansigma = mean(stoSigma);
-meanb = mean(stoB);
-meana = mean(stoA);
-meanFactorVar = mean(stoFactorVar);
+meanfactor = mean(stoFactor)
+meangamma = mean(stoGamma)
+meansigma = mean(stoSigma)
+meanb = mean(stoB)
+meana = mean(stoA)
+meanFactorVar = mean(stoFactorVar)
 end
 

@@ -1,7 +1,7 @@
-kro% % Dgp 
+% % Dgp 
 clc;clear;
 rng(1);
-T = 1000;
+T = 25;
 dim = 2;
 nFacs = 1;
 IT = eye(T);
@@ -59,7 +59,7 @@ yt = mu + latent + error;
 
 [bhat, ahat, gammahat, factorhat, factorVarHat, amle, Amle,Sinv] = ...
     factorModelGibbsCandJ2009(yt,surX,Sigma,zeros(length(beta),1), eye(length(beta)), ...
-    .5, eye(nFacs), [.1,.1]', 100, 10);
+    .5, eye(nFacs), [.1,.1]', 10, 1);
 
 e = yt - surX*bhat' - A*factorhat';
 et = reshape(e,dim,T);
