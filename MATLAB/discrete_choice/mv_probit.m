@@ -1,4 +1,7 @@
-function [] = mv_probit(y,surX, Sigma0,Sims, LikelihoodSims)
+function [] = mv_probit(y,surX, Sigma0,Sims)
+% y is expected as [y11,..., y1T; 
+%                   y21,...,y2T]
+
 [r,c] = size(surX);
 [neqns,~]= size(Sigma0);
 N = r/neqns;
@@ -25,7 +28,6 @@ z = double(y);
 accept = 0;
 R0avg = R0;
 for i = 1 : Sims
-    fprintf("%i\n", i);
     mu = surX*B;
     reshapedmu = reshape(mu, neqns,N);
     z = updateLatentZ(y',reshapedmu', R0, z)';
@@ -41,7 +43,7 @@ for i = 1 : Sims
     b0 = B0*BpriorsPre +  (B0 * s2a);
     s1a=s1;
     s2a=s2;
-    B = mvnrnd(b0, B0)';
+    B = b0 + chol(B0,'lower')*normrnd(0,1,c,1);
     stoB(i,:) = B';
     [W, D, R] = mhstep_mvprobit(W0,w0);
     Num = logpxWishart(D,R,w0,WishartPrior) + ...
@@ -61,5 +63,5 @@ for i = 1 : Sims
 end
 R0avg/(accept+1)
 accept/Sims
-% mean(stoB(floor(.1*Sims):end,:))
+mean(stoB(floor(.1*Sims):end,:))
 end

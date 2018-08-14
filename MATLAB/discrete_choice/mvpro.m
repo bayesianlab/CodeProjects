@@ -8,7 +8,7 @@ pdat= table2array(pdat);
 N = 50;
 K = 2;
 c = ones(N,1);
-Sigma = eye(K) +.5 ;
+Sigma = eye(K) +[0,.5;.5,0]
 x1 = [c,normrnd(0,1, N,1)];
 x2 = [c,normrnd(0, 1, N,2)];
 
@@ -31,5 +31,5 @@ y = reshape(y,K,N);
 mu = reshape(mu, K,N);
 
 
-mv_probit(y, surX, eye(K),1000, 100)
-% truncNormalRand(0, Inf, 1, 1)
+mv_probit(y, surX, eye(K),10)
+
