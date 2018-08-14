@@ -1,18 +1,15 @@
-function [] = mv_probit(y,surX, Sigma0,Sims)
+function [betabar, R0bar, acceptrate] = mv_probit(y,surX, b0, B0, Sigma0,Sims)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
 
 [r,c] = size(surX);
 [neqns,~]= size(Sigma0);
 N = r/neqns;
-IT = eye(N);
-b0= zeros(c,1);
+
 B=b0;
-B0 = eye(c)*10;
 B0inv = inv(B0);
 BpriorsPre = B0inv*b0;
 Sinv = inv(Sigma0);
-stoB = zeros(Sims, c);
 
 WishartPrior = createSigma(.5, neqns);
 D0 = eye(neqns)*.5;
@@ -27,6 +24,9 @@ s2a=s2;
 z = double(y);
 accept = 0;
 R0avg = R0;
+
+stoB = zeros(Sims, c);
+burnin = floor(.1*Sims);
 for i = 1 : Sims
     mu = surX*B;
     reshapedmu = reshape(mu, neqns,N);
@@ -45,7 +45,7 @@ for i = 1 : Sims
     s2a=s2;
     B = b0 + chol(B0,'lower')*normrnd(0,1,c,1);
     stoB(i,:) = B';
-    [W, D, R] = mhstep_mvprobit(W0,w0);
+    [W, D, R] = mhstep_mvprobit(w0, W0);
     Num = logpxWishart(D,R,w0,WishartPrior) + ...
          surLL(z,reshapedmu,R) + ...
         logWishart(W0, W, w0);
@@ -57,11 +57,14 @@ for i = 1 : Sims
         accept = accept + 1;
         D0 = D;
         R0 = R;
-        R0avg = R0avg + R0;
+        W0 = W;
+    end
+    if i > burnin
+       R0avg = R0avg + R0;
     end
     
 end
-R0avg/(accept+1)
-accept/Sims
-mean(stoB(floor(.1*Sims):end,:))
+R0bar= R0avg/(Sims-burnin + 1);
+acceptrate = accept/Sims;
+betabar = mean(stoB(burnin:end,:));
 end
