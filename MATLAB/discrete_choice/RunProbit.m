@@ -36,7 +36,7 @@ mu = reshape(mu, K,N);
 
 b0 = zeros(ncol, 1);
 B0 = eye(ncol)*100;
-wishartDf = 4;
+wishartDf = 2;
 
 yz = reshape(vecz, K,N);
 

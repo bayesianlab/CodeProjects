@@ -62,9 +62,9 @@ for i = 1 : Sims
             logWishart(W, wishartproposal, wishartDf);
         alpha = min(0, Num - Den);
         if lu(i) < alpha
-            accept = accept + 1;
+            accept = accept + 1
             D0 = D;
-            R0 = R;
+            R0 = R
             W0 = W;
         end
     end

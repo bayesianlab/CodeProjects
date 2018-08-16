@@ -2,7 +2,7 @@ clear;
 clc;
 rng(5);
 
-N = 50;
+N = 1000;
 K = 2;
 c = ones(N,1);
 Sigma = eye(K) +[0,.5;.5,0];
@@ -31,7 +31,7 @@ mu = reshape(mu, K,N);
 
 b0 = zeros(ncol, 1);
 B0 = eye(ncol)*100;
-wishartDf = 4;
+wishartDf = 2;
 proposalDf = wishartDf;
 
 yz = reshape(vecz, K,N);
