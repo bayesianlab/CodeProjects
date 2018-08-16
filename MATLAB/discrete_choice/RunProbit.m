@@ -54,7 +54,7 @@ disp(Sigma)
 fprintf('MLE Sigma\n')
 disp(MLER)
 fprintf('Simulations\n')
-disp(N)
+disp(Sims)
 fprintf('Sample Size\n')
 disp(SampleSize)
 end
