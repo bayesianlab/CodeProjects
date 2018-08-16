@@ -6,4 +6,4 @@
 #$ -notify 
 #$ -M dillonflann@gmail.com
 module load MATLAB
-./RunProbit 20000
+./RunProbit 40000

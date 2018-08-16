@@ -1,63 +1,72 @@
-function [betabar, R0bar, acceptrate] = mv_probit(y,surX, b0, B0, Sigma0,Sims)
+function [betabar, R0bar, acceptrate] = mv_probit(y,surX, b0, B0,...
+    wishartDf, D0, R0, Sims, wishartproposal)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
-
+% Dimension sizes needed
 [r,c] = size(surX);
-[neqns,~]= size(Sigma0);
+[neqns,~]= size(R0);
 N = r/neqns;
-
+% Prior initialization
+W0 = D0*R0*D0;
 B=b0;
 B0inv = inv(B0);
 BpriorsPre = B0inv*b0;
-Sinv = inv(Sigma0);
-
-WishartPrior = createSigma(.5, neqns);
-D0 = eye(neqns)*.5;
-R0 = WishartPrior;
-W0 = D0*R0*D0;
-w0 = 2;
+Sinv = inv(W0);
+z = double(y);
+R0avg = R0;
+% Storage containers and intialize local vars. 
 lu = log(unifrnd(0,1,Sims,1));
 s1 = zeros(c,c);
 s2= zeros(c,1);
-s1a = s1;
-s2a=s2;
-z = double(y);
+tempSum1 = s1;
+tempSum2=s2;
 accept = 0;
-R0avg = R0;
-
 stoB = zeros(Sims, c);
-burnin = floor(.1*Sims);
+if isinteger(.1*Sims)
+    burnin = floor(.1*Sims);
+else
+    burnin = 1;
+end
 for i = 1 : Sims
     mu = surX*B;
     reshapedmu = reshape(mu, neqns,N);
     z = updateLatentZ(y',reshapedmu', R0, z)';
     R0i = inv(R0);
     t=1;
+    
     for k = 1:N
         tend = t + neqns - 1;
-        s1a = s1a + surX(t:tend, :)'*R0i*surX(t:tend,:);
-        s2a = s2a + surX(t:tend, :)'*R0i*z(:,k);
+        tempSum1 = tempSum1 + surX(t:tend, :)'*R0i*surX(t:tend,:);
+        tempSum2 = tempSum2 + surX(t:tend, :)'*R0i*z(:,k);
         t = tend + 1;
     end
-    B0 = inv(B0inv + s1a);
-    b0 = B0*BpriorsPre +  (B0 * s2a);
-    s1a=s1;
-    s2a=s2;
+    B0 = inv(B0inv + tempSum1);
+    b0 = B0*BpriorsPre +  (B0 * tempSum2);
     B = b0 + chol(B0,'lower')*normrnd(0,1,c,1);
     stoB(i,:) = B';
-    [W, D, R] = mhstep_mvprobit(w0, W0);
-    Num = logpxWishart(D,R,w0,WishartPrior) + ...
-         surLL(z,reshapedmu,R) + ...
-        logWishart(W0, W, w0);
-    Den = logpxWishart(D0,R0,w0,WishartPrior) + ...
-        surLL(z,reshapedmu,R0) + ...
-        logWishart(W, W0, w0);
-    alpha = min(0, Num - Den);
-    if lu(i) < alpha
-        accept = accept + 1;
-        D0 = D;
-        R0 = R;
-        W0 = W;
+    tempSum1=s1;
+    tempSum2=s2;
+    
+    [W, D, R] = mhstep_mvprobit(wishartDf, wishartproposal);
+    if det(D) > 1e2
+        fprintf('Reset\n')
+        W0 = eye(neqns);
+        D0= .1*W0;
+        R0 = W0;
+    else
+        Num = logpxWishart(D,R,wishartDf,W0) + ...
+             surLL(z,reshapedmu,R) + ...
+            logWishart(W0, wishartproposal, wishartDf);
+        Den = logpxWishart(D0,R0,wishartDf,W) + ...
+            surLL(z,reshapedmu,R0) + ...
+            logWishart(W, wishartproposal, wishartDf);
+        alpha = min(0, Num - Den);
+        if lu(i) < alpha
+            accept = accept + 1;
+            D0 = D;
+            R0 = R;
+            W0 = W;
+        end
     end
     if i > burnin
        R0avg = R0avg + R0;
@@ -66,5 +75,5 @@ for i = 1 : Sims
 end
 R0bar= R0avg/(Sims-burnin + 1);
 acceptrate = accept/Sims;
-betabar = mean(stoB(burnin:end,:));
+betabar = mean(stoB(burnin:end,:),1);
 end
