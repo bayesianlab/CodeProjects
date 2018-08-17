@@ -1,5 +1,5 @@
 function [betabar, R0bar, acceptrate] = mv_probit(y,surX, b0, B0,...
-    wishartDf, D0, R0, Sims, wishartproposal)
+    wishartDf, wishartPrior, D0, R0, Sims)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
 % Dimension sizes needed
@@ -7,7 +7,7 @@ function [betabar, R0bar, acceptrate] = mv_probit(y,surX, b0, B0,...
 [neqns,~]= size(R0);
 N = r/neqns;
 % Prior initialization
-W0 = D0*R0*D0;
+W0 = (D0.^.5)*R0*(D0.^.5);
 B=b0;
 B0inv = inv(B0);
 BpriorsPre = B0inv*b0;
@@ -47,24 +47,25 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     
-    [W, D, R] = mhstep_mvprobit(wishartDf, wishartproposal);
+    [W, D, R] = mhstep_mvprobit(wishartDf, W0);
     if det(D) > 1e2
         fprintf('Reset\n')
         W0 = eye(neqns);
         D0= .1*W0;
         R0 = W0;
     else
-        Num = logpxWishart(D,R,wishartDf,W0) + ...
+        Num = logpxWishart(D,R,wishartDf, eye(2)) + ...
              surLL(z,reshapedmu,R) + ...
-            logWishart(W0, wishartproposal, wishartDf);
-        Den = logpxWishart(D0,R0,wishartDf,W) + ...
+            logWishart(W0, W, wishartDf) ;
+        Den = logpxWishart(D0,R0,wishartDf, eye(2)) + ...
             surLL(z,reshapedmu,R0) + ...
-            logWishart(W, wishartproposal, wishartDf);
+            logWishart(W, W0, wishartDf);
         alpha = min(0, Num - Den);
+
         if lu(i) < alpha
-            accept = accept + 1
+            accept = accept + 1;
             D0 = D;
-            R0 = R
+            R0 = R;
             W0 = W;
         end
     end

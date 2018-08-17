@@ -2,7 +2,8 @@ clear;
 clc;
 rng(5);
 
-N = 1000;
+Sims = 200;
+N = 100;
 K = 2;
 c = ones(N,1);
 Sigma = eye(K) +[0,.5;.5,0];
@@ -20,7 +21,8 @@ eps = mvnrnd(zeros(K,1), Sigma,N)';
 mu = surX*TrueB;
 vecz = mu + eps(:);
 MLEs = inv(surX'*surX)*surX'*vecz;
-sigmamle = (reshape(vecz,K,N)' - reshape(mu,K,N)')'*(reshape(vecz,K,N)' - reshape(mu,K,N)')./N;
+sigmamle = (reshape(vecz,K,N)' - reshape(mu,K,N)')'*(reshape(vecz,K,N)'...
+    - reshape(mu,K,N)')./N;
 D0inv = diag(1./sqrt(diag(sigmamle)));
 MLER = D0inv*sigmamle*D0inv;
 R0 = eye(2);
@@ -31,13 +33,13 @@ mu = reshape(mu, K,N);
 
 b0 = zeros(ncol, 1);
 B0 = eye(ncol)*100;
-wishartDf = 2;
-proposalDf = wishartDf;
+wishartDf = 200;
+
 
 yz = reshape(vecz, K,N);
 
 [bbar, Rbar, ar] = mv_probit(y, surX, MLEs, B0, wishartDf, ...
-     D0, R0, 100, sigmamle);
+     D0, R0, eye(2), Sims);
 MeanBeta = bbar';
 disp(table(TrueB, MLEs, MeanBeta))
 
@@ -51,4 +53,5 @@ fprintf('MLE Sigma\n')
 disp(MLER)
 fprintf('Sample Size\n')
 disp(N)
-
+fprintf('Simulation Runs\n')
+disp(Sims)

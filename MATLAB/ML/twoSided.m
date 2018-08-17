@@ -1,6 +1,7 @@
 function [rn] = twoSided(a,b)
 maxiterations = 0;
 LIM = 10000;
+
 while maxiterations < LIM
    z = unifrnd(a,b);
    lu = log(unifrnd(0,1));
@@ -28,6 +29,6 @@ while maxiterations < LIM
        end
    end    
 end
-fprintf("Error in two sided truncation")
+fprintf("Error in two sided truncation\n")
 end
 

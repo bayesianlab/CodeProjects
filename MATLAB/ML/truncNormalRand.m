@@ -12,7 +12,7 @@ elseif 1e3 < b
         rn = tnormrnd(a,b,mu,sigma);
         return
     end
-elseif a>-1e3
+elseif a<-1e3
     if standardizedB < -stdLimit
         rn = mu - sigma*leftTruncation(-standardizedB);
         return

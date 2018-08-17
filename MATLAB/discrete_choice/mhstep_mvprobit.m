@@ -1,7 +1,7 @@
 function [W, D, R] = mhstep_mvprobit(w0,W0)
-W  = .1*wishrnd(W0, w0);
-D = diag(sqrt(diag(W)));
-Dinv = inv(D);
-R = Dinv*W*Dinv;
+W  = inv(wishrnd(W0, w0));
+D = diag(diag(W));
+Dinvhalf = inv(D).^.5;
+R = Dinvhalf*W*Dinvhalf;
 end
 
