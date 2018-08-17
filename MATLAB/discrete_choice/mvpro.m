@@ -2,21 +2,21 @@ clear;
 clc;
 rng(5);
 
-Sims = 200;
-N = 100;
+Sims = 1;
+N = 25;
 K = 2;
 c = ones(N,1);
 Sigma = eye(K) +[0,.5;.5,0];
 x1 = [c,normrnd(0,1, N,1)];
-x2 = [c,normrnd(0, 1, N,2)];
+x2 = [normrnd(0, 1, N,2)];
 
 T1 = kron(x1, eye(K));
 T2 = kron(x2, eye(K));
 T1 = [ T1(:,1), T1(:,3)];
-T2 = [T2(:,2), T2(:,4), T2(:,6)];
+T2 = [T2(:,2), T2(:,4)];
 surX = [T1,T2];
 [nrow, ncol] = size(surX);
-TrueB = [.3, -.5, -1.5, .6, .4]';
+TrueB = [.3, -.5, -1.5, .6]';
 eps = mvnrnd(zeros(K,1), Sigma,N)';
 mu = surX*TrueB;
 vecz = mu + eps(:);
@@ -27,7 +27,7 @@ D0inv = diag(1./sqrt(diag(sigmamle)));
 MLER = D0inv*sigmamle*D0inv;
 R0 = eye(2);
 D0 = .1*inv(D0inv);
-y = vecz > 0;
+y = double(vecz > 0);
 y = reshape(y,K,N);
 mu = reshape(mu, K,N);
 
@@ -37,7 +37,7 @@ wishartDf = 200;
 
 
 yz = reshape(vecz, K,N);
-
+y
 [bbar, Rbar, ar] = mv_probit(y, surX, MLEs, B0, wishartDf, ...
      D0, R0, eye(2), Sims);
 MeanBeta = bbar';

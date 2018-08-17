@@ -1,6 +1,4 @@
 function [lmvnpdf ] = logmvnpdf( x, mu, sigma )
-[~, J] = size(x);
-[~,J2] = size(mu);
 if isrow(x)
     x = x';
 end
