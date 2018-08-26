@@ -1,4 +1,4 @@
-function [ r ] = correlation( corrparams )
+function [ r ] = correlationAntedependence( corrparams )
 n= length(corrparams);
 r = eye(n+1);
 rowcount = 0;

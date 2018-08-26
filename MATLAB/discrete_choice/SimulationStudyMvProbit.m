@@ -3,32 +3,32 @@ clc;
 
 
 Sims = 200;
-N = 50;
-K = 5;
-Covariates = 2;
-R = correlationAntedependence([.9,.7,.5,.3]);
+N = 200;
+K = 7;
+
+R = createSigma(-.5, K)
 iR = inv(R);
-beta = [.5, 1]';
+beta = [.5, .8,.3]';
+Covariates = length(beta);
 b0 = zeros(length(beta),1);
 B0 = eye(length(b0))*10;
-wishartDf = 10;
-% R0 = createSigma(.5,K);
-R0 = eye(K);
-W0 = wishrnd(R0, wishartDf);
+wishartDf = 50;
+W0 = wishrnd(eye(K), wishartDf)./wishartDf;
 D0 = diag(W0);
-timetrend = (-2:2)';
+R0 = diag(D0.^(-.5))*W0*diag(D0.^(-.5));
+timetrend =(1:K)'-4;
 timetrendsqd = timetrend.^2;
 t = 1:K;
 
 for i = 1:N
     select = t + (i-1)*K;
-    X(select, :) = [ones(K,1), timetrend];
+    X(select, :) = [ones(K,1), timetrend, normrnd(0,3,K,1)];
 end
 
-sum = [0,0]';
+sum = zeros(length(beta),1);
 reps = 1;
 for k = 1:reps
-E=mvnrnd(zeros(K,1),R, 50)';
+E=mvnrnd(zeros(K,1),R, N)';
 vecz = X*beta + E(:);
 vecy = double(vecz>0);
 y = reshape(vecy, K,N);
@@ -45,18 +45,19 @@ e = reshape(X*olsbeta, K, N) - z;
 sols = e*e'/N;
 dsols = diag(sols);
 dsolsinv = dsols.^(-.5);
-sols = diag(dsolsinv)*sols*diag(dsolsinv)
+sols = diag(dsolsinv)*sols*diag(dsolsinv);
+
 sum = sum + olsbeta;
-[bbar, r0, ar ] =mv_probit(y, X, b0,B0, wishartDf,...
-    diag(D0), R0, 100);
+% [bbar, r0, ar ] =mv_probit(y, X, b0,B0, wishartDf,...
+%     diag(D0), R0, 50);
+% bbar
+% r0
+% ar
+[bbar, r0, ar] = mv_probit_new_proposal(y, X, b0,B0, wishartDf,...
+    diag(D0), R0, 10);
 bbar'
 r0
 ar
-% [bbar, r0, ar] = mv_probit_new_prior(y, X, b0,B0, wishartDf,...
-%     diag(D0), R0, 50);
-% bbar'
-% r0
-% ar
 
 end
-sum./reps
+% sum./reps

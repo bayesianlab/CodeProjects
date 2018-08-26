@@ -1,4 +1,4 @@
-function [betabar, R0bar, acceptrate] = mv_probit(y,X, b0, B0,...
+function [betabar, R0bar, acceptrate] = mv_probit_new_proposal(y,X, b0, B0,...
     wishartDf, D0, R0, Sims)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
@@ -34,7 +34,7 @@ for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrelationMatrixDimension, SubjectNumber);
     z = updateLatentZ(y,reshapedmu, R0, z);
-    R0i = inv(R0);
+    R0i = R0\eye(CorrelationMatrixDimension);
     index =1:CorrelationMatrixDimension;
     for k = 1:SubjectNumber
         select = index + (k-1)*CorrelationMatrixDimension;
@@ -48,7 +48,17 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
-    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0./(wishartDf));
+    e = z - reshapedmu;
+    W0 = e*e';
+    D0 = diag(diag(W0));
+    D0invhalf = diag(diag(W0).^(-.5));
+    R0 = D0invhalf*W0*D0invhalf;
+    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0./wishartDf);
+
+    
+%     [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0*wishartDf);
+%     Rstar
+%     det(Rstar)
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');
     if lu(i) < alpha
