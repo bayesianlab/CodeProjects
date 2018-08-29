@@ -7,12 +7,20 @@ Num = logpxWishart(Dstar,Rstar,wishartDf, wprior) + ...
 Den = logpxWishart(D0,R0,wishartDf, wprior) + ...
       surLL(latentData,meanLatentData,R0) + ...
       logwish(Wstar, W0, wishartDf);
-%   [logpxWishart(Dstar,Rstar,wishartDf, wprior),...
-%       surLL(latentData,meanLatentData,Rstar),...
-%        logwish(W0, Wstar, wishartDf)]
-%   [logpxWishart(D0,R0,wishartDf, wprior),...
-%        surLL(latentData,meanLatentData,R0),...
-%         logwish(W0, Wstar, wishartDf)]
+%     A = logpxWishart(Dstar,Rstar,wishartDf, wprior);
+%     B = surLL(latentData,meanLatentData,Rstar);
+%     C = logwish(W0, Wstar, wishartDf);
+%     D = logpxWishart(D0,R0,wishartDf, wprior);
+%     E = surLL(latentData,meanLatentData,R0);
+%     F = logwish(W0, Wstar, wishartDf);
+%   NumVals = [A,B,C]
+%   DenVals = [C,D,E]
+%   pxmpx = [A-C]
+%   Dstar
+%   Rstar
+%   D0
+%   R0
+ 
 alpha = min(0, Num - Den);
 end
 

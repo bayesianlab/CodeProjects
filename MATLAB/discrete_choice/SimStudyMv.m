@@ -1,8 +1,7 @@
-clear;
-clc;
-
-
-Sims = 10;
+function [  ] = SimStudyMv( Sims )
+if ischar(Sims)
+    Sims = str2num(Sims);
+end
 N = 200;
 K = 7;
 
@@ -70,3 +69,6 @@ fprintf(fileID, 'stein loss \n');
 fprintf(fileID, '%f\n', steinloss);
 fclose(fileID);
 writetable(array2table(postr0), 'r0postrw.csv')
+
+end
+

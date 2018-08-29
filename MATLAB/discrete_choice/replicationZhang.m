@@ -11,7 +11,7 @@ iR = inv(R);
 beta = [.5, 1]';
 b0 = zeros(length(beta),1);
 B0 = eye(length(b0))*10;
-wishartDf = 10;
+wishartDf = 20;
 % R0 = createSigma(.5,K);
 R0 = eye(K);
 W0 = wishrnd(R0, wishartDf);
@@ -40,23 +40,25 @@ for i = 1:N
     densum = densum + X(select,:)'*iR*X(select,:);
     numsum = numsum + X(select,:)'*iR*z(:,i); 
 end
-olsbeta = densum\numsum;
-e = reshape(X*olsbeta, K, N) - z;
-sols = e*e'/N;
-dsols = diag(sols);
-dsolsinv = dsols.^(-.5);
-sols = diag(dsolsinv)*sols*diag(dsolsinv)
-sum = sum + olsbeta;
-[bbar, r0, ar ] =mv_probit(y, X, b0,B0, wishartDf,...
-    diag(D0), R0, 100);
+% olsbeta = densum\numsum;
+% e = reshape(X*olsbeta, K, N) - z;
+% sols = e*e'/N;
+% dsols = diag(sols);
+% dsolsinv = dsols.^(-.5);
+% sols = diag(dsolsinv)*sols*diag(dsolsinv)
+% sum = sum + olsbeta;
+r0indx = [2,5; 3,2; 4,1; 2,1];
+[bbar, r0, ar, r0post ] =mv_probit(y, X, b0,B0, wishartDf,...
+    diag(D0), R0, 50, r0indx);
 bbar'
 r0
 ar
-% [bbar, r0, ar] = mv_probit_new_prior(y, X, b0,B0, wishartDf,...
-%     diag(D0), R0, 50);
-% bbar'
-% r0
-% ar
-
+r0post
+[bbar, r0, ar, r0post] = mv_probit_new_proposal(y, X, b0,B0, wishartDf,...
+    diag(D0), R0, 50, r0indx);
+bbar'
+r0
+ar
+r0post
 end
 sum./reps

@@ -1,10 +1,16 @@
-function [betabar, R0bar, acceptrate] = mv_probit(y,X, b0, B0,...
-    wishartDf, D0, R0, Sims)
+function [betabar, R0bar, acceptrate, r0Elems] = mv_probit(y,X, b0, B0,...
+    wishartDf, D0, R0, Sims, r0indxs)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
 % Dimension sizes needed
 % X is longitudnal data
 % subject Xij = [1, x(i,1,...J)]
+if floor(.1*Sims) > 1
+    burnin = floor(.1*Sims);
+else
+    burnin = 1;
+end
+
 [r,c] = size(X);
 [CorrelationMatrixDimension,~]= size(R0);
 SubjectNumber = r/CorrelationMatrixDimension;
@@ -25,11 +31,11 @@ tempSum1 = s1;
 tempSum2=s2;
 accept = 0;
 stoB = zeros(Sims, c);
-if isinteger(.1*Sims)
-    burnin = floor(.1*Sims);
-else
-    burnin = 1;
-end
+trackingNum = size(r0indxs,1);
+tempStoElems = zeros(trackingNum,1);
+r0Elems = zeros(Sims-burnin, trackingNum);
+postDraws = 0;
+
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrelationMatrixDimension, SubjectNumber);
@@ -48,7 +54,7 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
-    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0./(wishartDf));
+    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0./wishartDf);
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');
     if lu(i) < alpha
@@ -58,10 +64,16 @@ for i = 1 : Sims
         W0 = Wstar;
     end
     if i > burnin
+        postDraws = postDraws + 1;
+        for k = 1:trackingNum
+            r0Elems(postDraws,k) = R0(r0indxs(k,1), r0indxs(k,2));
+        end
        R0avg = R0avg + R0;
     end
+
 end
 R0bar= R0avg/(Sims-burnin + 1);
 acceptrate = accept/Sims;
 betabar = mean(stoB(burnin:end,:),1);
+
 end
