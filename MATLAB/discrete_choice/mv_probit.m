@@ -54,7 +54,8 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
-    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0./wishartDf);
+    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf,...
+        W0.*(wishartDf - CorrelationMatrixDimension - 1));
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');
     if lu(i) < alpha

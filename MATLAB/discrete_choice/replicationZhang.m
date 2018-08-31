@@ -11,10 +11,10 @@ iR = inv(R);
 beta = [.5, 1]';
 b0 = zeros(length(beta),1);
 B0 = eye(length(b0))*10;
-wishartDf = 20;
+wishartDf = 300;
 % R0 = createSigma(.5,K);
 R0 = eye(K);
-W0 = wishrnd(R0, wishartDf);
+W0 = inv(wishrnd(inv(R0), wishartDf));
 D0 = diag(W0);
 timetrend = (-2:2)';
 timetrendsqd = timetrend.^2;
@@ -49,16 +49,16 @@ end
 % sum = sum + olsbeta;
 r0indx = [2,5; 3,2; 4,1; 2,1];
 [bbar, r0, ar, r0post ] =mv_probit(y, X, b0,B0, wishartDf,...
-    diag(D0), R0, 50, r0indx);
+    diag(D0), R0, 300, r0indx);
 bbar'
 r0
 ar
 r0post
-[bbar, r0, ar, r0post] = mv_probit_new_proposal(y, X, b0,B0, wishartDf,...
-    diag(D0), R0, 50, r0indx);
-bbar'
-r0
-ar
-r0post
+% [bbar, r0, ar, r0post] = mv_probit_new_proposal(y, X, b0,B0, wishartDf,...
+%     diag(D0), R0, 50, r0indx);
+% bbar'
+% r0
+% ar
+% r0post
 end
 sum./reps
