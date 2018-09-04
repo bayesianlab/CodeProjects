@@ -14,5 +14,4 @@ for i = 1:r
     z(i,:) = tmultnormrndEta(A(i,:), B(i,:), mu(i,:), Sigma, 1, init);
     end
 end
-end
 
