@@ -42,7 +42,7 @@ clc;
 % ark(a,b,alpha,beta,mu,V, y, X, 1000, b0, B0, a0, d0);
 % crt(a,b,mu,V,y,X,1000,100,b0,B0,a0,d0);
 % crb(a,b,mu,V,y,X, 1000, 100, 1000,100,  init, b0,B0,a0,d0);
-lognrnd(0,1,1)
-a = -log(2)
-b = log(1-
-exp(tlnrnd(.5, .75, 0, 1, 10))
+% lognrnd(0,1,1)
+% a = -log(2)
+% b = log(1-
+% exp(tlnrnd(.5, .75, 0, 1, 10))
