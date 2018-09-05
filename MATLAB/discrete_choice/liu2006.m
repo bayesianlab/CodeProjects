@@ -56,6 +56,7 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
+    fprintf('%i\n',i)
     ystar = D0*(z - reshapedmu);
     S = ystar*ystar';
     dSi = diag(diag(S).^(-.5));
