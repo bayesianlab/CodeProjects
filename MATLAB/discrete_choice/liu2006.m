@@ -71,6 +71,7 @@ for i = 1 : Sims
     if lu(i) < mhprob
         accept = accept + 1;
         R0 = canR;
+        det(R0)
         trackDet(accept) = det(R0);
         D0 = canD0;
     end
@@ -81,6 +82,7 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
+    fprintf('%i\n',i)
 end
 trackDet(1:accept)
 plot(1:accept, trackDet(1:accept))

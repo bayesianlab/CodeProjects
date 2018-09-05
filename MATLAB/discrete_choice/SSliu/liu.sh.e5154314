@@ -1,0 +1,39 @@
+MATLAB is a high-level language and program for manipulating matrices.
+It can be used as a commandline interface or GUI.
+NB: Native MATLAB uses 1 license per core and is meant to be used
+interactively for short times (<1 hour).  
+
+IT IS NOT MEANT TO BE INVOKED ON MULTIPLE INSTANCES ON COMPUTE NODES.
+Please see <http://goo.gl/XZRYs> for the proper way to compile your 
+m-code into executables for long runs which will not require a license.
+
+FAILURE TO CONVERT YOUR CODE TO m-code MAY RESULT IN JOBS BEING KILLED
+IF RUNNING MULTIPLE INSTANCES AND NOT ON AN INTERACTIVE NODE. Ask for
+help if you need it -  hpc-support@uci.edu
+Error using erfc
+Input must be real and full.
+
+Error in normcdf>localnormcdf (line 124)
+
+
+Error in normcdf (line 46)
+
+
+Error in tnormrnd (line 5)
+
+
+Error in truncNormalRand (line 6)
+
+
+Error in tmultnormrnd (line 26)
+
+
+Error in updateLatentZ (line 16)
+
+
+Error in liu2006 (line 42)
+
+
+Error in SimStudyliu2006 (line 29)
+
+MATLAB:erfc:notFullReal
