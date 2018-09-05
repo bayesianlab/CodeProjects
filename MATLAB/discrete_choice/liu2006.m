@@ -60,18 +60,12 @@ for i = 1 : Sims
     S = ystar*ystar';
     dSi = diag(diag(S).^(-.5));
     S =  (dSi*S*dSi)./(SubjectNumber+CorrMatrixDimension+1);
-    detflag = 0;
-%     while detflag == 0
-        canidate = iwishrnd(S, wishartDf);
-        d0 = diag(canidate).^(.5);
-        canD0 = diag(d0);
-        canD0i = diag(d0.^(-1));
-        canR = canD0i * canidate * canD0i;
-        det(canR)
-%         if det(canR) > .1
-%             detflag = 1;
-%         end
-%     end
+    canidate = iwishrnd(S, wishartDf);
+    d0 = diag(canidate).^(.5);
+    canD0 = diag(d0);
+    canD0i = diag(d0.^(-1));
+    canR = canD0i * canidate * canD0i;
+    det(canR)
     mhprob = min(0, .5*(CorrMatrixDimension + 1) *...
         (log(det(canR)) - log(det(R0))));
     if lu(i) < mhprob
