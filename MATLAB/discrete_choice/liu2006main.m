@@ -1,7 +1,7 @@
 % liu 2006 main
 clear;
 clc;
-Sims = 100;
+Sims = 1000;
 N = 200;
 K = 7;
 R = createSigma(-.5, K);
@@ -26,9 +26,7 @@ vecz = X*beta + E(:);
 vecy = double(vecz>0);
 y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
+mu = reshape(X*beta, K,N);
 
 [bbar, r0,ar] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
     Sims, [2,1])
-
-
-

@@ -24,6 +24,7 @@ R0avg = R0;
 
 % Storage containers and intialize local vars. 
 lu = log(unifrnd(0,1,Sims,1));
+forInverting = eye(CorrMatrixDimension);
 s1 = zeros(c,c);
 s1eye = eye(c,c);
 s2= zeros(c,1);
@@ -36,6 +37,7 @@ tempStoElems = zeros(trackingNum,1);
 r0Elems = zeros(Sims-burnin, trackingNum);
 postDraws = 0;
 accept = 0;
+trackDet = zeros(Sims,1);
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
@@ -54,15 +56,21 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
-    ystar = diag(diag(D0).^(-.5)) * (z - reshapedmu);
+    ystar = D0*(z - reshapedmu);
     S = ystar*ystar';
-    canidate = wishrnd(S, wishartDf);
-    canD0 = diag(diag(canidate).^(.5));
-    canR = diag(diag(canD0).^(-1)) * canidate * diag(diag(canD0).^(-1));
-    mhprob = min(0, .5*(CorrMatrixDimension + 1) *  (det(canR) - det(R0)));
+    dSi = diag(diag(S).^(-.5));
+    S =  (dSi*S*dSi).*(SubjectNumber+CorrMatrixDimension+1);
+    canidate = iwishrnd(S, wishartDf);
+    d0 = diag(canidate).^(.5);
+    canD0 = diag(d0);
+    canD0i = diag(d0.^(-1));
+    canR = canD0i * canidate * canD0i;
+    mhprob = min(0, .5*(CorrMatrixDimension + 1) *...
+        (log(det(canR)) - log(det(R0))));
     if lu(i) < mhprob
         accept = accept + 1;
         R0 = canR;
+        trackDet(accept) = det(R0);
         D0 = canD0;
     end
     if i > burnin
@@ -72,8 +80,9 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
-
 end
+trackDet(1:accept)
+plot(1:accept, trackDet(1:accept))
 R0bar= R0avg/(Sims-burnin + 1);
 acceptrate = accept/Sims;
 betabar = mean(stoB(burnin:end,:),1);
