@@ -56,11 +56,12 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
+    fprintf('%i\n',i)
     ystar = D0*(z - reshapedmu);
     S = ystar*ystar';
     dSi = diag(diag(S).^(-.5));
-    S =  (dSi*S*dSi).*(SubjectNumber+CorrMatrixDimension+1)\forInverting;
-    canidate = wishrnd(S, wishartDf)\forInverting;
+    S =  (dSi*S*dSi).*(SubjectNumber+CorrMatrixDimension+1);
+    canidate = iwishrnd(S, wishartDf);
     d0 = diag(canidate).^(.5);
     canD0 = diag(d0);
     canD0i = diag(d0.^(-1));
