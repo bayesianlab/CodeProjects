@@ -65,7 +65,6 @@ for i = 1 : Sims
     canD0 = diag(d0);
     canD0i = diag(d0.^(-1));
     canR = canD0i * canidate * canD0i;
-    det(canR)
     mhprob = min(0, .5*(CorrMatrixDimension + 1) *...
         (log(det(canR)) - log(det(R0))));
     if lu(i) < mhprob
