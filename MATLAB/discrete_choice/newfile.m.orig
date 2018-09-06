@@ -1,0 +1,7 @@
+fprintf('newfile\n')
+<<<<<<< HEAD
+2+2
+=======
+fprintf('newfile\n')
+fprintf('n')
+>>>>>>> hpcbranch
