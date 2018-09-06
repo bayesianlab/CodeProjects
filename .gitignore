@@ -80,3 +80,12 @@ PycharmProjects/mypythonprojects/HebrewLexicon/**
 PycharmProjects/mypythonprojects/strongs-dictionary-xml/**
 PycharmProjects/mypythonprojects/build/**
 
+
+# mcc complied files
+
+*.sh.e*
+*.sh.o*
+requiredMCR*
+run_*.sh
+
+
