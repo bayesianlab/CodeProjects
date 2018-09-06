@@ -41,7 +41,7 @@ trackDet = zeros(Sims,1);
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
-    z = updateLatentZ(y,reshapedmu, R0, z);
+    z = updateLatentZ(y,reshapedmu, R0);
     R0i = inv(R0);
     index =1:CorrMatrixDimension;
     for k = 1:SubjectNumber
@@ -55,12 +55,12 @@ for i = 1 : Sims
     stoB(i,:) = B';
     tempSum1=s1;
     tempSum2=s2;
+    
     % Correlation Matrix Part
-    fprintf('%i\n',i)
     ystar = D0*(z - reshapedmu);
     S = ystar*ystar';
-    dSi = diag(diag(S).^(-.5));
-    S =  (dSi*S*dSi).*(SubjectNumber);
+    dSi = diag(diag(S).^(-.5)).*SubjectNumber;
+    S =  (dSi*S*dSi);
     canidate = iwishrnd(S, wishartDf);
     d0 = diag(canidate).^(.5);
     canD0 = diag(d0);
@@ -69,7 +69,7 @@ for i = 1 : Sims
     mhprob = min(0, .5*(CorrMatrixDimension + 1) *...
         (log(det(canR)) - log(det(R0))));
     if lu(i) < mhprob
-        accept = accept + 1;
+        accept = accept + 1
         R0 = canR;
         det(R0)
         trackDet(accept) = det(R0);
@@ -82,7 +82,6 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
-    fprintf('%i\n',i)
 end
 trackDet(1:accept)
 plot(1:accept, trackDet(1:accept))
