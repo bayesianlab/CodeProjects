@@ -1,4 +1,4 @@
-function [betabar, R0bar, acceptrate, r0Elems] = liu2006(y,X, b0, B0,...
+function [betabar, R0bar, acceptrate, r0Elems, trackDet] = liu2006(y,X, b0, B0,...
     wishartDf, D0, R0, Sims, r0indxs)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
@@ -36,6 +36,7 @@ tempStoElems = zeros(trackingNum,1);
 r0Elems = zeros(Sims-burnin, trackingNum);
 postDraws = 0;
 accept = 0;
+trackDet = zeros(Sims,1);
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
@@ -58,7 +59,7 @@ for i = 1 : Sims
     ystar = D0*(z - reshapedmu);
     S = ystar*ystar';
     dSi = diag(diag(S).^(-.5));
-    S =  (dSi*S*dSi);
+    S =  (dSi*S*dSi).*SubjectNumber;
     canidate = iwishrnd(S, wishartDf);
     d0 = diag(canidate).^(.5);
     canD0 = diag(d0);
@@ -69,6 +70,8 @@ for i = 1 : Sims
     if lu(i) < mhprob
         accept = accept + 1;
         R0 = canR;
+        dett = det(R0);
+        trackDet(i) = dett;
         D0 = canD0;
     end
     if i > burnin
@@ -78,9 +81,9 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
+    fprintf('%i\n', i)
 end
-% trackDet(1:accept)
-% plot(1:accept, trackDet(1:accept))
+trackDet = trackDet(1:accept);
 R0bar= R0avg/(Sims-burnin + 1);
 acceptrate = accept/Sims;
 betabar = mean(stoB(burnin:end,:),1);

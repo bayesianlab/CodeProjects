@@ -1,7 +1,7 @@
 % liu 2006 main
 clear;
 clc;
-Sims = 200;
+Sims = 1000;
 N = 200;
 K = 7;
 R = [1, .8, .6, .4, .2, 0, 0;
@@ -34,5 +34,6 @@ y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
 mu = reshape(X*beta, K,N);
 
-[bbar, r0,ar] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
+[bbar, r0,ar, ~, td] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
     Sims, [2,1]);
+plot(td)
