@@ -1,7 +1,7 @@
 % liu 2006 main
 clear;
 clc;
-Sims = 10000;
+Sims = 1000;
 N = 200;
 K = 7;
 R = createSigma(-.5, K);
