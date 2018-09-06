@@ -1,4 +1,4 @@
-function [z] = updateLatentZ(y,mu,Sigma, init)
+function [z] = updateLatentZ(y,mu,Sigma)
 [r, c] = size(mu);
 z = zeros(r,c);
 A = zeros(r,c);
@@ -13,7 +13,7 @@ for j = 1:c
             B(i,j) = 0;
         end
     end
-    z(:,j) = tmultnormrnd(A(:,j), B(:,j), mu(:,j), Sigma, 1, init(:,j));
+    z(:,j) = ghkmvnrnd(A(:,j), B(:,j), mu(:,j), Sigma, 1);
 end
 end
 

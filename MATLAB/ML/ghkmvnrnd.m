@@ -3,17 +3,17 @@ function [z] = ghkmvnrnd(a,b,mu,sigma,N)
 L = chol(sigma, 'lower');
 offDiagonals = tril(L, -1);
 yDim = 1:J;
-eta = zeros(sims, J);
-for sim = 1:N
+eta = zeros(J,N);
+for i = 1:N
     for j = yDim
-        update = mu(j) + (offDiagonals(j,:)*eta(sim,:)');
-        aj = (a - update)/L(j,j);
-        bj = (b - update)/L(j,j);
+        update = mu(j) + (offDiagonals(j,:)*eta(:,i));
+        aj = (a(j) - update)/L(j,j);
+        bj = (b(j) - update)/L(j,j);
         Fb = normcdf(bj,0,1);
         Fa = normcdf(aj,0,1);
-        eta(sim,j) = norminv(unifrnd(0,1,1)*(Fb-Fa) + Fa);
+        eta(j,i) = norminv(unifrnd(0,1,1)*(Fb-Fa) + Fa);
     end
 end
-z = (L*eta' + mu')';
+z = (L*eta + mu);
 end
 

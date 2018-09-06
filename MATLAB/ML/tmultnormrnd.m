@@ -6,6 +6,7 @@ end
 if isrow(init) 
     init = init';
 end
+
 precision = Sigma\eye(J);
 Hxx = diag(precision);
 sii = sqrt(Hxx.^(-1));
