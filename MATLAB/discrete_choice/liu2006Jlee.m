@@ -1,4 +1,4 @@
-function [betabar, R0bar, acceptrate, r0Elems, trackDet] = liu2006(y,X, b0, B0,...
+function [betabar, R0bar, acceptrate, r0Elems, trackDet] = liu2006Jlee(y,X, b0, B0,...
     wishartDf, D0, R0, Sims, r0indxs)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
@@ -57,10 +57,10 @@ for i = 1 : Sims
     tempSum2=s2;
     
     % Correlation Matrix Part
-    ystar = z - reshapedmu;
+    ystar = D0*(z - reshapedmu);
     Scan = ystar*ystar';
     dSi = diag(diag(Scan).^(-.5));
-    Scan = Scan./(SubjectNumber - CorrMatrixDimension - 1);
+    Scan = (dSi*ScandSi).*SubjectNumber; 
     [~, pd] = chol(Scan,'lower');
     if pd == 0
         

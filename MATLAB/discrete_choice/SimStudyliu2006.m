@@ -10,7 +10,7 @@ R = [1, .8, .6, .4, .2, 0, 0;
     .4, .6, .8, 1, .8, .6, .4;
     .2, .4, .6, .8, 1, .8, .6;
     0, .2, .4, .6, .8, 1, .8;
-    0, 0, .2, .4, .6, .8, 1]
+    0, 0, .2, .4, .6, .8, 1];
 iR = inv(R);
 beta = [.5, .8,.3]';
 Covariates = length(beta);
@@ -32,30 +32,11 @@ vecy = double(vecz>0);
 y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
 
-[bbar, r0,ar, postr0] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
+[bbar, r0,ar, postr0,~] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
     Sims, [2,1]);
-r0
 r0ir = r0*iR;
 steinloss = trace(r0ir) - logdet(r0ir) - size(r0,1);
-fileID = fopen('SimStudyliu2006.txt' ,'w');
-fprintf(fileID, 'bbar\n');
-fprintf(fileID,'%f\n', bbar');
-fprintf(fileID, '\n');
-fprintf(fileID, 'r0 = \n');
-for i = 1:size(r0,1)
-    for j = 1:size(r0,2)
-        fprintf(fileID, '%f ', r0(i,j));
-    end
-    fprintf(fileID, '\n');
-end
-fprintf(fileID, '\n');
-fprintf(fileID, 'ar \n');
-fprintf(fileID, '%f\n', ar);
-fprintf(fileID, 'stein loss \n');
-fprintf(fileID, '%f\n', steinloss);
-fclose(fileID);
-writetable(array2table(postr0), 'r0postrw.csv')
-
+save('simres.mat')
 
 end
 
