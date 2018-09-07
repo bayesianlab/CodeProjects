@@ -1,4 +1,5 @@
 #!bin/bash
+#$ -N liurun
 #$ -S /bin/bash
 #$ -q pub8i
 #$ -l mem_free=8G
@@ -6,4 +7,4 @@
 #$ -notify 
 #$ -M dillonflann@gmail.com
 module load MATLAB
-./SimStudyliu2006 20000
+./SimStudyliu2006 100
