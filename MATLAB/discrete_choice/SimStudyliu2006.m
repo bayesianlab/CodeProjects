@@ -4,7 +4,13 @@ if ischar(Sims)
 end
 N = 200;
 K = 7;
-R = createSigma(-.5, K);
+R = [1, .8, .6, .4, .2, 0, 0;
+    .8, 1, .8, .6, .4, .2, 0;
+    .6, .8, 1, .8, .6, .4, .2;
+    .4, .6, .8, 1, .8, .6, .4;
+    .2, .4, .6, .8, 1, .8, .6;
+    0, .2, .4, .6, .8, 1, .8;
+    0, 0, .2, .4, .6, .8, 1]
 iR = inv(R);
 beta = [.5, .8,.3]';
 Covariates = length(beta);
@@ -28,7 +34,7 @@ z = reshape(vecz, K,N);
 
 [bbar, r0,ar, postr0] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
     Sims, [2,1]);
-
+r0
 r0ir = r0*iR;
 steinloss = trace(r0ir) - logdet(r0ir) - size(r0,1);
 fileID = fopen('SimStudyliu2006.txt' ,'w');
