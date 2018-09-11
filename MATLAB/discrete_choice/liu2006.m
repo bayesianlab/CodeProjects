@@ -26,6 +26,7 @@ R0avg = R0;
 lu = log(unifrnd(0,1,Sims,1));
 s1 = zeros(c,c);
 s1eye = eye(c,c);
+r0i = eye(CorrMatrixDimension);
 s2= zeros(c,1);
 tempSum1 = s1;
 tempSum2=s2;
@@ -48,7 +49,7 @@ for i = 1 : Sims
         z = updateLatentZ(y, reshapedmu, workingR0);
     end
     
-    R0i = inv(R0);
+    R0i = R0\r0i;
     index =1:CorrMatrixDimension;
     for k = 1:SubjectNumber
         select = index + (k-1)*CorrMatrixDimension;
