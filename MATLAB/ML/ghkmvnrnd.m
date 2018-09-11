@@ -16,7 +16,8 @@ for i = 1:N
 end
 z = (L*eta + mu);
 if sum(~isfinite(z)) > 0
-    fprintf('warning\n')
+    fprintf('in ghk\n')
+    z
     [a,b,mu]
     L
     na = 1;
