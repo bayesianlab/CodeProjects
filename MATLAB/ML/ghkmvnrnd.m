@@ -1,4 +1,4 @@
-function [z] = ghkmvnrnd(a,b,mu,sigma,N)
+function [z, na] = ghkmvnrnd(a,b,mu,sigma,N)
 [J,~] = size(sigma);
 L = chol(sigma, 'lower');
 offDiagonals = tril(L, -1);
@@ -15,5 +15,13 @@ for i = 1:N
     end
 end
 z = (L*eta + mu);
+if sum(~isfinite(z)) > 0
+    fprintf('warning\n')
+    [a,b,mu]
+    L
+    na = 1;
+else
+    na =0;
+
 end
 
