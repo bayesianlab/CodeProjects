@@ -47,7 +47,7 @@ for i = 1 : Sims
         fprintf('warning\n')
         z = updateLatentZ(y, reshapedmu, workingR0);
     end
-    end
+    
     R0i = inv(R0);
     index =1:CorrMatrixDimension;
     for k = 1:SubjectNumber
@@ -94,7 +94,7 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
-    fprintf('%i\n', i)
+%     fprintf('%i\n', i)
 end
 trackDet = trackDet(1:accept);
 R0bar= R0avg/(Sims-burnin + 1);

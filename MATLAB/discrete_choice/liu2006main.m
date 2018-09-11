@@ -34,7 +34,7 @@ y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
 mu = reshape(X*beta, K,N);
 
-Reps = 1;
+Reps = 50;
 posttrackingnums = [2,1;3,2; 6,3; 7,1]; 
 bbar = zeros(Reps,length(b0));
 r0 = zeros(size(R,1), size(R,1), Reps);
