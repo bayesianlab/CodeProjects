@@ -7,4 +7,4 @@
 #$ -notify 
 #$ -M dillonflann@gmail.com
 module load MATLAB
-./SimStudyliu2006 100
+./SimStudyliu2006 10000
