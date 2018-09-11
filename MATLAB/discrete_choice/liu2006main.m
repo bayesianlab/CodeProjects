@@ -1,7 +1,7 @@
 % liu 2006 main
 clear;
 clc;
-Sims = 100;
+Sims = 8000;
 N = 200;
 K = 7;
 R = [1, .8, .6, .4, .2, 0, 0;
@@ -10,7 +10,7 @@ R = [1, .8, .6, .4, .2, 0, 0;
     .4, .6, .8, 1, .8, .6, .4;
     .2, .4, .6, .8, 1, .8, .6;
     0, .2, .4, .6, .8, 1, .8;
-    0, 0, .2, .4, .6, .8, 1]
+    0, 0, .2, .4, .6, .8, 1];
 iR = inv(R);
 beta = [.5, .8,.3]';
 Covariates = length(beta);
@@ -34,6 +34,18 @@ y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
 mu = reshape(X*beta, K,N);
 
-[bbar, r0,ar, ~, td] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
-    Sims, [2,1]);
-plot(td)
+Reps = 50;
+posttrackingnums = [2,1;3,2; 6,3; 7,1]; 
+bbar = zeros(Reps,length(b0));
+r0 = zeros(size(R,1), size(R,1), Reps);
+post = zeros(Sims - floor(.1*Sims),size(posttrackingnums,1), Reps);
+ar = zeros(Reps,1);
+steinloss = zeros(Reps,1);
+for i =1:Reps
+    i
+    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), td] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
+        Sims, posttrackingnums);
+    r0ir = r0(:,:,i)*iR;
+    steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
+end
+

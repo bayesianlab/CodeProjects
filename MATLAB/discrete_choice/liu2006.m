@@ -58,12 +58,12 @@ for i = 1 : Sims
     
     % Correlation Matrix Part
     ystar = z - reshapedmu;
+
     Scan = ystar*ystar';
     dSi = diag(diag(Scan).^(-.5));
     Scan = Scan./(SubjectNumber - CorrMatrixDimension - 1);
     [~, pd] = chol(Scan,'lower');
     if pd == 0
-        
         S0 = Scan;
     else
         fprintf('warning\n')

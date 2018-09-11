@@ -63,7 +63,6 @@ for i = 1 : Sims
     Scan = (dSi*ScandSi).*SubjectNumber; 
     [~, pd] = chol(Scan,'lower');
     if pd == 0
-        
         S0 = Scan;
     else
         fprintf('warning\n')
