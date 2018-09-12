@@ -18,6 +18,7 @@ for j = 1:c
         fprintf('in latent z \n')
         [A(:,j), B(:,j), mu(:,j)]
         Sigma
+        z(:,j)
         break
     end
 end

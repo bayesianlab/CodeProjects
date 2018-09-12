@@ -26,6 +26,7 @@ R0avg = R0;
 lu = log(unifrnd(0,1,Sims,1));
 s1 = zeros(c,c);
 s1eye = eye(c,c);
+r0i = eye(CorrMatrixDimension);
 s2= zeros(c,1);
 tempSum1 = s1;
 tempSum2=s2;
@@ -38,26 +39,34 @@ postDraws = 0;
 accept = 0;
 trackDet = zeros(Sims,1);
 S0 = eye(CorrMatrixDimension);
-workingR0 = R0;
+Bcan = B0;
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
     z = updateLatentZ(y,reshapedmu, R0);
     if sum(~isfinite(z)) > 0
-        fprintf('warning\n')
-        z = updateLatentZ(y, reshapedmu, workingR0);
+        fprintf('z warning\n')
+        y
+        reshapedmu
+        R0
+        break
     end
-    
-    R0i = inv(R0);
+    R0i = R0\r0i;
     index =1:CorrMatrixDimension;
     for k = 1:SubjectNumber
         select = index + (k-1)*CorrMatrixDimension;
         tempSum1 = tempSum1 + X(select, :)'*R0i*X(select,:);
         tempSum2 = tempSum2 + X(select, :)'*R0i*z(:,k);
     end
-    B0 = (B0inv + tempSum1)\s1eye;
+    Bcan = (B0inv + tempSum1)\s1eye;
+    [L, pd] = chol(Bcan,'lower');
+    if pd ==0
+	    B0 = Bcan;
+    else
+	    fprintf('Non pd B0\n')
+    end
     b0 = B0*(BpriorsPre + tempSum2);
-    B = b0 + chol(B0,'lower')*normrnd(0,1,c,1);
+    B = b0 + L*normrnd(0,1,c,1);
     stoB(i,:) = B';
     tempSum1=s1;
     tempSum2=s2;
@@ -70,7 +79,7 @@ for i = 1 : Sims
     if pd == 0
         S0 = Scan;
     else
-        fprintf('warning\n')
+        fprintf('Canidate not pd\n')
     end
     canidate = iwishrnd(S0, wishartDf);
     d0 = diag(canidate).^(.5);
@@ -94,7 +103,7 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
-%     fprintf('%i\n', i)
+    fprintf('%i\n', i)
 end
 trackDet = trackDet(1:accept);
 R0bar= R0avg/(Sims-burnin + 1);

@@ -18,11 +18,14 @@ z = (L*eta + mu);
 if sum(~isfinite(z)) > 0
     fprintf('in ghk\n')
     z
+    fprintf('in ghk problem\n')
     [a,b,mu]
     L
+    z
     na = 1;
 else
     na =0;
+end
 
 end
 
