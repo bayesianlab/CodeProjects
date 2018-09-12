@@ -43,10 +43,11 @@ workingR0 = R0;
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
-    z = updateLatentZ(y,reshapedmu, R0);
-    if sum(~isfinite(z)) > 0
+    [z, na] = updateLatentZ(y,reshapedmu, R0);
+    if na == 1
         fprintf('warning\n')
         z = updateLatentZ(y, reshapedmu, workingR0);
+        break
     end
     
     R0i = R0\r0i;
