@@ -44,7 +44,7 @@ for i = 1 : Sims
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
     [z, na] = updateLatentZ(y,reshapedmu, R0);
     if na == 1
-        fprintf('warning\n')
+        fprintf('update latent z failed\n')
         break
     end
     R0i = R0\r0i;
