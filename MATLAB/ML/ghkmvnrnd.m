@@ -16,12 +16,14 @@ for i = 1:N
 end
 z = (L*eta + mu);
 if sum(~isfinite(z)) > 0
-    fprintf('warning\n')
+    fprintf('in ghk problem\n')
     [a,b,mu]
     L
+    z
     na = 1;
 else
     na =0;
+end
 
 end
 
