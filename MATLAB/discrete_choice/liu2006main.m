@@ -58,3 +58,4 @@ for i =1:Reps
     steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
 end
 
+save('liuSimResults.mat')

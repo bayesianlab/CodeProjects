@@ -1,4 +1,4 @@
-function [z] = updateLatentZ(y,mu,Sigma)
+function [z, na] = updateLatentZ(y,mu,Sigma)
 [r, c] = size(mu);
 z = zeros(r,c);
 A = zeros(r,c);

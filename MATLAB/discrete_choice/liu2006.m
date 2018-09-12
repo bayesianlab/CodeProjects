@@ -39,16 +39,12 @@ postDraws = 0;
 accept = 0;
 trackDet = zeros(Sims,1);
 S0 = eye(CorrMatrixDimension);
-Bcan = B0;
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
-    z = updateLatentZ(y,reshapedmu, R0);
-    if sum(~isfinite(z)) > 0
-        fprintf('z warning\n')
-        y
-        reshapedmu
-        R0
+    [z, na] = updateLatentZ(y,reshapedmu, R0);
+    if na == 1
+        fprintf('warning\n')
         break
     end
     R0i = R0\r0i;
