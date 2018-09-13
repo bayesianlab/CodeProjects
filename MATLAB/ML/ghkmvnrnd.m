@@ -16,6 +16,7 @@ for i = 1:N
     end
 end
 z = (L*eta + mu);
+na = 0;
 if sum(~isfinite(z)) > 0
     fprintf('in ghk problem\n')
     [a,b,mu]
