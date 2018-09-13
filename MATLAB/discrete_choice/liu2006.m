@@ -1,4 +1,4 @@
-function [betabar, R0bar, acceptrate, r0Elems, trackDet, na] = liu2006(y,X, b0, B0,...
+function [betabar, R0bar, acceptrate, r0Elems, trackDet] = liu2006(y,X, b0, B0,...
     wishartDf, D0, R0, Sims, r0indxs)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
@@ -51,10 +51,10 @@ for i = 1 : Sims
         tempSum2 = tempSum2 + X(select, :)'*R0i*z(:,k);
     end
     B0 = (B0inv + tempSum1)\s1eye;
-    [L, pd] = chol(Bcan,'lower');
-    if pd ==0
+    [L, pd] = chol(B0,'lower');
+    if pd ~=0
         fprintf('Non pd B0\n')
-	    break 
+        break
     end
     b0 = B0*(BpriorsPre + tempSum2);
     B = b0 + L*normrnd(0,1,c,1);
