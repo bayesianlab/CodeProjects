@@ -1,4 +1,4 @@
-function [z] = updateLatentZ(y,mu,Sigma)
+function [z, stopall] = updateLatentZ(y,mu,Sigma)
 [r, c] = size(mu);
 z = zeros(r,c);
 A = zeros(r,c);
@@ -14,10 +14,12 @@ for j = 1:c
         end
     end
     [z(:,j), na] = ghkmvnrnd(A(:,j), B(:,j), mu(:,j), Sigma, 1);
+    stopall = 0;
     if na == 1
         fprintf('in latent z \n')
         [A(:,j), B(:,j), mu(:,j)]
         Sigma
+        stopall = 1;
         break
     end
 end

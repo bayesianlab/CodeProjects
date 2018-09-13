@@ -43,10 +43,15 @@ workingR0 = R0;
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
-    z = updateLatentZ(y,reshapedmu, R0);
-    if sum(~isfinite(z)) > 0
-        fprintf('warning\n')
-        z = updateLatentZ(y, reshapedmu, workingR0);
+    [z, stopall] = updateLatentZ(y,reshapedmu, R0);
+    if stopall == 1
+        fprintf('Error\n')
+        z
+        R0 
+        reshapedmu
+        B
+        B0
+        break
     end
     
     R0i = R0\r0i;
@@ -95,7 +100,7 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
-%     fprintf('%i\n', i)
+    fprintf('%i\n', i)
 end
 trackDet = trackDet(1:accept);
 R0bar= R0avg/(Sims-burnin + 1);

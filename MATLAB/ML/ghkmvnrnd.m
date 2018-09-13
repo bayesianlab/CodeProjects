@@ -23,6 +23,7 @@ if sum(~isfinite(z)) > 0
     na = 1;
 else
     na =0;
+end
 
 end
 
