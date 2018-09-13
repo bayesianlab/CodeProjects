@@ -42,7 +42,8 @@ S0 = eye(CorrMatrixDimension);
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
-    [z, na] = updateLatentZ(y,reshapedmu, R0);
+    [z, na] =updateLatentZ(y,reshapedmu, R0);
+%     if sum(sum(~isfinite(z))) > 0
     if na == 1
         fprintf('update latent z failed\n')
         break
