@@ -1,6 +1,6 @@
 function [z, na] = ghkmvnrnd(a,b,mu,sigma,N)
 [J,~] = size(sigma);
-us = unifrnd(0,1,J);
+us = unifrnd(0,1,J,1);
 L = chol(sigma, 'lower');
 offDiagonals = tril(L, -1);
 yDim = 1:J;
