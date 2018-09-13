@@ -34,16 +34,7 @@ y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
 mu = reshape(X*beta, K,N);
 
-% r = [    1.0000    0.0431    0.1585    0.1535   -0.0635    0.1156    0.9510
-%     0.0431    1.0000    0.2524    0.0049   -0.0213   -0.0968    0.0097
-%     0.1585    0.2524    1.0000    0.3608    0.2532    0.2455    0.1668
-%     0.1535    0.0049    0.3608    1.0000    0.4905    0.2008    0.2987
-%    -0.0635   -0.0213    0.2532    0.4905    1.0000    0.2264   -0.0308
-%     0.1156   -0.0968    0.2455    0.2008    0.2264    1.0000    0.2553
-%     0.9510    0.0097    0.1668    0.2987   -0.0308    0.2553    1.0000]
-
-
-Reps = 1;
+Reps = 50;
 posttrackingnums = [2,1;3,2; 6,3; 7,1]; 
 bbar = zeros(Reps,length(b0));
 r0 = zeros(size(R,1), size(R,1), Reps);
@@ -52,8 +43,11 @@ ar = zeros(Reps,1);
 steinloss = zeros(Reps,1);
 for i =1:Reps
     i
-    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), td] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
+    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), td,na] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
         Sims, posttrackingnums);
+    if na == 1
+        break
+    end
     r0ir = r0(:,:,i)*iR;
     steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
 end
