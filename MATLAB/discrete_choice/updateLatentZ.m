@@ -13,14 +13,7 @@ for j = 1:c
             B(i,j) = 0;
         end
     end
-    [z(:,j), na] = ghkmvnrnd(A(:,j), B(:,j), mu(:,j), Sigma, 1);
-    if na == 1
-        fprintf('in latent z \n')
-        [A(:,j), B(:,j), mu(:,j)]
-        Sigma
-        na= 1;
-        break
-    end
+   z(:,j) = ghkmvnrnd(A(:,j), B(:,j), mu(:,j), Sigma, 1);
 end
 end
 

@@ -42,11 +42,7 @@ S0 = eye(CorrMatrixDimension);
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
-    [z, na] = updateLatentZ(y,reshapedmu, R0);
-    if na == 1
-        fprintf('update latent z failed\n')
-        break
-    end
+    z =updateLatentZ(y,reshapedmu, R0);
     R0i = R0\r0i;
     index =1:CorrMatrixDimension;
     for k = 1:SubjectNumber
@@ -54,12 +50,11 @@ for i = 1 : Sims
         tempSum1 = tempSum1 + X(select, :)'*R0i*X(select,:);
         tempSum2 = tempSum2 + X(select, :)'*R0i*z(:,k);
     end
-    Bcan = (B0inv + tempSum1)\s1eye;
+    B0 = (B0inv + tempSum1)\s1eye;
     [L, pd] = chol(Bcan,'lower');
     if pd ==0
-	    B0 = Bcan;
-    else
-	    fprintf('Non pd B0\n')
+        fprintf('Non pd B0\n')
+	    break 
     end
     b0 = B0*(BpriorsPre + tempSum2);
     B = b0 + L*normrnd(0,1,c,1);

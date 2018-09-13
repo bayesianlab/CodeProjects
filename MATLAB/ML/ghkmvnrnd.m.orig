@@ -1,0 +1,43 @@
+function [z, na] = ghkmvnrnd(a,b,mu,sigma,N)
+[J,~] = size(sigma);
+<<<<<<< HEAD
+us = unifrnd(0,1,J,1);
+||||||| merged common ancestors
+us = unifrnd(0,1,J);
+=======
+us = unifrnd(0,1,J, 1);
+>>>>>>> d158b66fb04ceb606d93a650c9e08a164c3e9413
+L = chol(sigma, 'lower');
+offDiagonals = tril(L, -1);
+yDim = 1:J;
+eta = zeros(J,N);
+% badoutput = 1;
+na = 0;
+% while badoutput == 1
+    for i = 1:N
+        for j = yDim
+            update = mu(j) + (offDiagonals(j,:)*eta(:,i));
+            aj = (a(j) - update)/L(j,j);
+            bj = (b(j) - update)/L(j,j);
+            Fb = normcdf(bj,0,1);
+            Fa = normcdf(aj,0,1);
+            eta(j,i) = norminv(us(j)*(Fb-Fa) + Fa);
+        end
+        if sum(sum(double(~isfinite(eta(:,i))))) == 0 
+            badoutput = 0;
+        else
+            save('errout.mat')
+            na = 1;
+        end
+    end
+    z = (L*eta + mu);
+%     if sum(sum(double(~isfinite(z)))) == 0 
+%             badoutput = 0;
+%     else
+%         save('errout.mat')
+%         na = 1;
+%     end
+% end
+end
+
+
