@@ -60,7 +60,7 @@ for i = 1 : Sims
     ystar = D0*(z - reshapedmu);
     Scan = ystar*ystar';
     dSi = diag(diag(Scan).^(-.5));
-    Scan = (dSi*ScandSi).*SubjectNumber; 
+    Scan = (dSi*Scan*dSi).*SubjectNumber; 
     [~, pd] = chol(Scan,'lower');
     if pd == 0
         S0 = Scan;
@@ -88,7 +88,7 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
-    fprintf('%i\n', i)
+%     fprintf('%i\n', i)
 end
 trackDet = trackDet(1:accept);
 R0bar= R0avg/(Sims-burnin + 1);
