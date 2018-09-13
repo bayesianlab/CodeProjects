@@ -27,7 +27,6 @@ L = chol(sigma, 'lower')
 offDiagonals = tril(L, -1)
 yDim = 1:J
 eta = zeros(J,N)
-
 for i = 1:N
     for j = yDim
         update = mu(j) + (offDiagonals(j,:)*eta(:,i))
