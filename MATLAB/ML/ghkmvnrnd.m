@@ -21,12 +21,20 @@ if sum(~isfinite(z)) > 0
     L
     z
     na = 1;
+<<<<<<< HEAD
+    [J,~] = size(sigma);
+L = chol(sigma, 'lower');
+offDiagonals = tril(L, -1);
+yDim = 1:J;
+eta = zeros(J,N);
+=======
     fprintf('Error Causing Material')
     [J,~] = size(sigma)
 L = chol(sigma, 'lower')
 offDiagonals = tril(L, -1)
 yDim = 1:J
 eta = zeros(J,N)
+>>>>>>> 9538ff5f8ffc71e75cbf8b59b88a5092cff33098
 for i = 1:N
     for j = yDim
         update = mu(j) + (offDiagonals(j,:)*eta(:,i))

@@ -1,6 +1,6 @@
 #!bin/bash
 #$ -S /bin/bash
-#$ -q pub8i
+#$ -q free48
 #$ -N liurun
 #$ -l mem_free=2G
 #$ -cwd
