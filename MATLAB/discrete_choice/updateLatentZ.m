@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 function [z, stopall] = updateLatentZ(y,mu,Sigma)
+=======
+function [z, na] = updateLatentZ(y,mu,Sigma)
+>>>>>>> 9538ff5f8ffc71e75cbf8b59b88a5092cff33098
 [r, c] = size(mu);
 z = zeros(r,c);
 A = zeros(r,c);
@@ -19,7 +23,11 @@ for j = 1:c
         fprintf('in latent z \n')
         [A(:,j), B(:,j), mu(:,j)]
         Sigma
+<<<<<<< HEAD
         stopall = 1;
+=======
+        z(:,j)
+>>>>>>> 9538ff5f8ffc71e75cbf8b59b88a5092cff33098
         break
     end
 end

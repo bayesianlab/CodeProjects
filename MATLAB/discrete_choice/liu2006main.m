@@ -43,8 +43,11 @@ ar = zeros(Reps,1);
 steinloss = zeros(Reps,1);
 for i =1:Reps
     i
-    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), td] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
+    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), td,na] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
         Sims, posttrackingnums);
+    if na == 1
+        break
+    end
     r0ir = r0(:,:,i)*iR;
     steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
 end

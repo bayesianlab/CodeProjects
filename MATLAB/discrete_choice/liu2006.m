@@ -1,4 +1,4 @@
-function [betabar, R0bar, acceptrate, r0Elems, trackDet] = liu2006(y,X, b0, B0,...
+function [betabar, R0bar, acceptrate, r0Elems, trackDet, na] = liu2006(y,X, b0, B0,...
     wishartDf, D0, R0, Sims, r0indxs)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
@@ -39,10 +39,10 @@ postDraws = 0;
 accept = 0;
 trackDet = zeros(Sims,1);
 S0 = eye(CorrMatrixDimension);
-workingR0 = R0;
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
+<<<<<<< HEAD
     [z, stopall] = updateLatentZ(y,reshapedmu, R0);
     if stopall == 1
         fprintf('Error\n')
@@ -51,9 +51,13 @@ for i = 1 : Sims
         reshapedmu
         B
         B0
+=======
+    [z, na] = updateLatentZ(y,reshapedmu, R0);
+    if na == 1
+        fprintf('update latent z failed\n')
+>>>>>>> 9538ff5f8ffc71e75cbf8b59b88a5092cff33098
         break
     end
-    
     R0i = R0\r0i;
     index =1:CorrMatrixDimension;
     for k = 1:SubjectNumber
@@ -61,9 +65,15 @@ for i = 1 : Sims
         tempSum1 = tempSum1 + X(select, :)'*R0i*X(select,:);
         tempSum2 = tempSum2 + X(select, :)'*R0i*z(:,k);
     end
-    B0 = (B0inv + tempSum1)\s1eye;
+    Bcan = (B0inv + tempSum1)\s1eye;
+    [L, pd] = chol(Bcan,'lower');
+    if pd ==0
+	    B0 = Bcan;
+    else
+	    fprintf('Non pd B0\n')
+    end
     b0 = B0*(BpriorsPre + tempSum2);
-    B = b0 + chol(B0,'lower')*normrnd(0,1,c,1);
+    B = b0 + L*normrnd(0,1,c,1);
     stoB(i,:) = B';
     tempSum1=s1;
     tempSum2=s2;
@@ -76,7 +86,7 @@ for i = 1 : Sims
     if pd == 0
         S0 = Scan;
     else
-        fprintf('warning\n')
+        fprintf('Canidate not pd\n')
     end
     canidate = iwishrnd(S0, wishartDf);
     d0 = diag(canidate).^(.5);
