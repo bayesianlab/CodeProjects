@@ -1,57 +1,55 @@
 clear;
 clc;
-rng(5);
-
-Sims = 1;
-N = 25;
-K = 2;
-c = ones(N,1);
-Sigma = eye(K) +[0,.5;.5,0];
-x1 = [c,normrnd(0,1, N,1)];
-x2 = [normrnd(0, 1, N,2)];
-
-T1 = kron(x1, eye(K));
-T2 = kron(x2, eye(K));
-T1 = [ T1(:,1), T1(:,3)];
-T2 = [T2(:,2), T2(:,4)];
-surX = [T1,T2];
-[nrow, ncol] = size(surX);
-TrueB = [.3, -.5, -1.5, .6]';
-eps = mvnrnd(zeros(K,1), Sigma,N)';
-mu = surX*TrueB;
-vecz = mu + eps(:);
-MLEs = inv(surX'*surX)*surX'*vecz;
-sigmamle = (reshape(vecz,K,N)' - reshape(mu,K,N)')'*(reshape(vecz,K,N)'...
-    - reshape(mu,K,N)')./N;
-D0inv = diag(1./sqrt(diag(sigmamle)));
-MLER = D0inv*sigmamle*D0inv;
-R0 = eye(2);
-D0 = .1*inv(D0inv);
-y = double(vecz > 0);
-y = reshape(y,K,N);
-mu = reshape(mu, K,N);
-
-b0 = zeros(ncol, 1);
-B0 = eye(ncol)*100;
-wishartDf = 200;
+Sims = 10000;
+N = 200;
+K = 7;
+R = [1, .8, .6, .4, .2, 0, 0;
+    .8, 1, .8, .6, .4, .2, 0;
+    .6, .8, 1, .8, .6, .4, .2;
+    .4, .6, .8, 1, .8, .6, .4;
+    .2, .4, .6, .8, 1, .8, .6;
+    0, .2, .4, .6, .8, 1, .8;
+    0, 0, .2, .4, .6, .8, 1];
+iR = inv(R);
+beta = [.5, .8,.3]';
+Covariates = length(beta);
+b0 = zeros(length(beta),1);
+B0 = eye(length(b0))*10;
+wishartDf = N;
+W0 = wishrnd(eye(K), wishartDf)./wishartDf;
+D0 = diag(W0).^(.5);
+R0 = diag(D0.^(-1))*W0*diag(D0.^(-1));
+timetrend =(1:K)'-4;
+timetrendsqd = timetrend.^2;
+t = 1:K;
+for i = 1:N
+    select = t + (i-1)*K;
+    X(select, :) = [ones(K,1), timetrend, normrnd(0,3,K,1)];
+end
+E=mvnrnd(zeros(K,1),R, N)';
+vecz = X*beta + E(:);
+vecy = double(vecz>0);
+y = reshape(vecy, K,N);
+z = reshape(vecz, K,N);
+mu = reshape(X*beta, K,N);
 
 
-yz = reshape(vecz, K,N);
-y
-[bbar, Rbar, ar] = mv_probit(y, surX, MLEs, B0, wishartDf, ...
-     D0, R0, eye(2), Sims);
-MeanBeta = bbar';
-disp(table(TrueB, MLEs, MeanBeta))
+Reps = 50;
+posttrackingnums = [2,1;3,2; 6,3; 7,1]; 
+bbar = zeros(Reps,length(b0));
+r0 = zeros(size(R,1), size(R,1), Reps);
+post = zeros(Sims - floor(.1*Sims),size(posttrackingnums,1), Reps);
+ar = zeros(Reps,1);
+steinloss = zeros(Reps,1);
+for i =1:Reps
+    i
+    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i)] = mv_probit(y, X, b0, B0, wishartDf, diag(D0), R0,...
+        Sims, posttrackingnums);
+    if na == 1
+        break
+    end
+    r0ir = r0(:,:,i)*iR;
+    steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
+end
 
-fprintf('Average Correlation Matrix: \n')
-disp(Rbar)
-fprintf('Accept reject rate MH: \n')
-disp(ar)
-fprintf('TrueSigma\n')
-disp(Sigma)
-fprintf('MLE Sigma\n')
-disp(MLER)
-fprintf('Sample Size\n')
-disp(N)
-fprintf('Simulation Runs\n')
-disp(Sims)
+save('liuSimResults.mat')

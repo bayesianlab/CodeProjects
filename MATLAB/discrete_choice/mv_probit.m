@@ -39,7 +39,7 @@ postDraws = 0;
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrelationMatrixDimension, SubjectNumber);
-    z = updateLatentZ(y,reshapedmu, R0, z);
+    z = updateLatentZ(y,reshapedmu, R0);
     R0i = inv(R0);
     index =1:CorrelationMatrixDimension;
     for k = 1:SubjectNumber
@@ -55,7 +55,7 @@ for i = 1 : Sims
     tempSum2=s2;
     % Correlation Matrix Part
     [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf,...
-        W0.*(wishartDf - CorrelationMatrixDimension - 1));
+        W0.*wishartDf);
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');
     if lu(i) < alpha
