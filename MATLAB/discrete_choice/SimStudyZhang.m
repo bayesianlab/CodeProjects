@@ -1,4 +1,4 @@
-function [  ] = SimStudyZhang( Sims)
+function [  ] = SimStudyZhang(Sims)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
