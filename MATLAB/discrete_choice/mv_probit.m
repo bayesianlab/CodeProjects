@@ -37,6 +37,7 @@ r0Elems = zeros(Sims-burnin, trackingNum);
 postDraws = 0;
 
 for i = 1 : Sims
+    fprintf('%i\n',i)
     mu = X*B;
     reshapedmu = reshape(mu, CorrelationMatrixDimension, SubjectNumber);
     z = updateLatentZ(y,reshapedmu, R0);

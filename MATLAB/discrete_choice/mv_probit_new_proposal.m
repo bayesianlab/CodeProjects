@@ -38,7 +38,7 @@ postDraws = 0;
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrelationMatrixDimension, SubjectNumber);
-    z = updateLatentZ(y,reshapedmu, R0, z);
+    z = updateLatentZ(y,reshapedmu, R0);
     R0i = R0\eye(CorrelationMatrixDimension);
     index =1:CorrelationMatrixDimension;
     for k = 1:SubjectNumber
@@ -59,11 +59,6 @@ for i = 1 : Sims
     D0invhalf = diag(diag(W0).^(-.5));
     R0 = D0invhalf*W0*D0invhalf;
     [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0./wishartDf);
-
-    
-%     [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0*wishartDf);
-%     Rstar
-%     det(Rstar)
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');
     if lu(i) < alpha
