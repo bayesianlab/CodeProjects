@@ -32,11 +32,22 @@ vecy = double(vecz>0);
 y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
 
-[bbar, r0,ar, postr0,~] = liu2006Vanilla(y, X, b0, B0, wishartDf, diag(D0), R0,...
-    Sims, [2,1]);
-r0ir = r0*iR;
-steinloss = trace(r0ir) - logdet(r0ir) - size(r0,1);
-save('simres.mat')
+Reps = 50;
+posttrackingnums = [2,1;3,2; 6,3; 7,1]; 
+bbar = zeros(Reps,length(b0));
+r0 = zeros(size(R,1), size(R,1), Reps);
+post = zeros(Sims - floor(.1*Sims),size(posttrackingnums,1), Reps);
+ar = zeros(Reps,1);
+steinloss = zeros(Reps,1);
+for i =1:Reps
+    i
+    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), td] = liu2006(y, X, b0, B0, wishartDf, diag(D0), R0,...
+        Sims, posttrackingnums);
+    r0ir = r0(:,:,i)*iR;
+    steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
+end
+
+save('simresvanilla.mat')
 
 end
 
