@@ -1,10 +1,10 @@
 #!bin/bash
 #$ -S /bin/bash
-#$ -N vanilla
 #$ -q pub8i
-#$ -l mem_free=2G
+#$ -N jlee
+#$ -l mem_free=4G
 #$ -cwd
 #$ -notify 
 #$ -M dillonflann@gmail.com
 module load MATLAB
-./SimStudyliu2006Vanilla 10000
+./SimStudyliu2006Jlee 10000
