@@ -88,4 +88,9 @@ PycharmProjects/mypythonprojects/build/**
 requiredMCR*
 run_*.sh
 
-
+/MATLAB/discrete_choice/SSMv/**
+/MATLAB/discrete_choice/SSjlee/**
+/MATLAB/discrete_choice/SSliu/**
+/MATLAB/discrete_choice/SSNewP/**
+/MATLAB/discrete_choice/SSzhang/**
+/MATLAB/discrete_choice/SSzhangnewprop/**
