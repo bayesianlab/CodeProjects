@@ -57,7 +57,7 @@ for i = 1 : Sims
     tempSum2=s2;
     
     % Correlation Matrix Part
-    ystar = D0*(z - reshapedmu);
+    ystar = (z - reshapedmu);
     Scan = ystar*ystar';
     dSi = diag(diag(Scan).^(-.5));
     Scan = (dSi*Scan*dSi).*SubjectNumber; 

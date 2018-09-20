@@ -47,6 +47,6 @@ for i =1:Reps
     r0ir = r0(:,:,i)*iR;
     steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
 end
-save('simeresjlee.mat')
+save('simeresjlee_.mat')
 end
 

@@ -57,17 +57,10 @@ for i = 1 : Sims
     tempSum2=s2;
     
     % Correlation Matrix Part
-    ystar = D0*(z - reshapedmu);
+    ystar = (z - reshapedmu);
     Scan = ystar*ystar';
     dSi = diag(diag(Scan).^(-.5));
     Scan = dSi*Scan*dSi;
-    [~, pd] = chol(Scan,'lower');
-    if pd == 0
-        
-        S0 = Scan;
-    else
-        fprintf('warning\n')
-    end
     canidate = iwishrnd(S0, wishartDf);
     d0 = diag(canidate).^(.5);
     canD0 = diag(d0);
