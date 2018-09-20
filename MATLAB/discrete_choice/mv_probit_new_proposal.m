@@ -58,7 +58,7 @@ for i = 1 : Sims
     D0 = diag(diag(W0));
     D0invhalf = diag(diag(W0).^(-.5));
     R0 = D0invhalf*W0*D0invhalf;
-    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0./wishartDf);
+    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0);
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');
     if lu(i) < alpha
