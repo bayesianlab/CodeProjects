@@ -7,7 +7,7 @@ exponentOnR = .5*(m - rr - 1);
 logdetR = exponentOnR*logdet(R);
 logdetD = exponentOnD*(sum(log(diag(D))));
 Dhalf = D.^.5;
-traceInvSDRD = -.5*trace(S\Dhalf*R*Dhalf);
+traceInvSDRD = -.5*trace(S\(Dhalf*R*Dhalf));
 pdfval = logdetR + logdetD + traceInvSDRD;
 end
 

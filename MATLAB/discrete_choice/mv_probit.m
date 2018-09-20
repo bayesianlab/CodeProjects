@@ -1,12 +1,12 @@
-function [betabar, R0bar, acceptrate, r0Elems] = mv_probit(y,X, b0, B0,...
+function [betabar, R0bar, acceptrate, r0Elems, R0sto] = mv_probit(y,X, b0, B0,...
     wishartDf, D0, R0, Sims, r0indxs)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
 % Dimension sizes needed
 % X is longitudnal data
 % subject Xij = [1, x(i,1,...J)]
-if floor(.1*Sims) > 1
-    burnin = floor(.1*Sims);
+if floor(.9*Sims) > 1
+    burnin = floor(.9*Sims);
 else
     burnin = 1;
 end
@@ -35,7 +35,7 @@ trackingNum = size(r0indxs,1);
 tempStoElems = zeros(trackingNum,1);
 r0Elems = zeros(Sims-burnin, trackingNum);
 postDraws = 0;
-
+R0sto = zeros(CorrelationMatrixDimension, CorrelationMatrixDimension, Sims-burnin);
 for i = 1 : Sims
     fprintf('%i\n',i)
     mu = X*B;
@@ -55,8 +55,7 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
-    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf,...
-        W0.*wishartDf);
+    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf,W0);
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');
     if lu(i) < alpha
@@ -71,6 +70,7 @@ for i = 1 : Sims
             r0Elems(postDraws,k) = R0(r0indxs(k,1), r0indxs(k,2));
         end
        R0avg = R0avg + R0;
+       R0sto(:,:,postDraws) = R0;
     end
 
 end
