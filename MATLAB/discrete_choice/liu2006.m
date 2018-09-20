@@ -14,8 +14,6 @@ end
 [CorrMatrixDimension,~]= size(R0);
 SubjectNumber = r/CorrMatrixDimension;
 % Prior initialization
-wprior = eye(CorrMatrixDimension);
-Sigma0 = (D0)*R0*(D0);
 B=b0;
 B0inv = inv(B0);
 BpriorsPre = B0inv*b0;
@@ -61,18 +59,13 @@ for i = 1 : Sims
     stoB(i,:) = B';
     tempSum1=s1;
     tempSum2=s2;
+    
     % Correlation Matrix Part
-    ystar = z - reshapedmu;
+    ystar = (z - reshapedmu);
     Scan = ystar*ystar';
     dSi = diag(diag(Scan).^(-.5));
-    Scan = Scan./(SubjectNumber - CorrMatrixDimension - 1);
-    [~, pd] = chol(Scan,'lower');
-    if pd == 0
-        S0 = Scan;
-    else
-        fprintf('Canidate not pd\n')
-    end
-    canidate = iwishrnd(S0, wishartDf);
+    Scan = dSi*Scan*dSi.*(SubjectNumber - CorrMatrixDimension -1);
+    canidate = iwishrnd(Scan, wishartDf);
     d0 = diag(canidate).^(.5);
     canD0 = diag(d0);
     canD0i = diag(d0.^(-1));
@@ -81,7 +74,6 @@ for i = 1 : Sims
         (log(det(canR)) - log(det(R0))));
     if lu(i) < mhprob
         accept = accept + 1;
-        workingR0 = R0;
         R0 = canR;
         dett = det(R0);
         trackDet(accept) = dett;
@@ -94,7 +86,7 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
-%     fprintf('%i\n', i)
+    fprintf('%i\n', i)
 end
 trackDet = trackDet(1:accept);
 R0bar= R0avg/(Sims-burnin + 1);
