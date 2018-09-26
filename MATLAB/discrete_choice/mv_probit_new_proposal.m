@@ -74,6 +74,7 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
+        fprintf('%i\n', i)
 end
 R0bar= R0avg/(Sims-burnin + 1);
 acceptrate = accept/Sims;
