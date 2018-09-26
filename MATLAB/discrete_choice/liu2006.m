@@ -31,16 +31,14 @@ tempSum2=s2;
 accept = 0;
 stoB = zeros(Sims, c);
 trackingNum = size(r0indxs,1);
-tempStoElems = zeros(trackingNum,1);
 r0Elems = zeros(Sims-burnin, trackingNum);
 postDraws = 0;
 accept = 0;
 trackDet = zeros(Sims,1);
-S0 = eye(CorrMatrixDimension);
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
-    z =updateLatentZ(y,reshapedmu, R0);
+    z = updateLatentZ(y,reshapedmu, R0);
     R0i = R0\r0i;
     index =1:CorrMatrixDimension;
     for k = 1:SubjectNumber
@@ -57,17 +55,17 @@ for i = 1 : Sims
     tempSum2=s2;
     
     % Correlation Matrix Part
-    ystar = (z - reshapedmu);
+    ystar = D0*(z - reshapedmu);
     Scan = ystar*ystar';
     dSi = diag(diag(Scan).^(-.5));
-    Scan = dSi*Scan*dSi.*(SubjectNumber - CorrMatrixDimension -1);
+    Scan = dSi*Scan*dSi;
     canidate = iwishrnd(Scan, wishartDf);
     d0 = diag(canidate).^(.5);
     canD0 = diag(d0);
     canD0i = diag(d0.^(-1));
     canR = canD0i * canidate * canD0i;
     mhprob = min(0, .5*(CorrMatrixDimension + 1) *...
-        (log(det(canR)) - log(det(R0))));
+        (logdet(canR) - logdet(R0)) );
     if lu(i) < mhprob
         accept = accept + 1;
         R0 = canR;
