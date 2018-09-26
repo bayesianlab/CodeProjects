@@ -9,6 +9,7 @@ c = 0;
 for i = 1:N
     baddraw = 1;
     while baddraw == 1
+        c = c + 1;
         for j = yDim
             update = mu(j) + (offDiagonals(j,:)*eta(:,i));
             aj = (a(j) - update)/L(j,j);
@@ -22,6 +23,10 @@ for i = 1:N
             eta(:,i) = zeros(J,1);
         else
             baddraw = 0;
+        end
+        if c == 10
+            save('ErrorGhk.mat')
+            break
         end
     end
 end

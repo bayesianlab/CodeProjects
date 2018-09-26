@@ -16,11 +16,9 @@ end
 SubjectNumber = r/CorrelationMatrixDimension;
 % Prior initialization
 wprior = eye(CorrelationMatrixDimension);
-W0 = (D0.^(.5))*R0*(D0.^(.5));
 B=b0;
 B0inv = inv(B0);
 BpriorsPre = B0inv*b0;
-z = y;
 R0avg = R0;
 % Storage containers and intialize local vars. 
 lu = log(unifrnd(0,1,Sims,1));
@@ -54,6 +52,13 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
+    if i == 1
+        demz = z-reshapedmu;
+        W0 = demz*demz';
+        D0 = diag(diag(W0));
+        D0ihalf = diag(diag(D0).^(-.5));
+        R0 = D0ihalf*W0*D0ihalf;
+    end
     [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf,W0);
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');
