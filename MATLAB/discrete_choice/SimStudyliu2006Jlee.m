@@ -20,7 +20,6 @@ wishartDf = N;
 D0 = ones(K,1);
 R0 = eye(K);
 timetrend = (1:K)';
-% timetrend =(1:K)'-4;
 timetrendsqd = timetrend.^2;
 bi = round(unifrnd(0,1,K,N));
 
@@ -45,7 +44,7 @@ ar = zeros(Reps,1);
 steinloss = zeros(Reps,1);
 for i =1:Reps
     i
-    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), td] = liu2006Jlee(y, X, b0, B0, wishartDf, diag(D0), R,...
+    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), td] = liu2006Jlee(y, X, beta, B0, wishartDf, diag(D0), R,...
         Sims, posttrackingnums);
     r0ir = r0(:,:,i)*iR;
     steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
