@@ -1,9 +1,8 @@
-% liu 2006 main
-clear;
-% clc;
+clear
+clc
 rng(1000)
-Sims = 100;
-N = 200;
+Sims = 1000;
+N = 2000;
 K = 7;
 R = [1, .8, .6, .4, .2, 0, 0;
     .8, 1, .8, .6, .4, .2, 0;
@@ -35,25 +34,31 @@ vecz = X*beta + E(:);
 vecy = double(vecz>0);
 y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
+beta = b0
+for i = 1:100
 mu = reshape(X*beta, K,N);
 
+  reshapedmu = reshape(mu, K, N);
+z = updateLatentZ(y,reshapedmu, R);
 
-
-Reps = 1;
-posttrackingnums = [2,1;3,2; 6,3; 7,1]; 
-bbar = zeros(Reps,length(b0));
-r0 = zeros(size(R,1), size(R,1), Reps);
-post = zeros(Sims - floor(.1*Sims),size(posttrackingnums,1), Reps);
-ar = zeros(Reps,1);
-loss = zeros(Reps,1);
-for i =1:Reps
-    i
-    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), td] = liu2006(y, X, beta, B0, wishartDf, diag(D0), R,...
-        Sims, posttrackingnums);
-    bbar
-    r0
-    ar
-    r0ir = r0(:,:,i)*iR;
-    loss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1)
+s1 = zeros(size(B0,1),size(B0,1));
+s1eye = eye(size(B0,1),size(B0,1));
+r0i = eye(K);
+s2= zeros(size(B0,1),1);
+r0i = eye(K);
+tempSum1 = s1;
+tempSum2=s2;
+    index =1:K;
+     R0i = R\r0i;
+for k = 1:N
+    select = index + (k-1)*K;
+    tempSum1 = tempSum1 + X(select, :)'*R0i*X(select,:);
+    tempSum2 = tempSum2 + X(select, :)'*R0i*z(:,k);
 end
 
+ist = (inv(B0) + tempSum1)\s1eye
+
+v = ist*tempSum2
+beta = v + chol(ist, 'lower')*normrnd(0,1,size(B0,1), 1)
+
+end

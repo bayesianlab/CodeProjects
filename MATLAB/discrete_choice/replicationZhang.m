@@ -1,7 +1,7 @@
 clear;
-clc;
 
 
+rng(50)
 Sims = 300;
 N = 50;
 K = 5;
@@ -44,7 +44,7 @@ for i = 1:N
 end
 
 r0indx = [2,5; 3,2; 4,1; 2,1];
-[bbar, r0, ar, r0post,R0sto ] =mv_probit(y, X, b0,B0, wishartDf,...
+[bbar, r0, ar, r0post,R0sto ] =mv_probit(y, X, beta,B0, wishartDf,...
     diag(D0), R, Sims, r0indx);
 bbar'
 r0

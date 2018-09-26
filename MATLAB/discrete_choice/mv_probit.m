@@ -53,7 +53,7 @@ for i = 1 : Sims
     tempSum2=s2;
     % Correlation Matrix Part
     if i == 1
-        demz = z-reshapedmu;
+        demz = z-reshape(X*B, CorrelationMatrixDimension, SubjectNumber);
         W0 = demz*demz';
         D0 = diag(diag(W0));
         D0ihalf = diag(diag(D0).^(-.5));

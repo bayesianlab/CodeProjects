@@ -37,7 +37,6 @@ r0Elems = zeros(Sims-burnin, trackingNum);
 postDraws = 0;
 accept = 0;
 trackDet = zeros(Sims,1);
-S0 = eye(CorrMatrixDimension);
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
@@ -57,17 +56,17 @@ for i = 1 : Sims
     tempSum2=s2;
     
     % Correlation Matrix Part
-    ystar = (z - reshapedmu);
+    ystar = D0*(z - reshapedmu);
     Scan = ystar*ystar';
     dSi = diag(diag(Scan).^(-.5));
     Scan = dSi*Scan*dSi;
-    canidate = iwishrnd(S0, wishartDf);
+    canidate = iwishrnd(Scan, wishartDf);
     d0 = diag(canidate).^(.5);
     canD0 = diag(d0);
     canD0i = diag(d0.^(-1));
     canR = canD0i * canidate * canD0i;
     mhprob = min(0, .5*(CorrMatrixDimension + 1) *...
-        (log(det(canR)) - log(det(R0))));
+        (logdet(canR) - logdet(R0)));
     if lu(i) < mhprob
         accept = accept + 1;
         R0 = canR;
@@ -82,7 +81,7 @@ for i = 1 : Sims
         end
        R0avg = R0avg + R0;
     end
-%     fprintf('%i\n', i)
+    fprintf('%i\n', i)
 end
 trackDet = trackDet(1:accept);
 R0bar= R0avg/(Sims-burnin + 1);
