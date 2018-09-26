@@ -36,10 +36,11 @@ mu = reshape(X*beta, K,N);
 
 
 Reps = 50;
+burninperc = .1;
 posttrackingnums = [2,1;3,2; 6,3; 7,1]; 
 bbar = zeros(Reps,length(b0));
 r0 = zeros(size(R,1), size(R,1), Reps);
-post = zeros(Sims - floor(.1*Sims),size(posttrackingnums,1), Reps);
+post = zeros(Sims - floor(burninperc*Sims),size(posttrackingnums,1), Reps);
 ar = zeros(Reps,1);
 steinloss = zeros(Reps,1);
 for i =1:Reps
