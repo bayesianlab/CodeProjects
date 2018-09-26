@@ -1,4 +1,4 @@
-function [pdfval] = logpxWishart(D, R, m, S)
+function [pdfval, Jac] = logpxWishart(D, R, m, S)
 % unnormalized
 [rr, ~] = size(S);
 % exponentOnD = .5*(m + 3*rr -3);
@@ -7,6 +7,7 @@ exponentOnR = .5*(m - rr - 1);
 logdetR = exponentOnR*logdet(R);
 logdetD = exponentOnD*(sum(log(diag(D))));
 Dhalf = D.^.5;
+Jac = prod(diag(D))^(.5*(rr-1));
 traceInvSDRD = -.5*trace(S\(Dhalf*R*Dhalf));
 pdfval = logdetR + logdetD + traceInvSDRD;
 end

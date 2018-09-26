@@ -48,17 +48,17 @@ end
 % sols = diag(dsolsinv)*sols*diag(dsolsinv)
 % sum = sum + olsbeta;
 r0indx = [2,5; 3,2; 4,1; 2,1];
-[bbar, r0, ar, r0post,R0sto ] =mv_probit(y, X, b0,B0, wishartDf,...
-    diag(D0), R0, Sims, r0indx);
-bbar';
-r0
-ar
-r0post;
-% [bbar, r0, ar, r0post] = mv_probit_new_proposal(y, X, b0,B0, wishartDf,...
-%     diag(D0), R0, 50, r0indx);
+% [bbar, r0, ar, r0post,R0sto ] =mv_probit(y, X, b0,B0, wishartDf,...
+%     diag(D0), R0, Sims, r0indx);
 % bbar'
 % r0
 % ar
-% r0post
+% r0post;
+[bbar, r0, ar, r0post] = mv_probit_new_proposal(y, X, b0,B0, wishartDf,...
+    diag(D0), R0, 50, r0indx);
+bbar'
+r0
+ar
+r0post;
 end
 sum./reps
