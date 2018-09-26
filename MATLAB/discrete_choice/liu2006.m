@@ -49,11 +49,7 @@ for i = 1 : Sims
         tempSum2 = tempSum2 + X(select, :)'*R0i*z(:,k);
     end
     B0 = (B0inv + tempSum1)\s1eye;
-    [L, pd] = chol(B0,'lower');
-    if pd ~=0
-        fprintf('Non pd B0\n')
-        break
-    end
+    L= chol(B0,'lower');
     b0 = B0*(BpriorsPre + tempSum2);
     B = b0 + L*normrnd(0,1,c,1);
     stoB(i,:) = B';
