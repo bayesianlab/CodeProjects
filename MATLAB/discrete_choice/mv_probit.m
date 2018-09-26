@@ -5,8 +5,8 @@ function [betabar, R0bar, acceptrate, r0Elems, R0sto] = mv_probit(y,X, b0, B0,..
 % Dimension sizes needed
 % X is longitudnal data
 % subject Xij = [1, x(i,1,...J)]
-if floor(.9*Sims) > 1
-    burnin = floor(.9*Sims);
+if floor(.1*Sims) > 1
+    burnin = floor(.1*Sims);
 else
     burnin = 1;
 end
@@ -32,7 +32,6 @@ tempSum2=s2;
 accept = 0;
 stoB = zeros(Sims, c);
 trackingNum = size(r0indxs,1);
-tempStoElems = zeros(trackingNum,1);
 r0Elems = zeros(Sims-burnin, trackingNum);
 postDraws = 0;
 R0sto = zeros(CorrelationMatrixDimension, CorrelationMatrixDimension, Sims-burnin);
