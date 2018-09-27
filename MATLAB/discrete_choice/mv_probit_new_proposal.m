@@ -28,6 +28,7 @@ s1eye = eye(c,c);
 s2= zeros(c,1);
 tempSum1 = s1;
 tempSum2=s2;
+tempSum3 = s1;
 accept = 0;
 stoB = zeros(Sims, c);
 
@@ -45,6 +46,7 @@ for i = 1 : Sims
         select = index + (k-1)*CorrelationMatrixDimension;
         tempSum1 = tempSum1 + X(select, :)'*R0i*X(select,:);
         tempSum2 = tempSum2 + X(select, :)'*R0i*z(:,k);
+        
     end
     B0 = (B0inv + tempSum1)\s1eye;
     b0 = B0*(BpriorsPre + tempSum2);
@@ -53,12 +55,20 @@ for i = 1 : Sims
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
-    e = z - reshapedmu;
+    e = (z - reshapedmu);
     W0 = e*e';
+    det(W0)
     D0 = diag(diag(W0));
     D0invhalf = diag(diag(W0).^(-.5));
     R0 = D0invhalf*W0*D0invhalf;
-    [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, W0);
+    Wstar = iwishrnd(inv(W0./wishartDf), wishartDf);
+    dstar = diag(Wstar);
+    dstarstd = dstar.^(-.5);
+    Ddstarstd = diag(dstarstd);
+    Dstar = diag(dstar);
+    Rstar = Ddstarstd * Wstar *Ddstarstd
+%     [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf, R0);
+
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');
     if lu(i) < alpha

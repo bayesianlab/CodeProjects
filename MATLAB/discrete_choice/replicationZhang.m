@@ -1,8 +1,7 @@
 clear;
 
 
-rng(50)
-Sims = 300;
+Sims = 100;
 N = 50;
 K = 5;
 Covariates = 2;
