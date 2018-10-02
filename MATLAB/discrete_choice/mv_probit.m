@@ -10,7 +10,7 @@ if floor(.1*Sims) > 1
 else
     burnin = 1;
 end
-
+% W0 = D0.^(.5)*R0*D0.^(.5)
 [r,c] = size(X);
 [CorrelationMatrixDimension,~]= size(R0);
 SubjectNumber = r/CorrelationMatrixDimension;
