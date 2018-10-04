@@ -4,10 +4,9 @@ alpha = a - mu;
 beta = b - mu;
 H = Sigma\eye(J);
 hii = diag(H);
-roothii = sqrt(hii);
+roothii = sqrt(1./hii);
 preprecision = zeros(J,J-1);
 notj = notJindxs(J);
-curz = zeros(J,1);
 ep = zeros(J,1);
 z = zeros(J,sims);
 for j = 1:J
@@ -20,9 +19,9 @@ for i = 1:sims
         lowerb = (alpha(j) - condmean)/roothii(j);
         upperb = (beta(j) - condmean)/roothii(j);
         ep(j) = tnormrnd(lowerb,upperb,0,1);
-        curz(j) = condmean + (roothii(j)*ep(j));
-        init = curz;
+        init(j) = condmean + (roothii(j)*ep(j));
     end
-    z(:,i) = curz;
+    z(:,i) = init;
 end
+
 X = mu + z(:, burn+1:sims);
