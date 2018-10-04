@@ -13,7 +13,7 @@ for j = 1:c
             B(i,j) = 0;
         end
     end
-   z(:,j) = ghkmvnrnd(A(:,j), B(:,j), mu(:,j), Sigma, 1);
+   z(:,j) = geweke91(A(:,j), B(:,j), mu(:,j), Sigma, 1,0,y(:,j));
 end
 end
 
