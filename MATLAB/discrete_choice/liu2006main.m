@@ -2,7 +2,7 @@
 clear;
 clc;
 
-rng(1)
+
 Sims = 100;
 N = 200;
 K = 7;
@@ -19,6 +19,7 @@ Covariates = length(beta);
 b0 = zeros(length(beta),1) ;
 B0 = eye(length(b0))*10;
 wishartDf = N;
+wishartPrior = eye(K);
 
 R0 =  eye(K);
 D0 = diag(R0);
@@ -49,15 +50,20 @@ post = zeros(Sims - floor(.1*Sims),size(posttrackingnums,1), Reps);
 ar = zeros(Reps,1);
 loss = zeros(Reps,1);
 
-for i =1:Reps
-    i
-    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), stoR0] = liu2006(y, X, beta,...
-        B0, wishartDf, diag(D0), R0,...
-        Sims, posttrackingnums,z);
-    bbar
-    r0
-    ar
-    r0ir = r0(:,:,i)*iR;
-    loss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1)
-end
-
+% for i =1:Reps
+%     i
+%     [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i), stoR0] = liu2006(y, X, beta,...
+%         B0, wishartDf, diag(D0), R,...
+%         Sims, posttrackingnums,z);
+%     bbar
+%     r0
+%     ar
+%     steinloss(R,r0)
+%     steinloss(R,eye(K))
+% end
+[betabar, R0bar, acceptrate, r0Elems, stoR0] =newmethod(y, X, beta,B0,...
+    wishartPrior, wishartDf, diag(D0), R0, ...
+        Sims, posttrackingnums);
+R0bar    
+acceptrate
+    
