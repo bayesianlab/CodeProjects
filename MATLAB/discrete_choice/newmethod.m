@@ -35,7 +35,7 @@ r0Elems = zeros(Sims-burnin, trackingNum);
 postDraws = 0;
 accept = 0;
 stoR0 = zeros(K, K, Sims-burnin);
-nustar = wishartDf + SampleSize;
+nustar = SampleSize;
 W0 = D0 * R0 * D0;
 for i = 1 : Sims
     mu = X*B;
@@ -45,15 +45,21 @@ for i = 1 : Sims
     % Correlation Matrix Part
     ystar = D0*(z - reshapedmu);
     WishartParameter = ystar*ystar';
-    Sstar = wishartPrior + WishartParameter;
+    dw = diag(WishartParameter);
+    idwhalf = dw.^(-.5);
+    Sstar = diag(idwhalf) * WishartParameter * diag(idwhalf)
 
-    canW = iwishrnd(Sstar, SampleSize);
+    canW = iwishrnd(Sstar, nustar);
     d0 = diag(canW).^(.5);
     canD = diag(d0);
     canD0i = diag(d0.^(-1));
     canR = canD0i * canW * canD0i;
-    mhprob = mhAcceptPXW(canW, canD, canR, W0, D0, R0, wishartPrior,...
-        wishartDf,Sstar, nustar, z', reshapedmu');
+    mhprob = min(0,logdet(canR) - logdet(R0))
+
+%     mhprob = mhStepMvProbit(canW,canD,canR,W0,D0,R0,wishartPrior,...
+%         wishartDf,z',reshapedmu');
+%     mhprob = mhAcceptPXW(canW, canD, canR, W0, D0, R0, wishartPrior,...
+%         wishartDf,Sstar, nustar, z', reshapedmu');
     if lu(i) < mhprob
         accept = accept + 1;
         R0 = canR;
