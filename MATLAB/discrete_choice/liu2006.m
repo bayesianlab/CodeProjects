@@ -1,4 +1,4 @@
-function [betabar, R0bar, acceptrate, r0Elems, stoR0 ] = liu2006(y,X, b0, B0,...
+function [betabar, stoB, R0bar, acceptrate, r0Elems, stoR0 ] = liu2006(y,X, b0, B0,...
     wishartDf, D0, R0, Sims, r0indxs, tz)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
@@ -36,12 +36,13 @@ postDraws = 0;
 accept = 0;
 stoR0 = zeros(CorrMatrixDimension, CorrMatrixDimension, Sims-burnin);
 
+B = ones(c,1)
 
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, CorrMatrixDimension, SubjectNumber);
     z = updateLatentZ(y,reshapedmu, R0);
-        
+        mean(z,2)
     % Correlation Matrix Part
     ystar = D0*(z - reshapedmu);
     WishartParameter = ystar*ystar';
