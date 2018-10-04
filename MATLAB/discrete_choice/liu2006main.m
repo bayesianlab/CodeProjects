@@ -2,8 +2,8 @@
 clear;
 clc;
 
-
-Sims = 10;
+rng(2)
+Sims = 100;
 N = 200;
 K = 7;
 R = [1, .8, .6, .4, .2, 0, 0;
@@ -18,20 +18,22 @@ beta = [1, 1,1, 1, 1, 1]';
 Covariates = length(beta);
 b0 = zeros(length(beta),1) ;
 B0 = eye(length(b0))*10;
-wishartDf = N;
-wishartPrior = eye(K);
+wishartDf = 10;
+wishartPrior = eye(K).*1000;
 
 R0 =  eye(K);
-D0 = diag(R0);
+D0 = 10*diag(R0);
 timetrend = (1:K)';
 % timetrend =(1:K)'-4;
 timetrendsqd = timetrend.^2;
-bi = [0,1,0,1,0,1,0]';
+bi = round(unifrnd(0,1,N*K,1));
+
 
 for i = 1:N
     select = timetrend + (i-1)*K;
-    X(select, :) = [ones(K,1), timetrend, timetrendsqd, bi,...
-        bi.*timetrend, bi.*timetrendsqd];
+    binary = bi(select);
+    X(select, :) = [ones(K,1), timetrend, timetrendsqd, binary,...
+        binary.*timetrend, binary.*timetrendsqd];
 end
 E=mvnrnd(zeros(K,1),R, N)';
 vecz = X*beta + E(:);
@@ -53,7 +55,7 @@ mean(z,2)
 for i =1:Reps
     i
     [bbar(i,:), stoB, r0(:,:, i),ar(i), post(:,:,i), stoR0] = liu2006(y, X, beta,...
-        B0, wishartDf, diag(D0), R,...
+        B0, wishartDf, diag(D0), R0,...
         Sims, posttrackingnums,z);
     bbar
     r0
@@ -61,8 +63,9 @@ for i =1:Reps
     steinloss(R,r0)
     steinloss(R,eye(K))
 end
+
 % [betabar, R0bar, acceptrate, r0Elems, stoR0] =newmethod(y, X, beta,B0,...
-%     wishartPrior, wishartDf, diag(D0), R0, ...
+%     wishartPrior, wishartDf, diag(D0), R, ...
 %         Sims, posttrackingnums);
 % R0bar    
 % acceptrate
