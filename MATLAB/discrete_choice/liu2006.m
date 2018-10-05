@@ -37,7 +37,6 @@ for i = 1 : Sims
     reshapedmu = reshape(mu, K, SampleSize);
     z = updateLatentZ(y,reshapedmu, R0);
     % Correlation Matrix Part
-    % Correlation Matrix Part
     ystar = D0*(z - reshapedmu);
     WishartParameter = ystar*ystar';
     dw = diag(WishartParameter);

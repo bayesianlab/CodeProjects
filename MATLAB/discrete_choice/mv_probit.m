@@ -1,16 +1,11 @@
 function [betabar, R0bar, acceptrate, r0Elems, R0sto, stoB] = mv_probit(y,X, b0, B0,...
-    wishartDf, D0, R0, Sims, r0indxs)
+    wishartDf, D0, R0, Sims, burnin, r0indxs)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
 % Dimension sizes needed
 % X is longitudnal data
 % subject Xij = [1, x(i,1,...J)]
-if floor(.1*Sims) > 1
-    burnin = floor(.1*Sims);
-else
-    burnin = 1;
-end
-% W0 = D0.^(.5)*R0*D0.^(.5)
+
 [r,c] = size(X);
 [CorrelationMatrixDimension,~]= size(R0);
 SubjectNumber = r/CorrelationMatrixDimension;
@@ -80,6 +75,6 @@ for i = 1 : Sims
 end
 R0bar= R0avg/(Sims-burnin + 1);
 acceptrate = accept/Sims;
-betabar = mean(stoB(burnin:end,:),1);
+betabar = mean(stoB(burnin+1:end,:),1);
 
 end

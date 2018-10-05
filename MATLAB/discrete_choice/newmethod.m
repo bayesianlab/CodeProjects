@@ -1,5 +1,6 @@
-function [betabar, R0bar, acceptrate, r0Elems, stoR0 ] = newmethod(y,X, b0, B0,...
-    wishartPrior, wishartDf, D0, R0, Sims, r0indxs)
+function [betabar, stoB, R0bar, acceptrate, r0Elems, stoR0 ] = ...
+    newmethod(y,X, b0, B0,...
+    wishartPrior, wishartDf, D0, R0, Sims, burnin, r0indxs)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
 % Dimension sizes needed
@@ -37,6 +38,7 @@ accept = 0;
 stoR0 = zeros(K, K, Sims-burnin);
 nustar = SampleSize;
 W0 = D0 * R0 * D0;
+stoB = zeros(Sims, c);
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, K, SampleSize);
@@ -47,26 +49,26 @@ for i = 1 : Sims
     WishartParameter = ystar*ystar';
     dw = diag(WishartParameter);
     idwhalf = dw.^(-.5);
-    Sstar = diag(idwhalf) * WishartParameter * diag(idwhalf)
+    Sstar = diag(idwhalf) * WishartParameter * diag(idwhalf);
 
     canW = iwishrnd(Sstar, nustar);
     d0 = diag(canW).^(.5);
     canD = diag(d0);
     canD0i = diag(d0.^(-1));
     canR = canD0i * canW * canD0i;
-    mhprob = min(0,logdet(canR) - logdet(R0));
+
 
 %     mhprob = mhStepMvProbit(canW,canD,canR,W0,D0,R0,wishartPrior,...
 %         wishartDf,z',reshapedmu');
-%     mhprob = mhAcceptPXW(canW, canD, canR, W0, D0, R0, wishartPrior,...
-%         wishartDf,Sstar, nustar, z', reshapedmu');
+    mhprob = mhAcceptPXW(canW, canD, canR, W0, D0, R0, wishartPrior,...
+        wishartDf,Sstar, nustar, z', reshapedmu');
     if lu(i) < mhprob
         accept = accept + 1;
         R0 = canR;
         D0 = canD;
         W0 = canW;
     end
-    if i > burnin
+    if i >= burnin
         postDraws = postDraws + 1;
         for k = 1:trackingNum
             r0Elems(postDraws,k) = R0(r0indxs(k,1), r0indxs(k,2));
@@ -90,11 +92,9 @@ for i = 1 : Sims
     tempSum2=s2;
     fprintf('%i\n', i)
 end
-R0avg
-Sims-burnin+1
 R0bar= R0avg/(Sims-burnin + 1);
 acceptrate = accept/Sims;
-betabar = mean(stoB(burnin:end,:),1);
+betabar = mean(stoB(burnin+1:end,:),1);
 
 end
 
