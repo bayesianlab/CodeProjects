@@ -4,6 +4,7 @@ clc;
 
 rng(2)
 Sims = 100;
+burnin = 0;
 N = 200;
 K = 7;
 R = [1, .8, .6, .4, .2, 0, 0;
@@ -48,7 +49,7 @@ Reps = 1;
 posttrackingnums = [2,1;3,2; 6,3; 7,1]; 
 bbar = zeros(Reps,length(b0));
 r0 = zeros(size(R,1), size(R,1), Reps);
-post = zeros(Sims - floor(.1*Sims),size(posttrackingnums,1), Reps);
+post = zeros(Sims,size(posttrackingnums,1), Reps);
 ar = zeros(Reps,1);
 loss = zeros(Reps,1);
 mean(z,2)
@@ -56,7 +57,7 @@ for i =1:Reps
     i
     [bbar(i,:), stoB, r0(:,:, i),ar(i), post(:,:,i), stoR0] = liu2006(y, X, beta,...
         B0, wishartDf, diag(D0), R,...
-        Sims, posttrackingnums,z);
+        Sims, burnin, posttrackingnums);
     bbar
     r0
     ar
