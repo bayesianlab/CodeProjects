@@ -54,7 +54,7 @@ for i = 1 : Sims
     canD = diag(d0);
     canD0i = diag(d0.^(-1));
     canR = canD0i * canW * canD0i;
-    mhprob = min(0,logdet(canR) - logdet(R0))
+    mhprob = min(0,logdet(canR) - logdet(R0));
 
 %     mhprob = mhStepMvProbit(canW,canD,canR,W0,D0,R0,wishartPrior,...
 %         wishartDf,z',reshapedmu');
