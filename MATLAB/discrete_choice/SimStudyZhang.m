@@ -38,7 +38,7 @@ vecy = double(vecz>0);
 y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
 mu = reshape(X*beta, K,N);
-Reps = 50;
+Reps = 1;
 posttrackingnums = [2,1;2,4; 1,4]; 
 bbar = zeros(Reps,length(b0));
 r0 = zeros(size(R,1), size(R,1), Reps);
@@ -49,7 +49,8 @@ ar = zeros(Reps,1);
 loss = zeros(Reps,1);
 for i =1:Reps
     i
-    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i)] = mv_probit(y, X, beta, B0, wishartDf, diag(D0), R,...
+    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i)] = ...
+        mv_probit(y, X, beta, B0, wishartDf, diag(D0), R0,...
         Sims, burnin, posttrackingnums);
     r0ir = r0(:,:,i)*iR;
     steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
