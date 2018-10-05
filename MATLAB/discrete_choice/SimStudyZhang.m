@@ -2,6 +2,7 @@ function [  ] = SimStudyZhang(Sims)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
+rng(14)
 burnin = 0;
 N = 600;
 K = 4;
