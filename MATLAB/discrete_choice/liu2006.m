@@ -48,39 +48,3 @@ for i = 1 : Sims
     canD0i = diag(d0.^(-1));
     canR = canD0i * canW * canD0i;
     mhprob = min(0,logdet(canR) - logdet(R0));
-    if lu(i) < mhprob
-        accept = accept + 1;
-        R0 = canR;
-        D0 = canD;
-        W0 = canW;
-    end
-    if i > burnin
-        postDraws = postDraws + 1;
-        for k = 1:trackingNum
-            r0Elems(postDraws,k) = R0(r0indxs(k,1), r0indxs(k,2));
-        end
-       R0avg = R0avg + R0;
-       stoR0(:,:,postDraws) = R0;
-    end
-    R0i = R0\r0i;
-    index =1:K;
-    for k = 1:SampleSize
-        select = index + (k-1)*K;
-        tempSum1 = tempSum1 + X(select, :)'*R0i*X(select,:);
-        tempSum2 = tempSum2 + X(select, :)'*R0i*z(:,k);
-    end
-    B0 = (tempSum1)\s1eye;
-    L= chol(B0,'lower');
-    b0 = B0*(tempSum2);
-    B = b0 + L*normrnd(0,1,c,1);
-    stoB(i,:) = B';
-    tempSum1=s1;
-    tempSum2=s2;
-    fprintf('%i\n', i)
-end
-R0bar= R0avg/(Sims-burnin + 1);
-acceptrate = accept/Sims;
-betabar = mean(stoB((burnin+1):end,:),1);
-
-end
-

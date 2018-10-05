@@ -1,8 +1,6 @@
 % liu 2006 main
 clear;
 clc;
-
-rng(2)
 Sims = 100;
 burnin = 0;
 N = 200;
