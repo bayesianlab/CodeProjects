@@ -25,3 +25,8 @@ for i = 1:sims
 end
 
 X = mu + z(:, burn+1:sims);
+% if sum(sum(~isfinite(X)))> 0
+%     save('erroroutput.mat')
+%     X = 'error';
+%     
+% end
