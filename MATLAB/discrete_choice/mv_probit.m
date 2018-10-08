@@ -7,10 +7,11 @@ function [betabar, R0bar, acceptrate, r0Elems, R0sto, stoB] = mv_probit(y,X, b0,
 % subject Xij = [1, x(i,1,...J)]
 
 [r,c] = size(X);
-[CorrelationMatrixDimension,~]= size(R0);
-SubjectNumber = r/CorrelationMatrixDimension;
+[K,~]= size(R0);
+SampleSize = r/K;
 % Prior initialization
-wprior = eye(CorrelationMatrixDimension);
+wprior = eye(K).*100;
+% eye(CorrelationMatrixDimension);
 B=b0;
 B0inv = inv(B0);
 BpriorsPre = B0inv*b0;
@@ -27,33 +28,30 @@ stoB = zeros(Sims, c);
 trackingNum = size(r0indxs,1);
 r0Elems = zeros(Sims-burnin, trackingNum);
 postDraws = 0;
-R0sto = zeros(CorrelationMatrixDimension, CorrelationMatrixDimension, Sims-burnin);
+W0= D0*R0*D0;
+R0sto = zeros(K, K, Sims-burnin);
 for i = 1 : Sims
     fprintf('%i\n',i)
     mu = X*B;
-    reshapedmu = reshape(mu, CorrelationMatrixDimension, SubjectNumber);
+    reshapedmu = reshape(mu, K, SampleSize);   
+R0
     z = updateLatentZ(y,reshapedmu, R0);
+    mean(z,2)
     R0i = inv(R0);
-    index =1:CorrelationMatrixDimension;
-    for k = 1:SubjectNumber
-        select = index + (k-1)*CorrelationMatrixDimension;
+    index =1:K;
+    for k = 1:SampleSize
+        select = index + (k-1)*K;
         tempSum1 = tempSum1 + X(select, :)'*R0i*X(select,:);
         tempSum2 = tempSum2 + X(select, :)'*R0i*z(:,k);
     end
     B0 = (B0inv + tempSum1)\s1eye;
     b0 = B0*(BpriorsPre + tempSum2);
     B = b0 + chol(B0,'lower')*normrnd(0,1,c,1);
-    stoB(i,:) = B';
+    stoB(i,:) = B;
     tempSum1=s1;
     tempSum2=s2;
     % Correlation Matrix Part
-    if i == 1
-        demz = z-reshape(X*B, CorrelationMatrixDimension, SubjectNumber);
-        W0 = demz*demz';
-        D0 = diag(diag(W0));
-        D0ihalf = diag(diag(D0).^(-.5));
-        R0 = D0ihalf*W0*D0ihalf;
-    end
+
     [Wstar, Dstar, Rstar] = proposalStepMvProbit(wishartDf,W0);
     alpha = mhStepMvProbit(Wstar,Dstar,Rstar,W0, D0, R0, wprior, ...
         wishartDf, z', reshapedmu');

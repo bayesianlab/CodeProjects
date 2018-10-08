@@ -2,9 +2,9 @@ function [  ] = SimStudyZhang(Sims)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
-rng(14)
+
 burnin = 0;
-N = 600;
+N = 150;
 K = 4;
 R = zeros(K);
 rho = [.7, .2, .1];
@@ -18,8 +18,7 @@ beta = [.5, .5,1, 1]';
 b0 = zeros(length(beta),1);
 B0 = eye(length(b0))*10;
 wishartDf = N;
-wishartPrior = eye(K)*10;
-D0 = ones(K,1);
+D0 = 100.*ones(K,1);
 R0 = eye(K);
 timetrend = (1:K)';
 timetrendsqd = timetrend.^2;
@@ -39,7 +38,7 @@ vecy = double(vecz>0);
 y = reshape(vecy, K,N);
 z = reshape(vecz, K,N);
 mu = reshape(X*beta, K,N);
-Reps = 50;
+Reps = 1;
 posttrackingnums = [2,1;2,4; 1,4]; 
 bbar = zeros(Reps,length(b0));
 r0 = zeros(size(R,1), size(R,1), Reps);
@@ -48,13 +47,17 @@ stoR0 = zeros(K,K,Sims,Reps);
 post = zeros(Sims,size(posttrackingnums,1), Reps);
 ar = zeros(Reps,1);
 loss = zeros(Reps,1);
+R0 = createSigma(.2,K)
+mean(z,2)
 for i =1:Reps
     i
-    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i)] = ...
+    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i),stoR0(:,:,:,i), stoB(:,:,i)] = ...
         mv_probit(y, X, beta, B0, wishartDf, diag(D0), R0,...
         Sims, burnin, posttrackingnums);
+    bbar
+    r0
     r0ir = r0(:,:,i)*iR;
     steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
 end
-fname = createDateString('zhang_')
-save(fname)
+% fname = createDateString('zhang_')
+% save(fname)
