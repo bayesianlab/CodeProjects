@@ -1,5 +1,5 @@
 function [betabar, stoB, R0bar, acceptrate, r0Elems, stoR0 ] = liu2006(y,X, b0, B0,...
-    wishartDf, D0, R0, Sims, burnin, r0indxs)
+    wishartDf, D0, R0, Sims, burnin, r0indxs,tz)
 % y is expected as [y11,..., y1T; 
 %                   y21,...,y2T]
 % Dimension sizes needed
@@ -35,7 +35,11 @@ stoR0 = zeros(K, K, Sims-burnin);
 for i = 1 : Sims
     mu = X*B;
     reshapedmu = reshape(mu, K, SampleSize);
-    z = updateLatentZ(y,reshapedmu, R0);
+    [z, p] = updateLatentZtest(y,reshapedmu, R0,y)
+    if p == 1
+        break
+    end
+%     mean(z,2) - mean(tz,2)
     % Correlation Matrix Part
     ystar = D0*(z - reshapedmu);
     WishartParameter = ystar*ystar';

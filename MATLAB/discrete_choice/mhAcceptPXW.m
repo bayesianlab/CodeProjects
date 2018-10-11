@@ -7,6 +7,7 @@ JacNum = .5*(K-1)*sum(log(diag(Dstar)));
 JacDen = .5*(K-1)*sum(log(diag(D0)));
 
 % surLL computes by row for every column!
+
 % a= logInvWish(Wstar,S,nu)
 % b=logInvWish(W0,S,nu)
 % c=  logInvWish(W0, Supdate, nuupdate)

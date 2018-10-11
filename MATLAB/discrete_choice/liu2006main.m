@@ -2,6 +2,7 @@
 clear;
 clc;
 Sims = 1000;
+rng(10)
 % burnin = 0;
 % N = 200;
 % K = 7;
@@ -28,15 +29,16 @@ Sims = 1000;
 % bi = round(unifrnd(0,1,N*K,1));
 
 burnin = 0;
-N = 150;
+N = 100;
 K = 4;
-R = createSigma(.9,K)
-% R = zeros(K);
-% rho = [.7, .2, .1];
-% for i = 1:K
-%     R(i, :) = [0, circshift(rho,i-1)];
-% end
-% R = (eye(K) + triu(R)) + triu(R)';
+% R = createSigma(.9,K)
+R = zeros(K);
+rho = [.7, .2, .1];
+for i = 1:K
+    R(i, :) = [0, circshift(rho,i-1)];
+end
+
+R = (eye(K) + triu(R,1)) + triu(R,1)'
 iR = inv(R);
 beta = [.5, .5,1, 1]';
 
@@ -81,27 +83,36 @@ post = zeros(Sims,size(posttrackingnums,1), Reps);
 ar = zeros(Reps,1);
 loss = zeros(Reps,1);
 mean(z,2)
+demean = y-mu;
+W = demean*demean';
+D0 = diag(W);
+dihalf = D0.^(-.5);
+R0 = diag(dihalf)*W*diag(dihalf);
 
-% updateLatentZ(y,mu,R)
-% for i =1:Reps
-%     i
-%     [bbar(i,:), stoB, r0(:,:, i),ar(i), post(:,:,i), stoR0] = liu2006(y, X, beta,...
-%         B0, wishartDf, diag(D0), R,...
-%         Sims, burnin, posttrackingnums);
-%     bbar
-%     r0
-%     ar
-%     steinloss(R,r0)
-%     steinloss(R,eye(K))
-% end
+
+
+
+for i =1:Reps
+    i
+    [bbar(i,:), stoB, r0(:,:, i),ar(i), post(:,:,i), stoR0] = ...
+        liu2006(y, X, beta, B0, wishartDf, diag(D0), R,...
+        Sims, burnin, posttrackingnums,z);
+    bbar
+    r0
+    ar
+    steinloss(R,r0)
+    steinloss(R,eye(K))
+end
+
+
 
 % [betabar, stoB, R0bar, acceptrate, r0Elems, stoR0] =newmethod(y, X, beta,B0,...
 %     wishartPrior, wishartDf, diag(D0), R, ...
 %         Sims, burnin, posttrackingnums);
 % R0bar    
 % acceptrate
-   
-
+%    
+% 
 
 % posttrackingnums = [2,1;2,4; 1,4]; 
 % bbar = zeros(Reps,length(b0));
@@ -112,19 +123,14 @@ mean(z,2)
 % ar = zeros(Reps,1);
 % loss = zeros(Reps,1);
 % 
-% demean = y-mu;
-% W = demean*demean'
-% D0 = diag(W);
-% dihalf = D0.^(-.5);
-% R0 = diag(dihalf)*W*diag(dihalf)
  
-for i =1:Reps
-    i
-    [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i),stoR0(:,:,:,i), stoB(:,:,i)] = ...
-        mv_probit(y, X, beta, B0, wishartDf, diag(D0), R0,...
-        Sims, burnin, posttrackingnums);
-    bbar
-    r0
-    r0ir = r0(:,:,i)*iR;
-    steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
-end
+% for i =1:Reps
+%     i
+%     [bbar(i,:), r0(:,:, i),ar(i), post(:,:,i),stoR0(:,:,:,i), stoB(:,:,i)] = ...
+%         mv_probit(y, X, beta, B0, wishartDf, diag(D0), R0,...
+%         Sims, burnin, posttrackingnums);
+%     bbar
+%     r0
+%     r0ir = r0(:,:,i)*iR;
+%     steinloss(i) = trace(r0ir) - logdet(r0ir) - size(r0,1);
+% end

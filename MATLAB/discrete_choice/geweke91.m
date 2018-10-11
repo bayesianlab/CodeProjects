@@ -21,7 +21,7 @@ for i = 1:sims
         ep(j) = tnormrnd(lowerb,upperb,0,1);
         init(j) = condmean + (roothii(j)*ep(j));
     end
-    z(:,i) = init;
+    z(:,i) = init
 end
 
 X = mu + z(:, burn+1:sims);

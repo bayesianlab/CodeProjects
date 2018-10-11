@@ -55,19 +55,19 @@ for i = 1 : Sims
     d0 = diag(canW).^(.5);
     canD = diag(d0);
     canD0i = diag(d0.^(-1));
-    R0 = canD0i * canW * canD0i
-    D0 = canD;
-    W0 = canW;
+    canR = canD0i * canW * canD0i;
+    canD = canD;
+    canW = canW;
 %     mhprob = mhStepMvProbit(canW,canD,canR,W0,D0,R0,wishartPrior,...
-%         wishartDf,z',reshapedmu');
+%         wishartDf,z',reshapedmu')
 %     mhprob = mhAcceptPXW(canW, canD, canR, W0, D0, R0, wishartPrior,...
-%         wishartDf,Sstar, nustar, z', reshapedmu');
-%     if lu(i) < mhprob
-%         accept = accept + 1;
-%         R0 = canR;
-%         D0 = canD;
-%         W0 = canW;
-%     end
+%         wishartDf,Sstar, nustar, z', reshapedmu')
+    if lu(i) < mhprob
+        accept = accept + 1;
+        R0 = canR;
+        D0 = canD;
+        W0 = canW;
+    end
     if i >= burnin
         postDraws = postDraws + 1;
         for k = 1:trackingNum

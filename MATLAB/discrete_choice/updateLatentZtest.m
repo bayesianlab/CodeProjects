@@ -1,4 +1,4 @@
-function [ z ] = updateLatentZtest(y,mu,Sigma,init )
+function [ z, p ] = updateLatentZtest(y,mu,Sigma,init )
 [r, c] = size(mu);
 z = zeros(r,c);
 A = zeros(r,c);
@@ -13,7 +13,10 @@ for j = 1:c
             B(i,j) = 0;
         end
     end
-   z(:,j) = geweke91(A(:,j), B(:,j), mu(:,j), Sigma, 1,0,init(:,j));
+   [z(:,j), p] = geweke1991(A(:,j), B(:,j), mu(:,j), Sigma, 1,0,init(:,j));
+   if p == 1
+       break
+   end
 % z(:,j) = ghkmvnrnd(A(:,j), B(:,j), mu(:,j), Sigma, 1);
 end
 end

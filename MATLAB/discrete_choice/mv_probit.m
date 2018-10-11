@@ -34,9 +34,7 @@ for i = 1 : Sims
     fprintf('%i\n',i)
     mu = X*B;
     reshapedmu = reshape(mu, K, SampleSize);   
-R0
     z = updateLatentZ(y,reshapedmu, R0);
-    mean(z,2)
     R0i = inv(R0);
     index =1:K;
     for k = 1:SampleSize
