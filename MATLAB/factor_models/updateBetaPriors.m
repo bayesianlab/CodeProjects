@@ -18,6 +18,6 @@ for t = 1:T
     xpxsum = xpxsum + X(select,:)'*diagSigmai*X(select,:);
 end
 
-B = (B0inv + xpxsum - Xhat'*Pinv*Xhat)\eye(colsX) 
+B = (B0inv + xpxsum - Xhat'*Pinv*Xhat)\eye(colsX) ;
 b= B*(B0inv*b0 + xpysum - Xhat'*Pinv*yhat) ;
 end
