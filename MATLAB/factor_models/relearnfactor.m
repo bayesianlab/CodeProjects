@@ -2,7 +2,7 @@
 clear;clc;
 rng(14)
 K = 4;
-T = 10;
+T = 100;
 nu = 10;
 lag = 1;
 om = 1;
@@ -16,8 +16,9 @@ epst = mvnrnd(zeros(K,1), diag(sii2), T+1)';
 vut = normrnd(0,om, T+1,1);
 yt = zeros(K,T+1);
 ft = zeros(1,T+1);
-initialVar = om/(1-g^2);
-ft(1) = normrnd(0,initialVar);
+state0 = 0;
+initialStateVar = om/(1-g^2);
+ft(1) = normrnd(0,initialStateVar);
 yt(:,1) = epst(:,1);
 
 for i = 2:(T+1)
@@ -51,8 +52,12 @@ B0 = 100.* eye(colX);
 b = beta';
 yh = yt(:);
 mu = Xt*b(:);
-
-
+statepriormean = 0;
+statepriorcov = 1;
+sigmaPriorParamA = 5;
+sigmaPriorParamB = 10;
+stateVariancePriorParamA = 5;
+stateVariancePriorParamB = 10;
 % index =1:K;
 % xpxsum = zeros(colX,colX);
 % xpysum = zeros(colX,1);
@@ -69,6 +74,8 @@ mu = Xt*b(:);
 %     apriormean, apriorcov, nu)
 
 
-forwardBackwardSmoother(yh,mu, diag(sii2), g, ap, 0, initialVar, nu)
-% dfgibbs(yt(:),Xt,a, g, F0, sii2, Sdiag, om, b0, B0, apriormean,...
-%     apriorcov, 10) 
+% forwardBackwardSmoother(yh,mu, diag(sii2), g, ap, 0, initialVar, nu)
+dynfacgibbs(yt(:),Xt,a, g, sii2, om, b0, B0, apriormean,...
+    apriorcov, state0, initialStateVar, statepriormean,...
+    statepriorcov, sigmaPriorParamA, sigmaPriorParamB,...
+    stateVariancePriorParamA, stateVariancePriorParamB, 100) 
