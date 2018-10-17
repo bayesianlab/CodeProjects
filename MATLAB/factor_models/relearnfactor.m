@@ -5,6 +5,16 @@ K = 4;
 T = 100;
 nu = 10;
 lag = 1;
+b0 = zeros(colX,1); 
+B0 = 100.* eye(colX);
+statepriormean = 0;
+statepriorcov = 1;
+sigmaPriorParamA = 5;
+sigmaPriorParamB = 10;
+stateVariancePriorParamA = 5;
+stateVariancePriorParamB = 10;
+apriormean = zeros(length(a),1);
+apriorcov = eye(length(a)).*100;
 om = 1;
 sii2 = ones(K,1);
 mu = ones(K,1);
@@ -26,56 +36,22 @@ for i = 2:(T+1)
     ft(i) = g*ft(i-1) + vut(i);
 end
 ytorig = yt;
-beta= [mu,G];
+modelparams= [mu,G];
 ytlag = yt(:,1:T);
 Xtest = [ones(1,T);ytlag];
 ytlag =[ones(1,T);ytlag]'; 
 yt = yt(:,2:T+1);
-yt*Xtest' *inv(Xtest*Xtest');
 Xt = repmat(kron(eye(K), ones(1,K+1)),T,1)...
     .*repmat(kron(ytlag, ones(K,1)),1,K);
 [rowX, colX] = size(Xt);
 
-e = epst(:,2:T+1);
-S = ones(T,1).*om;
-% S(1) = initialVar;
-S = diag(S);
-h = [ones(T,1).*(-g), ones(T,1), ones(T,1).*(-g)];
-p = full(spdiags(h,[-1,0],T,T));
-F0 = p*S*p';
-Sdiag = diag(F0);
-F0i = F0\eye(size(F0,1));
-apriormean = zeros(length(a),1);
-apriorcov = eye(length(a)).*100;
-b0 = zeros(colX,1); 
-B0 = 100.* eye(colX);
-b = beta';
-yh = yt(:);
-mu = Xt*b(:);
-statepriormean = 0;
-statepriorcov = 1;
-sigmaPriorParamA = 5;
-sigmaPriorParamB = 10;
-stateVariancePriorParamA = 5;
-stateVariancePriorParamB = 10;
-% index =1:K;
-% xpxsum = zeros(colX,colX);
-% xpysum = zeros(colX,1);
-
-% for t = 1:T
-%     select = index + (t-1)*K;
-%     xpysum = xpysum + Xt(select,:)'*yh(select);
-%     xpxsum = xpxsum + Xt(select,:)'*Xt(select,:);
-% end
-% bols = inv(xpxsum)*xpysum;
-% dll = @(guess) DmarginalLogLikelihood(yh,mu,sii2,guess,diag(F0i));
-% [ag,bt] = bhhh([0;0;0], dll, 100, 1e-3, .5)
-% mhStepForA(yh, mu, sii2, diag(F0i), dll, [0;0;0],...
-%     apriormean, apriorcov, nu)
+vecy = yt(:);
 
 
-% forwardBackwardSmoother(yh,mu, diag(sii2), g, ap, 0, initialVar, nu)
-dynfacgibbs(yt(:),Xt,a, g, sii2, om, b0, B0, apriormean,...
+
+[beta] = dynfacgibbs(vecy,Xt,a, g, sii2, om, b0, B0, apriormean,...
     apriorcov, state0, initialStateVar, statepriormean,...
     statepriorcov, sigmaPriorParamA, sigmaPriorParamB,...
     stateVariancePriorParamA, stateVariancePriorParamB, 100) 
+
+mean(beta,2)

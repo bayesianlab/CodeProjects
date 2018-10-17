@@ -10,11 +10,16 @@ function [storeBeta, storeObsModel, storeState, storeSigmaDiag,...
 % obsModel (observation Model of Kalman Filter) contains only the 
 % unrestricted elements of a. 
 % SigmaDiag is a KxK diagonal matrix
+% Output: storeBeta = Vectorized betas.
+% All output is saved in a K x N matrix where K is the dimension 
+% of the paramaeter and N is the simulation run. 
+
 K = length(SigmaDiag);
 T = length(y)/K;
 B0inv = B0\eye(size(B0,1));
 FullSigma = diag(SigmaDiag);
 amean = obsModel;
+
 % Set up F matrix, the precision of the state
 h = [ones(T,1).*(-stateTransition), ones(T,1), ones(T,1).*(-stateTransition)];
 p = full(spdiags(h,[-1,0],T,T));
@@ -24,6 +29,7 @@ F0 = p*S*p';
 Sdiag = diag(F0);
 F = F0 + kron(eye(T), [1;obsModel]'*diag(SigmaDiag)*[1;obsModel]);
 lowerCholF = chol(F,'lower');
+
 % Storage Conatainers
 storeBeta = zeros(length(b0),Sims);
 storeObsModel = zeros(length(obsModel),Sims);
@@ -31,6 +37,7 @@ storeState = zeros(T, Sims);
 storeSigmaDiag = zeros(K,Sims);
 storeStateTransition = zeros(length(stateTransition), Sims);
 storeStateVariance = zeros(length(stateVariance),Sims);
+
 for i = 1:Sims
     % Update mean function parameters
     [b,B] = updateBetaPriors(y,X,[1;obsModel],stateVariance,F0, SigmaDiag, b0,B0inv);
