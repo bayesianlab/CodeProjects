@@ -40,20 +40,22 @@ storeStateVariance = zeros(length(stateVariance),Sims);
 
 for i = 1:Sims
     % Update mean function parameters
-    [b,B] = updateBetaPriors(y,X,[1;obsModel],stateVariance,F0, SigmaDiag, b0,B0inv);
+    [b,B] = updateBetaPriors(y,X,[1;obsModel],stateVariance,F0, ...
+        SigmaDiag, b0,B0inv);
     b1 = b + chol(B,'lower')*normrnd(0,1,length(b0),1);
     mu1 = X*b1;
     storeBeta(:,i) = b1;
     
     % Update observation model parameters
     derivll = @(guess)DmarginalLogLikelihood(y,mu1,FullSigma,guess,Sdiag);
-    [obsModel, amean, ~] = mhStepForA(y,mu1,FullSigma,Sdiag,derivll, amean, ...
-        obsModelPriorMean, obsModelPriorCov, 15);
+    [obsModel, amean, ~] = mhStepForA(y,mu1,FullSigma,Sdiag,derivll,...
+        amean,obsModelPriorMean, obsModelPriorCov, 15);
     storeObsModel(:,i) = obsModel;
     
     % Update the state variable
     statemeans = forwardBackwardSmoother(y,mu1,FullSigma,...
-                      stateTransition, [1;obsModel], state0, initialStateVar, stateVariance);
+                      stateTransition, [1;obsModel], state0, ...
+                      initialStateVar, stateVariance);
     statedraw = (statemeans +  lowerCholF\normrnd(0,1, T,1))';
     storeState(:,i) = statedraw';
     
@@ -61,15 +63,25 @@ for i = 1:Sims
     shapedmu2 = [1;obsModel]*statedraw;
     shapedmu1 = reshape(mu1,K,T);
     shapedy = reshape(y, K,T);
-    SigmaDiag = drawSigmaDiag(shapedy, shapedmu1+shapedmu2, sigmaPriorParamA,...
-        sigmaPriorParamB);
+    SigmaDiag = drawSigmaDiag(shapedy, shapedmu1+shapedmu2,...
+        sigmaPriorParamA, sigmaPriorParamB);
     FullSigma = diag(SigmaDiag);
     storeSigmaDiag(:,i) = SigmaDiag;
     
     % Update the state transition matrix
-    g = drawStateTransition(statedraw, stateTransition, stateTransititionPriorMean,...
+    stateTransition = drawStateTransition(statedraw, stateTransition,...
+        stateTransititionPriorMean,...
         stateTransititionPriorCov, stateVariance);
-    storeStateTransition(:, i) = g;
+    h = [ones(T,1).*(-stateTransition), ones(T,1), ...
+        ones(T,1).*(-stateTransition)];
+    p = full(spdiags(h,[-1,0],T,T));
+    S = ones(T,1).*stateVariance;
+    S = diag(S);
+    F0 = p*S*p';
+    Sdiag = diag(F0);
+    F = F0 + kron(eye(T), [1;obsModel]'*diag(SigmaDiag)*[1;obsModel]);
+    lowerCholF = chol(F,'lower');
+    storeStateTransition(:, i) = stateTransition;
     
     % Update the state variance
     stateVariance = drawStateVariance(statedraw, stateTransition,...

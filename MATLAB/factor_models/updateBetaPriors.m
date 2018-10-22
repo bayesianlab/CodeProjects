@@ -1,4 +1,5 @@
 function [b,B  ] = updateBetaPriors(y,X,a, omega2,F0, SigmaDiag ,b0, B0inv)
+% For dynfacgibbs DONT CHANGE!
 [rowsX, colsX] = size(X);
 K = length(SigmaDiag);
 T = rowsX/K;
@@ -18,6 +19,6 @@ for t = 1:T
     xpxsum = xpxsum + X(select,:)'*diagSigmai*X(select,:);
 end
 
-B = (B0inv + xpxsum - Xhat'*Pinv*Xhat)\eye(colsX) ;
+B = (B0inv + xpxsum - Xhat'*Pinv*Xhat)\eye(colsX);
 b= B*(B0inv*b0 + xpysum - Xhat'*Pinv*yhat) ;
 end

@@ -1,4 +1,5 @@
 function [Yt, Xt] = lagYt(Yt, lag)
+
 [n,K] = size(Yt);
 start = 2;
 Xt = zeros(n-lag, K*lag + 1);
