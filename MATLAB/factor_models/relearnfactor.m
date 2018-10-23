@@ -2,7 +2,7 @@
 clear;clc;
 rng(14)
 K = 4;
-T = 25;
+T = 500;
 nu = 10;
 lag = 1;
 
@@ -11,6 +11,7 @@ sii2 = ones(K,1);
 mu = ones(K,1);
 G = ones(K,K).*[.75,.5,-.6,-.9];
 a = ones(K-1,1).*.75;
+a(1) = 13;
 ap = [1;a ];
 g = .5;
 epst = mvnrnd(zeros(K,1), diag(sii2), T+1)';
@@ -48,9 +49,10 @@ apriormean = zeros(length(a),1);
 apriorcov = eye(length(a)).*100;
 vecy = yt(:);
 
-[beta] = dynfacgibbs(vecy,Xt,a, g, sii2, om, b0, B0, apriormean,...
+[beta, obsmodel] = dynfacgibbs(vecy,Xt,a, g, sii2, om, b0, B0, apriormean,...
     apriorcov, state0, initialStateVar, statepriormean,...
     statepriorcov, sigmaPriorParamA, sigmaPriorParamB,...
     stateVariancePriorParamA, stateVariancePriorParamB, 100); 
 
-mean(beta,2)
+mean(beta(:, 2:end),2)
+mean(obsmodel(:, 2:end), 2) 
