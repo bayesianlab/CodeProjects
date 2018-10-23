@@ -1,12 +1,12 @@
 function [stoCountryBetas, S123 ] = kowupdateBetaPriors(KowData, ObsModel,...
-   vectorObservationVariances,varianceRestriction, Sworld, Sregion, Scountry,
+   vectorObservationVariances,varianceRestriction, Sworld, Sregion, Scountry,...
     regionIndices, b0, B0inv)
 [T, ~] = size(KowData);
 
 PerCountryEqns = 3;
 PerCountryFactors = 3;
 Countries = 60;
-Regions = 7;
+
 t = 1:5;
 tbeta = 1:4;
 priorsMult = B0inv*b0;
@@ -14,20 +14,25 @@ Eqns = PerCountryEqns*Countries;
 
 % USA has all three restrictions
 Tvector = ones(T,1);
-A = spdiags(Tvector, 0, T,T);
-B = spdiags(Tvector, 0, T,T);
-C = spdiags(Tvector, 0, T, T);
+A = spdiags(Tvector.*ObsModel(1,1), 0, T,T);
+B = spdiags(Tvector.*ObsModel(1,2), 0, T,T);
+C = spdiags(Tvector.*ObsModel(1,3), 0, T, T);
 MatrixInverse = recursiveWoodbury(diag(ones(T,1).*...
     vectorObservationVariances(1)), A, Sworld, B, Sregion(:,:,1),...
     C, Scountry(:,:,1)) ;
 newCountry = 0;
+region = 1;
 stoCountryBetas = zeros(4*Eqns,1);
 for i = 1:Eqns
-
-    newCountry = newCountry + 1;
-    A = spdiags(Tvector.*ObsModel(newCountry,1), 0, T,T);
-    B = spdiags(Tvector.*ObsModel(newCountry,2), 0, T,T);
-    C = spdiags(Tvector, 0, T, T);
+    if mod(i-1,3) == 0
+        newCountry = newCountry + 1;
+    end
+    if newCountry == regionIndices(region+1)
+        region = region + 1;
+    end
+    A = spdiags(Tvector.*ObsModel(i,1), 0, T, T);
+    B = spdiags(Tvector.*ObsModel(i,2), 0, T, T);
+    C = spdiags(Tvector.*ObsModel(i,3), 0, T, T);
     MatrixInverse = recursiveWoodbury(diag(ones(T,1).*...
         vectorObservationVariances(1)), A, Sworld, B,...
         Sregion(:,:,region) ,C, Scountry(:,:,newCountry)) ;
