@@ -39,7 +39,7 @@ restrictedvar = 1;
 % H*kron(eye(T), 2)*H'
 % full(spdiags([ones(T,1).*gamma, ones(T,1)], [-3:-1, 0], T,T))
 rng(1)
-kowdynfactorgibbs(kd,restrictedvar, b0, inv(B0),1 )
+% kowdynfactorgibbs(kd,restrictedvar, b0, inv(B0),1 )
 % rng(1)
 % Sigma = normrnd(0,1,5,5)
 % 
@@ -59,3 +59,17 @@ kowdynfactorgibbs(kd,restrictedvar, b0, inv(B0),1 )
 % mu = normrnd(3,1, 5,1)
 % Sigma = wishrnd(eye(5), 10);
 % mean(geweke91T(a,b,mu,Sigma, 10, 100000),2)
+p = [5,3;3,15]
+pin = p\eye(2);
+pind = diag(pin);
+cm= 1 - (1/pin(2,2))*pin(2,1);
+cv = pin(2,2)^(-1);
+x=[2;2]
+m = [1;1]
+normpdf(2,1,sqrt(5.3924))*normpdf(2,cm,sqrt(cv))
+mvnpdf(x, m, p)
+
+p=[1,.3;.3,1]
+
+log(mvtpdf(x-m, p, 10))
+MVstudenttpdf(x-m,[0;0],p,10)
