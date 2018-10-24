@@ -39,7 +39,7 @@ restrictedvar = 1;
 % H*kron(eye(T), 2)*H'
 % full(spdiags([ones(T,1).*gamma, ones(T,1)], [-3:-1, 0], T,T))
 
-kowdynfactorgibbs(kd,restrictedvar, b0, inv(B0),1 )
+% kowdynfactorgibbs(kd,restrictedvar, b0, inv(B0),1 )
 % rng(1)
 % Sigma = normrnd(0,1,5,5)
 % 
@@ -51,3 +51,9 @@ kowdynfactorgibbs(kd,restrictedvar, b0, inv(B0),1 )
 % S3 = 5;
 % inv(Sigma + A*S1*A' + B*S2*B' + C*S3*C')
 % recursiveWoodbury(Sigma, A, S1, B,S2, C,S3)
+
+a = zeros(5,1);
+b = ones(5,1).*Inf;
+mu = normrnd(3,1, 5,1)
+Sigma = wishrnd(eye(5), 10);
+mean(geweke91T(a,b,mu,Sigma, 10, 100),2)
