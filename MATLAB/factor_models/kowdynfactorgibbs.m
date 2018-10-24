@@ -7,7 +7,7 @@ storebeta = zeros(Countries*SeriesPerCountry, Sims);
 regionIndices = [1,4,6,24,42,49,55, 1000];
 currobsmod = unifrnd(.5,1,Countries*SeriesPerCountry,3);
 
-obsEqnVars = unifrnd(.1,1, 60,1);
+obsEqnVariances = unifrnd(.1,1, Countries*SeriesPerCountry,1);
 
 RegionAr= unifrnd(.5,1, 7, lag) ;
 CountryAr = unifrnd(.5,1, Countries, lag);
@@ -21,14 +21,14 @@ for i = 1 : Sims
     Sworld(:,:) = computeS123(WorldAr, restrictedStateVar, T);
     
     % Update mean function
-    [beta, demeanedy] = kowupdateBetaPriors(KowData, currobsmod, obsEqnVars, ...
+    [beta, demeanedy] = kowupdateBetaPriors(KowData, currobsmod, obsEqnVariances, ...
         restrictedStateVar, Sworld,Sregion,Scountry, regionIndices, b0, B0inv);
 %     storebeta(:,i) = beta;
 
     % Update Obs model
-%     kowll(demeanedy(:,1), 1, currobsmod(1,1), currobsmod(1,2), currobsmod(1,3),...
-%         Sworld, Sregion(:,:,1), Scountry(:,:,1), .05)
-    kowmaximize(demeanedy, currobsmod, obsEqnVars, Sworld, Sregion, Scountry, regionIndices)
+    
+    kowmaximize(demeanedy, currobsmod, obsEqnVariances, Sworld, Sregion,...
+        Scountry, regionIndices)
     
     
 end
