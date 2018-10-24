@@ -26,6 +26,8 @@ b0 = zeros(lags+1,1);
 B0 = 100.* eye(length(b0));
 restrictedvar = 1;
 
+
+
 % gamma = [-1,-2,-.4]
 % onevec = ones(T, 3);
 % onevec(1,2) = 0 ;

@@ -6,7 +6,6 @@ for i = 1 : N
     end
     dif = Bt\(lambda*Fdel);
     xhat = guess + dif;
-    Change = guess - xhat;
     guess = xhat;
 end
 end
