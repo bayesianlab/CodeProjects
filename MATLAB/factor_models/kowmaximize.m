@@ -1,12 +1,15 @@
-function [  ] = kowmaximize( demeanedy, init, sigmaVector, Sworld,...
+function [ ObsModel ] = kowmaximize( demeanedy, init, sigmaVector, Sworld,...
     Sregion, Scountry, regionIndices)
 Countries = 60;
 SeriesPerCountry = 3;
 country = 0;
 region = 1;
-for i = 1:Countries*SeriesPerCountry
-%    Maximize depending on whether it is new country or first in region
-
+Sr = Sregion(:,:,region);
+Sc = Scountry(:,:,1);
+ObsModel = zeros(3,Countries*SeriesPerCountry);
+% USA GDP has three restrictions
+ObsModel(:,1) = mhForUSAGDP(demeanedy(:,1), init(1,:)', sigmaVector(1), Sworld, Sr, Sc);
+for i = 2:Countries*SeriesPerCountry
     if mod(i-1,3) == 0
         country = country + 1;
         if country == regionIndices(region+1)
@@ -14,22 +17,18 @@ for i = 1:Countries*SeriesPerCountry
             % gdp and region restricted
             Sr = Sregion(:,:,region);
             Sc = Scountry(:,:,country);
-            mhStepTwoRestrictioins(demeanedy(:,i), init(i,:)', sigmaVector(i), Sworld, Sr,Sc)
-
-%             [~,p] = chol(ahess)
+            ObsModel(:,i) = mhStepTwoRestrictions(demeanedy(:,i), init(i,:)', sigmaVector(i), Sworld, Sr,Sc);
         else
             % gdp only restricted
             Sc = Scountry(:,:,country);
-            1;
+            ObsModel(:,i) = mhStepOneRestriction(demeanedy(:,i), init(i,:)', sigmaVector(i), Sworld, Sr,Sc);
         end
     else
         % unrestricted
+        ObsModel(:,i) = mhStepUnRestricted(demeanedy(:,i), init(i,:)', sigmaVector(i), Sworld, Sr,Sc);
     end
 
     
 end
-
-
-
 end
 

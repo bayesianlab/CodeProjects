@@ -3,15 +3,19 @@ Countries=60;
 SeriesPerCountry=3;
 lag= 3;
 [T, ~] = size(KowData);
-storebeta = zeros(Countries*SeriesPerCountry, Sims);
+Eqns = Countries*SeriesPerCountry
+storebeta = zeros(Eqns, Sims);
 regionIndices = [1,4,6,24,42,49,55, 1000];
-currobsmod = unifrnd(.5,1,Countries*SeriesPerCountry,3);
+currobsmod = unifrnd(.5,1,Eqns,3);
 
-obsEqnVariances = unifrnd(.1,1, Countries*SeriesPerCountry,1);
+obsEqnVariances = ones(Eqns,1);
 
 RegionAr= unifrnd(.5,1, 7, lag) ;
 CountryAr = unifrnd(.5,1, Countries, lag);
 WorldAr = unifrnd(.5,1, 1,lag);
+
+ar3init = zeros(3,1);
+
 
 for i = 1 : Sims
     Sregion(:,:,:) = computeS123(RegionAr,...
@@ -27,8 +31,12 @@ for i = 1 : Sims
 
     % Update Obs model
     
-    kowmaximize(demeanedy, currobsmod, obsEqnVariances, Sworld, Sregion,...
-        Scountry, regionIndices)
+    [obsmodel] = kowmaximize(demeanedy, currobsmod, obsEqnVariances, Sworld, Sregion,...
+        Scountry, regionIndices);
+    
+    % Update state 
+    kowUpdateFactors(demeanedy, obsmodel', spdiags(obsEqnVariances,0, Eqns,Eqns),...
+        WorldAr, RegionAr, CountryAr, regionIndices)  
     
     
 end

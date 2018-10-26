@@ -1,33 +1,30 @@
 function [ smoothedState, smoothedStateVar] =...
-    forwardBackwardSmoother(y, mu, FullSigma, StateTransition, a,...
-    state0, stateVar0, nu0 )
+    forwardBackwardSmoother(y, mu, FullSigma, StateTransition, ObsModel,...
+    state0, stateVar0, nu )
 K = size(FullSigma,1);
 T = length(y)/K;
 
 index =1:K;
 stateUpdateSave = zeros(T,1);
-statePredictSave = zeros(T,1);
 stateVarPredictSave = zeros(T,1);
 stateVarUpdateSave = zeros(T,1);
-stateUpdateSave(1) = state0;
-stateVarPredictSave(1) = stateVar0;
+
 for t = 1:T
     select = index + (t-1)*K;
     % Step 1 predict
     statePredict = StateTransition*state0;
-    statePredictSave(t) = statePredict;
-    stateVarPredict = (StateTransition'*stateVar0 *StateTransition) + nu0;
+    stateVarPredict = (StateTransition*stateVar0 *StateTransition') + nu;
     stateVarPredictSave(t) = stateVarPredict;
 
     % Step 2 update
-    resid = y(select) - mu(select) - a*statePredict;
-    residvar = a*stateVarPredict*a' + FullSigma;
+    resid = y(select) - mu(select) - ObsModel*statePredict;
+    residvar = ObsModel*stateVarPredict*ObsModel' + FullSigma;
 
     % Filter
-    KalmanGain = stateVarPredict*a'/residvar;
+    KalmanGain = stateVarPredict*ObsModel'/residvar;
     state0 = statePredict + KalmanGain*resid;
     stateUpdateSave(t) = state0;
-    stateVar0 = stateVarPredict - KalmanGain*a*stateVarPredict;
+    stateVar0 = stateVarPredict - KalmanGain*ObsModel*stateVarPredict;
     stateVarUpdateSave(t) = stateVar0;
     
 end
