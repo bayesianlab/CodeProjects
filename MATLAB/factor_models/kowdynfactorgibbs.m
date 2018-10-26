@@ -6,6 +6,7 @@ lag= 3;
 Eqns = Countries*SeriesPerCountry
 storebeta = zeros(Eqns, Sims);
 regionIndices = [1,4,6,24,42,49,55, 1000];
+regioneqns = [1,9;10,15;16,69;70,123;124,144;145,162;163,180];
 currobsmod = unifrnd(.5,1,Eqns,3);
 
 obsEqnVariances = ones(Eqns,1);
@@ -36,7 +37,7 @@ for i = 1 : Sims
     
     % Update state 
     kowUpdateFactors(demeanedy, obsmodel', spdiags(obsEqnVariances,0, Eqns,Eqns),...
-        WorldAr, RegionAr, CountryAr, regionIndices)  
+        WorldAr, RegionAr, CountryAr, regioneqns)  
     
     
 end
