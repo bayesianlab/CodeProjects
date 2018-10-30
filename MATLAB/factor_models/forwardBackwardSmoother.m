@@ -40,7 +40,7 @@ for t = (T-1):-1:1
        StateTransition*stateUpdateSave(t));
    smoothedStateVar(t) = stateVarUpdateSave(t) - ...
        (Smootht*(smoothedStateVar(t+1) -...
-       stateVarUpdateSave(t+1))*Smootht');
+       stateVarPredictSave(t+1))*Smootht');
 end
 
 end

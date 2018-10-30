@@ -11,9 +11,9 @@ currobsmod = unifrnd(.5,1,Eqns,3);
 
 obsEqnVariances = ones(Eqns,1);
 
-RegionAr= unifrnd(.5,1, 7, lag) ;
-CountryAr = unifrnd(.5,1, Countries, lag);
-WorldAr = unifrnd(.5,1, 1,lag);
+RegionAr= unifrnd(.1,.2, 7, lag) ;
+CountryAr = unifrnd(.1,.2, Countries, lag);
+WorldAr = unifrnd(.1,.2, 1,lag);
 
 ar3init = zeros(3,1);
 
