@@ -19,25 +19,30 @@ ar3init = zeros(3,1);
 
 
 for i = 1 : Sims
-    Sregion(:,:,:) = computeS123(RegionAr,...
-        restrictedStateVar, T);
-    Scountry(:,:,:) = computeS123(CountryAr,...
-        restrictedStateVar, T);
-    Sworld(:,:) = computeS123(WorldAr, restrictedStateVar, T);
+    
+    [P0world, PhiWorld, RRp] = kowKalmanInitRecursion(WorldAr, [1,0,0]', 1)
+size(kron(diag(ones(T,1)), eye(3)))
+%     Sregion(:,:,:) = computeS123(RegionAr,...
+%         restrictedStateVar, T);
+%     Scountry(:,:,:) = computeS123(CountryAr,...
+%         restrictedStateVar, T);
+%     Sworld(:,:) = computeS123(WorldAr, restrictedStateVar, T)
+    
+    
     
     % Update mean function
-    [beta, demeanedy] = kowupdateBetaPriors(KowData, currobsmod, obsEqnVariances, ...
-        restrictedStateVar, Sworld,Sregion,Scountry, regionIndices, b0, B0inv);
+%     [beta, demeanedy] = kowupdateBetaPriors(KowData, currobsmod, obsEqnVariances, ...
+%         restrictedStateVar, Sworld,Sregion,Scountry, regionIndices, b0, B0inv);
 %     storebeta(:,i) = beta;
 
     % Update Obs model
-    
-    [obsmodel] = kowmaximize(demeanedy, currobsmod, obsEqnVariances, Sworld, Sregion,...
-        Scountry, regionIndices);
+%     
+%     [obsmodel] = kowmaximize(demeanedy, currobsmod, obsEqnVariances, Sworld, Sregion,...
+%         Scountry, regionIndices);
     
     % Update state 
-    kowUpdateFactors(demeanedy, obsmodel', spdiags(obsEqnVariances,0, Eqns,Eqns),...
-        WorldAr, RegionAr, CountryAr, regioneqns)  
+%     kowUpdateFactors(demeanedy, obsmodel', spdiags(obsEqnVariances,0, Eqns,Eqns),...
+%         WorldAr, RegionAr, CountryAr, regioneqns)  
     
     
 end
