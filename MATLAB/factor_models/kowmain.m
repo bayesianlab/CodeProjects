@@ -7,7 +7,7 @@ y = table2array(kow1(:,2:end))';
 yt = yt';
 [K,T]= size(yt);
 
-size(yt(:))
+
 
 % testx=repmat(kron(eye(kt), ones(1,3*kt+1)),tt,1)...
 %     .*repmat(kron(Xt, ones(K,1)), 1,K)
@@ -26,6 +26,8 @@ b0 = zeros(lags+1,1);
 B0 = 100.* eye(length(b0));
 restrictedvar = 1;
 
+ys = kd(:,1:5:end);
+ys = ys';
 
 
 % gamma = [-1,-2,-.4]
@@ -39,7 +41,8 @@ restrictedvar = 1;
 % H*kron(eye(T), 2)*H'
 % full(spdiags([ones(T,1).*gamma, ones(T,1)], [-3:-1, 0], T,T))
 rng(1)
-kowdynfactorgibbs(kd,restrictedvar, b0, inv(B0),1 )
+kowdynfactorgibbs(ys, kd,restrictedvar, b0, inv(B0),1 );
+% X = full(X);
 % rng(1)
 % Sigma = normrnd(0,1,5,5)
 % 

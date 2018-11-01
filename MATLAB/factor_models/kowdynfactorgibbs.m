@@ -1,27 +1,55 @@
-function [  ] = kowdynfactorgibbs(KowData, restrictedStateVar, b0, B0inv,Sims )
+function [  ] = kowdynfactorgibbs(ys, KowData, restrictedStateVar, b0, B0inv,Sims )
 Countries=60;
+Regions = 7;
 SeriesPerCountry=3;
-lag= 3;
+nFactors = Countries + Regions + 1;
+Arp= 3;
 [T, ~] = size(KowData);
 Eqns = Countries*SeriesPerCountry
 storebeta = zeros(Eqns, Sims);
 regionIndices = [1,4,6,24,42,49,55, 1000];
-regioneqns = [1,9;10,15;16,69;70,123;124,144;145,162;163,180];
-currobsmod = unifrnd(.5,1,Eqns,3);
 
+% Should be passed in as parameters
+regioneqns = [1,9;10,15;16,69;70,123;124,144;145,162;163,180];
+countryeqns = [(1:3:178)', (3:3:180)'];
+
+currobsmod = unifrnd(.5,1,Eqns,3);
+[kowMakeRegionBlock(currobsmod(:,2), regioneqns, 7), kowMakeRegionBlock(currobsmod(:,3), countryeqns, 60)];
 obsEqnVariances = ones(Eqns,1);
 
-RegionAr= unifrnd(.1,.2, 7, lag) ;
-CountryAr = unifrnd(.1,.2, Countries, lag);
-WorldAr = unifrnd(.1,.2, 1,lag);
+RegionAr= unifrnd(.1,.2,Regions,Arp) ;
+CountryAr = unifrnd(.1,.2, Countries,Arp);
+WorldAr = unifrnd(.1,.2, 1,Arp);
 
-ar3init = zeros(3,1);
+stacktrans = [WorldAr;RegionAr;CountryAr];
+
+[P0, Phi] = kowComputeP0(stacktrans);
+
+T = 5;
+% Phi = [Phi, eye(nFactors), zeros(nFactors, nFactors*2)];
+% size(Phi)
 
 
+p = full(Phi);
+p = p(1:2,1:6)
+I = [eye(2), zeros(2, 4)]
+
+kron([[0;0], eye(2)], I) + kron([eye(2), [0;0]], p)
 for i = 1 : Sims
     
-    [P0world, PhiWorld, RRp] = kowKalmanInitRecursion(WorldAr, [1,0,0]', 1)
-size(kron(diag(ones(T,1)), eye(3)))
+%     [P0world, PhiWorld, RRp] = kowKalmanInitRecursion(WorldAr, [1,0,0]', 1);
+% 
+% Sworld = kowMakeVariance(PhiWorld(1,:), P0world,  1, T);
+% fworld = kowUpdateLatent(ys(:), Sworld, currobsmod(:,1), obsEqnVariances);
+% fregion = kowUpdateLatentStates(ys, currobsmod(:,2),  obsEqnVariances, RegionAr, regioneqns);
+% fcountry = kowUpdateLatentStates(ys, currobsmod(:,2), obsEqnVariances, CountryAr, countryeqns);
+% tset = [fworld;fregion;fcountry];
+% 
+% u = kowLag(tset, 3);
+% 
+
+
+
 %     Sregion(:,:,:) = computeS123(RegionAr,...
 %         restrictedStateVar, T);
 %     Scountry(:,:,:) = computeS123(CountryAr,...

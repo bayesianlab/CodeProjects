@@ -37,8 +37,7 @@ for i = 1:Eqns
     X = KowData(:,select(2:end));
     bcovarmat = (B0inv + X'*MatrixInverse*X)\eye(4);
     bmean = bcovarmat*(priorsMult + X'*MatrixInverse*y);
-    cbeta = bmean +...
-        chol(bcovarmat, 'lower')*normrnd(0,1,4,1);
+    cbeta = bmean + chol(bcovarmat, 'lower')*normrnd(0,1,4,1);
     demeanedys(:, i) = y - X*cbeta;
     stoCountryBetas(betaselect,1) = cbeta;
 end
