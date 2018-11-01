@@ -23,18 +23,24 @@ WorldAr = unifrnd(.1,.2, 1,Arp);
 
 stacktrans = [WorldAr;RegionAr;CountryAr];
 
-[P0, Phi] = kowComputeP0(stacktrans);
+% [P0, Phi] = kowComputeP0(stacktrans);
 
-T = 5;
 % Phi = [Phi, eye(nFactors), zeros(nFactors, nFactors*2)];
 % size(Phi)
+p1 = stacktrans(1:3,:);
 
+% p = stacktrans(1:2,:);
+% p=full(spdiags(p, [0, 2:2:4], 2, 6));
+% I = [eye(2), zeros(2,4)];
+% kron([[0;0],eye(2)], I) + kron([eye(2), [0;0]], p);
+% kron([eye(2), [0;0]], p)
+T = 3
+testp =  stacktrans(1:3,:);
+kowComputeP0(testp)
 
-p = full(Phi);
-p = p(1:2,1:6)
-I = [eye(2), zeros(2, 4)]
+% h = kowMakeVariance(testp, testP0, T);
+% full(h);
 
-kron([[0;0], eye(2)], I) + kron([eye(2), [0;0]], p)
 for i = 1 : Sims
     
 %     [P0world, PhiWorld, RRp] = kowKalmanInitRecursion(WorldAr, [1,0,0]', 1);

@@ -1,11 +1,13 @@
-function [ K ] = kowMakeVariance(  Phi, P0,  statevariance, T )
+function [ H ] = kowMakeVariance(  stackedTransitions, P0  ,T )
+[r,c] = size(P0);
+[k, lags] = size(stackedTransitions);
+N = (lags-1)*k;
+It = speye(T-1);
+Ik = [speye(k), zeros(k,N)];
+zt = zeros(T-1,1);
 
-k = size(Phi,2);
-
-H = full(spdiags([tril(ones(T,k).*Phi,0), ones(T,1)], [-k:0], T,T) );
-Sinv = spdiags(ones(T,1).*(1/statevariance),0,T, T);
-Sinv(1:k, 1:k) = P0;
-K = H*Sinv*H';
+p = spdiags(stackedTransitions,[0, k:k:N], k, k*lags);
+H = kron( [It, zt], p) + kron( [ zt, It], Ik);
 
 end
 
