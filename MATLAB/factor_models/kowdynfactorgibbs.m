@@ -1,4 +1,4 @@
-function [  ] = kowdynfactorgibbs(ys, KowData, restrictedStateVar, b0, B0inv,Sims )
+function [ h ] = kowdynfactorgibbs(ys, KowData, restrictedStateVar, b0, B0inv,Sims )
 Countries=60;
 Regions = 7;
 SeriesPerCountry=3;
@@ -18,8 +18,8 @@ currobsmod = unifrnd(.5,1,Eqns,3);
 obsEqnVariances = ones(Eqns,1);
 
 RegionAr= unifrnd(.1,.2,Regions,Arp) ;
-CountryAr = unifrnd(.1,.2, Countries,Arp);
-WorldAr = unifrnd(.1,.2, 1,Arp);
+CountryAr = unifrnd(-.1,.2, Countries,Arp);
+WorldAr = unifrnd(-.1,.2, 1,Arp);
 
 stacktrans = [WorldAr;RegionAr;CountryAr];
 
@@ -34,12 +34,16 @@ p1 = stacktrans(1:3,:);
 % I = [eye(2), zeros(2,4)];
 % kron([[0;0],eye(2)], I) + kron([eye(2), [0;0]], p);
 % kron([eye(2), [0;0]], p)
-T = 3
+T = 4;
 testp =  stacktrans(1:3,:);
-kowComputeP0(testp)
+P0 = kowComputeP0(stacktrans);
 
-% h = kowMakeVariance(testp, testP0, T);
-% full(h);
+
+
+h = kowMakeVariance(testp,  1, T);
+
+% full(h)
+% size(h)
 
 for i = 1 : Sims
     
