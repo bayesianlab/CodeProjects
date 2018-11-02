@@ -1,4 +1,4 @@
-function [ h ] = kowdynfactorgibbs(ys, KowData, restrictedStateVar, b0, B0inv,Sims )
+function [ h ] = kowdynfactorgibbs(ys, SurX, KowData, restrictedStateVar, b0, B0inv,Sims )
 Countries=60;
 Regions = 7;
 SeriesPerCountry=3;
@@ -36,7 +36,7 @@ p1 = stacktrans(1:3,:);
 % kron([[0;0],eye(2)], I) + kron([eye(2), [0;0]], p);
 % kron([eye(2), [0;0]], p)
 T = 51;
-testys = ys(Eqns*T)
+testys = ys;
 testp =  stacktrans(1:3,:);
 P0 = kowComputeP0(stacktrans);
 
@@ -44,30 +44,13 @@ P0 = kowComputeP0(stacktrans);
 
 Si = kowMakeVariance(stacktrans,  1, T);
 
-StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), IOcountry .* currobsmod(:,3)]
-kowUpdateLatent(testys(:), StateObsModel, Si, 1, T);
+StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), IOcountry .* currobsmod(:,3)];
+uu = (Si + kron(speye(T), StateObsModel'*StateObsModel))\speye(size(Si,1));
+
+% kowUpdateLatent(testys(:), StateObsModel, Si, 1, T)
+
+kowupdateBetaPriors(ys(:), SurX, diag(1./obsEqnVariances), StateObsModel, Si, Eqns, nFactors, T)
 for i = 1 : Sims
-    
-%     [P0world, PhiWorld, RRp] = kowKalmanInitRecursion(WorldAr, [1,0,0]', 1);
-% 
-% Sworld = kowMakeVariance(PhiWorld(1,:), P0world,  1, T);
-% fworld = kowUpdateLatent(ys(:), Sworld, currobsmod(:,1), obsEqnVariances);
-% fregion = kowUpdateLatentStates(ys, currobsmod(:,2),  obsEqnVariances, RegionAr, regioneqns);
-% fcountry = kowUpdateLatentStates(ys, currobsmod(:,2), obsEqnVariances, CountryAr, countryeqns);
-% tset = [fworld;fregion;fcountry];
-% 
-% u = kowLag(tset, 3);
-% 
-
-
-
-%     Sregion(:,:,:) = computeS123(RegionAr,...
-%         restrictedStateVar, T);
-%     Scountry(:,:,:) = computeS123(CountryAr,...
-%         restrictedStateVar, T);
-%     Sworld(:,:) = computeS123(WorldAr, restrictedStateVar, T)
-    
-    
     
     % Update mean function
 %     [beta, demeanedy] = kowupdateBetaPriors(KowData, currobsmod, obsEqnVariances, ...

@@ -1,4 +1,4 @@
-function [x] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelVariances, T)
+function [x, G] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelVariances, T)
 
 
 
@@ -18,14 +18,11 @@ eta = zeros(Total,1);
 eta(Total) = ForwardSolved(Total);
 epsilon = normrnd(0,1,Total,1);
 x = Li*epsilon;
-size(ForwardSolved)
-
 
 for t = Total-1:(-1):1
    eta(t) = (ForwardSolved(t) - upperoff(t,:)*eta)/diagelems(t+1); 
 end
 
-x = (eta + x)';
-x
+x = (eta + x);
 end
 
