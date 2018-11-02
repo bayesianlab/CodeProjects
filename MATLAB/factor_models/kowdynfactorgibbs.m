@@ -7,11 +7,12 @@ Arp= 3;
 [T, ~] = size(KowData);
 Eqns = Countries*SeriesPerCountry
 storebeta = zeros(Eqns, Sims);
-regionIndices = [1,4,6,24,42,49,55, 1000];
-
-% Should be passed in as parameters
+% regionIndices = [1,4,6,24,42,49,55, 1000];
 regioneqns = [1,9;10,15;16,69;70,123;124,144;145,162;163,180];
 countryeqns = [(1:3:178)', (3:3:180)'];
+[IOregion,IOcountry] = kowMakeObsModelIdentityMatrices(Eqns, regioneqns, SeriesPerCountry, Regions,Countries);
+% Should be passed in as parameters
+
 
 currobsmod = unifrnd(.5,1,Eqns,3);
 [kowMakeRegionBlock(currobsmod(:,2), regioneqns, 7), kowMakeRegionBlock(currobsmod(:,3), countryeqns, 60)];
@@ -34,17 +35,17 @@ p1 = stacktrans(1:3,:);
 % I = [eye(2), zeros(2,4)];
 % kron([[0;0],eye(2)], I) + kron([eye(2), [0;0]], p);
 % kron([eye(2), [0;0]], p)
-T = 4;
+T = 51;
+testys = ys(Eqns*T)
 testp =  stacktrans(1:3,:);
 P0 = kowComputeP0(stacktrans);
 
 
 
-h = kowMakeVariance(testp,  1, T);
+Si = kowMakeVariance(stacktrans,  1, T);
 
-% full(h)
-% size(h)
-
+StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), IOcountry .* currobsmod(:,3)]
+kowUpdateLatent(testys(:), StateObsModel, Si, 1, T);
 for i = 1 : Sims
     
 %     [P0world, PhiWorld, RRp] = kowKalmanInitRecursion(WorldAr, [1,0,0]', 1);

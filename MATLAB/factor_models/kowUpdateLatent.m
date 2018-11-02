@@ -1,21 +1,31 @@
-function [x] = kowUpdateLatent(vecresids, StateVarMat, ObsModel, ObsModelVariances)
-T = size(StateVarMat,1);
-K = length(ObsModelVariances);
+function [x] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelVariances, T)
 
-L = sparse(chol(StateVarMat, 'lower'));
-U = L';
-Li = L\eye(T);
-G = sparse(kron(eye(T), ObsModel));
-Omega = spdiags(repmat(ObsModelVariances,T,1), 0, T*K, T*K);
-ForwardSolved = Li*G'*Omega*vecresids;
-upperoff = triu(U,1);
-eta = zeros(T,1);
-eta(T) = ForwardSolved(T);
-epsilon = normrnd(0,1,T,1);
+
+
+[Nobseqns, Nstates] = size(ObsModel);
+Total = T*Nstates;
+G = kron(speye(T), ObsModel);
+KroneckerVariance = spdiags(repmat(1./ObsModelVariances, T*Nobseqns,1),0, T*Nobseqns, T*Nobseqns);
+L = StatePrecision + G'*KroneckerVariance*G;
+L = chol(L,'lower');
+Li = L\speye(size(L,1));
+
+ForwardSolved = Li*G'*KroneckerVariance*vecresids;
+
+upperoff = triu(L',1);
+diagelems = diag(L);
+eta = zeros(Total,1);
+eta(Total) = ForwardSolved(Total);
+epsilon = normrnd(0,1,Total,1);
 x = Li*epsilon;
-for t = T-1:(-1):1
-   eta(t) = ForwardSolved(t) - upperoff(t,:)*eta; 
+size(ForwardSolved)
+
+
+for t = Total-1:(-1):1
+   eta(t) = (ForwardSolved(t) - upperoff(t,:)*eta)/diagelems(t+1); 
 end
+
 x = (eta + x)';
+x
 end
 

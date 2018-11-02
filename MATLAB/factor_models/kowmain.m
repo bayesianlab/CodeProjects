@@ -41,7 +41,7 @@ ys = ys';
 % H*kron(eye(T), 2)*H'
 % full(spdiags([ones(T,1).*gamma, ones(T,1)], [-3:-1, 0], T,T))
 rng(1)
-h= kowdynfactorgibbs(ys, kd,restrictedvar, b0, inv(B0),1 );
+kowdynfactorgibbs(ys, kd,restrictedvar, b0, inv(B0),1 );
 
 % X = full(X);
 % rng(1)
