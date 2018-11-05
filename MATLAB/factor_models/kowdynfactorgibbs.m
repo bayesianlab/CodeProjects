@@ -1,6 +1,6 @@
 function [ h ] = kowdynfactorgibbs(ys, SurX, KowData, restrictedStateVar, b0, B0inv,Sims )
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'MaxIterations', 4, 'Display', 'iter');
+    'MaxIterations', 3, 'Display', 'iter');
 
 Countries=60;
 Regions = 7;
@@ -53,22 +53,24 @@ beta = kowupdateBetaPriors(ys(:), SurX, diag(1./obsEqnVariances), StateObsModel,
 mux = SurX*beta;
 ydemu = ys(:)- mux;
 shapeddemeany = reshape(ydemu,Eqns,T);
-% loglike = @(wg) -kowOptimizeWorld(wg, currobsmod, IOregion, IOcountry, StateVariable, ydemu, repmat(obsEqnVariances, T,1));
-% [themean, ~,~,~,~, Hessian] = fminunc(loglike, currobsmod(:,1), options);
+loglike = @(wg) -kowOptimizeWorld(wg, currobsmod, IOregion, IOcountry, StateVariable, ydemu, repmat(obsEqnVariances, T,1));
+[themean, ~,~,~,~, Hessian] = fminunc(loglike, currobsmod(:,1), options);
 
+mhWorld(themean, Hessian)
 
-for r = 1:1
-    bdex = regioneqns(r,1);
-    edex = regioneqns(r,2);
-    obsslice = currobsmod(bdex:edex,:);
-    yslice = shapeddemeany(bdex:edex, :);
-    vslice = obsEqnVariances(bdex:edex, :);
-    regguess = currobsmod(bdex:edex,2);
-    loglike = @(rg) -kowOptimizeRegion(rg, obsslice(:,1), obsslice(:,3),...
-        IOregion(bdex:edex,:), IOcountry(bdex:edex,:), StateVariable, yslice(:), repmat(vslice, T,1));
-    [themean, ~,~,~,~, Hessian] = fminunc(loglike, regguess, options)
-
-end
+% for r = 1:Regions
+%     bdex = regioneqns(r,1);
+%     edex = regioneqns(r,2);
+%     obsslice = currobsmod(bdex:edex,:);
+%     yslice = shapeddemeany(bdex:edex, :);
+%     vslice = obsEqnVariances(bdex:edex, :);
+%     regguess = currobsmod(bdex:edex,2);
+%     loglike = @(rg) -kowOptimizeRegion(rg, obsslice(:,1), obsslice(:,3),...
+%         IOregion(bdex:edex,:), IOcountry(bdex:edex,:), StateVariable,...
+%         yslice(:), repmat(vslice, T,1));
+%     [themean, ~,~,~,~, Hessian] = fminunc(loglike, regguess, options)
+% 
+% end
 
 for i = 1 : Sims
     
