@@ -1,4 +1,7 @@
 function [ h ] = kowdynfactorgibbs(ys, SurX, KowData, restrictedStateVar, b0, B0inv,Sims )
+options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
+    'MaxIterations', 4, 'Display', 'iter');
+
 Countries=60;
 Regions = 7;
 SeriesPerCountry=3;
@@ -36,20 +39,37 @@ p1 = stacktrans(1:3,:);
 % kron([[0;0],eye(2)], I) + kron([eye(2), [0;0]], p);
 % kron([eye(2), [0;0]], p)
 T = 51;
-testys = ys;
-testp =  stacktrans(1:3,:);
-P0 = kowComputeP0(stacktrans);
 
 
 
-Si = kowMakeVariance(stacktrans,  1, T);
+[Si, p ] = kowMakeVariance(stacktrans,  1, T);
 
 StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), IOcountry .* currobsmod(:,3)];
-uu = (Si + kron(speye(T), StateObsModel'*StateObsModel))\speye(size(Si,1));
+StateVariable = reshape(kowUpdateLatent(ys(:), StateObsModel, Si, 1, T), nFactors, T);
+ss = StateObsModel*StateVariable;
+size(ss(:))
 
-% kowUpdateLatent(testys(:), StateObsModel, Si, 1, T)
+beta = kowupdateBetaPriors(ys(:), SurX, diag(1./obsEqnVariances), StateObsModel, Si, Eqns, nFactors, T);
+mux = SurX*beta;
+ydemu = ys(:)- mux;
+shapeddemeany = reshape(ydemu,Eqns,T);
+% loglike = @(wg) -kowOptimizeWorld(wg, currobsmod, IOregion, IOcountry, StateVariable, ydemu, repmat(obsEqnVariances, T,1));
+% [themean, ~,~,~,~, Hessian] = fminunc(loglike, currobsmod(:,1), options);
 
-kowupdateBetaPriors(ys(:), SurX, diag(1./obsEqnVariances), StateObsModel, Si, Eqns, nFactors, T)
+
+for r = 1:1
+    bdex = regioneqns(r,1);
+    edex = regioneqns(r,2);
+    obsslice = currobsmod(bdex:edex,:);
+    yslice = shapeddemeany(bdex:edex, :);
+    vslice = obsEqnVariances(bdex:edex, :);
+    regguess = currobsmod(bdex:edex,2);
+    loglike = @(rg) -kowOptimizeRegion(rg, obsslice(:,1), obsslice(:,3),...
+        IOregion(bdex:edex,:), IOcountry(bdex:edex,:), StateVariable, yslice(:), repmat(vslice, T,1));
+    [themean, ~,~,~,~, Hessian] = fminunc(loglike, regguess, options)
+
+end
+
 for i = 1 : Sims
     
     % Update mean function

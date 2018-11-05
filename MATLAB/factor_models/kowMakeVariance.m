@@ -1,4 +1,4 @@
-function [ Si] = kowMakeVariance(  stackedTransitions,  stateVariance, T )
+function [ Si, p] = kowMakeVariance(  stackedTransitions,  stateVariance, T )
 [k, lags] = size(stackedTransitions);
 Tmlag = T- lags;
 Phi = [repmat(stackedTransitions, Tmlag,1), ones(k*Tmlag,1)];
