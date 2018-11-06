@@ -9,7 +9,6 @@ KroneckerVariance = spdiags(repmat(1./ObsModelVariances, T*Nobseqns,1),0, T*Nobs
 L = StatePrecision + G'*KroneckerVariance*G;
 L = chol(L,'lower');
 Li = L\speye(size(L,1));
-
 ForwardSolved = Li*G'*KroneckerVariance*vecresids;
 
 upperoff = triu(L',1);

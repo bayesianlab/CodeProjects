@@ -1,8 +1,13 @@
-function [ll] = kowOptimizeRegion(regionguess, world, country, IOregion,...
-    IOcountry, StateVariable, ydemuregion, variance)
-StateObsModel = [world, IOregion .* regionguess, IOcountry .*country];
-ss = StateObsModel*StateVariable;
-ydemuregion = ydemuregion - ss(:);
-ll = kowLogLikelihood(ydemuregion, variance);
+function [ll] = kowOptimizeRegion(regionguess, currobsmod, IOregion,...
+    IOcountry, StateVariable, ydemuregion, variance, bdex, edex, T)
+
+newregion = currobsmod(:,2);
+newregion(bdex:edex, 2) = regionguess;
+StateObsModel = [currobsmod(:,1), IOregion .* newregion, IOcountry .*currobsmod(:,2)];
+speyet = speye(T);
+kronobs = kron(speyet, StateObsModel);
+isinvertible = kronobs*StateVariance*kronobs' + ObsDiagVariance;
+chol(isinvertible)
+% ll = kowLogLikelihood(ydemuregion, variance);
 end
 

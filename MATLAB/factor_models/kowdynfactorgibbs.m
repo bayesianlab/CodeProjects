@@ -1,6 +1,6 @@
 function [ h ] = kowdynfactorgibbs(ys, SurX, KowData, restrictedStateVar, b0, B0inv,Sims )
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'MaxIterations', 3, 'Display', 'iter');
+    'MaxIterations', 3, 'Display', 'off');
 
 Countries=60;
 Regions = 7;
@@ -17,7 +17,8 @@ countryeqns = [(1:3:178)', (3:3:180)'];
 % Should be passed in as parameters
 
 
-currobsmod = unifrnd(.5,1,Eqns,3);
+% currobsmod = unifrnd(.5,1,Eqns,3);
+currobsmod = zeros(Eqns,3);
 [kowMakeRegionBlock(currobsmod(:,2), regioneqns, 7), kowMakeRegionBlock(currobsmod(:,3), countryeqns, 60)];
 obsEqnVariances = ones(Eqns,1);
 
@@ -30,47 +31,45 @@ stacktrans = [WorldAr;RegionAr;CountryAr];
 % [P0, Phi] = kowComputeP0(stacktrans);
 
 % Phi = [Phi, eye(nFactors), zeros(nFactors, nFactors*2)];
-% size(Phi)
-p1 = stacktrans(1:3,:);
-
+% size(Phi) 
 % p = stacktrans(1:2,:);
-% p=full(spdiags(p, [0, 2:2:4], 2, 6));
-% I = [eye(2), zeros(2,4)];
-% kron([[0;0],eye(2)], I) + kron([eye(2), [0;0]], p);
-% kron([eye(2), [0;0]], p)
-T = 51;
-
-
-
-[Si, p ] = kowMakeVariance(stacktrans,  1, T);
+% 
+% [si,p, s] = kowMakeVariance(p, 1, 5);
+% p
+smally = ys(:,1:T);
+smallx = SurX(1:Eqns*T, :);
+[Si, p, S ] = kowMakeVariance(stacktrans,  1, T);
 
 StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), IOcountry .* currobsmod(:,3)];
-StateVariable = reshape(kowUpdateLatent(ys(:), StateObsModel, Si, 1, T), nFactors, T);
+StateVariable = reshape(kowUpdateLatent(smally(:), StateObsModel, Si, 1, T), nFactors, T);
 ss = StateObsModel*StateVariable;
 size(ss(:))
 
-beta = kowupdateBetaPriors(ys(:), SurX, diag(1./obsEqnVariances), StateObsModel, Si, Eqns, nFactors, T);
-mux = SurX*beta;
-ydemu = ys(:)- mux;
+beta = kowupdateBetaPriors(smally(:), smallx, diag(1./obsEqnVariances), StateObsModel, Si, Eqns, nFactors, T);
+mux = smallx*beta;
+ydemu = smally(:)- mux;
 shapeddemeany = reshape(ydemu,Eqns,T);
 loglike = @(wg) -kowOptimizeWorld(wg, currobsmod, IOregion, IOcountry, StateVariable, ydemu, repmat(obsEqnVariances, T,1));
 [themean, ~,~,~,~, Hessian] = fminunc(loglike, currobsmod(:,1), options);
 
-mhWorld(themean, Hessian)
+mhWorld(ydemu, obsEqnVariances,currobsmod, themean, Hessian, StateVariable, IOregion, IOcountry, Eqns, T)
 
-% for r = 1:Regions
-%     bdex = regioneqns(r,1);
-%     edex = regioneqns(r,2);
-%     obsslice = currobsmod(bdex:edex,:);
-%     yslice = shapeddemeany(bdex:edex, :);
-%     vslice = obsEqnVariances(bdex:edex, :);
-%     regguess = currobsmod(bdex:edex,2);
-%     loglike = @(rg) -kowOptimizeRegion(rg, obsslice(:,1), obsslice(:,3),...
-%         IOregion(bdex:edex,:), IOcountry(bdex:edex,:), StateVariable,...
-%         yslice(:), repmat(vslice, T,1));
-%     [themean, ~,~,~,~, Hessian] = fminunc(loglike, regguess, options)
-% 
-% end
+for r = 1:Regions
+    bdex = regioneqns(r,1);
+    edex = regioneqns(r,2);
+    reqns = edex - bdex + 1;
+    obsslice = currobsmod(bdex:edex,:);
+    yslice = shapeddemeany(bdex:edex, :);
+    vslice = obsEqnVariances(bdex:edex, :);
+    regguess = currobsmod(bdex:edex,2)
+    regionidentityslice = IOregion(bdex:edex,:);
+    countryidentityslice = IOcountry(bdex:edex,:);
+    loglike = @(rg) -kowOptimizeRegion(rg, currobsmod, IOregion, IOcountry, StateVariable,...
+        ydemu, spdiags(repmat(obsEqnVariances, T,1), 0, T*Eqns, T*Eqns), bdex, edex, T);
+    [themean, ~,~,~,~, Hessian] = fminunc(loglike, regguess, options);
+%     mhRegion(yslice(:),vslice,obsslice, themean, Hessian, StateVariable, S, regionidentityslice, countryidentityslice, reqns, T)
+
+end
 
 for i = 1 : Sims
     
