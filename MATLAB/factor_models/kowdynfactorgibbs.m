@@ -18,7 +18,7 @@ countryeqns = [(1:3:178)', (3:3:180)'];
 
 
 % currobsmod = unifrnd(.5,1,Eqns,3);
-currobsmod = unifrnd(0,.1,Eqns,3);
+currobsmod = unifrnd(0,1,Eqns,3);
 [kowMakeRegionBlock(currobsmod(:,2), regioneqns, 7), kowMakeRegionBlock(currobsmod(:,3), countryeqns, 60)];
 obsEqnVariances = ones(Eqns,1);
 
@@ -36,7 +36,7 @@ stacktrans = [WorldAr;RegionAr;CountryAr];
 % 
 % [si,p, s] = kowMakeVariance(p, 1, 5);
 
-T= 51
+T= 25
 smally = ys(:,1:T);
 smallx = SurX(1:Eqns*T, :);
 [Si, p, S ] = kowMakeVariance(stacktrans,  1, T);
@@ -47,16 +47,20 @@ StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), IOcountry .* curr
 StateVariable = reshape(kowUpdateLatent(smally(:), StateObsModel, Si, 1, T), nFactors, T);
 ss = StateObsModel*StateVariable;
 
-beta = kowupdateBetaPriors(smally(:), smallx, diag(1./obsEqnVariances), StateObsModel, Si, Eqns, nFactors, T);
-mux = smallx*beta;
+% beta = kowupdateBetaPriors(smally(:), smallx, diag(1./obsEqnVariances), StateObsModel, Si, Eqns, nFactors, T);
+% mux = smallx*beta;
+mux = zeros(Eqns*T,1);
 ydemu = smally(:)- mux;
 shapeddemeany = reshape(ydemu,Eqns,T);
 Sworld = kowMakeVariance(stacktrans(1,:), 1, T);
 
+size(ydemu)
 
-obsV = spdiags(repmat(obsEqnVariances, T,1),0, T*Eqns, T*Eqns);
-loglike = @(wg) -kowOptimizeWorld(wg, ydemu, Sworld, obsV, Eqns, T);
-[themean, ~,~,~,~, Hessian] = fminunc(loglike, currobsmod(:,1), options)
+obsPre = 1./obsEqnVariances;
+size(obsPre)
+kowOptimizeWorld(currobsmod(:,1), ydemu, Sworld, obsPre, Sworld, Eqns, T)
+% loglike = @(wg) -kowOptimizeWorld(wg, ydemu, Sworld, obsPre, Si, Eqns, T);
+% [themean, ~,~,~,~, Hessian] = fminunc(loglike, currobsmod(:,1), options)
 
 % mhWorld(ydemu, obsEqnVariances,currobsmod, themean, Hessian, StateVariable, IOregion, IOcountry, Eqns, T)
 
