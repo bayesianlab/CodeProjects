@@ -1,4 +1,4 @@
-function [draw] = kowMhCountry(notcandidate, optimalMean, iHessian,...
+function [draw] = kowMhRestricted(notcandidate, optimalMean, iHessian,...
     Hessian, ydemu, StatePrecision, obsPrecision, PriorPre,...
     logdetPriorPre, K, T)
 df = 15;
@@ -16,9 +16,9 @@ restricteddraw = truncNormalRand(0, Inf, optimalMean(1), sigma)/w1;
     optimalMean(1), df, df+1);
 candidate = [restricteddraw;cdraw];
 
-llhoodnum= kowOptimizeCountry(candidate, ydemu, StatePrecision,...
+llhoodnum= kowLL(candidate, ydemu, StatePrecision,...
     obsPrecision, K, T);
-llhoodden= kowOptimizeCountry(notcandidate, ydemu, StatePrecision,...
+llhoodden= kowLL(notcandidate, ydemu, StatePrecision,...
     obsPrecision, K, T);
 
 
@@ -34,7 +34,6 @@ Prop = mvstudenttpdf(candidate, optimalMean, iHessian, df);
 Den = Like + Prop;
 
 if log(unifrnd(0,1,1,1)) < Num - Den
-    fprintf('yes\n')
     draw = candidate;
 else
     draw = notcandidate;

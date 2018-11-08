@@ -67,29 +67,51 @@ ydemut = reshape(ydemu,Eqns,T);
 %     CountryAr,Countries, SeriesPerCountry, options,...
 %     CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, T)
 
-kowUpdateCountryFactor(ydemut,obsEqnVariances, currobsmod(:,3),...
-    CountryAr, Countries, SeriesPerCountry, T);
+% kowUpdateCountryFactor(ydemut,obsEqnVariances, currobsmod(:,3),...
+%     CountryAr, Countries, SeriesPerCountry, T);
+
+% kowUpdateRegionObsModel(ydemut, obsEqnVariances,currobsmod(:,2),...
+%     CountryAr,Countries, SeriesPerCountry, options,...
+%     CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, regionIndices, T)
 
 
-t = 1:SeriesPerCountry;
 
-regioncount = 1;
-regioncheck = 0;
-for c = 1:Countries
-    if c == regionIndices(regioncount) 
-        regioncount = regioncount + 1;
-        regioncheck = regioncheck + 1;
-    end
-    selectC = t + (c-1)*SeriesPerCountry;
-    obsslice = currobsmod(selectC,2);
-    yslice = ydemut(selectC, :);
-    pslice = 1./obsEqnVariances(selectC, :);
-    [Sregionpre] = kowMakeVariance(RegionAr(regioncheck,:), 1, T);
-    loglike = @(rg) -kowLL(rg, yslice(:),...
-        Sregionpre, pslice, SeriesPerCountry,T); 
-    [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice, options);    
+
+
+updatedworldobsmod = zeros(Eqns,1);
+blocks = 30;
+eqnspblock = Eqns/blocks;
+WorldObsModelPriorPrecision = 1e-2.*eye(eqnspblock);
+WorldObsModelPriorlogdet = eqnspblock*log(1e-2);
+
+t = 1:eqnspblock;
+yslice = ydemut(t, :);
+obsslice = currobsmod(t,1);
+pslice = 1./obsEqnVariances(t);
+[Sworldpre] = kowMakeVariance(WorldAr(1,:), 1, T);
+loglike = @(rg) -kowLL(rg, yslice(:),...
+        Sworldpre, pslice, eqnspblock,T);
+    
+[themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice, options);
+iHessian = Hessian\eye(size(Hessian,1));
+
+updatedworldobsmod(t) = kowMhRestricted(obsslice,themean,iHessian, Hessian,yslice(:), Sworldpre,pslice,...
+            WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, eqnspblock, T);
  
+for b = 2:blocks
+    selectC = t + (b-1)*eqnspblock;
+    obsslice = currobsmod(selectC,1);
+    yslice = ydemut(selectC, :);
+    pslice = 1./obsEqnVariances(selectC);
+    [Sregionpre] = kowMakeVariance(WorldAr(1,:), 1, T);
+    loglike = @(rg) -kowLL(rg, yslice(:),...
+    Sregionpre, pslice, eqnspblock,T); 
+    [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice, options);
+    updatedworldobsmod(selectC) = kowMhUR(obsslice,themean,iHessian,yslice(:), Sworldpre,pslice,...
+            WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, eqnspblock, T);
+
 end
+
 
 for i = 1 : Sims
     
