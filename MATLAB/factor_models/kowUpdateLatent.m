@@ -1,13 +1,15 @@
-function [x, G] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelVariances, T)
+function [x, G] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelPrecision, T)
 
 [Nobseqns, Nstates] = size(ObsModel);
 Total = T*Nstates;
-G = kron(speye(T), ObsModel);
-KroneckerVariance = spdiags(repmat(1./ObsModelVariances, T*Nobseqns,1),0, T*Nobseqns, T*Nobseqns);
-L = StatePrecision + G'*KroneckerVariance*G;
+speyet = speye(T);
+G = kron(speyet, ObsModel);
+GtP = ObsModel'*spdiags(ObsModelPrecision,0, Nobseqns,Nobseqns);
+KroneckerVariance = kron(speye(T),GtP*ObsModel);
+L = StatePrecision + KroneckerVariance;
 L = chol(L,'lower');
 Li = L\speye(size(L,1));
-ForwardSolved = Li*G'*KroneckerVariance*vecresids;
+ForwardSolved = Li*kron(speyet,GtP) *vecresids;
 
 upperoff = triu(L',1);
 diagelems = diag(L);

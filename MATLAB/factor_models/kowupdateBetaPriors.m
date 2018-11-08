@@ -1,10 +1,12 @@
-function [ b, demeanedy ] = kowupdateBetaPriors(ys, SurX, Precision, StateObsModel,...
-    StatePrecision, nEqns, nFactors, T )...
+function [ b, demeanedyt ] = kowupdateBetaPriors(ys, SurX, obsModelPrecision, StateObsModel,...
+    StatePrecision, T )...
 
+nEqns = length(obsModelPrecision);
+nFactors = size(StateObsModel,2);
 
 i = 1:nEqns;
 j = 1:nFactors;
-fullpre = spdiags(Precision,0, nEqns, nEqns);
+fullpre = spdiags(obsModelPrecision,0, nEqns, nEqns);
 Pinverse = (StatePrecision + kron(speye(T),...
     StateObsModel'* fullpre *StateObsModel))\speye(size(StatePrecision,1));
 Astar = StateObsModel'*fullpre;
@@ -26,5 +28,5 @@ for t = 1:T
 end
 xstarTimesP = Xstar'*Pinverse;
 b = (addup - (xstarTimesP*Xstar))\(sumup - xstarTimesP*ystar);
-demeanedy = ys - SurX*b;
+demeanedyt = reshape(ys - SurX*b, nEqns, T);
 end

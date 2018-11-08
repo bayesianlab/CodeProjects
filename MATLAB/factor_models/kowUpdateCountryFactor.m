@@ -10,7 +10,7 @@ for c= 1 :Countries
     obsPrecisionSlice = 1./(obsEqnVariances(selcoun));
     obsslice = countryObsModel(selcoun);
     [Scountryprecision] = kowMakeVariance(CountryAr(c,:), 1, T);
-    factors(c,:) = kowUpdateLatent(ycslice(:), obsslice, Scountryprecision,obsslice,T)';
+    factors(c,:) = kowUpdateLatent(ycslice(:), obsslice, Scountryprecision, obsPrecisionSlice,T)';
 end
 end
 
