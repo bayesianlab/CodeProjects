@@ -1,0 +1,26 @@
+function [updatedCountryObsModel] = kowUpdateCountryObsModel(ydemut,...
+    obsEqnVariances, countryObsModel, CountryAr, Countries,...
+    SeriesPerCountry, options, CountryObsModelPriorPrecision,...
+    CountryObsModelPriorlogdet,T)
+
+updatedCountryObsModel = zeros(Countries*SeriesPerCountry,1);
+t = 1:SeriesPerCountry;
+countryEye = eye(SeriesPerCountry);
+for c= 1 :Countries
+    selcoun = t + (c-1)*SeriesPerCountry;
+    ycslice = ydemut(selcoun, :);
+    obsPrecisionSlice = 1./(obsEqnVariances(selcoun));
+    obsslice = countryObsModel(selcoun);
+    [Scountryprecision] = kowMakeVariance(CountryAr(c,:), 1, T);
+    cloglike = @(cg) -kowLL(cg, ycslice(:),Scountryprecision,...
+        obsPrecisionSlice, SeriesPerCountry, T);
+    [themean, ~,~,~,~, Hessian] = fminunc(cloglike, countryObsModel(selcoun),...
+        options);
+    iHessian = Hessian \countryEye;
+    updatedCountryObsModel(selcoun)=kowMhCountry(obsslice, themean,...
+        iHessian, Hessian, ycslice(:),...
+        Scountryprecision, obsPrecisionSlice, CountryObsModelPriorPrecision, ...
+        CountryObsModelPriorlogdet, SeriesPerCountry,T);
+end
+end
+

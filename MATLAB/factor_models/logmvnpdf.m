@@ -12,10 +12,3 @@ term2 = const - 0.5 * logdet(Sigma);    % scalar
 logp = term1' + term2;
 
 end
-
-function y = logdet(A)
-
-U = chol(A);
-y = 2*sum(log(diag(U)));
-
-end

@@ -1,7 +1,5 @@
 function [x, G] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelVariances, T)
 
-
-
 [Nobseqns, Nstates] = size(ObsModel);
 Total = T*Nstates;
 G = kron(speye(T), ObsModel);

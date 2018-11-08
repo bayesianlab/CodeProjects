@@ -9,7 +9,7 @@ yden = ydemu - ss(:);
 Precision = Hessian\eye(size(Hessian,1));
 likevarianceden = StateObsModel*StateObsModel' + diag(obsVariance);
 
-% draw restricted candidate
+% draw restricted candidate marginally
 sigma = sqrt(Hessian(1,1));
 restricteddraw = truncNormalRand(0, Inf, mu(1), sigma)/w1;
 
