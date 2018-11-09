@@ -63,7 +63,7 @@ ydemu = smally(:)- mux;
 ydemut = reshape(ydemu,Eqns,T);
 
 
-vecF = kowUpdateLatent(ydemu, StateObsModel, Si, obsEqnVariances, T); 
+vecF = kowUpdateLatent(ydemu, StateObsModel, Si, obsEqnVariances, T) 
 Ft = reshape(vecF, 68,20);
 
 
@@ -85,17 +85,17 @@ Ft = reshape(vecF, 68,20);
 for i = 1 : Sims
     
     % Update mean function
-    [beta, ydemut] = kowupdateBetaPriors(smally(:), smallx, obsEqnPrecision,...
-        StateObsModel, Si,  T);
+%     [beta, ydemut] = kowupdateBetaPriors(smally(:), smallx, obsEqnPrecision,...
+%         StateObsModel, Si,  T);
 
     % Update Obs model
-    tempStateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), zeroOutCountry .* currobsmod(:,3)];
-    tempydemut = ydemut - tempStateObsModel*Ft;
-    currobsmod(:,3) = kowUpdateCountryObsModel(tempydemut, obsEqnVariances,currobsmod(:,3),...
-        CountryAr,Countries, SeriesPerCountry, options,...
-        CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, T);
-    CFt = kowUpdateCountryFactor(tempydemut,obsEqnVariances, currobsmod(:,3),...
-             CountryAr, Countries, SeriesPerCountry, T)
+%     tempStateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), zeroOutCountry .* currobsmod(:,3)];
+%     tempydemut = ydemut - tempStateObsModel*Ft;
+%     currobsmod(:,3) = kowUpdateCountryObsModel(tempydemut, obsEqnVariances,currobsmod(:,3),...
+%         CountryAr,Countries, SeriesPerCountry, options,...
+%         CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, T);
+%     CFt = kowUpdateCountryFactor(tempydemut,obsEqnVariances, currobsmod(:,3),...
+%              CountryAr, Countries, SeriesPerCountry, T)
 %     
 %     Ft(countriesInFt, :) = CFt
 %     tempStateObsModel = [currobsmod(:,1), zeroOutRegion .* currobsmod(:,2), IOcountry.* currobsmod(:,3)];
