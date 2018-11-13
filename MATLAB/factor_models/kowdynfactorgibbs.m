@@ -1,4 +1,4 @@
-function [ h ] = kowdynfactorgibbs(ys, SurX, KowData, restrictedStateVar, b0, B0inv,Sims )
+function [ h ] = kowdynfactorgibbs(ys, SurX, KowData, restrictedStateVar, b0, B0inv, v0, r0, Sims )
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
     'MaxIterations', 5, 'Display', 'off');
 %% TODO 
@@ -46,7 +46,7 @@ stacktrans = [WorldAr;RegionAr;CountryAr];
 
 
 
-T= 20
+T= 51;
 smally = ys(:,1:T);
 smallx = SurX(1:Eqns*T, :);
 
@@ -63,61 +63,59 @@ ydemu = smally(:)- mux;
 ydemut = reshape(ydemu,Eqns,T);
 
 
-vecF = kowUpdateLatent(ydemu, StateObsModel, Si, obsEqnVariances, T) 
-Ft = reshape(vecF, 68,20);
+vecF = kowUpdateLatent(ydemu, StateObsModel, Si, obsEqnVariances, T) ;
+Ft = reshape(vecF, nFactors,T);
 
-
-
-% 
-% 
-% 
-
-
-
-
-
-
-
-
-
-
+sumFt = Ft;
 
 for i = 1 : Sims
-    
-    % Update mean function
+    %% Update mean function
 %     [beta, ydemut] = kowupdateBetaPriors(smally(:), smallx, obsEqnPrecision,...
 %         StateObsModel, Si,  T);
 
-    % Update Obs model
-%     tempStateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), zeroOutCountry .* currobsmod(:,3)];
-%     tempydemut = ydemut - tempStateObsModel*Ft;
-%     currobsmod(:,3) = kowUpdateCountryObsModel(tempydemut, obsEqnVariances,currobsmod(:,3),...
-%         CountryAr,Countries, SeriesPerCountry, options,...
-%         CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, T);
-%     CFt = kowUpdateCountryFactor(tempydemut,obsEqnVariances, currobsmod(:,3),...
-%              CountryAr, Countries, SeriesPerCountry, T)
-%     
-%     Ft(countriesInFt, :) = CFt
-%     tempStateObsModel = [currobsmod(:,1), zeroOutRegion .* currobsmod(:,2), IOcountry.* currobsmod(:,3)];
-%     tempydemut = ydemut - tempStateObsModel*Ft;         
-%     currobsmod(:,2) = kowUpdateRegionObsModel(tempydemut, obsEqnVariances,currobsmod(:,2),...
-%         CountryAr,Countries, SeriesPerCountry, options,...
-%         CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, regionIndices, T);    
-%     kowUpdateRegionFactor(tempydemut, obsEqnPrecision, currobsmod(:,2),RegionAr, regioneqns, T)
-%     
-%     tempStateObsModel = [zeroOutWorld, zeroOutRegion .* currobsmod(:,2), IOcountry.* currobsmod(:,3)];
-%     tempydemut = ydemut - tempStateObsModel*Ft;  
-%     [worldob, Sworld] = kowUpdateWorldObsModel(tempydemut, obsEqnVariances,currobsmod(:,1),...
-%                 WorldAr, options, WorldObsModelPriorPrecision,...
-%                 WorldObsModelPriorlogdet, blocks,Eqns, T);
-%     currobsmod(:,1) = worldob;
-%     kowUpdateLatent(tempydemut(:),currobsmod(:,1), Sworld, obsEqnVariances, T)'
-         
+    %% Update Obs model
+    % Zero out the world to demean y conditional on world, region
+    tempStateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), zeroOutCountry .* currobsmod(:,3)];
+    tempydemut = ydemut - tempStateObsModel*Ft;
+    currobsmod(:,3) = kowUpdateCountryObsModel(tempydemut, obsEqnVariances,currobsmod(:,3),...
+        CountryAr,Countries, SeriesPerCountry, options,...
+        CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, T);
+    Ft(countriesInFt, :) = kowUpdateCountryFactor(tempydemut,obsEqnVariances, currobsmod(:,3),...
+             CountryAr, Countries, SeriesPerCountry, T);
     
-    % Update state 
-%     kowUpdateFactors(demeanedy, obsmodel', spdiags(obsEqnVariances,0, Eqns,Eqns),...
-%         WorldAr, RegionAr, CountryAr, regioneqns)  
+    % Zero out the region to demean y conditional on the world,country 
+    tempStateObsModel = [currobsmod(:,1), zeroOutRegion .* currobsmod(:,2), IOcountry.* currobsmod(:,3)];
+    tempydemut = ydemut - tempStateObsModel*Ft;         
+    currobsmod(:,2) = kowUpdateRegionObsModel(tempydemut, obsEqnVariances,currobsmod(:,2),...
+        CountryAr,Countries, SeriesPerCountry, options,...
+        CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, regionIndices, T);    
+    Ft(regionsInFt, :) = kowUpdateRegionFactor(tempydemut, obsEqnPrecision, currobsmod(:,2),RegionAr, regioneqns, T);
     
+    % Zero out the world to demean y conditional on country, region
+    tempStateObsModel = [zeroOutWorld, IOregion .* currobsmod(:,2), IOcountry.* currobsmod(:,3)];
+    tempydemut = ydemut - tempStateObsModel*Ft;  
+    [worldob, Sworld] = kowUpdateWorldObsModel(tempydemut, obsEqnVariances,currobsmod(:,1),...
+                WorldAr, options, WorldObsModelPriorPrecision,...
+                WorldObsModelPriorlogdet, blocks,Eqns, T);
+    currobsmod(:,1) = worldob;
+    Ft(1,:) = kowUpdateLatent(tempydemut(:),currobsmod(:,1), Sworld, obsEqnVariances, T)';
+    sumFt = sumFt + Ft;
+    StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2), IOcountry.* currobsmod(:,3)];
+    
+    
+    
+    %% Update Obs Equation Variances
+    residuals = ydemut - StateObsModel*Ft;
+    kowUpdateObsVariances(residuals, v0,r0,T)
+    
+    %% Update State Transition Parameters
+    WorldAr = kowUpdateArParameters(Ft(1,:), Arp);
+    RegionAr = kowUpdateArParameters(Ft(regionsInFt,:), Arp);
+    CountryAr = kowUpdateArParameters(Ft(countriesInFt,:), Arp);
+    stacktrans = [WorldAr;RegionAr;CountryAr]
+    
+    %% Update the State Variance Matrix
+    Si = kowMakeVariance(stacktrans, 1, T);
     
 end
 end

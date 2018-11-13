@@ -9,7 +9,7 @@ yt = yt';
 
 
 
-kd = prepKow(y',3);
+kd = kowPrepKowData(y',3);
 lags = 3;
 b0 = zeros(lags+1,1); 
 B0 = 100.* eye(length(b0));
@@ -35,6 +35,8 @@ end
 
 
 rng(1)
-kowdynfactorgibbs(ys, surx, kd,restrictedvar, b0, inv(B0),1 );
+r0 = 10.*ones(K,1);
+v0 = 5;
+kowdynfactorgibbs(ys, surx, kd,restrictedvar, b0, inv(B0), v0, r0, 1 );
 
 

@@ -1,5 +1,5 @@
 function [state, Xt] = kowLagStates(state, lag)
-
+% State is a matrix of row vectors [x1, ...,xT]
 [T,K] = size(state);
 Xt = zeros( T*lag,K-lag);
 for i = 1:lag
