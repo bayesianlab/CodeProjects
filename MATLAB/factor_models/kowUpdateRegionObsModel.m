@@ -1,4 +1,4 @@
-function [updatedobsmod] = kowUpdateRegionObsModel(ydemut, obsEqnVariances,regionobsmodel,...
+function [updatedobsmod] = kowUpdateRegionObsModel(ydemut, obsEqnPrecision,regionobsmodel,...
     RegionAr,Countries, SeriesPerCountry, options,...
     CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, regionIndices, T)
 
@@ -10,7 +10,7 @@ for c = 1:Countries
     selectC = t + (c-1)*SeriesPerCountry;
     obsslice = regionobsmodel(selectC);
     yslice = ydemut(selectC, :);
-    pslice = 1./obsEqnVariances(selectC, :);
+    pslice = obsEqnPrecision(selectC, :);
     if c == regionIndices(regioncount) 
         regioncount = regioncount + 1;
         regioncheck = regioncheck + 1;

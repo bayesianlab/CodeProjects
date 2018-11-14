@@ -18,7 +18,7 @@ restrictedvar = 1;
 dexsy = 1:5:size(kd,2);
 dexsx = setdiff(1:size(kd,2), dexsy);
 ys = kd(:,dexsy);
-ys = ys';
+
 Xs = kd(:, dexsx);
 spK = speye(K);
 formsurI = kron(spK, ones(1,4));
@@ -28,7 +28,6 @@ t = 1:K;
 
 for r = 1:size(Xs,1)
     select = t + (r-1)*K;
-
     surx(select, :) = formsurI.*Xs(r,:);
 end
 
@@ -37,6 +36,7 @@ end
 rng(1)
 r0 = 10.*ones(K,1);
 v0 = 5;
-kowdynfactorgibbs(ys, surx, kd,restrictedvar, b0, inv(B0), v0, r0, 1 );
+size(ys)
+kowdynfactorgibbs(ys, surx,  b0, inv(B0), v0, r0, 1 );
 
 
