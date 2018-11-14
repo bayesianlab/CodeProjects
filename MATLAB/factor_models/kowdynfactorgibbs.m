@@ -1,5 +1,6 @@
-function [  ] = kowdynfactorgibbs(ys, SurX, b0, B0inv, v0, r0, Sims )
+function [sumFt, sumBeta, sumObsVariance  ] = kowdynfactorgibbs(ys, SurX, b0, B0inv, v0, r0, Sims )
 %% TODO 
+
 % Priors for update beta function are not implemented, now is ols.
 % Possibly the Sregion and Scountry matrices could be saved 
 % from the update obs model step instead of recreated twice in the updating
@@ -27,6 +28,12 @@ zeroOutCountry = zeros(size(IOcountry));
 zeroOutWorld = zeros(Eqns, 1);
 countriesInFt = 9:68;
 regionsInFt = 2:8;
+oldHessianCountry = reshape(repmat(eye(SeriesPerCountry), 1, Countries), ...
+    SeriesPerCountry, SeriesPerCountry, Countries);
+oldHessianRegion = reshape(repmat(eye(SeriesPerCountry), 1, Countries),...
+    SeriesPerCountry, SeriesPerCountry, Countries);
+oldHessianWorld = reshape(repmat(eye(eqnspblock),1,blocks), eqnspblock,...
+    eqnspblock, blocks);
 % Precalculated priors for country and world
 CountryObsModelPriorPrecision = 1e-2.*eye(SeriesPerCountry);
 CountryObsModelPriorlogdet = SeriesPerCountry*log(1e-2);
@@ -58,9 +65,10 @@ sumBeta = zeros(betaDim, 1);
 sumObsVariance = obsEqnVariances;
 
 %% MCMC of Algorithm 3 Chan&Jeliazkov 2009
+
 tic
 for i = 1 : Sims
-    fprintf('Iteration i = \n', i)
+    fprintf('Iteration %i\n', i)
     %% Update mean function
     [beta, ydemut] = kowupdateBetaPriors(ys(:), SurX, obsEqnPrecision,...
         StateObsModel, Si,  T);
@@ -74,7 +82,8 @@ for i = 1 : Sims
     currobsmod(:,3) = kowUpdateCountryObsModel(tempydemut,...
         obsEqnPrecision,currobsmod(:,3),...
         CountryAr,Countries, SeriesPerCountry, options,...
-        CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, T);
+        CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, T,...
+        oldHessianCountry);
     Ft(countriesInFt, :) = kowUpdateCountryFactor(tempydemut,...
         obsEqnPrecision, currobsmod(:,3),...
              CountryAr, Countries, SeriesPerCountry, T);
@@ -87,7 +96,7 @@ for i = 1 : Sims
         obsEqnPrecision,currobsmod(:,2),...
         CountryAr,Countries, SeriesPerCountry, options,...
         CountryObsModelPriorPrecision, CountryObsModelPriorlogdet,...
-        regionIndices, T);    
+        regionIndices, T, oldHessianRegion);    
     Ft(regionsInFt, :) = kowUpdateRegionFactor(tempydemut,...
         obsEqnPrecision, currobsmod(:,2),RegionAr, regioneqns, T);
     
@@ -97,8 +106,8 @@ for i = 1 : Sims
     tempydemut = ydemut - tempStateObsModel*Ft;  
     [worldob, Sworld] = kowUpdateWorldObsModel(tempydemut,...
         obsEqnPrecision,currobsmod(:,1),...
-                WorldAr, options, WorldObsModelPriorPrecision,...
-                WorldObsModelPriorlogdet, blocks,Eqns, T);
+        WorldAr, options, WorldObsModelPriorPrecision,...
+        WorldObsModelPriorlogdet, blocks,Eqns, T, oldHessianWorld);
     currobsmod(:,1) = worldob;
     Ft(1,:) = kowUpdateLatent(tempydemut(:),currobsmod(:,1), Sworld,...
         obsEqnPrecision, T)';
@@ -122,5 +131,8 @@ for i = 1 : Sims
     Si = kowMakeVariance(stacktrans, 1, T);
     
 end
+sumFt =  sumFt./Sims;
+sumBeta = sumBeta./Sims;
+sumObsVariance = sumObsVariance./Sims;
 toc
 end

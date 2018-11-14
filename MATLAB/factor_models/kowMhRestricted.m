@@ -1,12 +1,12 @@
 function [draw] = kowMhRestricted(notcandidate, optimalMean, iHessian,...
     Hessian, ydemu, StatePrecision, obsPrecision, PriorPre,...
-    logdetPriorPre, K, T)
+    logdetPriorPre, T)
 df = 15;
 w1 = sqrt(chi2rnd(df,1)/df);
 K = size(Hessian,1);
 Precision = Hessian;
 % draw restricted candidate marginally
-sigma = sqrt(iHessian(1,1));
+sigma = sqrt(Hessian(1,1));
 
 restricteddraw = truncNormalRand(0, Inf, optimalMean(1), sigma)/w1;
 % draw conditional candidate

@@ -1,7 +1,7 @@
 function [updatedCountryObsModel] = kowUpdateCountryObsModel(ydemut,...
     obsEqnPrecision, countryObsModel, CountryAr, Countries,...
     SeriesPerCountry, options, CountryObsModelPriorPrecision,...
-    CountryObsModelPriorlogdet,T)
+    CountryObsModelPriorlogdet,T, oldHessian)
 
 updatedCountryObsModel = zeros(Countries*SeriesPerCountry,1);
 t = 1:SeriesPerCountry;
@@ -16,11 +16,18 @@ for c= 1 :Countries
         obsPrecisionSlice, SeriesPerCountry, T);
     [themean, ~,~,~,~, Hessian] = fminunc(cloglike, countryObsModel(selcoun),...
         options);
+    [~,p] = chol(Hessian);
+    if p ~= 0
+        Hessian = oldHessian(:,:,c);
+    else
+        oldHessian(:,:,c) = Hessian;
+    end
+        
     iHessian = Hessian \countryEye;
     updatedCountryObsModel(selcoun)=kowMhRestricted(obsslice, themean,...
         iHessian, Hessian, ycslice(:),...
         Scountryprecision, obsPrecisionSlice, CountryObsModelPriorPrecision, ...
-        CountryObsModelPriorlogdet, SeriesPerCountry,T);
+        CountryObsModelPriorlogdet, T);
 end
 end
 

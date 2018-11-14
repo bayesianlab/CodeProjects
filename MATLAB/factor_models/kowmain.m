@@ -37,6 +37,6 @@ rng(1)
 r0 = 10.*ones(K,1);
 v0 = 5;
 size(ys)
-kowdynfactorgibbs(ys, surx,  b0, inv(B0), v0, r0, 1 );
+kowdynfactorgibbs(ys, surx,  b0, inv(B0), v0, r0, 5);
 
 
