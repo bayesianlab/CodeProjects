@@ -1,7 +1,7 @@
 #!bin/bash
 #$ -S /bin/bash
 #$ -q pub8i
-#$ -N jlee
+#$ -N kowmed
 #$ -l mem_free=8G
 #$ -cwd
 #$ -notify 
