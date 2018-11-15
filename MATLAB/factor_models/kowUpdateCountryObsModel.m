@@ -22,7 +22,6 @@ for c= 1 :Countries
     else
         oldHessian(:,:,c) = Hessian;
     end
-        
     iHessian = Hessian \countryEye;
     updatedCountryObsModel(selcoun)=kowMhRestricted(obsslice, themean,...
         iHessian, Hessian, ycslice(:),...

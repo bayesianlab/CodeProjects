@@ -123,7 +123,7 @@ colnames(KOW) <- c('year', 'gdpUSA', 'conUSA', 'investUSA',
                    'gdpSGP', 'conSGP', 'investSGP',
                    'gdpTHA', 'conTHA', 'investTHA')
 LogFirstDif <- log(KOW[2:55,2:181]) - log(KOW[1:54, 2:181])
-KOW <- cbind(KOW$year[2:55], LogFirstDif*100)
+KOW <- cbind(KOW$year[2:55], LogFirstDif)
 colnames(KOW)[1] <- 'year'
 
 write.csv(KOW, 'kowdata.csv')

@@ -1,4 +1,6 @@
-function [sumFt, sumBeta, sumObsVariance  ] = kowdynfactorgibbs(ys, SurX, b0, B0inv, v0, r0, Sims )
+function [sumFt, sumFt2, sumBeta, sumBeta2, sumObsVariance,...
+    sumObsVariance2] = kowdynfactorgibbs(ys, SurX, b0, B0inv, v0, r0,...
+    Sims, burnin )
 %% TODO 
 
 % Priors for update beta function are not implemented, now is ols.
@@ -9,13 +11,13 @@ function [sumFt, sumBeta, sumObsVariance  ] = kowdynfactorgibbs(ys, SurX, b0, B0
 %% Initializations 
 % Maximization parameters for loadings mean and variance step. 
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'MaxIterations', 5, 'Display', 'off');
+    'MaxIterations', 4, 'Display', 'off');
 Countries=60;
 Regions = 7;
 SeriesPerCountry=3;
 nFactors = Countries + Regions + 1;
 Arp= 3;
-[T, Eqns] = size(ys);
+[Eqns,T] = size(ys);
 blocks = 30;
 eqnspblock = Eqns/blocks;
 betaDim = size(SurX,2);
@@ -60,10 +62,12 @@ vecF = kowUpdateLatent(ys(:), StateObsModel, Si, obsEqnVariances, T) ;
 Ft = reshape(vecF, nFactors,T);
 
 %% Storage contaianers for averages of posteriors
-sumFt = Ft;
+sumFt = zeros(size(Ft,1), size(Ft,2));
+sumFt2 = sumFt;
 sumBeta = zeros(betaDim, 1);
-sumObsVariance = obsEqnVariances;
-
+sumBeta2 = sumBeta;
+sumObsVariance = zeros(length(obsEqnVariances),1);
+sumObsVariance2 =  sumObsVariance;
 %% MCMC of Algorithm 3 Chan&Jeliazkov 2009
 
 tic
@@ -72,12 +76,12 @@ for i = 1 : Sims
     %% Update mean function
     [beta, ydemut] = kowupdateBetaPriors(ys(:), SurX, obsEqnPrecision,...
         StateObsModel, Si,  T);
-    sumBeta = sumBeta + beta;
+
     
     %% Update Obs model
     % Zero out the world to demean y conditional on world, region
     tempStateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
-        zeroOutCountry .* currobsmod(:,3)];
+        zeroOutCountry ];
     tempydemut = ydemut - tempStateObsModel*Ft;
     currobsmod(:,3) = kowUpdateCountryObsModel(tempydemut,...
         obsEqnPrecision,currobsmod(:,3),...
@@ -90,7 +94,7 @@ for i = 1 : Sims
     
     % Zero out the region to demean y conditional on the world,country 
     tempStateObsModel = [currobsmod(:,1),...
-        zeroOutRegion .* currobsmod(:,2), IOcountry.* currobsmod(:,3)];
+        zeroOutRegion, IOcountry.* currobsmod(:,3)];
     tempydemut = ydemut - tempStateObsModel*Ft;         
     currobsmod(:,2) = kowUpdateRegionObsModel(tempydemut,...
         obsEqnPrecision,currobsmod(:,2),...
@@ -111,7 +115,7 @@ for i = 1 : Sims
     currobsmod(:,1) = worldob;
     Ft(1,:) = kowUpdateLatent(tempydemut(:),currobsmod(:,1), Sworld,...
         obsEqnPrecision, T)';
-    sumFt = sumFt + Ft;
+
     StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
         IOcountry.* currobsmod(:,3)];
     
@@ -119,7 +123,7 @@ for i = 1 : Sims
     residuals = ydemut - StateObsModel*Ft;
     obsEqnVariances = kowUpdateObsVariances(residuals, v0,r0,T);
     obsEqnPrecision = 1./obsEqnVariances;
-    sumObsVariance = sumObsVariance + obsEqnVariances;
+    
     
     %% Update State Transition Parameters
     WorldAr = kowUpdateArParameters(Ft(1,:), Arp);
@@ -129,10 +133,22 @@ for i = 1 : Sims
     
     %% Update the State Variance Matrix
     Si = kowMakeVariance(stacktrans, 1, T);
+    if i > burnin
+        sumBeta = sumBeta + beta;
+        sumBeta2 = sumBeta2 + beta.^2;
+        sumFt = sumFt + Ft;
+        sumFt2 = sumFt2 + Ft.^2;
+        sumObsVariance = sumObsVariance + obsEqnVariances;
+        sumObsVariance2 = sumObsVariance2 + obsEqnVariances.^2;
+    end
     
 end
-sumFt =  sumFt./Sims;
-sumBeta = sumBeta./Sims;
-sumObsVariance = sumObsVariance./Sims;
+Runs = Sims-burnin;
+sumFt =  sumFt./Runs;
+sumFt2 = sumFt2./Runs;
+sumBeta = sumBeta./Runs;
+sumBeta2 = sumBeta2./Runs;
+sumObsVariance = sumObsVariance./Runs;
+sumObsVariance2 = sumObsVariance2./Runs;
 toc
 end
