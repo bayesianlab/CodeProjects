@@ -1,15 +1,11 @@
 function [pval] = kowOptimLogMvnPdf(demeanedy, Precision)
 [A, p] = chol(Precision, 'lower');
 if p ~= 0
-%     [E,D] = eig(Precision);
-%     d = diag(D);
-%     d(d <= 1e-7) = 1;
-    [~,DD, ~] = svd(Precision);
-    logdetPre = sum(log(diag(DD)));
-%     D = diag(d);
-%     Precision = E*D*E';
-%     eig(Precision)
-%     A = chol(Precision);\
+    [~,D] = eig(Precision);
+    d = diag(D);
+    d(d <= 1e-3) = 1e-3;
+%     [~,DD, ~] = svd(Precision);
+    logdetPre = sum(log(d));
 else
     logdetPre=  2*sum(log(diag(A)));
 end
