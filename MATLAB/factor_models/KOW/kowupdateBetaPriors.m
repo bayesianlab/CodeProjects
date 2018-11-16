@@ -3,12 +3,17 @@ function [ b, demeanedyt ] = kowupdateBetaPriors(ys, SurX, obsModelPrecision, St
 
 nEqns = length(obsModelPrecision);
 nFactors = size(StateObsModel,2);
-
+sizeStatePre = size(StatePrecision,1);
 i = 1:nEqns;
 j = 1:nFactors;
 fullpre = spdiags(obsModelPrecision,0, nEqns, nEqns);
-Pinverse = (StatePrecision + kron(speye(T),...
-    StateObsModel'* fullpre *StateObsModel))\speye(size(StatePrecision,1));
+Inside = StatePrecision + kron(speye(T),...
+    StateObsModel'* fullpre *StateObsModel);
+[L, p] = chol(Inside);
+Li = L\eye(sizeStatePre);
+Pinverse = Li*Li';
+% Pinverse = (StatePrecision + kron(speye(T),...
+%     StateObsModel'* fullpre *StateObsModel))\speye(sizeStatePre);
 Astar = StateObsModel'*fullpre;
 cx = size(SurX,2);
 addup = zeros(cx,cx);
