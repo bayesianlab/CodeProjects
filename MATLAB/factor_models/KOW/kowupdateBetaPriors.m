@@ -32,6 +32,10 @@ for t = 1:T
     ystar(pick, :) = Astar*tmpy;
 end
 xstarTimesP = Xstar'*Pinverse;
-b = (addup - (xstarTimesP*Xstar))\(sumup - xstarTimesP*ystar);
+VarTerm = (addup - (xstarTimesP*Xstar));
+[L,p] = chol(VarTerm);
+p
+Li = L\eye(size(VarTerm,1));
+b = (Li*Li')*(sumup - xstarTimesP*ystar);
 demeanedyt = reshape(ys - SurX*b, nEqns, T);
 end
