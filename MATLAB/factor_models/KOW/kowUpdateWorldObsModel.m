@@ -2,7 +2,7 @@ function [updatedworldobsmod, Sworldpre] = kowUpdateWorldObsModel(...
     ydemut, obsEqnPrecision,worldobsmodel,WorldAr, options,...
     WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, blocks,Eqns,....
     T, oldHessian)
-
+fprintf('World...\n')
 updatedworldobsmod = zeros(Eqns,1);
 eqnspblock = Eqns/blocks;
 
@@ -19,8 +19,10 @@ loglike = @(rg) -kowLL(rg, yslice(:),...
 
 [~,p] = chol(Hessian);
 if p ~= 0
+    fprintf('Non-pd Hessian, using last pd value\n')
     Hessian = oldHessian(:,:,1);
 else
+    fprintf('Maximization resulted in pd Hessian, saving...\n')
     oldHessian(:,:,1) = Hessian;
 end
 iHessian = Hessian\eye(size(Hessian,1));
@@ -39,8 +41,10 @@ for b = 2:blocks
     [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice, options);
     [~,p] = chol(Hessian);
     if p ~= 0
+        fprintf('Non-pd Hessian, using last pd value\n')
         Hessian = oldHessian(:,:,b);
     else
+        fprintf('Maximization resulted in pd Hessian, saving...\n')
         oldHessian(:,:,b) = Hessian;
     end
     iHessian = Hessian\eye(size(Hessian,1));

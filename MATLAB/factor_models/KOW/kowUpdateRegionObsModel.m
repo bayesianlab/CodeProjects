@@ -2,7 +2,7 @@ function [updatedobsmod] = kowUpdateRegionObsModel(ydemut,...
     obsEqnPrecision,regionobsmodel, RegionAr, Countries,...
     SeriesPerCountry, options, CountryObsModelPriorPrecision,...
     CountryObsModelPriorlogdet, regionIndices, T, oldHessian)
-
+fprintf('Region...\n')
 updatedobsmod = zeros(SeriesPerCountry*T, 1);
 t = 1:SeriesPerCountry;
 regioncount = 1;
@@ -21,8 +21,10 @@ for c = 1:Countries
         [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice, options);
         [~,p] = chol(Hessian);
         if p ~= 0
+            fprintf('Non-pd Hessian, using last pd value\n')
             Hessian = oldHessian(:,:,c);
         else
+            fprintf('Maximization resulted in pd Hessian, saving...\n')
             oldHessian(:,:,c) = Hessian;
         end
         iHessian = Hessian\eye(size(Hessian,1));
@@ -38,8 +40,10 @@ for c = 1:Countries
         [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice, options);
         [~,p] = chol(Hessian);
         if p ~= 0
+            fprintf('Non-pd Hessian, using last pd value\n')
             Hessian = oldHessian(:,:,c);
         else
+            fprintf('Maximization resulted pd Hessian, saving...\n')
             oldHessian(:,:,c) = Hessian;
         end
         iHessian = Hessian\eye(size(Hessian,1));
@@ -51,6 +55,6 @@ for c = 1:Countries
  
 end
 
-
+fprintf('Finsihed region obs model updates.\n')
 end
 

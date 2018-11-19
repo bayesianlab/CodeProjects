@@ -11,7 +11,7 @@ function [sumFt, sumFt2, sumBeta, sumBeta2, sumObsVariance,...
 %% Initializations 
 % Maximization parameters for loadings mean and variance step. 
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'MaxIterations', 4, 'Display', 'off');
+    'MaxIterations', 4, 'MaxFunctionEvaluations', 175, 'Display', 'off');
 Countries=60;
 Regions = 7;
 SeriesPerCountry=3;
@@ -72,7 +72,7 @@ sumObsVariance2 =  sumObsVariance;
 
 tic
 for i = 1 : Sims
-    fprintf('Iteration %i\n', i)
+    fprintf('\n\n  Iteration %i\n', i)
     %% Update mean function
     [beta, ydemut] = kowupdateBetaPriors(ys(:), SurX, obsEqnPrecision,...
         StateObsModel, Si,  T);
@@ -126,9 +126,9 @@ for i = 1 : Sims
     
     
     %% Update State Transition Parameters
-    WorldAr = kowUpdateArParameters(Ft(1,:), Arp);
-    RegionAr = kowUpdateArParameters(Ft(regionsInFt,:), Arp);
-    CountryAr = kowUpdateArParameters(Ft(countriesInFt,:), Arp);
+    WorldAr = kowUpdateArParameters(WorldAr, Ft(1,:), Arp);
+    RegionAr = kowUpdateArParameters(RegionAr, Ft(regionsInFt,:), Arp);
+    CountryAr = kowUpdateArParameters(CountryAr, Ft(countriesInFt,:), Arp);
     stacktrans = [WorldAr;RegionAr;CountryAr];
     
     %% Update the State Variance Matrix

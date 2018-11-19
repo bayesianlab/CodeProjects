@@ -2,7 +2,7 @@ function [updatedCountryObsModel] = kowUpdateCountryObsModel(ydemut,...
     obsEqnPrecision, countryObsModel, CountryAr, Countries,...
     SeriesPerCountry, options, CountryObsModelPriorPrecision,...
     CountryObsModelPriorlogdet,T, oldHessian)
-
+fprintf('\nBeginning the observation model updates...\n')
 updatedCountryObsModel = zeros(Countries*SeriesPerCountry,1);
 t = 1:SeriesPerCountry;
 countryEye = eye(SeriesPerCountry);
@@ -18,8 +18,10 @@ for c= 1 :Countries
         options);
     [~,p] = chol(Hessian);
     if p ~= 0
+        fprintf('Non-pd Hessian, using last pd value\n')
         Hessian = oldHessian(:,:,c);
     else
+        fprintf('Maximization produced expected pd Hessian, saving...\n')
         oldHessian(:,:,c) = Hessian;
     end
     iHessian = Hessian \countryEye;
@@ -28,5 +30,6 @@ for c= 1 :Countries
         Scountryprecision, obsPrecisionSlice, CountryObsModelPriorPrecision, ...
         CountryObsModelPriorlogdet, T);
 end
+fprintf('Finished country  obs model updates.\n')
 end
 
