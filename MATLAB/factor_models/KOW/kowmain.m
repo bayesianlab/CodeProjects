@@ -1,10 +1,10 @@
 %% Generated from kowGenData()
 clear;
 clc;
-[y, surx] = kowGenData();
+% [y, surx] = kowGenData();
 
-% load('kowy.mat')
-% load('kowx.mat')
+load('kowy.mat')
+load('surx.mat')
 K = size(y,1);
 rng(1)
 r0 = 10.*ones(K,1);

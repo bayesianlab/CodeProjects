@@ -1,5 +1,5 @@
 function [ b, demeanedyt ] = kowupdateBetaPriors(ys, SurX, obsModelPrecision, StateObsModel,...
-    StatePrecision, T )...
+    StatePrecision, T )
 
 nEqns = length(obsModelPrecision);
 nFactors = size(StateObsModel,2);
@@ -9,9 +9,9 @@ j = 1:nFactors;
 fullpre = spdiags(obsModelPrecision,0, nEqns, nEqns);
 Inside = StatePrecision + kron(speye(T),...
     StateObsModel'* fullpre *StateObsModel);
-[L, p] = chol(Inside);
-Li = L\eye(sizeStatePre);
-Pinverse = Li*Li';
+% [L, p] = chol(Inside, 'lower');
+% Li = L\eye(sizeStatePre);
+% Pinverse = Li*Li';
 % Pinverse = (StatePrecision + kron(speye(T),...
 %     StateObsModel'* fullpre *StateObsModel))\speye(sizeStatePre);
 Astar = StateObsModel'*fullpre;
@@ -31,13 +31,14 @@ for t = 1:T
     Xstar(pick, :) = Astar*tmpx;
     ystar(pick, :) = Astar*tmpy;
 end
-xstarTimesP = Xstar'*Pinverse;
-VarTerm = (addup - (xstarTimesP*Xstar));
-NumeratorTerm = sumup - xstarTimesP*ystar;
-[L,p] = chol(VarTerm);
+PinvXstar = (Inside\speye(size(Inside,1)))*Xstar;
+VarTerm = (addup - (Xstar'*PinvXstar));
+VarTerm = (eye(size(VarTerm,1)) + VarTerm);
+NumeratorTerm = sumup - PinvXstar'*ystar;
+[L,p] = chol(VarTerm,'lower');
+p
 if p ~= 0
-    Li = pinv(VarTerm);
-    b = Li*NumeratorTerm;
+    b = VarTerm\NumeratorTerm;
 else
     b = linSysSolve(L, NumeratorTerm);
 end

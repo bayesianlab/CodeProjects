@@ -42,13 +42,13 @@ CountryObsModelPriorlogdet = SeriesPerCountry*log(1e-2);
 WorldObsModelPriorPrecision = 1e-2.*eye(eqnspblock);
 WorldObsModelPriorlogdet = eqnspblock*log(1e-2);
 % Initialize the observation model
-currobsmod = unifrnd(0, 1,Eqns, 3);
+currobsmod = zeros(Eqns, 3);
 obsEqnVariances = ones(Eqns,1);
 obsEqnPrecision = 1./obsEqnVariances;
 % Initialize the AR terms on the State variables
-RegionAr= unifrnd(.1,.2,Regions,Arp) ;
-CountryAr = unifrnd(-.1,.2, Countries,Arp);
-WorldAr = unifrnd(-.1,.2, 1,Arp);
+RegionAr= zeros(Regions,Arp) ;
+CountryAr = zeros(Countries,Arp);
+WorldAr = zeros( 1,Arp);
 stacktrans = [WorldAr;RegionAr;CountryAr];
 % Matrix form of the Observation model. Multiplies all the 
 % state variables in one step. 

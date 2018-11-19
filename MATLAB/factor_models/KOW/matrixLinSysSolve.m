@@ -11,6 +11,7 @@ for i = 1:T
         soln(i,c) = (X(i,c)-offdiagL(i,:)*soln(:,c))./ diagL(i);
     end
 end
+fprintf('done!\n')
 for i = T:(-1):1
     for c = 1:C
         answ(i,c) = (soln(i,c) - offdiagU(i,:)*answ(:,c))/diagL(i);
