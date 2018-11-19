@@ -34,8 +34,12 @@ end
 xstarTimesP = Xstar'*Pinverse;
 VarTerm = (addup - (xstarTimesP*Xstar));
 [L,p] = chol(VarTerm);
-p
-Li = L\eye(size(VarTerm,1));
-b = (Li*Li')*(sumup - xstarTimesP*ystar);
+if p ~= 0
+    Li = pinv(VarTerm);
+    b = Li*(sumup - xstarTimesP*ystar);
+else
+    Li = L\eye(size(VarTerm,1));
+    b = (Li*Li')*(sumup - xstarTimesP*ystar);
+end
 demeanedyt = reshape(ys - SurX*b, nEqns, T);
 end
