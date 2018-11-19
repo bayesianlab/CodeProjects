@@ -1,5 +1,5 @@
 function [answ, diagL, offdiagL] = solveSystem(P, x)
-%% Solves system of type  eta = P^-1 x
+%% Solves system of type  x = P*eta
 %  P eta = x and cholesky of P = LU 
 % LU eta = x first solve by forward sub. then backward sub. 
 L = chol(P, 'lower');

@@ -33,9 +33,13 @@ for t = 1:T
 end
 xstarTimesP = Xstar'*Pinverse;
 VarTerm = (addup - (xstarTimesP*Xstar));
+NumeratorTerm = sumup - xstarTimesP*ystar;
 [L,p] = chol(VarTerm);
-p
-Li = L\eye(size(VarTerm,1));
-b = (Li*Li')*(sumup - xstarTimesP*ystar);
+if p ~= 0
+    Li = pinv(VarTerm);
+    b = Li*NumeratorTerm;
+else
+    b = linSysSolve(L, NumeratorTerm);
+end
 demeanedyt = reshape(ys - SurX*b, nEqns, T);
 end
