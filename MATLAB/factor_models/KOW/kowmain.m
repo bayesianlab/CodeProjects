@@ -12,4 +12,5 @@ v0 = 5;
 b0 = 1;
 B0 = 1;
 [f, f2 b, b2, v, v2] = kowdynfactorgibbs(y, surx,  b0, inv(B0), v0,...
-    r0,  10, 2);c
+    r0,  4, 1);
+

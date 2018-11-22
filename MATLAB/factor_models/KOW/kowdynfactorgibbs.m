@@ -1,8 +1,8 @@
 function [sumFt, sumFt2, sumBeta, sumBeta2, sumObsVariance,...
-    sumObsVariance2, storeB, storeFt] = kowdynfactorgibbs(ys, SurX, b0, B0inv, v0, r0,...
+    sumObsVariance2] = kowdynfactorgibbs(ys, SurX, b0, B0inv, v0, r0,...
     Sims, burnin )
 %% TODO 
-
+% Verify storage works
 % Priors for update beta function are not implemented, now is ols.
 % Possibly the Sregion and Scountry matrices could be saved 
 % from the update obs model step instead of recreated twice in the updating
