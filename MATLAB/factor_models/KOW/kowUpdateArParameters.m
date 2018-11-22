@@ -1,30 +1,23 @@
 function [ArParams] = kowUpdateArParameters(ArParams, StateVariables, Arp)
 fprintf('\nUpdating ar parameters on state variables\n')
-[Rows, T] = size(StateVariables);
+[Rows, ~] = size(StateVariables);
+accept = 0;
 for i = 1: Rows
     State = StateVariables(i,:);
     Ar = ArParams(i,:);
-    Ar2 = Ar.*Ar;
     [y,x] = kowLagStates(State, Arp);
-    G = eye(size(x,1)) +  x*x';
-    gammahat = linSysSolve(chol(G,'lower'), x*y');
-    proposal = mvnrnd(gammahat, G);
-    proposal2 = proposal.*proposal;
-    v = 1/(1 - sum(proposal2));
-    vold = 1/(1-sum(Ar2));
-    while v < 1e-3  
-        proposal = mvnrnd(gammahat, G);
-        proposal2 = proposal.*proposal;
-        v = 1/(proposal2(1) - proposal2(2) - proposal2(3));
-    end
-    alpha = min(0, log(normpdf(State(1), 0, v)) -...
-        log(normpdf(State(1), 0, vold)));
+    G = (eye(size(x,1)) +  x*x')\eye(Arp);
+    gammahat = G*x*y';
+    [proposal, P0] = kowArPropose(gammahat, G);
+    num = logmvnpdf(proposal', gammahat', P0);
+    den = logmvnpdf(Ar, gammahat', P0);
+    alpha = min(0, num-den);
     if log(unifrnd(0,1,1,1)) < alpha
+        accept = accept + 1;
         ArParams(i,:) = proposal;
     end
-    
-
+   
 end
-
+ fprintf('Accepted %.3f \n', accept/Rows)
 end
 

@@ -1,5 +1,5 @@
 function [sumFt, sumFt2, sumBeta, sumBeta2, sumObsVariance,...
-    sumObsVariance2] = kowdynfactorgibbs(ys, SurX, b0, B0inv, v0, r0,...
+    sumObsVariance2, storeB, storeFt] = kowdynfactorgibbs(ys, SurX, b0, B0inv, v0, r0,...
     Sims, burnin )
 %% TODO 
 
@@ -11,14 +11,14 @@ function [sumFt, sumFt2, sumBeta, sumBeta2, sumObsVariance,...
 %% Initializations 
 % Maximization parameters for loadings mean and variance step. 
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'MaxIterations', 4, 'MaxFunctionEvaluations', 175, 'Display', 'off');
+     'Display', 'off');
 Countries=60;
 Regions = 7;
 SeriesPerCountry=3;
 nFactors = Countries + Regions + 1;
 Arp= 3;
 [Eqns,T] = size(ys);
-blocks = 30;
+blocks = 60;
 eqnspblock = Eqns/blocks;
 betaDim = size(SurX,2);
 regionIndices = [1,4,6,24,42,49,55, -1];
@@ -69,7 +69,8 @@ sumBeta2 = sumBeta;
 sumObsVariance = zeros(length(obsEqnVariances),1);
 sumObsVariance2 =  sumObsVariance;
 %% MCMC of Algorithm 3 Chan&Jeliazkov 2009
-
+storeB = zeros(betaDim, Sims);
+storeFt = zeros(size(Ft,1), size(Ft,2), Sims);
 tic
 for i = 1 : Sims
     fprintf('\n\n  Iteration %i\n', i)
@@ -79,15 +80,14 @@ for i = 1 : Sims
 
     
     %% Update Obs model
-    % Zero out the world to demean y conditional on world, region
+    % COUNTRY: Zero out the world to demean y conditional on world, region
     tempStateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
         zeroOutCountry ];
     tempydemut = ydemut - tempStateObsModel*Ft;
     currobsmod(:,3) = kowUpdateCountryObsModel(tempydemut,...
-        obsEqnPrecision,currobsmod(:,3),...
-        CountryAr,Countries, SeriesPerCountry, options,...
-        CountryObsModelPriorPrecision, CountryObsModelPriorlogdet, T,...
-        oldHessianCountry);
+        obsEqnPrecision,currobsmod(:,3),CountryAr,Countries,...
+        SeriesPerCountry,CountryObsModelPriorPrecision,...
+        CountryObsModelPriorlogdet, T, oldHessianCountry, i);
     Ft(countriesInFt, :) = kowUpdateCountryFactor(tempydemut,...
         obsEqnPrecision, currobsmod(:,3),...
              CountryAr, Countries, SeriesPerCountry, T);
@@ -98,27 +98,27 @@ for i = 1 : Sims
     tempydemut = ydemut - tempStateObsModel*Ft;         
     currobsmod(:,2) = kowUpdateRegionObsModel(tempydemut,...
         obsEqnPrecision,currobsmod(:,2),...
-        CountryAr,Countries, SeriesPerCountry, options,...
+        CountryAr,Countries, SeriesPerCountry,...
         CountryObsModelPriorPrecision, CountryObsModelPriorlogdet,...
-        regionIndices, T, oldHessianRegion);    
+        regionIndices, T, oldHessianRegion, i);    
     Ft(regionsInFt, :) = kowUpdateRegionFactor(tempydemut,...
         obsEqnPrecision, currobsmod(:,2),RegionAr, regioneqns, T);
     
-    % Zero out the world to demean y conditional on country, region
-    tempStateObsModel = [zeroOutWorld, IOregion .* currobsmod(:,2),...
+    % WORLD: Zero out the world to demean y conditional on country, region
+        tempStateObsModel = [zeroOutWorld, IOregion .* currobsmod(:,2),...
         IOcountry.* currobsmod(:,3)];
     tempydemut = ydemut - tempStateObsModel*Ft;  
     [worldob, Sworld] = kowUpdateWorldObsModel(tempydemut,...
         obsEqnPrecision,currobsmod(:,1),...
-        WorldAr, options, WorldObsModelPriorPrecision,...
-        WorldObsModelPriorlogdet, blocks,Eqns, T, oldHessianWorld);
+        WorldAr, WorldObsModelPriorPrecision,...
+        WorldObsModelPriorlogdet, blocks,Eqns, T, oldHessianWorld, i);
     currobsmod(:,1) = worldob;
     Ft(1,:) = kowUpdateLatent(tempydemut(:),currobsmod(:,1), Sworld,...
         obsEqnPrecision, T)';
 
     StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
         IOcountry.* currobsmod(:,3)];
-    
+
     %% Update Obs Equation Variances
     residuals = ydemut - StateObsModel*Ft;
     obsEqnVariances = kowUpdateObsVariances(residuals, v0,r0,T);
@@ -133,7 +133,12 @@ for i = 1 : Sims
     
     %% Update the State Variance Matrix
     Si = kowMakeVariance(stacktrans, 1, T);
+    
+    
+    %% Store means and second moments
     if i > burnin
+        storeB(:,i-burnin) = beta;
+        storeFt(:,:,i-burnin) = Ft;
         sumBeta = sumBeta + beta;
         sumBeta2 = sumBeta2 + beta.^2;
         sumFt = sumFt + Ft;
@@ -143,6 +148,7 @@ for i = 1 : Sims
     end
     
 end
+
 Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
 sumFt2 = sumFt2./Runs;

@@ -1,11 +1,13 @@
-function [ P0 ] = kowMakeStateSpace(ArParams,  stateVariance, T )
+function [ P0 ] = kowMakeStateSpace(ArParams,  stateVariance )
 [k, lags] = size(ArParams);
-Tmlag = T- lags;
+
 % State space representation 
 bottom = [eye(lags-1),zeros(lags-1,1)];
-Phi = [ArParams;bottom];
+Phi = [ArParams;bottom]
 R = [1; zeros(lags-1,1)];
 RRp = R*R';
-P0 = reshape((eye(lags^2) - kron(Phi,Phi))\RRp(:), lags, lags);
+ImGamma = eye(lags^2) - kron(Phi,Phi);
+
+P0 = reshape(ImGamma\RRp(:), lags, lags);
 end
 
