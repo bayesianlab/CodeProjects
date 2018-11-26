@@ -134,8 +134,6 @@ for i = 1 : Sims
     
     %% Store means and second moments
     if i > burnin
-        storeB(:,i-burnin) = beta;
-        storeFt(:,:,i-burnin) = Ft;
         sumBeta = sumBeta + beta;
         sumBeta2 = sumBeta2 + beta.^2;
         sumFt = sumFt + Ft;
@@ -150,7 +148,6 @@ for i = 1 : Sims
     end
 
 end
-
 Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
 sumFt2 = sumFt2./Runs;
