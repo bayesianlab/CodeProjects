@@ -1,6 +1,7 @@
 function [y, SurX] = kowGenData()
 
-kowImport
+% kowImport
+kowdata = kowImportFunction('~/Datasets/kow.csv', 2, 55)
 alldata = table2array(kowdata(:,2:end))';
 
 lags = 3;

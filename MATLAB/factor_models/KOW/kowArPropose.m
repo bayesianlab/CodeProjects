@@ -1,19 +1,25 @@
-function [ ArParams, P0 ] = kowArPropose(gammahat, G)
-
+function [ proposal, P0, P0old ] = kowArPropose(y,x, OldAr)
+Arp = size(x,1);
+G = ((eye(Arp).*.01) +  x*x')\eye(Arp);
+gammahat = G*x*y';
 lags = length(gammahat);
-
 keepproposing = 1;
 c = 0;
+R = [1;zeros(lags-1,1)];
+RRp = R*R';
+eyelagsquared = eye(lags^2);
+bottom = [eye(lags-1),zeros(lags-1,1)];
+Phi = [OldAr;bottom]; 
+P0old = reshape((eyelagsquared  - kron(Phi,Phi))\RRp(:), lags,lags);
+
 while keepproposing > 0
     c = c + 1;
-    ArParams = mvnrnd(gammahat, G);
+    proposal = mvnrnd(gammahat, G);
     bottom = [eye(lags-1),zeros(lags-1,1)];
-    Phi = [ArParams;bottom];
+    Phi = [proposal;bottom];
     valid = sum(eig(Phi) < 1);
     if valid == lags
-        R = [1;zeros(lags-1,1)];
-        RRp = R*R';
-        ImGamma = eye(lags^2) - kron(Phi,Phi);
+        ImGamma = eyelagsquared  - kron(Phi,Phi);
         P0 = reshape(ImGamma\RRp(:), lags,lags);
         [~, pd] = chol(P0);
         if pd == 0

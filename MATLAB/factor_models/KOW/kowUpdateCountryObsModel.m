@@ -11,7 +11,6 @@ else
     options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
     'MaxIterations', 3, 'Display', 'off');
 end
-fprintf('\nBeginning the observation model updates...\n')
 updatedCountryObsModel = zeros(Countries*SeriesPerCountry,1);
 t = 1:SeriesPerCountry;
 countryEye = eye(SeriesPerCountry);

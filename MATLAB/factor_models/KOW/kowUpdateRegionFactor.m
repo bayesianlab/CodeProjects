@@ -11,7 +11,7 @@ for r= 1:Regions
     obsslice = regionObsModel(bdex:edex);
     [Sregionprecision] = kowMakeVariance(RegionAr(r,:), 1, T);
     factors(r,:) = kowUpdateLatent(ycslice(:), obsslice,...
-        Sregionprecision,obsPrecisionSlice,T)';
+        Sregionprecision,obsPrecisionSlice)';
 end
 end
 

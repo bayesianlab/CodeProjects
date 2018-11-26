@@ -1,8 +1,8 @@
-function [draw, G] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelPrecision, T)
+function [draw] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelPrecision)
 
-[Nobseqns, Nstates] = size(ObsModel);
+[Nobseqns] = size(ObsModel,1);
+T = length(vecresids)/Nobseqns;
 speyet = speye(T);
-G = kron(speyet, ObsModel);
 GtP = ObsModel'*spdiags(ObsModelPrecision,0, Nobseqns,Nobseqns);
 KroneckerVariance = kron(speye(T),GtP*ObsModel);
 x = kron(speyet,GtP) *vecresids;
