@@ -3,7 +3,6 @@ function [ b, demeanedyt ] = kowupdateBetaPriors(ys, SurX, obsModelPrecision, St
 fprintf('\nBeginning beta update...\n')
 nEqns = length(obsModelPrecision);
 nFactors = size(StateObsModel,2);
-sizeStatePre = size(StatePrecision,1);
 i = 1:nEqns;
 j = 1:nFactors;
 fullpre = spdiags(obsModelPrecision,0, nEqns, nEqns);

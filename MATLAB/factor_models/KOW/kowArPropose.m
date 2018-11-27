@@ -14,6 +14,10 @@ P0old = reshape((eyelagsquared  - kron(Phi,Phi))\RRp(:), lags,lags);
 
 while keepproposing > 0
     c = c + 1;
+    if c == 25
+        proposal = zeros(1,Arp);
+        keepproposing = -1;
+    end
     proposal = mvnrnd(gammahat, G);
     bottom = [eye(lags-1),zeros(lags-1,1)];
     Phi = [proposal;bottom];

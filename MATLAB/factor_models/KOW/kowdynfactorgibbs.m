@@ -146,7 +146,15 @@ for i = 1 : Sims
             tempfilename = createDateString('tempFtupdate_at_.mat');
             save(tempfilename, sumFt./i-burnin)
         end
+<<<<<<< HEAD
     end
+=======
+
+    end
+     hold on
+    plot(Ft(1,:))
+    drawnow
+>>>>>>> 905709681037d9fa08bee0331ce0e604cea98372
 end
 Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
