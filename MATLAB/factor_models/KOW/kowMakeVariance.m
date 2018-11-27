@@ -2,7 +2,7 @@ function [  Sprecision] = kowMakeVariance(  stackedTransitions,  stateVariance, 
 [k, lags] = size(stackedTransitions);
 Tmlag = T- lags;
 
-Phi = [repmat(stackedTransitions, Tmlag,1), ones(k*Tmlag,1)];
+Phi = [repmat(-stackedTransitions, Tmlag,1), ones(k*Tmlag,1)];
 
 % make H
 H = [speye(k*lags, k*T); spdiags(Phi,[0:k:k*lags], k*Tmlag, k*T)];

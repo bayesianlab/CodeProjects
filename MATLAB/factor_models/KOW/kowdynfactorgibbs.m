@@ -70,6 +70,7 @@ sumObsVariance2 =  sumObsVariance;
 %% MCMC of Algorithm 3 Chan&Jeliazkov 2009
 storeB = zeros(betaDim, Sims);
 storeFt = zeros(size(Ft,1), size(Ft,2), Sims);
+
 tic
 for i = 1 : Sims
     fprintf('\n\n  Iteration %i\n', i)
@@ -77,7 +78,8 @@ for i = 1 : Sims
     [beta, ydemut] = kowupdateBetaPriors(ys(:), SurX, obsEqnPrecision,...
         StateObsModel, Si,  T);
     
-    %% Update Obs model
+    %% Update Obs model 
+    
     % WORLD: Zero out the world to demean y conditional on country, region
     tempStateObsModel = [zeroOutWorld, IOregion .* currobsmod(:,2),...
         IOcountry.* currobsmod(:,3)];
@@ -90,18 +92,6 @@ for i = 1 : Sims
     Ft(1,:) = kowUpdateLatent(tempydemut(:),currobsmod(:,1), Sworld,...
         obsEqnPrecision)';
     
-    % REGION: Zero out the region to demean y conditional on the world,country 
-    tempStateObsModel = [currobsmod(:,1),...
-        zeroOutRegion, IOcountry.* currobsmod(:,3)];
-    tempydemut = ydemut - tempStateObsModel*Ft;         
-    currobsmod(:,2) = kowUpdateRegionObsModel(tempydemut,...
-        obsEqnPrecision,currobsmod(:,2),...
-        CountryAr,Countries, SeriesPerCountry,...
-        CountryObsModelPriorPrecision, CountryObsModelPriorlogdet,...
-        regionIndices, T, oldHessianRegion, i);    
-    Ft(regionsInFt, :) = kowUpdateRegionFactor(tempydemut,...
-        obsEqnPrecision, currobsmod(:,2),RegionAr, regioneqns, T);
-
     % COUNTRY: Zero out the world to demean y conditional on world, region
     tempStateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
         zeroOutCountry ];
@@ -117,6 +107,17 @@ for i = 1 : Sims
     StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
         IOcountry.* currobsmod(:,3)];
 
+    % REGION: Zero out the region to demean y conditional on the world,country 
+    tempStateObsModel = [currobsmod(:,1),...
+        zeroOutRegion, IOcountry.* currobsmod(:,3)];
+    tempydemut = ydemut - tempStateObsModel*Ft;         
+    currobsmod(:,2) = kowUpdateRegionObsModel(tempydemut,...
+        obsEqnPrecision,currobsmod(:,2),...
+        CountryAr,Countries, SeriesPerCountry,...
+        CountryObsModelPriorPrecision, CountryObsModelPriorlogdet,...
+        regionIndices, T, oldHessianRegion, i);    
+    Ft(regionsInFt, :) = kowUpdateRegionFactor(tempydemut,...
+        obsEqnPrecision, currobsmod(:,2),RegionAr, regioneqns, T);
 
     %% Update Obs Equation Variances
     residuals = ydemut - StateObsModel*Ft;
@@ -145,7 +146,11 @@ for i = 1 : Sims
             tempfilename = createDateString('tempFtupdate_at_.mat');
             save(tempfilename, sumFt./i-burnin)
         end
+     hold on
+    plot(Ft(1,:))
+    drawnow
     end
+
 
 end
 Runs = Sims-burnin;
