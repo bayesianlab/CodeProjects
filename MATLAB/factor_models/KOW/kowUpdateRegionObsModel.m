@@ -1,8 +1,9 @@
-function [updatedobsmod] = kowUpdateRegionObsModel(ydemut,...
+function [updatedobsmod, oldmean, oldHessian] = kowUpdateRegionObsModel(ydemut,...
     obsEqnPrecision,regionobsmodel, RegionAr, Countries,...
     SeriesPerCountry,  CountryObsModelPriorPrecision,...
-    CountryObsModelPriorlogdet, regionIndices, T, oldHessian,...
+    CountryObsModelPriorlogdet, regionIndices, oldmean, oldHessian,...
     iterationCount)
+T = size(ydemut,2);
 if iterationCount == 1
     stopTryingFlag = 0;
     options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
@@ -10,7 +11,7 @@ if iterationCount == 1
 else
     stopTryingFlag = 1;
     options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'MaxIterations', 3, 'Display', 'off');
+    'MaxIterations', 10, 'Display', 'off');
 end
 fprintf('Region...\n')
 updatedobsmod = zeros(SeriesPerCountry*T, 1);
@@ -44,18 +45,22 @@ for c = 1:Countries
                 [~,notpd] = chol(Hessian);
             end
             if limit == 2 
-                fprintf('Non-pd Hessian, using last pd value\n')
+                fprintf('%i Non-pd Hessian, using last pd value\n', c)
+                themean = oldmean(:,c);
                 Hessian = oldHessian(:,:,c);
             else
-                fprintf('Maximization resulted in pd Hessian, saving...\n')
+                fprintf('%i Maximization resulted in pd Hessian, saving...\n', c)
+                oldmean(:,c) = themean;
                 oldHessian(:,:,c) = Hessian;
             end
         else
             if notpd ~= 0
-                fprintf('Non-pd Hessian, using last pd value\n')
+                fprintf('%i Non-pd Hessian, using last pd value\n', c)
+                themean = oldmean(:,c);
                 Hessian = oldHessian(:,:,c);
             else
-                fprintf('Maximization resulted in pd Hessian, saving...\n')
+                fprintf('%i Maximization resulted in pd Hessian, saving...\n', c)
+                oldmean(:,c) = themean;
                 oldHessian(:,:,c) = Hessian;
             end
         end
@@ -84,18 +89,18 @@ for c = 1:Countries
                 [~,notpd] = chol(Hessian);
             end
             if limit == 2 
-                fprintf('Non-pd Hessian, using last pd value\n')
+                fprintf('%i Non-pd Hessian, using last pd value\n', c)
                 Hessian = oldHessian(:,:,c);
             else
-                fprintf('Maximization resulted in pd Hessian, saving...\n')
+                fprintf('%i Maximization resulted in pd Hessian, saving...\n', c)
                 oldHessian(:,:,c) = Hessian;
             end
         else
             if notpd ~= 0
-                fprintf('Non-pd Hessian, using last pd value\n')
+                fprintf('%i Non-pd Hessian, using last pd value\n', c)
                 Hessian = oldHessian(:,:,c);
             else
-                fprintf('Maximization resulted in pd Hessian, saving...\n')
+                fprintf('%i Maximization resulted in pd Hessian, saving...\n', c)
                 oldHessian(:,:,c) = Hessian;
             end
         end
