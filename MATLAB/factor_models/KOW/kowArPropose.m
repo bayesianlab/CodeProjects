@@ -17,18 +17,19 @@ while keepproposing > 0
     if c == 10
         proposal = zeros(1,Arp);
         keepproposing = -1;
-    end
-    proposal = mvnrnd(gammahat, G);
-    bottom = [eye(lags-1),zeros(lags-1,1)];
-    Phi = [proposal;bottom];
-    valid = sum(eig(Phi) < 1);
-    if valid == lags
-        ImGamma = eyelagsquared  - kron(Phi,Phi);
-        P0 = reshape(ImGamma\RRp(:), lags,lags);
-        [~, pd] = chol(P0);
-        if pd == 0
-            keepproposing = -1;
-        end 
+    else
+        proposal = mvnrnd(gammahat, G);
+        bottom = [eye(lags-1),zeros(lags-1,1)];
+        Phi = [proposal;bottom];
+        valid = sum(eig(Phi) < 1);
+        if valid == lags
+            ImGamma = eyelagsquared  - kron(Phi,Phi);
+            P0 = reshape(ImGamma\RRp(:), lags,lags);
+            [~, pd] = chol(P0);
+            if pd == 0
+                keepproposing = -1;
+            end 
+        end
     end
 end
 end
