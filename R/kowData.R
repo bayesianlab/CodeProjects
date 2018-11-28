@@ -125,7 +125,6 @@ colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rknaUSA',
   'rgdpnaTHA', 'rconnaTHA', 'rknaTHA')
 
 LogFirstDif <- log(KOW[2:55,2:181]) - log(KOW[1:54, 2:181])
-LogFirstDifDeMean <- LogFirstDif - colMeans(LogFirstDif)
 
 KOW <- cbind(KOW$year[2:55], LogFirstDifDeMean)
 colnames(KOW)[1] <- 'year'
