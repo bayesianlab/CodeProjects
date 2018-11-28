@@ -123,7 +123,7 @@ for i = 1 : Sims
     
     StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
         IOcountry.* currobsmod(:,3)];
-
+currobsmod
     %% Update Obs Equation Variances
     residuals = ydemut - StateObsModel*Ft;
     obsEqnVariances = kowUpdateObsVariances(residuals, v0,r0,T);
@@ -151,6 +151,10 @@ for i = 1 : Sims
             tempfilename = createDateString('tempFtupdate_at_.mat');
             save(tempfilename, sumFt./i-burnin)
         end
+    end
+    hold on
+    plot(Ft(1,:))
+    drawnow
 end
 Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
