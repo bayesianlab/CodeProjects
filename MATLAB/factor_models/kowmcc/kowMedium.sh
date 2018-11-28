@@ -1,7 +1,7 @@
 #!bin/bash
 #$ -S /bin/bash
-#$ -q pub8i
-#$ -N submitted_med 
+#$ -q ist
+#$ -N teniter_med
 #$ -l mem_free=8G
 #$ -cwd
 #$ -notify 
