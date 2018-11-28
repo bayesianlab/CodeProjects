@@ -1,22 +1,20 @@
 function [updatedworldobsmod, Sworldpre, oldmean, oldHessian] = kowUpdateWorldObsModel(...
     ydemut, obsEqnPrecision,worldobsmodel,WorldAr,...
     WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, blocks,Eqns,....
-    T, oldmean, oldHessian, iterationCount)
+    oldmean, oldHessian, iterationCount)
 if iterationCount == 1
     stopTryingFlag = 0;
     options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
         'Display', 'off');
 else
-    stopTryingFlag = 0;
+    stopTryingFlag = 1;
     options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
     'MaxIterations', 30, 'OptimalityTolerance', .5, 'Display', 'off');
 end
-    
+T = size(ydemut,2);   
 fprintf('World...\n')
 updatedworldobsmod = zeros(Eqns,1);
 eqnspblock = Eqns/blocks;
-
-
 t = 1:eqnspblock;
 yslice = ydemut(t, :);
 obsslice = worldobsmodel(t);
@@ -70,22 +68,17 @@ for b = 2:blocks
     obsslice = worldobsmodel(selectC);
     yslice = ydemut(selectC, :);
     pslice = obsEqnPrecision(selectC);
-    loglike = @(rg) -kowLL(rg, yslice(:),...
-    Sworldpre, pslice, eqnspblock,T); 
-    [themean, ~,~,~,~, Hessian] = fminunc(loglike,...
-        normrnd(0,1,length(obsslice),1), options);
-    notvalid = ~isfinite(sum(sum(Hessian)));
-    negativediag = sum(diag(Hessian) < 0);
+    loglike = @(rg) -kowLL(rg, yslice(:), Sworldpre, pslice, eqnspblock,T); 
+    [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,  eqnspblock,1),...
+        options);
     [~,notpd] = chol(Hessian);
     limit = 0;
     if stopTryingFlag == 0
-        while (notvalid == 1 || negativediag > 0 || notpd > 0 ) && limit < 2
+        while (notpd > 0 ) && (limit < 2)
             limit = limit + 1;
             fprintf('  Trying different point..\n')
             [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,...
                 length(obsslice),1), options);
-            notvalid = ~isfinite(sum(sum(Hessian)));
-            negativediag = sum(diag(Hessian) < 0);
             [~,notpd] = chol(Hessian);
         end
         if limit == 2 

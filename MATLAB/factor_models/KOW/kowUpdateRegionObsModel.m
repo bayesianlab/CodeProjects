@@ -11,7 +11,7 @@ if iterationCount == 1
 else
     stopTryingFlag = 1;
     options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'MaxIterations', 30, 'OptimalityTolerance', .5, 'Display', 'off');
+    'MaxIterations', 30, 'OptimalityTolerance',.5, 'Display', 'off');
 end
 fprintf('Region...\n')
 updatedobsmod = zeros(SeriesPerCountry*T, 1);
@@ -30,18 +30,15 @@ for c = 1:Countries
         loglike = @(rg) -kowLL(rg, yslice(:),...
         Sregionpre, pslice, SeriesPerCountry,T); 
         [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,length(obsslice),1), options);
-        notvalid = ~isfinite(sum(sum(Hessian)));
-        negativediag = sum(diag(Hessian) < 0);
         [~,notpd] = chol(Hessian);
         limit = 0;
         if stopTryingFlag == 0
-            while (notvalid == 1 || negativediag > 0 || notpd > 0 ) && limit < 2
+            while (notpd > 0 ) && (limit < 2)
                 limit = limit + 1;
                 fprintf('  Trying different point..\n')
                 [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice +...
                     normrnd(0,2,length(obsslice),1), options);
-                notvalid = ~isfinite(sum(sum(Hessian)));
-                negativediag = sum(diag(Hessian) < 0);
+
                 [~,notpd] = chol(Hessian);
             end
             if limit == 2 
@@ -73,20 +70,16 @@ for c = 1:Countries
         [Sregionpre] = kowMakeVariance(RegionAr(regioncheck,:), 1, T);
         loglike = @(rg) -kowLL(rg, yslice(:),...
         Sregionpre, pslice, SeriesPerCountry,T); 
-        [themean, ~,~,~,~, Hessian] = fminunc(loglike,...
-            normrnd(0,1,length(obsslice),1), options);
-        notvalid = ~isfinite(sum(sum(Hessian)));
-        negativediag = sum(diag(Hessian) < 0);
+        [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,...
+            SeriesPerCountry,1), options);
         [~,notpd] = chol(Hessian);
         limit = 0;
         if stopTryingFlag == 0
-            while (notvalid == 1 || negativediag > 0 || notpd > 0 ) && limit < 2
+            while ( notpd > 0 ) && (limit < 2)
                 limit = limit + 1;
                 fprintf('  Trying different point..\n')
                 [themean, ~,~,~,~, Hessian] = fminunc(loglike,...
                     normrnd(0,1,length(obsslice),1), options);
-                notvalid = ~isfinite(sum(sum(Hessian)));
-                negativediag = sum(diag(Hessian) < 0);
                 [~,notpd] = chol(Hessian);
             end
             if limit == 2 

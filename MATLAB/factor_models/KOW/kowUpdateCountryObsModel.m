@@ -26,18 +26,14 @@ for c= 1 :Countries
         obsPrecisionSlice, SeriesPerCountry, T);
     [themean, ~,~,~,~, Hessian] = fminunc(loglike, countryObsModel(selcoun),...
         options);
-    notvalid = ~isfinite(sum(sum(Hessian)));
-    negativediag = sum(diag(Hessian) < 0);
     [~,notpd] = chol(Hessian);
     limit = 0;
         if stopTryingFlag == 0
-            while (notvalid == 1 || negativediag > 0 || notpd > 0 ) && limit < 2
+            while (notpd > 0 ) && (limit < 2)
                 limit = limit + 1;
                 fprintf('  Initial point failed, Trying different point...\n')
-                [themean, ~,~,~,~, Hessian] = fminunc(loglike, ...
-                    normrnd(0,1,length(obsslice),1), options);
-                notvalid = ~isfinite(sum(sum(Hessian)));
-                negativediag = sum(diag(Hessian) < 0);
+                [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,...
+                    SeriesPerCountry,1), options);
                 [~,notpd] = chol(Hessian);
             end
             if limit == 2 

@@ -45,11 +45,10 @@ CountryObsModelPriorPrecision = 1e-2.*eye(SeriesPerCountry);
 CountryObsModelPriorlogdet = SeriesPerCountry*log(1e-2);
 WorldObsModelPriorPrecision = 1e-2.*eye(eqnspblock);
 WorldObsModelPriorlogdet = eqnspblock*log(1e-2);
-% Initialize the observation model
+% Initialize values for parameters 
 currobsmod = zeros(Eqns, 3);
 obsEqnVariances = ones(Eqns,1);
 obsEqnPrecision = 1./obsEqnVariances;
-% Initialize the AR terms on the State variables
 RegionAr= zeros(Regions,Arp) ;
 CountryAr = zeros(Countries,Arp);
 WorldAr = zeros( 1,Arp);
@@ -58,24 +57,21 @@ stacktrans = [WorldAr;RegionAr;CountryAr];
 % state variables in one step. 
 StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
     IOcountry .* currobsmod(:,3)];
-% The covariance matrix according to Fahrmeir and Kaufman.
+% The covariance matrix according to Fahrmeir and Kaufman
 Si = kowMakeVariance(stacktrans,1, T);
 % Vectorized state variable initialization and reshaped version
 % for fast matrix multiplication.
 vecF = kowUpdateLatent(ys(:), StateObsModel, Si, obsEqnVariances) ;
-% Ft = reshape(vecF, nFactors,T);
-Ft = zeros(nFactors,T);
+Ft = reshape(vecF, nFactors,T);
+
 %% Storage contaianers for averages of posteriors
-sumFt = zeros(size(Ft,1), size(Ft,2));
+sumFt = zeros(nFactors, T);
 sumFt2 = sumFt;
 sumBeta = zeros(betaDim, 1);
 sumBeta2 = sumBeta;
-sumObsVariance = zeros(length(obsEqnVariances),1);
+sumObsVariance = zeros(Eqns,1);
 sumObsVariance2 =  sumObsVariance;
 %% MCMC of Algorithm 3 Chan&Jeliazkov 2009
-storeB = zeros(betaDim, Sims);
-storeFt = zeros(size(Ft,1), size(Ft,2), Sims);
-
 tic
 for i = 1 : Sims
     fprintf('\n\n  Iteration %i\n', i)
@@ -84,16 +80,15 @@ for i = 1 : Sims
         StateObsModel, Si,  T);
     
     %% Update Obs model 
-    
     % WORLD: Zero out the world to demean y conditional on country, region
     tempStateObsModel = [zeroOutWorld, IOregion .* currobsmod(:,2),...
         IOcountry.* currobsmod(:,3)];
     tempydemut = ydemut - tempStateObsModel*Ft;  
-    [worldob, Sworld, oldMeanWorld, oldHessianWorld] = kowUpdateWorldObsModel(tempydemut,...
-        obsEqnPrecision,currobsmod(:,1),...
-        WorldAr, WorldObsModelPriorPrecision,...
-        WorldObsModelPriorlogdet, blocks,Eqns, T, oldMeanWorld,...
-        oldHessianWorld, i);
+    [worldob, Sworld, oldMeanWorld, oldHessianWorld] = ...
+        kowUpdateWorldObsModel(tempydemut, obsEqnPrecision,currobsmod(:,1),...
+            WorldAr, WorldObsModelPriorPrecision,...
+            WorldObsModelPriorlogdet, blocks,Eqns, oldMeanWorld,...
+            oldHessianWorld, i);
     currobsmod(:,1) = worldob;
     Ft(1,:) = kowUpdateLatent(tempydemut(:),currobsmod(:,1), Sworld,...
         obsEqnPrecision)';
@@ -104,8 +99,9 @@ for i = 1 : Sims
     tempydemut = ydemut - tempStateObsModel*Ft;         
     [currobsmod(:,2),oldMeanRegion, oldHessianRegion] = ...
         kowUpdateRegionObsModel(tempydemut, obsEqnPrecision,currobsmod(:,2),...
-        CountryAr,Countries, SeriesPerCountry, CountryObsModelPriorPrecision,...
-        CountryObsModelPriorlogdet, regionIndices, oldMeanRegion, oldHessianRegion, i);    
+            CountryAr,Countries, SeriesPerCountry, CountryObsModelPriorPrecision,...
+            CountryObsModelPriorlogdet, regionIndices, oldMeanRegion,...
+            oldHessianRegion, i);    
     Ft(regionsInFt, :) = kowUpdateRegionFactor(tempydemut,...
         obsEqnPrecision, currobsmod(:,2),RegionAr, regioneqns, T);
     
@@ -115,8 +111,8 @@ for i = 1 : Sims
     tempydemut = ydemut - tempStateObsModel*Ft;
     [currobsmod(:,3), oldMeanCountry, oldHessianCountry] = ...
         kowUpdateCountryObsModel(tempydemut, obsEqnPrecision,currobsmod(:,3), ...
-        CountryAr,Countries, SeriesPerCountry, CountryObsModelPriorPrecision,...
-        CountryObsModelPriorlogdet,  oldMeanCountry, oldHessianCountry, i);
+            CountryAr,Countries, SeriesPerCountry, CountryObsModelPriorPrecision,...
+            CountryObsModelPriorlogdet,  oldMeanCountry, oldHessianCountry, i);
     Ft(countriesInFt, :) = kowUpdateCountryFactor(tempydemut,...
         obsEqnPrecision, currobsmod(:,3),...
              CountryAr, Countries, SeriesPerCountry, T);
@@ -155,11 +151,7 @@ for i = 1 : Sims
     hold on
     plot(Ft(1,:))
     drawnow
-    currobsmod
-%     oldMeanCountry = zeros(SeriesPerCountry, Countries);
-%     oldMeanRegion = zeros(SeriesPerCountry, Countries);
-%     oldMeanWorld = zeros(eqnspblock, blocks);
-%     currobsmod = zeros(Eqns, 3);
+
 end
 Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
