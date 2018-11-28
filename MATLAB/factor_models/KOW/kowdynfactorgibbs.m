@@ -19,7 +19,7 @@ SeriesPerCountry=3;
 nFactors = Countries + Regions + 1;
 Arp= 3;
 [Eqns,T] = size(ys);
-blocks = 60;
+blocks = 36;
 eqnspblock = Eqns/blocks;
 betaDim = size(SurX,2);
 regionIndices = [1,4,6,24,42,49,55, -1];
@@ -123,7 +123,7 @@ for i = 1 : Sims
     
     StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
         IOcountry.* currobsmod(:,3)];
-currobsmod
+
     %% Update Obs Equation Variances
     residuals = ydemut - StateObsModel*Ft;
     obsEqnVariances = kowUpdateObsVariances(residuals, v0,r0,T);
@@ -155,6 +155,11 @@ currobsmod
     hold on
     plot(Ft(1,:))
     drawnow
+    currobsmod
+%     oldMeanCountry = zeros(SeriesPerCountry, Countries);
+%     oldMeanRegion = zeros(SeriesPerCountry, Countries);
+%     oldMeanWorld = zeros(eqnspblock, blocks);
+%     currobsmod = zeros(Eqns, 3);
 end
 Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
