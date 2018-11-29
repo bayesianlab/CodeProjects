@@ -8,7 +8,7 @@ void forwardSolve(int Cols, double sum, double *L, double Z[Cols], double *x, do
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
   int RowsLowerC, ColsLowerC;
-  double *x, *L, *Y, diag[ColsLowerC]  Z[ColsLowerC], sum;
+  double *x, *L, *Y, diag[ColsLowerC],  Z[ColsLowerC], sum;
   if (nrhs != 2) {
     mexErrMsgTxt("Wrong number of function inputs. Two required.\n");
   }
