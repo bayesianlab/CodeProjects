@@ -7,7 +7,7 @@ if ischar(burnin)
     burnin = str2num(burnin);
 end
 load('kow.mat');
-K = size(y,1);
+K = size(kowy,1);
 rng(1)
 r0 = 10.*ones(K,1);
 v0 = 5;
