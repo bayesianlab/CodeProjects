@@ -144,8 +144,8 @@ for i = 1 : Sims
         sumObsVariance2 = sumObsVariance2 + obsEqnVariances.^2;
         % Save a temporary object every 100 iterations after the burnrin
         if mod(i,100) == 0
-            tempfilename = createDateString('tempFtupdate_at_.mat');
-            tempfilename = createDateString('tempFt2update_at_.mat');
+            tempfilename = createDateString('tempFtupdate');
+            tempfilename = createDateString('tempFt2update');
             tempitem = sumFt./(i-burnin);
             tempitem2 = sumFt2./(i-burnin);
             save(tempfilename, 'tempitem');
