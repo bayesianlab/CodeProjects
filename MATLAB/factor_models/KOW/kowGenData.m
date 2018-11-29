@@ -1,7 +1,9 @@
 function [y, SurX] = kowGenData()
 
 % kowImport
-kowdata = kowImportFunction('~/Datasets/kow.csv', 2, 55)
+% kowdata = kowImportFunction('~/Datasets/kow.csv', 2, 55)
+
+kowdata=kowImportFunction('/Users/dillonflannery-valadez/Google Drive/Datasets/kowdetaildata.csv', 2, 55);
 alldata = table2array(kowdata(:,2:end))';
 
 lags = 3;
@@ -26,6 +28,8 @@ for r = 1:size(Xs,1)
     select = t + (r-1)*K;
     SurX(select, :) = formsurI.*Xs(r,:);
 end
-
+kowy = y;
+kowx = SurX;
+save('kow.mat', 'kowy', 'kowx')
 end
 

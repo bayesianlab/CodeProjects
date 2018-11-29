@@ -1,0 +1,10 @@
+load("/Users/dillonflannery-valadez/Downloads/star.rda")
+library(plm)
+starpanel <- pdata.frame(star, c("schid"))
+f<-plm(mathscore~small+aide+tchexper+boy+white_asian, index=c("schid"), model=c("within"), data=starpanel)
+summary(f)
+fixef(f)
+fp<-plm(mathscore~small+aide+tchexper+boy+white_asian, index=c("schid"), model=c("pooling"), data=starpanel)
+summary(fp)
+
+lm(mathscore~small+aide+tchexper+boy+white_asian, data=star)

@@ -20,7 +20,7 @@ Like = llhoodden + kowEvalPriorsForObsModel(notcandidate, PriorPre, ...
 Prop = mvstudenttpdf(candidate, optimalMean, iHessian, df);
 Den = Like + Prop;
 
-if log(unifrnd(0,1,1,1)) < Num - Den
+if log(unifrnd(0,1,1,1)) <= Num - Den
     draw = candidate;
 else
     draw = notcandidate;

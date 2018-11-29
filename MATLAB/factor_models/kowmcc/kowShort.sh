@@ -1,7 +1,7 @@
 #!bin/bash
 #$ -S /bin/bash
-#$ -q pub8i
-#$ -N newkowshort
+#$ -q its
+#$ -N kow_short
 #$ -l mem_free=8G
 #$ -cwd
 #$ -notify 

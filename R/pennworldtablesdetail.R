@@ -1,5 +1,5 @@
 library(readxl)
-pwtd90 <- read_excel("Datasets/na_data.xlsx", 
+pwtd90 <- read_excel("/Users/dillonflannery-valadez/Google\ Drive/Datasets/na_data.xlsx", 
                     sheet = "Data")
 KOW <- cbind(pwtd90[pwtd90$countrycode == 'USA' & pwtd90$year >= 1960, c('year', 'q_gdp', 'q_c', 'q_i')],
              pwtd90[pwtd90$countrycode == 'CAN' & pwtd90$year >= 1960, c('q_gdp', 'q_c', 'q_i')],          
@@ -126,4 +126,4 @@ LogFirstDif <- log(KOW[2:55,2:181]) - log(KOW[1:54, 2:181])
 KOW <- cbind(KOW$year[2:55], LogFirstDif)
 colnames(KOW)[1] <- 'year'
 
-write.csv(KOW, 'kowdata.csv')
+write.csv(KOW, '/Users/dillonflannery-valadez/Google\ Drive/Datasets/kowdetaildata.csv', row.names = FALSE)

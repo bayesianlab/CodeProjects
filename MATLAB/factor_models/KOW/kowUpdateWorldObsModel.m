@@ -1,7 +1,7 @@
-function [updatedworldobsmod, Sworldpre] = kowUpdateWorldObsModel(...
+function [updatedworldobsmod, Sworldpre, oldmean, oldHessian] = kowUpdateWorldObsModel(...
     ydemut, obsEqnPrecision,worldobsmodel,WorldAr,...
     WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, blocks,Eqns,....
-    T, oldHessian, iterationCount)
+    oldmean, oldHessian, iterationCount)
 if iterationCount == 1
     stopTryingFlag = 0;
     options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
@@ -9,14 +9,12 @@ if iterationCount == 1
 else
     stopTryingFlag = 1;
     options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'MaxIterations', 3, 'Display', 'off');
+    'MaxIterations', 30, 'OptimalityTolerance', .5, 'Display', 'off');
 end
-    
+T = size(ydemut,2);   
 fprintf('World...\n')
 updatedworldobsmod = zeros(Eqns,1);
 eqnspblock = Eqns/blocks;
-
-
 t = 1:eqnspblock;
 yslice = ydemut(t, :);
 obsslice = worldobsmodel(t);
@@ -34,25 +32,29 @@ if stopTryingFlag == 0
     while (notvalid == 1 || negativediag > 0 || notpd > 0 ) && limit < 2
         limit = limit + 1;
         fprintf('  Trying different point..\n')
-        [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice +...
-            normrnd(0,2,length(obsslice),1), options);
+        [themean, ~,~,~,~, Hessian] = fminunc(loglike, ...
+            normrnd(0,1,length(obsslice),1), options);
         notvalid = ~isfinite(sum(sum(Hessian)));
         negativediag = sum(diag(Hessian) < 0);
         [~,notpd] = chol(Hessian);
     end
     if limit == 2 
-        fprintf('Non-pd Hessian, using last pd value\n')
+        fprintf('%i Non-pd Hessian, using last pd value\n', 1)
+        themean = oldmean(:,1);
         Hessian = oldHessian(:,:,1);
     else
-        fprintf('Maximization resulted in pd Hessian, saving...\n')
+        fprintf('%i Maximization resulted in pd Hessian, saving...\n', 1)
+        oldmean(:,1) = themean;
         oldHessian(:,:,1) = Hessian;
     end
 else
     if notpd ~= 0
-        fprintf('Non-pd Hessian, using last pd value\n')
+        fprintf('%i Non-pd Hessian, using last pd value\n', 1)
+        themean = oldmean(:,1);
         Hessian = oldHessian(:,:,1);
     else
-        fprintf('Maximization resulted in pd Hessian, saving...\n')
+        fprintf('%i Maximization resulted in pd Hessian, saving...\n',1)
+        oldmean(:,1) = themean;
         oldHessian(:,:,1) = Hessian;
     end
 end
@@ -66,37 +68,36 @@ for b = 2:blocks
     obsslice = worldobsmodel(selectC);
     yslice = ydemut(selectC, :);
     pslice = obsEqnPrecision(selectC);
-    [Sregionpre] = kowMakeVariance(WorldAr(1,:), 1, T);
-    loglike = @(rg) -kowLL(rg, yslice(:),...
-    Sregionpre, pslice, eqnspblock,T); 
-    [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice, options);
-    notvalid = ~isfinite(sum(sum(Hessian)));
-    negativediag = sum(diag(Hessian) < 0);
+    loglike = @(rg) -kowLL(rg, yslice(:), Sworldpre, pslice, eqnspblock,T); 
+    [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,  eqnspblock,1),...
+        options);
     [~,notpd] = chol(Hessian);
     limit = 0;
     if stopTryingFlag == 0
-        while (notvalid == 1 || negativediag > 0 || notpd > 0 ) && limit < 2
+        while (notpd > 0 ) && (limit < 2)
             limit = limit + 1;
             fprintf('  Trying different point..\n')
-            [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice +...
-                normrnd(0,2,length(obsslice),1), options);
-            notvalid = ~isfinite(sum(sum(Hessian)));
-            negativediag = sum(diag(Hessian) < 0);
+            [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,...
+                length(obsslice),1), options);
             [~,notpd] = chol(Hessian);
         end
         if limit == 2 
-            fprintf('Non-pd Hessian, using last pd value\n')
+            fprintf('%i Non-pd Hessian, using last pd value\n', b)
+            themean = oldmean(:,b);
             Hessian = oldHessian(:,:,b);
         else
-            fprintf('Maximization resulted in pd Hessian, saving...\n')
+            fprintf('%i Maximization resulted in pd Hessian, saving...\n', b)
+            oldmean(:,b) = themean;
             oldHessian(:,:,b) = Hessian;
         end
     else
         if notpd ~= 0
-            fprintf('Non-pd Hessian, using last pd value\n')
+            fprintf('%i Non-pd Hessian, using last pd value\n', b)
+            themean = oldmean(:,b);
             Hessian = oldHessian(:,:,b);
         else
-            fprintf('Maximization resulted in pd Hessian, saving...\n')
+            fprintf('%i Maximization resulted in pd Hessian, saving...\n', b)
+            oldmean(:,b) = themean;
             oldHessian(:,:,b) = Hessian;
         end
     end

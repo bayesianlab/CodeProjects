@@ -14,17 +14,23 @@ P0old = reshape((eyelagsquared  - kron(Phi,Phi))\RRp(:), lags,lags);
 
 while keepproposing > 0
     c = c + 1;
-    proposal = mvnrnd(gammahat, G);
-    bottom = [eye(lags-1),zeros(lags-1,1)];
-    Phi = [proposal;bottom];
-    valid = sum(eig(Phi) < 1);
-    if valid == lags
-        ImGamma = eyelagsquared  - kron(Phi,Phi);
-        P0 = reshape(ImGamma\RRp(:), lags,lags);
-        [~, pd] = chol(P0);
-        if pd == 0
-            keepproposing = -1;
-        end 
+    if c == 20
+        proposal = zeros(1,Arp);
+        P0 = eye(Arp);
+        keepproposing = -1;
+    else
+        proposal = mvnrnd(gammahat, G);
+        bottom = [eye(lags-1),zeros(lags-1,1)];
+        Phi = [proposal;bottom];
+        valid = sum(eig(Phi) < 1);
+        if valid == lags
+            ImGamma = eyelagsquared  - kron(Phi,Phi);
+            P0 = reshape(ImGamma\RRp(:), lags,lags);
+            [~, pd] = chol(P0);
+            if pd == 0
+                keepproposing = -1;
+            end 
+        end
     end
 end
 end
