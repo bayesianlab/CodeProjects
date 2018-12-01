@@ -145,11 +145,11 @@ for i = 1 : Sims
         % Save a temporary object every 100 iterations after the burnrin
         if mod(i,100) == 0
             tempfilename = createDateString('tempFtupdate_at_.mat');
-            tempfilename = createDateString('tempFt2update_at_.mat');
+            tempfilename2 = createDateString('tempFt2update_at_.mat');
             tempitem = sumFt./(i-burnin);
             tempitem2 = sumFt2./(i-burnin);
             save(tempfilename, 'tempitem');
-            save(tempfileame2, 'tempitem2');
+            save(tempfilename2, 'tempitem2');
         end
     end
 end
