@@ -1,11 +1,8 @@
-function [sumFt, sumFt2, sumBeta, sumBeta2, sumObsVariance,...
-    sumObsVariance2] = kowdynfactorgibbs(ys, SurX, v0, r0,...
+function [sumFt, sumFt2, storeBeta, storeObsVariance]...
+    = kowdynfactorgibbs(ys, SurX, v0, r0,...
     Sims, burnin )
 %% TODO 
-% Save means from maximization step, when non-pd hessians are result
-% of maximization the means are also junk. Change this to 
-% use saved values from valid maximization steps. 
-%
+
 % Possibly the Sregion and Scountry matrices could be saved 
 % from the update obs model step instead of recreated twice in the updating
 % of the  latent states. 
@@ -67,10 +64,9 @@ Ft = reshape(vecF, nFactors,T);
 %% Storage contaianers for averages of posteriors
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt;
-sumBeta = zeros(betaDim, 1);
-sumBeta2 = sumBeta;
-sumObsVariance = zeros(Eqns,1);
-sumObsVariance2 =  sumObsVariance;
+storeBeta = zeros(betaDim, Sims -burnin);
+storeObsVariance = zeros(Eqns,Sims -burnin);
+
 %% MCMC of Algorithm 3 Chan&Jeliazkov 2009
 tic
 for i = 1 : Sims
@@ -136,12 +132,10 @@ for i = 1 : Sims
     
     %% Store means and second moments
     if i > burnin
-        sumBeta = sumBeta + beta;
-        sumBeta2 = sumBeta2 + beta.^2;
+        storeBeta(:,i-burnin) = beta;
         sumFt = sumFt + Ft;
         sumFt2 = sumFt2 + Ft.^2;
-        sumObsVariance = sumObsVariance + obsEqnVariances;
-        sumObsVariance2 = sumObsVariance2 + obsEqnVariances.^2;
+        storeObsVariance(:,i-burnin) = obsEqnVariances;
         % Save a temporary object every 100 iterations after the burnrin
         if mod(i,500) == 0
             tempfilename = createDateString('tempFtupdate');
@@ -156,9 +150,5 @@ end
 Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
 sumFt2 = sumFt2./Runs;
-sumBeta = sumBeta./Runs;
-sumBeta2 = sumBeta2./Runs;
-sumObsVariance = sumObsVariance./Runs;
-sumObsVariance2 = sumObsVariance2./Runs;
 toc
 end
