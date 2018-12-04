@@ -20,6 +20,6 @@ b0 = 1;
 B0 = 1;
 
 
-[f, f2, b, b2, v, v2] = kowdynfactorgibbs(kowy, kowx,  v0, r0,  20, 8);
+[f, f2, b, v] = kowdynfactorgibbs(kowy, kowx,  v0, r0,  20, 8);
 
 
