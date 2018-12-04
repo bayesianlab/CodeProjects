@@ -13,7 +13,7 @@ r0 = 10.*ones(K,1);
 v0 = 5;
 b0 = 1;
 B0 = 1;
-[f, f2 b, A, v] = kowdynfactorgibbs(kowy, kowx,  v0, r0, Sims, burnin)
+[f, f2, fmat, b, A, v] = kowdynfactorgibbs(kowy, kowx,  v0, r0, Sims, burnin)
 
 fname = createDateString('kow_')
 save(fname)
