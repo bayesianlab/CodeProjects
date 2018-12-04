@@ -1,4 +1,4 @@
-function [sumFt, sumFt2, storeBeta, storeObsVariance]...
+function [sumFt, sumFt2, storeBeta, storeObsModel, storeObsVariance]...
     = kowdynfactorgibbs(ys, SurX, v0, r0,...
     Sims, burnin )
 %% TODO 
@@ -66,7 +66,7 @@ sumFt = zeros(nFactors, T);
 sumFt2 = sumFt;
 storeBeta = zeros(betaDim, Sims -burnin);
 storeObsVariance = zeros(Eqns,Sims -burnin);
-
+storeObsModel = zeros(Eqns, 3, Sims-burnin);
 %% MCMC of Algorithm 3 Chan&Jeliazkov 2009
 tic
 for i = 1 : Sims
@@ -136,6 +136,7 @@ for i = 1 : Sims
         sumFt = sumFt + Ft;
         sumFt2 = sumFt2 + Ft.^2;
         storeObsVariance(:,i-burnin) = obsEqnVariances;
+        storeObsModel(:,:,i-burnin) = currobsmod;
         % Save a temporary object every 100 iterations after the burnrin
         if mod(i,500) == 0
             tempfilename = createDateString('tempFtupdate');
