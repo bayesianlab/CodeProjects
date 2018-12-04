@@ -1,10 +1,10 @@
-function [  ] = kow2Period( Sims, burnin)
+function [  ] = kow2Period( S, bn)
 load('kow2p.mat')
-if ischar(Sims)
-    Sims = str2num(Sims);
+if ischar(S)
+    S = str2num(S);
 end
-if ischar(burnin)
-    burnin = str2num(burnin);
+if ischar(bn)
+    bn = str2num(bn);
 end
 
 [f, f2, b, v] = kowdynfactorgibbs(kowp1y, kowp1x,  v0, r0,  S, bn);
