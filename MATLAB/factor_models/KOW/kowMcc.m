@@ -1,5 +1,5 @@
 function [] = kowMcc(Sims, burnin)
-% [y, surx] = kowGenData();
+
 if ischar(Sims)
     Sims = str2num(Sims);
 end
