@@ -1,4 +1,4 @@
-function [sumFt, sumFt2, storeBeta, storeObsModel, storeObsVariance]...
+function [sumFt, sumFt2, storeFt, storeBeta, storeObsModel, storeObsVariance]...
     = kowdynfactorgibbs(ys, SurX, v0, r0,...
     Sims, burnin )
 %% TODO 
@@ -64,6 +64,7 @@ Ft = reshape(vecF, nFactors,T);
 %% Storage contaianers for averages of posteriors
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt;
+storeFt = zeros(nFactors,T, Sims-burnin);
 storeBeta = zeros(betaDim, Sims -burnin);
 storeObsVariance = zeros(Eqns,Sims -burnin);
 storeObsModel = zeros(Eqns, 3, Sims-burnin);
@@ -132,6 +133,7 @@ for i = 1 : Sims
     
     %% Store means and second moments
     if i > burnin
+        storeFt(:,:,i-burnin) = Ft;
         storeBeta(:,i-burnin) = beta;
         sumFt = sumFt + Ft;
         sumFt2 = sumFt2 + Ft.^2;
