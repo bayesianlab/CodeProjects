@@ -9,7 +9,7 @@ B0 = 1;
 kowp1y = kowy(:,1:46);
 kowp1x = kowx(1:46*180,:);
 kowp2y = kowy(:, 47:end);
-kowp2x = kowx((47*180)+1:end,:);
+kowp2x = kowx((46*180)+1:end,:);
 kowpapery = kowy(:,1:30);
 kowpaperx = kowx(1:(30*180),:);
 save('kow2p.mat')
