@@ -67,7 +67,8 @@ sumFt2 = sumFt;
 storeFt = zeros(nFactors,T, Sims-burnin);
 storeBeta = zeros(betaDim, Sims -burnin);
 storeObsVariance = zeros(Eqns,Sims -burnin);
-storeObsModel = zeros(Eqns, 3, Sims-burnin);
+storeObsModel = zeros(Eqns, Arp, Sims-burnin);
+storeStateTransitions = zeros(nFacotrs, Arp, Sims-burnin); 
 %% MCMC of Algorithm 3 Chan&Jeliazkov 2009
 tic
 for i = 1 : Sims
@@ -133,25 +134,24 @@ for i = 1 : Sims
     
     %% Store means and second moments
     if i > burnin
-        storeFt(:,:,i-burnin) = Ft;
-        storeBeta(:,i-burnin) = beta;
+        v = i -burnin;
+        storeFt(:,:,v) = Ft;
+        storeBeta(:,v) = beta;
         sumFt = sumFt + Ft;
         sumFt2 = sumFt2 + Ft.^2;
-        storeObsVariance(:,i-burnin) = obsEqnVariances;
-        storeObsModel(:,:,i-burnin) = currobsmod;
-        % Save a temporary object every 100 iterations after the burnrin
+        storeObsVariance(:,v) = obsEqnVariances;
+        storeObsModel(:,:,v) = currobsmod;
+        storeStateTransitions(:,:,v) = stacktrans;
+        % Save a temporary object every 500 iterations after the burnrin
         if mod(i,500) == 0
             tempfilename = createDateString('tempFtupdate');
             tempfilename2 = createDateString('tempFt2update');
-            tempitem = sumFt./(i-burnin);
-            tempitem2 = sumFt2./(i-burnin);
+            tempitem = sumFt./(v);
+            tempitem2 = sumFt2./(v);
             save(tempfilename, 'tempitem');
             save(tempfilename2, 'tempitem2');
         end
     end
-    hold on 
-    plot(1964:2014,Ft(1,:))
-    drawnow
 end
 Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
