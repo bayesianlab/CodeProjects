@@ -124,10 +124,11 @@ for i = 1 : Sims
     obsEqnPrecision = 1./obsEqnVariances;
     
     %% Update State Transition Parameters
-    WorldAr = kowUpdateArParameters(WorldAr, Ft(1,:), Arp);
-    RegionAr = kowUpdateArParameters(RegionAr, Ft(regionsInFt,:), Arp);
-    CountryAr = kowUpdateArParameters(CountryAr, Ft(countriesInFt,:), Arp);
+    [WorldAr, wml] = kowUpdateArParameters(WorldAr, Ft(1,:), Arp);
+    [RegionAr, rml] = kowUpdateArParameters(RegionAr, Ft(regionsInFt,:), Arp);
+    [CountryAr, cml] = kowUpdateArParameters(CountryAr, Ft(countriesInFt,:), Arp);
     stacktrans = [WorldAr;RegionAr;CountryAr];
+    arml = [wml;rml;cml];
     
     %% Update the State Variance Matrix
     Si = kowMakeVariance(stacktrans, 1, T);
@@ -157,4 +158,5 @@ Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
 sumFt2 = sumFt2./Runs;
 toc
+fprintf('Compute Marginal Likelihood\n')
 end

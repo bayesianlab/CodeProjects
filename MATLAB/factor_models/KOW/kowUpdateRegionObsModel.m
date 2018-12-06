@@ -28,7 +28,7 @@ for c = 1:Countries
         regioncheck = regioncheck + 1;
         [Sregionpre] = kowMakeVariance(RegionAr(regioncheck,:), 1, T);
         loglike = @(rg) -kowLL(rg, yslice(:),...
-        Sregionpre, pslice, SeriesPerCountry,T); 
+            Sregionpre, pslice, SeriesPerCountry,T); 
         [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,length(obsslice),1), options);
         [~,notpd] = chol(Hessian);
         limit = 0;

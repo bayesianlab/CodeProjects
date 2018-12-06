@@ -1,4 +1,4 @@
-function [ proposal, P0, P0old ] = kowArPropose(y,x, OldAr)
+function [ proposal, P0, P0old, gammaHat, G ] = kowArPropose(y,x, OldAr)
 Arp = size(x,1);
 G = ((eye(Arp).*.01) +  x*x')\eye(Arp);
 gammahat = G*x*y';
