@@ -20,6 +20,17 @@ b0 = 1;
 B0 = 1;
 
 
-[f, f2, b, v] = kowdynfactorgibbs(kowy, kowx,  v0, r0,  20, 8);
+% [f, f2, b, v] = kowdynfactorgibbs(kowy, kowx,  v0, r0,  20, 8);
 
+g=normrnd(0,1,68,3,20);
 
+J=10;
+nFactors = size(g,1);
+for n = 1:nFactors
+    gammastar = mean(g(n,:,:),3);
+    
+end
+
+for j = 1:J
+
+end

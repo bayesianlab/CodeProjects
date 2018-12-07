@@ -158,5 +158,5 @@ Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
 sumFt2 = sumFt2./Runs;
 toc
-fprintf('Compute Marginal Likelihood\n')
+
 end
