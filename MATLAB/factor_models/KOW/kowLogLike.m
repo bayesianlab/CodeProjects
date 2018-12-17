@@ -1,15 +1,12 @@
-function [ ll ] = kowLogLike( demeanedy, ObsModel, ObsModelVariances,Sworld,...
-    Sregion, Scountry )
-T = size(demeanedy,1);
-worlddiag = diag(Sworld);
-regiondiag = diag(Sregion);
-countrydiag = diag(Scountry);
-ll=0;
-for t = 1:T
-    V = ObsModelVariances + (ObsModel(1)^2)*worlddiag(t) + ...
-            (ObsModel(2)^2)*regiondiag(t) + ...
-            (ObsModel(3)^2)*countrydiag(t);
-    ll = ll + log(mvnpdf(demeanedy(t), 0, V));
-end
+function [ ll ] = kowLogLike( countryguess, ydemu, StatePrecision, obsPrecision )
+speyet = speye(T);
+O = diag(obsPrecision);
+Oa = O*countryguess;
+kOa = kron(speyet, Oa);
+Middle =(StatePrecision +  kron(speyet, countryguess'*O*countryguess)) \ eye(T);
+P = spdiags(repmat(obsPrecision, T,1),0,K*T, K*T) - kOa* Middle *kOa';
+
+ll = kowOptimLogMvnPdf(ydemu, P);
+
 end
 

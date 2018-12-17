@@ -8,6 +8,7 @@ c = 0;
 R = [1;zeros(lags-1,1)];
 RRp = R*R';
 eyelagsquared = eye(lags^2);
+
 bottom = [eye(lags-1),zeros(lags-1,1)];
 Phi = [OldAr;bottom]; 
 P0old = reshape((eyelagsquared  - kron(Phi,Phi))\RRp(:), lags,lags);
