@@ -21,7 +21,7 @@ obsslice = worldobsmodel(t);
 pslice = obsEqnPrecision(t);
 [Sworldpre] = kowMakeVariance(WorldAr(1,:), 1, T);
 loglike = @(rg) -kowLL(rg, yslice(:),...
-        Sworldpre, pslice, eqnspblock,T);
+        Sworldpre, pslice);
     
 [themean, ~,~,~,~, Hessian] = fminunc(loglike, obsslice, options);
 notvalid = ~isfinite(sum(sum(Hessian)));
@@ -61,14 +61,14 @@ end
 iHessian = Hessian\eye(size(Hessian,1));
 updatedworldobsmod(t) = kowMhRestricted(obsslice,themean,iHessian,...
     Hessian,yslice(:), Sworldpre,pslice, WorldObsModelPriorPrecision,...
-    WorldObsModelPriorlogdet,  T);
+    WorldObsModelPriorlogdet);
  
 for b = 2:blocks
     selectC = t + (b-1)*eqnspblock;
     obsslice = worldobsmodel(selectC);
     yslice = ydemut(selectC, :);
     pslice = obsEqnPrecision(selectC);
-    loglike = @(rg) -kowLL(rg, yslice(:), Sworldpre, pslice, eqnspblock,T); 
+    loglike = @(rg) -kowLL(rg, yslice(:), Sworldpre, pslice); 
     [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,  eqnspblock,1),...
         options);
     [~,notpd] = chol(Hessian);
@@ -103,7 +103,7 @@ for b = 2:blocks
     end
     iHessian = Hessian\eye(size(Hessian,1));
     updatedworldobsmod(selectC) = kowMhUR(obsslice,themean,iHessian,yslice(:), Sworldpre,pslice,...
-            WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, eqnspblock, T);
+            WorldObsModelPriorPrecision, WorldObsModelPriorlogdet);
 
 end
 

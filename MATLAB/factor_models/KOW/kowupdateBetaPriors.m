@@ -1,5 +1,5 @@
-function [ b, demeanedyt ] = kowupdateBetaPriors(ys, SurX, obsModelPrecision, StateObsModel,...
-    StatePrecision, T )
+function [ b, demeanedyt, VarTerm ] = kowupdateBetaPriors(ys, SurX,...
+    obsModelPrecision, StateObsModel, StatePrecision, T )
 fprintf('\nBeginning beta update...\n')
 nEqns = length(obsModelPrecision);
 nFactors = size(StateObsModel,2);

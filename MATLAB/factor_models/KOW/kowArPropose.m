@@ -1,4 +1,4 @@
-function [ proposal, P0, P0old ] = kowArPropose(y,x, OldAr)
+function [ proposal, P0, P0old, gammahat, G ] = kowArPropose(y,x, OldAr)
 Arp = size(x,1);
 G = ((eye(Arp).*.01) +  x*x')\eye(Arp);
 gammahat = G*x*y';
@@ -8,6 +8,7 @@ c = 0;
 R = [1;zeros(lags-1,1)];
 RRp = R*R';
 eyelagsquared = eye(lags^2);
+
 bottom = [eye(lags-1),zeros(lags-1,1)];
 Phi = [OldAr;bottom]; 
 P0old = reshape((eyelagsquared  - kron(Phi,Phi))\RRp(:), lags,lags);

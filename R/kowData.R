@@ -126,8 +126,9 @@ colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rknaUSA',
 
 LogFirstDif <- log(KOW[2:55,2:181]) - log(KOW[1:54, 2:181])
 
-KOW <- cbind(KOW$year[2:55], LogFirstDifDeMean)
+KOWREAL <- cbind(KOW$year[2:55], LogFirstDifDeMean)
 colnames(KOW)[1] <- 'year'
 remove(LogFirstDif)
-remove(LogFirstDifDeMean)
+
+write.csv(KOW, '/Users/dillonflannery-valadez/Google\ Drive/Datasets/kowreal.csv', row.names = FALSE)
 
