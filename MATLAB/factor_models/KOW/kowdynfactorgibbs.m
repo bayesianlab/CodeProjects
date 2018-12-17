@@ -149,9 +149,6 @@ for i = 1 : Sims
             save(tempfilename2, 'tempitem2');
         end
     end
-    hold on 
-    plot(1964:2014,Ft(1,:))
-    drawnow
 end
 Runs = Sims-burnin;
 sumFt =  sumFt./Runs;
