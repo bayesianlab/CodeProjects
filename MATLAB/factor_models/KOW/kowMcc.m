@@ -6,6 +6,9 @@ end
 if ischar(burnin)
     burnin = str2num(burnin);
 end
+if ischar(ReducedRuns)
+    ReducedRuns = str2num(ReducedRuns)
+end
 load('kow.mat');
 K = size(kowy,1);
 rng(1)
