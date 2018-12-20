@@ -19,7 +19,7 @@ t = 1:eqnspblock;
 yslice = ydemut(t, :);
 obsslice = worldobsmodel(t);
 pslice = obsEqnPrecision(t);
-[Sworldpre] = kowMakeVariance(WorldAr(1,:), 1, T);
+[Sworldpre] = kowMakePrecision(WorldAr(1,:), 1, T);
 loglike = @(rg) -kowLL(rg, yslice(:),...
         Sworldpre, pslice);
     
@@ -102,8 +102,8 @@ for b = 2:blocks
         end
     end
     iHessian = Hessian\eye(size(Hessian,1));
-    updatedworldobsmod(selectC) = kowMhUR(obsslice,themean,iHessian,yslice(:), Sworldpre,pslice,...
-            WorldObsModelPriorPrecision, WorldObsModelPriorlogdet);
+    updatedworldobsmod(selectC) = kowMhUR(obsslice,themean,iHessian,yslice(:),...
+        Sworldpre,pslice,WorldObsModelPriorPrecision, WorldObsModelPriorlogdet);
 
 end
 
