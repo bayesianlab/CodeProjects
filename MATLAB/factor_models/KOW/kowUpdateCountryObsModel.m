@@ -21,7 +21,7 @@ for c= 1 :Countries
     ycslice = ydemut(selcoun, :);
     obsPrecisionSlice = obsEqnPrecision(selcoun);
     obsslice = countryObsModel(selcoun);
-    [Scountryprecision] = kowMakeVariance(CountryAr(c,:), 1, T);
+    [Scountryprecision] = kowMakePrecision(CountryAr(c,:), 1, T);
     loglike = @(cg) -kowLL(cg, ycslice(:),Scountryprecision,...
         obsPrecisionSlice);
     [themean, ~,~,~,~, Hessian] = fminunc(loglike, countryObsModel(selcoun),...

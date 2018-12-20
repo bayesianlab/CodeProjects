@@ -64,7 +64,7 @@ stacktrans = [WorldAr;RegionAr;CountryAr];
 StateObsModel = [currobsmod(:,1), IOregion .* currobsmod(:,2),...
     IOcountry .* currobsmod(:,3)];
 % The covariance matrix according to Fahrmeir and Kaufman
-Si = kowMakeVariance(stacktrans,1, T);
+Si = kowMakePrecision(stacktrans,1, T);
 % Vectorized state variable initialization and reshaped version
 % for fast matrix multiplication.
 vecF = kowUpdateLatent(ys(:), StateObsModel, Si, obsEqnVariances) ;
@@ -141,7 +141,7 @@ for i = 1 : Sims
     stacktrans = [WorldAr;RegionAr;CountryAr];
     
     %% Update the State Variance Matrix
-    Si = kowMakeVariance(stacktrans, 1, T);
+    Si = kowMakePrecision(stacktrans, 1, T);
 
     %% Store means and second moments
     if i > burnin
@@ -197,7 +197,7 @@ CountryAr = ArStar(countriesInFt, :);
 omegaGammaParameter = sumResiduals2./Runs;
 omegaStar = mean(storeObsVariance,2);
 obsPrecisionStar = 1./omegaStar;
-Sstar = kowMakeVariance(ArStar, 1, T);
+Sstar = kowMakePrecision(ArStar, 1, T);
 storeRRobsModel = zeros(Eqns, Arp, ReducedRuns);
 storeRRbeta = zeros(betaDim, ReducedRuns);
 sumFtRR = zeros(nFactors*T, 1);
@@ -379,7 +379,7 @@ for r = 1:RR
             CountryObsModelPriorPrecision , CountryObsModelPriorlogdet);
         
     else
-        Si = kowMakeVariance(ArStar,1,T);
+        Si = kowMakePrecision(ArStar,1,T);
         StateObsModel = [Astar(:,1), IOregion .* Astar(:,2),...
             IOcountry .* Astar(:,3)]; 
         for n = 1:ReducedRuns

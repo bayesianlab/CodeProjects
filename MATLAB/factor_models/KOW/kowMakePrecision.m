@@ -1,4 +1,4 @@
-function [  Sprecision, H] = kowMakeVariance(  stackedTransitions,  stateVariance, T )
+function [  Sprecision, H] = kowMakePrecision(  stackedTransitions,  stateVariance, T )
 [k, lags] = size(stackedTransitions);
 Tmlag = T- lags;
 

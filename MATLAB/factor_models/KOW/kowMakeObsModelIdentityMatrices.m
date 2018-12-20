@@ -1,5 +1,5 @@
-function [obsr, obsc] = kowMakeObsModelIdentityMatrices(Neqns, RegionIndices, SeriesPerCountry, Regions,Countries)
-
+function [obsr, obsc] = kowMakeObsModelIdentityMatrices(Neqns, RegionIndices, SeriesPerCountry,Countries)
+Regions = size(RegionIndices,1);
 obsr = zeros(Neqns, Regions);
 for i = 1:Regions
     obsr(RegionIndices(i,1):RegionIndices(i,2), i) = 1;

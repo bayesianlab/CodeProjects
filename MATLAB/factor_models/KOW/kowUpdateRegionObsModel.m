@@ -27,7 +27,7 @@ for c = 1:Countries
     if c == regionIndices(regioncount) 
         regioncount = regioncount + 1;
         regioncheck = regioncheck + 1;
-        [Sregionpre] = kowMakeVariance(RegionAr(regioncheck,:), 1, T);
+        [Sregionpre] = kowMakePrecision(RegionAr(regioncheck,:), 1, T);
         loglike = @(rg) -kowLL(rg, yslice(:),...
             Sregionpre, pslice); 
         [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,length(obsslice),1), options);
@@ -67,7 +67,7 @@ for c = 1:Countries
             iHessian, Hessian,yslice(:), Sregionpre,pslice,...
             CountryObsModelPriorPrecision, CountryObsModelPriorlogdet);
     else
-        [Sregionpre] = kowMakeVariance(RegionAr(regioncheck,:), 1, T);
+        [Sregionpre] = kowMakePrecision(RegionAr(regioncheck,:), 1, T);
         loglike = @(rg) -kowLL(rg, yslice(:),...
         Sregionpre, pslice); 
         [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,...
