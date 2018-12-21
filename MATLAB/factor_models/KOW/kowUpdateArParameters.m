@@ -3,7 +3,6 @@ fprintf('\nUpdating ar parameters on state variables\n')
 [Rows, ~] = size(StateVariables);
 accept = 0;
 zeroarp = zeros(1,Arp);
-storeForMl = zeros(Rows,1);
 for i = 1: Rows
     State = StateVariables(i,:);
     Ar = ArParams(i,:);
@@ -18,6 +17,5 @@ for i = 1: Rows
     end
    
 end
- fprintf('Accepted %.3f \n', accept/Rows)
 end
 
