@@ -1,4 +1,5 @@
 function [  ] = kowSim(Sims,burnin,dataset )
+pwd
 load(dataset)
 [K,T] = size(yt);
 initobsmodel = .1.*ones(K,3);
