@@ -1,6 +1,12 @@
 function [  ] = kowSim(Sims,burnin,dataset )
 pwd
-load(dataset)
+if ischar(Sims)
+    Sims = str2num(Sims);
+end
+if ischar(burnin)
+    burnin = str2num(burnin);
+end
+load('smallt')
 [K,T] = size(yt);
 initobsmodel = .1.*ones(K,3);
 initgamma = .3;
