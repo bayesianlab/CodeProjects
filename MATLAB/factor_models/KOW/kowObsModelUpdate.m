@@ -1,19 +1,16 @@
-function [  ] = kowObsModelUpdate(vecy, precision, StateTransition, oldMean,...
-    oldHessian, Restricted, guess)
-
+function [ draw,themean,Hessian ] = kowObsModelUpdate(vecy, precision, StatePrecision, oldMean,...
+    oldHessian, Restricted, PriorPre, logdetPriorPre, guess)
+MaxRecursionDepth = 1;
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-        'Display', 'off');
-T = length(vecy)/length(precision) 
-StatePrecision = kowMakePrecision(StateTransition, 1, T);
-oldMean
-oldHessian
+        'Display', 'off', 'MaxIterations', 30);
 [themean,Hessian] = kowOptimize(guess, vecy, StatePrecision,precision,oldMean,...
-    oldHessian, options, 1)
-
-% if Restricted == 1
-%     kowMHR
-% else
-%     kowMhUR
-% end
+    oldHessian, options, MaxRecursionDepth);
+if Restricted == 1
+    draw = kowMHR(guess,themean,Hessian,vecy,StatePrecision,precision,...
+        PriorPre,logdetPriorPre);
+else
+    draw = kowMHUnRes(guess,themean,Hessian,vecy,StatePrecision,precision,PriorPre,...
+        logdetPriorPre);
+end
 end
 
