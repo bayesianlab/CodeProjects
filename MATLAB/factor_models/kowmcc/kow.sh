@@ -7,4 +7,4 @@
 #$ -notify 
 #$ -M dillonflann@gmail.com
 module load MATLAB
-./kowMcc 10000 2000
+./kowMcc 10000 2000 5000
