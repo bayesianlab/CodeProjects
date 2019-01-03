@@ -6,7 +6,10 @@ end
 if ischar(burnin)
     burnin = str2num(burnin);
 end
-load('smallt')
+load(dataset)
+[K,T] = size(yt);
+initobsmodel = .1.*ones(K,3);
+initgamma = .3;
 [K,T] = size(yt);
 initobsmodel = .1.*ones(K,3);
 initgamma = .3;
