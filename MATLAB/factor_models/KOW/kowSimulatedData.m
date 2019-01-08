@@ -42,5 +42,12 @@ mu = ones(Countries*SeriesPerCountry, 1).* -.5;
     kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, mu, beta, G, gamma);
 save('smallt')
 clear;
-
+load('kowar1.mat')
+CountriesThatStartRegions = [1,4,6,24,42,49,55, -1];
+RegionIndices = [1,9;10,15;16,69;70,123;124,144;145,162;163,180];
+Countries = 60;
+SeriesPerCountry = 3;
+blocks = 36;
+save('kowdataJan7')
+clear
 

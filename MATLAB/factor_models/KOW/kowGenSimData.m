@@ -53,7 +53,6 @@ for t= 1:T
         fillx = s1 + (c-1)*SeriesPerCountry*(SeriesPerCountry+1);
         Xt(rowsx, fillx) = kron(eye(SeriesPerCountry), [1,yt(getCountry,t)']);
     end
-
 end
 % Take out an obs for VAR(1) 
 
