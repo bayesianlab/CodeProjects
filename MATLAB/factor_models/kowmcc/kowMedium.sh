@@ -1,6 +1,6 @@
 #!bin/bash
 #$ -S /bin/bash
-#$ -q ist
+#$ -q its
 #$ -N teniter_med
 #$ -l mem_free=8G
 #$ -cwd
