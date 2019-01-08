@@ -1,6 +1,6 @@
-function [sumFt, sumFt2, storeBeta, storeObsVariance, storeObsModel, storeStateTransitions, storeFt ] =...
+function [sumFt, sumFt2, storeBeta, storeObsVariance, storeObsModel, storeStateTransitions, storeFt, ml ] =...
     kowDynFac(yt, Xt, RegionIndices, CountriesThatStartRegions, Countries,...
-    SeriesPerCountry, initobsmodel, initgamma, blocks, Sims, burnin )
+    SeriesPerCountry, initobsmodel, initgamma, blocks, Sims, burnin, ReducedRuns )
 % sumResiduals2 are not averaged, should they be?
 [nEqns, T] = size(yt);
 [~, betaDim] = size(Xt);
@@ -52,7 +52,7 @@ storeObsModel = zeros(nEqns, 3, Sims-burnin);
 storeStateTransitions = zeros(nFactors, lags, Sims-burnin);
 sumLastHessianCountry = reshape(repmat(eye(SeriesPerCountry), 1, Countries), ...
     SeriesPerCountry, SeriesPerCountry, Countries);
-sumLastHessionRegion = reshape(repmat(eye(SeriesPerCountry), 1, Countries),...
+sumLastHessianRegion = reshape(repmat(eye(SeriesPerCountry), 1, Countries),...
     SeriesPerCountry, SeriesPerCountry, Countries);
 sumLastHessianWorld = reshape(repmat(eye(EqnsPerBlock),1,blocks), EqnsPerBlock,...
     EqnsPerBlock, blocks);
@@ -131,7 +131,7 @@ for i = 1 : Sims
         storeStateTransitions(:,:,v) = stateTransitions;
         sumResiduals2 = sumResiduals2 + r2;
         sumLastHessianCountry = sumLastHessianCountry + lastHessianCountry;
-        sumLastHessionRegion = sumLastHessionRegion + lastHessianRegion;
+        sumLastHessianRegion = sumLastHessianRegion + lastHessianRegion;
         sumLastHessianWorld = sumLastHessianWorld + lastHessianWorld;
         sumLastMeanCountry = sumLastMeanCountry + lastMeanCountry;
         sumLastMeanRegion = sumLastMeanRegion + lastMeanRegion;
@@ -141,5 +141,163 @@ end
 Runs = Sims- burnin;
 sumFt = sumFt./Runs;
 sumFt2 = sumFt2./Runs;
+
+fprintf('MAIN RUN COMPLETE\n')
+sumFtRR = zeros(nFactors*T, 1);
+storeRRbeta = zeros(betaDim, ReducedRuns);
+storeRRobsModel = zeros(nEqns, 3, ReducedRuns);
+gammaStar = mean(storeStateTransitions,3);
+omegaGammaParameter = sumResiduals2./Runs;
+Sstar = kowStatePrecision(gammaStar, 1, T);
+omegaStar = mean(storeObsVariance,2);
+obsPrecisionStar = 1./omegaStar;
+sumBetaVar = zeros(betaDim,betaDim);
+pistargamma = kowArMl(storeStateTransitions, gammaStar, sumFt);
+for rr = 1:3
+    fprintf('Reduced Run %i\n', rr)
+    if rr == 1
+        for n = 1:ReducedRuns
+            %% Reduced Run 1
+            %% Update mean function
+            [beta, ydemut, betaVar] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
+                StateObsModel, Sstar,  T);
+            sumBetaVar = sumBetaVar + betaVar;
+            storeRRbeta(:,n) = beta;
+            %% Update Obs model 
+            % WORLD: Zero out the world to demean y conditional on country, region
+            tempStateObsModel = [zeroOutWorld, IRegion .* currobsmod(:,2),...
+                ICountry.* currobsmod(:,3)];
+            tempydemut = ydemut - tempStateObsModel*Ft; 
+            [update,lastMeanWorld, lastHessianWorld, f] = kowWorldBlocks(tempydemut, obsPrecisionStar, currobsmod(:,1),...
+                stateTransitions(1), blocks, lastMeanWorld, lastHessianWorld,...
+                WorldObsModelPriorPrecision, WorldObsModelPriorlogdet);
+            currobsmod(:,1) = update;
+            Ft(1,:) = f;
+
+            % REGION: Zero out the region to demean y conditional on the world,country 
+            tempStateObsModel = [currobsmod(:,1),...
+                zeroOutRegion, ICountry.* currobsmod(:,3)];
+            tempydemut = ydemut - tempStateObsModel*Ft; 
+
+            [update, lastMeanRegion, lastHessianRegion, f] =  ...
+                    kowRegionBlocks(tempydemut,obsPrecisionStar,currobsmod(:,2),...
+                    stateTransitions(1+(1:Regions)), CountriesThatStartRegions,...
+                    SeriesPerCountry,Countries, lastMeanRegion,lastHessianRegion,...
+                    CountryPriorPrecision, CountryPriorlogdet);
+            currobsmod(:,2) = update;
+            Ft(RegionIndicesInFt,:) = f;
+
+            % COUNTRY: Zero out the world to demean y conditional on world, region
+            tempStateObsModel = [currobsmod(:,1), IRegion .* currobsmod(:,2),...
+                zeroOutCountry ];
+            tempydemut = ydemut - tempStateObsModel*Ft;
+            [update, lastMeanRegion, lastHessianRegion, f] = ...
+                kowCountryBlocks(tempydemut, obsPrecisionStar, currobsmod(:,3),...
+                    stateTransitions(CountryIndicesInFt),SeriesPerCountry, Countries,...
+                    lastMeanCountry, lastHessianCountry, CountryPriorPrecision, CountryPriorlogdet);
+           currobsmod(:,3) = update;
+           Ft(CountryIndicesInFt, :) = f;
+
+            StateObsModel = [currobsmod(:,1), IRegion .* currobsmod(:,2),...
+                ICountry.* currobsmod(:,3)];
+        end
+        betaStar = mean(storeRRbeta,2);
+        sumBetaVar = sumBetaVar./ReducedRuns;
+        ydemut = reshape(yt(:) - Xt*betaStar, nEqns, T);
+    elseif rr == 2
+        for n = 1:ReducedRuns
+            %% Update Obs model 
+            % WORLD: Zero out the world to demean y conditional on country, region
+            tempStateObsModel = [zeroOutWorld, IRegion .* currobsmod(:,2),...
+                ICountry.* currobsmod(:,3)];
+            tempydemut = ydemut - tempStateObsModel*Ft; 
+            [update,lastMeanWorld, lastHessianWorld, f] = kowWorldBlocks(tempydemut, obsPrecisionStar, currobsmod(:,1),...
+                stateTransitions(1), blocks, lastMeanWorld, lastHessianWorld,...
+                WorldObsModelPriorPrecision, WorldObsModelPriorlogdet);
+            currobsmod(:,1) = update;
+            Ft(1,:) = f;
+
+            % REGION: Zero out the region to demean y conditional on the world,country 
+            tempStateObsModel = [currobsmod(:,1),...
+                zeroOutRegion, ICountry.* currobsmod(:,3)];
+            tempydemut = ydemut - tempStateObsModel*Ft; 
+
+            [update, lastMeanRegion, lastHessianRegion, f] =  ...
+                    kowRegionBlocks(tempydemut,obsPrecisionStar,currobsmod(:,2),...
+                    stateTransitions(1+(1:Regions)), CountriesThatStartRegions,...
+                    SeriesPerCountry,Countries, lastMeanRegion,lastHessianRegion,...
+                    CountryPriorPrecision, CountryPriorlogdet);
+            currobsmod(:,2) = update;
+            Ft(RegionIndicesInFt,:) = f;
+
+            % COUNTRY: Zero out the world to demean y conditional on world, region
+            tempStateObsModel = [currobsmod(:,1), IRegion .* currobsmod(:,2),...
+                zeroOutCountry ];
+            tempydemut = ydemut - tempStateObsModel*Ft;
+            [update, lastMeanRegion, lastHessianRegion, f] = ...
+                kowCountryBlocks(tempydemut, obsPrecisionStar, currobsmod(:,3),...
+                    stateTransitions(CountryIndicesInFt),SeriesPerCountry, Countries,...
+                    lastMeanCountry, lastHessianCountry, CountryPriorPrecision, CountryPriorlogdet);
+           currobsmod(:,3) = update;
+           Ft(CountryIndicesInFt, :) = f;
+
+            StateObsModel = [currobsmod(:,1), IRegion .* currobsmod(:,2),...
+                ICountry.* currobsmod(:,3)];
+            storeRRobsModel(:,:,n) = currobsmod;
+            sumLastHessianCountry = sumLastHessianCountry + lastHessianCountry;
+            sumLastHessianRegion = sumLastHessianRegion + lastHessianRegion; 
+            sumLastHessianWorld = sumLastHessianWorld + lastHessianWorld;
+            sumLastMeanCountry = sumLastMeanCountry + lastMeanCountry;
+            sumLastMeanRegion = sumLastMeanRegion + lastMeanRegion;
+            sumLastMeanWorld = sumLastMeanWorld + lastMeanWorld;             
+        end
+        sumLastHessianCountry = sumLastHessianCountry./ReducedRuns;
+        sumLastHessianRegion = sumLastHessianRegion./ReducedRuns;
+        sumLastHessianWorld = sumLastHessianWorld./ReducedRuns;
+        sumLastMeanCountry = sumLastMeanCountry./ReducedRuns;
+        sumLastMeanRegion = sumLastMeanRegion ./ ReducedRuns;
+        sumLastMeanWorld = sumLastMeanWorld ./ReducedRuns;
+        Astar = mean(storeRRobsModel,3);
+        StateObsModelStar = [Astar(:,1), IRegion .* Astar(:,2),...
+            ICountry .* Astar(:,3)]; 
+    else
+        for n = 1:ReducedRuns
+            [Ftrr, P] = kowUpdateLatent(ydemut(:), StateObsModelStar, Sstar,...
+                obsPrecisionStar);
+            sumFtRR = sumFtRR + Ftrr;                 
+        end        
+    end
+end
+piastarworld = kowObsModelReducedRunWorld(squeeze(storeRRobsModel(:,1,:)),...
+    ydemut, obsPrecisionStar, Astar(:,1), sumLastMeanWorld,...
+    sumLastHessianWorld, WorldAr, blocks, nEqns,...
+    WorldObsModelPriorPrecision , WorldObsModelPriorlogdet);
+piastarregion = kowObsModelReducedRunRegion(squeeze(storeRRobsModel(:,2,:)), ydemut,...
+    obsPrecisionStar, Astar(:,2), sumLastMeanRegion,...
+    sumLastHessianRegion, RegionAr, Countries, nEqns,...
+    CountryPriorPrecision , CountryPriorlogdet,...
+    CountriesThatStartRegions);
+piastarcountry = kowObsModelReducedRunCountry(squeeze(storeRRobsModel(:,3,:)),...
+    ydemut, obsPrecisionStar, Astar(:,3), sumLastMeanCountry,...
+    sumLastHessianCountry, CountryAr, Countries,...
+    CountryPriorPrecision , CountryPriorlogdet);
+Ftstar = sumFtRR./ReducedRuns;
+% Integrate out Ft
+fyGivenThetaStar = kowLL(StateObsModelStar, ydemut(:), Sstar, obsPrecisionStar) +...
+    logmvnpdf(Ftstar', zeros(1,nFactors*T), eye(nFactors*T)*100) -...
+    logmvnpdf(Ftstar',Ftstar', P);
+priorBetaStar = logmvnpdf(betaStar', zeros(1,betaDim), eye(betaDim)*100);
+priorAstar = logmvnpdf(Astar, zeros(size(Astar,1), size(Astar,2)),...
+    eye(size(Astar,2)).*100)';
+priorOmegaStar = logigampdf(obsPrecisionStar, .5*v0, .5*r0);
+priorGammaStar = logmvnpdf(gammaStar, zeros(size(gammaStar,1), size(gammaStar,2)),...
+    eye(size(gammaStar,2)).*100)';
+priorStar = sum([priorBetaStar;priorAstar;priorOmegaStar;priorGammaStar]);
+posteriorStar = sum([pistargamma;...
+    logigampdf(omegaStar, (T+v0)/2, 2./(omegaGammaParameter + r0));...
+    logmvnpdf(betaStar',betaStar', sumBetaVar);...
+    piastarcountry;piastarworld;piastarregion],1);
+
+ml = fyGivenThetaStar + priorStar - posteriorStar;
 end
 

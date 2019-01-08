@@ -20,7 +20,7 @@ for b = 1:blocks
     thetaMean = oldMean(:,b);
     Precision = oldHessian(:,:,b);
     thetaVariance = eyeeqns/Precision;
-    StatePrecision = kowMakeVariance(worldAR, 1, T);
+    StatePrecision = kowStatePrecision(worldAR, 1, T);
     for r = 1:rrcols
         if b == 1
             thetag = blockb(:, r);

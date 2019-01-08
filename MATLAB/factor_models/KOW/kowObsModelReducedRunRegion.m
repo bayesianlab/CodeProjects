@@ -26,7 +26,7 @@ for c = 1:blocks
         if c == regionIndices(regioncount) 
             regioncount = regioncount + 1;
             regioncheck = regioncheck + 1;
-            [StatePrecision] = kowMakeVariance(RegionAr(regioncheck,:), 1, T);        
+            [StatePrecision] = kowStatePrecision(RegionAr(regioncheck,:), 1, T);        
             thetag = blockb(:,r);
             % Draw new value based on ordinate for denominator alpha
             w1 = sqrt(chi2rnd(df,1)/df);
@@ -68,7 +68,7 @@ for c = 1:blocks
             alphagtostar = min(0,Num - Den);
             numeratorterm(r) = alphagtostar + PropD;
         else
-            [StatePrecision] = kowMakeVariance(RegionAr(regioncheck,:), 1, T);
+            [StatePrecision] = kowStatePrecision(RegionAr(regioncheck,:), 1, T);
             % Unrestricted cases 
             % Denominator terms
             w1 = sqrt(chi2rnd(df,1)/df);

@@ -15,7 +15,6 @@ for i = 1: Rows
         accept = accept + 1;
         ArParams(i,:) = proposal;
     end
-   
 end
 end
 

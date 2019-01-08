@@ -351,14 +351,14 @@ for r = 1:RR
             % Store the observation model at the posterior ordinate
             storeRRobsModel(:,:,n) = currobsmod;
             sumOldHessianCountry = sumOldHessianCountry + oldHessianCountry;
-            sumOldHessionRegion = sumOldHessionRegion + oldHessianRegion;
+            sumOldHessionRegion = sumOldHessianRegion + oldHessianRegion;
             sumOldHessianWorld = sumOldHessianWorld + oldHessianWorld;
             sumOldMeanCountry = sumOldMeanCountry + oldMeanCountry;
             sumOldMeanRegion = sumOldMeanRegion + oldMeanRegion;
             sumOldMeanWorld = sumOldMeanWorld + oldMeanWorld;            
         end
         sumOldHessianCountry = sumOldHessianCountry./ReducedRuns;
-        sumOldHessianRegion = sumOldHessionRegion./ReducedRuns;
+        sumOldHessianRegion = sumOldHessianRegion./ReducedRuns;
         sumOldHessianWorld = sumOldHessianWorld./ReducedRuns;
         sumOldMeanCountry = sumOldMeanCountry./ReducedRuns;
         sumOldMeanRegion = sumOldMeanRegion ./ ReducedRuns;
@@ -403,8 +403,8 @@ priorGammaStar = logmvnpdf(ArStar, zeros(size(ArStar,1), size(ArStar,2)),...
     eye(size(ArStar,2)).*100)';
 priorStar = sum([priorBetaStar;priorAstar;priorOmegaStar;priorGammaStar]);
 posteriorStar = sum([piastarcountry;piastarworld; piastarregion;pistargamma;...
-    logigampdf(omegaStar, (T+v0)/2, 2./(omegaGammaParameter + r0))],1) +...
-    logmvnpdf(betaStar', betaStar', sumbetaVar);
+    logigampdf(omegaStar, (T+v0)/2, 2./(omegaGammaParameter + r0));...
+    logmvnpdf(betaStar', betaStar', sumbetaVar)],1);
 
 ml = fygivenFtstar + priorStar - posteriorStar;
 end

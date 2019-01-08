@@ -21,7 +21,7 @@ for c = 1:blocks
     thetaMean = oldMean(:,c);
     Precision = oldHessian(:,:,c);
     thetaVariance = eyeeqns/Precision;
-    [StatePrecision] = kowMakeVariance(CountryAr(c,:), 1, T);        
+    [StatePrecision] = kowStatePrecision(CountryAr(c,:), 1, T);        
     for r = 1:rrcols
         thetag = blockb(:,r);
         % Draw new value based on ordinate for denominator alpha
