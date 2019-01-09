@@ -2,7 +2,7 @@ clear;clc;
 % Dimension and setup
 rng(1.6)
 T = 500;
-Gsim = [-.5, -.3, .25];
+Gsim = [-.3, .5, -.3];
 gamma = .3;
 SeriesPerCountry = 3;
 betaSim = [.3, -.5, .25];
@@ -16,7 +16,7 @@ save('longt')
 clear;
 rng(1.6)
 T = 100;
-Gsim = [-.5, -.3, .25];
+Gsim = [-.3, .5, -.3];
 gamma = .3;
 SeriesPerCountry = 3;
 betaSim = [.3, -.5, .25];
@@ -30,7 +30,7 @@ save('onehundredt')
 clear;
 rng(1.6)
 T = 75;
-Gsim = [-.5, -.3, .25];
+Gsim = [-.3, .5, -.3];
 gamma = .3;
 SeriesPerCountry = 3;
 betaSim = [.3, -.5, .25];

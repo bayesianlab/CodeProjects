@@ -32,6 +32,7 @@ for b = 1:Countries
     end
 end
 f = zeros(NF, T);
+
 for i = 1:NF
     f(i,:) = kowUpdateLatent(yt(:), obsupdate,saveStatePrecisions(:,:,i), precision);
 end
