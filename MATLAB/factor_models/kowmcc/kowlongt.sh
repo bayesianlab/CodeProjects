@@ -7,4 +7,4 @@
 #$ -notify 
 #$ -M dillonflann@gmail.com
 module load MATLAB
-./kowSim 2000 500 longt
+./kowSim 2000 500 1000 6 longt
