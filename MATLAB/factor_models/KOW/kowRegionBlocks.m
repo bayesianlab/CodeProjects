@@ -18,7 +18,7 @@ for b = 1:Countries
         Restricted = 1;
         regioncount = regioncount + 1;
         regionselect = regionselect + 1;
-        [StatePrecision] = kowMakePrecision(StateTransitions(regionselect,:), 1, T);
+        [StatePrecision] = kowStatePrecision(StateTransitions(regionselect,:), 1, T);
         [obsupdate(selectC),lastMeanUpdate(:,b),lastHessianUpdate(:,:,b)] =...
             kowObsModelUpdate(yslice(:), pslice, StatePrecision, lastMean(:,b),...
             lastHessian(:,:,b), Restricted, PriorPre, logdetPriorPre, guess);
@@ -33,7 +33,7 @@ for b = 1:Countries
 end
 f = zeros(NF, T);
 for i = 1:NF
-    f(i,:) = kowUpdateLatent(yt(:), RegionObsModel,saveStatePrecisions(:,:,i), precision);
+    f(i,:) = kowUpdateLatent(yt(:), obsupdate,saveStatePrecisions(:,:,i), precision);
 end
 end
 

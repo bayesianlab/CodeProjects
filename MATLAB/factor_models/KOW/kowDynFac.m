@@ -89,7 +89,7 @@ for i = 1 : Sims
     currobsmod(:,2) = update;
     Ft(RegionIndicesInFt,:) = f;
     
-    % COUNTRY: Zero out the world to demean y conditional on world, region
+    % COUNTRY: Zero out the country to demean y conditional on world, region
     tempStateObsModel = [currobsmod(:,1), IRegion .* currobsmod(:,2),...
         zeroOutCountry ];
     tempydemut = ydemut - tempStateObsModel*Ft;
@@ -141,7 +141,6 @@ end
 Runs = Sims- burnin;
 sumFt = sumFt./Runs;
 sumFt2 = sumFt2./Runs;
-
 fprintf('MAIN RUN COMPLETE\n')
 sumFtRR = zeros(nFactors*T, 1);
 storeRRbeta = zeros(betaDim, ReducedRuns);
@@ -297,7 +296,9 @@ posteriorStar = sum([pistargamma;...
     logigampdf(omegaStar, (T+v0)/2, 2./(omegaGammaParameter + r0));...
     logmvnpdf(betaStar',betaStar', sumBetaVar);...
     piastarcountry;piastarworld;piastarregion],1);
-
+fyGivenThetaStar
+priorStar
+posteriorStar
 ml = fyGivenThetaStar + priorStar - posteriorStar;
 end
 

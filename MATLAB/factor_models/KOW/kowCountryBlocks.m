@@ -10,7 +10,7 @@ lastHessianUpdate = zeros(SeriesPerCountry, SeriesPerCountry, Countries);
 t = 1:SeriesPerCountry;
 Restricted = 1;
 for c = 1:Countries
-    StatePrecision = kowMakePrecision(StateTransitions(c), 1, T);
+    StatePrecision = kowStatePrecision(StateTransitions(c), 1, T);
     selcoun = t + (c-1)*SeriesPerCountry;
     yslice = yt(selcoun, :);
     pslice = precision(selcoun);
@@ -23,7 +23,7 @@ for c = 1:Countries
 end
 f = zeros(NF, T);
 for i = 1:NF
-    f(i,:) = kowUpdateLatent(yt(:), CountryObsModel, saveStatePrecisions(:,:,i), precision);
+    f(i,:) = kowUpdateLatent(yt(:), obsupdate, saveStatePrecisions(:,:,i), precision);
 end
 end
 
