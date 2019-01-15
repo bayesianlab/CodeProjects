@@ -16,6 +16,8 @@ blocks = 1;
 EqnsPerBlock = K/blocks;
 lastMeanWorld = zeros(K,1);
 lastHessianWorld = eye(K);
+ObsPriorMean = ones(1,K);
+ObsPriorVar = eye(K).*100;
 WorldObsModelPriorPrecision = 1e-2.*eye(EqnsPerBlock);
 WorldObsModelPriorlogdet = EqnsPerBlock*log(1e-2);
 % Ft = zeros(1,T);
@@ -38,7 +40,7 @@ for i = 1 : Sims
     % WORLD: Zero out the world to demean y conditional on country, region
     [update,lastMeanWorld, lastHessianWorld, f] = kowWorldBlocks(ydemut, obsPrecision, currobsmod(:,1),...
         stateTransitions(1), blocks, lastMeanWorld, lastHessianWorld,...
-        WorldObsModelPriorPrecision, WorldObsModelPriorlogdet);
+        WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, ObsPriorMean,ObsPriorVar, Ft);
     currobsmod(:,1) = update
 %     Ft(1,:) = f;
     

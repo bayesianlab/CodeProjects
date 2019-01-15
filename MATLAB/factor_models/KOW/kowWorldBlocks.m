@@ -1,6 +1,6 @@
 function [obsupdate, lastMeanUpdate, lastHessianUpdate,f  ] = ...
     kowWorldBlocks( yt, precision, WorldObsModel, StateTransition,...
-    blocks, lastMean, lastHessian, PriorPre, logdetPriorPre )
+    blocks, lastMean, lastHessian, PriorPre, logdetPriorPre, ObsPriorMean,ObsPriorVar, factor )
 [nEqns, T] = size(yt);
 obsupdate = zeros(length(WorldObsModel),1);
 EqnsPerblock = nEqns/blocks;
@@ -17,12 +17,12 @@ for b = 1:blocks
        Restricted = 1;
        [obsupdate(index), lastMeanUpdate(:,1), lastHessianUpdate(:,:,1)] =...
            kowObsModelUpdate(yslice(:), pslice, StatePrecision, lastMean(:,b),...
-           lastHessian(:,:,b), Restricted, PriorPre, logdetPriorPre, guess);
+                lastHessian(:,:,b), Restricted, PriorPre, logdetPriorPre, guess, ObsPriorMean,ObsPriorVar, factor, yslice);
    else
        Restricted = 0;
        [obsupdate(index), lastMeanUpdate(:,b), lastHessianUpdate(:,:,b)] =...
            kowObsModelUpdate(yslice(:), pslice, StatePrecision, lastMean(:,b),...
-           lastHessian(:,:,b), Restricted, PriorPre,logdetPriorPre, guess);
+                lastHessian(:,:,b), Restricted, PriorPre,logdetPriorPre, guess, ObsPriorMean,ObsPriorVar, factor);
    end
 end
 f = kowUpdateLatent(yt(:),obsupdate, StatePrecision, precision)';

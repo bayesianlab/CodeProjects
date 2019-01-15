@@ -1,6 +1,7 @@
+clear;clc;
 rng(5)
 load('sdtest.mat')
-Sims = 1000;
+Sims = 100;
 burnin = floor(.1*Sims);
 [sumFt, sumFt2, storeBeta, storeObsVariance, storeObsModel,...
     storeStateTransitions, storeFt] = kowTest(yt,Xt,Sims, burnin, [muSim;betaSim], Gsim, gammaSim, Factor);
