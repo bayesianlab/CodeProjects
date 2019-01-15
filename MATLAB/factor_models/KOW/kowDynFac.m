@@ -66,6 +66,9 @@ for i = 1 : Sims
         StateObsModel, Si,  T);
     
     %% Update Obs model 
+    
+
+    
     % WORLD: Zero out the world to demean y conditional on country, region
     tempStateObsModel = [zeroOutWorld, IRegion .* currobsmod(:,2),...
         ICountry.* currobsmod(:,3)];
@@ -79,8 +82,7 @@ for i = 1 : Sims
     % REGION: Zero out the region to demean y conditional on the world,country 
     tempStateObsModel = [currobsmod(:,1),...
         zeroOutRegion, ICountry.* currobsmod(:,3)];
-    tempydemut = ydemut - tempStateObsModel*Ft; 
-
+    tempydemut = ydemut - tempStateObsModel*Ft;
     [update, lastMeanRegion, lastHessianRegion, f] =  ...
             kowRegionBlocks(tempydemut,obsPrecision,currobsmod(:,2),...
             stateTransitions(1+(1:Regions)), CountriesThatStartRegions,...
@@ -89,7 +91,7 @@ for i = 1 : Sims
     currobsmod(:,2) = update;
     Ft(RegionIndicesInFt,:) = f;
     
-    % COUNTRY: Zero out the world to demean y conditional on world, region
+    % COUNTRY: Zero out the country to demean y conditional on world, region
     tempStateObsModel = [currobsmod(:,1), IRegion .* currobsmod(:,2),...
         zeroOutCountry ];
     tempydemut = ydemut - tempStateObsModel*Ft;
@@ -141,7 +143,6 @@ end
 Runs = Sims- burnin;
 sumFt = sumFt./Runs;
 sumFt2 = sumFt2./Runs;
-
 fprintf('MAIN RUN COMPLETE\n')
 sumFtRR = zeros(nFactors*T, 1);
 storeRRbeta = zeros(betaDim, ReducedRuns);
