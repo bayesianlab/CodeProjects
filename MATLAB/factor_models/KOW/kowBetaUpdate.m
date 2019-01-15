@@ -32,6 +32,6 @@ VarTerm = speye(cx) + addup - (XstarPinv*Xstar);
 NumeratorTerm = sumup - (XstarPinv*ystar);
 b = solveSystem(VarTerm, NumeratorTerm);
 [L] = chol(VarTerm, 'lower');
-b = b+mvnrndPrecision(diag(L), tril(L,-1));
+b = mvnrndPrecision(b,diag(L), tril(L,-1));
 ydemut = reshape(vecy - SurX*b, nEqns, T);
 end

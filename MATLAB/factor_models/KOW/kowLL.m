@@ -5,11 +5,10 @@ R = size(ydemu,1);
 T = R/K;
 eyespsize = speye(SPSize);
 eyet = speye(T);
-O = diag(obsPrecision);
-Oa = O*obsModelTransition;
-kOa = kron(eyet, Oa);
-Middle =(StatePrecision +  kron(eyet, obsModelTransition'*Oa)) \ eyespsize;
-P = spdiags(repmat(obsPrecision, T,1),0,K*T, K*T) - kOa* Middle *kOa';
+Oi = diag(obsPrecision);
+OiA = Oi*obsModelTransition;
+Middle = (StatePrecision + kron(eyet, obsModelTransition'*OiA))\eyespsize;
+P = kron(eyet, Oi) - (kron(eyet,OiA)*Middle*kron(eyet,OiA'));
 ll = kowOptimLogMvnPdf(ydemu, P);
 end
 
