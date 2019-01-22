@@ -7,17 +7,16 @@ ObsPriorInv = ObsPriorVar\eye(sizeA);
 OmegaInv = diag(Omega.^(-1));
 f2Oi = (factor*factor').*OmegaInv;
 Phi = (ObsPriorInv + f2Oi)\eye(sizeA);
-phi = (Phi*(sum(factor.*(OmegaInv*ydemut),2) + ObsPriorInv*ObsPriorMean'))';
-PartA = logmvnpdf(ObsModel',phi,Phi);
+phi = Phi*(ObsPriorInv*ObsPriorMean' + sum(factor.*(OmegaInv*ydemut),2));
+PartA = logmvnpdf(ObsModel',phi',Phi);
 % f|A
 AOi = ObsModel'*OmegaInv;
 AOiA = AOi*ObsModel;
 kAOiA = kron(speyet, AOiA);
 Vprecision = factorPrecision + kAOiA;
 Vvar = Vprecision\eye(size(Vprecision,1));
-theta = kron(speyet,AOi)*ydemut(:);
-fmean = Vvar*theta;
+fmean = Vvar*(kron(speyet,AOi)*ydemut(:));
 PartB = logmvnpdf(factor, fmean', Vvar);
-Ans = PartA - PartB;
+Ans = -(PartA - PartB);
 end
 

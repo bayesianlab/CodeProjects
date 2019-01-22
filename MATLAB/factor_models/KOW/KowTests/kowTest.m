@@ -1,5 +1,6 @@
 function [sumFt, sumFt2, storeBeta, storeObsVariance, storeObsModel,...
-    storeStateTransitions, storeFt] = kowTest(yt, Xt, Sims, burnin, initBeta, initobsmod, initGamma, Factor  )
+    storeStateTransitions, storeFt] = kowTest(yt, Xt, Sims,...
+    burnin, initBeta, initobsmod, initGamma, Factor, v0, r0  )
 [K,T] = size(yt);
 betaDim=size(Xt,2);
 obsPrecision = ones(K,1);
@@ -7,8 +8,9 @@ obsVariance = 1./obsPrecision;
 currobsmod = initobsmod;
 StateObsModel = currobsmod;
 stateTransitions = initGamma;
-beta = repmat(initBeta, K,1);
+beta = initBeta(:);
 resids = yt(:) - Xt*beta;
+
 ydemut = reshape(resids, K,T);
 r2 = resids'*resids;
 Si = kowStatePrecision(stateTransitions, 1, T);
@@ -16,12 +18,13 @@ blocks = 1;
 EqnsPerBlock = K/blocks;
 lastMeanWorld = zeros(K,1);
 lastHessianWorld = eye(K);
-ObsPriorMean = ones(1,K);
-ObsPriorVar = eye(K).*100;
+ObsPriorMean = initobsmod';
+ObsPriorVar = eye(K).*1e2;
 WorldObsModelPriorPrecision = 1e-2.*eye(EqnsPerBlock);
 WorldObsModelPriorlogdet = EqnsPerBlock*log(1e-2);
 % Ft = zeros(1,T);
 Ft = Factor(1,1:end-1);
+residuals = reshape(resids, K,T) - StateObsModel*Ft;
 sumFt = zeros(1, T);
 sumFt2 = sumFt;
 sumResiduals2 = zeros(K,1);
@@ -30,6 +33,7 @@ storeBeta = zeros(betaDim, Sims -burnin);
 storeObsVariance = zeros(K,Sims -burnin);
 storeObsModel = zeros(K, 1, Sims-burnin);
 storeStateTransitions = zeros(K, 1, Sims-burnin);
+ss= sqrt(diag(reshape(resids,K,T)*reshape(resids,K,T)'./T));
 for i = 1 : Sims
     fprintf('\n\n  Iteration %i\n', i)
     %% Update mean function
@@ -38,13 +42,12 @@ for i = 1 : Sims
     
     %% Update Obs model 
     % WORLD: Zero out the world to demean y conditional on country, region
-    [update,lastMeanWorld, lastHessianWorld, f] = kowWorldBlocks(ydemut, obsPrecision, currobsmod(:,1),...
-        stateTransitions(1), blocks, lastMeanWorld, lastHessianWorld,...
-        WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, ObsPriorMean,ObsPriorVar, Ft);
-    currobsmod(:,1) = update
-%     Ft(1,:) = f;
+%     [update,lastMeanWorld, lastHessianWorld, f] = kowWorldBlocks(ydemut, obsPrecision, currobsmod(:,1),...
+%         stateTransitions(1), blocks, lastMeanWorld, lastHessianWorld,...
+%         WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, ObsPriorMean,ObsPriorVar, Ft, i, burnin);
+%     currobsmod(:,1) = update;
+
     
-%     Ft(1,:) = kowUpdateLatent(resids(:),currobsmod,Si, obsPrecision)';
 
     %% Update Obs Equation Variances
 %     residuals = ydemut - StateObsModel*Ft;
@@ -53,7 +56,7 @@ for i = 1 : Sims
     
     %% Update State Transition Parameters
 %     [WorldAr] = kowUpdateArParameters(stateTransitions(1), Ft(1,:), 1);
-%     stateTransitions = [WorldAr];
+%     stateTransitions = [WorldAr]
     
     %% Update the State Variance Matrix
 %     Si = kowStatePrecision(stateTransitions, 1, T);

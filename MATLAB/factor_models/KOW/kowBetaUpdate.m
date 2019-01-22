@@ -1,4 +1,4 @@
-function [ b, ydemut, VarTerm ] = kowBetaUpdate(vecy, SurX,...
+function [ b, ydemut, Precision ] = kowBetaUpdate(vecy, SurX,...
     obsModelPrecision, StateObsModel, StatePrecision, T )
 %% Validated.
 fprintf('\nBeginning beta update...\n')
@@ -28,10 +28,10 @@ for t = 1:T
     ystar(pick, :) = Astar*tmpy;
 end
 XstarPinv = Xstar'*(Inside\speye(size(Inside,1)));
-VarTerm = speye(cx) + addup - (XstarPinv*Xstar);
+Precision = speye(cx) + addup - (XstarPinv*Xstar);
 NumeratorTerm = sumup - (XstarPinv*ystar);
-b = solveSystem(VarTerm, NumeratorTerm);
-[L] = chol(VarTerm, 'lower');
-b = mvnrndPrecision(b,diag(L), tril(L,-1));
+Variance = Precision\speye(cx);
+b = Variance*NumeratorTerm;
+b = mvnrnd(b',Variance)';
 ydemut = reshape(vecy - SurX*b, nEqns, T);
 end

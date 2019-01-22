@@ -1,7 +1,7 @@
 function [ proposal, P0, P0old, gammahat, G ] = kowArPropose(y,x, OldAr)
 Arp = size(x,1);
 G = ((eye(Arp).*.01) +  x*x')\eye(Arp);
-gammahat = G*x*y';
+gammahat = G*((eye(Arp)*ones(Arp,1).*.01) +  x*y');
 keepproposing = 1;
 c = 0;
 R = [1;zeros(Arp-1,1)];
