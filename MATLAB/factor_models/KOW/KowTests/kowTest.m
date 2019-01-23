@@ -24,16 +24,9 @@ WorldObsModelPriorPrecision = 1e-2.*eye(EqnsPerBlock);
 WorldObsModelPriorlogdet = EqnsPerBlock*log(1e-2);
 % Ft = zeros(1,T);
 Ft = Factor(1,1:end-1);
-residuals = reshape(resids, K,T) - StateObsModel*Ft;
-sumFt = zeros(1, T);
-sumFt2 = sumFt;
-sumResiduals2 = zeros(K,1);
-storeFt = zeros(1,T, Sims-burnin);
-storeBeta = zeros(betaDim, Sims -burnin);
-storeObsVariance = zeros(K,Sims -burnin);
-storeObsModel = zeros(K, 1, Sims-burnin);
-storeStateTransitions = zeros(K, 1, Sims-burnin);
-ss= sqrt(diag(reshape(resids,K,T)*reshape(resids,K,T)'./T));
+[sumFt,sumFt2, sumResiduals2, storeFt, storeBeta,...
+    storeObsVariance, storeObsModel, storeStateTransitions] =...
+      kowMakeStorageContainers(Sims,burnin,betaDim, K, T,1)
 for i = 1 : Sims
     fprintf('\n\n  Iteration %i\n', i)
     %% Update mean function
@@ -47,7 +40,7 @@ for i = 1 : Sims
 %         WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, ObsPriorMean,ObsPriorVar, Ft, i, burnin);
 %     currobsmod(:,1) = update;
 
-    
+
 
     %% Update Obs Equation Variances
 %     residuals = ydemut - StateObsModel*Ft;
