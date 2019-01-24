@@ -1,27 +1,27 @@
-function [ draw ] = kowMHUnRes(notcandidate, optimalMean, Hessian, ydemu,...
-    StatePrecision, obsPrecision, PriorPre,...
-    logdetPriorPre  )
-iHessian = Hessian\eye(size(Hessian,1));
+function [ draw ] = kowMHUnRes(notcandidate, optimalMean, Precision, ydemut,...
+     obsPrecision, ObsPriorMean, ObsPriorVar, factor, StatePrecision)
+Variance = Precision\eye(size(Precision,1));
 df = 15;
 
-candidate = optimalMean + chol(iHessian, 'lower')*...
-    normrnd(0,1,size(iHessian,1),1)./(sqrt(chi2rnd(df,1,1)/df));
-llhoodnum= kowLL(candidate, ydemu, StatePrecision,...
-    obsPrecision);
-llhoodden= kowLL(notcandidate, ydemu, StatePrecision,...
-    obsPrecision);
+candidate = optimalMean + chol(Variance, 'lower')*...
+    normrnd(0,1,size(Variance,1),1)./(sqrt(chi2rnd(df,1,1)/df));
 
-Like = llhoodnum + kowEvalPriorsForObsModel(candidate, PriorPre, ...
-    logdetPriorPre);
-Prop = mvstudenttpdf(notcandidate, optimalMean, iHessian, df);
+%% MH step
+% Numerator
+numLikelihood = kowRatioLL(ydemut, candidate, ...
+    ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) ;
+Like = numLikelihood;
+Prop = mvstudenttpdf(notcandidate, optimalMean, Variance, df);
 Num = Like + Prop ;
 
-Like = llhoodden + kowEvalPriorsForObsModel(notcandidate, PriorPre, ...
-    logdetPriorPre);
-Prop = mvstudenttpdf(candidate, optimalMean, iHessian, df);
+% Denominator
+denLikelihood = kowRatioLL(ydemut, notcandidate,...
+    ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) ;
+Like = denLikelihood;
+Prop = mvstudenttpdf(candidate, optimalMean, Variance, df);
 Den = Like + Prop;
-
-if log(unifrnd(0,1,1,1)) <= Num - Den
+alpha = Num - Den;
+if log(unifrnd(0,1,1,1)) <= alpha
     draw = candidate;
 else
     draw = notcandidate;

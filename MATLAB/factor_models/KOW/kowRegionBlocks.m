@@ -1,6 +1,6 @@
 function [obsupdate,lastMeanUpdate,lastHessianUpdate,f  ] =...
     kowRegionBlocks( yt,precision,RegionObsModel,...
-        StateTransitions, CountriesThatStartRegions,...
+        StateTransitions, RegionIndices, CountriesThatStartRegions,...
         SeriesPerCountry, Countries, lastMean, lastHessian,...
         PriorPre, logdetPriorPre,ObsPriorMean,ObsPriorVar, factor, i, burnin )
 T = size(yt,2);
@@ -38,7 +38,10 @@ for b = 1:Countries
 end
 f = zeros(NF, T);
 for i = 1:NF
-    f(i,:) = kowUpdateLatent(yt(:), obsupdate,saveStatePrecisions(:,:,i), precision);
+    select = RegionIndices(i,:);
+    yvec = yt(select(1):select(2), :);
+    yvec = yvec(:);
+    f(i,:) = kowUpdateLatent(yvec, obsupdate(select(1):select(2)),saveStatePrecisions(:,:,i), precision(select(1):select(2)));
 end
 end
 

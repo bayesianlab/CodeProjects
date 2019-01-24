@@ -1,9 +1,9 @@
 clear;clc;
 % Dimension and setup
-rng(1.6)
+rng(190)
 T = 500;
-Gsim = [.3, .3, .3];
-gamma = .3;
+Gsim = [0,  0, .4];
+gamma = .8;
 SeriesPerCountry = 3;
 betaSim = [.3, -.5, .25];
 Regions = 2;
@@ -15,7 +15,7 @@ mu = ones(Countries*SeriesPerCountry, 1).* -.5;
     kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, mu, betaSim, Gsim, gamma);
 save('longt')
 clear;
-rng(1.6)
+rng(106)
 T = 100;
 Gsim = [.3, .5, .3];
 gamma = .3;
@@ -30,9 +30,9 @@ mu = ones(Countries*SeriesPerCountry, 1).* -.5;
     kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, mu, betaSim, Gsim, gamma);
 save('onehundredt')
 clear;
-
+rng(105)
 T = 75;
-Gsim = [.3, .5, .3];
+Gsim = [0, 0, .3];
 gamma = .3;
 SeriesPerCountry = 3;
 betaSim = [.3, -.5, .25];

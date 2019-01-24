@@ -1,5 +1,5 @@
-function [draw, alpha] = kowMHR(notcandidate, optimalMean,Precision, ydemu,...
-    StatePrecision, obsPrecision, PriorPre, logdetPriorPre)
+function [draw, alpha] = kowMHR(notcandidate, optimalMean,Precision, ydemut,...
+    obsPrecision, ObsPriorMean, ObsPriorVar, factor, StatePrecision)
 n = size(Precision,1);
 Variance = Precision\eye(n);
 df = 15;
@@ -10,24 +10,25 @@ alpha = -(optimalMean(1)*w1)/sigma;
 z = truncNormalRand(alpha, Inf,0, 1);
 restricteddraw = optimalMean(1) + (sigma*z)/w1;
 
-% draw conditional candidate
-[cdraw,~,~] = kowConditionalDraw(restricteddraw, optimalMean, Variance, Precision, df, df+1, 1, 2:n);
-candidate = [restricteddraw;cdraw];
+% % draw conditional candidate
+% [cdraw,~,~] = kowConditionalDraw(restricteddraw, optimalMean, Variance, Precision, df, df+1, 1, 2:n);
+% candidate = [restricteddraw;cdraw]
+
+candidate = optimalMean(2:n) + chol(Variance(2:n,2:n), 'lower')*normrnd(0,1, n-1,1)./w1;
+candidate = [restricteddraw;candidate];
 
 %% MH step
 % Numerator
-llhoodnum= kowLL(candidate, ydemu, StatePrecision,...
-    obsPrecision);
-Like = llhoodnum + kowEvalPriorsForObsModel(candidate, PriorPre, ...
-    logdetPriorPre);
+numLikelihood = kowRatioLL(ydemut, candidate, ...
+    ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) 
+Like = numLikelihood;
 Prop = mvstudenttpdf(notcandidate, optimalMean, Variance, df);
 Num = Like + Prop ;
 
 % Denominator
-llhoodden= kowLL(notcandidate, ydemu, StatePrecision,...
-    obsPrecision);
-Like = llhoodden + kowEvalPriorsForObsModel(notcandidate, PriorPre, ...
-    logdetPriorPre);
+denLikelihood = kowRatioLL(ydemut, notcandidate,...
+    ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) 
+Like = denLikelihood;
 Prop = mvstudenttpdf(candidate, optimalMean, Variance, df);
 Den = Like + Prop;
 alpha = Num - Den;

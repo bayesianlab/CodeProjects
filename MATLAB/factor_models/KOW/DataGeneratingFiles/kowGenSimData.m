@@ -21,7 +21,7 @@ Beta = kron(eye(Countries),beta);
 [I1, I2] = kowMakeObsModelIdentityMatrices(K, RegionIndices,SeriesPerCountry,...
     Countries);
 obsModel = [ones(K,1).*G(1), ones(K,1).*G(2),ones(K,1).*G(3)];
-obsModel(1,1) = .5;
+obsModel(1,1) = abs(G(1));
 for r = 1:Regions
    obsModel(RegionIndices(r,1), 2) = ...
        abs(obsModel(RegionIndices(r,1), 2));  
@@ -29,6 +29,7 @@ end
 obsModel(1:SeriesPerCountry:end,3) = abs(obsModel(1:SeriesPerCountry:end,3));
 Gt = [ones(K,1).*obsModel(:,1), I1.*obsModel(:,2), I2.*obsModel(:,3) ];
 gamma = gamma.*ones(nFactors,1);
+
 % Init factor
 variance = 1/(1-(gamma(1)^2));
 Factor(:,1) = normrnd(0,variance, nFactors,1);
