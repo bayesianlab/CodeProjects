@@ -1,0 +1,16 @@
+function [lastMeanWorld,lastHessianWorld, lastMeanRegion, ...
+lastHessianRegion, lastMeanCountry, lastHessianCountry] =...
+ kowBackupMeansAndHessians(SeriesPerCountry,Countries, EqnsPerBlock, blocks )
+lastMeanWorld = zeros(EqnsPerBlock, blocks);
+lastHessianWorld = reshape(repmat(eye(EqnsPerBlock),1,blocks), EqnsPerBlock,...
+    EqnsPerBlock, blocks);
+lastMeanRegion = zeros(SeriesPerCountry, Countries);
+lastHessianRegion = reshape(repmat(eye(SeriesPerCountry), 1, Countries),...
+    SeriesPerCountry, SeriesPerCountry, Countries);
+lastMeanCountry = zeros(SeriesPerCountry, Countries);
+lastHessianCountry = reshape(repmat(eye(SeriesPerCountry), 1, Countries), ...
+    SeriesPerCountry, SeriesPerCountry, Countries);
+
+
+end
+
