@@ -5,8 +5,8 @@ speyet = speye(T);
 FullPrecision = diag(ObsModelPrecision);
 GtO = ObsModel'*FullPrecision;
 P = StatePrecision + kron(speyet, GtO*ObsModel);
-x = kron(speyet,GtO)*vecresids;
-[mu, diagP, offdiagP] = solveSystem(P, x);
-draw  = mvnrndPrecision(mu, diagP, offdiagP);
+P = P\speye(size(P,1));
+mu = P*(kron(speyet,GtO)*vecresids);
+draw = mvnrnd(mu,P);
 end
 

@@ -18,8 +18,7 @@ for c = 1:Countries
     [obsupdate(selcoun), lastMeanUpdate(:,c), lastHessianUpdate(:,:,c)] = ...
         kowObsModelUpdate(guess, pslice, StatePrecision, lastMean(:,c),...
            lastHessian(:,:,c), Restricted, PriorPre, logdetPriorPre,...
-           ObsPriorMean,ObsPriorVar, factor, yslice, i, burnin);
-       
+           ObsPriorMean(selcoun),ObsPriorVar(selcoun,selcoun), factor(c,:), yslice, i, burnin);
     saveStatePrecisions(:,:,c) = StatePrecision;
 end
 f = zeros(NF, T);

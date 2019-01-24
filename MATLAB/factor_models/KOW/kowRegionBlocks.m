@@ -25,7 +25,7 @@ for b = 1:Countries
         [obsupdate(selectC),lastMeanUpdate(:,b),lastHessianUpdate(:,:,b)] =...
             kowObsModelUpdate(guess, pslice, StatePrecision, lastMean(:,b),...
                 lastHessian(:,:,b), Restricted, PriorPre, logdetPriorPre,...
-                ObsPriorMean,ObsPriorVar, factor, yslice, i, burnin);
+                ObsPriorMean(selectC),ObsPriorVar(selectC,selectC), factor(regionselect,:), yslice, i, burnin);
         saveStatePrecisions(:,:,regionselect) = StatePrecision;
 
     else
@@ -33,11 +33,10 @@ for b = 1:Countries
         [obsupdate(selectC),lastMeanUpdate(:,b), lastHessianUpdate(:,:,b)] =...
             kowObsModelUpdate(guess, pslice, StatePrecision, lastMean(:,b),...
                 lastHessian(:,:,b), Restricted, PriorPre, logdetPriorPre,...
-                ObsPriorMean,ObsPriorVar, factor, yslice, i, burnin);
+                ObsPriorMean(selectC),ObsPriorVar(selectC,selectC), factor(regionselect,:), yslice, i, burnin);
     end
 end
 f = zeros(NF, T);
-
 for i = 1:NF
     f(i,:) = kowUpdateLatent(yt(:), obsupdate,saveStatePrecisions(:,:,i), precision);
 end

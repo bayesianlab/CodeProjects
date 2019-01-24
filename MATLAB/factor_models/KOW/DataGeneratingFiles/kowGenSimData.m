@@ -37,7 +37,7 @@ Factor(:,1) = normrnd(0,variance, nFactors,1);
 yt(:,1) = normrnd(0,1,K,1);
 for t= 2:T
     Factor(:,t) = gamma.*Factor(:,t-1) + normrnd(0, 1,nFactors,1);   
-    yt(:,t) = mu + Beta*yt(:,t-1)  + Gt*Factor(:,t-1) + normrnd(0,1,K,1);
+    yt(:,t) = mu + Beta*yt(:,t-1)  + Gt*Factor(:,t) + normrnd(0,1,K,1);
 end
 % Create Xt matrix for vectorized yt
 s = 1:SeriesPerCountry;

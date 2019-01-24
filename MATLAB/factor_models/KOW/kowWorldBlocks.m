@@ -8,6 +8,7 @@ lastMeanUpdate = zeros(EqnsPerblock, blocks);
 lastHessianUpdate = zeros(EqnsPerblock, EqnsPerblock, blocks);
 select = 1:EqnsPerblock;
 StatePrecision = kowStatePrecision(StateTransition, 1, T);
+
 for b = 1:blocks
     index = select + (b-1)*EqnsPerblock;
     yslice = yt(index,:);
@@ -18,13 +19,13 @@ for b = 1:blocks
        [obsupdate(index), lastMeanUpdate(:,1), lastHessianUpdate(:,:,1)] =...
            kowObsModelUpdate(guess, pslice, StatePrecision, lastMean(:,b),...
                 lastHessian(:,:,b), Restricted, PriorPre, logdetPriorPre,...
-                ObsPriorMean,ObsPriorVar, factor, yslice, i, burnin);
+                ObsPriorMean(index),ObsPriorVar(index,index), factor, yslice, i, burnin);
    else
        Restricted = 0;
        [obsupdate(index), lastMeanUpdate(:,b), lastHessianUpdate(:,:,b)] =...
            kowObsModelUpdate( guess, pslice, StatePrecision, lastMean(:,b),...
                 lastHessian(:,:,b), Restricted, PriorPre,logdetPriorPre,...
-                 ObsPriorMean,ObsPriorVar, factor, yslice, i, burnin);
+                 ObsPriorMean(index),ObsPriorVar(index,index), factor, yslice, i, burnin);
    end
 end
 f = kowUpdateLatent(yt(:),obsupdate, StatePrecision, precision)';
