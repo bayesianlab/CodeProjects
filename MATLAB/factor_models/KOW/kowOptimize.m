@@ -5,7 +5,7 @@ if MaxRecursionDepth == 2
     Hessian = oldHessian;
 else
     loglike = @(guess) kowRatioLL(yt, guess,ObsPriorMean,ObsPriorVar,precision,factor,StatePrecision);
-    [themean, ~,~,~,~, Hessian] = fminunc(loglike, guess, options)
+    [themean, ~,flag,~,~, Hessian] = fminunc(loglike, guess, options);
     [~,notpd] = chol(Hessian);
     if notpd > 0
         fprintf('Did not optimize, tyring new point. Attempt: %i\n',...

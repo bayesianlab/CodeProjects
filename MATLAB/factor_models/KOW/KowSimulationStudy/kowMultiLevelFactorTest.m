@@ -4,7 +4,7 @@ rng(1001)
 initBeta = betaSim;
 initBeta = (ones(K,1+length(betaSim)).*[mu(1), betaSim])';
 initBeta = initBeta(:);
-initobsmod = ones(K,3).*[4,3,4];
+initobsmod = ones(K,3).*[0,0,.4];
 initGamma = gamma;
 v0 = 5;
 r0 = 10;

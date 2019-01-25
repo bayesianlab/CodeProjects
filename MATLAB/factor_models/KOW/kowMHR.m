@@ -19,15 +19,15 @@ candidate = [restricteddraw;candidate];
 
 %% MH step
 % Numerator
-numLikelihood = kowRatioLL(ydemut, candidate, ...
-    ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) 
+numLikelihood = -kowRatioLL(ydemut, candidate, ...
+    ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) ;
 Like = numLikelihood;
 Prop = mvstudenttpdf(notcandidate, optimalMean, Variance, df);
 Num = Like + Prop ;
 
 % Denominator
-denLikelihood = kowRatioLL(ydemut, notcandidate,...
-    ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) 
+denLikelihood = -kowRatioLL(ydemut, notcandidate,...
+    ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) ;
 Like = denLikelihood;
 Prop = mvstudenttpdf(candidate, optimalMean, Variance, df);
 Den = Like + Prop;

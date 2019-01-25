@@ -18,7 +18,7 @@ for b = 1:blocks
        Restricted = 1;
        [obsupdate(index), lastMeanUpdate(:,1), lastHessianUpdate(:,:,1)] =...
            kowObsModelUpdate(guess, pslice, StatePrecision, lastMean(:,b),...
-                lastHessian(:,:,b), Restricted, PriorPre, logdetPriorPre,...
+                lastHessian(:,:,b), Restricted,...
                 ObsPriorMean(index),ObsPriorVar(index,index), factor, yslice, i, burnin);
    else
        Restricted = 0;
@@ -28,6 +28,6 @@ for b = 1:blocks
                  ObsPriorMean(index),ObsPriorVar(index,index), factor, yslice, i, burnin);
    end
 end
-f = kowUpdateLatent(yt(:),obsupdate, StatePrecision, precision)';
+f = kowUpdateLatent(yt(:),obsupdate, StatePrecision, precision);
 end
 

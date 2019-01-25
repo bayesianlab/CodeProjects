@@ -15,7 +15,7 @@ AOiA = AOi*ObsModel;
 kAOiA = kron(speyet, AOiA);
 Vprecision = factorPrecision + kAOiA;
 Vvar = Vprecision\eye(size(Vprecision,1));
-fmean = Vvar*(kron(speyet,AOi)*ydemut(:));
+fmean = Vvar*(AOi*ydemut)';
 PartB = logmvnpdf(factor, fmean', Vvar);
 Ans = -(PartA - PartB);
 end

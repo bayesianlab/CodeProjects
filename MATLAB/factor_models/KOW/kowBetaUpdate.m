@@ -33,5 +33,6 @@ NumeratorTerm = sumup - (XstarPinv*ystar);
 Variance = Precision\speye(cx);
 b = Variance*NumeratorTerm;
 b = mvnrnd(b',Variance)';
+b
 ydemut = reshape(vecy - SurX*b, nEqns, T);
 end
