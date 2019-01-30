@@ -1,11 +1,11 @@
 clear;clc;
 % Dimension and setup
 rng(130)
-T = 250;
-Gsim = [.3, .4 , .4];
-gamma = .65;
+T = 200;
+Gsim = [.5, .3 , .35];
+gamma = [.8, -.5,-.5, .35, .45, .35,.45];
 SeriesPerCountry = 3;
-betaSim = [.3, -.5, .25, .2];
+betaSim = [.2, -.2, .2, -.2];
 Regions = 2;
 CountriesInRegion = 2;
 K = Regions*CountriesInRegion*SeriesPerCountry;

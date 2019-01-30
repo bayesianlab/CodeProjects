@@ -22,8 +22,9 @@ if candidate(1) < 0
     z = truncNormalRand(alpha, Inf,0, 1);
     restricteddraw = optimalMean(1) + (sigma*z)/w1;
     candidate = optimalMean(2:n) + chol(Variance(2:n,2:n), 'lower')*normrnd(0,1, n-1,1)./w1;
-    candidate = [restricteddraw;candidate];
+    candidate = [restricteddraw;candidate]
 end
+
 
 %% MH step
 % Numerator

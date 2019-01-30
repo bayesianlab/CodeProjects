@@ -19,7 +19,8 @@ Xt = E.*Xt;
 beta = beta.*ones(K, (SeriesPerCountry+1));
 beta= reshape(beta', (SeriesPerCountry+1)*K,1);
 
-stateTransitionsAll = gamma'*eye(nFactors);
+
+stateTransitionsAll = gamma'.*eye(nFactors);
 
 Si = kowStatePrecision(stateTransitionsAll, 1, T);
 S = Si\eye(size(stateTransitionsAll,1)*T);

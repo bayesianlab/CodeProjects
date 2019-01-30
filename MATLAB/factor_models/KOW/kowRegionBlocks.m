@@ -25,6 +25,7 @@ for b = 1:blockNumber
         Restricted = 1;
         regioncount = regioncount + 1;
         regionselect = regionselect + 1;
+        StateTransitions(regionselect,:)
         [StatePrecision] = kowStatePrecision(StateTransitions(regionselect,:), 1, T);
         [obsupdate(selectC),lastMeanUpdate(:,b),lastHessianUpdate(:,:,b)] =...
             kowObsModelUpdate(guess, pslice, StatePrecision, lastMean(:,b),...
