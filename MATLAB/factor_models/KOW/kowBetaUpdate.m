@@ -32,7 +32,9 @@ Precision = speye(cx) + addup - (XstarPinv*Xstar);
 NumeratorTerm = sumup - (XstarPinv*ystar);
 Variance = Precision\speye(cx);
 b = Variance*NumeratorTerm;
-b = mvnrnd(b',Variance)';
-b
+[c, p] =chol(Variance,'lower');
+b = (b + c*normrnd(0,1,cx,1));
+
+% b = mvnrnd(b',Variance)';
 ydemut = reshape(vecy - SurX*b, nEqns, T);
 end

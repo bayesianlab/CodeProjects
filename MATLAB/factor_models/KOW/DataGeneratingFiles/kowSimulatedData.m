@@ -1,50 +1,49 @@
 clear;clc;
 % Dimension and setup
-rng(190)
-T = 500;
-Gsim = [0,  0, .4];
-gamma = .8;
+rng(130)
+T = 250;
+Gsim = [.3, .4 , .4];
+gamma = .65;
 SeriesPerCountry = 3;
-betaSim = [.3, -.5, .25];
+betaSim = [.3, -.5, .25, .2];
 Regions = 2;
-CountriesInRegion = 3;
+CountriesInRegion = 2;
 K = Regions*CountriesInRegion*SeriesPerCountry;
 Countries = Regions*CountriesInRegion;
-mu = ones(Countries*SeriesPerCountry, 1).* -.5;
-[yt, Xt, Factor, RegionIndices,CountriesThatStartRegions ] = ...
-    kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, mu, betaSim, Gsim, gamma);
+[yt, Xt, Factor, RegionIndices,CountriesThatStartRegions, betaTrue ] = ...
+    kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, betaSim, Gsim, gamma);
 save('longt')
-clear;
-rng(106)
-T = 100;
-Gsim = [.3, .5, .3];
-gamma = .3;
-SeriesPerCountry = 3;
-betaSim = [.3, -.5, .25];
-Regions = 2;
-CountriesInRegion = 3;
-Countries = Regions*CountriesInRegion;
-K = Regions*CountriesInRegion*SeriesPerCountry;
-mu = ones(Countries*SeriesPerCountry, 1).* -.5;
-[yt, Xt, Factor, RegionIndices,CountriesThatStartRegions ] = ...
-    kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, mu, betaSim, Gsim, gamma);
-save('onehundredt')
-clear;
-rng(105)
-T = 75;
-Gsim = [0, 0, .3];
-gamma = .3;
-SeriesPerCountry = 3;
-betaSim = [.3, -.5, .25];
-Regions = 2;
-CountriesInRegion = 3;
-Countries = Regions*CountriesInRegion;
-mu = ones(Countries*SeriesPerCountry, 1).* -.5;
-K = Regions*CountriesInRegion*SeriesPerCountry;
-[yt, Xt, Factor, RegionIndices,CountriesThatStartRegions ] = ...
-    kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, mu, betaSim, Gsim, gamma);
-save('smallt')
-clear;
+% clear;
+% rng(106)
+% T = 100;
+% Gsim = [.3, .5, .3];
+% gamma = .3;
+% SeriesPerCountry = 3;
+% betaSim = [.3, -.5, .25];
+% Regions = 2;
+% CountriesInRegion = 3;
+% Countries = Regions*CountriesInRegion;
+% K = Regions*CountriesInRegion*SeriesPerCountry;
+% mu = ones(Countries*SeriesPerCountry, 1).* -.5;
+% [yt, Xt, Factor, RegionIndices,CountriesThatStartRegions ] = ...
+%     kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, mu, betaSim, Gsim, gamma);
+% save('onehundredt')
+% clear;
+% rng(105)
+% T = 75;
+% Gsim = [0, 0, .3];
+% gamma = .3;
+% SeriesPerCountry = 3;
+% betaSim = [.3, -.5, .25];
+% Regions = 2;
+% CountriesInRegion = 3;
+% Countries = Regions*CountriesInRegion;
+% mu = ones(Countries*SeriesPerCountry, 1).* -.5;
+% K = Regions*CountriesInRegion*SeriesPerCountry;
+% [yt, Xt, Factor, RegionIndices,CountriesThatStartRegions ] = ...
+%     kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, mu, betaSim, Gsim, gamma);
+% save('smallt')
+% clear;
 % load('kowar1.mat')
 % CountriesThatStartRegions = [1,4,6,24,42,49,55, -1];
 % RegionIndices = [1,9;10,15;16,69;70,123;124,144;145,162;163,180];

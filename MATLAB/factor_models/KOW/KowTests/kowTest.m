@@ -17,14 +17,12 @@ lastMeanWorld = zeros(K,1);
 lastHessianWorld = eye(K);
 ObsPriorMean = initobsmod';
 ObsPriorVar = eye(K).*1e2;
-WorldObsModelPriorPrecision = 1e-2.*eye(EqnsPerBlock);
-WorldObsModelPriorlogdet = EqnsPerBlock*log(1e-2);
 Ft = Factor;
 
 [sumFt,sumFt2, sumResiduals2, storeFt, storeBeta,...
     storeObsVariance, storeObsModel, storeStateTransitions] =...
       kowSmallContainers(Sims,burnin,betaDim, K, T,1);
-  size(Xt)
+  
 for i = 1 : Sims
     fprintf('\n\n  Iteration %i\n', i)
     %% Update mean function
@@ -35,11 +33,12 @@ for i = 1 : Sims
     % WORLD: Zero out the world to demean y conditional on country, region
     [update,lastMeanWorld, lastHessianWorld, f] = kowWorldBlocks(ydemut, obsPrecision, currobsmod(:,1),...
         stateTransitions(1), blocks, lastMeanWorld, lastHessianWorld,...
-        WorldObsModelPriorPrecision, WorldObsModelPriorlogdet, ObsPriorMean,ObsPriorVar, Ft, i, burnin);
-    currobsmod(:,1) = update
+         ObsPriorMean,ObsPriorVar, Ft(1,:), i, burnin);
+    currobsmod(:,1) = update;
     Ft = f;
-    
+    StateObsModel = currobsmod;
     %% Update Obs Equation Variances
+    
     residuals = ydemut - StateObsModel*Ft;
     [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
     obsPrecision = 1./obsVariance;

@@ -1,35 +1,31 @@
 function [ proposal, P0, P0old, gammahat, G ] = kowArPropose(y,x, OldAr)
 Arp = size(x,1);
 G = ((eye(Arp).*.01) +  x*x')\eye(Arp);
-gammahat = G*((eye(Arp)*ones(Arp,1).*.01) +  x*y');
-keepproposing = 1;
-c = 0;
-R = [1;zeros(Arp-1,1)];
-RRp = R*R';
-eyelagsquared = eye(Arp^2);
-bottom = [eye(Arp-1),zeros(Arp-1,1)];
-Phi = [OldAr;bottom]; 
-P0old = reshape((eyelagsquared  - kron(Phi,Phi))\RRp(:), Arp,Arp);
-while keepproposing > 0
-    c = c + 1;
-    if c == 20
-        proposal = zeros(1,Arp);
-        P0 = eye(Arp);
-        keepproposing = -1;
-    else
+gammahat = G* (x*y');
+proposal = 10;
+valid = -1;
+if Arp == 1
+    while abs(proposal) > 1
+        proposal = normrnd(gammahat,G);
+        P0 = 1/(1-proposal^2);
+        P0old = 1/(1-OldAr^2);
+    end
+else
+    Phi = [OldAr;bottom];
+    R = [1;zeros(Arp-1,1)];
+    RRp = R*R';
+    P0old = reshape((eyelagsquared  - kron(Phi,Phi))\RRp(:), Arp,Arp);
+    while valid ~=Arp
         proposal = mvnrnd(gammahat, G);
-        bottom = [eye(Arp-1),zeros(Arp-1,1)];
-        Phi = [proposal;bottom];
+        Phi = [OldAr;bottom]; 
         valid = sum(eig(Phi) < 1);
         if valid == Arp
             ImGamma = eyelagsquared  - kron(Phi,Phi);
             P0 = reshape(ImGamma\RRp(:), Arp,Arp);
-            [~, pd] = chol(P0);
-            if pd == 0
-                keepproposing = -1;
-            end 
         end
     end
 end
-end
+ 
+
+
 

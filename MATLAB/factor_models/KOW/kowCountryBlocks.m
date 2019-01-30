@@ -1,6 +1,7 @@
 function [obsupdate, lastMeanUpdate, lastHessianUpdate,f ] =...
     kowCountryBlocks(yt, precision, CountryObsModel, StateTransitions,...
-    SeriesPerCountry, Countries, lastMean, lastHessian, PriorPre, logdetPriorPre,ObsPriorMean,ObsPriorVar, factor, i, burnin)
+    SeriesPerCountry, Countries, lastMean, lastHessian, ObsPriorMean,ObsPriorVar, factor, i, burnin)
+fprintf('Country...')
 T = size(yt,2);
 saveStatePrecisions = zeros(T,T,Countries);
 obsupdate = zeros(length(CountryObsModel),1);
@@ -20,7 +21,6 @@ for c = 1:Countries
            ObsPriorVar(selcoun,selcoun), factor(c,:), yslice, i, burnin);
     saveStatePrecisions(:,:,c) = StatePrecision;
 end
-obsupdate
 f = zeros(Countries, T);
 for i = 1:Countries
     selcoun = t + (i-1)*SeriesPerCountry;
