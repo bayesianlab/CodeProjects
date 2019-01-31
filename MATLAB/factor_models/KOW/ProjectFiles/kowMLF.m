@@ -16,9 +16,6 @@ initobsmod = ones(K,3).*[1,1,1];
 initGamma = g';
 v0 = 5;
 r0 = 10;
-Sims = 10;
-ReducedRuns = 5;
-burnin = 1;
 blocks = 1;
 [sumFt, sumFt2, storeBeta, storeObsVariance, storeObsModel,...
     storeStateTransitions, ml] = ...
