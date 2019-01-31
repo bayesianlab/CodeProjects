@@ -21,6 +21,8 @@ for b = 1:blocks
     Precision = oldHessian(:,:,b);
     thetaVariance = eyeeqns/Precision;
     StatePrecision = kowStatePrecision(worldAR, 1, T);
+    opm =  ObsPriorMean(selectC);
+    opv = ObsPriorVar(selectC,selectC);
     for r = 1:rrcols
         if b == 1
             thetag = blockb(:, r);
@@ -32,11 +34,13 @@ for b = 1:blocks
             candidate = [restricteddraw;candidate];
             % Denominator value
             Like= -kowRatioLL(yslice, candidate, ...
-                    ObsPriorMean(selectC), ObsPriorVar(selectC,selectC), pslice, factor, StatePrecision) ;
+                    opm, opv, pslice, factor, StatePrecision) ;
             Prop = mvstudenttpdf(thetastarb, thetaMean, thetaVariance, df);
             Num = Like + Prop ;
+
+            
             Like = -kowRatioLL(yslice, thetastarb, ...
-                    ObsPriorMean(selectC), ObsPriorVar(selectC,selectC), obsPrecision, factor, StatePrecision) ;
+                    opm, opv, pslice, factor, StatePrecision) ;
             Prop = mvstudenttpdf(candidate, thetaMean, thetaVariance, df);
             Den = Like + Prop;
             alpha = Num - Den;
@@ -44,11 +48,11 @@ for b = 1:blocks
             
             % Numerator value
             Like = -kowRatioLL(yslice, thetastarb, ...
-                    ObsPriorMean(selectC), ObsPriorVar(selectC,selectC), obsPrecision, factor, StatePrecision) ;
+                    opm, opv, pslice, factor, StatePrecision) ;
             PropN = mvstudenttpdf(thetag, thetaMean, thetaVariance, df);
             Num = Like + PropN ;
             Like = -kowRatioLL(yslice, thetastarb, ...
-                    ObsPriorMean(selectC), ObsPriorVar(selectC,selectC), obsPrecision, factor, StatePrecision) ;
+                    opm, opv, pslice, factor, StatePrecision) ;
             PropD = mvstudenttpdf(thetastarb, thetaMean, thetaVariance, df);
             Den = Like + PropD;
             alphagtostar = min(0,Num - Den);
@@ -58,10 +62,11 @@ for b = 1:blocks
             thetag = blockb(:,r);
             % Unrestricted cases 
             % Numerator terms
+
            LikeN =-kowRatioLL(yslice, thetastarb, ...
-                    ObsPriorMean(selectC), ObsPriorVar(selectC,selectC), obsPrecision, factor, StatePrecision) ;
+                    opm, opv, pslice, factor, StatePrecision) ;
             LikeD = -kowRatioLL(yslice, thetag, ...
-                    ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) ;
+                    opm, opv, pslice, factor, StatePrecision) ;
             PropN = mvstudenttpdf(thetag, thetaMean, thetaVariance, df);
             Num = LikeN + PropN ;
             PropD = mvstudenttpdf(thetastarb, thetaMean, thetaVariance, df);
@@ -70,14 +75,14 @@ for b = 1:blocks
             numeratorterm(r) = alphagtostar + PropD; 
             % Denominator terms
             w1 = sqrt(chi2rnd(df,1)/df);
-            candidate = thetaMean + chol(thetaVariance, 'lower')*normrnd(0,1, n-1,1)./w1;
+            candidate = thetaMean + chol(thetaVariance, 'lower')*normrnd(0,1, n,1)./w1;
             % Denominator value
             Like= -kowRatioLL(yslice, candidate, ...
-                    ObsPriorMean(selectC), ObsPriorVar(selectC,selectC), obsPrecision, factor, StatePrecision) ;
+                    opm, opv, pslice, factor, StatePrecision) ;
             Prop = mvstudenttpdf(thetastarb, thetaMean, thetaVariance, df);
             Num = Like + Prop ;
             Like = -kowRatioLL(yslice, thetastarb, ...
-                    ObsPriorMean(selectC), ObsPriorVar(selectC,selectC), obsPrecision, factor, StatePrecision) ;
+                    opm, opv, pslice, factor, StatePrecision) ;
             Prop = mvstudenttpdf(candidate, thetaMean, thetaVariance, df);
             Den = Like + Prop;
             alpha = Num - Den;

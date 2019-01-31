@@ -1,4 +1,4 @@
-function [] = kowMLF(Sims, burnin, ReducedRuns, dataset)
+function [] = kowMLF(Sims, burnin, ReducedRuns, dataset, varargin)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -8,22 +8,20 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
-pwd
-
-load(dataset);
 rng(1001)
-initobsmod = ones(K,3).*[1,1,1];
-initGamma = g';
-v0 = 5;
-r0 = 10;
-blocks = 1;
+load(dataset);
+if nargin == 5
+    fname = createDateString(varargin{1})
+else
+    fname = createDateString('simulation_study_')
+end
 [sumFt, sumFt2, storeBeta, storeObsVariance, storeObsModel,...
     storeStateTransitions, ml] = ...
     kowMultiLevelFactor(yt, Xt, RegionIndices,...
       CountriesThatStartRegions, Countries, SeriesPerCountry,...
-      Sims, burnin, blocks, Regions, K/Regions, betaTrue, initobsmod, initGamma, v0, r0, ...
+      Sims, burnin, blocks,  RegionBlocks, K/RegionBlocks, initBeta, initobsmod, initGamma, v0, r0, ...
       ReducedRuns);
-fname = createDateString('simstudy_')
+
 save(fname)
 
 end

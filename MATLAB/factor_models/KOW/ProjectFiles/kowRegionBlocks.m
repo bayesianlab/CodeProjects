@@ -1,27 +1,25 @@
 function [obsupdate,lastMeanUpdate,lastHessianUpdate,f  ] =...
     kowRegionBlocks( yt,precision,RegionObsModel,...
         StateTransitions, RegionIndices, lastMean, lastHessian,...
-        ObsPriorMean,ObsPriorVar, factor, i, burnin )
+        ObsPriorMean,ObsPriorVar, factor, i, burnin, CountriesThatStartRegions )
 fprintf(' Region... ')
 [K,T] = size(yt);
-blockNumber = size(RegionIndices,1);
+blockNumber = size(lastMean,2);
 blockSize = K/blockNumber;
 NF = length(StateTransitions);
 saveStatePrecisions = zeros(T,T,NF);
-lastMeanUpdate = zeros(blockSize, blockNumber);
-lastHessianUpdate = zeros(blockSize, blockSize, blockNumber);
+lastMeanUpdate = zeros(size(lastMean,1), size(lastMean,2));
+lastHessianUpdate = zeros(size(lastHessian,1), size(lastHessian,2), size(lastHessian,3));
 obsupdate = zeros(length(RegionObsModel),1);
 regioncount = 1;
 regionselect = 0;
 t = 1:blockSize;
 for b = 1:blockNumber
-    indices = RegionIndices(b,:);
-    selectC = indices(1):indices(2);
+    selectC = t + blockSize*(b-1);
     guess = RegionObsModel(selectC);
     yslice = yt(selectC, :);
     pslice = precision(selectC, :);
-%     if b == CountriesThatStartRegions(regioncount) 
-    if b > 0 
+    if b == CountriesThatStartRegions(regioncount) 
         Restricted = 1;
         regioncount = regioncount + 1;
         regionselect = regionselect + 1;
