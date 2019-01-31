@@ -3,7 +3,7 @@ function [y, SurX] = kowGenData()
 % kowImport
 % kowdata = kowImportFunction('~/Datasets/kow.csv', 2, 55)
 
-kowdata=kowImportFunction('/Users/dillonflannery-valadez/Google Drive/Datasets/kowdetaildata.csv', 2, 55);
+kowdata=kowImportFunction('~/GoogleDrive/Datasets/kowdetaildata.csv', 2, 55);
 alldata = table2array(kowdata(:,2:end))';
 
 lags = 3;

@@ -2,89 +2,91 @@ clear;clc;
 load('longt.mat')
 rng(1001)
 
-initobsmod = ones(K,3).*[.3,1,1];
+initobsmod = ones(K,3).*[1,1,1];
 initGamma = gamma';
 v0 = 5;
 r0 = 10;
-Sims = 50;
-burnin = 5;
+Sims = 10;
+ReducedRuns = 5;
+burnin = 1;
 blocks = 1;
 
 
 [sumFt, sumFt2, storeBeta, storeObsVariance, storeObsModel,...
-    storeStateTransitions, storeFt] = ...
+    storeStateTransitions, storeFt, ml] = ...
     kowMultiLevelFactor(yt, Xt, RegionIndices,...
       CountriesThatStartRegions, Countries, SeriesPerCountry,...
-      Sims, burnin, blocks, 2, 2, betaTrue, initobsmod, gamma, v0, r0);
+      Sims, burnin, blocks, 2, 10, betaTrue, initobsmod, gamma, v0, r0, ...
+      ReducedRuns);
 
 variance = sumFt2 - sumFt.^2;
 sig = sqrt(variance);
 upper = sumFt + 2.*sig;
 lower = sumFt - 2.*sig;
-
-
+xaxis = 1:T;
+fillX = [xaxis, fliplr(xaxis)];
+fillY = [upper, fliplr(lower)];
 mean(storeObsModel,3)
 mean(storeStateTransitions,3)'
 mean(reshape(mean(storeBeta,2), SeriesPerCountry+1, K),2)'
 
-
+facealpha = .5;
 
 subplot(5,2,[1,2])
+h = fill(fillX(1,:), fillY(1,:), [1,0,0]);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 hold on 
-plot(Factor(1,:), 'Color', 'black')
-plot(sumFt(1,:))
-legend('True', 'Estimated')
+p1 = plot(Factor(1,:), 'Color', 'black', 'LineWidth', 1);
 title('World')
 hold off
 
 subplot(5,2,3)
+h = fill(fillX(1,:), fillY(1,:), [1,0,0]);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 hold on 
-plot(Factor(2,:), 'Color', 'black')
-plot(sumFt(2,:))
-legend('True', 'Estimated')
+p1 = plot(Factor(2,:), 'Color', 'black');
 title('Region 1')
 hold off
 
 subplot(5,2,5)
+h = fill(fillX(1,:), fillY(1,:), [1,0,0]);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 hold on 
-plot(Factor(3,:), 'Color', 'black')
-plot(sumFt(3,:))
-legend('True', 'Estimated')
+p1 = plot(Factor(3,:), 'Color', 'black');
 title('Region 2')
 hold off
 
-
 subplot(5,2,4)
 hold on 
-plot(Factor(4,:), 'Color', 'black')
-plot(sumFt(4,:))
-legend('True', 'Estimated')
+h = fill(fillX(1,:), fillY(1,:), [1,0,0]);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+p1 = plot(Factor(4,:), 'Color', 'black');
 title('Country 1')
 hold off
 
 subplot(5,2,6)
+h = fill(fillX(1,:), fillY(1,:), [1,0,0]);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 hold on 
-plot(Factor(5,:), 'Color', 'black')
-plot(sumFt(5,:))
-legend('True', 'Estimated')
+p1 = plot(Factor(5,:), 'Color', 'black');
 title('Country 2')
 hold off
 
 
 subplot(5,2,7)
+h = fill(fillX(1,:), fillY(1,:), [1,0,0]);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 hold on 
-plot(Factor(6,:), 'Color', 'black')
-plot(sumFt(6,:))
-legend('True', 'Estimated')
+p1 = plot(Factor(6,:), 'Color', 'black');
 title('Country 3')
 hold off
 
 
 subplot(5,2,8)
+h = fill(fillX(1,:), fillY(1,:), [1,0,0]);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 hold on 
-plot(Factor(7,:), 'Color', 'black')
-plot(sumFt(7,:))
-legend('True', 'Estimated')
+p1 = plot(Factor(7,:), 'Color', 'black');
 title('Country 4')
 hold off
 

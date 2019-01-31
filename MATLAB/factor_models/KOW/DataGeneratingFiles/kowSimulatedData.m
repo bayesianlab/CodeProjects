@@ -2,16 +2,16 @@ clear;clc;
 % Dimension and setup
 rng(130)
 T = 200;
-Gsim = [.5, .3 , .35];
-gamma = [.8, -.5,-.5, .35, .45, .35,.45];
-SeriesPerCountry = 3;
-betaSim = [.2, -.2, .2, -.2];
+Gsim = [.99, .5 , .3];
+g = [.5, .5, .5, .5, .5, .5, .5];
+SeriesPerCountry = 5;
+betaSim = [.2, -.2, .2, -.2, .2, -.2];
 Regions = 2;
 CountriesInRegion = 2;
 K = Regions*CountriesInRegion*SeriesPerCountry;
 Countries = Regions*CountriesInRegion;
 [yt, Xt, Factor, RegionIndices,CountriesThatStartRegions, betaTrue ] = ...
-    kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, betaSim, Gsim, gamma);
+    kowGenSimData(T, Regions, CountriesInRegion, SeriesPerCountry, betaSim, Gsim, g);
 save('longt')
 % clear;
 % rng(106)
