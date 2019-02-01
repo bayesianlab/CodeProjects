@@ -32,7 +32,7 @@ beta, currobsmod, StateObsModel, Ft, obsVariance,obsPrecision] = ...
 
 speyet = speye(T,T);
 
-    for i = 1 : Sims
+for i = 1 : Sims
     fprintf('\n\n  Iteration %i\n', i)
     %% Update mean function
     [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...

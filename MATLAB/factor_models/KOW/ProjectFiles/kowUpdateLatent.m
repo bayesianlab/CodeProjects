@@ -10,3 +10,4 @@ mu = P*(kron(speyet,GtO)*vecresids);
 draw = mvnrnd(mu,P);
 end
 
+
