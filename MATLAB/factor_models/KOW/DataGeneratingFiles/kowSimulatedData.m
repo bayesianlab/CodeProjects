@@ -2,12 +2,14 @@ clear;clc;
 % Dimension and setup
 rng(130)
 T = 200;
-Gsim = [.5, 0 , 0];
-g = [.5, .5, .5, .5, .5, .5, .5];
-SeriesPerCountry = 5;
-betaSim = [.2, -.2, .2, -.2, .2, -.2];
-Regions = 2;
-CountriesInRegion = 2;
+Gsim = [0, 0 , .5];
+
+SeriesPerCountry = 10;
+betaSim = ones(1,SeriesPerCountry+1).*.2;
+
+Regions = 1;
+CountriesInRegion = 1;
+g = ones(1,1 + Regions + (CountriesInRegion*Regions)).*.5;
 K = Regions*CountriesInRegion*SeriesPerCountry;
 Countries = Regions*CountriesInRegion;
 [yt, Xt, Factor, RegionIndices,CountriesThatStartRegions, betaTrue ] = ...

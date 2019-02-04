@@ -11,14 +11,14 @@ candidate = optimalMean + chol(Variance, 'lower')*...
 numLikelihood = -kowRatioLL(ydemut, candidate, ...
     ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) ;
 Like = numLikelihood;
-Prop = mvstudenttpdf(notcandidate, optimalMean, Variance, df);
+Prop = mvstudenttpdf(notcandidate', optimalMean', Variance, df);
 Num = Like + Prop ;
 
 % Denominator
 denLikelihood = -kowRatioLL(ydemut, notcandidate,...
     ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) ;
 Like = denLikelihood;
-Prop = mvstudenttpdf(candidate, optimalMean, Variance, df);
+Prop = mvstudenttpdf(candidate', optimalMean', Variance, df);
 Den = Like + Prop;
 alpha = Num - Den;
 if log(unifrnd(0,1,1,1)) <= alpha

@@ -1,4 +1,4 @@
-function [sumFt, sumFt2, storeBeta] = ...
+function [sumFt, sumFt2, storeObsModel] = ...
     MultDyFacVar(yt, Xt,  InfoMat, SeriesPerCountry, Sims, burnin, initobsmodel, initStateTransitions, v0, r0)
 
 % InfoMat is Countries: Region info in column 1,
@@ -12,9 +12,10 @@ nFactors = length(initStateTransitions);
 
 [IRegion, ICountry, Regions, Countries] = MakeObsModelIdentity( InfoMat, SeriesPerCountry);
 
-backupMeanAndHessian  = setBackups(InfoMat, SeriesPerCountry);
+backupMeanAndHessian  = setBackups(InfoMat, SeriesPerCountry, 2);
 RegionIndicesFt = 2:(Regions+1);
-CountryIndicesFt = 1+Regions:(1+Regions+Countries);
+
+CountryIndicesFt = 2+Regions:(1+Regions+Countries);
 StateObsModel = makeStateObsModel(initobsmodel,IRegion,ICountry);
 
 
@@ -22,7 +23,7 @@ Si = kowStatePrecision( diag(initStateTransitions), 1, T);
 obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
 currobsmod = initobsmodel;
-
+storeObsModel = zeros(K, 3, Sims-burnin);
 vecF = kowUpdateLatent(yt(:), StateObsModel, Si, obsPrecision) ;
 Ft = reshape(vecF, nFactors,T);
 sumFt = zeros(nFactors, T);
@@ -30,29 +31,48 @@ sumFt2 = sumFt;
 zerooutregion = zeros(K, Regions);
 zerooutcountry = zeros(K, Countries);
 zerooutworld = zeros(K,1);
+
+ydemut = yt;
 for i = 1 : Sims
     fprintf('Simulation %i\n',i)
-    [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
-        StateObsModel,Si,T);
+    %     [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
+    %         StateObsModel,Si,T);
     
     
-    currobsmod = AmarginalF(SeriesPerCountry, InfoMat, ...
-        Ft, yt, currobsmod, stateTransitions, obsPrecision, IRegion,ICountry, ...
+    
+    %     NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry) ;
+    %     NoRegion = makeStateObsModel(currobsmod, zerooutregion, ICountry);
+    
+    %     ynow = ydemut - NoWorld*Ft;
+    %     ynor = ydemut - NoRegion*Ft;
+    
+    NoCountry = makeStateObsModel(currobsmod, IRegion, zerooutcountry);
+
+    ty = ydemut - NoCountry*Ft;
+    currobsmod(:,3) = AmarginalF(SeriesPerCountry, InfoMat, ...
+        Ft(CountryIndicesFt, :), ty, currobsmod(:,3), stateTransitions(CountryIndicesFt), obsPrecision, ...
         backupMeanAndHessian);
-    StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);
-    NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry) ;
+    Ft(CountryIndicesFt,:) = kowUpdateLatent(ty(:), currobsmod(:,3).*ICountry,...
+        kowStatePrecision(stateTransitions(CountryIndicesFt).*eye(Countries), 1,T), obsPrecision);
+    
     NoRegion = makeStateObsModel(currobsmod, zerooutregion, ICountry);
-    NoCountry = makeStateObsModel(currobsmod, IRegion, zerooutcountry)
-    
-    ynow = ydemut - NoWorld*Ft;
-    ynor = ydemut - NoRegion*Ft;
-    ynoc = ydemut - NoCountry*Ft;
-    
-    
-    
-    Ft(1,:) = kowUpdateLatent(ynow(:), currobsmod(:,1), kowStatePrecision(stateTransitions(1), 1,T), obsPrecision);
-    Ft(2,:) = kowUpdateLatent(ynor(:), currobsmod(:,2), kowStatePrecision(stateTransitions(2), 1,T), obsPrecision);
-    Ft(3,:) = kowUpdateLatent(ynoc(:), currobsmod(:,3), kowStatePrecision(stateTransitions(3), 1,T), obsPrecision);
+    ty = ydemut - NoRegion*Ft;
+    currobsmod(:,2) = AmarginalF(SeriesPerCountry, InfoMat, ...
+        Ft(RegionIndicesFt, :), ty, currobsmod(:,2), stateTransitions(RegionIndicesFt), obsPrecision, ...
+        backupMeanAndHessian);
+    Ft(RegionIndicesFt,:) = kowUpdateLatent(ty(:), currobsmod(:,2).*IRegion,...
+        kowStatePrecision(stateTransitions(RegionIndicesFt).*eye(Regions), 1,T), obsPrecision);
+
+    NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry) ;
+    ty = ydemut - NoWorld*Ft;
+    currobsmod(:,1) = AmarginalF(SeriesPerCountry, InfoMat, ...
+        Ft(RegionIndicesFt, :), ty, currobsmod(:,2), stateTransitions(RegionIndicesFt), obsPrecision, ...
+        backupMeanAndHessian);
+    Ft(1,:) = kowUpdateLatent(ty(:), currobsmod(:,1),...
+        kowStatePrecision(stateTransitions(1), 1,T), obsPrecision);
+
+currobsmod
+    StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);
     residuals = ydemut - StateObsModel*Ft;
     [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
     
@@ -66,11 +86,11 @@ for i = 1 : Sims
     if i > burnin
         v = i -burnin;
         
-        storeBeta(:,v) = beta;
+        %         storeBeta(:,v) = beta;
         sumFt = sumFt + Ft;
         sumFt2 = sumFt2 + Ft.^2;
         %         storeObsVariance(:,v) = obsVariance;
-        %         storeObsModel(:,:,v) = currobsmod;
+        storeObsModel(:,:,v) = currobsmod;
         %         storeStateTransitions(:,:,v) = stateTransitions;
         %         sumResiduals2 = sumResiduals2 + r2;
         %         sumLastHessianCountry = sumLastHessianCountry + lastHessianCountry;

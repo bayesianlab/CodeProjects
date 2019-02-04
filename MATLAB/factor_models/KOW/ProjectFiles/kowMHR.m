@@ -30,12 +30,13 @@ end
 % Numerator
 Like = -kowRatioLL(ydemut, candidate, ...
     ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) ;
-Prop = mvstudenttpdf(notcandidate, optimalMean, Variance, df);
+
+Prop = mvstudenttpdf(notcandidate', optimalMean', Variance, df);
 Num = Like + Prop ;
 % Denominator
 Like = -kowRatioLL(ydemut, notcandidate,...
     ObsPriorMean, ObsPriorVar, obsPrecision, factor, StatePrecision) ;
-Prop = mvstudenttpdf(candidate, optimalMean, Variance, df);
+Prop = mvstudenttpdf(candidate', optimalMean', Variance, df);
 Den = Like + Prop;
 
 if log(unifrnd(0,1,1,1)) <= (Num - Den)
