@@ -2,7 +2,7 @@ clear;clc;
 % Dimension and setup
 rng(130)
 T = 200;
-Gsim = [.99, .5 , .3];
+Gsim = [.5, 0 , 0];
 g = [.5, .5, .5, .5, .5, .5, .5];
 SeriesPerCountry = 5;
 betaSim = [.2, -.2, .2, -.2, .2, -.2];

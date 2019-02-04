@@ -1,44 +1,69 @@
 function [xt, lastMean, lastHessian] = ...
-    optimizeA(x0, ydemut,ObsPriorMean, ObsPriorVar, obsPrecision, factor,factorPrecision, lastMean, lastHessian, RestrictionLevel, options)
+    optimizeA(x0, ydemut, obsPrecision, factor, stateTransitions,...
+    backup, RestrictionLevel, Regions, IRegion, ICountry, options)
 
-[K,T] = size(ydemut);
-if RestrictionLevel == 1
-    LogLikePositive = @(v) AproptoLLLevel1 (guess, ydemut,ObsPriorMean, ObsPriorVar, obsPrecision, factor,factorPrecision);
-    LL = @(guess) -AproptoLLLevel1 (guess, ydemut,ObsPriorMean, ObsPriorVar, obsPrecision, factor,factorPrecision);
-     [themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0, options);
-     [~, p] = chol(Hessian);
-elseif RestrictionLevel == 2
-     LogLikePositive = @(v) AproptoLLLevel2 (guess, ydemut,ObsPriorMean, ObsPriorVar, obsPrecision, factor,factorPrecision);
-     LL = @(guess) -AproptoLLLevel2 (guess, ydemut,ObsPriorMean, ObsPriorVar, obsPrecision, factor,factorPrecision);
-     [themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0, options);
-     [~, p] = chol(Hessian);
-elseif Restriction == 3
-     LogLikePositive = @(v) AproptoLLLevel3 (guess, ydemut,ObsPriorMean, ObsPriorVar, obsPrecision, factor,factorPrecision);
-      LL = @(guess) -AproptoLLLevel3 (guess, ydemut,ObsPriorMean, ObsPriorVar, obsPrecision, factor,factorPrecision);
-     [themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0, options);
-     [~, p] = chol(Hessian);
-else
-    error('Restriction level must be 1-3')
-end
- if p ~= 0 
-     themean = lastMean;
-     Hessian = lastHessian;
- else
-     lastMean = themean;
-     lastHessian = Hessian;
-     fprintf('Optimization failure\n')
- end
+
 df = 20;
-w1 = sqrt(chi2rnd(df,1)/df);
-HLowerI = chol(Hessian,'lower')\eye(length(themean));
-Variance = HLowerI*HLowerI;
-proposal  = themean' + H\normrnd(0,1,length(themean),1)./w1;
-priorDensity = @(p) logmvnpdf(p, priorMean, priorVariance);
-proposalDensity = @(q) mvtstudenttpdf(q, themean, Variance, df);
+[K,T] = size(ydemut);
+[R, C] = size(x0);
+xt = zeros(R,C);
+lmindex = 1;
+nFactors = size(factor,1);
 
-xt = MH(proposal, x0, LogLikePositive, proposalDensity, priorDensity);
 
-xt = packageXt(xt, RestrictionLevel, K);
+for i = 1:3
+    
+    nx = x0(:,i);
+    factorPrecision = kowStatePrecision(stateTransitions(i), 1, T);
+    subFt = factor(i,:);
+    tempSOM = x0;
+    if i == 1
+        tempSOM(:,1) = 0;
+    elseif i == 2
+        tempSOM(:,2) = 0;
+    else
+        tempSOM(:,3) = 0;
+    end
+    tempSOM
+    tempy = ydemut - tempSOM*factor;
 
+    if RestrictionLevel == 1
+        if i > 2
+            lastMean = backup{lmindex};
+            lastHessian = backup{lmindex+1};
+            lastMean = backup{lmindex};
+            lastHessian = backup{lmindex+1};
+            xt(:,i) = restrictedDraw(nx, tempy, obsPrecision, subFt,...
+                factorPrecision, K, lastMean, lastHessian, options);
+        else
+            lastMean = backup{lmindex};
+            lastHessian = backup{lmindex+1};
+            xt(:,i) = unrestrictedDraw(nx, yt, obsPrecision, subFt, factorPrecision,...
+                K, lastMean, lastHessian, options)
+        end
+    elseif RestrictionLevel == 2
+        if i > 1
+            lastMean = backup{lmindex};
+            lastHessian = backup{lmindex+1};
+            xt(:,i) = restrictedDraw(nx, tempy, obsPrecision, subFt,...
+                factorPrecision, K, lastMean, lastHessian, options);
+        else
+            lastMean = backup{lmindex};
+            lastHessian = backup{lmindex+1};
+            xt(:,i) = unrestrictedDraw(nx, yt, obsPrecision, subFt, factorPrecision,...
+                K, lastMean, lastHessian, options)
+        end
+        
+    elseif RestrictionLevel == 3
+        lastMean = backup{lmindex};
+        lastHessian = backup{lmindex+1};
+        xt(:,i) = restrictedDraw(nx, tempy, obsPrecision, subFt,...
+            factorPrecision, K, lastMean, lastHessian, options);
+%         kowUpdateLatent(tempy(:), xt(:,i), factorPrecision, obsPrecision)
+    else
+        error('Restriction level must be 1-3')
+    end
+    lmindex = lmindex + 2; 
+end
 end
 

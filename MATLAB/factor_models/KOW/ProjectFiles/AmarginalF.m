@@ -1,36 +1,59 @@
-function [currobsmod] = AmarginalF(SeriesPerCountry, InfoMat, Factor, yt,...
-    currobsmod,  ObsPriorMean, ObsPriorVar, lastMean, lastHessian )
+function [currobsmod, backupMeanAndHessian] = AmarginalF(SeriesPerCountry, InfoMat, Factor, yt,...
+    currobsmod,  stateTransitions, obsPrecision, IRegion,ICountry, backupMeanAndHessian)
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-        'Display', 'iter', 'FiniteDifferenceType', 'central',...
-         'MaxIterations', 100, 'MaxFunctionEvaluations', 600);
-Countries = size(InfoMat,1);
-Regions = length(unique(InfoMat(1,:)));
-% May have to remove factor from y1 
+    'Display', 'off', 'FiniteDifferenceType', 'central',...
+    'MaxIterations', 100, 'MaxFunctionEvaluations', 600);
+[nFactors, T] = size(Factor);
+
+Regions = length(unique(InfoMat(:,1)));
+% May have to remove factor from y1
 t = 1:SeriesPerCountry;
 [K,T] = size(yt);
 changeRegion = InfoMat(1,1);
-InfoMat = [1,1; 1,2; 1,3; 2,4;2,5; 3,6;4,7]
 Countries = size(InfoMat,1);
+
 for c = 1:Countries
-    [InfoMat(c,1),c]
+    backup = backupMeanAndHessian(c,:);
+    
+    subsetSelect = t + SeriesPerCountry*(c-1);
+    subFt = subsetFt(Factor, [InfoMat(c,:), c], Regions);
+    subTrans = subsetFt(stateTransitions, [InfoMat(c,:), c], Regions);
+    I1 = IRegion(subsetSelect,:);
+    I2 = ICountry(subsetSelect,:);
+%     subStateObsModel = StateObsModel(subsetSelect,:);
+    %     factorPrecision = kowStatePrecision(diag(subTrans), 1, T);
+    yslice = yt(subsetSelect,:);
+    precisionSlice = obsPrecision(subsetSelect);
+    x0 = currobsmod(subsetSelect,:);
     if c == 1
-        RestrictionLevel = 3
+        % Only on first pass through, all three
+        % variables restricted
+        RestrictionLevel = 3;
+        
+        
     elseif InfoMat(c,1) ~= changeRegion
-        RestrictionLevel = 2
+        % All new regions are restricted
+        RestrictionLevel = 2;
+        Level2Dim = 1 + (K-1)*nFactors;
         changeRegion = InfoMat(c,1);
+        ObsPriorMean = ones(1, Level2Dim);
+        ObsPriorPrecision = eye(Level2Dim).*1e-2;
+        %         x0 = freeObsModelElems(currobsmod(subsetSelect,:), RestrictionLevel);
     else
-        RestrictionLevel = 1
+        % Every country is restricted
+        RestrictionLevel = 1;
+        Level1Dim = nFactors*K - 1;
+        ObsPriorMean = ones(1, Level1Dim);
+        ObsPriorPrecision = eye(Level1Dim).*1e-2;
     end
     
-%     subsetSelect = t + SeriesPerCountry*(c-1);
-%     [subFt, subTrans]  = subsetFt(Factor, InfoMat(c,:), Regions);
-%     factorPrecision = kowStatePrecision(diag(subTrans), 1, T);
-%     yslice = yt(subsetSelect,:);
-%     precisionSlice = obsPrecision(subsetSelect);
-%     x0 = currobsmod(subsetSelect,:);
-%     [xt, lastMean, lastHessian] = optimizeA(x0, yslice,...
-%         ObsPriorMean, ObsPriorVar, precisionSlice, subFt,...
-%         factorPrecision, lastMean, lastHessian, RestrictionLevel, options);
-%     currobsmod(subsetSelect,:) = xt;
+    
+    [xt, backup, lastHessian] = optimizeA(x0, yslice,...
+        precisionSlice, subFt, subTrans, backup, ...
+        RestrictionLevel, Regions, I1,I2, options);
+    backupMeanAndHessian{c,1} =  backup;
+    backupMeanAndHessian{c,2} = lastHessian;
+    currobsmod(subsetSelect,:) = xt;
+end
 end
 

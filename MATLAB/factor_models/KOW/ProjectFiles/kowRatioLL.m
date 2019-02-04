@@ -6,6 +6,7 @@ speyet = speye(sizeT);
 ObsPriorInv = ObsPriorVar\eye(sizeA);
 OmegaInv = diag(Omega.^(-1));
 f2Oi = (factor*factor').*OmegaInv;
+
 Phi = (ObsPriorInv + f2Oi)\eye(sizeA);
 phi = Phi*(ObsPriorInv*ObsPriorMean' + sum(factor.*(OmegaInv*ydemut),2));
 PartA = logmvnpdf(ObsModel',phi',Phi);

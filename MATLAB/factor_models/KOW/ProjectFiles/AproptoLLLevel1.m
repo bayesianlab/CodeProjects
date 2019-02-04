@@ -20,8 +20,12 @@ Amean = AFvariance*(ObsPriorPrecision*ObsPriorMean' + Term(:));
 pdfA = logmvnpdf(ObsModel, Amean, Avariance);
 
 % F | A
-AOI = ObsModel'*OmegaI;
-Fvariance = (factorPrecision + AOI*ObsModel)\eye(nFactorsT);
+% One restricted element (country)
+A = reshape(ObsModel(3:bottomDim), K-1, nFactors)';
+% Transpose to have aw in column 1 ar in column 2 and ac in column 1
+A = [ [ObsModel(1:2)', 1];A];
+AOI = A'*OmegaI;
+Fvariance = (factorPrecision + AOI*A)\eye(nFactorsT);
 Fmean = Fvariance*(kron(speye(T), AOI)*ydemut(:));
 pdfF = logmvnpdf(factor(:)', Fmean', Fvariance);
 pdfval = pdfA- pdfF;

@@ -2,7 +2,7 @@ clear;clc;
 load('longt.mat')
 rng(1001)
 
-initobsmod = ones(K,3).*[1,1,1];
+initobsmod = ones(K,3).*[.5,.5,.5];
 initGamma = g';
 v0 = 5;
 r0 = 10;
