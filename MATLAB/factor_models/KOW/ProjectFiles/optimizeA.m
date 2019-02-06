@@ -5,18 +5,10 @@ function [xt, lastMean, lastHessian] = ...
 
 
 [K,T] = size(ydemut);
-[R, C] = size(x0);
-
-
-nFactors = size(factor,1);
-
-
 if RestrictionLevel == 1
-    xt = restrictedDraw(x0, ydemut, obsPrecision, factor,...
+    [xt, lastMean, lastHessian] = restrictedDraw(x0, ydemut, obsPrecision, factor,...
         factorPrecision, K, lastMean, lastHessian, options);
-    
 elseif RestrictionLevel == 0
-
     xt = unrestrictedDraw(x0, ydemut, obsPrecision, factor, factorPrecision,...
         K, lastMean, lastHessian, options);
 else

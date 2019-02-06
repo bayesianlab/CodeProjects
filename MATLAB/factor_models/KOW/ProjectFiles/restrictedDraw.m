@@ -1,4 +1,4 @@
-function [ retval ] = restrictedDraw(x0, yt, obsPrecision, Ft, FtPrecision,...
+function [ retval, lastMean, lastHessian ] = restrictedDraw(x0, yt, obsPrecision, Ft, FtPrecision,...
     nEqns, lastMean, lastHessian, options )
 % df = 20;
 % ObsPriorMean = ones(1, nEqns-1);
@@ -36,17 +36,22 @@ df = 20;
 w1 = sqrt(chi2rnd(df,1)/df);
 ObsPriorMean = ones(1, nEqns);
 ObsPriorPrecision = eye(nEqns).*1e-5;
+
 LogLikePositive = @(v) AproptoLL (v, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 LL = @(guess) -AproptoLL(guess, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 [themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0, options);
+
+% check = kowMHR(x0,themean,Hessian, yt,obsPrecision,ObsPriorMean, ObsPriorPrecision\eye(length(themean)), Ft, FtPrecision)
 [~, p] = chol(Hessian);
+
 [themean, Hessian, lastMean, lastHessian] = ...
     optimCheck(p, themean,Hessian, lastMean, lastHessian);
 V = Hessian \ eye(length(themean));
 n = length(themean);
-proposal = themean(1:n) + chol(V(1:n,1:n), 'lower')*normrnd(0,1, n,1)./w1;
+
+proposal = themean + chol(V, 'lower')*normrnd(0,1, n,1)./w1;
 if proposal(1) < 0    
     sigma = sqrt(V(1,1));
     alpha = -(themean(1)*w1)/sigma;
@@ -65,5 +70,7 @@ if log(unifrnd(0,1,1)) <= alpha
 else
    retval = x0; 
 end
+
+
 end
 

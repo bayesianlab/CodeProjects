@@ -32,7 +32,8 @@ Factor = reshape(Factor,nFactors,T);
 
 Gt = [ones(K,1).*G(1), I1.*G(2), I2.*G(3)];
 
-mu = reshape(Xt*beta, K,T) + Gt*Factor;
+% mu = reshape(Xt*beta, K,T) + Gt*Factor;
+mu = Gt*Factor
 yt = mu + normrnd(0,1,K,T);
 Xt = sparse(Xt);
 CountriesThatStartRegions = [1:CountriesInRegion:Countries, -1];

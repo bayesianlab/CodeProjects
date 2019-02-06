@@ -3,6 +3,8 @@ function [draw, alpha] = kowMHR(notcandidate, optimalMean,Precision, ydemut,...
 n = size(Precision,1);
 Variance = Precision\eye(n);
 df = 20;
+
+
 w1 = sqrt(chi2rnd(df,1)/df);
 % % draw restricted candidate marginally
 % sigma = sqrt(Variance(1,1));
@@ -14,7 +16,7 @@ w1 = sqrt(chi2rnd(df,1)/df);
 % [cdraw,~,~] = kowConditionalDraw(restricteddraw, optimalMean, Variance, Precision, df, df+1, 1, 2:n);
 % candidate = [restricteddraw;cdraw]
 
-candidate = optimalMean(1:n) + chol(Variance(1:n,1:n), 'lower')*normrnd(0,1, n,1)./w1;
+candidate = optimalMean + chol(Variance, 'lower')*normrnd(0,1, n,1)./w1;
 % candidate = [restricteddraw;candidate];
 if candidate(1) < 0    
     sigma = sqrt(Variance(1,1));

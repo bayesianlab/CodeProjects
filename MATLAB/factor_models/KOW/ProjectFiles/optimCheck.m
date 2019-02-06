@@ -5,7 +5,7 @@ if p ~= 0
      Hessian = lastHessian;
      fprintf('Optimization failure\n')
  else
-     lastMean = themean;
+     lastMean = themean';
      lastHessian = Hessian;
      
  end

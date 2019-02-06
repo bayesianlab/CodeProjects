@@ -4,6 +4,14 @@ if MaxRecursionDepth == 2
     themean = oldMean;
     Hessian = oldHessian;
 else
+    guess
+    yt
+    
+    ObsPriorMean
+    ObsPriorVar
+    precision
+    factor
+    full(StatePrecision)
     loglike = @(guess) kowRatioLL(yt, guess,ObsPriorMean,ObsPriorVar,precision,factor,StatePrecision);
     [themean, ~,flag,~,~, Hessian] = fminunc(loglike, guess, options);
     [~,notpd] = chol(Hessian);

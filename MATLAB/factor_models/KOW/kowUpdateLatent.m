@@ -1,4 +1,5 @@
 function [draw, P] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelPrecision)
+
 [Nobseqns] = size(ObsModel,1);
 T = length(vecresids)/Nobseqns;
 speyet = speye(T);

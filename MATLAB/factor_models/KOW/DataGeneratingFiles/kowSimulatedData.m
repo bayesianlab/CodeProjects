@@ -1,10 +1,10 @@
 clear;clc;
 % Dimension and setup
 rng(130)
-T = 200;
-Gsim = [0, 0 , .5];
+T = 500;
+Gsim = [.4, .5 , .5];
 
-SeriesPerCountry = 10;
+SeriesPerCountry = 3;
 betaSim = ones(1,SeriesPerCountry+1).*.2;
 
 Regions = 1;

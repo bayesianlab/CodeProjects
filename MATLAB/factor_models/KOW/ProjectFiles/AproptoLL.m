@@ -5,11 +5,12 @@ K = length(obsPrecision);
 nFactorsT = nFactors*T;
 nFactorsK = nFactors*K;
 % A | F
+
 OmegaI = diag(obsPrecision);
 FtOF = kron(OmegaI, factor*factor');
 
 Avariance = (ObsPriorPrecision + FtOF)\speye(nFactorsK, nFactorsK);
-Term = ((factor*ydemut')./obsPrecision');
+Term = ((factor*ydemut').*obsPrecision');
 Amean = Avariance*(ObsPriorPrecision*ObsPriorMean' + Term(:));
 pdfA = logmvnpdf(ObsModel', Amean', Avariance);
 
