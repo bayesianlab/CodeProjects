@@ -2,8 +2,8 @@ function [ retval, lastMean, lastHessian] = unrestrictedDraw( x0, yt, obsPrecisi
     nEqns, lastMean, lastHessian, options  )
 df = 20;
 w1 = sqrt(chi2rnd(df,1)/df);
-ObsPriorMean = ones(1, nEqns);
-ObsPriorPrecision = eye(nEqns).*1e-5;
+ObsPriorMean = .5.*ones(1, nEqns);
+ObsPriorPrecision = eye(nEqns).*1e-3;
 
 LogLikePositive = @(v) AproptoLL (v, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
@@ -31,7 +31,8 @@ proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
 Num = LogLikePositive(proposal) + proposalDist(x0');
 Den = LogLikePositive(x0) + proposalDist(proposal');
 alpha = Num - Den;
-if log(unifrnd(0,1,1)) <= alpha 
+u = log(unifrnd(0,1,1));
+if u <= alpha 
     retval = proposal;
 else
    retval = x0; 

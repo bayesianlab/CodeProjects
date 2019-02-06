@@ -1,21 +1,21 @@
-function [] = plotFt(Factor, sumFt, sumFt2, InfoMat)
+function [] = plotFt(Factor, sumFt, sumFt2, InfoCell)
 [nFactors, T] = size(Factor);
 variance = sumFt2 - sumFt.^2;
 sig = sqrt(variance);
-upper = sumFt + sig;
-lower = sumFt - sig;
+upper = sumFt + 2.*sig;
+lower = sumFt - 2.*sig;
 xaxis = 1:T;
 fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
 facealpha = .3;
-
+InfoMat = InfoCell{1,1};
 
 
 LW = .75;
-COLOR = [1,0,.5];
+COLOR = [1,0,0];
 Regions = length(unique(InfoMat));
 Countries = size(InfoMat,1);
-
+RowsWhenEven = Regions/2 + 1;
 RowsWhenOdd  = Regions +1;
 figure(1)
 if mod(Regions,2) == 0
@@ -23,7 +23,7 @@ if mod(Regions,2) == 0
 
         % Even Regions
         if k == 1
-            subplot(Regions,2, 1:2)
+            subplot(RowsWhenEven,2, 1:2)
             h = fill(fillX(1,:), fillY(1,:), COLOR);
             set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
             hold on
@@ -31,12 +31,11 @@ if mod(Regions,2) == 0
             title('World')
             hold off
         else
-            subplot(Regions, 2, k+1)
-            h = fill(fillX(1,:), fillY(k+1,:), COLOR);
+            subplot(RowsWhenEven, 2, k+1)
+            h = fill(fillX(1,:), fillY(k,:), COLOR);
             set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
             hold on
-
-            p1 = plot(Factor(k+1,:), 'Color', 'black', 'LineWidth', LW);
+            p1 = plot(Factor(k,:), 'Color', 'black', 'LineWidth', LW);
             title(sprintf('Region %i', k-1))
             hold off
         end
