@@ -1,12 +1,12 @@
 clear;clc;
 rng(1101)
 SeriesPerCountry =5;
-CountriesInRegion = 5;
+CountriesInRegion = 3;
 Regions = 5;
 Countries = CountriesInRegion*Regions;
 
 
-T = 50;
+T = 100;
 beta = ones(1,SeriesPerCountry+1).*.4;
 G = [.7, .5, .5]';
 % gamma = linspace(.1, .2, 1+Regions+Countries);
