@@ -62,7 +62,6 @@ else
             title(sprintf('Region %i', k-1))
             hold off
         else
-            k
             subplot(RowsWhenOdd, 2, k+1)
             h = fill(fillX(1,:), fillY(k,:), COLOR);
             set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
@@ -90,7 +89,6 @@ if Countries == 1
 else
     if mod(Countries,2) == 0
         for k = 1:Countries
-            
             % Even
             subplot(RowsWhenEven, 2, k)
             h = fill(fillX(1,:), fillY(k+moveToCountry,:), COLOR);

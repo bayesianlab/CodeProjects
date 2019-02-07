@@ -18,7 +18,6 @@ SeriesPerCountry = InfoCell{1,3};
 nFactors = length(initStateTransitions);
 [K,T] = size(yt);
 betaDim= size(Xt,2);
-SeriesPerCountry
 [IRegion, ICountry, Regions, Countries] = MakeObsModelIdentity( InfoMat, SeriesPerCountry);
 
 backupMeanAndHessian  = setBackups(InfoCell, SeriesPerCountry, worldBlocks,2);
@@ -27,7 +26,6 @@ RegionIndicesFt = 2:(Regions+1);
 CountryIndicesFt = 2+Regions:(1+Regions+Countries);
 
 StateObsModel = makeStateObsModel(initobsmodel,IRegion,ICountry);
-
 
 Si = kowStatePrecision( diag(initStateTransitions), 1, T);
 obsPrecision = ones(K,1);
@@ -63,7 +61,7 @@ for i = 1 : Sims
     %     [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
     %         StateObsModel,Si,T);
     
-    %% World
+            %% World
     FactorType = 1;
     NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry) ;
     ty = ydemut - NoWorld*Ft;
@@ -72,7 +70,7 @@ for i = 1 : Sims
         backupMeanAndHessian, FactorType, worldBlocks);
     Ft(1,:) = f;
     
-    %% Region
+        %% Region
     FactorType = 2;
     NoRegion = makeStateObsModel(currobsmod, zerooutregion, ICountry);
     ty = ydemut - NoRegion*Ft;
@@ -81,7 +79,7 @@ for i = 1 : Sims
         backupMeanAndHessian,FactorType);
     Ft(RegionIndicesFt,:) = f;
     
-    %% Country
+        %% Country
     FactorType = 3;
     NoCountry = makeStateObsModel(currobsmod, IRegion, zerooutcountry);
     ty = ydemut - NoCountry*Ft;
@@ -89,7 +87,7 @@ for i = 1 : Sims
         Ft(CountryIndicesFt, :), ty, currobsmod(:,3), stateTransitions(CountryIndicesFt), obsPrecision, ...
         backupMeanAndHessian, FactorType);
     Ft(CountryIndicesFt, :) = f;
-    
+
     %% Variance
     StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);
     residuals = ydemut - StateObsModel*Ft;

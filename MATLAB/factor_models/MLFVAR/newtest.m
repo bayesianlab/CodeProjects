@@ -1,15 +1,16 @@
 clear;clc;
 rng(1101)
 SeriesPerCountry =5;
-CountriesInRegion = 10;
-Regions = 2;
+CountriesInRegion = 5;
+Regions = 5;
 Countries = CountriesInRegion*Regions;
 
 
 T = 50;
 beta = ones(1,SeriesPerCountry+1).*.4;
-G = [.99, .7, .5]';
-gamma = linspace(.5, .8, 1+Regions+Countries);
+G = [.7, .5, .5]';
+% gamma = linspace(.1, .2, 1+Regions+Countries);
+gamma = ones(1, 1+Regions+Countries).*.5;
 K = SeriesPerCountry*CountriesInRegion*Regions;
 [DataCell] = ...
     MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, G, gamma);
@@ -26,8 +27,8 @@ Regions = size(InfoCell{1,2},1);
 nFactors = 1 + Regions + Countries;
 v0=3;
 r0 =5;
-Sims = 10;
-burnin =1;
+Sims = 50;
+burnin =10;
 initobsmodel = [.2,.2,.2].*ones(K,3);
 initStateTransitions = ones(nFactors,1).*.5;
 initBeta = ones(size(Xt,2),1);
