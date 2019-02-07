@@ -6,7 +6,7 @@ nFactors = 1 + Regions + Countries;
 rdex = 1:Regions;
 InfoCell = cell(1,3);
 InfoCell{1,1} = kron(rdex', ones(CountriesInRegion,1));
-InfoCell{1,2} = [1:SeriesPerCountry*CountriesInRegion:K,;SeriesPerCountry*CountriesInRegion:SeriesPerCountry*CountriesInRegion:K]';
+InfoCell{1,2} = [1:SeriesPerCountry*CountriesInRegion:K;SeriesPerCountry*CountriesInRegion:SeriesPerCountry*CountriesInRegion:K]';
 InfoCell{1,3} = SeriesPerCountry;
 
 InfoMat = InfoCell{1,1};

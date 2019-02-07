@@ -18,13 +18,14 @@ SeriesPerCountry = InfoCell{1,3};
 nFactors = length(initStateTransitions);
 [K,T] = size(yt);
 betaDim= size(Xt,2);
-
+SeriesPerCountry
 [IRegion, ICountry, Regions, Countries] = MakeObsModelIdentity( InfoMat, SeriesPerCountry);
 
 backupMeanAndHessian  = setBackups(InfoCell, SeriesPerCountry, worldBlocks,2);
 RegionIndicesFt = 2:(Regions+1);
 
 CountryIndicesFt = 2+Regions:(1+Regions+Countries);
+
 StateObsModel = makeStateObsModel(initobsmodel,IRegion,ICountry);
 
 
@@ -33,6 +34,7 @@ obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
 beta = initBeta;
 currobsmod = initobsmodel;
+
 
 vecF = kowUpdateLatent(yt(:), StateObsModel, Si, obsPrecision) ;
 Ft = reshape(vecF, nFactors,T);
