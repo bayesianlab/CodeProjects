@@ -6,7 +6,7 @@ function [obsupdate, backupMeanAndHessian, f] = ...
 
 
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'Display', 'iter', 'FiniteDifferenceType', 'forward',...
+    'Display', 'off', 'FiniteDifferenceType', 'forward',...
     'MaxIterations', 100, 'MaxFunctionEvaluations', 5000,...
     'OptimalityTolerance', 1e-5, 'FunctionTolerance', 1e-5, 'StepTolerance', 1e-5);
 
@@ -20,6 +20,7 @@ obsupdate = zeros(K,1);
 if InfoMat(1) ~= 1
     error('InfoMat(1) is not equal to 1. First Region must start with 1')
 end
+
 if FactorType == 1
     fprintf('WORLD ')
     nBlocks = varargin{1};
@@ -50,8 +51,8 @@ if FactorType == 1
         backupMeanAndHessian{c,2} = lastHessian;
         obsupdate(subsetSelect) = xt;
     end
-    
     f = kowUpdateLatent(yt(:),obsupdate, factorPrecision, obsPrecision);
+    
 elseif FactorType ==2
     fprintf('REGION ')
     RegionInfo = InfoCell{1,2};
@@ -99,7 +100,7 @@ elseif FactorType ==2
         obsupdate(subsetSelect) = xt;
         f(r,:) =  kowUpdateLatent(yslice(:),  obsupdate(subsetSelect), factorPrecision, precisionSlice);
     end
-    obsupdate
+    
 elseif FactorType == 3
     fprintf('COUNTRY ')
     t = 1:SeriesPerCountry;
@@ -124,6 +125,6 @@ elseif FactorType == 3
 else
     error('Incorrect factor type, must be world, region or country (1,2,3)')
 end
-obsupdate
+
 end
 

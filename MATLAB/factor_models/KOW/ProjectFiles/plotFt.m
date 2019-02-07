@@ -16,7 +16,7 @@ COLOR = [1,0,0];
 Regions = length(unique(InfoMat));
 Countries = size(InfoMat,1);
 RowsWhenEven = Regions/2 + 1;
-RowsWhenOdd  = Regions +1;
+RowsWhenOdd  = 1 + (Regions-1)/2 + 1;
 figure(1)
 if mod(Regions,2) == 0
     for k = 1:Regions+1
@@ -42,7 +42,6 @@ if mod(Regions,2) == 0
     end
 else
     for k = 1:Regions+1
-
         % Odd Regions
         if k == 1
             subplot(RowsWhenOdd, 2, 1:2)
@@ -62,7 +61,6 @@ else
             title(sprintf('Region %i', k-1))
             hold off
         else
-            k
             subplot(RowsWhenOdd, 2, k+1)
             h = fill(fillX(1,:), fillY(k,:), COLOR);
             set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
@@ -90,7 +88,6 @@ if Countries == 1
 else
     if mod(Countries,2) == 0
         for k = 1:Countries
-            
             % Even
             subplot(RowsWhenEven, 2, k)
             h = fill(fillX(1,:), fillY(k+moveToCountry,:), COLOR);
