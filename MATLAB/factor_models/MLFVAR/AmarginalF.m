@@ -6,9 +6,9 @@ function [obsupdate, backupMeanAndHessian, f] = ...
 
 
 options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'Display', 'off', 'FiniteDifferenceType', 'forward',...
+    'Display', 'iter', 'FiniteDifferenceType', 'forward',...
     'MaxIterations', 100, 'MaxFunctionEvaluations', 5000,...
-    'OptimalityTolerance', 1e-8, 'FunctionTolerance', 1e-8, 'StepTolerance', 1e-8);
+    'OptimalityTolerance', 1e-5, 'FunctionTolerance', 1e-5, 'StepTolerance', 1e-5);
 
 
 
@@ -99,7 +99,7 @@ elseif FactorType ==2
         obsupdate(subsetSelect) = xt;
         f(r,:) =  kowUpdateLatent(yslice(:),  obsupdate(subsetSelect), factorPrecision, precisionSlice);
     end
-    
+    obsupdate
 elseif FactorType == 3
     fprintf('COUNTRY ')
     t = 1:SeriesPerCountry;
@@ -124,6 +124,6 @@ elseif FactorType == 3
 else
     error('Incorrect factor type, must be world, region or country (1,2,3)')
 end
-
+obsupdate
 end
 

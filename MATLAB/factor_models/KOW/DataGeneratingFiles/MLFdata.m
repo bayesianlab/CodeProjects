@@ -41,7 +41,7 @@ end
 Factor = [Fw;Fr;Fc];
 
 [I1, I2] = MakeObsModelIdentity(InfoMat, SeriesPerCountry);
- 
+I1 
 Gt = [ones(K,1).*G(1), I1.*G(2), I2.*G(3)];
 
 % mu = reshape(Xt*beta, K,T) + Gt*Factor;
