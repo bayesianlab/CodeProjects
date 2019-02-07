@@ -33,7 +33,9 @@ if SimVersion == 1
         sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] =...
         MultDyFacVarSimVersion(yt, Xt,InfoCell, Sims, burnin, ReducedRuns,initBeta, initobsmodel, ...
         initStateTransitions,v0,r0, wb);
-    fname = createDateString('simulation_mfvar_');
+    deletext = strfind(DotMatFile, '.');
+    leadname = DotMatFile(1:deletext-1);
+    fname = createDateString(leadname)
     save(fname)
 else
     fprintf('Running version with mean\n')
