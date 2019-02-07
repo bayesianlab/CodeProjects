@@ -11,6 +11,10 @@ end
 if ischar(wb)
     wb = str2num(wb);
 end
+if ischar(SimVersion)
+    SimVersion = str2num(SimVersion);
+end
+
 load(DotMatFile,  'DataCell')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
@@ -35,8 +39,10 @@ if SimVersion == 1
         initStateTransitions,v0,r0, wb);
     deletext = strfind(DotMatFile, '.');
     leadname = DotMatFile(1:deletext-1);
-    fname = createDateString(leadname)
+    fname = createDateString(leadname);
     save(fname)
+    fprintf(['Saved results as  ', fname, '\n'])
+    
 else
     fprintf('Running version with mean\n')
     [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
