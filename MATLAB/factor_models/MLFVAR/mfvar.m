@@ -1,4 +1,4 @@
-function [] = mfvar(Sims, burnin, ReducedRuns, wb, DotMatFile)
+function [] = mfvar(Sims, burnin, ReducedRuns, wb, SimVersion, DotMatFile)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -17,7 +17,6 @@ Xt = DataCell{1,2};
 Factor = DataCell{1,3};
 InfoCell = DataCell{1,4};
 
-
 SeriesPerCountry = InfoCell{1,3};
 Countries = length(InfoCell{1,1});
 Regions = size(InfoCell{1,2},1);
@@ -28,13 +27,21 @@ r0 =5;
 initobsmodel = [.2,.2,.2].*ones(K,3);
 initStateTransitions = ones(nFactors,1).*.5;
 initBeta = ones(size(Xt,2),1);
-
-[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] =...
-    MultDyFacVar(yt, Xt,InfoCell, Sims, burnin, ReducedRuns,initBeta, initobsmodel, ...
-    initStateTransitions,v0,r0, wb);
-fname = createDateString('simulation_mfvar_');
-save(fname)
+if SimVersion == 1
+    [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
+        sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] =...
+        MultDyFacVarSimVersion(yt, Xt,InfoCell, Sims, burnin, ReducedRuns,initBeta, initobsmodel, ...
+        initStateTransitions,v0,r0, wb);
+    fname = createDateString('simulation_mfvar_');
+    save(fname)
+else
+    [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
+        sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] =...
+        MultDyFacVarSimVersion(yt, Xt,InfoCell, Sims, burnin, ReducedRuns,initBeta, initobsmodel, ...
+        initStateTransitions,v0,r0, wb);
+    fname = createDateString('worlddata_');
+    save(fname)
+end
 fprintf('\n\t\t SIMULATION ENDED \n')
 end
 
