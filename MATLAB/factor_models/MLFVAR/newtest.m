@@ -1,12 +1,12 @@
 clear;clc;
 rng(1101)
-SeriesPerCountry =5;
-CountriesInRegion = 3;
-Regions = 5;
+SeriesPerCountry =10;
+CountriesInRegion = 10;
+Regions = 10;
 Countries = CountriesInRegion*Regions;
 
 
-T = 100;
+T = 40;
 beta = ones(1,SeriesPerCountry+1).*.4;
 G = [.7, .5, .5]';
 % gamma = linspace(.1, .2, 1+Regions+Countries);
@@ -27,12 +27,12 @@ Regions = size(InfoCell{1,2},1);
 nFactors = 1 + Regions + Countries;
 v0=3;
 r0 =5;
-Sims = 50;
+Sims = 100;
 burnin =10;
 initobsmodel = [.2,.2,.2].*ones(K,3);
 initStateTransitions = ones(nFactors,1).*.5;
 initBeta = ones(size(Xt,2),1);
-wb = 1;
+wb = 8;
 ReducedRuns = 3;
 
 
