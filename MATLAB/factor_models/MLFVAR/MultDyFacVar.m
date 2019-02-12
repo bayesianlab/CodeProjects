@@ -19,12 +19,15 @@ nFactors = length(initStateTransitions);
 [K,T] = size(yt);
 betaDim= size(Xt,2);
 
+
 [IRegion, ICountry, Regions, Countries] = MakeObsModelIdentity( InfoMat, SeriesPerCountry);
+
 
 backupMeanAndHessian  = setBackups(InfoCell, SeriesPerCountry, worldBlocks,2);
 RegionIndicesFt = 2:(Regions+1);
 
 CountryIndicesFt = 2+Regions:(1+Regions+Countries);
+
 StateObsModel = makeStateObsModel(initobsmodel,IRegion,ICountry);
 
 
@@ -34,8 +37,6 @@ stateTransitions = initStateTransitions;
 beta = initBeta;
 currobsmod = initobsmodel;
 
-vecF = kowUpdateLatent(yt(:), StateObsModel, Si, obsPrecision) ;
-Ft = reshape(vecF, nFactors,T);
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt.^2;
 zerooutregion = zeros(K, Regions);
@@ -51,21 +52,21 @@ sumOM2= sumOM ;
 sumBeta = zeros(betaDim, 1);
 sumBeta2 = sumBeta;
 ydemut = yt;
-Ft = zeros(nFactors,T);
+
+Ft = ones(nFactors,T);
 
 DisplayHelpfulInfo(K,T,Regions,Countries,SeriesPerCountry,...
-    nFactors, worldBlocks, Sims,burnin,ReducedRuns)
+    nFactors, worldBlocks, Sims,burnin,ReducedRuns);
 
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
-        [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
-            StateObsModel,Si,T);
-    
+    [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
+        StateObsModel, Si,  T);
     %% World
     FactorType = 1;
-    NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry) ;
+    NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry);
     ty = ydemut - NoWorld*Ft;
-    [currobsmod(:,1), backupMeanAndHessian, f] = AmarginalF(InfoCell, ...
+    [currobsmod(:,1), backupMeanAndHessian,f] = AmarginalF(InfoCell, ...
         Ft(1, :), ty, currobsmod(:,1), stateTransitions(1), obsPrecision, ...
         backupMeanAndHessian, FactorType, worldBlocks);
     Ft(1,:) = f;
@@ -74,7 +75,7 @@ for i = 1 : Sims
     FactorType = 2;
     NoRegion = makeStateObsModel(currobsmod, zerooutregion, ICountry);
     ty = ydemut - NoRegion*Ft;
-    [currobsmod(:,2),backupMeanAndHessian, f] = AmarginalF(InfoCell, ...
+    [currobsmod(:,2),backupMeanAndHessian,f] = AmarginalF(InfoCell, ...
         Ft(RegionIndicesFt, :), ty, currobsmod(:,2), stateTransitions(RegionIndicesFt), obsPrecision, ...
         backupMeanAndHessian,FactorType);
     Ft(RegionIndicesFt,:) = f;
@@ -88,23 +89,22 @@ for i = 1 : Sims
         backupMeanAndHessian, FactorType);
     Ft(CountryIndicesFt, :) = f;
     
-    %% Variance
     StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);
+    fprintf('\nMean Obs. Model')
+    disp(mean(currobsmod))
+    
+    %% Variance
     residuals = ydemut - StateObsModel*Ft;
     [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
     obsPrecision = 1./obsVariance;
     
     %% AR Parameters
-    [WorldAr] = kowUpdateArParameters(stateTransitions(1), Ft(1,:), 1);
-    [RegionAr] = kowUpdateArParameters(stateTransitions(RegionIndicesFt),...
-        Ft(RegionIndicesFt,:), 1);
-    [CountryAr] = kowUpdateArParameters(stateTransitions(CountryIndicesFt),...
-        Ft(CountryIndicesFt,:), 1);
-    stateTransitions = [WorldAr;RegionAr;CountryAr];
-    
+    stateTransitions = kowUpdateArParameters(stateTransitions, Ft, 1);
+    Si = kowStatePrecision( diag(stateTransitions), 1, T);
+    fprintf('Mean ST l')
+    disp(stateTransitions')
     %% Storage
     if i > burnin
-        %         v = i -burnin;
         sumBeta = sumBeta + beta;
         sumBeta2 = sumBeta2 + beta.^2;
         sumFt = sumFt + Ft;

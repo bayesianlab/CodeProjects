@@ -34,9 +34,6 @@ stateTransitions = initStateTransitions;
 beta = initBeta;
 currobsmod = initobsmodel;
 
-
-% vecF = kowUpdateLatent(yt(:), StateObsModel, Si, obsPrecision) ;
-% Ft = reshape(vecF, nFactors,T);
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt.^2;
 zerooutregion = zeros(K, Regions);

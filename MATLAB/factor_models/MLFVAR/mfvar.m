@@ -28,8 +28,8 @@ K = SeriesPerCountry*Countries;
 nFactors = 1 + Regions + Countries;
 v0=3;
 r0 =5;
-initobsmodel = [.2,.2,.2].*ones(K,3);
-initStateTransitions = ones(nFactors,1).*.5;
+initobsmodel = [.1,.1,.1].*ones(K,3);
+initStateTransitions = ones(nFactors,1).*.2;
 initBeta = ones(size(Xt,2),1);
 if SimVersion == 1
     fprintf('Running sim version\n')
