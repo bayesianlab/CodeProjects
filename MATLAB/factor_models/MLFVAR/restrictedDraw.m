@@ -42,10 +42,7 @@ LogLikePositive = @(v) AproptoLL (v, yt,ObsPriorMean,...
 LL = @(guess) -AproptoLL(guess, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 [themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0, options);
-
-% check = kowMHR(x0,themean,Hessian, yt,obsPrecision,ObsPriorMean, ObsPriorPrecision\eye(length(themean)), Ft, FtPrecision)
 [~, p] = chol(Hessian);
-
 [themean, Hessian, lastMean, lastHessian] = ...
     optimCheck(p, themean,Hessian, lastMean, lastHessian);
 V = Hessian \ eye(length(themean));

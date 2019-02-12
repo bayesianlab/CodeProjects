@@ -15,6 +15,5 @@ else
     error('Restriction level must be 1 or 0')
 end
 
-
 end
 

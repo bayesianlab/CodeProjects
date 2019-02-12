@@ -14,7 +14,8 @@ for i = 1: Rows
     if log(unifrnd(0,1,1,1)) <= alpha
         accept = accept + 1;
         ArParams(i,:) = proposal;
-    end
+    else
+        ArParams(i,:) = ArParams;
 end
 end
 

@@ -26,19 +26,23 @@ stateTransitionsAll = gamma'.*eye(nFactors);
 W = kowStatePrecision(gamma(1), 1, T);
 
 
-Fw = mvnrnd(zeros(1,T), W);
-Fr = zeros(Regions, T);
-for r = 1:Regions
-    R = kowStatePrecision(gamma(1+r), 1, T);
-    Fr(r,:) = mvnrnd(zeros(1,T), R);
-end
-Fc = zeros(Countries,T);
-for c = 1:Countries
-    C = kowStatePrecision(gamma(3) , 1, T); 
-    Fc(c,:) =mvnrnd(zeros(1,T), C);
-end
+% Fw = mvnrnd(zeros(1,T), W);
+% Fr = zeros(Regions, T);
+% for r = 1:Regions
+%     R = kowStatePrecision(gamma(1+r), 1, T);
+%     Fr(r,:) = mvnrnd(zeros(1,T), R);
+% end
+% Fc = zeros(Countries,T);
+% for c = 1:Countries
+%     C = kowStatePrecision(gamma(3) , 1, T); 
+%     Fc(c,:) =mvnrnd(zeros(1,T), C);
+% end
+% 
+% Factor = [Fw;Fr;Fc];
 
-Factor = [Fw;Fr;Fc];
+S = kowStatePrecision( stateTransitionsAll, 1, T) \ speye(nFactors*T);
+
+Factor = reshape(mvnrnd(zeros(1,nFactors*T), S)', nFactors, T);
 
 [I1, I2] = MakeObsModelIdentity(InfoMat, SeriesPerCountry);
 

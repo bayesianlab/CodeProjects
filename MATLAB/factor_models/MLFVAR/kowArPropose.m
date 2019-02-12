@@ -1,10 +1,11 @@
 function [ proposal, P0, P0old, gammahat, G ] = kowArPropose(y,x, OldAr)
 Arp = size(x,1);
+
 G = ((eye(Arp).*.01) +  x*x')\eye(Arp);
 gammahat = G* (x*y');
-proposal = 10;
 valid = -1;
 if Arp == 1
+    proposal = 10;
     while abs(proposal) > 1
         proposal = normrnd(gammahat,G);
         P0 = 1/(1-proposal^2);

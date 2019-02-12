@@ -3,6 +3,14 @@ fprintf('\nUpdating ar parameters on state variables\n')
 [Rows, ~] = size(StateVariables);
 accept = 0;
 zeroarp = zeros(1,Arp);
+
+% X = StateVariables(:,1:end-Arp);
+% Y = StateVariables(:,Arp+1:end);
+% 
+% Prior = eye(Rows).*1e-3;
+% 
+% (1./diag(X*X')).*diag(X*Y')
+
 for i = 1: Rows
     State = StateVariables(i,:);
     Ar = ArParams(i,:);
