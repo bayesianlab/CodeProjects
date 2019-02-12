@@ -83,7 +83,6 @@ elseif FactorType ==2
     %             backupMeanAndHessian{c,2} = lastHessian;
     %             obsupdate(subsetSelect) = xt;
     %         end
-    
     for r = 1:Regions
         lastMean = backupMeanAndHessian{r,1};
         lastHessian = backupMeanAndHessian{r,2};

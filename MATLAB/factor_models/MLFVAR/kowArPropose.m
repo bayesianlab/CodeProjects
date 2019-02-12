@@ -4,9 +4,11 @@ Arp = size(x,1);
 G = ((eye(Arp).*.01) +  x*x')\eye(Arp);
 gammahat = G* (x*y');
 valid = -1;
+c = 0;
 if Arp == 1
     proposal = 10;
-    while abs(proposal) > 1
+    while abs(proposal) > 1 & (c < 100)
+        c = c + 1;
         proposal = normrnd(gammahat,G);
         P0 = 1/(1-proposal^2);
         P0old = 1/(1-OldAr^2);

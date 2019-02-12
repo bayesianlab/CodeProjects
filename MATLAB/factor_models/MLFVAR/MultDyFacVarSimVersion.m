@@ -3,7 +3,7 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     ...
     MultDyFacVarSimVersion(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initBeta, initobsmodel, initStateTransitions, v0, r0,...
-    worldBlocks, Factor)
+    worldBlocks)
 
 % InfoCell 1,1 has which country belongs to which Region
 % InfoCell 1,2 has which equation starts a region and which
@@ -35,8 +35,8 @@ beta = initBeta;
 currobsmod = initobsmodel;
 
 
-vecF = kowUpdateLatent(yt(:), StateObsModel, Si, obsPrecision) ;
-Ft = reshape(vecF, nFactors,T);
+% vecF = kowUpdateLatent(yt(:), StateObsModel, Si, obsPrecision) ;
+% Ft = reshape(vecF, nFactors,T);
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt.^2;
 zerooutregion = zeros(K, Regions);
@@ -53,19 +53,16 @@ sumBeta = zeros(betaDim, 1);
 sumBeta2 = sumBeta;
 ydemut = yt;
 
-% Ft = Factor
+Ft = ones(nFactors,T);
 
 DisplayHelpfulInfo(K,T,Regions,Countries,SeriesPerCountry,...
     nFactors, worldBlocks, Sims,burnin,ReducedRuns);
 
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
-    %     [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
-    %         StateObsModel,Si,T);
-    
-   %% World
+    %% World
     FactorType = 1;
-    NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry) ;
+    NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry);
     ty = ydemut - NoWorld*Ft;
     [currobsmod(:,1), backupMeanAndHessian,f] = AmarginalF(InfoCell, ...
         Ft(1, :), ty, currobsmod(:,1), stateTransitions(1), obsPrecision, ...
@@ -89,16 +86,12 @@ for i = 1 : Sims
         Ft(CountryIndicesFt, :), ty, currobsmod(:,3), stateTransitions(CountryIndicesFt), obsPrecision, ...
         backupMeanAndHessian, FactorType);
     Ft(CountryIndicesFt, :) = f;
-    
+
     StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);
-    
-%     vecF = kowUpdateLatent(yt(:), StateObsModel, Si, obsPrecision) ;
-%     Ft = reshape(vecF, nFactors,T);
-    
     fprintf('\nMean Obs. Model')
     disp(mean(currobsmod))
+
     %% Variance
-    
     residuals = ydemut - StateObsModel*Ft;
     [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
     obsPrecision = 1./obsVariance;
@@ -106,7 +99,7 @@ for i = 1 : Sims
     %% AR Parameters
     stateTransitions = kowUpdateArParameters(stateTransitions, Ft, 1);
     Si = kowStatePrecision( diag(stateTransitions), 1, T);
-    fprintf('\nMean ST l')
+    fprintf('Mean ST l')
     disp(stateTransitions')
     %% Storage
     if i > burnin
