@@ -48,8 +48,13 @@ ydemut = yt;
 
 Ft = ones(nFactors,T);
 
+options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
+    'Display', 'off', 'FiniteDifferenceType', 'forward',...
+    'MaxIterations', 100, 'MaxFunctionEvaluations', 5000,...
+    'OptimalityTolerance', 1e-5, 'FunctionTolerance', 1e-5, 'StepTolerance', 1e-5);
+
 DisplayHelpfulInfo(K,T,Regions,Countries,SeriesPerCountry,...
-    nFactors, worldBlocks, Sims,burnin,ReducedRuns);
+    nFactors, worldBlocks, Sims,burnin,ReducedRuns, options);
 
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
@@ -60,7 +65,7 @@ for i = 1 : Sims
     ty = ydemut - NoWorld*Ft;
     [currobsmod(:,1), backupMeanAndHessian,f] = AmarginalF(InfoCell, ...
         Ft(1, :), ty, currobsmod(:,1), stateTransitions(1), obsPrecision, ...
-        backupMeanAndHessian, FactorType, worldBlocks);
+        backupMeanAndHessian, FactorType, worldBlocks, options);
     Ft(1,:) = f;
     
             %% Region
@@ -69,7 +74,7 @@ for i = 1 : Sims
     ty = ydemut - NoRegion*Ft;
     [currobsmod(:,2),backupMeanAndHessian,f] = AmarginalF(InfoCell, ...
         Ft(RegionIndicesFt, :), ty, currobsmod(:,2), stateTransitions(RegionIndicesFt), obsPrecision, ...
-        backupMeanAndHessian,FactorType);
+        backupMeanAndHessian,FactorType, worldBlocks, options);
     Ft(RegionIndicesFt,:) = f;
     
         %% Country
@@ -78,7 +83,7 @@ for i = 1 : Sims
     ty = ydemut - NoCountry*Ft;
     [currobsmod(:,3), backupMeanAndHessian,f] = AmarginalF(InfoCell, ...
         Ft(CountryIndicesFt, :), ty, currobsmod(:,3), stateTransitions(CountryIndicesFt), obsPrecision, ...
-        backupMeanAndHessian, FactorType);
+        backupMeanAndHessian, FactorType, worldBlocks, options);
     Ft(CountryIndicesFt, :) = f;
 
     StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);

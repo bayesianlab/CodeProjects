@@ -28,7 +28,7 @@ K = SeriesPerCountry*Countries;
 nFactors = 1 + Regions + Countries;
 v0=3;
 r0 =5;
-initobsmodel = [.1,.1,.1].*ones(K,3);
+initobsmodel = unifrnd(.05,.2, K,3);
 initStateTransitions = ones(nFactors,1).*.2;
 initBeta = ones(size(Xt,2),1);
 if SimVersion == 1
@@ -44,7 +44,7 @@ if SimVersion == 1
     fprintf(['Saved results as  ', fname, '\n'])
     
 else
-    fprintf('Running version with mean\n')
+    fprintf('<strong> Running version with mean </strong>\n')
     [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
         sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] =...
         MultDyFacVar(yt, Xt,InfoCell, Sims, burnin, ReducedRuns,initBeta, initobsmodel, ...
