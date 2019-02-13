@@ -6,11 +6,10 @@ Regions = 2;
 Countries = CountriesInRegion*Regions;
 T = 75;
 beta = ones(1,SeriesPerCountry+1).*.4;
-G = [.45, .65, .85]';
 gamma = ones(1, 1+Regions+Countries).*.3;
 K = SeriesPerCountry*CountriesInRegion*Regions;
 [DataCell] = ...
-    MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, G, gamma);
+    MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
 
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
