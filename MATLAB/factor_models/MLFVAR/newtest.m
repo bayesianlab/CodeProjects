@@ -1,8 +1,8 @@
 clear;clc;
 rng(1101)
 SeriesPerCountry =5;
-CountriesInRegion = 3;
-Regions = 3;
+CountriesInRegion = 5;
+Regions = 2;
 Countries = CountriesInRegion*Regions;
 T = 75;
 beta = ones(1,SeriesPerCountry+1).*.4;

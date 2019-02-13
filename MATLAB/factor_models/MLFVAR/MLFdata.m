@@ -44,10 +44,8 @@ Factor = reshape(Factor,nFactors,T);
 % Factor = [Fw;Fr;Fc];
 
 [I1, I2] = MakeObsModelIdentity(InfoMat, SeriesPerCountry);
- 
-Gt = [ones(K,1).*G(1), I1.*G(2), I2.*G(3)];
+Gt = unifrnd(0,1,K,nFactors).*[ones(K,1), I1, I2]; 
 
-% mu = reshape(Xt*beta, K,T) + Gt*Factor;
 mu = Gt*Factor;
 yt = mu + normrnd(0,1,K,T);
 % Xt = sparse(Xt);
