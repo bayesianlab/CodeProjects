@@ -25,10 +25,6 @@ RegionIndicesFt = 2:(Regions+1);
 
 CountryIndicesFt = 2+Regions:(1+Regions+Countries);
 
-StateObsModel = makeStateObsModel(initobsmodel,IRegion,ICountry);
-
-
-Si = kowStatePrecision( diag(initStateTransitions), 1, T);
 obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
 beta = initBeta;
@@ -84,14 +80,6 @@ for i = 1 : Sims
         Ft(CountryIndicesFt, :), ty, currobsmod(:,3), stateTransitions(CountryIndicesFt), obsPrecision, ...
         backupMeanAndHessian, FactorType);
     Ft(CountryIndicesFt, :) = f;
-    
-
-    
-    
-
-    
-
-
 
     StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);
     fprintf('\nMean Obs. Model')

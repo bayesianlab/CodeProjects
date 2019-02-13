@@ -1,10 +1,10 @@
 clear;clc;
 rng(1101)
-SeriesPerCountry =6;
-CountriesInRegion = 3;
+SeriesPerCountry =10;
+CountriesInRegion = 2;
 Regions = 2;
 Countries = CountriesInRegion*Regions;
-T = 75;
+T = 150;
 beta = ones(1,SeriesPerCountry+1).*.4;
 gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
 K = SeriesPerCountry*CountriesInRegion*Regions;
