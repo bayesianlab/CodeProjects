@@ -13,7 +13,7 @@ for s = 1:Reps
     rng(1101)
     SeriesPerCountry =SPC(s);
     
-    
+
     beta = ones(1,SeriesPerCountry+1).*.4;
     
     gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
@@ -33,7 +33,7 @@ for s = 1:Reps
     r0 =5;
     Sims = 5000;
     burnin =1000;
-    initobsmodel = [.1,.1,.1].*ones(K,3);
+    initobsmodel = unifrnd(0,1,K,3);
     initStateTransitions = ones(nFactors,1).*.5;
     initBeta = ones(size(Xt,2),1);
     wb = 1;
