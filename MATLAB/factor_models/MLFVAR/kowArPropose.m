@@ -13,6 +13,10 @@ if Arp == 1
         P0 = 1/(1-proposal^2);
         P0old = 1/(1-OldAr^2);
     end
+    if c == 100
+        proposal = OldAr;
+        P0 = P0old;
+    end
 else
     Phi = [OldAr;bottom];
     R = [1;zeros(Arp-1,1)];

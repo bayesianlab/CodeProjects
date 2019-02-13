@@ -42,7 +42,7 @@ DataCell{1,3} = Factor;
 DataCell{1,4} = InfoCell;
 DataCell{1,5} = beta;
 DataCell{1,6} = gamma;
-DataCell{1,7} = G;
+DataCell{1,7} = Gt;
 
 
 end

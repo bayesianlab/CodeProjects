@@ -57,7 +57,8 @@ DisplayHelpfulInfo(K,T,Regions,Countries,SeriesPerCountry,...
 
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
-    %% World
+    
+        %% World
     FactorType = 1;
     NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry);
     ty = ydemut - NoWorld*Ft;
@@ -66,7 +67,7 @@ for i = 1 : Sims
         backupMeanAndHessian, FactorType, worldBlocks);
     Ft(1,:) = f;
     
-    %% Region
+            %% Region
     FactorType = 2;
     NoRegion = makeStateObsModel(currobsmod, zerooutregion, ICountry);
     ty = ydemut - NoRegion*Ft;
@@ -75,7 +76,7 @@ for i = 1 : Sims
         backupMeanAndHessian,FactorType);
     Ft(RegionIndicesFt,:) = f;
     
-    %% Country
+        %% Country
     FactorType = 3;
     NoCountry = makeStateObsModel(currobsmod, IRegion, zerooutcountry);
     ty = ydemut - NoCountry*Ft;
@@ -83,6 +84,14 @@ for i = 1 : Sims
         Ft(CountryIndicesFt, :), ty, currobsmod(:,3), stateTransitions(CountryIndicesFt), obsPrecision, ...
         backupMeanAndHessian, FactorType);
     Ft(CountryIndicesFt, :) = f;
+    
+
+    
+    
+
+    
+
+
 
     StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);
     fprintf('\nMean Obs. Model')

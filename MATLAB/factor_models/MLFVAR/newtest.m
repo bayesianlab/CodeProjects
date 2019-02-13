@@ -1,12 +1,12 @@
 clear;clc;
 rng(1101)
-SeriesPerCountry =5;
-CountriesInRegion = 5;
+SeriesPerCountry =6;
+CountriesInRegion = 3;
 Regions = 2;
 Countries = CountriesInRegion*Regions;
 T = 75;
 beta = ones(1,SeriesPerCountry+1).*.4;
-gamma = ones(1, 1+Regions+Countries).*.3;
+gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
 K = SeriesPerCountry*CountriesInRegion*Regions;
 [DataCell] = ...
     MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
@@ -23,7 +23,7 @@ v0=3;
 r0 =5;
 Sims = 20;
 burnin =10;
-initobsmodel = [.1,.1,.1].*ones(K,3);
+initobsmodel = unifrnd(0,1,K,3);
 initStateTransitions = ones(nFactors,1).*.5;
 initBeta = ones(size(Xt,2),1);
 wb = 1;

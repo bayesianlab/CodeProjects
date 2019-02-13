@@ -43,6 +43,7 @@ LL = @(guess) -AproptoLL(guess, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 [themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0, options);
 [~, p] = chol(Hessian);
+
 [themean, Hessian, lastMean, lastHessian] = ...
     optimCheck(p, themean,Hessian, lastMean, lastHessian);
 V = Hessian \ eye(length(themean));
@@ -58,7 +59,6 @@ if proposal(1) < 0
     proposal = [restricteddraw;lower];
 end
 proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
-
 Num = LogLikePositive(proposal) + proposalDist(x0');
 Den = LogLikePositive(x0) + proposalDist(proposal');
 alpha = Num - Den;
