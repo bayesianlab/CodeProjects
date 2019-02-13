@@ -5,18 +5,19 @@ Reps = length(CR);
 SeriesPerCountry =5;
 Regions = 3;
 R2 = zeros(Reps, Regions + 1);
+T = 75;
+mkdir('Results/')
 for s = 1:Reps
     rng(1101)
     CountriesInRegion = CR(s);
     Countries = CountriesInRegion*Regions;
     nFactors = 1+Regions+Countries;
-    T = 5;
+    
     beta = ones(1,SeriesPerCountry+1).*.4;
-    G = [.45, .65, .85]';
-    gamma = ones(1, nFactors).*.3;
+    gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
     K = SeriesPerCountry*CountriesInRegion*Regions;
     [DataCell] = ...
-        MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, G, gamma);
+        MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
     
     yt = DataCell{1,1};
     Xt = DataCell{1,2};
@@ -43,11 +44,11 @@ for s = 1:Reps
     fitted =  (1./sum(sumFt.^2,2)).*sum((sumFt.*Factor),2).* sumFt;
     SST = sum((Factor - mean(Factor,2)).^2,2);
     SSR = sum((Factor - fitted).^2,2) ;
-     r2 = (1-(SSR./SST))';
-     R2(s,:) = r2(1:Regions+1);
+    r2 = (1-(SSR./SST))';
+    R2(s,:) = r2(1:Regions+1);
+    fname = createDateString('SPC_RepResults_');
+    save(['Results/',fname])
 end
-mkdir('Results/')
-fname = createDateString('SPCSim_')
-save(['Results/',fname])
+
 end
 
