@@ -1,4 +1,5 @@
 function [DataCell] = MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, G, gam)
+
 Countries = Regions*CountriesInRegion;
 K = Countries*SeriesPerCountry;
 InfoMat = zeros(K,1);
