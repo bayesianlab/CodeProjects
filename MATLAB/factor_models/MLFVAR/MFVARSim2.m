@@ -6,8 +6,8 @@ SeriesPerCountry =5;
 Regions = 3;
 R2 = zeros(Reps, Regions + 1);
 
-Sims = 5;
-burnin =1;
+Sims = 5000;
+burnin =1000;
 T = 75;
 
 dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res1/';
