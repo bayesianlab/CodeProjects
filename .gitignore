@@ -97,3 +97,6 @@ run_*.sh
 /MATLAB/discrete_choice/bin/**
 build/*
 /MATLAB/factor_models/kowmcc/**
+*.o*
+*.e*
+bin/
