@@ -3,6 +3,7 @@ fprintf('\nUpdating ar parameters on state variables\n')
 [Rows, ~] = size(StateVariables);
 accept = 0;
 zeroarp = zeros(1,Arp);
+
 for i = 1: Rows
     State = StateVariables(i,:);
     Ar = ArParams(i,:);
@@ -15,7 +16,8 @@ for i = 1: Rows
         accept = accept + 1;
         ArParams(i,:) = proposal;
     else
-        ArParams(i,:) = ArParams;
+        ArParams(i,:) = ArParams(i,:);
+    end
 end
 end
 

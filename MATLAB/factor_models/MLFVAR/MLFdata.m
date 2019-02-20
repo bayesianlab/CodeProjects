@@ -1,4 +1,4 @@
-function [DataCell] = MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma)
+function [DataCell] = MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gam)
 Countries = Regions*CountriesInRegion;
 K = Countries*SeriesPerCountry;
 InfoMat = zeros(K,1);
@@ -21,7 +21,7 @@ beta = beta.*ones(K, (SeriesPerCountry+1));
 beta= reshape(beta', (SeriesPerCountry+1)*K,1);
 
 
-stateTransitionsAll = gamma'.*eye(nFactors);
+stateTransitionsAll = gam'.*eye(nFactors);
 speyet = speye(T);
 S = kowStatePrecision(stateTransitionsAll, 1, T)\speye(nFactors*T);
 Factor = mvnrnd(zeros(nFactors*T,1), S);
@@ -41,7 +41,7 @@ DataCell{1,2} = Xt;
 DataCell{1,3} = Factor;
 DataCell{1,4} = InfoCell;
 DataCell{1,5} = beta;
-DataCell{1,6} = gamma;
+DataCell{1,6} = gam;
 DataCell{1,7} = Gt;
 
 
