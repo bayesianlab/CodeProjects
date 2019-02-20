@@ -1,6 +1,6 @@
 function [] = MFVARSim2()
 
-CR = [2,4,6,8,10];
+CR = [3,5,7,9,11];
 Reps = length(CR);
 SeriesPerCountry =5;
 Regions = 3;
@@ -8,7 +8,7 @@ R2 = zeros(Reps, Regions + 1);
 
 Sims = 5;
 burnin =1;
-T = 5;
+T = 75;
 
 dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res1/';
 mkdir(dirname)
