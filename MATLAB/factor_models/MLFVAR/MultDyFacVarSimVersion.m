@@ -68,7 +68,8 @@ for i = 1 : Sims
         backupMeanAndHessian, FactorType, worldBlocks, options);
     Ft(1,:) = f;
     
-            %% Region
+   
+    %% Region
     FactorType = 2;
     NoRegion = makeStateObsModel(currobsmod, zerooutregion, ICountry);
     ty = ydemut - NoRegion*Ft;
@@ -77,7 +78,8 @@ for i = 1 : Sims
         backupMeanAndHessian,FactorType, worldBlocks, options);
     Ft(RegionIndicesFt,:) = f;
     
-        %% Country
+
+    %% Country
     FactorType = 3;
     NoCountry = makeStateObsModel(currobsmod, IRegion, zerooutcountry);
     ty = ydemut - NoCountry*Ft;
@@ -85,11 +87,9 @@ for i = 1 : Sims
         Ft(CountryIndicesFt, :), ty, currobsmod(:,3), stateTransitions(CountryIndicesFt), obsPrecision, ...
         backupMeanAndHessian, FactorType, worldBlocks, options);
     Ft(CountryIndicesFt, :) = f;
-
+   
     StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);
-    fprintf('\nMean Obs. Model')
-    disp(mean(currobsmod))
-
+    
     %% Variance
     residuals = ydemut - StateObsModel*Ft;
     [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
@@ -98,8 +98,7 @@ for i = 1 : Sims
     %% AR Parameters
     stateTransitions = kowUpdateArParameters(stateTransitions, Ft, 1);
     Si = kowStatePrecision( diag(stateTransitions), 1, T);
-    fprintf('Mean ST l')
-    disp(stateTransitions')
+
     %% Storage
     if i > burnin
         sumBeta = sumBeta + beta;

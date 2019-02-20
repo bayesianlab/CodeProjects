@@ -1,12 +1,17 @@
 function [] = MFVARSim2()
 
-CR = [2,4,6,8,10];
+CR = [3,5,7,9,11];
 Reps = length(CR);
 SeriesPerCountry =5;
 Regions = 3;
 R2 = zeros(Reps, Regions + 1);
+
+Sims = 5;
+burnin =1;
 T = 75;
-mkdir('Results/')
+
+dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res1/';
+mkdir(dirname)
 for s = 1:Reps
     rng(1101)
     CountriesInRegion = CR(s);
@@ -29,9 +34,7 @@ for s = 1:Reps
     nFactors = 1 + Regions + Countries;
     v0=3;
     r0 =5;
-    Sims = 5000;
-    burnin =1000;
-    initobsmodel = [.1,.1,.1].*ones(K,3);
+    initobsmodel = unifrnd(0,1,K,3);
     initStateTransitions = ones(nFactors,1).*.5;
     initBeta = ones(size(Xt,2),1);
     wb = 1;
@@ -46,8 +49,8 @@ for s = 1:Reps
     SSR = sum((Factor - fitted).^2,2) ;
     r2 = (1-(SSR./SST))';
     R2(s,:) = r2(1:Regions+1);
-    fname = createDateString('SPC_RepResults_');
-    save(['Results/',fname])
+    fname = createDateString('CR_RepResults_');
+    save([dirname,fname])
 end
 
 end
