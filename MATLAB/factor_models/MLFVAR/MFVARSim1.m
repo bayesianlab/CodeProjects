@@ -8,8 +8,8 @@ Countries = CountriesInRegion*Regions;
 nFactors = 1+Regions+Countries;
 R2 = zeros(Reps, nFactors);
 T = 75;
-Sims = 5;
-burnin =1;
+Sims = 5000;
+burnin =1000;
 dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res1/';
 mkdir(dirname)
 for s = 1:Reps
