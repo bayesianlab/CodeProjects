@@ -1,10 +1,9 @@
-function[] =  DisplayHelpfulInfo(K,T,Regions,Countries,SeriesPerCountry, nFactors, wb, Sims, burnin, ReducedRuns, options)
+function[] =  DisplayHelpfulInfo(K,T,Regions,Countries,nFactors, wb, Sims, burnin, ReducedRuns, options)
 fprintf('\n<strong> This simulation is running wtih the following settings: </strong>\n')
 
 fprintf('\tK = %i dimenstional system\n', K)
 fprintf('\tt = %i timeperiods \n',  T)
 fprintf('\tC = %i  countries\n', Countries)
-fprintf('\tn = %i SeriesPerCountry \n',  SeriesPerCountry)
 fprintf('\tR = %i  Regions\n',  Regions)
 fprintf('\tq = %i  factors is the total number of factors\n',  nFactors)
 fprintf('<strong> The world observation model is blocked into: </strong>\n')

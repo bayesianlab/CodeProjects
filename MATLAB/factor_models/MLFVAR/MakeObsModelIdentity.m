@@ -1,15 +1,23 @@
-function [IR, IC, Regions, Countries] = MakeObsModelIdentity( InfoMat, SeriesPerCountry)
-Countries = size(InfoMat,1);
-K = Countries*SeriesPerCountry;
-Countries = K/SeriesPerCountry;
-Regions = length(unique(InfoMat(:,1)));
-IC = kron(eye(Countries), ones(SeriesPerCountry,1));
+function [IdentityCell, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell)
 
-IR = zeros(K,Regions);
-Expanded = kron(InfoMat, ones(SeriesPerCountry,1));
-for r = 1:Regions
-    IR(:,r) = double(r == Expanded);  
+
+getK = InfoCell{1,1};
+K = getK(end,end);
+sectors = length(InfoCell);
+sectorInfo = zeros(1,sectors);
+IdentityCell = cell(1,sectors);
+for s = 1:sectors
+    Info = InfoCell{1,s};
+    cols = size(Info,1);
+    sectorInfo(s) = cols;
+    I = zeros(K,cols);
+    for r = 1:cols
+        index = Info(r,:);
+        I(index(1):index(2),r) = 1;
+    end
+    IdentityCell{1,s} = I;
 end
 
+factorInfo = factorIndices(sectorInfo);
 end
 

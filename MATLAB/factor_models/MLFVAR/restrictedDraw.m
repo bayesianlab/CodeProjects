@@ -1,10 +1,14 @@
 function [ retval, lastMean, lastHessian ] = restrictedDraw(x0, yt, obsPrecision, Ft, FtPrecision,...
-    nEqns, lastMean, lastHessian, options )
+     lastMean, lastHessian, options )
 
 df = 20;
+[K,T] = size(yt);
+% It = speye(T);
+% Sinv = FtPrecision\eye(size(FtPrecision,1));
+
 w1 = sqrt(chi2rnd(df,1)/df);
-ObsPriorMean = .5.*ones(1, nEqns);
-ObsPriorPrecision = eye(nEqns).*1e-3;
+ObsPriorMean = .5.*ones(1, K);
+ObsPriorPrecision = eye(K).*1e-3;
 
 LogLikePositive = @(v) AproptoLL (v, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);

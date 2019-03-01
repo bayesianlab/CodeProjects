@@ -5,25 +5,24 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     burnin, ReducedRuns, initBeta, initobsmodel, initStateTransitions, v0, r0,...
     worldBlocks)
 
-% InfoCell 1,1 has which country belongs to which Region
-% InfoCell 1,2 has which equation starts a region and which
-% ends a region in row pairs
-% InfoCell 1,3 has SeriesPerCountry
-% Number of rows is equal to countries in InfoCell 1,1
 % yt is K x T
-% Obs Model must be [World Region Country] and is K x 3
+% initobsmodel must be [Level1, Level2,...] and is K x Levels
+% initStateTransitions must be nFactors x p where
+% p is the number of lagged factors in every Factor equation
 
-InfoMat = InfoCell{1,1};
-SeriesPerCountry = InfoCell{1,3};
-nFactors = length(initStateTransitions);
+[nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);
 betaDim= size(Xt,2);
-[IRegion, ICountry, Regions, Countries] = MakeObsModelIdentity( InfoMat, SeriesPerCountry);
+[Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+levels = length(sectorInfo);
+Countries = sectorInfo(3);
+Regions = sectorInfo(2);
+backupMeanAndHessian  = setBackups(InfoCell);
+% Needs to be generalized
+RegionIndicesFt = 2:Regions+1;
+CountryIndicesFt = 2+Regions:Countries +Regions+ 1;
 
-backupMeanAndHessian  = setBackups(InfoCell, SeriesPerCountry, worldBlocks,2);
-RegionIndicesFt = 2:(Regions+1);
 
-CountryIndicesFt = 2+Regions:(1+Regions+Countries);
 
 obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
@@ -32,10 +31,8 @@ currobsmod = initobsmodel;
 
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt.^2;
-zerooutregion = zeros(K, Regions);
-zerooutcountry = zeros(K, Countries);
-zerooutworld = zeros(K,1);
 sumResiduals2 = zeros(K,1);
+storeStateTransitions = zeros(nFactors, arFactor, Sims-burnin);
 sumST = zeros(nFactors, 1);
 sumST2 = zeros(nFactors, 1);
 sumObsVariance = zeros(K,1);
@@ -44,63 +41,52 @@ sumOM = zeros(K, 3);
 sumOM2= sumOM ;
 sumBeta = zeros(betaDim, 1);
 sumBeta2 = sumBeta;
-ydemut = yt;
+
 
 Ft = ones(nFactors,T);
 
-options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-    'Display', 'off', 'FiniteDifferenceType', 'forward',...
-    'MaxIterations', 100, 'MaxFunctionEvaluations', 5000,...
-    'OptimalityTolerance', 1e-5, 'FunctionTolerance', 1e-5, 'StepTolerance', 1e-5);
+% options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
+%     'Display', 'off', 'FiniteDifferenceType', 'forward',...
+%     'MaxIterations', 100, 'MaxFunctionEvaluations', 5000,...
+%     'OptimalityTolerance', 1e-5, 'FunctionTolerance', 1e-5, 'StepTolerance', 1e-5);
 
-DisplayHelpfulInfo(K,T,Regions,Countries,SeriesPerCountry,...
+options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
+    'StepTolerance', 1e-10, 'Display', 'off');
+
+DisplayHelpfulInfo(K,T,Regions,Countries,...
     nFactors, worldBlocks, Sims,burnin,ReducedRuns, options);
 
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     
-        %% World
-    FactorType = 1;
-    NoWorld = makeStateObsModel([zerooutworld, currobsmod(:,2:3)],IRegion,ICountry);
-    ty = ydemut - NoWorld*Ft;
-    [currobsmod(:,1), backupMeanAndHessian,f] = AmarginalF(InfoCell, ...
-        Ft(1, :), ty, currobsmod(:,1), stateTransitions(1), obsPrecision, ...
-        backupMeanAndHessian, FactorType, worldBlocks, options);
-    Ft(1,:) = f;
-    
-   
-    %% Region
-    FactorType = 2;
-    NoRegion = makeStateObsModel(currobsmod, zerooutregion, ICountry);
-    ty = ydemut - NoRegion*Ft;
-    [currobsmod(:,2),backupMeanAndHessian,f] = AmarginalF(InfoCell, ...
-        Ft(RegionIndicesFt, :), ty, currobsmod(:,2), stateTransitions(RegionIndicesFt), obsPrecision, ...
-        backupMeanAndHessian,FactorType, worldBlocks, options);
-    Ft(RegionIndicesFt,:) = f;
-    
-
-    %% Country
-    FactorType = 3;
-    NoCountry = makeStateObsModel(currobsmod, IRegion, zerooutcountry);
-    ty = ydemut - NoCountry*Ft;
-    [currobsmod(:,3), backupMeanAndHessian,f] = AmarginalF(InfoCell, ...
-        Ft(CountryIndicesFt, :), ty, currobsmod(:,3), stateTransitions(CountryIndicesFt), obsPrecision, ...
-        backupMeanAndHessian, FactorType, worldBlocks, options);
-    Ft(CountryIndicesFt, :) = f;
-   
-    StateObsModel = makeStateObsModel(currobsmod,IRegion,ICountry);
+    %% Update loadings and factors
+    for q = 1:levels
+        ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
+        ty = yt - ConditionalObsModel*Ft;
+        Info = InfoCell{1,q};
+        factorIndx = factorInfo(q,:);
+        factorSelect = factorIndx(1):factorIndx(2);
+        tempbackup = backupMeanAndHessian(factorSelect,:);
+        [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
+            Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect), obsPrecision, ...
+            tempbackup, options);
+        backupMeanAndHessian(factorSelect,:) = tempbackup;
+        
+        Ft(factorSelect,:) = f;
+    end
+    StateObsModel = makeStateObsModel(currobsmod,Identities,0);
     
     %% Variance
-    residuals = ydemut - StateObsModel*Ft;
+    residuals = yt - StateObsModel*Ft;
     [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
     obsPrecision = 1./obsVariance;
     
     %% AR Parameters
     stateTransitions = kowUpdateArParameters(stateTransitions, Ft, 1);
-    Si = kowStatePrecision( diag(stateTransitions), 1, T);
-
+    
     %% Storage
     if i > burnin
+        v = i - burnin;
         sumBeta = sumBeta + beta;
         sumBeta2 = sumBeta2 + beta.^2;
         sumFt = sumFt + Ft;
@@ -110,9 +96,9 @@ for i = 1 : Sims
         sumOM= sumOM + currobsmod;
         sumOM2 = sumOM2 + currobsmod.^2;
         sumST = sumST + stateTransitions;
+        storeStateTransitions(:,:,v) = stateTransitions;
         sumST2 = sumST2 + stateTransitions.^2;
         sumResiduals2 = sumResiduals2 + r2;
-        
     end
     
 end
@@ -133,6 +119,6 @@ sumResiduals2 = sumResiduals2 ./Runs;
 obsPrecisionStar = 1./sumObsVariance;
 
 % MLFML(yt,Xt, sumST, sumObsVariance, nFactors)
-
+MLMLDFVAR(ReducedRuns, yt,Xt,Ft,obsPrecisionStar, storeStateTransitions, sumOM, backupMeanAndHessian,InfoCell, options, v0, r0,1)
 end
 

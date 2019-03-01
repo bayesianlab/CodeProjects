@@ -1,4 +1,4 @@
-function [] = plotFt(Factor, sumFt, sumFt2, InfoCell)
+function [] = plotFt(Factor, sumFt, sumFt2, InfoCell, varargin)
 [nFactors, T] = size(Factor);
 variance = sumFt2 - sumFt.^2;
 sig = sqrt(variance);
@@ -8,16 +8,16 @@ xaxis = 1:T;
 fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
 facealpha = .3;
-InfoMat = InfoCell{1,1};
+
 
 
 LW = .75;
 COLOR = [1,0,0];
-Regions = length(unique(InfoMat));
-Countries = size(InfoMat,1);
+Regions = size(InfoCell{1,2},1);
+Countries = size(InfoCell{1,3},1);
 RowsWhenEven = Regions/2 + 1;
 RowsWhenOdd  = 1 + (Regions-1)/2 + 1;
-figure(1)
+f1=figure(1);
 if mod(Regions,2) == 0
     for k = 1:Regions+1
 
@@ -72,7 +72,7 @@ else
     end
 end
 
-figure(2)
+f2 = figure(2);
 moveToCountry = 1 + Regions;
 RowsWhenOdd = (Countries- 1)/2 + 1;
 RowsWhenEven = Countries/2;
@@ -122,7 +122,15 @@ else
     end
 end
 
-
+if nargin > 4
+    if nargin == 5
+        error('Need two filenames')
+    end
+    fprintf('Saving to file:\n %s\n  %s\n', varargin{1}, varargin{2})
+    
+    saveas(f1, varargin{1})
+    saveas(f2, varargin{2})
+end
 
 end
 
