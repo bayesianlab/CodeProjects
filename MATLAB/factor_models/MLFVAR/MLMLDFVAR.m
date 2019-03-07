@@ -13,7 +13,8 @@ if nomean == 1
     
     sumObsPrecision = zeros(K,1);
     storer2 = zeros(K,Sims);
-    
+    storeObsModel = zeros(K, levels,Sims);
+    storeThetagParams = cell(levels,2);
     for r = 1:Sims
         %% Obtain pi(Sigma*|y, stateTrans*)
         for q = 1:levels
@@ -26,7 +27,7 @@ if nomean == 1
             [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
                 Ft(factorSelect, :), ty, currobsmod(:,q), stateTransStar(factorSelect), obsPrecision, ...
                 tempbackup, options);
-            backupMeanAndHessian(factorSelect,:) = tAempbackup;
+            backupMeanAndHessian(factorSelect,:) = tempbackup;
             Ft(factorSelect,:) = f;
         end
         StateObsModel = makeStateObsModel(currobsmod,Identities,0);
@@ -43,22 +44,30 @@ if nomean == 1
     
     %%  get pi(ObsModel*|y, Sigma*, stateTrans*)
     
+    
     for r = 1:Sims
 
         for q = 1:levels
+            sectorInfo(q)        
+            
+            
             ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
             ty = yt - ConditionalObsModel*Ft;
             Info = InfoCell{1,q};
             factorIndx = factorInfo(q,:);
             factorSelect = factorIndx(1):factorIndx(2);
             tempbackup = backupMeanAndHessian(factorSelect,:);
+            
+           
+            
             [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
                 Ft(factorSelect, :), ty, currobsmod(:,q), stateTransStar(factorSelect), obsPrecisionStar, ...
                 tempbackup, options);
             backupMeanAndHessian(factorSelect,:) = tempbackup;
+            
             Ft(factorSelect,:) = f;
         end
-        StateObsModel = makeStateObsModel(currobsmod,Identities,0);
+        storeObsModel(:,:,r) = currobsmod;
     end
     
     

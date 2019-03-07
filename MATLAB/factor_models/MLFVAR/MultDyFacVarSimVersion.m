@@ -1,34 +1,43 @@
 function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
-    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] = ...
+   sumObsVariance, sumObsVariance2] = ...
     ...
-    MultDyFacVarSimVersion(yt, Xt,  InfoCell, Sims,...
-    burnin, ReducedRuns, initBeta, initobsmodel, initStateTransitions, v0, r0,...
+    MultDyFacVarSimVersion(yt, InfoCell, Sims,...
+    burnin, ReducedRuns, initobsmodel, initStateTransitions, v0, r0,...
     worldBlocks)
-
+%% INPUT 
 % yt is K x T
-% initobsmodel must be [Level1, Level2,...] and is K x Levels
+% initobsmodel must be [Level1, Level2,...] and is K x Levels,
+% Levels are the number of factors that appear in each equation
 % initStateTransitions must be nFactors x p where
 % p is the number of lagged factors in every Factor equation
+% InfoCell is a cell matrix with:
+% InfoCell{1,g} All the information about the beginning and ending
+% indices of the equations in the gth sector stored as 
+% row 1 = [beg, end]
+% row 2 = [beg, end] 
+% .
+% .
+% .
+% row j = [beg, end]
 
+
+
+% Index information
 [nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);
-betaDim= size(Xt,2);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 levels = length(sectorInfo);
 Countries = sectorInfo(3);
 Regions = sectorInfo(2);
 backupMeanAndHessian  = setBackups(InfoCell);
-% Needs to be generalized
-RegionIndicesFt = 2:Regions+1;
-CountryIndicesFt = 2+Regions:Countries +Regions+ 1;
 
-
-
+% Initializatitons
 obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
-beta = initBeta;
 currobsmod = initobsmodel;
+Ft = ones(nFactors,T);
 
+% Storage
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt.^2;
 sumResiduals2 = zeros(K,1);
@@ -39,16 +48,7 @@ sumObsVariance = zeros(K,1);
 sumObsVariance2 = sumObsVariance;
 sumOM = zeros(K, 3);
 sumOM2= sumOM ;
-sumBeta = zeros(betaDim, 1);
-sumBeta2 = sumBeta;
 
-
-Ft = ones(nFactors,T);
-
-% options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
-%     'Display', 'off', 'FiniteDifferenceType', 'forward',...
-%     'MaxIterations', 100, 'MaxFunctionEvaluations', 5000,...
-%     'OptimalityTolerance', 1e-5, 'FunctionTolerance', 1e-5, 'StepTolerance', 1e-5);
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-10, 'Display', 'off');
@@ -74,6 +74,7 @@ for i = 1 : Sims
         
         Ft(factorSelect,:) = f;
     end
+    
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
     
     %% Variance
@@ -87,8 +88,6 @@ for i = 1 : Sims
     %% Storage
     if i > burnin
         v = i - burnin;
-        sumBeta = sumBeta + beta;
-        sumBeta2 = sumBeta2 + beta.^2;
         sumFt = sumFt + Ft;
         sumFt2 = sumFt2 + Ft.^2;
         sumObsVariance = sumObsVariance +  obsVariance;
@@ -114,11 +113,13 @@ sumOM= sumOM ./Runs;
 sumOM2 = sumOM2 ./Runs;
 sumST = sumST./Runs;
 sumST2 = sumST2 ./Runs;
-sumResiduals2 = sumResiduals2 ./Runs;
 
+sumResiduals2 = sumResiduals2 ./Runs;
 obsPrecisionStar = 1./sumObsVariance;
 
 % MLFML(yt,Xt, sumST, sumObsVariance, nFactors)
-MLMLDFVAR(ReducedRuns, yt,Xt,Ft,obsPrecisionStar, storeStateTransitions, sumOM, backupMeanAndHessian,InfoCell, options, v0, r0,1)
+% save('testdata')
+% load('testdata.mat')
+% MLMLDFVAR(ReducedRuns, yt,Xt,Ft,obsPrecisionStar, storeStateTransitions, sumOM, backupMeanAndHessian,InfoCell, options, v0, r0,1)
 end
 
