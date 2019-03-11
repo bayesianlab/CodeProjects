@@ -2,7 +2,7 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
    sumObsVariance, sumObsVariance2] = ...
     ...
     MultDyFacVarSimVersion(yt, InfoCell, Sims,...
-    burnin, ReducedRuns, initobsmodel, initStateTransitions, v0, r0,...
+    burnin, ReducedRuns, initFactor, initobsmodel, initStateTransitions, v0, r0,...
     worldBlocks)
 %% INPUT 
 % yt is K x T
@@ -35,7 +35,7 @@ backupMeanAndHessian  = setBackups(InfoCell);
 obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
 currobsmod = initobsmodel;
-Ft = ones(nFactors,T);
+Ft = initFactor;
 
 % Storage
 sumFt = zeros(nFactors, T);
@@ -49,9 +49,8 @@ sumObsVariance2 = sumObsVariance;
 sumOM = zeros(K, 3);
 sumOM2= sumOM ;
 
-
-options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-10, 'Display', 'off');
+options = optimoptions(@fminunc,'FiniteDifferenceType', 'central',...
+    'StepTolerance', 1e-5, 'Display', 'off', 'OptimalityTolerance', 1e-9);
 
 DisplayHelpfulInfo(K,T,Regions,Countries,...
     nFactors, worldBlocks, Sims,burnin,ReducedRuns, options);
@@ -60,7 +59,7 @@ for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     
     %% Update loadings and factors
-    for q = 1:levels
+    for q = [3,1]
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
         ty = yt - ConditionalObsModel*Ft;
         Info = InfoCell{1,q};
@@ -71,12 +70,13 @@ for i = 1 : Sims
             Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect), obsPrecision, ...
             tempbackup, options);
         backupMeanAndHessian(factorSelect,:) = tempbackup;
-        
+        currobsmod
         Ft(factorSelect,:) = f;
     end
     
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
-    
+%      vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, kowStatePrecision(diag(stateTransitions),1,T), obsPrecision);
+%     Ft = reshape(vecFt, nFactors,T);
     %% Variance
     residuals = yt - StateObsModel*Ft;
     [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
@@ -105,8 +105,6 @@ end
 Runs = Sims- burnin;
 sumFt = sumFt./Runs;
 sumFt2 = sumFt2./Runs;
-sumBeta = sumBeta./Runs;
-sumBeta2 = sumBeta2./Runs;
 sumObsVariance = sumObsVariance./Runs;
 sumObsVariance2 = sumObsVariance2 ./Runs;
 sumOM= sumOM ./Runs;

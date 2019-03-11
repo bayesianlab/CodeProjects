@@ -34,7 +34,7 @@ I2 = Identities{1,3};
 Z0 = zeros(K,1);
 Z1 = zeros(size(I1,1), size(I1,2));
 Z2 = zeros(size(I2,1), size(I2,2));
-Gt = unifrnd(.1,.5,K,nFactors).*[ones(K,1), I1, I2]; 
+Gt = unifrnd(.6,.7,K,nFactors).*[ones(K,1), I1, I2]; 
 
 Gt(1,1) = 1;
 RegionInfo = InfoCell{1,2};
@@ -49,12 +49,14 @@ end
 WorldOnly = Gt(:,1);
 RegionsOnly = Gt(:,2:Regions+1);
 CountriesOnly = Gt(:,1+Regions+1:Countries+1+Regions);
-Gt = [WorldOnly, RegionsOnly,CountriesOnly];
+Gt = [WorldOnly, Z1,CountriesOnly];
 
 
 mu = Gt*Factor;
 yt = mu + normrnd(0,1,K,T);
 % Xt = sparse(Xt);
+
+Gt = [Gt(:,1), sum(Gt(:,2:Regions+1),2), sum(Gt(:,Regions+2:end),2)];
 Xt =0;
 DataCell = cell(1,7);
 DataCell{1,1} = yt;

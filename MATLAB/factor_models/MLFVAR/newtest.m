@@ -1,11 +1,11 @@
 
 clear;clc;
-rng(1101)
-SeriesPerCountry =5;
-CountriesInRegion = 5;
-Regions = 2;
+rng(121)
+SeriesPerCountry=3;
+CountriesInRegion = 1;
+Regions = 1;
 Countries = CountriesInRegion*Regions;
-T = 100;
+T = 50;
 beta = ones(1,SeriesPerCountry+1).*.4;
 gamma = unifrnd(.01,.25, 1, 1+Regions+Countries,1);
 K = SeriesPerCountry*CountriesInRegion*Regions;
@@ -16,12 +16,12 @@ yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
 Factor = DataCell{1,4};
+Gamma = DataCell{1,6};
 Gt = DataCell{1,7};
 
-% initStateTransitions = DataCell{1,6}';
-% initobsmodel(:,1) = Gt(:,1);
-% initobsmodel(:,2) = sum(Gt(:,2:Regions+1),2);
-% initobsmodel(:,3) = sum(Gt(:,1+Regions+1:Countries+Regions+1,:),2);
+
+
+
 sectorInfo = cellfun(@(x)size(x,1), InfoCell);
 Regions = sectorInfo(2);
 Countries = sectorInfo(3);
@@ -29,17 +29,26 @@ Countries = sectorInfo(3);
 nFactors = 1 + Regions + Countries;
 v0=3;
 r0 =5;
-Sims = 20;
-burnin =10;
-initobsmodel = [.5.*ones(K,1), .5.*ones(K,1), .5.*ones(K,1)];
-initStateTransitions = ones(nFactors,1).*.5;
+Sims = 100;
+burnin =20;
 
+
+% initobsmodel = Gt;
+% initobsmodel = .1.*ones(K,3);
+initobsmodel = zeros(K,3);
+% initobsmodel = [.5.*ones(K,1), .5.*ones(K,1), .5.*ones(K,1)];
+% initobsmodel = [zeros(K,1), zeros(K,1), .5.*ones(K,1)];
+
+initStateTransitions = ones(nFactors,1).*.5;
+% initStateTransitions = DataCell{1,6}';
+
+initFactor = Factor;
 wb = 1;
 ReducedRuns = 3;
 [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] = ...
-    MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin, ReducedRuns,  initobsmodel, ...
-    initStateTransitions,v0,r0, wb);
+    sumObsVariance, sumObsVariance2] = ...
+    MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin, ReducedRuns,  initFactor, initobsmodel, ...
+        initStateTransitions,v0,r0, wb);
 
 
 
@@ -53,6 +62,8 @@ ReducedRuns = 3;
 % disp(sumST')
 plotFt(Factor, sumFt, sumFt2, InfoCell)
 
+Gt
+sumOM
 
 
 
