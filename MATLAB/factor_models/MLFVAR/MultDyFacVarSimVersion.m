@@ -19,8 +19,6 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
 % .
 % row j = [beg, end]
 
-
-
 % Index information
 [nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);

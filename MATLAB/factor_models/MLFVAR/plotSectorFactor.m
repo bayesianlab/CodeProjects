@@ -1,4 +1,4 @@
-function [] = plotSectorFactor(factorSeries, factorSeries2ndMoment, xaxis, filename, name)
+function [] = plotSectorFactor(factorSeries, factorSeries2ndMoment, xaxis, name, varargin)
 
 variance = factorSeries2ndMoment - factorSeries.^2;
 sig = sqrt(variance);
@@ -10,12 +10,15 @@ fillY = [upper, fliplr(lower)];
 facealpha = .3;
 COLOR = [1,0,0];
 f = figure;
-% h=fill(fillX, fillY, COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+h=fill(fillX, fillY, COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 hold on
 plot(xaxis,factorSeries, 'Color', 'black', 'LineWidth', 1)
 title(name)
 hold off
-saveas(f, filename)
+nargin 
+if nargin > 4
+    saveas(f, filename)
+end
 end
 
