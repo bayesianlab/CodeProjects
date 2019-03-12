@@ -8,6 +8,7 @@ nFactorsK = nFactors*K;
 ObsModelT =ObsModel';
 OmegaI = diag(obsPrecision);
 FtOF = kron(OmegaI, factor*factor');
+
 Avariance = (ObsPriorPrecision + FtOF)\speye(nFactorsK, nFactorsK);
 Term = ((factor*ydemut').*obsPrecision');
 Amean = Avariance*(ObsPriorPrecision*ObsPriorMean' + Term(:));

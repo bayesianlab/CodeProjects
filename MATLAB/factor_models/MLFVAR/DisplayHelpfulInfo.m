@@ -1,4 +1,4 @@
-function[] =  DisplayHelpfulInfo(K,T,Regions,Countries,nFactors, wb, Sims, burnin, ReducedRuns, options)
+function[] =  DisplayHelpfulInfo(K,T,Regions,Countries,nFactors,  Sims, burnin, ReducedRuns, options)
 fprintf('\n<strong> This simulation is running wtih the following settings: </strong>\n')
 
 fprintf('\tK = %i dimenstional system\n', K)
@@ -6,13 +6,6 @@ fprintf('\tt = %i timeperiods \n',  T)
 fprintf('\tC = %i  countries\n', Countries)
 fprintf('\tR = %i  Regions\n',  Regions)
 fprintf('\tq = %i  factors is the total number of factors\n',  nFactors)
-fprintf('<strong> The world observation model is blocked into: </strong>\n')
-fprintf('\tb = %i blocks\n', wb)
-blockSize = K/wb;
-if floor(blockSize) ~= blockSize
-    error('Invalid wb size')
-end
-fprintf('\tj = %i is the number of equations per block\n', blockSize) 
 fprintf('<strong> MCMC Info:</strong>\n')
 
 fprintf('\tM = %i are the total MCMC runs\n', Sims)

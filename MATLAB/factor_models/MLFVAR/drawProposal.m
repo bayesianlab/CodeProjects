@@ -3,24 +3,25 @@ function [ retval, lastMean, lastHessian ] = drawProposal(x0, yt, obsPrecision, 
 
 df = 20;
 [K,T] = size(yt);
-
-ObsPriorMean = .5.*ones(1, K);
-ObsPriorPrecision = eye(K).*1e-3;
+[N,q] = size(x0);
+ObsPriorMean = .5.*ones(1, N*q);
+ObsPriorPrecision = eye(N*q).*1e-3;
 
 LogLikePositive = @(v) PropLike (v, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 LL = @(guess) -PropLike(guess, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 [themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0, options);
+themeanT = themean';
+vecthemeanT = themeanT(:);
 [~, p] = chol(Hessian);
-[themean, Hessian, lastMean, lastHessian] = ...
-    optimCheck(p, themean,Hessian, lastMean, lastHessian);
-V = Hessian \ eye(length(themean));
-n = length(themean);
 
-proposal = themean + chol(V, 'lower')*normrnd(0,1, n,1)./w1;
+V = Hessian \ eye(length(vecthemeanT));
+n = length(vecthemeanT);
+w1 = sqrt(chi2rnd(df,1)/df);
+proposal = vecthemeanT + chol(V, 'lower')*normrnd(0,1, n,1)./w1;
 
-for k = 1:levels
+for k = 1:length(RestrictedIndices)
     if  proposal(RestrictedIndices(k)) < 0
         w1 = sqrt(chi2rnd(df,1)/df);
         sigma = sqrt(V(RestrictedIndices(k)));
@@ -30,14 +31,16 @@ for k = 1:levels
     end
 end
 
-x0T = x0';
-proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
-Num = LogLikePositive(proposal) + proposalDist(x0T(:)');
-Den = LogLikePositive(x0T(:)) + proposalDist(proposal');
+reshapeProp = reshape(vecthemeanT, q, N)';
+vecx0T = x0';
+vecx0T = vecx0T(:);
+proposalDist = @(q) mvstudenttpdf(q, vecthemeanT', V, df);
+Num = LogLikePositive(reshapeProp) + proposalDist(vecx0T');
+Den = LogLikePositive(x0) + proposalDist(proposal');
 alpha = Num - Den;
 u =log(unifrnd(0,1,1));
 if u  <= alpha
-    retval = proposal;
+    retval = reshapeProp;
 else
     retval = x0;
 end

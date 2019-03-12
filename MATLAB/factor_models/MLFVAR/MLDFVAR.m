@@ -1,9 +1,9 @@
 function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
-   sumObsVariance, sumObsVariance2] = ...
+    sumObsVariance, sumObsVariance2] = ...
     ...
-    MultDyFacVarSimVersion(yt, InfoCell, Sims,...
+    MLDFVAR(yt, InfoCell, InfoCell2, Sims,...
     burnin, ReducedRuns, initFactor, initobsmodel, initStateTransitions, v0, r0)
-%% INPUT 
+%% INPUT
 % yt is K x T
 % initobsmodel must be [Level1, Level2,...] and is K x Levels,
 % Levels are the number of factors that appear in each equation
@@ -11,9 +11,9 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
 % p is the number of lagged factors in every Factor equation
 % InfoCell is a cell matrix with:
 % InfoCell{1,g} All the information about the beginning and ending
-% indices of the equations in the gth sector stored as 
+% indices of the equations in the gth sector stored as
 % row 1 = [beg, end]
-% row 2 = [beg, end] 
+% row 2 = [beg, end]
 % .
 % .
 % .
@@ -28,6 +28,7 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
 levels = length(sectorInfo);
 Countries = sectorInfo(3);
 Regions = sectorInfo(2);
+blockIndices = InfoCell{1,3}
 backupMeanAndHessian  = setBackups(InfoCell);
 
 % Initializatitons
@@ -49,58 +50,45 @@ sumOM = zeros(K, 3);
 sumOM2= sumOM ;
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-10, 'Display', 'iter', 'OptimalityTolerance', 1e-9);
+    'StepTolerance', 1e-7, 'Display', 'off', 'OptimalityTolerance', 1e-7);
 
 DisplayHelpfulInfo(K,T,Regions,Countries,...
-    nFactors,  Sims,burnin,ReducedRuns, options);
-pick = 1:levels;
+    nFactors, Sims,burnin,ReducedRuns, options);
+
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     
-    %% Update loadings and factors
-    
-%     u = randperm(levels);
-    for q = levels:(-1):1
-
-        
-        ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
-
-        ty = yt - ConditionalObsModel*Ft;
-        Info = InfoCell{1,q};
-        factorIndx = factorInfo(q,:);
-        factorSelect = factorIndx(1):factorIndx(2);
-        tempbackup = backupMeanAndHessian(factorSelect,:);
-        [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
-            Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect), obsPrecision, ...
-            tempbackup, options);
-        backupMeanAndHessian(factorSelect,:) = tempbackup;
-        Ft(factorSelect,:) = f;
-    end
+    %% Update loadings
+    [currobsmod, tempbackup] =ObsModelUpdate(InfoCell2, ...
+        Ft, yt, currobsmod, stateTransitions, obsPrecision, ...
+         backupMeanAndHessian, options, blockIndices);
+%     backupMeanAndHessian(factorSelect,:) = tempbackup;
     
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
-%      vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, kowStatePrecision(diag(stateTransitions),1,T), obsPrecision);
-%     Ft = reshape(vecFt, nFactors,T);
+    vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, kowStatePrecision(diag(stateTransitions),1,T), obsPrecision);
+    Ft = reshape(vecFt, nFactors,T);
+    
     %% Variance
-    residuals = yt - StateObsModel*Ft;
-    [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
-    obsPrecision = 1./obsVariance;
+%     residuals = yt - StateObsModel*Ft;
+%     [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
+%     obsPrecision = 1./obsVariance;
     
     %% AR Parameters
-    stateTransitions = kowUpdateArParameters(stateTransitions, Ft, 1);
+%     stateTransitions = kowUpdateArParameters(stateTransitions, Ft, 1);
     
     %% Storage
     if i > burnin
         v = i - burnin;
         sumFt = sumFt + Ft;
         sumFt2 = sumFt2 + Ft.^2;
-        sumObsVariance = sumObsVariance +  obsVariance;
-        sumObsVariance2 = sumObsVariance2 + obsVariance.^2;
+%         sumObsVariance = sumObsVariance +  obsVariance;
+%         sumObsVariance2 = sumObsVariance2 + obsVariance.^2;
         sumOM= sumOM + currobsmod;
         sumOM2 = sumOM2 + currobsmod.^2;
         sumST = sumST + stateTransitions;
         storeStateTransitions(:,:,v) = stateTransitions;
         sumST2 = sumST2 + stateTransitions.^2;
-        sumResiduals2 = sumResiduals2 + r2;
+%         sumResiduals2 = sumResiduals2 + r2;
     end
     
 end
