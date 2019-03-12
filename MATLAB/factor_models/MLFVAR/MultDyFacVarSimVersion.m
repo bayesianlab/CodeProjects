@@ -49,7 +49,7 @@ sumOM = zeros(K, 3);
 sumOM2= sumOM ;
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-10, 'Display', 'iter', 'OptimalityTolerance', 1e-9);
+    'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-9);
 
 DisplayHelpfulInfo(K,T,Regions,Countries,...
     nFactors,  Sims,burnin,ReducedRuns, options);
@@ -60,11 +60,8 @@ for i = 1 : Sims
     %% Update loadings and factors
     
 %     u = randperm(levels);
-    for q = levels:(-1):1
-
-        
+    for q = 1:1:levels
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
-
         ty = yt - ConditionalObsModel*Ft;
         Info = InfoCell{1,q};
         factorIndx = factorInfo(q,:);

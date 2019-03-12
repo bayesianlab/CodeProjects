@@ -78,7 +78,7 @@ end
 moveToCountry = 1 + Regions;
 divrem = [fix(Countries/MAXPERFIGURE), mod(Countries,MAXPERFIGURE)];
 
-% Check if the number of countries is small, less than the max per page
+% Check if the number of countries is small, i.e. less than the max per page
 if divrem(1,1) == 0
     % Check if the remainder is even
     if mod(divrem(1,2),2)== 0
@@ -135,15 +135,18 @@ if divrem(1,1) == 0
     
     % Number of countries is larger than the per page max
 else
+    
     t = 1:MAXPERFIGURE;
     for k = 1:divrem(1,1)
         select = t + (k-1)*MAXPERFIGURE;
         figure
         for p = 1:MAXPERFIGURE
             subplot(MAXROWS, MAXCOLS, p)
-            h = fill(fillX(1,:), fillY(p+moveToCountry,:), COLOR);
+           
+            h = fill(fillX(1,:), fillY(select(p) + moveToCountry,:), COLOR);
             set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
             hold on
+            
             p1 = plot(Factor(select(p) + moveToCountry,:), 'Color', 'black', 'LineWidth', LW);
             title(sprintf('Country %i', select(p)))
             hold off
@@ -152,6 +155,7 @@ else
     lastplots = (1+divrem(1,1)*MAXPERFIGURE):Countries;
     if (mod(divrem(1,2),2)== 0) & (divrem(1,2) ~= 0)
         % Even
+        
         figure
         remcols = divrem(1,2)/2;
         for p = 1:divrem(1,2)

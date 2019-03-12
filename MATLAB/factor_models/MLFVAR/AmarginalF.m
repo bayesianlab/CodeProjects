@@ -25,7 +25,4 @@ for r = 1:Regions
     
     f(r,:) =  kowUpdateLatent(yslice(:),  xt, factorPrecision, precisionSlice);
 end
-
-
 end
-

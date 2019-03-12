@@ -1,9 +1,9 @@
 
 clear;clc;
-rng(121)
+% rng(121)
 SeriesPerCountry=6;
-CountriesInRegion = 3;
-Regions = 4;
+CountriesInRegion = 2;
+Regions = 2;
 Countries = CountriesInRegion*Regions;
 T = 50;
 beta = ones(1,SeriesPerCountry+1).*.4;
@@ -42,13 +42,17 @@ initobsmodel = [.5.*ones(K,1), .5.*ones(K,1), .5.*ones(K,1)];
 initStateTransitions = ones(nFactors,1).*.5;
 % initStateTransitions = DataCell{1,6}';
 
-% initFactor = Factor;
-initFactor = normrnd(0,1,nFactors,T);
+obsPrecision = ones(K,1);
+[Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
+vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
+Ft = reshape(vecFt, nFactors,T);
+initFactor = Ft;
 ReducedRuns = 3;
 [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
     sumObsVariance, sumObsVariance2] = ...
     MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin, ReducedRuns,  initFactor, initobsmodel, ...
-        initStateTransitions,v0,r0);
+    initStateTransitions,v0,r0);
 
 
 
@@ -64,5 +68,8 @@ plotFt(Factor, sumFt, sumFt2, InfoCell)
 
 Gt
 sumOM
+
+Gamma
+sumST
 
 

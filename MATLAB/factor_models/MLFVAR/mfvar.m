@@ -1,4 +1,4 @@
-function [] = mfvar(Sims, burnin, ReducedRuns, wb, SimVersion, DotMatFile)
+function [] = mfvar(Sims, burnin, ReducedRuns, SimVersion, DotMatFile)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -8,9 +8,6 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
-if ischar(wb)
-    wb = str2num(wb);
-end
 if ischar(SimVersion)
     SimVersion = str2num(SimVersion);
 end
@@ -18,25 +15,31 @@ end
 load(DotMatFile,  'DataCell')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
-Factor = DataCell{1,3};
-InfoCell = DataCell{1,4};
+InfoCell = DataCell{1,3};
+Factor = DataCell{1,4};
 
-SeriesPerCountry = InfoCell{1,3};
-Countries = length(InfoCell{1,1});
-Regions = size(InfoCell{1,2},1);
-K = SeriesPerCountry*Countries;
+[Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+levels = length(sectorInfo);
+Countries = sectorInfo(3);
+Regions = sectorInfo(2);
+[K,T] = size(yt);
 nFactors = 1 + Regions + Countries;
 v0=3;
 r0 =5;
 initobsmodel = unifrnd(.05,.2, K,3);
 initStateTransitions = ones(nFactors,1).*.2;
 initBeta = ones(size(Xt,2),1);
+obsPrecision = ones(K,1);
+StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
+vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
+Ft = reshape(vecFt, nFactors,T);
+initFactor = Ft;
 if SimVersion == 1
     fprintf('Running sim version\n')
     [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
         sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] =...
-        MultDyFacVarSimVersion(yt, Xt,InfoCell, Sims, burnin, ReducedRuns,initBeta, initobsmodel, ...
-        initStateTransitions,v0,r0, wb);
+        MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin, ReducedRuns, initFactor, initobsmodel, ...
+        initStateTransitions,v0,r0);
     deletext = strfind(DotMatFile, '.');
     leadname = DotMatFile(1:deletext-1);
     fname = createDateString(leadname);
@@ -47,9 +50,9 @@ else
     fprintf('<strong> Running version with mean </strong>\n')
     [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
         sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] =...
-        MultDyFacVar(yt, Xt,InfoCell, Sims, burnin, ReducedRuns,initBeta, initobsmodel, ...
-        initStateTransitions,v0,r0, wb);
-    fname = createDateString('worlddata_');
+        MultDyFacVar(yt, Xt,InfoCell, Sims, burnin, ReducedRuns,initFactor, initBeta, initobsmodel, ...
+        initStateTransitions,v0,r0);
+    fname = createDateString('realdatasimulation_');
     save(fname)
 end
 fprintf('\n\t\t SIMULATION ENDED \n')
