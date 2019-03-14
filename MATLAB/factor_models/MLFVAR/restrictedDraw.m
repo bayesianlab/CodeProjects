@@ -28,7 +28,7 @@ proposal = themean + chol(V, 'lower')*normrnd(0,1, n,1)./w1;
 if proposal(1) < 0    
     sigma = sqrt(V(1,1));
     alpha = -(themean(1)*w1)/sigma;
-    z = truncNormalRand(alpha, Inf,0, 1);
+    z = truncatedBelow(alpha, 0, 1);
     restricteddraw = themean(1) + (sigma*z)/w1;
     lower = themean(2:n) + chol(V(2:n,2:n), 'lower')*normrnd(0,1, n-1,1)./w1;
     proposal = [restricteddraw;lower];
