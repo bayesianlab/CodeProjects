@@ -5,7 +5,7 @@ CountriesInRegion = 3;
 Regions = 2:8;
 Reps = length(Regions);
 
-T = 50;
+T = 75;
 Sims = 5000;
 burnin =1000;
 dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res3/';

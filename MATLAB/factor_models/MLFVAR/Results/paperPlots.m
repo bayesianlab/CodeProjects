@@ -1,8 +1,8 @@
 pathtosave = '~/GoogleDrive/statespace/';
  %% FIRST PASS
 %% SPC
-load('SeriesPerCountrySimFirst.mat')
-plotFt(Factor, sumFt, sumFt2, NewInfoCell,  pathtosave, 'SeriesPerCountryFirst' )
+% load('SeriesPerCountrySimFirst.mat')
+% plotFt(Factor, sumFt, sumFt2, NewInfoCell,  pathtosave, 'SeriesPerCountryFirst' )
 %%CR
 % load('CountriesRegionSimFirst.mat')
 % plotFt(Factor, sumFt, sumFt2, NewInfoCell,  pathtosave, 'CountriesPerRegion' )
@@ -20,13 +20,13 @@ plotFt(Factor, sumFt, sumFt2, NewInfoCell,  pathtosave, 'SeriesPerCountryFirst' 
 
 % CR
 % load('CountriesRegionFull.mat')
-% plotFt(Factor, sumFt, sumFt2, NewInfoCell,  pathtosave, 'CountriesRegion' )
+% plotFt(Factor, sumFt, sumFt2, NewInfoCell,  pathtosave, 'CountriesRegionLast' )
 % r2cr = figure;
 % plotR2(R2, CR)
 % saveas(r2cr, '~/GoogleDrive/statespace/R2CR.jpg')
 
-% load('sim3_last.mat')
-% plotFt(Factor, sumFt, sumFt2, InfoCell,  pathtosave, 'sim3' )
+load('sim3_last.mat')
+plotFt(Factor, sumFt, sumFt2, InfoCell,  pathtosave, 'sim3' )
 
 
 % load('worlddata_18_Feb_2019_18_29_30.mat')

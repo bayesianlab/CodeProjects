@@ -61,7 +61,7 @@ figure
 ploti = 1:MAXPERFIGURE;
 c=0;
 moveToCountry = 1 + Regions;
-cindex = moveToCountry + 1:(1+Regions+Countries)
+cindex = moveToCountry + 1:(1+Regions+Countries);
 
 if length(cindex) < MAXROWS
     countryRows = 1+Regions;
