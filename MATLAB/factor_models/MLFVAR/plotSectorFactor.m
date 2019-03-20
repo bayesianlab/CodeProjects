@@ -2,8 +2,8 @@ function [] = plotSectorFactor(factorSeries, factorSeries2ndMoment, xaxis, name,
 
 variance = factorSeries2ndMoment - factorSeries.^2;
 sig = sqrt(variance);
-upper = factorSeries + 1.5.*sig;
-lower = factorSeries - 1.5.*sig;
+upper = factorSeries + sig;
+lower = factorSeries - sig;
 
 fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
@@ -16,8 +16,8 @@ hold on
 plot(xaxis,factorSeries, 'Color', 'black', 'LineWidth', 1)
 title(name)
 hold off
-nargin 
 if nargin > 4
+    filename = varargin{1};
     saveas(f, filename)
 end
 end
