@@ -32,7 +32,8 @@ for s = 1:Reps
     nFactors = 1 + Regions + Countries;
     v0=3;
     r0 =5;
-    
+    s0 = 3;
+    d0 = 5;
     initobsmodel = [.5.*ones(K,1), .5.*ones(K,1), .5.*ones(K,1)];
     initStateTransitions = ones(nFactors,1).*.5;
     obsPrecision = ones(K,1);
@@ -43,11 +44,11 @@ for s = 1:Reps
     Ft = reshape(vecFt, nFactors,T);
     initFactor = Ft;
     ReducedRuns = 3;
-[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-    sumObsVariance, sumObsVariance2] = ...
-    MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
-    ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-plotFt(Factor, sumFt, sumFt2, InfoCell)
+    [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
+        sumObsVariance, sumObsVariance2] = ...
+        MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
+        ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+    plotFt(Factor, sumFt, sumFt2, InfoCell)
     
     fitted =  (1./sum(sumFt.^2,2)).*sum((sumFt.*Factor),2).* sumFt;
     SST = sum((Factor - mean(Factor,2)).^2,2);

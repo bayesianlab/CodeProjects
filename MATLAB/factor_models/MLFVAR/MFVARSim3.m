@@ -31,6 +31,8 @@ for s = 1:Reps
     nFactors = 1 + R + Countries;
     v0=3;
     r0 =5;
+    s0 = 3;
+    d0 = 5;
     
     initobsmodel = unifrnd(0,1,K,3);
     initStateTransitions = ones(nFactors,1).*.5;
