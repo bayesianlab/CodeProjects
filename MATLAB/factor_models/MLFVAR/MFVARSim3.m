@@ -1,5 +1,7 @@
 function [] = MFVARSim3()
 
+identification = 2;
+
 SeriesPerCountry = 3;
 CountriesInRegion = 3;
 Regions = 2:8;
@@ -25,7 +27,7 @@ for s = 1:Reps
     
     yt = DataCell{1,1};
     InfoCell = DataCell{1,3};
-    Factor = DataCell{1,4};    
+    Factor = DataCell{1,4};
     nFactors = 1 + R + Countries;
     v0=3;
     r0 =5;
@@ -36,8 +38,9 @@ for s = 1:Reps
     ReducedRuns = 3;
     [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
         sumObsVariance, sumObsVariance2] = ...
-        MultDyFacVarSimVersion(yt,InfoCell, Sims, burnin, ReducedRuns, initFactor, initobsmodel, ...
-        initStateTransitions,v0,r0);
+        MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
+        ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+    plotFt(Factor, sumFt, sumFt2, InfoCell)
     
     fitted =  (1./sum(sumFt.^2,2)).*sum((sumFt.*Factor),2).* sumFt;
     SST = sum((Factor - mean(Factor,2)).^2,2);

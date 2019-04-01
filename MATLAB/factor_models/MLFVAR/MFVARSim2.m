@@ -1,5 +1,7 @@
 function [] = MFVARSim2()
 
+identification = 2;
+
 CR = 2:12;
 Reps = length(CR);
 SeriesPerCountry =3;
@@ -35,17 +37,18 @@ for s = 1:Reps
     ReducedRuns = 3;
     [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
         sumObsVariance, sumObsVariance2] = ...
-        MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin, ReducedRuns,  initFactor, initobsmodel, ...
-        initStateTransitions,v0,r0);
+        MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
+        ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+    plotFt(Factor, sumFt, sumFt2, InfoCell)
     
     fitted =  (1./sum(sumFt.^2,2)).*sum((sumFt.*Factor),2).* sumFt;
     SST = sum((Factor - mean(Factor,2)).^2,2);
     SSR = sum((Factor - fitted).^2,2) ;
     r2 = (1-(SSR./SST))';
     R2(s,:) = r2(1:Regions+1);
-
+    
 end
-    fname = createDateString('CR_RepResults_');
-    save([dirname,fname])
+fname = createDateString('CR_RepResults_');
+save([dirname,fname])
 end
 
