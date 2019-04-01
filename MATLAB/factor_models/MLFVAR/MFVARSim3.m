@@ -10,7 +10,7 @@ Reps = length(Regions);
 T = 75;
 Sims = 5000;
 burnin =1000;
-dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res3/';
+dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/ID2_3/';
 mkdir(dirname)
 for s = 1:Reps
     fprintf('Repetition number %i\n', s)

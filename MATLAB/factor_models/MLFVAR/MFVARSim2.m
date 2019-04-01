@@ -12,7 +12,7 @@ Sims = 5;
 burnin =1;
 T = 50;
 
-dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res2/';
+dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/ID2_2/';
 mkdir(dirname)
 for s = 1:Reps
     rng(1101)

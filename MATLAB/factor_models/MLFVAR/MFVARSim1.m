@@ -11,7 +11,7 @@ R2 = zeros(Reps, nFactors);
 T = 75;
 Sims = 5;
 burnin =1;
-dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res1/';
+dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/ID2_1/';
 mkdir(dirname)
 for s = 1:Reps
     fprintf('Repetition number %i\n', s)
