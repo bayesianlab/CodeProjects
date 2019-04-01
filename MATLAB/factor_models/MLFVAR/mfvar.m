@@ -56,7 +56,7 @@ else
         sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2] = ...
         MultDyFacVar(yt, Xt, InfoCell, Sims, burnin,...
         ReducedRuns,  initFactor, initBeta, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-    fname = createDateString('realdatasimulation_');
+    fname = createDateString('id2_realdata_');
     save(fname)
 end
 fprintf('\n\t\t SIMULATION ENDED \n')
