@@ -8,7 +8,7 @@ df = 20;
 
 w1 = sqrt(chi2rnd(df,1)/df);
 ObsPriorMean = .5.*ones(1, K);
-ObsPriorPrecision = eye(K).*1e-3;
+ObsPriorPrecision = eye(K);
 
 LogLikePositive = @(v) AproptoLL (v, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);

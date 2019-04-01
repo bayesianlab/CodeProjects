@@ -6,8 +6,8 @@ SeriesPerCountry =3;
 Regions = 3;
 R2 = zeros(Reps, Regions + 1);
 
-Sims = 5000;
-burnin =1000;
+Sims = 5;
+burnin =1;
 T = 50;
 
 dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res2/';
@@ -43,9 +43,9 @@ for s = 1:Reps
     SSR = sum((Factor - fitted).^2,2) ;
     r2 = (1-(SSR./SST))';
     R2(s,:) = r2(1:Regions+1);
+
+end
     fname = createDateString('CR_RepResults_');
     save([dirname,fname])
-end
-
 end
 

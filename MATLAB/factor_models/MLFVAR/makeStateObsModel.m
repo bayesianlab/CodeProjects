@@ -4,7 +4,6 @@ K= size(obsModel,1);
 sectorInfo = cellfun(@(x)size(x,2),Identities );
 sectors = sum(sectorInfo);
 Iden = cell2mat(Identities);
-
 expanded = zeros( K, sectors);
 colnum = 0;
 for k = 1:levels

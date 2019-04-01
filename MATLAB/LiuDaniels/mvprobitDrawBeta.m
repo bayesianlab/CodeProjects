@@ -12,7 +12,9 @@ for t = 1:T
 end
 sigBeta = sigBeta \ eye(dimX);
 mubeta = sigBeta*sumBeta;
-betaDraw = mvnrnd(mubeta', sigBeta)';
+L = chol(sigBeta, 'lower');
+betaDraw = mubeta + L*normrnd(0,1,dimX,1);
+
 
 end
 

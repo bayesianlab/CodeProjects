@@ -2,7 +2,7 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
    sumObsVariance, sumObsVariance2] = ...
     ...
     MultDyFacVarSimVersion(yt, InfoCell, Sims,...
-    burnin, ReducedRuns, initFactor, initobsmodel, initStateTransitions, v0, r0)
+    burnin, ReducedRuns, initFactor, initobsmodel, initStateTransitions, v0, r0, s0,d0, identification)
 %% INPUT 
 % yt is K x T
 % initobsmodel must be [Level1, Level2,...] and is K x Levels,
@@ -26,13 +26,14 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
 levels = length(sectorInfo);
 Countries = sectorInfo(3);
 Regions = sectorInfo(2);
-backupMeanAndHessian  = setBackups(InfoCell);
+backupMeanAndHessian  = setBackups(InfoCell, identification);
 
 % Initializatitons
 obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
-currobsmod = initobsmodel;
+currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
+factorVariance = ones(nFactors,1);
 
 % Storage
 sumFt = zeros(nFactors, T);
@@ -51,30 +52,29 @@ options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
 
 DisplayHelpfulInfo(K,T,Regions,Countries,...
     nFactors,  Sims,burnin,ReducedRuns, options);
-pick = 1:levels;
+
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     
     %% Update loadings and factors
     
-%     u = randperm(levels);
-    for q = 1:1:levels
+    for q = 1:3
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
         ty = yt - ConditionalObsModel*Ft;
         Info = InfoCell{1,q};
         factorIndx = factorInfo(q,:);
         factorSelect = factorIndx(1):factorIndx(2);
+        factorVarianceSubset = factorVariance(factorSelect);
         tempbackup = backupMeanAndHessian(factorSelect,:);
         [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
-            Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect), obsPrecision, ...
-            tempbackup, options);
+            Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect), factorVarianceSubset,...
+            obsPrecision, tempbackup, options, identification);
         backupMeanAndHessian(factorSelect,:) = tempbackup;
         Ft(factorSelect,:) = f;
     end
     
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
-%      vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, kowStatePrecision(diag(stateTransitions),1,T), obsPrecision);
-%     Ft = reshape(vecFt, nFactors,T);
+
     %% Variance
     residuals = yt - StateObsModel*Ft;
     [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
@@ -83,6 +83,9 @@ for i = 1 : Sims
     %% AR Parameters
     stateTransitions = kowUpdateArParameters(stateTransitions, Ft, 1);
     
+    if identification == 2
+        factorVariance = drawFactorVariance(Ft, stateTransitions, s0, d0);
+    end
     %% Storage
     if i > burnin
         v = i - burnin;

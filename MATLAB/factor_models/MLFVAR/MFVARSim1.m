@@ -7,9 +7,9 @@ Regions = 3;
 Countries = CountriesInRegion*Regions;
 nFactors = 1+Regions+Countries;
 R2 = zeros(Reps, nFactors);
-T = 50;
-Sims = 5000;
-burnin =1000;
+T = 75;
+Sims = 5;
+burnin =1;
 dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/Res1/';
 mkdir(dirname)
 for s = 1:Reps
@@ -32,12 +32,18 @@ for s = 1:Reps
     v0=3;
     r0 =5;
     
-    initobsmodel = unifrnd(0,1,K,3);
+    initobsmodel = [.5.*ones(K,1), .5.*ones(K,1), .5.*ones(K,1)];
     initStateTransitions = ones(nFactors,1).*.5;
-    initFactor = normrnd(0,1,nFactors,T);
+    obsPrecision = ones(K,1);
+    [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+    StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
+    vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
+        kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
+    Ft = reshape(vecFt, nFactors,T);
+    initFactor = Ft;
     ReducedRuns = 3;
     [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-         sumObsVariance, sumObsVariance2] = ...
+        sumObsVariance, sumObsVariance2] = ...
         MultDyFacVarSimVersion(yt,InfoCell, Sims, burnin, ReducedRuns,  initFactor, initobsmodel, ...
         initStateTransitions,v0,r0);
     
@@ -45,9 +51,8 @@ for s = 1:Reps
     SST = sum((Factor - mean(Factor,2)).^2,2);
     SSR = sum((Factor - fitted).^2,2) ;
     R2(s,:) = (1-(SSR./SST))';
-    fname = createDateString('SPC_RepResults_');
-    save([dirname,fname])
 end
-
+fname = createDateString('SPC_RepResults_');
+save([dirname,fname])
 end
 

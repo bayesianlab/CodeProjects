@@ -1,6 +1,6 @@
-function [zdraws] = updateYstar(y,mu,Covariance,init)
+function [zdraws] = updateYstar(y,mu,Covariance)
 [K,T] = size(y);
-GHK = 0;
+GHK =1;
 if GHK == 1
     L = chol(Covariance, 'lower');
     Linv = chol(Covariance\eye(K), 'lower');
