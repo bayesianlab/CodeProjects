@@ -29,21 +29,24 @@ Regions = sectorInfo(2);
 nFactors = 1 + Regions + Countries;
 v0=3;
 r0 =5;
+s0=v0;
+d0 = r0;
 initobsmodel = unifrnd(.05,.2, K,3);
 initStateTransitions = ones(nFactors,1).*.2;
 initBeta = ones(size(Xt,2),1);
 obsPrecision = ones(K,1);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
+vecFt  =  kowUpdateLatent(yt(:),  StateObsModel,...
+    kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
 Ft = reshape(vecFt, nFactors,T);
 initFactor = Ft;
 if SimVersion == 1
     fprintf('Running sim version\n')
-[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-    sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2] = ...
-    MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
-    ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-
+    [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
+        sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2] = ...
+        MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
+        ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+    
     deletext = strfind(DotMatFile, '.');
     leadname = DotMatFile(1:deletext-1);
     fname = createDateString(leadname);
