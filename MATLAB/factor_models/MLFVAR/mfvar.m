@@ -12,11 +12,14 @@ if ischar(SimVersion)
     SimVersion = str2num(SimVersion);
 end
 
+identification = 2;
+
 load(DotMatFile,  'DataCell')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
 Factor = DataCell{1,4};
+
 
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 levels = length(sectorInfo);
@@ -36,10 +39,11 @@ Ft = reshape(vecFt, nFactors,T);
 initFactor = Ft;
 if SimVersion == 1
     fprintf('Running sim version\n')
-    [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-        sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] =...
-        MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin, ReducedRuns, initFactor, initobsmodel, ...
-        initStateTransitions,v0,r0);
+[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
+    sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2] = ...
+    MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
+    ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+
     deletext = strfind(DotMatFile, '.');
     leadname = DotMatFile(1:deletext-1);
     fname = createDateString(leadname);
@@ -49,9 +53,9 @@ if SimVersion == 1
 else
     fprintf('<strong> Running version with mean </strong>\n')
     [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-        sumBeta, sumBeta2, sumObsVariance, sumObsVariance2] =...
-        MultDyFacVar(yt, Xt,InfoCell, Sims, burnin, ReducedRuns,initFactor, initBeta, initobsmodel, ...
-        initStateTransitions,v0,r0);
+        sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2] = ...
+        MultDyFacVar(yt, Xt, InfoCell, Sims, burnin,...
+        ReducedRuns,  initFactor, initBeta, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
     fname = createDateString('realdatasimulation_');
     save(fname)
 end
