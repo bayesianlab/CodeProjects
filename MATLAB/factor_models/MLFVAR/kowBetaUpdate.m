@@ -33,9 +33,9 @@ XstarPinv = Xstar'*(Inside\speye(size(Inside,1)));
 Precision = B0 + addup - (XstarPinv*Xstar);
 NumeratorTerm = sumup - (XstarPinv*ystar);
 Variance = Precision\speye(cx);
-b = Variance*(NumeratorTerm + B0*ones(cx,1);
+b = Variance*(NumeratorTerm + B0*b0);
 [c, p] =chol(Variance,'lower');
-b = (b + c*normrnd(0,1,cx,1));
+b = b + c*normrnd(0,1,cx,1);
 
 % b = mvnrnd(b',Variance)';
 ydemut = reshape(vecy - SurX*b, nEqns, T);
