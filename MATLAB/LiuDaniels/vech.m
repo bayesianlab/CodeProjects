@@ -1,4 +1,4 @@
-function [v] = vech(Matrix)
-v = Matrix(tril(true(size(Matrix))));
+function [v] = vech(Matrix, diag)
+v = Matrix(tril(true(size(Matrix)),diag));
 end
 

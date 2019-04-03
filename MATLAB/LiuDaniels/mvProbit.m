@@ -9,46 +9,50 @@ s = zeros(K,K);
 mhparam = .5*(K+1);
 lu = log(unifrnd(0,1, Sims,1));
 
-vechRk = vech(Rk);
+vechRk = vech(Rk,-1);
+
 sigma0 = .1.*eye(length(vechRk));
-Q = ystar(:)-X*beta;
-iCommuteMat = InverseCommute(vechRk, K);
-loglike = @(g)-SigmaMaximize(g,sigma0,iCommuteMat, Q, K, T)
-options = optimoptions(@fminunc, 'Display', 'iter', 'MaxFunctionEvaluations', 10000)
-fminunc(loglike, vechRk, options)
+iCommuteMat = TransformMatrix(vechRk, K);
+loglike = @(g)-SigmaMaximize(g,sigma0,iCommuteMat, Q, K, T);
+options = optimoptions(@fminunc, 'Display', 'off', 'MaxFunctionEvaluations', 5000);
+
+
+
 for k = 1:Sims
-%     fprintf('Simulation %i\n', k)
-%     logdetRk = 2*sum(log(diag(chol(Rk))));
-%     
-%     mu = reshape(X*betaDraw, K,T);
-%     
-%     ys = updateYstar(y, mu, Rk);
-%     
-%     z = (ys - mu);
-%     zzp = z*z';
-%     zzp12 = diag(zzp).^(-.5);
-%     Rkp1 = diag(zzp12)*zzp*diag(zzp12);
-%     [LR, p]  = chol(Rkp1);
-%     logdetRkp1 = 2*sum(log(diag(LR)));
-%     alpha = min(0, mhparam*(logdetRkp1 - logdetRk));
-%     if p == 0
-%         if lu(k) < alpha
-%             Rk = Rkp1;
-%         end
-%         
-%     end
-%     
-%     
-%     betaDraw = mvprobitDrawBeta(ys,X,Rk);
-%     
-%     if k > burnin
-%         s = s + Rk;
-%         sumBeta = sumBeta + betaDraw;
-%     end
-%     
+    fprintf('Simulation %i\n', k)
+    
+    
+    mu = reshape(X*betaDraw, K,T);
+    
+    ys = updateYstar(y, mu, Rk);
+    betaDraw = mvprobitDrawBeta(ys,X,Rk)
+     
+    Q = ystar(:)-X*betaDraw;
+    loglike = @(g)-SigmaMaximize(g,sigma0,iCommuteMat, Q, K, T);
+    p  = fminunc(loglike,vechRk, options);
+    p = reshape(iCommuteMat*p, K,K);
+    p =  p + p' + eye(K);
+    p = iwishrnd(p,T);
+    phalf = diag(p).^(-.5);
+    pdraw = diag(phalf)*p*diag(phalf);
+    logdetRkp1 = 2.*sum(log(diag(chol(pdraw))));
+    logdetRk = 2*sum(log(diag(chol(Rk))));
+    
+    alpha = min(0, mhparam*(logdetRkp1 - logdetRk))
+    if lu(k) < alpha
+        Rk = pdraw;
+    end
+
+   
+    
+    if k > burnin
+        s = s + Rk;
+        sumBeta = sumBeta + betaDraw;
+    end
+    
 end
-% Runs = Sims-burnin;
-% avgs = s./Runs;
-% avgBeta = sumBeta/Runs;
+Runs = Sims-burnin;
+avgs = s./Runs;
+avgBeta = sumBeta/Runs;
 end
 

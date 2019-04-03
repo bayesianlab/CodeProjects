@@ -27,11 +27,13 @@ for t = 1:T
     Xstar(pick, :) = Astar*tmpx;
     ystar(pick, :) = Astar*tmpy;
 end
+B0 = speye(cx);
+b0 = ones(cx,1);
 XstarPinv = Xstar'*(Inside\speye(size(Inside,1)));
-Precision = speye(cx) + addup - (XstarPinv*Xstar);
+Precision = B0 + addup - (XstarPinv*Xstar);
 NumeratorTerm = sumup - (XstarPinv*ystar);
 Variance = Precision\speye(cx);
-b = Variance*NumeratorTerm;
+b = Variance*(NumeratorTerm + B0*ones(cx,1);
 [c, p] =chol(Variance,'lower');
 b = (b + c*normrnd(0,1,cx,1));
 

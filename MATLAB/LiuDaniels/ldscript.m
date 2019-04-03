@@ -1,6 +1,6 @@
 clear;clc;
 % rng(10)
-N = 500;
+N = 200;
 T = 7;
 nCovariates = 6;
 onesN = ones(N,1);
@@ -29,20 +29,27 @@ end
 
 beta = ones(nCovariates,1);
 err = mvnrnd(zeros(1,T), R, N)';
+
+
 mu = Xit*beta;
 ystar = mvnrnd(reshape(mu, T, N)', R)';
 y = double(ystar>0);
 
 
+initbeta = .5.*ones(nCovariates,1);
+initR = eye(T);
+[a,b]=mvProbit(y,Xit, initbeta, initR, ystar, 100, 0)
 
-[a1, a2] = mvProbit(y,Xit, zeros(nCovariates,1), eye(T), ystar, 100, 10)
 
 
+%  V = [ [1;.3;.2;.1], [.3;1;.3;.2], [ .2;.3;1;.2], [.1;.2;.3;1] ]
+%  vech(V,-1)
+%  vech(V,0)
+% % InverseCommute(vech(V,0), 3)*vech(V,0)
+% T = TransformMatrix(vech(V,-1),4)
 
- V = [1,.3,.3;.3,1,.3;.3,.3,1];
- 
+% reshape(InverseCommute(vech(V,0), 3) * vech(V,0),3,3) + (reshape(InverseCommute(vech(V,0), 3) * vech(V,0),3,3))' + eye(3)
 
-% reshape(InverseCommute(nonzeros(tril(R)), 7)* nonzeros(tril(R)),7,7)
  %  m = [-2,-2,-2];
 %  a = [0,0,0];
 % hh = GibbsTruncNormBelow(a, m,V, 10000,100);

@@ -10,8 +10,8 @@ for t = 1:T
     sigBeta = sigBeta + (X(xselect,:)'*inverseR) * X(xselect,:);
     sumBeta = sumBeta + (X(xselect,:)'*inverseR) *ystar(:,t);
 end
-sigBeta = sigBeta \ eye(dimX);
-mubeta = sigBeta*sumBeta;
+sigBeta = (eye(dimX) +  sigBeta) \ eye(dimX);
+mubeta = sigBeta*(sumBeta + eye(dimX)*(.5.*ones(dimX,1)));
 L = chol(sigBeta, 'lower');
 betaDraw = mubeta + L*normrnd(0,1,dimX,1);
 

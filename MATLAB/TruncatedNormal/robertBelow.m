@@ -1,7 +1,7 @@
 function [rn] = robertBelow(a,mu,sigma)
 alpha = (a - mu) / sigma;
 optimal =  (alpha + (alpha^2 + 4)^(.5))*.5;
-LIMIT = 100;
+LIMIT = 1000;
 lim=0;
 while lim <= LIMIT
     lim = lim+1;
@@ -12,8 +12,10 @@ while lim <= LIMIT
         z = mu + sigma*z;
         rn = z;
         return
-    else
     end
 end
+save('errormat')
+error('limit reached')
+
 end
 

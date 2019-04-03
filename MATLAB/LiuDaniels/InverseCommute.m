@@ -11,6 +11,7 @@ else
     countCols = 0;
     for k = 1:RowsMatrix
         Diagonal = ones(RowsMatrix,1);
+        Diagonal(1) = 0;
         DiagonalIndex = 1-k;
         SizeBlockCols =  RowsMatrix - (k-1);
         Block = full(spdiags(  Diagonal, DiagonalIndex, RowsMatrix, SizeBlockCols));
