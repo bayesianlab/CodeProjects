@@ -2,9 +2,9 @@ function [] = plotSectorFactor(factorSeries, factorSeries2ndMoment, xaxis, name,
 
 variance = factorSeries2ndMoment - factorSeries.^2;
 sig = sqrt(variance);
-upper = factorSeries + 2.*sig;
-lower = factorSeries - 2.*sig;
-
+sigma2 = 2.*sig;
+upper = factorSeries + sigma2;
+lower = factorSeries- sigma2;
 fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
 facealpha = .3;

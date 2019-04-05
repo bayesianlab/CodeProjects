@@ -36,9 +36,9 @@ ystar = mvnrnd(reshape(mu, T, N)', R)';
 y = double(ystar>0);
 
 
-initbeta = .5.*ones(nCovariates,1);
+initbeta = .5                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             .*ones(nCovariates,1);
 initR = eye(T);
-[a,b]=mvProbit(y,Xit, initbeta, initR, ystar, 100, 0)
+[a,b]=mvProbit(y,Xit, initbeta, initR, ystar, 1000, 100)
 
 
 

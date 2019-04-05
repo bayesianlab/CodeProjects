@@ -20,8 +20,7 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
 [~, dimX] = size(Xt);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 levels = length(sectorInfo);
-Countries = sectorInfo(3);
-Regions = sectorInfo(2);
+
 backupMeanAndHessian  = setBackups(InfoCell, identification);
 
 % Initializatitons
@@ -44,22 +43,24 @@ sumST = zeros(nFactors, 1);
 sumST2 = zeros(nFactors, 1);
 sumObsVariance = zeros(K,1);
 sumObsVariance2 = sumObsVariance;
-sumOM = zeros(K, 3);
+sumOM = zeros(K, levels);
 sumOM2= sumOM ;
 sumFactorVar = zeros(nFactors,1);
 sumFactorVar2 = sumFactorVar;
 
+
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-9);
 
-DisplayHelpfulInfo(K,T,Regions,Countries,...
-    nFactors,  Sims,burnin,ReducedRuns, options);
+DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
         StateObsModel, Si,  T);
-    
-    for q = 1:3
+        
+    beta
+     
+    for q = 1:levels
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
         ty = yt - ConditionalObsModel*Ft;
         Info = InfoCell{1,q};

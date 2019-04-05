@@ -25,20 +25,20 @@ for k = 1:Sims
     mu = reshape(X*betaDraw, K,T);
     
     ys = updateYstar(y, mu, Rk);
-    betaDraw = mvprobitDrawBeta(ys,X,Rk)
+    betaDraw = mvprobitDrawBeta(ys,X,Rk);
      
-    Q = ystar(:)-X*betaDraw;
+    Q = ys(:)-X*betaDraw;
     loglike = @(g)-SigmaMaximize(g,sigma0,iCommuteMat, Q, K, T);
     p  = fminunc(loglike,vechRk, options);
     p = reshape(iCommuteMat*p, K,K);
     p =  p + p' + eye(K);
     p = iwishrnd(p,T);
     phalf = diag(p).^(-.5);
-    pdraw = diag(phalf)*p*diag(phalf);
+    pdraw = diag(phalf)*p*diag(phalf)
     logdetRkp1 = 2.*sum(log(diag(chol(pdraw))));
     logdetRk = 2*sum(log(diag(chol(Rk))));
     
-    alpha = min(0, mhparam*(logdetRkp1 - logdetRk))
+    alpha = min(0, mhparam*(logdetRkp1 - logdetRk));
     if lu(k) < alpha
         Rk = pdraw;
     end

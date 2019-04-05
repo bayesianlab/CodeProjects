@@ -1,10 +1,8 @@
-function[] =  DisplayHelpfulInfo(K,T,Regions,Countries,nFactors,  Sims, burnin, ReducedRuns, options)
+function[] =  DisplayHelpfulInfo(K,T,nFactors,  Sims, burnin, ReducedRuns, options)
 fprintf('\n<strong> This simulation is running wtih the following settings: </strong>\n')
 
 fprintf('\tK = %i dimenstional system\n', K)
 fprintf('\tt = %i timeperiods \n',  T)
-fprintf('\tC = %i  countries\n', Countries)
-fprintf('\tR = %i  Regions\n',  Regions)
 fprintf('\tq = %i  factors is the total number of factors\n',  nFactors)
 fprintf('<strong> MCMC Info:</strong>\n')
 

@@ -34,7 +34,7 @@ I2 = Identities{1,3};
 Z0 = zeros(K,1);
 Z1 = zeros(size(I1,1), size(I1,2));
 Z2 = zeros(size(I2,1), size(I2,2));
-Gt = .3.*[ones(K,1), I1, I2]; 
+Gt = .3.*[ones(K,1), I1, Z2]; 
 
 % Gt(1,1) = 1;
 % RegionInfo = InfoCell{1,2};
