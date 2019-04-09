@@ -34,21 +34,11 @@ I2 = Identities{1,3};
 Z0 = zeros(K,1);
 Z1 = zeros(size(I1,1), size(I1,2));
 Z2 = zeros(size(I2,1), size(I2,2));
-Gt = .3.*[ones(K,1), I1, Z2]; 
-
-% Gt(1,1) = 1;
-% RegionInfo = InfoCell{1,2};
-% for r =1:Regions
-%     Gt(RegionInfo(r,1), 1+r) = 1;
-% end
-% CountryInfo = InfoCell{1,3};
-% for c =1:Countries
-%     Gt(CountryInfo(c,1), 1+ Regions+c) = 1;
-% end
-
+% Gt = .3.*ones(K,3);
+Gt = unifrnd(.5,1,K,3);
 WorldOnly = Gt(:,1);
-RegionsOnly = Gt(:,2:Regions+1);
-CountriesOnly = Gt(:,1+Regions+1:Countries+1+Regions);
+RegionsOnly = Gt(:,2).*I1;
+CountriesOnly = Gt(:,3).*I2;
 Gt = [WorldOnly, RegionsOnly,CountriesOnly];
 
 

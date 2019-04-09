@@ -15,6 +15,7 @@ Top = [P0, EmptySparse];
 Omega = spdiags(stateVar.*ones(Tm1*nFactors,1),0, Tm1*nFactors,Tm1*nFactors);
 Omega = [Top;EmptySparse', Omega];
 H = kron(spdiags(ones(T,1),-1, T,T), -stateTransition) + speye(TnFactors,TnFactors);
+
 Precision = H*Omega*H' ;
 end
 

@@ -52,8 +52,7 @@ sumFactorVar2 = sumFactorVar;
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-9);
 
-DisplayHelpfulInfo(K,T,Regions,Countries,...
-    nFactors,  Sims,burnin,ReducedRuns, options);
+DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
@@ -74,7 +73,7 @@ for i = 1 : Sims
         backupMeanAndHessian(factorSelect,:) = tempbackup;
         Ft(factorSelect,:) = f;
     end
-    
+    currobsmod
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 
     %% Variance

@@ -7,7 +7,7 @@ GtO = ObsModel'*FullPrecision;
 P = StatePrecision + kron(speyet, GtO*ObsModel);
 P = P\speye(size(P,1));
 mu = P*(kron(speyet,GtO)*vecresids);
-draw = mvnrnd(mu,P);
+draw = mvnrnd(mu',P);
 end
 
 
