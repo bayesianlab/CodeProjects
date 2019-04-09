@@ -19,6 +19,7 @@ V = Hessian \ eye(length(themean));
 n = length(themean);
 proposal = themean + chol(V, 'lower')*normrnd(0,1, n,1)./w1;
 proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
+
 Num = LogLikePositive(proposal) + proposalDist(freeElems');
 Den = LogLikePositive(freeElems) + proposalDist(proposal');
 alpha = Num - Den;

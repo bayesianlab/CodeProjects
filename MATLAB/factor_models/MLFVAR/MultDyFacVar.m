@@ -111,7 +111,7 @@ for i = 1 : Sims
         sumResiduals2 = sumResiduals2 + r2;
         sumFactorVar = sumFactorVar + factorVariance;
         sumFactorVar2 = sumFactorVar2 + factorVariance.^2;
-        sumVarianceDecomp = sumVarianceDecomp + variancedecomp
+        sumVarianceDecomp = sumVarianceDecomp + variancedecomp;
         sumVarianceDecomp2 = sumVarianceDecomp2 + variancedecomp.^2;
     end
 end

@@ -33,13 +33,13 @@ v0=3;
 r0 =5;
 s0 = 3;
 d0 = 5;
-Sims = 10;
+Sims = 3;
 burnin = 1;
 ReducedRuns = 3;
 initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
-initobsmodel = .3.*ones(K,levels);
-initStateTransitions = ones(nFactors,1).*.1;
+initobsmodel = .1.*ones(K,levels);
+initStateTransitions = .3.*ones(nFactors,1).*.1;
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
@@ -72,8 +72,10 @@ identification = 2;
 
 
 % Real Data Version
-[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-    sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2, sumVarDecom, sumVarDecomp2] = ...
+[sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
+    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
+    sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
+   sumVarianceDecomp2] = ...
     MultDyFacVar(yt, Xt, InfoCell, Sims, burnin,...
     ReducedRuns,  initFactor, initBeta, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
 xaxis = 1962:2014;
