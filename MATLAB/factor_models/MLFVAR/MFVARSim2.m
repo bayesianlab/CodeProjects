@@ -1,19 +1,16 @@
 function [] = MFVARSim2()
-
-identification = 2;
-
-CR = 2:12;
+CR = 10:20;
 Reps = length(CR);
 SeriesPerCountry =3;
 Regions = 3;
 R2 = zeros(Reps, Regions + 1);
-
 Sims = 5000;
 burnin =1000;
-T = 50;
-
+T = 150;
 dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/ID2_2/';
 mkdir(dirname)
+for id = 1:2
+    identification = id;
 for s = 1:Reps
     rng(1101)
     CountriesInRegion = CR(s);
