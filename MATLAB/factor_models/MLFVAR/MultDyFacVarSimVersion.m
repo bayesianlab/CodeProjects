@@ -1,5 +1,6 @@
 function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
-   sumObsVariance, sumObsVariance2] = ...
+   sumObsVariance, sumObsVariance2, sumVarianceDecomp,...
+   sumVarianceDecomp2] = ...
     ...
     MultDyFacVarSimVersion(yt, InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initobsmodel, initStateTransitions, v0, r0, s0,d0, identification)
@@ -34,7 +35,7 @@ stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
 factorVariance = ones(nFactors,1);
-
+variancedecomp = zeros(K,3);
 % Storage
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt.^2;
@@ -48,12 +49,14 @@ sumOM = zeros(K, 3);
 sumOM2= sumOM ;
 sumFactorVar = zeros(nFactors,1);
 sumFactorVar2 = sumFactorVar;
+sumVarianceDecomp = variancedecomp;
+sumVarianceDecomp2 = variancedecomp;
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-9);
 
 DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
-
+vy = var(yt,0,2);
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     
@@ -67,13 +70,14 @@ for i = 1 : Sims
         factorSelect = factorIndx(1):factorIndx(2);
         factorVarianceSubset = factorVariance(factorSelect);
         tempbackup = backupMeanAndHessian(factorSelect,:);
-        [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
+        [currobsmod(:,q), tempbackup, f, vdecomp] = AmarginalF(Info, ...
             Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect), factorVarianceSubset,...
-            obsPrecision, tempbackup, options, identification);
+            obsPrecision, tempbackup, options, identification, vy);
         backupMeanAndHessian(factorSelect,:) = tempbackup;
         Ft(factorSelect,:) = f;
+        variancedecomp(:,q) = vdecomp;
     end
-    currobsmod
+    
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 
     %% Variance
@@ -95,13 +99,15 @@ for i = 1 : Sims
         sumObsVariance = sumObsVariance +  obsVariance;
         sumObsVariance2 = sumObsVariance2 + obsVariance.^2;
         sumOM= sumOM + currobsmod;
-        sumOM2 = sumOM2 + currobsmod.^2;
+        sumOM2 = sumOM2 + sumOM.^2;
         sumST = sumST + stateTransitions;
         storeStateTransitions(:,:,v) = stateTransitions;
         sumST2 = sumST2 + stateTransitions.^2;
         sumResiduals2 = sumResiduals2 + r2;
         sumFactorVar = sumFactorVar + factorVariance;
-        sumFactorVar2 = sumFactorVar2 + factorVariance.^2;        
+        sumFactorVar2 = sumFactorVar2 + factorVariance.^2; 
+        sumVarianceDecomp = sumVarianceDecomp + variancedecomp;
+        sumVarianceDecomp2 = sumVarianceDecomp2 + variancedecomp.^2;
     end
     
 end
@@ -114,6 +120,8 @@ sumObsVariance2 = sumObsVariance2 ./Runs;
 sumOM= sumOM ./Runs;
 sumOM2 = sumOM2 ./Runs;
 sumST = sumST./Runs;
+sumVarianceDecomp = sumVarianceDecomp./Runs
+sumVarianceDecomp2 = sumVarianceDecomp2./Runs
 sumST2 = sumST2 ./Runs;
 
 sumResiduals2 = sumResiduals2 ./Runs;

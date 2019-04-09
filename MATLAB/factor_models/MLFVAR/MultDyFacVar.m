@@ -1,6 +1,7 @@
 function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
-    sumFactorVar, sumFactorVar2] = ...
+    sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
+   sumVarianceDecomp2] = ...
     ...
     MultDyFacVar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
@@ -47,7 +48,8 @@ sumOM = zeros(K, levels);
 sumOM2= sumOM ;
 sumFactorVar = zeros(nFactors,1);
 sumFactorVar2 = sumFactorVar;
-
+sumVarianceDecomp = variancedecomp;
+sumVarianceDecomp2 = variancedecomp;
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-9);
@@ -57,7 +59,7 @@ for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
         StateObsModel, Si,  T);
-     
+    
     for q = 1:levels
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
         ty = yt - ConditionalObsModel*Ft;
@@ -66,11 +68,13 @@ for i = 1 : Sims
         factorSelect = factorIndx(1):factorIndx(2);
         factorVarianceSubset = factorVariance(factorSelect);
         tempbackup = backupMeanAndHessian(factorSelect,:);
-        [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
+        [currobsmod(:,q), tempbackup, f, vdecomp] = AmarginalF(Info, ...
             Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect), factorVarianceSubset,...
             obsPrecision, tempbackup, options, identification);
         backupMeanAndHessian(factorSelect,:) = tempbackup;
         Ft(factorSelect,:) = f;
+        Ft(factorSelect,:) = f;
+        variancedeomp(:,q) = vdecomp;
     end
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
     
@@ -105,6 +109,8 @@ for i = 1 : Sims
         sumResiduals2 = sumResiduals2 + r2;
         sumFactorVar = sumFactorVar + factorVariance;
         sumFactorVar2 = sumFactorVar2 + factorVariance.^2;
+        sumVarianceDecomp = sumVarianceDecomp + variancedecomp;
+        sumVarianceDecomp2 = sumVarianceDecomp2 + variancedecomp.^2;
     end
 end
 
@@ -120,6 +126,8 @@ sumOM2 = sumOM2 ./Runs;
 sumST = sumST./Runs;
 sumST2 = sumST2 ./Runs;
 sumResiduals2 = sumResiduals2 ./Runs;
+sumVarianceDecomp = sumVarianceDecomp./Runs;
+sumVarianceDecomp2 = sumVarianceDecomp2./Runs;
 
 obsPrecisionStar = 1./sumObsVariance;
 
