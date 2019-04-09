@@ -3,7 +3,7 @@ function [ retval, lastMean, lastHessian] = identification2( x0, yt, obsPrecisio
 [K,T] = size(yt);
 df = 20;
 w1 = sqrt(chi2rnd(df,1)/df);
-ObsPriorMean = .5.*ones(1, K-1);
+ObsPriorMean = ones(1, K-1);
 ObsPriorPrecision = eye(K-1);
 
 LogLikePositive = @(v) LLRestrict (v, yt,ObsPriorMean,...

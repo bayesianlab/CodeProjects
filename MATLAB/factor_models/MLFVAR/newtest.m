@@ -12,7 +12,8 @@ clear;clc;
 % [DataCell] = ...
 %     MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
 
-load('Housing.mat')
+% load('Housing.mat')
+load('StandardizedRealData.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
@@ -74,9 +75,9 @@ identification = 2;
     sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2] = ...
     MultDyFacVar(yt, Xt, InfoCell, Sims, burnin,...
     ReducedRuns,  initFactor, initBeta, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-% xaxis = 1962:2014;
+xaxis = 1962:2014;
 
-plotSectorFactor(sumFt(1,:), sumFt2(1,:), 1:108)
+plotSectorFactor(sumFt(1,:), sumFt2(1,:), xaxis)
 % plotSectorFactor(sumFt(2,:), sumFt2(2,:), xaxis)
 % plotSectorFactor(sumFt(3,:), sumFt2(3,:), xaxis)
 % plotSectorFactor(sumFt(9,:), sumFt2(9,:), xaxis)

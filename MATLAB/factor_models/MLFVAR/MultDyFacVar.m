@@ -57,8 +57,6 @@ for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
         StateObsModel, Si,  T);
-        
-    beta
      
     for q = 1:levels
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
@@ -88,6 +86,8 @@ for i = 1 : Sims
         factorVariance = drawFactorVariance(Ft, stateTransitions, s0, d0);
     end
     
+    Si = kowStatePrecision(diag(initStateTransitions),1,T);
+    
     %% Storage
     if i > burnin
         v = i - burnin;
@@ -106,7 +106,6 @@ for i = 1 : Sims
         sumFactorVar = sumFactorVar + factorVariance;
         sumFactorVar2 = sumFactorVar2 + factorVariance.^2;
     end
-    
 end
 
 Runs = Sims- burnin;
