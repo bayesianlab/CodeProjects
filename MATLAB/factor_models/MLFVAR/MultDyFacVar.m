@@ -32,7 +32,7 @@ Ft = initFactor;
 StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 Si = kowStatePrecision(diag(initStateTransitions),1,T);
 factorVariance = ones(nFactors,1);
-variancedecomp = zeros(K,3);
+variancedecomp = zeros(K,levels);
 % Storage
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt;
@@ -76,7 +76,7 @@ for i = 1 : Sims
         backupMeanAndHessian(factorSelect,:) = tempbackup;
         Ft(factorSelect,:) = f;
         Ft(factorSelect,:) = f;
-        variancedeomp(:,q) = vdecomp;
+        variancedecomp(:,q) = vdecomp;
     end
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
     
@@ -111,7 +111,7 @@ for i = 1 : Sims
         sumResiduals2 = sumResiduals2 + r2;
         sumFactorVar = sumFactorVar + factorVariance;
         sumFactorVar2 = sumFactorVar2 + factorVariance.^2;
-        sumVarianceDecomp = sumVarianceDecomp + variancedecomp;
+        sumVarianceDecomp = sumVarianceDecomp + variancedecomp
         sumVarianceDecomp2 = sumVarianceDecomp2 + variancedecomp.^2;
     end
 end

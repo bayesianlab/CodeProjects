@@ -33,8 +33,8 @@ v0=3;
 r0 =5;
 s0 = 3;
 d0 = 5;
-Sims = 20;
-burnin = 10;
+Sims = 10;
+burnin = 1;
 ReducedRuns = 3;
 initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
@@ -76,7 +76,7 @@ identification = 2;
     sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2, sumVarDecom, sumVarDecomp2] = ...
     MultDyFacVar(yt, Xt, InfoCell, Sims, burnin,...
     ReducedRuns,  initFactor, initBeta, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-% xaxis = 1962:2014;
+xaxis = 1962:2014;
 
 % plotSectorFactor(sumFt(1,:), sumFt2(1,:), xaxis)
 % plotSectorFactor(sumFt(2,:), sumFt2(2,:), xaxis)
