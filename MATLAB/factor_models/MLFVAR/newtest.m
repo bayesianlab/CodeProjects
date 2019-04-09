@@ -46,7 +46,7 @@ vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
 Ft = reshape(vecFt, nFactors,T);
 initFactor = Ft;
-identification = 2;
+identification = 1;
 % Simulation Version 
 % 
 

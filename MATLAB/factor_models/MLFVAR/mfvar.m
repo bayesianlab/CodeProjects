@@ -52,7 +52,7 @@ if SimVersion == 1
     fprintf(['Saved results as  ', fname, '\n'])
     
 else
-    for id = 1:2
+    for id = 2:2
         identification = id;
         fprintf('<strong> Running version with mean </strong>\n')
         [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
