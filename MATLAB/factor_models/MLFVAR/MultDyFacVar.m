@@ -32,7 +32,7 @@ Ft = initFactor;
 StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 Si = kowStatePrecision(diag(initStateTransitions),1,T);
 factorVariance = ones(nFactors,1);
-
+variancedecomp = zeros(K,3);
 % Storage
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt;
@@ -55,6 +55,8 @@ options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-9);
 
 DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
+vy = var(yt,0,2);
+
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
@@ -70,7 +72,7 @@ for i = 1 : Sims
         tempbackup = backupMeanAndHessian(factorSelect,:);
         [currobsmod(:,q), tempbackup, f, vdecomp] = AmarginalF(Info, ...
             Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect), factorVarianceSubset,...
-            obsPrecision, tempbackup, options, identification);
+            obsPrecision, tempbackup, options, identification, vy);
         backupMeanAndHessian(factorSelect,:) = tempbackup;
         Ft(factorSelect,:) = f;
         Ft(factorSelect,:) = f;

@@ -1,19 +1,19 @@
 
 clear;clc;
-rng(121)
-SeriesPerCountry=5;
-CountriesInRegion =3;
-Regions = 2;
-Countries = CountriesInRegion*Regions;
-T = 20;
-beta = ones(1,SeriesPerCountry+1).*.4;
-gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
-K = SeriesPerCountry*CountriesInRegion*Regions;
-[DataCell] = ...
-    MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
+% rng(121)
+% SeriesPerCountry=5;
+% CountriesInRegion =3;
+% Regions = 2;
+% Countries = CountriesInRegion*Regions;
+% T = 20;
+% beta = ones(1,SeriesPerCountry+1).*.4;
+% gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
+% K = SeriesPerCountry*CountriesInRegion*Regions;
+% [DataCell] = ...
+%     MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
 
 % load('Housing.mat')
-% load('StandardizedRealData.mat')
+load('StandardizedRealData.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
@@ -61,10 +61,10 @@ identification = 2;
 
 % 
 
-[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-    sumObsVariance, sumObsVariance2] = ...
-    MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
-    ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+% [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
+%     sumObsVariance, sumObsVariance2] = ...
+%     MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
+%     ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
 
 % plotFt(Factor, sumFt, sumFt2, InfoCell)
 
@@ -72,10 +72,10 @@ identification = 2;
 
 
 % Real Data Version
-% [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-%     sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2] = ...
-%     MultDyFacVar(yt, Xt, InfoCell, Sims, burnin,...
-%     ReducedRuns,  initFactor, initBeta, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
+    sumObsVariance, sumObsVariance2, sumFactorVar, sumFactorVar2] = ...
+    MultDyFacVar(yt, Xt, InfoCell, Sims, burnin,...
+    ReducedRuns,  initFactor, initBeta, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
 % xaxis = 1962:2014;
 
 % plotSectorFactor(sumFt(1,:), sumFt2(1,:), xaxis)
