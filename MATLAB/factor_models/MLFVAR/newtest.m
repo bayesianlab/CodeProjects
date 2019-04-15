@@ -1,16 +1,16 @@
 
 clear;clc;
-% rng(121)
-% SeriesPerCountry=5;
-% CountriesInRegion =3;
-% Regions = 2;
-% Countries = CountriesInRegion*Regions;
-% T = 20;
-% beta = ones(1,SeriesPerCountry+1).*.4;
-% gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
-% K = SeriesPerCountry*CountriesInRegion*Regions;
-% [DataCell] = ...
-%     MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
+rng(121)
+SeriesPerCountry=10;
+CountriesInRegion =3;
+Regions = 2;
+Countries = CountriesInRegion*Regions;
+T = 200;
+beta = ones(1,SeriesPerCountry+1).*.4;
+gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
+K = SeriesPerCountry*CountriesInRegion*Regions;
+[DataCell] = ...
+    MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
 
 % load('Housing.mat')
 load('StandardizedRealData.mat')
@@ -33,8 +33,8 @@ v0=3;
 r0 =5;
 s0 = 3;
 d0 = 5;
-Sims = 3;
-burnin = 1;
+Sims = 10;
+burnin = 5;
 ReducedRuns = 3;
 initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
@@ -65,10 +65,10 @@ identification = 1;
 %     sumObsVariance, sumObsVariance2] = ...
 %     MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
 %     ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-
+% 
 % plotFt(Factor, sumFt, sumFt2, InfoCell)
-
-
+% 
+% coverageProb(Factor,sumFt, sumFt2)
 
 
 % Real Data Version

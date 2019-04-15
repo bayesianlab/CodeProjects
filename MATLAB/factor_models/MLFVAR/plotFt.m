@@ -4,6 +4,7 @@ variance = sumFt2 - sumFt.^2;
 sig = sqrt(variance);
 upper = sumFt + 2.*sig;
 lower = sumFt - 2.*sig;
+
 xaxis = 1:T;
 fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
