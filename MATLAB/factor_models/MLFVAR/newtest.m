@@ -1,11 +1,11 @@
 
 clear;clc;
-rng(121)
-SeriesPerCountry=10;
-CountriesInRegion =3;
-Regions = 2;
+% rng(121)
+SeriesPerCountry=3;
+CountriesInRegion =10;
+Regions = 4;
 Countries = CountriesInRegion*Regions;
-T = 200;
+T = 50;
 beta = ones(1,SeriesPerCountry+1).*.4;
 gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
 K = SeriesPerCountry*CountriesInRegion*Regions;
@@ -13,7 +13,7 @@ K = SeriesPerCountry*CountriesInRegion*Regions;
     MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
 
 % load('Housing.mat')
-load('StandardizedRealData.mat')
+% load('StandardizedRealData.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
@@ -46,7 +46,7 @@ vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
 Ft = reshape(vecFt, nFactors,T);
 initFactor = Ft;
-identification = 1;
+identification = 2;
 % Simulation Version 
 % 
 
@@ -72,13 +72,13 @@ identification = 1;
 
 
 % Real Data Version
-[sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
-    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
-    sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
-   sumVarianceDecomp2] = ...
-    MultDyFacVar(yt, Xt, InfoCell, Sims, burnin,...
-    ReducedRuns,  initFactor, initBeta, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-xaxis = 1962:2014;
+% [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
+%     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
+%     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
+%    sumVarianceDecomp2] = ...
+%     MultDyFacVar(yt, Xt, InfoCell, Sims, burnin,...
+%     ReducedRuns,  initFactor, initBeta, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+% xaxis = 1962:2014;
 
 % plotSectorFactor(sumFt(1,:), sumFt2(1,:), xaxis)
 % plotSectorFactor(sumFt(2,:), sumFt2(2,:), xaxis)
@@ -88,36 +88,24 @@ xaxis = 1962:2014;
 % plotSectorFactor(sumFt(11,:), sumFt2(11,:), xaxis)
 % 
 
-% 
-% fitted =  (1./sum(sumFt.^2,2)).*sum((sumFt.*Factor),2).* sumFt;
-% SST = sum((Factor - mean(Factor,2)).^2,2);
-% SSR = sum((Factor - fitted).^2,2) ;
-% R2 = (1-(SSR./SST))'
-% disp('Mean Obs. Model')
-% disp(mean(mean(sumOM,3),1))
-% disp('Mean State Trans. l')
-% disp(sumST')
-% Gt
-% sumOM
-% 
-% Gamma
-% sumST
 
-% rng(9)
-% om = [.5;.5;.5];
-% yt = normrnd(0,1,3,10);
-% p1 = ones(1,3);
-% p2 = eye(3);
-% f = normrnd(0,1,1,10);
-% fp = eye(10);
-% 
-% AproptoLL(om, yt, p1, p2, p1',f,fp)
-% 
-% om = [.5;.5];
-% p1 = ones(1,2);
-% p2 = eye(2);
-% pre = ones(3,1)
-% LLRestrict(om, yt, p1, p2, pre,f,fp)
+% Spatial Version
+clear;clc;
+% rng(121)
+SeriesPerCountry=3;
+CountriesInRegion =10;
+Regions = 4;
+Countries = CountriesInRegion*Regions;
+T = 50;
+beta = ones(1,SeriesPerCountry+1).*.4;
+gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
+K = SeriesPerCountry*CountriesInRegion*Regions;
+% [DataCell] = ...
+SpatialMLFdata(3,0);
 
 
 
+% [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
+%     sumObsVariance, sumObsVariance2] = ...
+%     SMDFVAR_SimVersion(yt, InfoCell, Sims, burnin,...
+%     ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);

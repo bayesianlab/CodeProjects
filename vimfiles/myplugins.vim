@@ -18,6 +18,8 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'auto-pairs'
 Plugin 'git://github.com/kana/vim-operator-user'
 Plugin 'git://github.com/rhysd/vim-clang-format'
+
+Plugin 'vim-scripts/indentpython.vim'
 Plugin 'surround.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required

@@ -10,7 +10,7 @@ InfoCell{1,2} = [1,9;10,15;16,69;70,123;124,144;145,162;163,180];
 InfoCell{1,3} = [(1:SeriesPerCountry:180)', (SeriesPerCountry:SeriesPerCountry:180)'];
 
 kow = kow./std(kow,0,2);
-kowmus = mean(kow,2)
+kowmus = mean(kow,2);
 kow = kow - kowmus;
 
 select = 1:SeriesPerCountry;
