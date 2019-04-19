@@ -1,4 +1,5 @@
-function [] = SpatialMLFdata(Nsquares, ploton)
+function [] = SpatialMLFdata(SeriesPerY, Nsquares, drawsFromCube, ploton, T)
+
 
 x = 0:1/Nsquares:1;
 y = x;
@@ -23,14 +24,15 @@ end
 % D = nearest_neighbor(Nsquares);
 
 rng(4)
-
-yassignment = sort(randi([1,20], 10,1));
-
-c = 0;
-b=1;
-
+yassignment = sort(randi([1,20], drawsFromCube,1));
 uni = unique(yassignment);
 Nuni = length(uni);
+K = SeriesPerY*drawsFromCube;
+yassignment = kron(yassignment, ones(SeriesPerY,1));
+yassignment
+
+b=1;
+nFactors = Nuni;
 regionInfo = zeros(Nuni,2);
 for q = 1:Nuni
     n = sum(yassignment==uni(q));
@@ -38,18 +40,17 @@ for q = 1:Nuni
     regionInfo(q,:) = [b,e];
     b= e+1;
 end
+regionInfo
 
-    
 gammas = unifrnd(.01,.3, nFactors,1);
-    
 stateTransitionsAll = gammas'.*eye(nFactors);
-% speyet = speye(T);
-% S = spatialPrecision(stateTransitionsAll, 1, T)\speye(nFactors*T);
-% Factor = mvnrnd(zeros(nFactors*T,1), S);
-% Factor = reshape(Factor,nFactors,T);
+speyet = speye(T);
+S = kowStatePrecision(stateTransitionsAll, 1, T)\speye(nFactors*T);
+Factor = mvnrnd(zeros(nFactors*T,1), S);
+Factor = reshape(Factor,nFactors,T);
 
 
-% [Identities, sectorInfo] = MakeObsModelIdentity(InfoCell);
+[Identities, sectorInfo] = MakeObsModelIdentity(InfoCell);
 % I1 = Identities{1,2};
 % I2 = Identities{1,3};
 % Z0 = zeros(K,1);

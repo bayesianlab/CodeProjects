@@ -101,7 +101,7 @@ beta = ones(1,SeriesPerCountry+1).*.4;
 gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
 K = SeriesPerCountry*CountriesInRegion*Regions;
 % [DataCell] = ...
-SpatialMLFdata(3,0);
+SpatialMLFdata(3,3, 10,0, 10);
 
 
 
