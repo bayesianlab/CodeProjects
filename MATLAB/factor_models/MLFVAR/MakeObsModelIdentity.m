@@ -1,6 +1,4 @@
 function [IdentityCell, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell)
-
-
 getK = InfoCell{1,1};
 K = getK(end,end);
 sectors = length(InfoCell);
@@ -17,7 +15,6 @@ for s = 1:sectors
     end
     IdentityCell{1,s} = I;
 end
-
 factorInfo = factorIndices(sectorInfo);
 end
 

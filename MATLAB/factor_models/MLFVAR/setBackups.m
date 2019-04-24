@@ -24,7 +24,6 @@ elseif identification == 2
     for p = 1:levels
         sectorInfo = InfoCell{1,p};
         nsectors = size(sectorInfo,1);
-        
         for k = 1:nsectors
             index = sectorInfo(k,:);
             range = index(1):index(2);

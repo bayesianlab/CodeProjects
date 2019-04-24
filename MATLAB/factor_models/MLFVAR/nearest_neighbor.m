@@ -1,4 +1,4 @@
-function [neighbors] = nearest_neighbor(Nsquares)
+function [neighbors, cuts] = nearest_neighbor(Nsquares)
 NsquaresSquared = Nsquares^2;
 neighbors = zeros(NsquaresSquared, NsquaresSquared);
 points = 1:Nsquares;
@@ -23,5 +23,8 @@ for q = 1:Nsquares
     end
 end
 neighbors = neighbors + neighbors';
+Y = zeros(1,NsquaresSquared);
+Y(1) = 1;
+cuts = [Y;fliplr(Y)] * eig(neighbors).^(-1);
 end
 

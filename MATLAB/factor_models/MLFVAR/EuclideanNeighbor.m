@@ -1,4 +1,4 @@
-function [D, cuts] = EuclideanNeighbor(Nsquares, ploton)
+function [D, cuts, Middles] = EuclideanNeighbor(Nsquares, ploton)
 x = 0:1/Nsquares:1;
 [u,~] = meshgrid(x);
 nsqr2 =  Nsquares^2;

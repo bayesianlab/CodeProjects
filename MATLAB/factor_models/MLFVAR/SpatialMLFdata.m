@@ -1,9 +1,26 @@
-function [] = SpatialMLFdata(SeriesPerY, Nsquares, drawsFromCube, ploton, T)
+function [DataCell] = SpatialMLFdata(SeriesPerY, Nsquares,...
+    squaresSampled, yPerSquare, ploton, levels, T, corrType)
+
+if squaresSampled > Nsquares
+    error('squaresSampled must be less than Nsquares.')
+end
+
+DataCell = cell(1,levels);
+
+if corrType == 'nearest_neighbor'
+    [D, cuts] = nearest_neighbor(Nsquares);
+    [~,~, Middles] = EuclideanNeighbor(Nsquares, 0);
+    midpoint = mean(cuts);
+else
+    [D,cuts, Middles] = EuclideanNeighbor(Nsquares, ploton);
+    midpoint = mean(cuts);
+end
 
 
+rng(2)
+uniqueSquares = sort(datasample( [1:Nsquares^2], squaresSampled, 'Replace', false))';
 x = 0:1/Nsquares:1;
 y = x;
-
 if ploton == 1
     hold on
     plot(x(1), y(3))
@@ -15,32 +32,24 @@ if ploton == 1
             plot(Y,X, 'black');
         end
     end
+    for k = 1:length(uniqueSquares)
+        uniqueSquares(k)
+        xy = Middles(uniqueSquares(k),:);
+        plot(xy(1), xy(2), '.', 'MarkerSize', 18, 'Color', 'black')
+    end
 end
+yassignment = kron(uniqueSquares, ones(SeriesPerY,1));
+K = length(yassignment);
+[I1,I2] = SpatialMakeIdentities(K,SeriesPerY, length(uniqueSquares));
+InfoCell{1,1} = [1,K];
+[InfoCell{1,2}, regionFactors] = setRegionalIndices(I2, SeriesPerY)
 
-
-[D,cuts] = EuclideanNeighbor(Nsquares, ploton)
-
-
-% D = nearest_neighbor(Nsquares);
-
-rng(4)
-yassignment = sort(randi([1,20], drawsFromCube,1));
-uni = unique(yassignment);
-Nuni = length(uni);
-K = SeriesPerY*drawsFromCube;
-yassignment = kron(yassignment, ones(SeriesPerY,1));
-yassignment
-
-b=1;
-nFactors = Nuni;
-regionInfo = zeros(Nuni,2);
-for q = 1:Nuni
-    n = sum(yassignment==uni(q));
-    e = b+n-1;
-    regionInfo(q,:) = [b,e];
-    b= e+1;
+if levels > 2
+    seriesFactors = squaresSampled*yPerSquare;
+else
+    seriesFactors = 0;
 end
-regionInfo
+nFactors = seriesFactors + regionFactors + 1;
 
 gammas = unifrnd(.01,.3, nFactors,1);
 stateTransitionsAll = gammas'.*eye(nFactors);
@@ -49,33 +58,33 @@ S = kowStatePrecision(stateTransitionsAll, 1, T)\speye(nFactors*T);
 Factor = mvnrnd(zeros(nFactors*T,1), S);
 Factor = reshape(Factor,nFactors,T);
 
+levels = length(DataCell);
+Gt = unifrnd(0.01,.5,K,nFactors);
+G = [I1, I2];
 
-[Identities, sectorInfo] = MakeObsModelIdentity(InfoCell);
-% I1 = Identities{1,2};
-% I2 = Identities{1,3};
-% Z0 = zeros(K,1);
-% Z1 = zeros(size(I1,1), size(I1,2));
-% Z2 = zeros(size(I2,1), size(I2,2));
-% Gt = unifrnd(.5,1,K,3);
-% WorldOnly = Gt(:,1);
-% RegionsOnly = Gt(:,2).*I1;
-% CountriesOnly = Gt(:,3).*I2;
-% Gt = [WorldOnly, RegionsOnly,CountriesOnly];
-%
-%
-% mu = Gt*Factor;
-% yt = mu + normrnd(0,1,K,T);
-%
-% Gt = [Gt(:,1), sum(Gt(:,2:Regions+1),2), sum(Gt(:,Regions+2:end),2)];
-% Xt =0;
-% DataCell = cell(1,7);
-% DataCell{1,1} = yt;
-% DataCell{1,2} = Xt;
-% DataCell{1,3} = InfoCell;
-% DataCell{1,4} = Factor;
-% DataCell{1,5} = beta;
-% DataCell{1,6} = gam;
-% DataCell{1,7} = Gt;
-%
+Gt = Gt .* G;
+mu = Gt*Factor;
 
+smallD = selectCorrElems(D, uniqueSquares);
+if corrType == 'nearest_neighbor'
+    ImA =  eye(size(smallD,1)) - (midpoint.*smallD);
+    t = diag(diag(ImA).^(-.5));
+    R = t*ImA*t;
+else
+    R = exp(-3.*smallD);
+end
+LR = chol(R,'lower');
+BigLR = kron(eye(squaresSampled), LR);
+
+yt = BigLR*normrnd(mu,1,K,T);
+Xt =0;
+
+DataCell = cell(1,7);
+DataCell{1,1} = yt;
+DataCell{1,2} = Xt;
+DataCell{1,3} = InfoCell;
+DataCell{1,4} = smallD;
+DataCell{1,5} = Factor;
+DataCell{1,6} = gammas;
+DataCell{1,7} = Gt;
 end
