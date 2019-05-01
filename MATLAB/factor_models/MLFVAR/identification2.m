@@ -1,10 +1,10 @@
 function [ retval, lastMean, lastHessian] = identification2( x0, yt, obsPrecision, Ft, FtPrecision,...
     lastMean, lastHessian, options  )
 [K,T] = size(yt);
-df = 20;
+df = 10;
 w1 = sqrt(chi2rnd(df,1)/df);
 ObsPriorMean = ones(1, K-1);
-ObsPriorPrecision = eye(K-1);
+ObsPriorPrecision = .5.*eye(K-1);
 
 LogLikePositive = @(v) LLRestrict (v, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
@@ -19,15 +19,15 @@ V = Hessian \ eye(length(themean));
 n = length(themean);
 proposal = themean + chol(V, 'lower')*normrnd(0,1, n,1)./w1;
 proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
-
+% [LogLikePositive(proposal),proposalDist(freeElems'),LogLikePositive(freeElems),proposalDist(proposal')]
 Num = LogLikePositive(proposal) + proposalDist(freeElems');
 Den = LogLikePositive(freeElems) + proposalDist(proposal');
 alpha = Num - Den;
 u = log(unifrnd(0,1,1));
-if u <= alpha 
+if u <= alpha
     retval = [1;proposal];
 else
-   retval = x0; 
+    retval = x0;
 end
 end
 

@@ -1,6 +1,6 @@
 function [obsupdate, backup, f, vdecomp] = ...
     AmarginalF(Info, Factor, yt, currobsmod,  stateTransitions, factorVariance,...
-    obsPrecision, backup, options, identification, vy)
+    obsPrecision, backup, options, identification, vy, mut)
 
 [K,T] = size(yt);
 Regions = size(Info,1);
@@ -11,23 +11,24 @@ vdecomp = zeros(K,1);
 for r = 1:Regions
     subsetSelect = Info(r,1):Info(r,2);
     yslice = yt(subsetSelect,:);
+    muslice = mut(subsetSelect,:);
     vytemp = vy(subsetSelect);
     precisionSlice = obsPrecision(subsetSelect);
     x0 = currobsmod(subsetSelect);
     factorPrecision = kowStatePrecision(stateTransitions(r), factorVariance(r), T);
     lastMean = backup{r,1};
     lastHessian = backup{r,2};
-    [xt, lastMean1, lastHessian1] = optimizeA(x0, yslice,...
+    [xt, lastMean, lastHessian] = optimizeA(x0, yslice,...
         precisionSlice,  Factor(r,:), factorPrecision, lastMean, lastHessian, options, identification);
     obsupdate(subsetSelect) = xt;
     
-    lastMean = .5.*(lastMean + lastMean1);
-    lastHessian = .5.*(lastHessian + lastHessian1);
+    lastMean = (lastMean + lastMean);
+    lastHessian = (lastHessian + lastHessian);
     
     backup{r,1} = lastMean;
     backup{r,2} = lastHessian;
     
-    f(r,:) =  kowUpdateLatent(yslice(:),  xt, factorPrecision, precisionSlice);
+    f(r,:) =  kowUpdateLatent(yslice(:) - muslice(:),  xt, factorPrecision, precisionSlice);
     
     obsmodSquared = xt.^2;
     

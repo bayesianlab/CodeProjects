@@ -1,4 +1,4 @@
-function [DataCell] = MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gam)
+function [DataCell] = MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, identification)
 Countries = Regions*CountriesInRegion;
 K = Countries*SeriesPerCountry;
 InfoMat = zeros(K,1);
@@ -20,28 +20,44 @@ InfoCell{1,3} = [(1:SeriesPerCountry:K)', (SeriesPerCountry:SeriesPerCountry:K)'
 beta = beta.*ones(K, (SeriesPerCountry+1));
 beta= reshape(beta', (SeriesPerCountry+1)*K,1);
 
-
+gam = unifrnd(.5,.6,nFactors,1);
 stateTransitionsAll = gam'.*eye(nFactors);
 speyet = speye(T);
-S = kowStatePrecision(stateTransitionsAll, 1, T)\speye(nFactors*T);
+
+S = kowStatePrecision(stateTransitionsAll, ones(nFactors,1), T)\speye(nFactors*T);
 Factor = mvnrnd(zeros(nFactors*T,1), S);
 Factor = reshape(Factor,nFactors,T);
 
 
 [Identities, sectorInfo] = MakeObsModelIdentity(InfoCell);
+
 I1 = Identities{1,2};
 I2 = Identities{1,3};
 Z0 = zeros(K,1);
 Z1 = zeros(size(I1,1), size(I1,2));
 Z2 = zeros(size(I2,1), size(I2,2));
 % Gt = .3.*ones(K,3);
-Gt = unifrnd(.5,1,K,3);
+Gt = unifrnd(.5,.99,K,3);
 WorldOnly = Gt(:,1);
 RegionsOnly = Gt(:,2).*I1;
 CountriesOnly = Gt(:,3).*I2;
 % Gt = [WorldOnly, RegionsOnly,CountriesOnly];
-Gt = [WorldOnly, RegionsOnly, CountriesOnly];
-
+Gt = [WorldOnly, RegionsOnly, Z2];
+if identification == 2
+    WorldOnly(1,1) = 1;
+    Start1 = InfoCell{1,2};
+    Start1 = Start1(:,1);
+    for j = 1:length(Start1)
+        RegionsOnly(Start1(j), j) = 1;
+    end
+    Start1 = InfoCell{1,3};
+    Start1 = Start1(:,1);
+    for q = 1:length(Start1)
+        CountriesOnly(Start1(q),q) = 1;
+    end
+    Gt = [WorldOnly, RegionsOnly, Z2];
+end
+Gt
 
 mu = Gt*Factor;
 yt = mu + normrnd(0,1,K,T);

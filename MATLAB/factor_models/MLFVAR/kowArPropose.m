@@ -1,5 +1,6 @@
 function [ proposal, P0, P0old, gammahat, G ] = kowArPropose(y,x, OldAr)
-Arp = size(x,1);
+Arp = size(OldAr,1);
+
 G = ((eye(Arp).*.01) +  x*x')\eye(Arp);
 gammahat = G* (x*y');
 valid = -1;

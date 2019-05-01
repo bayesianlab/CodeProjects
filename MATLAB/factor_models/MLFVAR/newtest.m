@@ -3,15 +3,15 @@
 clear;clc;
 rng(121)
 SeriesPerCountry=3;
-CountriesInRegion =3;
-Regions = 2;
+CountriesInRegion =10;
+Regions = 3;
 Countries = CountriesInRegion*Regions;
-T = 150;
+T = 100;
+identification = 2;
 beta = ones(1,SeriesPerCountry+1).*.4;
-gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
 K = SeriesPerCountry*CountriesInRegion*Regions;
 [DataCell] = ...
-    MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
+    MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, identification);
 
 % % load('Housing.mat')
 % % load('StandardizedRealData.mat')
@@ -28,44 +28,51 @@ Gt = DataCell{1,7};
 % Regions = sectorInfo(2);
 % 
 levels = size(InfoCell,2);
-% 
+ 
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 v0=3;
 r0 =5;
 s0 = 3;
 d0 = 5;
 Sims = 20;
-burnin = 10;
-ReducedRuns = 3;
+burnin = 0;
+ReducedRuns = 10;
 initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
-initobsmodel = .1.*ones(K,levels);
-initStateTransitions = .3.*ones(nFactors,1).*.1;
+% initStateTransitions = .3.*ones(nFactors,1).*.1;
+initStateTransitions = Gamma;
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+
+% Simulation Version 
+initobsmodel = unifrnd(0,1,K,3);
+% initobsmodel = Gt
+
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-    kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
-Ft = reshape(vecFt, nFactors,T);
+    kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
+% Ft = reshape(vecFt, nFactors,T);
+Ft = Factor;
 initFactor = Ft;
 identification = 2;
-% Simulation Version 
-% initobsmodel = zeros(K,3);
-% initobsmodel = .05.*[ones(K,1), ones(K,1), ones(K,1)];
-initobsmodel = unifrnd(0,1,K,3);
-% initobsmodel(:,2) = zeros(K,1);
+estML = 0;
+[sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
+    sumObsVariance, sumObsVariance2, sumVarianceDecomp,...
+    sumVarianceDecomp2, ml] = MultDyFacVarSimVersion(yt,...
+      InfoCell, Sims, burnin, ReducedRuns,  initFactor, initobsmodel,...
+      initStateTransitions,v0,r0, s0,d0, identification,estML);
 
-
-
-
-
-[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-    sumObsVariance, sumObsVariance2] = ...
-    MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
-    ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-
+ml
+[sumOM,Gt]
+mean([sumOM,Gt])
 % hold on
 % plot(Factor(1,:))
 % plot(sumFt(1,:))
+A = makeStateObsModel(sumOM, Identities, 0);
+yhat = A*sumFt;
+hold on 
+plot(yt(1,:))
+plot(yhat(1,:))
+rmse = mean(sqrt(sum((yt - yhat).^2,2)))
 % plotFt(Factor, sumFt, sumFt2, InfoCell)
 % 
 % coverageProb(Factor,sumFt, sumFt2)
