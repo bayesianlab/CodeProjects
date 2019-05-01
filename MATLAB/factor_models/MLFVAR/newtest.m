@@ -1,70 +1,71 @@
 
 
-% clear;clc;
-% rng(121)
-% SeriesPerCountry=3;
-% CountriesInRegion =10;
-% Regions = 4;
-% Countries = CountriesInRegion*Regions;
-% T = 50;
-% beta = ones(1,SeriesPerCountry+1).*.4;
-% gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
-% K = SeriesPerCountry*CountriesInRegion*Regions;
-% [DataCell] = ...
-%     MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
+clear;clc;
+rng(121)
+SeriesPerCountry=3;
+CountriesInRegion =3;
+Regions = 2;
+Countries = CountriesInRegion*Regions;
+T = 150;
+beta = ones(1,SeriesPerCountry+1).*.4;
+gamma = unifrnd(0,.8, 1, 1+Regions+Countries,1);
+K = SeriesPerCountry*CountriesInRegion*Regions;
+[DataCell] = ...
+    MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, gamma);
 
-% load('Housing.mat')
-% load('StandardizedRealData.mat')
-% yt = DataCell{1,1};
-% Xt = DataCell{1,2};
-% InfoCell = DataCell{1,3};
-% Factor = DataCell{1,4};
-% Gamma = DataCell{1,6};
-% Gt = DataCell{1,7};
+% % load('Housing.mat')
+% % load('StandardizedRealData.mat')
+yt = DataCell{1,1};
+Xt = DataCell{1,2};
+InfoCell = DataCell{1,3};
+Factor = DataCell{1,4};
+Gamma = DataCell{1,6};
+Gt = DataCell{1,7};
 % 
-% [K,T] = size(yt);
-% [~, dimX] = size(Xt);
+[K,T] = size(yt);
+[~, dimX] = size(Xt);
 % sectorInfo = cellfun(@(x)size(x,1), InfoCell);
 % Regions = sectorInfo(2);
 % 
-% levels = size(InfoCell,2);
+levels = size(InfoCell,2);
 % 
-% nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-% v0=3;
-% r0 =5;
-% s0 = 3;
-% d0 = 5;
-% Sims = 10;
-% burnin = 5;
-% ReducedRuns = 3;
-% initBeta = ones(dimX,1);
-% obsPrecision = ones(K,1);
-% initobsmodel = .1.*ones(K,levels);
-% initStateTransitions = .3.*ones(nFactors,1).*.1;
-% [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-% StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-% vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-%     kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
-% Ft = reshape(vecFt, nFactors,T);
-% initFactor = Ft;
-% identification = 2;
+nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
+v0=3;
+r0 =5;
+s0 = 3;
+d0 = 5;
+Sims = 20;
+burnin = 10;
+ReducedRuns = 3;
+initBeta = ones(dimX,1);
+obsPrecision = ones(K,1);
+initobsmodel = .1.*ones(K,levels);
+initStateTransitions = .3.*ones(nFactors,1).*.1;
+[Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
+vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
+    kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
+Ft = reshape(vecFt, nFactors,T);
+initFactor = Ft;
+identification = 2;
 % Simulation Version 
 % initobsmodel = zeros(K,3);
 % initobsmodel = .05.*[ones(K,1), ones(K,1), ones(K,1)];
-% initobsmodel = unifrnd(0,1,K,3);
-% initobsmodel = [zeros(K,1), zeros(K,1), .5.*ones(K,1)];
+initobsmodel = unifrnd(0,1,K,3);
+% initobsmodel(:,2) = zeros(K,1);
 
 
-% initStateTransitions = DataCell{1,6}';
-% 
 
-% 
 
-% [sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-%     sumObsVariance, sumObsVariance2] = ...
-%     MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
-%     ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-% 
+
+[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
+    sumObsVariance, sumObsVariance2] = ...
+    MultDyFacVarSimVersion(yt, InfoCell, Sims, burnin,...
+    ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+
+% hold on
+% plot(Factor(1,:))
+% plot(sumFt(1,:))
 % plotFt(Factor, sumFt, sumFt2, InfoCell)
 % 
 % coverageProb(Factor,sumFt, sumFt2)
@@ -89,58 +90,70 @@
 
 
 % Spatial Version
-clear;clc;
-T = 50;
-
-SeriesPerY =3;
-Nsquares = 3;
-squaresSampled= 3;
-yPerSquare = 3;
-ploton= 0 ;
-levels = 2;
-T = 10;
-DataCell = SpatialMLFdata(SeriesPerY, Nsquares,...
-    squaresSampled, yPerSquare, ploton, levels, T, 'nearest_neighbor');
-
-yt = DataCell{1,1};
-Xt = DataCell{1,2};
-InfoCell = DataCell{1,3};
-LocationCorrelation = DataCell{1,4};
-p = size(LocationCorrelation,1);
-zp = zeros(1,p);
-zpp = zp;
-zp(1) = 1;
-zpp(end) = 1;
-cutpoints = 1./([zp;zpp]*eig(LocationCorrelation))
-
-
-[K,T] = size(yt);
-[~, dimX] = size(Xt);
-sectorInfo = cellfun(@(x)size(x,1), InfoCell);
-Regions = sectorInfo(2);
-levels = size(InfoCell,2);
-nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-v0=3;
-r0 =5;
-s0 = 3;
-d0 = 5;
-Sims = 10;
-burnin = 5;
-ReducedRuns = 3;
-initBeta = ones(dimX,1);
-obsPrecision = ones(K,1);
-initobsmodel = .1.*ones(K,levels);
-initStateTransitions = .3.*ones(nFactors,1).*.1;
-[Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-    kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
-Ft = reshape(vecFt, nFactors,T);
-initFactor = Ft;
-identification = 2;
-[sumFt, sumFt2,sumOM, sumOM2, sumST, sumST2,...
-    sumObsVariance, sumObsVariance2] = ...
-    SMDFVAR_SimVersion(yt, InfoCell, 'nearest_neighbor', LocationCorrelation, Sims, burnin,...
-    ReducedRuns,  initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
-
+% clear;clc;
+% T = 200;
+% SeriesPerY =3;
+% gridX = 8;
+% squaresSampled= 50;
+% yPerSquare = 3;
+% ploton= 1;
+% levels = 2;
+% nearest_neighbor = 1;
+% euclidean_distance = 2;
+% DataCell = SpatialMLFdata(SeriesPerY, gridX,...
+%     squaresSampled, ploton, levels, T, euclidean_distance);
+% 
+% yt = DataCell{1,1};
+% Xt = DataCell{1,2};
+% InfoCell = DataCell{1,3};
+% LocationCorrelation = DataCell{1,4};
+% Factor = DataCell{1,5};
+% p = size(LocationCorrelation,1);
+% zp = zeros(1,p);
+% zpp = zp;
+% zp(1) = 1;
+% zpp(end) = 1;
+% cutpoints = 1./([zp;zpp]*eig(LocationCorrelation));
+% 
+% 
+% [K,T] = size(yt);
+% [~, dimX] = size(Xt);
+% sectorInfo = cellfun(@(x)size(x,1), InfoCell);
+% Regions = sectorInfo(2);
+% levels = size(InfoCell,2);
+% nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
+% v0=3;
+% r0 =5;
+% s0 = 3;
+% d0 = 5;
+% Sims = 80;
+% burnin = 10;
+% ReducedRuns = 3;
+% initBeta = ones(dimX,1);
+% obsPrecision = ones(K,1);
+% initobsmodel = unifrnd(0,1,K, levels);
+% initStateTransitions = .3.*ones(nFactors,1).*.1;
+% 
+% [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+% StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
+% vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
+%     kowStatePrecision(diag(initStateTransitions),1,T), obsPrecision);
+% Ft = reshape(vecFt, nFactors,T);
+% initFactor = Ft;
+% identification = 2;
+% 
+% [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
+%     sumObsVariance, sumObsVariance2,...
+%     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
+%     sumVarianceDecomp2, parama] = ...
+%     SMDFVAR_SimVersion(yt, InfoCell, euclidean_distance,...
+%       LocationCorrelation, cutpoints, Sims, burnin,ReducedRuns,...
+%       initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
+% figure
+% plot(parama )
+%  sigmaFt = sqrt(sumFt2 - sumFt.^2);
+%  upper = sumFt + 2.*sigmaFt;
+%  lower = sumFt - 2.*sigmaFt;
+ 
+%   plotFt(Factor, sumFt, sumFt2, InfoCell)
 

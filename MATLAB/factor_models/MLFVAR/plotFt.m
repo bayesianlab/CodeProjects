@@ -33,6 +33,8 @@ for k = 1:Regions+1
     c = c + 1;
     if k == 1
         subplot(regionWorldPagesRows,MAXCOLS, 1:MAXCOLS)
+        length(fillX(1,:))
+        length(fillY(1,:))
         h = fill(fillX(1,:), fillY(1,:), COLOR);
         set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
         hold on
@@ -62,16 +64,15 @@ figure
 ploti = 1:MAXPERFIGURE;
 c=0;
 moveToCountry = 1 + Regions;
-cindex = moveToCountry + 1:(1+Regions+Countries);
+cindex = moveToCountry + 1:(1+Regions+Countries)
 
 if length(cindex) < MAXROWS
-    countryRows = 1+Regions;
+    countryRows = Countries
 else
     countryRows = MAXROWS;
 end
 RemainingPlots = length(cindex);
 for k = cindex
-    
     if c == MAXPERFIGURE
         RemainingPlots = RemainingPlots - MAXPERFIGURE;
         if RemainingPlots < MAXPERFIGURE
@@ -81,6 +82,7 @@ for k = cindex
         c=0;
     end
     c = c + 1;
+
     subplot(countryRows,MAXCOLS, ploti(c))
    
     h = fill(fillX(1,:), fillY(k,:), COLOR);

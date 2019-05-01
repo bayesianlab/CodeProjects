@@ -1,5 +1,5 @@
 function [ realml ] = logAvg( X )
-% X is assumed to already by logged
+% X is assumed to already be logged
 % Storage is assumed to be [c1,c2,...cN], and average across
 % second dimension
 N = length(X);

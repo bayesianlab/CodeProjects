@@ -1,31 +1,27 @@
-function [DataCell] = SpatialMLFdata(SeriesPerY, Nsquares,...
-    squaresSampled, yPerSquare, ploton, levels, T, corrType)
+function [DataCell] = SpatialMLFdata(SeriesPerY, gridX,...
+    samplesFromGrid, ploton, levels, T, corrType)
 
-if squaresSampled > Nsquares
-    error('squaresSampled must be less than Nsquares.')
-end
 
 DataCell = cell(1,levels);
 
-if corrType == 'nearest_neighbor'
-    [D, cuts] = nearest_neighbor(Nsquares);
-    [~,~, Middles] = EuclideanNeighbor(Nsquares, 0);
+if corrType == 1
+    [D, cuts] = nearest_neighbor(gridX);
+    [~,~, Middles] = EuclideanNeighbor(gridX, 0);
     midpoint = mean(cuts);
 else
-    [D,cuts, Middles] = EuclideanNeighbor(Nsquares, ploton);
+    [D,cuts, Middles] = EuclideanNeighbor(gridX, ploton);
     midpoint = mean(cuts);
 end
 
 
-rng(2)
-uniqueSquares = sort(datasample( [1:Nsquares^2], squaresSampled, 'Replace', false))';
-x = 0:1/Nsquares:1;
+uniqueSquares = sort(datasample( [1:gridX^2], samplesFromGrid, 'Replace', false))';
+x = 0:1/gridX:1;
 y = x;
 if ploton == 1
     hold on
     plot(x(1), y(3))
-    for k = 1:Nsquares + 1
-        for m = 1:Nsquares + 1
+    for k = 1:gridX + 1
+        for m = 1:gridX + 1
             X = [x(m), x(m)];
             Y = [y(1), y(end)];
             plot( X,Y, 'black')
@@ -33,7 +29,7 @@ if ploton == 1
         end
     end
     for k = 1:length(uniqueSquares)
-        uniqueSquares(k)
+
         xy = Middles(uniqueSquares(k),:);
         plot(xy(1), xy(2), '.', 'MarkerSize', 18, 'Color', 'black')
     end
@@ -42,10 +38,11 @@ yassignment = kron(uniqueSquares, ones(SeriesPerY,1));
 K = length(yassignment);
 [I1,I2] = SpatialMakeIdentities(K,SeriesPerY, length(uniqueSquares));
 InfoCell{1,1} = [1,K];
-[InfoCell{1,2}, regionFactors] = setRegionalIndices(I2, SeriesPerY)
+
+[InfoCell{1,2}, regionFactors] = setRegionalIndices(I2, SeriesPerY);
 
 if levels > 2
-    seriesFactors = squaresSampled*yPerSquare;
+%     seriesFactors = samplesFromGrid*yPerSquare;
 else
     seriesFactors = 0;
 end
@@ -66,17 +63,19 @@ Gt = Gt .* G;
 mu = Gt*Factor;
 
 smallD = selectCorrElems(D, uniqueSquares);
-if corrType == 'nearest_neighbor'
+if corrType == 1
     ImA =  eye(size(smallD,1)) - (midpoint.*smallD);
     t = diag(diag(ImA).^(-.5));
     R = t*ImA*t;
 else
-    R = exp(-3.*smallD);
+    R = exp(-1.*smallD);
 end
+
 LR = chol(R,'lower');
-BigLR = kron(eye(squaresSampled), LR);
+BigLR = kron(eye(SeriesPerY), LR);
 
 yt = BigLR*normrnd(mu,1,K,T);
+
 Xt =0;
 
 DataCell = cell(1,7);

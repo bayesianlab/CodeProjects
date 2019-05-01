@@ -17,9 +17,13 @@ for r = 1:Regions
     factorPrecision = kowStatePrecision(stateTransitions(r), factorVariance(r), T);
     lastMean = backup{r,1};
     lastHessian = backup{r,2};
-    [xt, lastMean, lastHessian] = optimizeA(x0, yslice,...
+    [xt, lastMean1, lastHessian1] = optimizeA(x0, yslice,...
         precisionSlice,  Factor(r,:), factorPrecision, lastMean, lastHessian, options, identification);
     obsupdate(subsetSelect) = xt;
+    
+    lastMean = .5.*(lastMean + lastMean1);
+    lastHessian = .5.*(lastHessian + lastHessian1);
+    
     backup{r,1} = lastMean;
     backup{r,2} = lastHessian;
     

@@ -39,7 +39,8 @@ Gt = unifrnd(.5,1,K,3);
 WorldOnly = Gt(:,1);
 RegionsOnly = Gt(:,2).*I1;
 CountriesOnly = Gt(:,3).*I2;
-Gt = [WorldOnly, RegionsOnly,CountriesOnly];
+% Gt = [WorldOnly, RegionsOnly,CountriesOnly];
+Gt = [WorldOnly, RegionsOnly, CountriesOnly];
 
 
 mu = Gt*Factor;
