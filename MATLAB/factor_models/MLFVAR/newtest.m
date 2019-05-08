@@ -210,8 +210,8 @@
 %     initStateTransitions, v0, r0, s0, d0, identification, estML)
 
 clear;clc;
-load('baue.mat');
-rng(2)
+load('ue.mat');
+rng(3)
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};

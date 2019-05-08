@@ -1,19 +1,17 @@
 clear;clc;
-baue = importusaue('~/GoogleDrive/Datasets/US unemployment/usaue.csv', 2, 59 );
+ue = importfileue('~/GoogleDrive/Datasets/US unemployment/ue.csv', 2, 59 );
 importdates
-baue = table2array(baue);
+ue = table2array(ue);
 
-baue = baue./ std(baue, [], 1);
+ue = ue./ std(ue, [], 1);
 
-baue = baue./std(baue, [], 1);
-baue= baue' ;
-[K,T] = size(baue);
-SeriesPerCountry = 2;
+ue = ue./std(ue, [], 1);
+ue= ue' ;
+[K,T] = size(ue);
+SeriesPerCountry = 1;
 Countries = 50;
 InfoCell{1,1} = [1,K];
-InfoCell{1,2} = [1,26; 27,52; 53, 83; 84,100];
-InfoCell{1,3} = [(1:SeriesPerCountry:K)', (SeriesPerCountry:SeriesPerCountry:K)'];
-
+InfoCell{1,2} = [1,13; 14,25; 26,40; 41,50];
 
 select = 1:SeriesPerCountry;
 dimX = (SeriesPerCountry+1)*SeriesPerCountry;
@@ -31,12 +29,12 @@ for t = 1:T-1
     for c = 1:Countries
         rows = select2 + (c-1)*SeriesPerCountry;
         cols = colsX + (c-1)*dimX;
-        tempX(rows,cols)= kron(eye(SeriesPerCountry), [1, baue(rows, t)']);
+        tempX(rows,cols)= kron(eye(SeriesPerCountry), [1, ue(rows, t)']);
     end
     X(Xrows, :) = tempX;
 end
 X = sparse(X);
-y = baue(:,2:T);
+y = ue(:,2:T);
 
 DataCell = cell(1,7);
 DataCell{1,1} = y;
@@ -46,4 +44,4 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('baue.mat', 'DataCell')
+save('ue.mat', 'DataCell')
