@@ -55,7 +55,7 @@ if identification == 2
     for q = 1:length(Start1)
         CountriesOnly(Start1(q),q) = 1;
     end
-    Gt = [WorldOnly, RegionsOnly, Z2];
+    Gt = [WorldOnly, RegionsOnly, CountriesOnly];
 end
 Gt
 

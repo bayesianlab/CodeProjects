@@ -1,15 +1,17 @@
 function [ proposal, P0, P0old, gammahat, G ] = kowArPropose(y,x, OldAr)
 Arp = size(OldAr,1);
 
+
+
 G = ((eye(Arp).*.01) +  x*x')\eye(Arp);
 gammahat = G* (x*y');
 valid = -1;
 c = 0;
 if Arp == 1
     proposal = 10;
-    while abs(proposal) > 1 & (c < 100)
+    while abs(proposal) > 1 & (c < 5)
         c = c + 1;
-        proposal = normrnd(gammahat,G);
+        proposal = normrnd(gammahat,G,1,1);
         P0 = 1/(1-proposal^2);
         P0old = 1/(1-OldAr^2);
     end
