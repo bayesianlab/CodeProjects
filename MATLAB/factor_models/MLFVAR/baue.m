@@ -1,6 +1,6 @@
-function [] = ue()
+function [] = baue(i)
 clear;clc;
-load('ue.mat');
+load('baue.mat');
 rng(3)
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
@@ -21,8 +21,8 @@ v0=3;
 r0 =5;
 s0 = 3;
 d0 = 5;
-Sims = 10000;
-burnin = 2000;
+Sims = 5000;
+burnin = 1000;
 ReducedRuns = 10;
 initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
@@ -47,7 +47,6 @@ t = 1:59;
    sumVarianceDecomp2] = MultDyFacVar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML)
-
 f = 'ue_';
 f=createDateString(f)
 save(f)
