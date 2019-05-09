@@ -77,6 +77,7 @@ for i = 1 : Sims
     for q = levelVec
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
         mut = ConditionalObsModel*Ft;
+        ydemut = yt - mut;
         Info = InfoCell{1,q};
         factorIndx = factorInfo(q,:);
         factorSelect = factorIndx(1):factorIndx(2);
@@ -84,8 +85,8 @@ for i = 1 : Sims
         tempbackup = backupMeanAndHessian(factorSelect,:);
         
         [currobsmod(:,q), tempbackup, f, vdecomp] = AmarginalF(Info, ...
-            Ft(factorSelect, :), yt, currobsmod(:,q), stateTransitions(factorSelect), factorVarianceSubset,...
-            obsPrecision, tempbackup, options, identification, vy, mut);
+            Ft(factorSelect, :), ydemut, currobsmod(:,q), stateTransitions(factorSelect), factorVarianceSubset,...
+            obsPrecision, tempbackup, options, identification, vy);
         backupMeanAndHessian(factorSelect,:) = tempbackup;
         Ft(factorSelect,:) = f;
         variancedecomp(:,q) = vdecomp;
@@ -94,8 +95,8 @@ for i = 1 : Sims
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
     
     %% Variance
-    residuals = yt - StateObsModel*Ft;
-    [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
+    ydemut = yt - StateObsModel*Ft;
+    [obsVariance,r2] = kowUpdateObsVariances(ydemut, v0,r0,T);
     
     obsPrecision = 1./obsVariance;
     

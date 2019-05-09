@@ -15,6 +15,8 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
 % yt is K x T
 % Obs Model must be [World Region Country] and is K x 3
 
+
+
 % Index information
 [nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);
@@ -62,6 +64,7 @@ vy = var(yt,0,2);
 
 levelVec = 1:levels;
 for i = 1 : Sims
+
     fprintf('\nSimulation %i\n',i)
     [beta, xbt] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
         StateObsModel, Si,  T);
@@ -82,6 +85,7 @@ for i = 1 : Sims
         Ft(factorSelect,:) = f;
         variancedecomp(:,q) = vdecomp;
     end
+
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
     
     %% Variance

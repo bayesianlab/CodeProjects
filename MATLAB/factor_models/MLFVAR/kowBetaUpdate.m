@@ -1,7 +1,7 @@
 function [ b, mut, Variance ] = kowBetaUpdate(vecy, SurX,...
     obsModelPrecision, StateObsModel, StatePrecision, T )
 %% Validated.
-fprintf('\nBeginning beta update...')
+% fprintf('\nBeginning beta update...')
 nEqns = length(obsModelPrecision);
 nFactors = size(StateObsModel,2);
 i = 1:nEqns;
@@ -38,5 +38,5 @@ b = Variance*(NumeratorTerm);
 b = b + c*normrnd(0,1,cx,1);
 
 mut = reshape(SurX*b, nEqns, T);
-fprintf('done...\n')
+% fprintf('done...\n')
 end

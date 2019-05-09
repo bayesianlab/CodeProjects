@@ -1,5 +1,5 @@
 function [ArParams] = kowUpdateArParameters(ArParams, StateVariables, Arp)
-fprintf('\nUpdating ar parameters on state variables\n')
+% fprintf('\nUpdating ar parameters on state variables\n')
 [Rows, ~] = size(StateVariables);
 accept = 0;
 zeroarp = zeros(1,Arp);

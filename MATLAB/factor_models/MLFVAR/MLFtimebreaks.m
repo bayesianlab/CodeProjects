@@ -22,9 +22,9 @@ Factor2 = mvnrnd(zeros(nFactors*t2,1), S2);
 Factor2 = reshape(Factor2,nFactors,t2);
 
 % Gt1 = unifrnd(.80,1,K,1);
-Gt1 = ones(K,1).*.5;
-% Gt1 = zeros(K,1);
-Gt1(1) = 1;
+% Gt1 = ones(K,1).*.5;
+Gt1 = zeros(K,1);
+% Gt1(1) = 1;
 mu1 = Gt1*Factor1;
 yt1 = mu1 + normrnd(0,1,K,t1);
 
