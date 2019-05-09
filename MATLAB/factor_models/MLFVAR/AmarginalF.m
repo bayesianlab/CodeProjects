@@ -25,7 +25,7 @@ for r = 1:Regions
     backup{r,1} = lastMean;
     backup{r,2} = lastCovar;
     
-    f(r,:) =  kowUpdateLatent(yslice(:) - muslice(:),  xt, factorPrecision, precisionSlice);
+    f(r,:) =  kowUpdateLatent(yslice(:) ,  xt, factorPrecision, precisionSlice);
     
     obsmodSquared = xt.^2;
     

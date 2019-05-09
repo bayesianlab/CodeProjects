@@ -177,7 +177,6 @@ if estML == 1
         end
         Ag(:,:,r) = currobsmod;
     end
-    
     Astar = mean(Ag,3);
     piAstarsum = 0;
     for q = levelVec

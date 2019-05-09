@@ -1,4 +1,4 @@
-function [DataCell] = MLFdata(T, Regions, CountriesInRegion,SeriesPerCountry,beta, identification)
+function [DataCell] = MLFdata_withmean(T, Regions, CountriesInRegion,SeriesPerCountry, identification)
 Countries = Regions*CountriesInRegion;
 K = Countries*SeriesPerCountry;
 InfoMat = zeros(K,1);
@@ -9,15 +9,19 @@ InfoCell{1,1} = [1,K];
 InfoCell{1,2} = [1:SeriesPerCountry*CountriesInRegion:K;SeriesPerCountry*CountriesInRegion:SeriesPerCountry*CountriesInRegion:K]';
 InfoCell{1,3} = [(1:SeriesPerCountry:K)', (SeriesPerCountry:SeriesPerCountry:K)'];
 
-% Xt = normrnd(0,1, K*T,(SeriesPerCountry+1));
-% Xt(:,1) = ones(K*T,1);
-% Xt = repmat(Xt,1,K);
-% E = repmat(kron(eye(K),ones(1,(SeriesPerCountry+1))),T,1);
-% Xt = E.*Xt;
+Xt = normrnd(0,1, K*T,(SeriesPerCountry+1));
+Xt(:,1) = ones(K*T,1);
+Xt = repmat(Xt,1,K);
+E = repmat(kron(eye(K),ones(1,(SeriesPerCountry+1))),T,1);
+Xt = E.*Xt;
+
+dimX = size(Xt,2);
 
 % Parameter inits
-beta = beta.*ones(K, (SeriesPerCountry+1));
-beta= reshape(beta', (SeriesPerCountry+1)*K,1);
+beta = .4.*ones(dimX, 1);
+
+
+
 
 gam = unifrnd(.5,.6,nFactors,1);
 stateTransitionsAll = gam'.*eye(nFactors);
@@ -54,11 +58,11 @@ if identification == 2
     Gt = [WorldOnly, RegionsOnly, CountriesOnly];
 end
 
-mu = Gt*Factor;
+mu = reshape(Xt*beta, K,T) + Gt*Factor;
 yt = mu + normrnd(0,1,K,T);
 
 Gt = [Gt(:,1), sum(Gt(:,2:Regions+1),2), sum(Gt(:,Regions+2:end),2)];
-Xt =0;
+
 DataCell = cell(1,7);
 DataCell{1,1} = yt;
 DataCell{1,2} = Xt;

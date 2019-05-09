@@ -1,4 +1,4 @@
-function [ b, ydemut, Precision ] = kowBetaUpdate(vecy, SurX,...
+function [ b, mut, Variance ] = kowBetaUpdate(vecy, SurX,...
     obsModelPrecision, StateObsModel, StatePrecision, T )
 %% Validated.
 fprintf('\nBeginning beta update...')
@@ -36,6 +36,7 @@ Variance = Precision\speye(cx);
 b = Variance*(NumeratorTerm);
 [c, p] =chol(Variance,'lower');
 b = b + c*normrnd(0,1,cx,1);
-ydemut = reshape(vecy - SurX*b, nEqns, T);
+
+mut = reshape(SurX*b, nEqns, T);
 fprintf('done...\n')
 end

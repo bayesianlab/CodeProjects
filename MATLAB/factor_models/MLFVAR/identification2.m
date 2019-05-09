@@ -21,10 +21,8 @@ else
     V = lastCovar;
 end
 
-
 proposal = themean + chol(V, 'lower')*normrnd(0,1, K-1,1)./w1;
 proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
-% [LogLikePositive(proposal),proposalDist(freeElems'),LogLikePositive(freeElems),proposalDist(proposal')]
 Num = LogLikePositive(proposal) + proposalDist(freeElems');
 Den = LogLikePositive(freeElems) + proposalDist(proposal');
 alpha = Num - Den;

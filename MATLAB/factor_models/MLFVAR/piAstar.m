@@ -13,7 +13,7 @@ for m = 1:G
         precisionSlice = obsPrecision(subsetSelect);
         x0 = Astar(subsetSelect);
         x1 = Ag(subsetSelect, m);
-        freeElemsStar = x0(2:end)';
+        freeElemsStar = x0(2:end);
         freeElemsg = x1(2:end);
         themean = backup{r,1};
         V = backup{r,2};
@@ -23,6 +23,7 @@ for m = 1:G
         LogLikePositive = @(v) LLRestrict (v, yslice,ObsPriorMean,...
             ObsPriorPrecision, precisionSlice, Ft(r,:),factorPrecision);
         proposalDist = @(q) mvstudenttpdf(q, themean, V, df);
+        
         
         alphagtostar(r,m) = min(0, LogLikePositive(freeElemsStar) + proposalDist(freeElemsg') - ...
             LogLikePositive(freeElemsg) + proposalDist(freeElemsStar'));
