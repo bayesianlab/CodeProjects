@@ -149,6 +149,8 @@ sumVarianceDecomp = sumVarianceDecomp./Runs;
 sumVarianceDecomp2 = sumVarianceDecomp2./Runs;
 sumST2 = sumST2 ./Runs;
 sumResiduals2 = sumResiduals2 ./Runs;
+sumFactorVar = sumFactorVar./Runs;
+sumFactorVar2 = sumFactorVar2./Runs;
 
 [K,T] = size(yt);
 obsPrecisionStar = 1./sumObsVariance;

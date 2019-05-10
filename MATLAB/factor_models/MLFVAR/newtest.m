@@ -267,16 +267,16 @@
 % FULL PERIOD
 % BREAK 1 + BREAK 2 
 clear;clc;
-rng(3)
-Sims = 250;
+% rng(3)
+Sims = 200;
 burnin = 25;
-ReducedRuns = 100;
-ML = zeros(1,2);
-t1 = 50;
-t2 = 50;
-K = 30;
+ReducedRuns = 200;
+ML = zeros(1,3);
+timeBreak = 70;
+T = 80;
+K = 6;
 identification = 2;
-DataCell = MLFtimebreaks(K, t1,t2, identification);
+DataCell = MLFtimebreaks(K, T, timeBreak, identification);
 
 
 yt = DataCell{1,1};
@@ -316,13 +316,12 @@ estML = 1;
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML);
 sumOM
+sumBeta
 ML(1) = ml;
 %%%%%%%%%%%%%%
-rng(3)
-yt1 = yt(:,1:t1);
-
+yt1 = yt(:,1:timeBreak);
 [K,t1] = size(yt1);
-Xt1 = Xt(1:K*t1,:);
+Xt1 = Xt(1:(K*timeBreak),:);
 levels = size(InfoCell,2);
 
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
@@ -352,12 +351,13 @@ estML = 1;
     initStateTransitions, v0, r0, s0, d0, identification, estML);
 
 sumOM
+sumBeta
 ML(2) = ml;
 %%%%%%%%%%%%%%%%
-yt2 = yt(:,t1+1 : end);
+yt2 = yt(:,(timeBreak+1) : end);
 
-[K,t1] = size(yt2);
-Xt2 = Xt(K*t1+ 1: end,:);
+[K,t2] = size(yt2);
+Xt2 = Xt( (K*timeBreak+1): end,:);
 levels = size(InfoCell,2);
 
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
@@ -368,7 +368,6 @@ d0 = 5;
 initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
 initStateTransitions = .3.*ones(nFactors,1);
-
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 
 initobsmodel = unifrnd(0,1,K,1);
@@ -386,6 +385,11 @@ estML = 1;
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML);
 sumOM
-ML(2) = ML(2) + ml;
+sumBeta
+ML(3) =  ml;
 
-ML(2) - ML(1)
+ML(2)/ML(1)
+ML(3)/ML(1)
+
+ML(2) + ML(3) - ML(1)
+

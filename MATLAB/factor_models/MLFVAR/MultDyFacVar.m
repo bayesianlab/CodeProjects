@@ -150,7 +150,8 @@ sumVarianceDecomp = sumVarianceDecomp./Runs;
 sumVarianceDecomp2 = sumVarianceDecomp2./Runs;
 sumST2 = sumST2 ./Runs;
 sumResiduals2 = sumResiduals2 ./Runs;
-
+sumFactorVar = sumFactorVar./Runs;
+sumFactorVar2 = sumFactorVar2./Runs;
 
 %% Marginal Likelihood
 [K,T] = size(yt);
@@ -208,26 +209,47 @@ if estML == 1
             obsPrecisionStar, tempbackup,identification));
     end
     fprintf('Computing Marginal Likelihood\n')
+
+sum(piObsVarianceStar) 
+  sum(piFactorVarianceStar)         
+sum(piFactorTransitionStar) 
+piBetaStar
+ piAstarsum
+
     posteriorStar = sum(piObsVarianceStar) +  sum(piFactorVarianceStar) ...
         + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
     StateObsModelStar = makeStateObsModel(Astar, Identities, 0) ;
     
-    mu = StateObsModelStar*sumFt ;
+    mu = reshape(Xt*BetaStar,K,T) +  StateObsModelStar*sumFt ;
     LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
     Kprecision = kowStatePrecision(diag(sumST), sumFactorVar, T);
+
+
+
     Fpriorstar = logmvnpdf(sumFt(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T));
     
     G = kron(eye(T), StateObsModelStar);
     J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
-    piFtstarGivenyAndthetastar = .5*( logdet(J) -  (log(2*pi)*K*T)  );
+
+
+    piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*K*T)  );
     
-    
+    LogLikelihood 
+Fpriorstar 
+ piFtstarGivenyAndthetastar
+
     fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
     
     priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), 100.*eye(nFactors)));
     priorObsVariance = sum(logigampdf(sumObsVariance, v0, d0));
     priorFactorVar = sum(logigampdf(sumFactorVar, s0, d0));
     priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), 100.*eye(dimX));
+
+priorST 
+ priorObsVariance 
+ priorFactorVar 
+priorAstar 
+ priorBeta
 
     ml = fyGiventhetastar + priorST + priorObsVariance + priorFactorVar + priorAstar + priorBeta - posteriorStar;
    
