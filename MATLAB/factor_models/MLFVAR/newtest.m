@@ -268,13 +268,13 @@
 % BREAK 1 + BREAK 2 
 clear;clc;
 % rng(3)
-Sims = 200;
+Sims = 100;
 burnin = 25;
 ReducedRuns = 200;
 ML = zeros(1,3);
-timeBreak = 70;
-T = 80;
-K = 6;
+timeBreak = 50;
+T = 100;
+K = 8;
 identification = 2;
 DataCell = MLFtimebreaks(K, T, timeBreak, identification);
 
@@ -391,5 +391,5 @@ ML(3) =  ml;
 ML(2)/ML(1)
 ML(3)/ML(1)
 
-ML(2) + ML(3) - ML(1)
+(ML(2) + ML(3)) - ML(1)
 
