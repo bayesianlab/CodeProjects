@@ -89,8 +89,8 @@ for i = 1 : Sims
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
     
     %% Variance
-    residuals = yt - StateObsModel*Ft - xbt;
-    [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
+    resids = yt - StateObsModel*Ft - xbt;
+    [obsVariance,r2] = kowUpdateObsVariances(resids, v0,r0,T);
     obsPrecision = 1./obsVariance;
     
     %% AR Parameters
@@ -162,10 +162,11 @@ piFactorTransitionStar = kowArMl(storeStateTransitions, sumST, sumFt);
 Ag = zeros(K,levels,ReducedRuns);
 Betag = zeros(dimX, ReducedRuns);
 Sstar =  kowStatePrecision(diag(sumST), sumFactorVar,T);
+currobsmod = sumOM;
 if estML == 1
     for r = 1:ReducedRuns
         fprintf('Reduced Run %i\n', r)
-        [~, xbt] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
+        [~, xbt] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
             StateObsModel, Sstar,  T);
         for q = levelVec
             ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
@@ -180,7 +181,6 @@ if estML == 1
                 sumFt(factorSelect, :), ydemut, currobsmod(:,q), sumST(factorSelect), factorVarianceSubset,...
                 obsPrecisionStar, tempbackup, options, identification, vy, mut);
             backupMeanAndHessian(factorSelect,:) = tempbackup;
-            sumFt(factorSelect,:) = f;
         end
         Ag(:,:,r) = currobsmod;
         StateObsModel = makeStateObsModel(currobsmod,Identities,0);
@@ -198,29 +198,26 @@ if estML == 1
     BetaStar = mean(Betag,2);
     piBetaStar = logmvnpdf(BetaStar', beta', Variance);
     piAstarsum = 0;
+    
+    
     for q = levelVec
+        ConditionalObsModel = makeStateObsModel(Astar, Identities, q);
+        mut = xbt + ConditionalObsModel*sumFt;
+        ydemut = yt - mut;
         priorAstar = Apriors(Info,Astar);
         Info = InfoCell{1,q};
         factorIndx = factorInfo(q,:);
         factorSelect = factorIndx(1):factorIndx(2);
         factorVarianceSubset = sumFactorVar(factorSelect);
         tempbackup = sumBackup(factorSelect,:);
-        piAstarsum = piAstarsum + sum(piAstar(Info, Ft(factorSelect, :), yt, squeeze(Ag(:,q,:)),...
+        piAstarsum = piAstarsum + sum(piAstar(Info, sumFt(factorSelect, :), ydemut, squeeze(Ag(:,q,:)),...
             Astar, sumST(factorSelect), factorVarianceSubset,...
             obsPrecisionStar, tempbackup,identification));
     end
     fprintf('Computing Marginal Likelihood\n')
     
-    sum(piObsVarianceStar)
-    sum(piFactorVarianceStar)
-    sum(piFactorTransitionStar)
-    piBetaStar
-    piAstarsum
-    
-    
     posteriorStar = sum(piObsVarianceStar) +  sum(piFactorVarianceStar) ...
-        + sum(piFactorTransitionStar) + piBetaStar + piAstarsum
-    StateObsModelStar = makeStateObsModel(Astar, Identities, 0) ;
+        + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
     
     mu = reshape(Xt*BetaStar,K,T) +  StateObsModelStar*sumFt ;
     LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
@@ -232,29 +229,18 @@ if estML == 1
     
     G = kron(eye(T), StateObsModelStar);
     J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
-    
-    
-    piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*K*T)  );
-    
-    LogLikelihood
-    Fpriorstar
-    piFtstarGivenyAndthetastar
-    
+   
+    piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
+   
     fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
-    
     
     priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), eye(nFactors)));
     priorObsVariance = sum(logigampdf(sumObsVariance, v0, d0));
     priorFactorVar = sum(logigampdf(sumFactorVar, s0, d0));
     priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), eye(dimX));
-    
-    priorST
-    priorObsVariance
-    priorFactorVar
-    priorAstar
-    priorBeta
-    
-    ml = fyGiventhetastar + priorST + priorObsVariance + priorFactorVar + priorAstar + priorBeta - posteriorStar;
+      
+    priorStar = sum([priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]);
+    ml = fyGiventhetastar + priorStar - posteriorStar;
     
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
 else

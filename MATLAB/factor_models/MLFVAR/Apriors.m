@@ -7,8 +7,8 @@ for r = 1:Regions
     astar = astar(2:end);
     K = length(subsetSelect);
     ObsPriorMean = ones(1, K-1);
-    ObsPriorPrecision = eye(K-1);    
-    priorAstar = priorAstar + logmvnpdf(astar', ObsPriorMean, ObsPriorPrecision);
+    ObsPriorVariance = eye(K-1);    
+    priorAstar = priorAstar + logmvnpdf(astar', ObsPriorMean, ObsPriorVariance);
 end
 end
 

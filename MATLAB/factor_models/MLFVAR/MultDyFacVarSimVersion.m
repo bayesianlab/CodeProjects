@@ -165,22 +165,24 @@ if estML == 1
         fprintf('Reduced Run %i\n', r)
         for q = levelVec
             ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
-            mut = ConditionalObsModel*Ft;
+            mut =  ConditionalObsModel*sumFt;
+            ydemut = yt - mut;
             Info = InfoCell{1,q};
             factorIndx = factorInfo(q,:);
             factorSelect = factorIndx(1):factorIndx(2);
-            factorVarianceSubset = factorVariance(factorSelect);
+            factorVarianceSubset = sumFactorVar(factorSelect);
             tempbackup = backupMeanAndHessian(factorSelect,:);
-            [currobsmod(:,q), tempbackup, f, ~] = AmarginalF(Info, ...
-                Ft(factorSelect, :), yt, currobsmod(:,q), stateTransitions(factorSelect), factorVarianceSubset,...
-                obsPrecision, tempbackup, options, identification, vy, mut);
+            [currobsmod(:,q), tempbackup, ~, ~] = AmarginalF(Info, ...
+                sumFt(factorSelect, :), ydemut, currobsmod(:,q), sumST(factorSelect), factorVarianceSubset,...
+                obsPrecisionStar, tempbackup, options, identification, vy, mut);
             backupMeanAndHessian(factorSelect,:) = tempbackup;
-            Ft(factorSelect,:) = f;
-            
         end
         Ag(:,:,r) = currobsmod;
     end
     Astar = mean(Ag,3);
+    ObsModelStar = makeStateObsModel(Astar, Identities, q);
+    muStar = ObsModelStar*sumFt;
+    ydemut = yt - muStar;
     piAstarsum = 0;
     for q = levelVec
         priorAstar = Apriors(Info,Astar);
@@ -189,7 +191,7 @@ if estML == 1
         factorSelect = factorIndx(1):factorIndx(2);
         factorVarianceSubset = sumFactorVar(factorSelect);
         tempbackup = sumBackup(factorSelect,:);
-        piAstarsum = piAstarsum + sum(piAstar(Info, Ft(factorSelect, :), yt, squeeze(Ag(:,q,:)),...
+        piAstarsum = piAstarsum + sum(piAstar(Info, Ft(factorSelect, :), ydemut, squeeze(Ag(:,q,:)),...
             Astar, sumST(factorSelect), factorVarianceSubset,...
             obsPrecisionStar, tempbackup,identification));
     end

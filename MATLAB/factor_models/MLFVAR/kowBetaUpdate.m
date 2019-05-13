@@ -27,8 +27,8 @@ for t = 1:T
     Xstar(pick, :) = Astar*tmpx;
     ystar(pick, :) = Astar*tmpy;
 end
-B0 = speye(cx);
-b0 = ones(cx,1);
+B0 = 10.*speye(cx);
+b0 = zeros(cx,1);
 XstarPinv = Xstar'*(Inside\speye(size(Inside,1)));
 Precision = B0 + addup - (XstarPinv*Xstar);
 NumeratorTerm = sumup - (XstarPinv*ystar);
