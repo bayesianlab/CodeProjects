@@ -3,6 +3,8 @@ load(DotMatFile,  'DataCell')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
+[K,T] = size(yt);
+[~, dimX] = size(Xt);
 Sims = 10000;
 burnin = 2000;
 ReducedRuns = 2000;
