@@ -1,4 +1,4 @@
-function [ b, mut, Variance ] = kowBetaUpdate(vecy, SurX,...
+function [ b, mut, bhat, Variance ] = kowBetaUpdate(vecy, SurX,...
     obsModelPrecision, StateObsModel, StatePrecision, T )
 %% Validated.
 % fprintf('\nBeginning beta update...')
@@ -33,9 +33,9 @@ XstarPinv = Xstar'*(Inside\speye(size(Inside,1)));
 Precision = B0 + addup - (XstarPinv*Xstar);
 NumeratorTerm = sumup - (XstarPinv*ystar);
 Variance = Precision\speye(cx);
-b = Variance*(NumeratorTerm);
+bhat = Variance*(NumeratorTerm);
 [c, p] =chol(Variance,'lower');
-b = b + c*normrnd(0,1,cx,1);
+b = bhat + c*normrnd(0,1,cx,1);
 
 mut = reshape(SurX*b, nEqns, T);
 % fprintf('done...\n')

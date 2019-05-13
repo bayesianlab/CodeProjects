@@ -268,13 +268,13 @@
 % BREAK 1 + BREAK 2 
 clear;clc;
 % rng(3)
-Sims = 1000;
+Sims = 200;
 burnin = 100;
 ReducedRuns = 100;
 ML = zeros(1,3);
-timeBreak = 50;
-T = 100;
-K =4;
+timeBreak = 100;
+T = 200;
+K =5;
 identification = 2;
 MLFtimebreaks(K, T, timeBreak, identification);
 load('totaltime.mat')
@@ -316,7 +316,8 @@ estML = 1;
     sumVarianceDecomp2, ml] = MultDyFacVar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML);
-
+sumOM
+sumBeta
 ML(1) = ml;
 
 %%%%%%%%%%%%%
