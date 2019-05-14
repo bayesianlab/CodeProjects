@@ -324,15 +324,15 @@ if estML == 1
     posteriorStar = sum(piObsVarianceStar) +  sum(piFactorVarianceStar) ...
         + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
     
-    posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar) ,...
-        sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
+%     posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar) ,...
+%         sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
     
     mu = reshape(Xt*BetaStar,K,T) +  reshape(ItAstar*sumFt(:), K, T) ;
-    LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)))
+    LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
     
     
     Kprecision = kowStatePrecision(diag(sumST), sumFactorVar, T);
-    Fpriorstar = logmvnpdf(sumFt(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T))
+    Fpriorstar = logmvnpdf(sumFt(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T));
     J = Kprecision + ItAstar'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*ItAstar;
     piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
     fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
@@ -343,7 +343,7 @@ if estML == 1
     priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), 100.*eye(dimX));
     priorStar = sum([priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]);
     
-    priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]
+%     priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]
     
     ml = fyGiventhetastar + priorStar - posteriorStar;
     

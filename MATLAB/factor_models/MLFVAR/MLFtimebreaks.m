@@ -18,7 +18,8 @@ S = kowStatePrecision(stateTransitionsAll, ones(nFactors,1), T) \ speyeT;
 Factor = mvnrnd(zeros(nFactors*T,1), S);
 Factor = reshape(Factor,nFactors,T);
 
-% Gt1 = ones(K,1).*.6;
+% Gt1 = unifrnd(.8,1, K,1);
+% Gt1(1) = 1;
 Gt1 = zeros(K,1);
 Gt2 = unifrnd(.8,1,K,1);
 Gt2(1) = 1;

@@ -272,9 +272,9 @@ Sims = 100;
 burnin = 50;
 ReducedRuns = 100;
 ML = zeros(1,2);
-timeBreak = 50;
-T = 100;
-K =10;
+timeBreak = 100;
+T = 200;
+K =4;
 identification = 2;
 MLFtimebreaks(K, T, timeBreak, identification);
 load('totaltime.mat')
