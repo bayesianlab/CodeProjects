@@ -268,13 +268,13 @@
 % BREAK 1 + BREAK 2 
 clear;clc;
 % rng(3)
-Sims = 100;
+Sims = 200;
 burnin = 50;
 ReducedRuns = 100;
 ML = zeros(1,2);
 timeBreak = 100;
 T = 200;
-K =4;
+K =5;
 identification = 2;
 MLFtimebreaks(K, T, timeBreak, identification);
 load('totaltime.mat')
