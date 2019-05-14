@@ -268,12 +268,12 @@
 % BREAK 1 + BREAK 2 
 clear;clc;
 % rng(3)
-Sims = 1000;
-burnin = 100;
+Sims = 100;
+burnin = 50;
 ReducedRuns = 100;
-ML = zeros(1,3);
-timeBreak = 50;
-T = 100;
+ML = zeros(1,2);
+timeBreak = 100;
+T = 200;
 K =4;
 identification = 2;
 MLFtimebreaks(K, T, timeBreak, identification);
@@ -299,97 +299,108 @@ d0 = 5;
 initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
 initStateTransitions = .3.*ones(nFactors,1);
-
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-
 initobsmodel = unifrnd(.1,.5,K,1);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
 initFactor = reshape(vecFt, nFactors,T);
-
 identification = 2;
 estML = 1;
+
+[sumFt, sumFt2, sumOM1, sumOM12, sumOM2, sumOM22, sumST, sumST2,...
+    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
+    sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
+    sumVarianceDecomp2, ml] = Mdfvar_TimeBreaks(yt, Xt, InfoCell, Sims,burnin, ReducedRuns,...
+    timeBreak, initFactor,  initobsmodel,initStateTransitions,...
+    v0, r0, s0, d0, identification, estML);
+sumOM1
+sumOM2
+sumBeta;
+ML(1) = ml;
 [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
     sumVarianceDecomp2, ml] = MultDyFacVar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML);
-
-ML(1) = ml;
-
-%%%%%%%%%%%%%
-
-yt1 = yt(:,1:timeBreak);
-[K,t1] = size(yt1);
-Xt1 = Xt(1:(K*timeBreak),:);
-levels = size(InfoCell,2);
-
-nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-v0=3;
-r0 =5;
-s0 = 3;
-d0 = 5;
-initBeta = ones(dimX,1);
-obsPrecision = ones(K,1);
-initStateTransitions = .3.*ones(nFactors,1);
-[Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-
-initobsmodel = unifrnd(0,.1,K,1);
-StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-vecFt  =  kowUpdateLatent(yt1(:),  StateObsModel, ...
-    kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),t1), obsPrecision);
-initFactor = reshape(vecFt, nFactors,t1);
-
-identification = 2;
-estML = 1;
-
-[sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
-    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
-    sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
-    sumVarianceDecomp2, ml] = MultDyFacVar(yt1, Xt1,  InfoCell, Sims,...
-    burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
-    initStateTransitions, v0, r0, s0, d0, identification, estML);
-
 sumOM
 sumBeta
 ML(2) = ml;
-%%%%%%%%%%%%%%%%
-yt2 = yt(:,(timeBreak+1) : end);
-[K,t2] = size(yt2);
-Xt2 = Xt( (K*timeBreak+1): end,:);
-levels = size(InfoCell,2);
-nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-v0=3;
-r0 =5;
-s0 = 3;
-d0 = 5;
-initBeta = ones(dimX,1);
-obsPrecision = ones(K,1);
-initStateTransitions = .3.*ones(nFactors,1);
-[Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-
-initobsmodel = unifrnd(0,1,K,1);
-StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-vecFt  =  kowUpdateLatent(yt2(:),  StateObsModel, ...
-    kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),t2), obsPrecision);
-initFactor = reshape(vecFt, nFactors,t2);
-identification = 2;
-estML = 1;
-
-[sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
-    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
-    sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
-    sumVarianceDecomp2, ml] = MultDyFacVar(yt2, Xt2,  InfoCell, Sims,...
-    burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
-    initStateTransitions, v0, r0, s0, d0, identification, estML);
-sumOM
-sumBeta
-ML(3) =  ml;
-
-ML(2)/ML(1)
-ML(3)/ML(1)
-
-(ML(2) + ML(3)) - ML(1)
+ML(1) - ML(2)
+% ML(1) = ml;
+% 
+% %%%%%%%%%%%%%
+% 
+% yt1 = yt(:,1:timeBreak);
+% [K,t1] = size(yt1);
+% Xt1 = Xt(1:(K*timeBreak),:);
+% levels = size(InfoCell,2);
+% 
+% nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
+% v0=3;
+% r0 =5;
+% s0 = 3;
+% d0 = 5;
+% initBeta = ones(dimX,1);
+% obsPrecision = ones(K,1);
+% initStateTransitions = .3.*ones(nFactors,1);
+% [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+% 
+% initobsmodel = unifrnd(0,.1,K,1);
+% StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
+% vecFt  =  kowUpdateLatent(yt1(:),  StateObsModel, ...
+%     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),t1), obsPrecision);
+% initFactor = reshape(vecFt, nFactors,t1);
+% 
+% identification = 2;
+% estML = 1;
+% 
+% [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
+%     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
+%     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
+%     sumVarianceDecomp2, ml] = MultDyFacVar(yt1, Xt1,  InfoCell, Sims,...
+%     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
+%     initStateTransitions, v0, r0, s0, d0, identification, estML);
+% 
+% sumOM
+% sumBeta
+% ML(2) = ml;
+% %%%%%%%%%%%%%%%%
+% yt2 = yt(:,(timeBreak+1) : end);
+% [K,t2] = size(yt2);
+% Xt2 = Xt( (K*timeBreak+1): end,:);
+% levels = size(InfoCell,2);
+% nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
+% v0=3;
+% r0 =5;
+% s0 = 3;
+% d0 = 5;
+% initBeta = ones(dimX,1);
+% obsPrecision = ones(K,1);
+% initStateTransitions = .3.*ones(nFactors,1);
+% [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+% 
+% initobsmodel = unifrnd(0,1,K,1);
+% StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
+% vecFt  =  kowUpdateLatent(yt2(:),  StateObsModel, ...
+%     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),t2), obsPrecision);
+% initFactor = reshape(vecFt, nFactors,t2);
+% identification = 2;
+% estML = 1;
+% 
+% [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
+%     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
+%     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
+%     sumVarianceDecomp2, ml] = MultDyFacVar(yt2, Xt2,  InfoCell, Sims,...
+%     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
+%     initStateTransitions, v0, r0, s0, d0, identification, estML);
+% sumOM
+% sumBeta
+% ML(3) =  ml;
+% 
+% ML(2)/ML(1)
+% ML(3)/ML(1)
+% 
+% (ML(2) + ML(3)) - ML(1)
 
