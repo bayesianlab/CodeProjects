@@ -35,6 +35,7 @@ for m = 1:G
         
     end
 end
+
 pistar  = logAvg(alphagtostarq) - logAvg(alphastartoj);
 end
 
