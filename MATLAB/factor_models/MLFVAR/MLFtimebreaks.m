@@ -1,4 +1,4 @@
-function [DataCell, DataCell1, DataCell2] = MLFtimebreaks(K, T, timeBreak, identification)
+function [DataCell] = MLFtimebreaks(K, T, timeBreak, identification)
 
 nFactors = 1;
 
@@ -45,24 +45,24 @@ DataCell{1,8} = Gt2;
 
 save('totaltime.mat', 'DataCell')
 
-yt1 = yt(:,1:timeBreak);
-[K,t1] = size(yt1);
-Xt1 = Xt(1:(K*timeBreak),:);
-
-DataCell{1,1} = yt1;
-DataCell{1,2} = Xt1;
-DataCell{1,3} = InfoCell;
-
-save('time1.mat', 'DataCell')
-
-yt2 = yt(:,(timeBreak+1) : end);
-[K,t2] = size(yt2);
-Xt2 = Xt( (K*timeBreak+1): end,:);
-
-DataCell{1,1} = yt2;
-DataCell{1,2} = Xt2;
-DataCell{1,3} = InfoCell;
-
-save('time2.mat', 'DataCell')
+% yt1 = yt(:,1:timeBreak);
+% [K,t1] = size(yt1);
+% Xt1 = Xt(1:(K*timeBreak),:);
+% 
+% DataCell{1,1} = yt1;
+% DataCell{1,2} = Xt1;
+% DataCell{1,3} = InfoCell;
+% 
+% save('time1.mat', 'DataCell')
+% 
+% yt2 = yt(:,(timeBreak+1) : end);
+% [K,t2] = size(yt2);
+% Xt2 = Xt( (K*timeBreak+1): end,:);
+% 
+% DataCell{1,1} = yt2;
+% DataCell{1,2} = Xt2;
+% DataCell{1,3} = InfoCell;
+% 
+% save('time2.mat', 'DataCell')
 end
 

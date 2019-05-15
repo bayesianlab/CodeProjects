@@ -1,6 +1,6 @@
 function [parama] = drawCorrParam(parama, tuningVar, cutpoints, CorrType,  yt,...
     StateObsModel, LocationCorrelation, Ft, seriesPerY)
-priorVariance = 10;
+priorVariance = 100;
 if CorrType == 1
     % Nearest Neighbor
     Lower = (cutpoints(1) - parama)/tuningVar;
@@ -25,8 +25,8 @@ else
     LikeD = sum(logmvnpdf(yt', (StateObsModel*Ft)', LCD));
     propN = logmvnpdf(parama, prop, tuningVar);
     propD = logmvnpdf(prop, parama, tuningVar);
-    priorN = logmvnpdf(1, prop,priorVariance);
-    priorD = logmvnpdf(1, parama, priorVariance);
+    priorN = logmvnpdf(prop, 1,priorVariance);
+    priorD = logmvnpdf(parama, 1, priorVariance);
     
 end
 
