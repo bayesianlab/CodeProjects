@@ -9,8 +9,8 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
 % Spatial version of MDFVAR
 % yt is K x T
 
-parama=1;
-tuningVar= .25;
+parama=.1;
+tuningVar=  .5;
 % Index information
 [nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);
@@ -32,7 +32,7 @@ obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
-Si = kowStatePrecision(diag(initStateTransitions),1,T);
+Si = kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T);
 factorVariance = ones(nFactors,1);
 variancedecomp = zeros(K,levels);
 % Storage
@@ -65,8 +65,6 @@ for i = 1 : Sims
     LocationCorrelationPrecision = LocationCorrelation\speye(rowsCorr);
     LocationCorrelationPrecision = kron(eye(seriesPerY), LocationCorrelationPrecision);
     
-    % %     [beta, ydemut] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
-    % %         StateObsModel, Si,  T);
     BigLower= kron(eye(seriesPerY), Lower);
     
     ystar = BigLower\yt;
@@ -108,7 +106,7 @@ for i = 1 : Sims
     obsPrecision = 1./obsVariance;
     
     %% AR Parameters
-    stateTransitions = kowUpdateArParameters(stateTransitions, Ft, 1);
+    stateTransitions = kowUpdateArParameters(stateTransitions, Ft, factorVariance, 1);
     
     if identification == 2
         factorVariance = drawFactorVariance(Ft, stateTransitions, s0, d0);
@@ -116,7 +114,7 @@ for i = 1 : Sims
     
     %% Spatial Parameter
     parama = drawCorrParam(parama, tuningVar, cutpoints, CorrType,  yt,...
-        StateObsModel, LC, Ft, seriesPerY)
+        StateObsModel, LC, Ft, seriesPerY);
     
     %% Storage
     if i > burnin
@@ -155,7 +153,6 @@ sumST2 = sumST2 ./Runs;
 sumResiduals2 = sumResiduals2 ./Runs;
 sumVarianceDecomp = sumVarianceDecomp./Runs;
 sumVarianceDecomp2 = sumVarianceDecomp2./Runs;
-
 obsPrecisionStar = 1./sumObsVariance;
 
 % MLFML(yt,Xt, sumST, sumObsVariance, nFactors)

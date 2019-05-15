@@ -1,5 +1,5 @@
 function [DataCell] = SpatialMLFdata(SeriesPerY, gridX,...
-    samplesFromGrid, ploton, levels, T, corrType)
+    samplesFromGrid, ploton, levels, T, parama, corrType)
 
 
 DataCell = cell(1,levels);
@@ -9,8 +9,7 @@ if corrType == 1
     [~,~, Middles] = EuclideanNeighbor(gridX, 0);
     midpoint = mean(cuts);
 else
-    [D,cuts, Middles] = EuclideanNeighbor(gridX, ploton);
-    midpoint = mean(cuts);
+    [D,~, Middles] = EuclideanNeighbor(gridX, ploton);
 end
 
 
@@ -51,7 +50,7 @@ nFactors = seriesFactors + regionFactors + 1;
 gammas = unifrnd(.01,.3, nFactors,1);
 stateTransitionsAll = gammas'.*eye(nFactors);
 speyet = speye(T);
-S = kowStatePrecision(stateTransitionsAll, 1, T)\speye(nFactors*T);
+S = kowStatePrecision(stateTransitionsAll, ones(nFactors,1), T)\speye(nFactors*T);
 Factor = mvnrnd(zeros(nFactors*T,1), S);
 Factor = reshape(Factor,nFactors,T);
 
@@ -64,11 +63,12 @@ mu = Gt*Factor;
 
 smallD = selectCorrElems(D, uniqueSquares);
 if corrType == 1
-    ImA =  eye(size(smallD,1)) - (midpoint.*smallD);
+    parama = midpoint
+    ImA =  eye(size(smallD,1)) - (parama.*smallD);
     t = diag(diag(ImA).^(-.5));
     R = t*ImA*t;
 else
-    R = exp(-1.*smallD);
+    R = exp(-parama.*smallD);
 end
 
 LR = chol(R,'lower');
