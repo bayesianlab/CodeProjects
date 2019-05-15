@@ -1,6 +1,9 @@
-function [] = RunSpatialSimulation()
+function [] = RunSpatialSimulation(parama)
 %% Spatial model
 %Spatial Version
+if ischar(parama)
+    parama = str2num(parama);
+end
 clear;clc;
 T = 100;
 SeriesPerY =3;
@@ -10,7 +13,6 @@ ploton= 1;
 levels = 2;
 % nearest_neighbor = 1;
 euclidean_distance = 2;
-parama = 2;
 DataCell = SpatialMLFdata(SeriesPerY, gridX,...
     squaresSampled, ploton, levels, T, euclidean_distance);
 
@@ -59,4 +61,5 @@ identification = 2;
       initFactor, initobsmodel, initStateTransitions,v0,r0, s0,d0, identification);
 fname = createDateString('timebreaks_');
 save(fname)
+end
 

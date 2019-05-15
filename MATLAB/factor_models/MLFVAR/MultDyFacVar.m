@@ -220,8 +220,8 @@ if estML == 1
     posteriorStar = sum(piObsVarianceStar) +  sum(piFactorVarianceStar) ...
         + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
  
-%     posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar), ...
-%         sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
+    posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar), ...
+        sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
     
     mu = reshape(Xt*BetaStar,K,T) +  StateObsModelStar*sumFt ;
     LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
@@ -236,10 +236,10 @@ if estML == 1
     priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), eye(nFactors)));
     priorObsVariance = sum(logigampdf(sumObsVariance, v0, d0));
     priorFactorVar = sum(logigampdf(sumFactorVar, s0, d0));
-    priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), 100.*eye(dimX));
+    priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), eye(dimX));
     priorStar = sum([priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]);
     
-% priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]
+priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]
     ml = fyGiventhetastar + priorStar - posteriorStar;
     
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
