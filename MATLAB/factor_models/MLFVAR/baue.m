@@ -47,7 +47,7 @@ t = 1:59;
    sumVarianceDecomp2] = MultDyFacVar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML)
-f = 'ue_';
+f = 'baue_';
 f=createDateString(f)
 save(f)
 end
