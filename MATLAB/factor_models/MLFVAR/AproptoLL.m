@@ -1,4 +1,5 @@
-function [pdfval] = AproptoLL(ObsModel,ydemut,ObsPriorMean, ObsPriorPrecision, obsPrecision, factor,factorPrecision)
+function [pdfval] = AproptoLL(ObsModel,ydemut,ObsPriorMean,...
+    ObsPriorPrecision, obsPrecision, factor,factorPrecision)
 
 [nFactors, T ] = size(factor);
 K = length(obsPrecision);

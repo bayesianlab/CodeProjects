@@ -1,4 +1,4 @@
-function [DataCell] = SpatialMLFdata(SeriesPerY, gridX,...
+function [DataCell] = SpatialMLFdataWithMean(SeriesPerY, gridX,...
     samplesFromGrid, ploton, levels, T, parama, corrType)
 
 
@@ -38,14 +38,14 @@ K = length(yassignment);
 [I1,I2] = SpatialMakeIdentities(K,SeriesPerY, length(uniqueSquares));
 InfoCell{1,1} = [1,K];
 
-[InfoCell{1,2}, regionFactors] = setRegionalIndices(I2, SeriesPerY);
+
 
 if levels > 2
 %     seriesFactors = samplesFromGrid*yPerSquare;
 else
     seriesFactors = 0;
 end
-nFactors = seriesFactors + regionFactors + 1;
+nFactors = 1;
 
 gammas = unifrnd(.01,.3, nFactors,1);
 stateTransitionsAll = gammas'.*eye(nFactors);
@@ -56,9 +56,6 @@ Factor = reshape(Factor,nFactors,T);
 
 levels = length(DataCell);
 Gt = unifrnd(0.01,.5,K,nFactors);
-G = [I1, I2];
-
-Gt = Gt .* G;
 mu = Gt*Factor;
 
 smallD = selectCorrElems(D, uniqueSquares);
@@ -73,9 +70,13 @@ end
 
 LR = chol(R,'lower');
 BigLR = kron(eye(SeriesPerY), LR);
-yt = BigLR*normrnd(mu,1,K,T);
+xcols = 3;
+Xt = normrnd(0,1, K*T, xcols);
+Xt(:,1) = ones(K*T,1);
 
-Xt =0;
+beta = .4.*ones(xcols, 1);
+mu = reshape(Xt*beta, K,T);
+yt = mu + BigLR*normrnd(mu,1,K,T);
 
 DataCell = cell(1,7);
 DataCell{1,1} = yt;
@@ -85,4 +86,5 @@ DataCell{1,4} = smallD;
 DataCell{1,5} = Factor;
 DataCell{1,6} = gammas;
 DataCell{1,7} = Gt;
+
 end

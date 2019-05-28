@@ -23,12 +23,13 @@ Factor = reshape(Factor,nFactors,T);
 Gt1 = zeros(K,1);
 Gt2 = unifrnd(.8,1,K,1);
 Gt2(1) = 1;
-
 mu1 = Gt1*Factor(1:timeBreak);
-
 mu2 = Gt2*Factor((timeBreak+1):end);
 
+% Gt = unifrnd(0,1,K,1)
+% Gt(1) = 1;
 MU = [mu1,mu2] + reshape(Xt*beta,K,T);
+% MU = Gt*Factor + reshape(Xt*beta,K,T);
 yt = MU + normrnd(0,1,K,T);
 
 

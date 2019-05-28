@@ -19,7 +19,8 @@ InfoCell{1,3} = [(1:SeriesPerCountry:K)', (SeriesPerCountry:SeriesPerCountry:K)'
 beta = beta.*ones(K, (SeriesPerCountry+1));
 beta= reshape(beta', (SeriesPerCountry+1)*K,1);
 
-gam = unifrnd(.5,.6,nFactors,1);
+% gam = unifrnd(0.01,.9,nFactors,1);
+gam= .5.*ones(nFactors,1);
 stateTransitionsAll = gam'.*eye(nFactors);
 speyet = speye(T);
 
@@ -35,7 +36,8 @@ I2 = Identities{1,3};
 Z0 = zeros(K,1);
 Z1 = zeros(size(I1,1), size(I1,2));
 Z2 = zeros(size(I2,1), size(I2,2));
-Gt = unifrnd(.5,.99,K,3);
+% Gt = ones(K,3).*[.1, .1, .1];
+Gt = unifrnd(0,1,K,3);
 WorldOnly = Gt(:,1);
 RegionsOnly = Gt(:,2).*I1;
 CountriesOnly = Gt(:,3).*I2;
