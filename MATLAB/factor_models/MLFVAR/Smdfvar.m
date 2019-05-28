@@ -3,27 +3,28 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
     sumVarianceDecomp2, storeParama] = ...
     ...
-    SMDFVAR_SimVersion(yt,  InfoCell, CorrType, LocationCorrelation, cutpoints, Sims,...
+    Smdfvar(yt, Xt, InfoCell, CorrType, LocationCorrelation, cutpoints, Sims,...
     burnin, ReducedRuns, initFactor, initobsmodel,...
-    initStateTransitions, v0, r0, s0, d0, identification)
+    initStateTransitions, v0, r0, s0, d0, parama, identification)
 % Spatial version of MDFVAR
 % yt is K x T
 
-parama=.1;
-tuningVar=  .5;
+
+if CorrType == 1
+    tuningVar = .5;
+else
+    tuningVar=  .025;
+end
+
 % Index information
 [nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);
+[~, dimX] = size(Xt);
 rowsCorr = size(LocationCorrelation,1);
 seriesPerY = K /rowsCorr ;
 nGroups = K/seriesPerY;
 
-[I1, I2, factorInfo] = SpatialMakeIdentities(K, seriesPerY, nGroups);
 
-G = [I1,I2];
-
-Gz1 = [zeros(size(I1,1) ,size(I1,2)), I2];
-Gz2 = [I1, zeros(size(I2,1), size(I2,2))];
 levels = length(InfoCell);
 backupMeanAndHessian  = setBackups(InfoCell, identification);
 % % Initializatitons
@@ -31,6 +32,7 @@ LC = LocationCorrelation;
 obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
+StateObsModel = currobsmod(:,1);
 Ft = initFactor;
 Si = kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T);
 factorVariance = ones(nFactors,1);
@@ -38,8 +40,8 @@ variancedecomp = zeros(K,levels);
 % Storage
 sumFt = zeros(nFactors, T);
 sumFt2 = sumFt;
-% sumBeta = zeros(dimX,1);
-% sumBeta2 = sumBeta;
+sumBeta = zeros(dimX,1);
+sumBeta2 = sumBeta;
 sumResiduals2 = zeros(K,1);
 storeStateTransitions = zeros(nFactors, arFactor, Sims-burnin);
 sumST = zeros(nFactors, 1);
@@ -58,52 +60,26 @@ options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
 
 % DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 vy = var(yt,0,2);
-
+eyeK = speye(K);
+eyeT = speye(T);
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
-    [LocationCorrelation, Lower] = createSpatialCorr(LC, parama, CorrType);
-    LocationCorrelationPrecision = LocationCorrelation\speye(rowsCorr);
-    LocationCorrelationPrecision = kron(eye(seriesPerY), LocationCorrelationPrecision);
     
-    BigLower= kron(eye(seriesPerY), Lower);
+    [LocationCorrelation, ~] = createSpatialCorr(LC, parama, CorrType);
     
-    ystar = BigLower\yt;
-    stateObs = ones(K,1);
-    LocationCorrelationPrecision = diag(stateObs);
-    for q = 1:levels
-        Info = InfoCell{1,q};
-        factorIndx = factorInfo(q,:);
-        factorSelect = factorIndx(1):factorIndx(2);
-        factorVarianceSubset = factorVariance(factorSelect);
-        tempbackup = backupMeanAndHessian(factorSelect,:);
-        if q == 1
-            % Cross correlation ys
-            ty = ystar - Gz1*Ft;
-            [currobsmod(:,q), tempbackup, f, vdecomp] = ...
-                Spatial_AmarginalF(LocationCorrelationPrecision, ...
-                Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect),...
-                factorVarianceSubset, tempbackup,options, identification, vy);
-            backupMeanAndHessian(factorSelect,:) = tempbackup;
-            Ft(q,:) = f;
-            variancedecomp(:,q) = vdecomp;
-        else
-            % Within region ys
-            ty = ystar - Gz2*Ft;
-            [currobsmod(:,q), tempbackup, f, vdecomp] = Spatial_AmarginalF_Within_Region(Info, ...
-                Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect),...
-                factorVarianceSubset, obsPrecision, tempbackup,...
-                options, identification, vy);
-            backupMeanAndHessian(factorSelect,:) = tempbackup;
-            Ft(factorSelect,:) = f;
-            variancedecomp(:,q) = vdecomp;
-        end
-    end
-    StateObsModel = BigLower*[I1.*currobsmod(:,1), I2.*currobsmod(:,2)];
+    LocationCorrelationPrecision = kron(eye(seriesPerY), LocationCorrelation\speye(rowsCorr));
+    ItSigmaInverse = kron(eyeT, LocationCorrelationPrecision);
+    ItA = kron(eyeT, StateObsModel);
+    [beta, mu,~, ~] = timeBreaksBeta(yt, Xt, ItA, ItSigmaInverse, Si);
+    ty = yt  - mu;
+    [currobsmod(:), tempbackup, f, vdecomp] = ...
+        Spatial_AmarginalF(eyeK, ...
+        Ft, ty, currobsmod, stateTransitions,...
+        factorVariance, backupMeanAndHessian,options, identification, vy);
+    backupMeanAndHessian = tempbackup;
+    Ft(1,:) = f;
+    variancedecomp(:,1) = vdecomp;
     
-    %% Variance
-    residuals = yt - StateObsModel*Ft;
-    [obsVariance,r2] = kowUpdateObsVariances(residuals, v0,r0,T);
-    obsPrecision = 1./obsVariance;
     
     %% AR Parameters
     stateTransitions = kowUpdateArParameters(stateTransitions, Ft, factorVariance, 1);
@@ -121,29 +97,28 @@ for i = 1 : Sims
         v = i - burnin;
         sumFt = sumFt + Ft;
         sumFt2 = sumFt2 + Ft.^2;
-        %             sumBeta = sumBeta + beta;
-        %             sumBeta2 = sumBeta2 + beta.^2;
-        sumObsVariance = sumObsVariance +  obsVariance;
-        sumObsVariance2 = sumObsVariance2 + obsVariance.^2;
+        sumBeta = sumBeta + beta;
+        sumBeta2 = sumBeta2 + beta.^2;
         sumOM= sumOM + currobsmod;
         sumOM2 = sumOM2 + currobsmod.^2;
         sumST = sumST + stateTransitions;
         storeStateTransitions(:,:,v) = stateTransitions;
         sumST2 = sumST2 + stateTransitions.^2;
-        sumResiduals2 = sumResiduals2 + r2;
         sumFactorVar = sumFactorVar + factorVariance;
         sumFactorVar2 = sumFactorVar2 + factorVariance.^2;
         sumVarianceDecomp = sumVarianceDecomp + variancedecomp;
         sumVarianceDecomp2 = sumVarianceDecomp2 + variancedecomp.^2;
         storeParama(v) = parama;
     end
+    
+    Si = kowStatePrecision(diag(stateTransitions),factorVariance,T);
 end
 
 Runs = Sims- burnin;
 sumFt = sumFt./Runs;
 sumFt2 = sumFt2./Runs;
-% sumBeta = sumBeta./Runs;
-% sumBeta2 = sumBeta2./Runs;
+sumBeta = sumBeta./Runs;
+sumBeta2 = sumBeta2./Runs;
 sumObsVariance = sumObsVariance./Runs;
 sumObsVariance2 = sumObsVariance2 ./Runs;
 sumOM= sumOM ./Runs;

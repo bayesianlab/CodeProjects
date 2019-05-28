@@ -1,13 +1,21 @@
-function [] = RunMdfvar(DotMatFile)
+function [] = RunMdfvar(Sims, burnin, estML, DotMatFile)
+if ischar(Sims)
+    Sims = str2num(Sims);
+end
+if ischar(burnin)
+    burnin = str2num(burnin);
+end
+if ischar(ReducedRuns)
+    ReducedRuns = str2num(ReducedRuns);
+end
 load(DotMatFile,  'DataCell')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
 [K,T] = size(yt);
 [~, dimX] = size(Xt);
-Sims = 10000;
-burnin = 2000;
 ReducedRuns = 2000;
+identification = 2;
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 v0=3;
 r0 =5;
@@ -22,8 +30,7 @@ StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
 initFactor = reshape(vecFt, nFactors,T);
-identification = 2;
-estML = 1;
+
 [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
@@ -31,6 +38,6 @@ estML = 1;
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML);
 ml
-fname = createDateString('timebreaks_');
+fname = createDateString(join(DotMatFile, '_'));
 save(fname)
 end

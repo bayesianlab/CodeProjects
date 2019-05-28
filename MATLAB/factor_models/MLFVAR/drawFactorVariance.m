@@ -9,7 +9,7 @@ for t = 1 :q
     fhat = [0, Factor(t,2:end).*stateTransitions(t)];
     demeaned = (fstar-fhat);    
     paramb(t) = (d0 + demeaned*demeaned');
-    draws(t) = 1/gamrnd(parama,1/(.5.*paramb(t)) );
+    draws(t) = 1/gamrnd(parama,2/(paramb(t)) );
 end
 
 end
