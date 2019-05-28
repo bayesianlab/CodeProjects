@@ -21,9 +21,9 @@ v0=3;
 r0 =5;
 s0 = 3;
 d0 = 5;
-Sims = 3;
-burnin = 1;
-ReducedRuns = 10;
+Sims = 10000;
+burnin = 2000;
+ReducedRuns = 8000;
 initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
 initStateTransitions = .3.*ones(nFactors,1);
@@ -37,7 +37,7 @@ vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
 initFactor = reshape(vecFt, nFactors,T);
 size(initFactor)
 identification = 2;
-estML = 0;
+estML = 1;
 
 t = 1:59;
 
@@ -46,7 +46,7 @@ t = 1:59;
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
    sumVarianceDecomp2] = Mldfvar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
-    initStateTransitions, v0, r0, s0, d0, identification, estML)
+    initStateTransitions, v0, r0, s0, d0, identification, estML);
 
 f = 'ue_';
 f=createDateString(f)
