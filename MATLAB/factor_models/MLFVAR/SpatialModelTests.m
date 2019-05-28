@@ -14,7 +14,7 @@
 % euclidParama = 5;
 % DataCell = SpatialMLFdataWithMean(SeriesPerY, gridX,...
 %     squaresSampled, ploton, levels, T, euclidParama, CorrType);
-% 
+%
 % yt = DataCell{1,1};
 % Xt = DataCell{1,2};
 % InfoCell = DataCell{1,3};
@@ -30,8 +30,8 @@
 %     cutpoints = 1./([zp;zpp]*eig(LocationCorrelation));
 %     initparama = unifrnd(cutpoints(1), cutpoints(2));
 % end
-% 
-% 
+%
+%
 % [K,T] = size(yt);
 % [~, dimX] = size(Xt);
 % sectorInfo = cellfun(@(x)size(x,1), InfoCell);
@@ -55,7 +55,7 @@
 % Ft = reshape(vecFt, nFactors,T);
 % initFactor = Ft;
 % identification = 2;
-% 
+%
 % % [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
 % %     sumObsVariance, sumObsVariance2,...
 % %     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
@@ -84,6 +84,14 @@ yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
 LocationCorrelation = DataCell{1,4};
+p = size(LocationCorrelation,1);
+zp = zeros(1,p);
+zpp = zp;
+zp(1) = 1;
+zpp(end) = 1;
+cutpoints = 1./([zp;zpp]*eig(LocationCorrelation));
+
+
 
 [K,T] = size(yt);
 [~, dimX] = size(Xt);
@@ -103,11 +111,14 @@ initobsmodel = unifrnd(0,1,K, levels);
 initStateTransitions = .3.*ones(nFactors,1).*.1;
 Identities{1,1} = ones(K,1);
 StateObsModel = makeStateObsModel(initobsmodel, Identities,0);
+
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
 Ft = reshape(vecFt, nFactors,T);
 initFactor = Ft;
 identification = 2;
+CorrType = 2;
+initparama = 1;
 [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
