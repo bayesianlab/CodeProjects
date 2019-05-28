@@ -1,4 +1,4 @@
-function [] = baue(i)
+function [] = baue()
 clear;clc;
 load('baue.mat');
 rng(3)

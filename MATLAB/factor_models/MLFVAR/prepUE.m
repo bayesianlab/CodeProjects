@@ -3,8 +3,6 @@ ue = importfileue('~/GoogleDrive/Datasets/US unemployment/ue.csv', 2, 59 );
 importdates
 ue = table2array(ue);
 
-ue = ue./ std(ue, [], 1);
-
 ue = ue./std(ue, [], 1);
 ue= ue' ;
 [K,T] = size(ue);
