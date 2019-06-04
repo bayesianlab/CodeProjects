@@ -1,4 +1,4 @@
-function [] = TimeBreakSearch(Sims, burnin, ReducedRuns)
+function [] = TimeBreakSearch(Sims, burnin, ReducedRuns, DotMatFile)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -8,12 +8,9 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
-timeBreak = 100;
-T = 200;
-K =5;
-identification = 2;
-MLFtimebreaks(K, T, timeBreak, identification);
-load('totaltime.mat')
+
+load(DotMatFile)
+
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
