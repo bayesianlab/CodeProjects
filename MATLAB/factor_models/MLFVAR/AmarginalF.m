@@ -203,6 +203,7 @@ else
         obsupdate(subsetSelect) = xt;
         backup{r,1} = lastMean;
         backup{r,2} = lastCovar;
+        
         f(r,:) =  kowUpdateLatent(ySlice(:), xt, factorPrecision, precisionSlice);
         obsmodSquared = xt.^2;
         for m = 1:size(ySlice,1)

@@ -1,4 +1,4 @@
-function [sumFt, sumFt2, sumOM1, sumOM12, sumOM2, sumOM22 sumST, sumST2,...
+function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
     sumVarianceDecomp2, ml] = ...
@@ -15,8 +15,6 @@ function [sumFt, sumFt2, sumOM1, sumOM12, sumOM2, sumOM22 sumST, sumST2,...
 % yt is K x T
 % Obs Model must be [World Region Country] and is K x 3
 
-
-
 % Index information
 [nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);
@@ -31,6 +29,8 @@ obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
 currobsmod1 = setObsModel(initobsmodel, InfoCell, identification);
 currobsmod2 = setObsModel(initobsmodel, InfoCell, identification);
+com(:,:,1) = currobsmod1;
+com(:,:,2) = currobsmod2;
 Ft = initFactor;
 StateObsModel = makeStateObsModel(currobsmod1,Identities,0);
 ItA = kron(eye(T), StateObsModel);
@@ -50,10 +50,9 @@ sumST = zeros(nFactors, 1);
 sumST2 = zeros(nFactors, 1);
 sumObsVariance = zeros(K,1);
 sumObsVariance2 = sumObsVariance;
-sumOM1 = zeros(K, levels);
-sumOM12= sumOM1;
-sumOM2 = zeros(K, levels);
-sumOM22= sumOM2;
+sumOM = zeros(K, levels, length(timeBreak)+1);
+sumOM2= sumOM;
+
 sumFactorVar = zeros(nFactors,1);
 sumFactorVar2 = sumFactorVar;
 sumVarianceDecomp = variancedecomp;
@@ -67,32 +66,33 @@ options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
 
 % DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 vy = var(yt,0,2);
-
+if timeBreak == 0
+    tb = 1;
+    timeBreak = T;
+else
+    tb =1:length(timeBreak)+1;
+end
 levelVec = 1:levels;
 for i = 1 : Sims
-    
-    fprintf('\nSimulation %i\n',i)
+%         fprintf('\nSimulation %i\n',i)
     [beta, xbt,~,~] = timeBreaksBeta(yt, Xt, ItA, ItSigmaInverse, Si);
     
-    for tb = 1:2
-        if tb == 1
+    for t = tb
+        if t == 1
             timeIndex = 1:timeBreak;
             ytTimeBreak = yt(:, timeIndex);
             FactorTimeBreak = Ft(:, timeIndex);
-            com = currobsmod1;
             xbtTimeBreak = xbt(:, timeIndex);
             backupMeanAndHessian = backupMeanAndHessian1;
         else
             timeIndex = timeBreak+1:T;
             ytTimeBreak = yt(:, timeIndex);
             FactorTimeBreak= Ft(:, timeIndex);
-            com = currobsmod2;
             xbtTimeBreak = xbt(:, timeIndex);
             backupMeanAndHessian = backupMeanAndHessian2;
         end
-        
         for q = levelVec
-            ConditionalObsModel = makeStateObsModel(com, Identities, q);
+            ConditionalObsModel = makeStateObsModel(com(:,:,t), Identities, q);
             mut = xbtTimeBreak + ConditionalObsModel*FactorTimeBreak;
             ydemut = ytTimeBreak - mut;
             Info = InfoCell{1,q};
@@ -100,36 +100,31 @@ for i = 1 : Sims
             factorSelect = factorIndx(1):factorIndx(2);
             factorVarianceSubset = factorVariance(factorSelect);
             tempbackup = backupMeanAndHessian(factorSelect,:);
-            [com(:,q), tempbackup, ~, ~] = AmarginalF(Info, ...
-                FactorTimeBreak(factorSelect, :), ydemut, com(:,q), stateTransitions(factorSelect), factorVarianceSubset,...
-                obsPrecision, tempbackup, options, identification, vy, mut);
+            [com(:,q,t), tempbackup, ~, ~] = AmarginalF(Info, ...
+                FactorTimeBreak(factorSelect, :), ydemut, com(:,q,t),...
+                stateTransitions(factorSelect), factorVarianceSubset,...
+                obsPrecision, tempbackup, options, identification, vy);
             backupMeanAndHessian(factorSelect,:) = tempbackup;
-            
-            [f, vdecomp] = FgivenA(Info, ydemut, com(:,q),...
+            [f, vdecomp] = FgivenA(Info, ydemut, com(:,q,t),...
                 stateTransitions(factorSelect), factorVarianceSubset,obsPrecision,  vy);
             Ft(:, timeIndex) = f;
         end
-        if tb == 1
-            currobsmod1 = com;
-            StateObsModel = makeStateObsModel(com,Identities,0);
+        if t == 1
+            StateObsModel = makeStateObsModel(com(:,:,t),Identities,0);
             mu1 = StateObsModel*FactorTimeBreak + xbtTimeBreak;
-            StateObsModel = makeStateObsModel(currobsmod1,Identities, 0);
+            StateObsModel = makeStateObsModel(com(:,:,t),Identities, 0);
             ItA1 = kron(eye(timeBreak), StateObsModel);
             backupMeanAndHessian1 = backupMeanAndHessian;
-            
         else
-            currobsmod2 = com;
-            StateObsModel = makeStateObsModel(com,Identities,0);
+            StateObsModel = makeStateObsModel(com(:,:,t),Identities,0);
             mu2 = StateObsModel*FactorTimeBreak + xbtTimeBreak;
             resids = yt - [mu1,mu2];
-            StateObsModel = makeStateObsModel(currobsmod2,Identities, 0);
-            ItA2= kron(eye(timeBreak), StateObsModel);
+            StateObsModel = makeStateObsModel(com(:,:,t),Identities, 0);
+            ItA2= kron(eye(T-timeBreak), StateObsModel);
             ItA = blkdiag(ItA1, ItA2);
             backupMeanAndHessian2 = backupMeanAndHessian;
         end
     end
-    
-    
     
     %% Variance
     [obsVariance,r2] = kowUpdateObsVariances(resids, v0,r0,T);
@@ -143,8 +138,8 @@ for i = 1 : Sims
     
     if identification == 2
         [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
-        
     end
+    
     %% Storage
     if i > burnin
         v = i - burnin;
@@ -154,10 +149,10 @@ for i = 1 : Sims
         sumBeta2 = beta.^2 + sumBeta2;
         sumObsVariance = sumObsVariance +  obsVariance;
         sumObsVariance2 = sumObsVariance2 + obsVariance.^2;
-        sumOM1= sumOM1 + currobsmod1;
-        sumOM12 = sumOM12 + currobsmod1.^2;
-        sumOM2= sumOM2 + currobsmod2;
-        sumOM22 = sumOM22 + currobsmod2.^2;
+        for t = tb
+            sumOM(:,:,t) = sumOM(:,:,t) + com(:,:,t);
+            sumOM2(:,:,t) = sumOM2(:,:,t) + com(:,:,t).^2;
+        end
         sumST = sumST + stateTransitions;
         storeStateTransitions(:,:,v) = stateTransitions;
         sumST2 = sumST2 + stateTransitions.^2;
@@ -167,7 +162,6 @@ for i = 1 : Sims
         sumVarianceDecomp = sumVarianceDecomp + variancedecomp;
         sumVarianceDecomp2 = sumVarianceDecomp2 + variancedecomp.^2;
         storeFactorParamb(:, v) =  factorParamb;
-        
         if estML == 1
             for q = levelVec
                 factorIndx = factorInfo(q,:);
@@ -178,12 +172,8 @@ for i = 1 : Sims
                     backupMeanAndHessian2(factorSelect,:), sumBackup2(factorSelect,:));
             end
         end
-        
     end
 end
-
-
-
 Runs = Sims- burnin;
 sumBeta = sumBeta./Runs;
 sumBeta2 = sumBeta2./Runs;
@@ -193,10 +183,9 @@ sumFt = sumFt./Runs;
 sumFt2 = sumFt2./Runs;
 sumObsVariance = sumObsVariance./Runs;
 sumObsVariance2 = sumObsVariance2 ./Runs;
-sumOM1= sumOM1 ./Runs;
-sumOM12 = sumOM12 ./Runs;
-sumOM2= sumOM2 ./Runs;
-sumOM22 = sumOM22 ./Runs;
+sumOM= sumOM ./Runs;
+sumOM2 = sumOM2 ./Runs;
+
 sumST = sumST./Runs;
 sumVarianceDecomp = sumVarianceDecomp./Runs;
 sumVarianceDecomp2 = sumVarianceDecomp2./Runs;
@@ -219,25 +208,23 @@ ItSigmaInverseStar = kron(eye(T), diag(obsPrecisionStar));
 % currobsmod = sumOM;
 if estML == 1
     for r = 1:ReducedRuns
-        fprintf('Reduced Run %i\n', r)
+        %         fprintf('Reduced Run %i\n', r)
         [~, xbt,~,~] = timeBreaksBeta(yt, Xt, ItA, ItSigmaInverseStar, Sstar);
-        for tb = 1:2
-            if tb == 1
+        for t = tb
+            if t == 1
                 timeIndex = 1:timeBreak;
                 ytTimeBreak = yt(:, timeIndex);
                 FactorTimeBreak = sumFt(:, timeIndex);
-                com = currobsmod1;
                 xbtTimeBreak = xbt(:, timeIndex);
                 
             else
                 timeIndex = timeBreak+1:T;
                 ytTimeBreak = yt(:, timeIndex);
                 FactorTimeBreak= sumFt(:, timeIndex);
-                com = currobsmod2;
                 xbtTimeBreak = xbt(:, timeIndex);
             end
             for q = levelVec
-                ConditionalObsModel = makeStateObsModel(com, Identities, q);
+                ConditionalObsModel = makeStateObsModel(com(:,:,t), Identities, q);
                 mut = xbtTimeBreak + ConditionalObsModel*FactorTimeBreak;
                 ydemut = ytTimeBreak - mut;
                 Info = InfoCell{1,q};
@@ -245,22 +232,20 @@ if estML == 1
                 factorSelect = factorIndx(1):factorIndx(2);
                 factorVarianceSubset = sumFactorVar(factorSelect);
                 tempbackup = backupMeanAndHessian(factorSelect,:);
-                [com(:,q), tempbackup, ~, ~] = AmarginalF(Info, ...
-                    FactorTimeBreak(factorSelect, :), ydemut, com(:,q), sumST(factorSelect), factorVarianceSubset,...
-                    obsPrecisionStar, tempbackup, options, identification, vy, mut);
+                [com(:,q,t), tempbackup, ~, ~] = AmarginalF(Info, ...
+                    FactorTimeBreak(factorSelect, :), ydemut, com(:,q,t), sumST(factorSelect), factorVarianceSubset,...
+                    obsPrecisionStar, tempbackup, options, identification, vy);
                 backupMeanAndHessian(factorSelect,:) = tempbackup;
             end
-            if tb == 1
-                currobsmod1 = com;
-                Ag1(:,:,r) = currobsmod1;
-                StateObsModel = makeStateObsModel(currobsmod1,Identities,0);
+            if t == 1
+                Ag1(:,:,r) = com(:,:,t);
+                StateObsModel = makeStateObsModel(com(:,:,t),Identities,0);
                 ItA1 = kron(eye(timeBreak), StateObsModel);
                 
             else
-                currobsmod2 = com;
-                Ag2(:,:,r) = currobsmod2;
-                StateObsModel = makeStateObsModel(currobsmod2,Identities, 0);
-                ItA2= kron(eye(timeBreak), StateObsModel);
+                Ag2(:,:,r) = com(:,:,t);
+                StateObsModel = makeStateObsModel(com(:,:,t),Identities, 0);
+                ItA2= kron(eye(T-timeBreak), StateObsModel);
                 ItA = blkdiag(ItA1, ItA2);
             end
         end
@@ -270,13 +255,13 @@ if estML == 1
     StateObsModel = makeStateObsModel(Astar1,Identities,0);
     ItA1 = kron(eye(timeBreak), StateObsModel);
     StateObsModel = makeStateObsModel(Astar2,Identities, 0);
-    ItA2= kron(eye(timeBreak), StateObsModel);
+    ItA2= kron(eye(T-timeBreak), StateObsModel);
     ItAstar = blkdiag(ItA1, ItA2);
     
     bhatmean = zeros(1,dimX);
     VarSum = zeros(dimX,dimX);
     for r = 1:ReducedRuns
-        fprintf('Reduced Run %i\n', r)
+        %         fprintf('Reduced Run %i\n', r)
         [beta, xbt,bhat,Variance] = timeBreaksBeta(yt, Xt, ItAstar, ItSigmaInverseStar, Sstar);
         Betag(:,r) = beta;
         bhatmean = bhatmean + bhat';
@@ -286,11 +271,11 @@ if estML == 1
     piBetaStar = logmvnpdf(BetaStar', bhatmean./ReducedRuns, VarSum./ReducedRuns);
     piAstarsum = 0;
     for q = levelVec
-        for tb = 1:2
-            if tb == 1
+        for t = 1:2
+            if t == 1
                 timeIndex = 1:timeBreak;
                 ytTimeBreak = yt(:, timeIndex);
-                FactorTimeBreak = sumFt(:, timeIndex);                
+                FactorTimeBreak = sumFt(:, timeIndex);
                 xbtTimeBreak = xbt(:, timeIndex);
                 Astar = Astar1;
                 Ag = Ag1;
@@ -299,7 +284,7 @@ if estML == 1
             else
                 timeIndex = timeBreak+1:T;
                 ytTimeBreak = yt(:, timeIndex);
-                FactorTimeBreak= sumFt(:, timeIndex);                
+                FactorTimeBreak= sumFt(:, timeIndex);
                 xbtTimeBreak = xbt(:, timeIndex);
                 Astar = Astar2;
                 Ag = Ag2;
@@ -329,21 +314,21 @@ if estML == 1
     
     mu = reshape(Xt*BetaStar,K,T) +  reshape(ItAstar*sumFt(:), K, T) ;
     LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
-    
-    
+
     Kprecision = kowStatePrecision(diag(sumST), sumFactorVar, T);
     Fpriorstar = logmvnpdf(sumFt(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T));
     J = Kprecision + ItAstar'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*ItAstar;
+
     piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
     fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
     
     priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), eye(nFactors)));
     priorObsVariance = sum(logigampdf(sumObsVariance, v0, d0));
     priorFactorVar = sum(logigampdf(sumFactorVar, s0, d0));
-    priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), 100.*eye(dimX));
+    priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), eye(dimX));
     priorStar = sum([priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]);
     
-%     priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]
+%     priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta, Fpriorstar ]
     
     ml = fyGiventhetastar + priorStar - posteriorStar;
     

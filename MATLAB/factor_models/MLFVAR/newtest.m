@@ -2,11 +2,11 @@
 
 clear;clc;
 % rng(121)
-SeriesPerCountry=3;
-CountriesInRegion =2;
-Regions = 2;
+SeriesPerCountry=10;
+CountriesInRegion =1;
+Regions = 1;
 Countries = CountriesInRegion*Regions;
-T = 150;
+T = 10;
 identification = 2;
 beta = ones(1,SeriesPerCountry+1).*.4;
 K = SeriesPerCountry*CountriesInRegion*Regions;
@@ -17,6 +17,10 @@ K = SeriesPerCountry*CountriesInRegion*Regions;
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
+
+InfoCell = InfoCell(1,1);
+levels = size(InfoCell,2);
+
 Factor = DataCell{1,4};
 Gamma = DataCell{1,6};
 Gt = DataCell{1,7};
@@ -38,7 +42,8 @@ initStateTransitions = .3.*ones(nFactors,1).*.1;
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 
 % Simulation Version
-initobsmodel = unifrnd(0,1,K,3);
+% initobsmodel = unifrnd(0,1,K,levels);
+initobsmodel = zeros(K,1);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
@@ -52,7 +57,12 @@ estML = 0;
       InfoCell, Sims, burnin, ReducedRuns,  initFactor, initobsmodel,...
       initStateTransitions,v0,r0, s0,d0, identification,estML);
 
-plotFt(Factor, sumFt, sumFt2, InfoCell)
+ plot(yt(1,:))
+ hold on
+ plot(sumFt(1,:))
+ sumOM
+ Gt
+% plotFt(Factor, sumFt, sumFt2, InfoCell)
 % ml
 % [sumOM,Gt]
 % mean([sumOM,Gt])

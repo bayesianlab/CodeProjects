@@ -62,12 +62,11 @@ vy = var(yt,0,2);
 levelVec = 1:levels;
 for i = 1 : Sims
     
-    fprintf('\nSimulation %i\n',i)
+%     fprintf('\nSimulation %i\n',i)
     [beta, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
         StateObsModel, Si,  T);
     
     for q = levelVec
-        fprintf('Level %i\n', q)
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
         mut = xbt + ConditionalObsModel*Ft;
         ydemut = yt - mut;
@@ -79,7 +78,7 @@ for i = 1 : Sims
         [currobsmod(:,q), tempbackup, f, vdecomp] = AmarginalF(Info, ...
             Ft(factorSelect, :), ydemut, currobsmod(:,q), ...
             stateTransitions(factorSelect), factorVarianceSubset,...
-            obsPrecision, tempbackup, options, identification, vy, breakUp(q), blocks(q));
+            obsPrecision, tempbackup, options, identification, vy);
         backupMeanAndHessian(factorSelect,:) = tempbackup;
         Ft(factorSelect,:) = f;
         variancedecomp(:,q) = vdecomp;
@@ -165,7 +164,7 @@ Sstar =  kowStatePrecision(diag(sumST), sumFactorVar,T);
 currobsmod = sumOM;
 if estML == 1
     for r = 1:ReducedRuns
-        fprintf('Reduced Run %i\n', r)
+%         fprintf('Reduced Run %i\n', r)
         [~, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
             StateObsModel, Sstar,  T);
         for q = levelVec
@@ -179,7 +178,7 @@ if estML == 1
             tempbackup = backupMeanAndHessian(factorSelect,:);
             [currobsmod(:,q), tempbackup, ~, ~] = AmarginalF(Info, ...
                 sumFt(factorSelect, :), ydemut, currobsmod(:,q), sumST(factorSelect), factorVarianceSubset,...
-                obsPrecisionStar, tempbackup, options, identification, vy, mut);
+                obsPrecisionStar, tempbackup, options, identification, vy);
             backupMeanAndHessian(factorSelect,:) = tempbackup;
         end
         Ag(:,:,r) = currobsmod;
@@ -190,7 +189,7 @@ if estML == 1
     bhatmean = zeros(1,dimX);
     VarSum = zeros(dimX,dimX);
     for r = 1:ReducedRuns
-        fprintf('Reduced Run %i\n', r)
+%         fprintf('Reduced Run %i\n', r)
         [beta, xbt, bhat, Variance] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
             StateObsModelStar, Sstar,  T);
         Betag(:,r) = beta;
@@ -220,8 +219,8 @@ if estML == 1
     posteriorStar = sum(piObsVarianceStar) +  sum(piFactorVarianceStar) ...
         + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
     
-    posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar), ...
-        sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
+%     posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar), ...
+%         sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
     
     mu = reshape(Xt*BetaStar,K,T) +  StateObsModelStar*sumFt ;
     LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
@@ -229,6 +228,7 @@ if estML == 1
     Kprecision = kowStatePrecision(diag(sumST), sumFactorVar, T);
     Fpriorstar = logmvnpdf(sumFt(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T));
     G = kron(eye(T), StateObsModelStar);
+
     J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
     piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
     fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
@@ -239,7 +239,7 @@ if estML == 1
     priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), eye(dimX));
     priorStar = sum([priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]);
     
-    priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]
+%     priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta, Fpriorstar ]
     ml = fyGiventhetastar + priorStar - posteriorStar;
     
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)

@@ -36,7 +36,6 @@ I2 = Identities{1,3};
 Z0 = zeros(K,1);
 Z1 = zeros(size(I1,1), size(I1,2));
 Z2 = zeros(size(I2,1), size(I2,2));
-% Gt = ones(K,3).*[.1, .1, .1];
 Gt = unifrnd(0,1,K,3);
 WorldOnly = Gt(:,1);
 RegionsOnly = Gt(:,2).*I1;
@@ -53,11 +52,11 @@ if identification == 2
     for q = 1:length(Start1)
         CountriesOnly(Start1(q),q) = 1;
     end
-    Gt = [WorldOnly, RegionsOnly, CountriesOnly];
+    Gt = [Z0, Z1,Z2];
 end
 
 mu = Gt*Factor;
-yt = mu + normrnd(0,1,K,T);
+yt = mu + normrnd(0,.5,K,T);
 
 Gt = [Gt(:,1), sum(Gt(:,2:Regions+1),2), sum(Gt(:,Regions+2:end),2)];
 Xt =0;

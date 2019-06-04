@@ -49,7 +49,7 @@ sumST = zeros(nFactors, 1);
 sumST2 = zeros(nFactors, 1);
 sumObsVariance = zeros(K,1);
 sumObsVariance2 = sumObsVariance;
-sumOM = zeros(K, 3);
+sumOM = zeros(K, levels);
 sumOM2= sumOM ;
 sumFactorVar = zeros(nFactors,1);
 sumFactorVar2 = sumFactorVar;
@@ -64,7 +64,7 @@ options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
 DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 vy = var(yt,0,2);
 
-levelVec = 1:levels;
+levelVec = 1:1;
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)   
     %% Update loadings and factors

@@ -2,10 +2,10 @@
 % Runs tests on a break in the middle and the 
 % Full period
 clear;clc;
-rng(3)
+% rng(3)
 Sims = 200;
 burnin = 10;
-ReducedRuns = 10;
+ReducedRuns = 100;
 ML = zeros(1,2);
 timeBreak = 100;
 T = 200;
@@ -35,7 +35,7 @@ initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
 initStateTransitions = .3.*ones(nFactors,1);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-initobsmodel = unifrnd(.1,.5,K,1);
+initobsmodel = .01.*ones(K,1);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
@@ -43,16 +43,17 @@ initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
 estML = 1;
 
-% [sumFt, sumFt2, sumOM1, sumOM12, sumOM2, sumOM22, sumST, sumST2,...
-%     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
-%     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
-%     sumVarianceDecomp2, ml] = Mdfvar_TimeBreaks(yt, Xt, InfoCell, Sims,burnin, ReducedRuns,...
-%     timeBreak, initFactor,  initobsmodel,initStateTransitions,...
-%     v0, r0, s0, d0, identification, estML);
-% sumOM1
-% sumOM2
-% sumBeta;
-% ML(1) = ml;
+
+[sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
+    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
+    sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
+    sumVarianceDecomp2, ml] = Mdfvar_TimeBreaks(yt, Xt, InfoCell, Sims,burnin, ReducedRuns,...
+    timeBreak, initFactor,  initobsmodel,initStateTransitions,...
+    v0, r0, s0, d0, identification, estML);
+sumOM
+sumBeta
+ml
+ML(1) = ml;
 [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
@@ -62,8 +63,8 @@ estML = 1;
 sumOM
 sumBeta
 ml
-% ML(2) = ml;
-% ML(1) - ML(2)
+ML(2) = ml;
+ML(1) - ML(2)
 
 %% Testing if two models estimated beats one
 % yt1 = yt(:, 1:timeBreak);
