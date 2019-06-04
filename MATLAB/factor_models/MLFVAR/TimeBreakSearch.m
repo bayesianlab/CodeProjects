@@ -45,6 +45,7 @@ timeBreaks = 2:T-1;
 mls = zeros(length(timeBreaks),1);
 c = 0;
 for g = timeBreaks
+    fprintf('Time break: %i\n', g)
     c = c + 1;
     [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
         sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
@@ -56,5 +57,7 @@ for g = timeBreaks
 end
 [~, order] = sort(mls);
 [mls(order), timeBreaks(order)]
+fname = createDateString(join(DotMatFile, '_'));
+save(fname)
 end
 
