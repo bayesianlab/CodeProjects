@@ -13,10 +13,7 @@ load(DotMatFile)
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
-Factor = DataCell{1,4};
-Gamma = DataCell{1,6};
-Gt1 = DataCell{1,7};
-Gt2 = DataCell{1,8};
+
 [K,T] = size(yt);
 [~, dimX] = size(Xt);
 levels = size(InfoCell,2);
@@ -29,7 +26,7 @@ initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
 initStateTransitions = .3.*ones(nFactors,1);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-initobsmodel = unifrnd(.1,.5,K,1);
+initobsmodel = unifrnd(.1,.5,K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);

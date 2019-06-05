@@ -107,7 +107,7 @@ for i = 1 : Sims
             backupMeanAndHessian(factorSelect,:) = tempbackup;
             [f, vdecomp] = FgivenA(Info, ydemut, com(:,q,t),...
                 stateTransitions(factorSelect), factorVarianceSubset,obsPrecision,  vy);
-            Ft(:, timeIndex) = f;
+            Ft(factorSelect, timeIndex) = f;
         end
         if t == 1
             StateObsModel = makeStateObsModel(com(:,:,t),Identities,0);
