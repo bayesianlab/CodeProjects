@@ -10,7 +10,6 @@ if ischar(ReducedRuns)
 end
 
 load(DotMatFile)
-
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};

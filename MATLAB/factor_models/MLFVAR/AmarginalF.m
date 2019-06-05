@@ -73,7 +73,7 @@ if nargin > 11
                 g = blocks;
                 p = 1;
                 for h = 1:floorNblocks
-                    fprintf('Block number %i \n', h)
+%                     fprintf('Block number %i \n', h)
                     if h == 1
                         isRestricted = 1;
                     else
@@ -125,7 +125,7 @@ if nargin > 11
                 g = blocks;
                 p = 1;
                 for h = 1:floorNblocks
-                    fprintf('Block number %i \n', h)
+%                     fprintf('Block number %i \n', h)
                     if h == 1
                         isRestricted = 1;
                     else
