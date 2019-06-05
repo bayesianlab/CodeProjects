@@ -1,5 +1,5 @@
 function [] = RunMdfvarBlock(Sims, burnin, ReducedRuns, estML,...
-    breakUp, blocks, DotMatFile)
+    DotMatFile)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -32,6 +32,9 @@ StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
 initFactor = reshape(vecFt, nFactors,T);
+
+breakUp = [1,0];
+blocks = [10,0];
 
 [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
