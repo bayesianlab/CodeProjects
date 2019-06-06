@@ -1,11 +1,11 @@
 function [rn] = twoSided(a,b)
 maxiterations = 0;
-LIM = 10000;
+LIM = 100;
 while maxiterations < LIM
    z = unifrnd(a,b);
    lu = log(unifrnd(0,1));
    if (a<0) && (0<b)
-       rho_z = -.5* z^2;
+       rho_z = -.5* z^2
        if lu < rho_z
            rn = z;
            return
@@ -28,6 +28,6 @@ while maxiterations < LIM
        end
    end    
 end
-fprintf("Error in two sided truncation\n")
+error("Error in two sided truncation\n")
 end
 

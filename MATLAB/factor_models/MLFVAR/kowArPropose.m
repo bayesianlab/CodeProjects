@@ -11,9 +11,7 @@ if Arp == 1
     proposal = 10;
     while abs(proposal) > 1 & (c ~= 100)
         c = c + 1;
-        alpha = (-1-gammahat)/G;
-        beta = (1-gammahat)/G;
-        proposal = gammahat + G*twoSided(alpha,beta);
+        proposal = tnormrnd(-1,1,gammahat, G);
 %         proposal = normrnd(gammahat,G,1,1);
         P0 = sigma2/(1-proposal^2);
     end
