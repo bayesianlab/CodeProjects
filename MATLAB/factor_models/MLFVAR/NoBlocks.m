@@ -118,7 +118,6 @@ for i = 1 : Sims
                 sumBackup(factorSelect,:) = sumLastMeanHessian(InfoCell{1,q}, backupMeanAndHessian(factorSelect,:), sumBackup(factorSelect,:));
             end
         end
-        
     end
 end
 
