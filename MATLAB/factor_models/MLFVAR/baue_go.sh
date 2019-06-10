@@ -1,6 +1,6 @@
 #!bin/bash
 #$ -S /bin/bash
-#$ -q its
+#$ -q pub8i
 #$ -N baue_
 #$ -l mem_free=4G
 #$ -cwd
