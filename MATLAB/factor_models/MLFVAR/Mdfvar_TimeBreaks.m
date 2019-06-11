@@ -62,7 +62,7 @@ sumBackup1 = backupMeanAndHessian1;
 sumBackup2 = backupMeanAndHessian2;
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-9);
+    'StepTolerance', 1e-5, 'Display', 'off', 'OptimalityTolerance', 1e-4);
 
 % DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 vy = var(yt,0,2);
@@ -74,7 +74,8 @@ else
 end
 levelVec = 1:levels;
 for i = 1 : Sims
-%         fprintf('\nSimulation %i\n',i)
+    tic
+        fprintf('\nSimulation %i\n',i)
     [beta, xbt,~,~] = timeBreaksBeta(yt, Xt, ItA, ItSigmaInverse, Si);
     
     for t = tb
@@ -173,7 +174,9 @@ for i = 1 : Sims
             end
         end
     end
+    toc
 end
+
 Runs = Sims- burnin;
 sumBeta = sumBeta./Runs;
 sumBeta2 = sumBeta2./Runs;

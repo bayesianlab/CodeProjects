@@ -43,14 +43,14 @@ sumBackup = backupMeanAndHessian;
 
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-9);
+    'StepTolerance', 1e-5, 'Display', 'off', 'OptimalityTolerance', 1e-4);
 
 DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 vy = var(yt,0,2);
 
 levelVec = 1:levels;
 for i = 1 : Sims
-    
+    tic
     fprintf('\nSimulation %i\n',i)
     [beta, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
         StateObsModel, Si,  T);
@@ -119,6 +119,7 @@ for i = 1 : Sims
             end
         end
     end
+    toc
 end
 
 

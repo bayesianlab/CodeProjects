@@ -1,4 +1,4 @@
-function [] = TimeBreakSearch(Sims, burnin, ReducedRuns, DotMatFile)
+function [] = TBS(Sims,burnin,ReducedRuns, TB, DotMatFile)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -8,7 +8,9 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
-
+if ischar(TB)
+    TB = str2num(TB);
+end
 load(DotMatFile)
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
@@ -34,25 +36,17 @@ initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
 estML = 1;
 
-timeBreaks = 3:T-3;
-mls = zeros(length(timeBreaks),1);
-c = 0;
-for g = timeBreaks
-    fprintf('Time break: %i\n', g)
-    c = c + 1;
     [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
         sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
         sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
         sumVarianceDecomp2, ml] = Mdfvar_TimeBreaks(yt, Xt, InfoCell, Sims,burnin, ReducedRuns,...
-        timeBreaks(c), initFactor,  initobsmodel,initStateTransitions,...
+        TB, initFactor,  initobsmodel,initStateTransitions,...
         v0, r0, s0, d0, identification, estML);
-    mls(c) = ml;
-end
-[~, order] = sort(mls);
-[mls(order), timeBreaks(order)]
-period = strfind(DotMatFile, '.');
+    
 
-fname = createDateString(join(DotMatFile(1:period-1), '_'));
+
+
+fname = join(['TimeBreak_', num2str(TB)])
 save(fname)
 end
 
