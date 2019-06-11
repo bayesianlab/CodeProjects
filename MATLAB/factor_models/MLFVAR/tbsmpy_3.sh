@@ -1,6 +1,6 @@
 #!bin/bash
 #$ -S /bin/bash
-#$ -q its
+#$ -q pub8i
 #$ -N tbsmpy_3
 #$ -l mem_free=4G
 #$ -cwd
