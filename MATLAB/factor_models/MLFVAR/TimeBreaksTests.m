@@ -13,8 +13,6 @@ K =6;
 identification = 2;
 MLFtimebreaks(K, T, timeBreak, identification);
 load('totaltime.mat')
-
-
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
