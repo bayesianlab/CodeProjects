@@ -20,6 +20,11 @@ for i = Indx
     ytb = yt(:,i+1:end);
     Xtb = Xt(K*i + 1:end,:);
     fnameb = sprintf('TimeBreakData/TimeBreakBeg%i',i+1);
-    save(fnamee, 'yte','Xte', 'InfoCell')
-    save(fnameb, 'ytb', 'Xtb', 'InfoCell')
+    DataCell{1,1} = yte;
+    DataCell{1,2} = Xte;
+    DataCell{1,3} = InfoCell;
+    save(fnamee, 'DataCell')
+    DataCell{1,1} = ytb;
+    DataCell{1,2} = Xtb;
+    save(fnameb, 'DataCell')
 end

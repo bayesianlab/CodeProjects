@@ -8,7 +8,8 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
-load(DotMatFile)
+datalocation = join(['TimeBreakData/', DotMatFile]);
+load(datalocation, 'DataCell')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
