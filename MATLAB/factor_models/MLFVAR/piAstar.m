@@ -4,7 +4,7 @@ function [pistar] = piAstar(Info, Ft, yt, Ag, Astar, stateTransitions, factorVar
 Regions = size(Info,1);
 alphagtostarq = zeros(Regions, G);
 alphastartoj = zeros(Regions, G);
-df = 15;
+df = 20;
 for m = 1:G
     for r = 1:Regions
         subsetSelect = Info(r,1):Info(r,2);
@@ -19,11 +19,10 @@ for m = 1:G
         V = backup{r,2};
         factorPrecision = kowStatePrecision(stateTransitions(r), factorVariance(r), T);
         ObsPriorMean = ones(1, K-1);
-        ObsPriorPrecision = eye(K-1);
+        ObsPriorPrecision = 10.*eye(K-1);
         LogLikePositive = @(v) LLRestrict (v, yslice,ObsPriorMean,...
             ObsPriorPrecision, precisionSlice, Ft(r,:),factorPrecision);
         proposalDist = @(q) mvstudenttpdf(q, themean, V, df);
-        
         
         alphagtostarq(r,m) = min(0, LogLikePositive(freeElemsStar) + proposalDist(freeElemsg') - ...
             LogLikePositive(freeElemsg) + proposalDist(freeElemsStar')) + proposalDist(freeElemsStar');
