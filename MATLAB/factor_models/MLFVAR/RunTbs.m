@@ -43,8 +43,6 @@ estML = 1;
     TB, initFactor,  initobsmodel,initStateTransitions,...
     v0, r0, s0, d0, identification, estML);
 
-
-
 mkdir('TbsOutput')
 fname = join(['TimeBreak_', num2str(TB)])
 save(fname)
