@@ -8,7 +8,7 @@ for r = 1:Regions
     astar = reshape(astar(2:end), 1, K-1);
     
     ObsPriorMean = ones(1, K-1);
-    ObsPriorVariance = eye(K-1);    
+    ObsPriorVariance = 10.*eye(K-1);    
     priorAstar = priorAstar + logmvnpdf(astar, ObsPriorMean, ObsPriorVariance);
 end
 end

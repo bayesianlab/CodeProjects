@@ -45,18 +45,18 @@ sumBackup = backupMeanAndHessian;
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-5, 'Display', 'off', 'OptimalityTolerance', 1e-4);
 
-DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
+% DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 vy = var(yt,0,2);
 
 levelVec = 1:levels;
 for i = 1 : Sims
-    tic
-    fprintf('\nSimulation %i\n',i)
+    
+%     fprintf('\nSimulation %i\n',i)
     [beta, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
         StateObsModel, Si,  T);
     
     for q = levelVec
-        fprintf('Level %i\n', q)
+%         fprintf('Level %i\n', q)
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
         mut = xbt + ConditionalObsModel*Ft;
         ydemut = yt - mut;
@@ -119,7 +119,7 @@ for i = 1 : Sims
             end
         end
     end
-    toc
+    
 end
 
 
@@ -154,7 +154,7 @@ Sstar =  kowStatePrecision(diag(sumST), sumFactorVar,T);
 currobsmod = sumOM;
 if estML == 1
     for r = 1:ReducedRuns
-        fprintf('Reduced Run %i\n', r)
+%         fprintf('Reduced Run %i\n', r)
         [~, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
             StateObsModel, Sstar,  T);
         for q = levelVec
@@ -180,8 +180,8 @@ if estML == 1
     bhatmean = zeros(1,dimX);
     VarSum = zeros(dimX,dimX);
     for r = 1:ReducedRuns
-        fprintf('Reduced Run %i\n', r)
-        [beta, xbt, bhat, Variance] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
+%         fprintf('Reduced Run %i\n', r)
+        [beta, ~, bhat, Variance] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
             StateObsModelStar, Sstar,  T);
         Betag(:,r) = beta;
         bhatmean = bhatmean + bhat';
@@ -191,9 +191,10 @@ if estML == 1
     piBetaStar = logmvnpdf(BetaStar', bhatmean./ReducedRuns, VarSum./ReducedRuns);
     piAstarsum = 0;
     priorAstar = zeros(1,levels);
+    mutStar = reshape(Xt*BetaStar,K,T);
     for q = levelVec
         ConditionalObsModel = makeStateObsModel(Astar, Identities, q);
-        mut = xbt + ConditionalObsModel*sumFt;
+        mut = mutStar + ConditionalObsModel*sumFt;
         ydemut = yt - mut;
         priorAstar(q) = Apriors(Info,Astar);
         Info = InfoCell{1,q};
@@ -210,9 +211,6 @@ if estML == 1
     posteriorStar = sum(piObsVarianceStar) +  sum(piFactorVarianceStar) ...
         + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
     
-    posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar), ...
-        sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
-    
     mu = reshape(Xt*BetaStar,K,T) +  StateObsModelStar*sumFt ;
     LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
     
@@ -223,13 +221,18 @@ if estML == 1
     piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
     fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
     
-    priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), eye(nFactors)));
-    priorObsVariance = sum(logigampdf(sumObsVariance, v0, d0));
-    priorFactorVar = sum(logigampdf(sumFactorVar, s0, d0));
-    priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), eye(dimX));
+    priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), 10.*eye(nFactors)));
+    priorObsVariance = sum(logigampdf(sumObsVariance, .5.*v0, .5.*d0));
+    priorFactorVar = sum(logigampdf(sumFactorVar, .5.*s0, .5.*d0));
+    priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), 10.*eye(dimX));
     priorStar = sum([priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]);
     
-    priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta ]
+%     [LogLikelihood, piFtstarGivenyAndthetastar]
+%     priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta, Fpriorstar ]
+%     sum(priors)
+%     posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar), ...
+%         sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
+    
     ml = fyGiventhetastar + priorStar - posteriorStar;
     
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
