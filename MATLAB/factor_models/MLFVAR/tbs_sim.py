@@ -1,6 +1,8 @@
 #!/usr/bin/env/ python
 import csv, subprocess, os
-files = os.listdir('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakData/')
+home = os.path.expanduser('~')
+files = os.listdir(home + 'CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakData/')
+files = files[0:3]
 for f in files:
     qs = "qsub -v DATA={0} tbs_sim_study.sh".format(f)
     print(qs)
