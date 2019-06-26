@@ -8,6 +8,7 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
+pwd
 datalocation = join(['TimeBreakData/', DotMatFile]);
 load(datalocation, 'DataCell')
 yt = DataCell{1,1};
@@ -40,7 +41,7 @@ estML = 1;
     initStateTransitions, v0, r0, s0, d0, identification, estML);
 period = strfind(DotMatFile, '.');
 
-fname = DotMatFile(1:period-1);
+fname = join(['Result_'], DotMatFile(1:period-1));
 dirname = 'TimeBreakSimulations/';
 if ~exist(dirname, 'dir')
     mkdir(dirname)
