@@ -41,7 +41,7 @@ estML = 1;
     initStateTransitions, v0, r0, s0, d0, identification, estML);
 period = strfind(DotMatFile, '.');
 
-fname = join(['Result_'], DotMatFile(1:period-1));
+fname = join(['Result_', DotMatFile(1:period-1)]);
 dirname = 'TimeBreakSimulations/';
 if ~exist(dirname, 'dir')
     mkdir(dirname)

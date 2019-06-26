@@ -1,4 +1,5 @@
 clear;clc;
+rng(3)
 timeBreak = 100;
 T = 200;
 K =6;
@@ -11,7 +12,7 @@ InfoCell = DataCell{1,3};
 Factor = DataCell{1,4};
 Gamma = DataCell{1,6};
 
-Indx = 75:125;
+Indx = 40:160;
 mkdir('TimeBreakData')
 for i = Indx
     yte = yt(:, 1:i);
