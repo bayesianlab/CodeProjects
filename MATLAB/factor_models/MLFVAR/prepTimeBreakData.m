@@ -33,6 +33,7 @@ end
 load('StandardizedRealData.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
+[K,T] = size(yt);
 InfoCell = DataCell{1,3};
 Factor = DataCell{1,4};
 Gamma = DataCell{1,6};
@@ -42,10 +43,12 @@ mkdir('TimeBreakDataKOW')
 for i = Indx
     yte = yt(:, 1:i);
     Xte = Xt(1:K*i, :);
-    fnamee = sprintf('TimeBreakDataKOW/TimeBreakEnd%i',i);
+    fnamee = sprintf('TimeBreakDataKOW/TimeBreakKowEnd%i',i);
     ytb = yt(:,i+1:end);
     Xtb = Xt(K*i + 1:end,:);
-    fnameb = sprintf('TimeBreakDataKOW/TimeBreakBeg%i',i+1);
+    size(Xtb)
+    size(ytb)
+    fnameb = sprintf('TimeBreakDataKOW/TimeBreakKowBeg%i',i+1);
     DataCell{1,1} = yte;
     DataCell{1,2} = Xte;
     DataCell{1,3} = InfoCell;

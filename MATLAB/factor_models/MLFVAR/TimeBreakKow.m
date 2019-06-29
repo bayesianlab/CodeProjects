@@ -26,7 +26,7 @@ initBeta = ones(dimX,1);
 obsPrecision = ones(K,1);
 initStateTransitions = .3.*ones(nFactors,1);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-initobsmodel = .01.*ones(K,1);
+initobsmodel = .01.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
