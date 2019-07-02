@@ -51,12 +51,12 @@ vy = var(yt,0,2);
 levelVec = 1:levels;
 for i = 1 : Sims
     
-%     fprintf('\nSimulation %i\n',i)
+    fprintf('\nSimulation %i\n',i)
     [beta, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
         StateObsModel, Si,  T);
     
     for q = levelVec
-%         fprintf('Level %i\n', q)
+        fprintf('Level %i\n', q)
         ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
         mut = xbt + ConditionalObsModel*Ft;
         ydemut = yt - mut;
@@ -154,7 +154,7 @@ Sstar =  kowStatePrecision(diag(sumST), sumFactorVar,T);
 currobsmod = sumOM;
 if estML == 1
     for r = 1:ReducedRuns
-%         fprintf('Reduced Run %i\n', r)
+        fprintf('Reduced Run %i\n', r)
         [~, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
             StateObsModel, Sstar,  T);
         for q = levelVec
@@ -180,7 +180,7 @@ if estML == 1
     bhatmean = zeros(1,dimX);
     VarSum = zeros(dimX,dimX);
     for r = 1:ReducedRuns
-%         fprintf('Reduced Run %i\n', r)
+        fprintf('Reduced Run %i\n', r)
         [beta, ~, bhat, Variance] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
             StateObsModelStar, Sstar,  T);
         Betag(:,r) = beta;
