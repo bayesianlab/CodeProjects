@@ -45,4 +45,4 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('StandardizedRealData.mat', 'DataCell')
+save('kowDataVar1.mat', 'DataCell')
