@@ -1,11 +1,14 @@
-function [ll] = kowLL(countryguess, ydemu, StatePrecision, obsPrecision, K, T)
-speyet = speye(T);
-O = diag(obsPrecision);
-Oa = O*countryguess;
-kOa = kron(speyet, Oa);
-Middle =(StatePrecision +  kron(speyet, countryguess'*diag(obsPrecision)*countryguess)) \ eye(T);
-P = spdiags(repmat(obsPrecision, T,1),0,K*T, K*T) - kOa* Middle *kOa';
-
+function [ll] = kowLL(obsModelTransition, ydemu, StatePrecision, obsPrecision)
+SPSize = size(StatePrecision,1);
+K = length(obsPrecision);
+R = size(ydemu,1);
+T = R/K;
+eyespsize = speye(SPSize);
+eyet = speye(T);
+Oi = diag(obsPrecision);
+OiA = Oi*obsModelTransition;
+Middle = (StatePrecision + kron(eyet, obsModelTransition'*OiA))\eyespsize;
+P = kron(eyet, Oi) - (kron(eyet,OiA)*Middle*kron(eyet,OiA'));
 ll = kowOptimLogMvnPdf(ydemu, P);
 end
 

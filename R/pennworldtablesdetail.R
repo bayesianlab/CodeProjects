@@ -1,5 +1,5 @@
 library(readxl)
-pwtd90 <- read_excel("/Users/dillonflannery-valadez/Google\ Drive/Datasets/na_data.xlsx", 
+pwtd90 <- read_excel("/home/precision/GoogleDrive/Datasets/na_data.xlsx", 
                     sheet = "Data")
 KOW <- cbind(pwtd90[pwtd90$countrycode == 'USA' & pwtd90$year >= 1960, c('year', 'q_gdp', 'q_c', 'q_i')],
              pwtd90[pwtd90$countrycode == 'CAN' & pwtd90$year >= 1960, c('q_gdp', 'q_c', 'q_i')],          

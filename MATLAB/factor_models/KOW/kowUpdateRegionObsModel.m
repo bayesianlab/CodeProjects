@@ -4,6 +4,7 @@ function [updatedobsmod, oldmean, oldHessian] = kowUpdateRegionObsModel(ydemut,.
     CountryObsModelPriorlogdet, regionIndices, oldmean, oldHessian,...
     iterationCount)
 T = size(ydemut,2);
+
 if iterationCount == 1
     stopTryingFlag = 0;
     options = optimoptions(@fminunc, 'Algorithm', 'quasi-newton',...
@@ -26,9 +27,9 @@ for c = 1:Countries
     if c == regionIndices(regioncount) 
         regioncount = regioncount + 1;
         regioncheck = regioncheck + 1;
-        [Sregionpre] = kowMakeVariance(RegionAr(regioncheck,:), 1, T);
+        [Sregionpre] = kowMakePrecision(RegionAr(regioncheck,:), 1, T);
         loglike = @(rg) -kowLL(rg, yslice(:),...
-        Sregionpre, pslice, SeriesPerCountry,T); 
+            Sregionpre, pslice); 
         [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,length(obsslice),1), options);
         [~,notpd] = chol(Hessian);
         limit = 0;
@@ -64,12 +65,11 @@ for c = 1:Countries
         iHessian = Hessian\eye(size(Hessian,1));
         updatedobsmod(selectC) = kowMhRestricted(obsslice,themean,...
             iHessian, Hessian,yslice(:), Sregionpre,pslice,...
-            CountryObsModelPriorPrecision, CountryObsModelPriorlogdet,...
-             T);
+            CountryObsModelPriorPrecision, CountryObsModelPriorlogdet);
     else
-        [Sregionpre] = kowMakeVariance(RegionAr(regioncheck,:), 1, T);
+        [Sregionpre] = kowMakePrecision(RegionAr(regioncheck,:), 1, T);
         loglike = @(rg) -kowLL(rg, yslice(:),...
-        Sregionpre, pslice, SeriesPerCountry,T); 
+        Sregionpre, pslice); 
         [themean, ~,~,~,~, Hessian] = fminunc(loglike, normrnd(0,1,...
             SeriesPerCountry,1), options);
         [~,notpd] = chol(Hessian);
@@ -105,7 +105,7 @@ for c = 1:Countries
         iHessian = Hessian\eye(size(Hessian,1));
         updatedobsmod(selectC) = kowMhUR(obsslice,themean,iHessian,...
             yslice(:), Sregionpre,pslice, CountryObsModelPriorPrecision,...
-            CountryObsModelPriorlogdet, SeriesPerCountry, T);
+            CountryObsModelPriorlogdet);
     end   
 end
 fprintf('Finsihed region obs model updates.\n')

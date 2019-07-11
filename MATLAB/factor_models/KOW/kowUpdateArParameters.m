@@ -1,8 +1,9 @@
 function [ArParams] = kowUpdateArParameters(ArParams, StateVariables, Arp)
-fprintf('\nUpdating ar parameters on state variables\n')
+% fprintf('\nUpdating ar parameters on state variables\n')
 [Rows, ~] = size(StateVariables);
 accept = 0;
 zeroarp = zeros(1,Arp);
+
 for i = 1: Rows
     State = StateVariables(i,:);
     Ar = ArParams(i,:);
@@ -14,9 +15,9 @@ for i = 1: Rows
     if log(unifrnd(0,1,1,1)) <= alpha
         accept = accept + 1;
         ArParams(i,:) = proposal;
+    else
+        ArParams(i,:) = ArParams(i,:);
     end
-   
 end
- fprintf('Accepted %.3f \n', accept/Rows)
 end
 

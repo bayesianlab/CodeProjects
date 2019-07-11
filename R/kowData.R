@@ -1,5 +1,5 @@
 library(readxl)
-pwt90 <- read_excel("Datasets/pwt90.xlsx", 
+pwt90 <- read_excel("~/GoogleDrive/Datasets/pwt90.xlsx", 
                           sheet = "Data")
 KOW <- cbind(pwt90[pwt90$countrycode == 'USA' & pwt90$year >= 1960, c('year', 'rgdpna', 'rconna', 'rkna')],
              pwt90[pwt90$countrycode == 'CAN' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rkna')],          
@@ -124,10 +124,9 @@ colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rknaUSA',
   'rgdpnaSGP', 'rconnaSGP', 'rknaSGP',
   'rgdpnaTHA', 'rconnaTHA', 'rknaTHA')
 
-LogFirstDif <- log(KOW[2:55,2:181]) - log(KOW[1:54, 2:181])
+KOW <- log(KOW[2:55,2:181]) - log(KOW[1:54, 2:181])
+KOWrescaled <- KOW*100
 
-KOW <- cbind(KOW$year[2:55], LogFirstDifDeMean)
-colnames(KOW)[1] <- 'year'
-remove(LogFirstDif)
-remove(LogFirstDifDeMean)
 
+write.csv(KOW, '~/GoogleDrive/Datasets/kow_march6.csv', row.names = FALSE)
+write.csv(KOWrescaled, '~/GoogleDrive/Datasets/kow_march6_rescaled.csv', row.names = FALSE)

@@ -1,4 +1,3 @@
-"My vimrc" 
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -14,10 +13,13 @@ Plugin 'scrooloose/nerdTree'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'jalvesaq/Nvim-R'			
+Plugin 'mattn/emmet-vim'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'auto-pairs'
 Plugin 'git://github.com/kana/vim-operator-user'
 Plugin 'git://github.com/rhysd/vim-clang-format'
+
+Plugin 'vim-scripts/indentpython.vim'
 Plugin 'surround.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required

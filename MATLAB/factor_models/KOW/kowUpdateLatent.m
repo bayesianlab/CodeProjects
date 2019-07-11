@@ -1,14 +1,12 @@
-function [draw] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelPrecision)
-
+function [draw, P] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, ObsModelPrecision)
 [Nobseqns] = size(ObsModel,1);
 T = length(vecresids)/Nobseqns;
 speyet = speye(T);
-GtP = ObsModel'*spdiags(ObsModelPrecision,0, Nobseqns,Nobseqns);
-KroneckerVariance = kron(speye(T),GtP*ObsModel);
-x = kron(speyet,GtP) *vecresids;
-
-P= StatePrecision + KroneckerVariance;
-[mu, diagP, offdiagP] = solveSystem(P, x);
-draw  = mvnrndPrecision(diagP, offdiagP) + mu;
+FullPrecision = diag(ObsModelPrecision);
+GtO = ObsModel'*FullPrecision;
+P = StatePrecision + kron(speyet, GtO*ObsModel);
+P = P\speye(size(P,1));
+mu = P*(kron(speyet,GtO)*vecresids);
+draw = mvnrnd(mu,P);
 end
 

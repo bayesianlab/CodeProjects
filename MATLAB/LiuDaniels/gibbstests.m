@@ -1,0 +1,1 @@
+mean(GibbsTruncNormBelow([0,0], [0,0], eye(2), 100,10))
