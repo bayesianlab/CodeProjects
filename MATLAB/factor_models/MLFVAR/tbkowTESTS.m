@@ -1,16 +1,8 @@
-function [] = TimeBreak(Sims, burnin, ReducedRuns, DotMatFile)
-if ischar(Sims)
-    Sims = str2num(Sims);
-end
-if ischar(burnin)
-    burnin = str2num(burnin);
-end
-if ischar(ReducedRuns)
-    ReducedRuns = str2num(ReducedRuns);
-end
-pwd
-datalocation = join(['TimeBreakData/', DotMatFile]);
-load(datalocation, 'DataCell')
+clear;clc;
+load('kowDataVar1.mat', 'DataCell')
+Sims=100;
+burnin =10;
+ReducedRuns=0;
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
@@ -32,21 +24,10 @@ vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
 initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
-estML = 1;
+estML = 0;
 [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
     sumVarianceDecomp2, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML);
-period = strfind(DotMatFile, '.');
-
-fname = join(['Result_', DotMatFile(1:period-1)]);
-dirname = 'TimeBreakSimulations/';
-if ~exist(dirname, 'dir')
-    mkdir(dirname)
-end
-
-save(join([dirname,fname]))
-end
-
