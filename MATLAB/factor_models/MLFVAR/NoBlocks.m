@@ -43,7 +43,7 @@ sumBackup = backupMeanAndHessian;
 
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-5, 'Display', 'off', 'OptimalityTolerance', 1e-4);
+    'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-8);
 
 % DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 vy = var(yt,0,2);
@@ -73,7 +73,7 @@ for i = 1 : Sims
         Ft(factorSelect,:) = f;
         variancedecomp(:,q) = vdecomp;
     end
-    
+
     StateObsModel = makeStateObsModel(currobsmod,Identities,0);
     
     %% Variance

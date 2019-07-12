@@ -9,7 +9,7 @@ if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
 pwd
-datalocation = join(['TimeBreakDataKOW/', DotMatFile]);
+datalocation = join(['KOW_Part1/', DotMatFile]);
 load(datalocation, 'DataCell')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
@@ -42,7 +42,7 @@ estML = 1;
 period = strfind(DotMatFile, '.');
 
 fname = join(['Result_', DotMatFile(1:period-1)]);
-dirname = 'TimeBreakSimulationsKOW/';
+dirname = 'TBKOW/';
 if ~exist(dirname, 'dir')
     mkdir(dirname)
 end

@@ -46,8 +46,7 @@ for i = Indx
     fnamee = sprintf('TimeBreakDataKOW/TimeBreakKowEnd%i',i);
     ytb = yt(:,i+1:end);
     Xtb = Xt(K*i + 1:end,:);
-    size(Xtb)
-    size(ytb)
+
     fnameb = sprintf('TimeBreakDataKOW/TimeBreakKowBeg%i',i+1);
     DataCell{1,1} = yte;
     DataCell{1,2} = Xte;
