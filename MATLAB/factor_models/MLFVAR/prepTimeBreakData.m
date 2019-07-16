@@ -30,7 +30,7 @@ for i = Indx
     save(fnameb, 'DataCell')
 end
 
-load('StandardizedRealData.mat')
+load('kowDataVar1.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 [K,T] = size(yt);
