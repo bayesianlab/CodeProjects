@@ -8,8 +8,8 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
-pwd
 datalocation = join(['KOW_Part1/', DotMatFile]);
+disp(DotMatFile)
 load(datalocation, 'DataCell')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
