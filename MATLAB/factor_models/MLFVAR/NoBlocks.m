@@ -119,10 +119,9 @@ for i = 1 : Sims
             end
         end
     end
-save('savestate')  
 end
 
-
+save('savestate')  
 
 Runs = Sims- burnin;
 sumBeta = sumBeta./Runs;
