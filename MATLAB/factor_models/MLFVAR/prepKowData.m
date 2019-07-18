@@ -21,7 +21,7 @@ X = zeros(K*(T-1),  SeriesPerCountry*(SeriesPerCountry+1)*Countries);
 I = kron(eye(K), ones(1,1+SeriesPerCountry));
 fillX = 1:K;
 tempX = X(1:K, :);
-stdkow = kow;
+
 for t = 1:T-1
     select2 = 1:SeriesPerCountry;
     select3 = 1:dimX;
@@ -29,7 +29,7 @@ for t = 1:T-1
     for c = 1:Countries
         rows = select2 + (c-1)*SeriesPerCountry;
         cols = colsX + (c-1)*dimX;
-        tempX(rows,cols)= kron(eye(SeriesPerCountry), [1, stdkow(rows, t)']);
+        tempX(rows,cols)= kron(eye(SeriesPerCountry), [1, kow(rows, t)']);
     end
     X(Xrows, :) = tempX;
 end

@@ -30,7 +30,7 @@ for i = Indx
     save(fnameb, 'DataCell')
 end
 
-load('StandardizedRealData.mat')
+load('kowDataVar1.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 [K,T] = size(yt);
@@ -46,8 +46,7 @@ for i = Indx
     fnamee = sprintf('TimeBreakDataKOW/TimeBreakKowEnd%i',i);
     ytb = yt(:,i+1:end);
     Xtb = Xt(K*i + 1:end,:);
-    size(Xtb)
-    size(ytb)
+
     fnameb = sprintf('TimeBreakDataKOW/TimeBreakKowBeg%i',i+1);
     DataCell{1,1} = yte;
     DataCell{1,2} = Xte;
