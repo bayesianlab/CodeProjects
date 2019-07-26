@@ -8,7 +8,7 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
-datalocation = join(['UnfinishedKOW2/', DotMatFile]);
+datalocation = join(['UnfinishedKOW3/', DotMatFile]);
 disp(DotMatFile)
 load(datalocation, 'DataCell')
 yt = DataCell{1,1};
