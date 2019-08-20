@@ -10,4 +10,4 @@
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 module load MATLAB
-./its 1000 200 800 ${DATA} 
+./bigmem2 1000 200 800 ${DATA} 
