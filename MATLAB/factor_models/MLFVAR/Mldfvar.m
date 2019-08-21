@@ -29,6 +29,8 @@ else
         MultDyFacVarSimVersion(yt, InfoCell, Sims,...
         burnin, ReducedRuns, initFactor, initobsmodel, initStateTransitions,...
         v0, r0, s0,d0, identification, estML);
+    sumBeta =0;
+    sumBeta2=0;
 end
 end
 

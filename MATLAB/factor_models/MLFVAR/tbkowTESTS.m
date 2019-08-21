@@ -1,8 +1,8 @@
 clear;clc;
 load('kowDataVar1.mat', 'DataCell')
-Sims=1000;
-burnin =200;
-ReducedRuns=800;
+Sims=10;
+burnin =2;
+ReducedRuns=8;
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
@@ -30,5 +30,5 @@ estML = 1;
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
     sumVarianceDecomp2, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
-    initStateTransitions, v0, r0, s0, d0, identification, estML);
-save('testkow')
+    initStateTransitions, v0, r0, s0, d0, identification, estML,1);
+save('testkow_nomean')
