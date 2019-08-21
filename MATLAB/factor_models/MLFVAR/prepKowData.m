@@ -11,7 +11,7 @@ InfoCell{1,3} = [(1:SeriesPerCountry:180)', (SeriesPerCountry:SeriesPerCountry:1
 
 kow = kow./std(kow,0,2);
 kowmus = mean(kow,2);
-kow = kow - kowmus;
+kow = kow;
 
 select = 1:SeriesPerCountry;
 dimX = (SeriesPerCountry+1)*SeriesPerCountry;
@@ -45,4 +45,4 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('kowDataVar1.mat', 'DataCell')
+save('kowDataVar1WithMean.mat', 'DataCell')

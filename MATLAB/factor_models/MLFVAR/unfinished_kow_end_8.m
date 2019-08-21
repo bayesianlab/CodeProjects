@@ -1,5 +1,5 @@
 clear;clc;
-load('kowDataVar1.mat', 'DataCell')
+load('UnfinishedKOW/TimeBreakKowEnd8.mat', 'DataCell')
 Sims=1000;
 burnin =200;
 ReducedRuns=800;
@@ -31,4 +31,4 @@ estML = 1;
     sumVarianceDecomp2, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML);
-save('testkow')
+save('Results_TimeBreakKowEnd8.mat')
