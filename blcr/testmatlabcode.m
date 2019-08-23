@@ -9,11 +9,12 @@ if exist('overwritethis.mat')
 end
 for k = c:1000
     k
-    t = t + 1;
+    
     pause(1)
     if mod(k, 5) == 0
 	fprintf('saved file')
         save('overwritethis')
     end
+    t = t + 1
 end
 end
