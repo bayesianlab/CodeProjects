@@ -1,8 +1,8 @@
 clear;clc;
-load('kowDataVar1NoTransformation.mat', 'DataCell')
-Sims=20;
-burnin =2;
-ReducedRuns=8;
+load('UnfinishedKOW/TimeBreakKowEnd8.mat', 'DataCell')
+Sims=1000;
+burnin =200;
+ReducedRuns=800;
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
@@ -31,4 +31,4 @@ estML = 1;
     sumVarianceDecomp2, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML);
-save('testkow_notransformation')
+save('Results_TimeBreakKowEnd8.mat')

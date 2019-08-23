@@ -1,9 +1,12 @@
 #!/usr/bin/env/ python
 import csv, subprocess, os
 home = os.path.expanduser('~') + '/'
-files = os.listdir(home + 'CodeProjects/MATLAB/factor_models/MLFVAR/UnfinishedKOW/')
+files = os.listdir(home + 'CodeProjects/MATLAB/factor_models/MLFVAR/UnfinishedKOW3/')
+c = 0
 for f in files:
-    qs = "qsub -v DATA={0} tbs_kow.sh".format(f)
+    qs = "qsub -v DATA={0} tbs_kow3.sh".format(f)
+    c += 1
+    print(c)
     print(qs)
     call =subprocess.call(qs, shell=True)
     if call == 1:

@@ -6,8 +6,8 @@
 #$ -cwd
 #$ -notify 
 #$ -M dillonflann@gmail.com
-#$ -m ea
+#$ -m e
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 module load MATLAB
-./TimeBreakKow 1000 200 800 ${DATA} 
+./bigmem 1000 200 800 ${DATA} 

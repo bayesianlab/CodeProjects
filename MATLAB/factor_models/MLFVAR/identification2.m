@@ -1,10 +1,10 @@
 function [ retval, lastMean, lastCovar] = identification2( x0, yt, obsPrecision, Ft, FtPrecision,...
-    lastMean, lastHessian, options  )
+    lastMean, lastCovar, options  )
 [K,T] = size(yt);
 df = 15;
 w1 = sqrt(chi2rnd(df,1)/df);
 ObsPriorMean = ones(1, K-1);
-ObsPriorPrecision = 10.*eye(K-1);
+ObsPriorPrecision = eye(K-1);
 LogLikePositive = @(v) LLRestrict (v, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 LL = @(guess) -LLRestrict(guess, yt,ObsPriorMean,...

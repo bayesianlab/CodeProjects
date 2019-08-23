@@ -9,9 +9,9 @@ InfoCell{1,1} = [1,180];
 InfoCell{1,2} = [1,9;10,15;16,69;70,123;124,144;145,162;163,180];
 InfoCell{1,3} = [(1:SeriesPerCountry:180)', (SeriesPerCountry:SeriesPerCountry:180)'];
 
-kow = kow./std(kow,0,2);
+kow = 100.*kow;
 kowmus = mean(kow,2);
-kow = kow - kowmus;
+
 
 select = 1:SeriesPerCountry;
 dimX = (SeriesPerCountry+1)*SeriesPerCountry;
@@ -45,4 +45,4 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('kowDataVar1.mat', 'DataCell')
+save('kowDataVar1NoTransformation.mat', 'DataCell')

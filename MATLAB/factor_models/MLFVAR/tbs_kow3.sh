@@ -10,4 +10,4 @@
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 module load MATLAB
-./KOW_TBS_Exec 1000 200 800 kowDataVar1NoTransformation.mat 
+./bigmem2 1000 200 800 ${DATA} 
