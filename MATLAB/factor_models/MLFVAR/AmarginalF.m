@@ -26,7 +26,7 @@ if nargin > 11
             backup{r,1} = lastMean;
             backup{r,2} = lastCovar;
             f(r,:) =  kowUpdateLatent(ySlice(:) , xt, factorPrecision, precisionSlice);
-            obsmodSquared = xt.^2;
+            obsmodSquared = xt.^2;         
             for m = 1:size(ySlice,1)
                 u = u + 1;
                 vdecomp(u) = (obsmodSquared(m) .* var(f(r,:))) ./ vytemp(m);
@@ -205,11 +205,12 @@ else
         backup{r,2} = lastCovar;
         
         f(r,:) =  kowUpdateLatent(ySlice(:), xt, factorPrecision, precisionSlice);
+        
         obsmodSquared = xt.^2;
+        
         for m = 1:size(ySlice,1)
             u = u + 1;
             vdecomp(u) = (obsmodSquared(m) .* var(f(r,:))) ./ vytemp(m);
         end
     end
-    
 end
