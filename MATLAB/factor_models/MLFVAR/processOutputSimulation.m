@@ -79,30 +79,77 @@
 % matrix2latexmatrix(st,'st.tex')
 
 
+% clear;clc;
+% simpath = 'TBKOW/';
+% files = dir(join([simpath,'*.mat']));
+% x =natsortfiles({files.name});
+% 
+% c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
+% N = floor(length(x)/2);
+% beg = 1:N;
+% 
+% c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
+% N = floor(length(x)/2);
+% beg = 1:N;
+% G = length(beg);
+% 
+% for g = 1:N
+%     set1 = x{G+ g};
+%     datapath = join([simpath,set1]);
+%     ml1 = load(datapath, 'ml');
+%     set2 = x{g};
+%     datapath = join([simpath,set2]);
+%     ml2 = load(datapath, 'ml');
+%     sumMls(g,2) = ml1.ml + ml2.ml;
+%     sumMls(g,1) = c;
+%     c = c + 1;
+% end
+
 clear;clc;
-simpath = 'TBKOW/';
-files = dir(join([simpath,'*.mat']));
-x =natsortfiles({files.name});
+savepath = '~/GoogleDrive/statespace/'
+load('Result_kowDataVar1NoTransformation.mat')
+xaxis = 1962:2014;
+% world = plot(xaxis, sumFt(1,:), 'black')
+% saveas(world, join([savepath, 'world.jpeg']))
 
-c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
-N = floor(length(x)/2);
-beg = 1:N;
+vdc = sumVarianceDecomp2 - sumVarianceDecomp.^2;
+sdvardecomp = sqrt(vdc);
+sdvd = 1.5.*sdvardecomp;
+sdvdup = sumVarianceDecomp + sdvd;
+sdvdlow = sumVarianceDecomp-sdvd;
 
-c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
-N = floor(length(x)/2);
-beg = 1:N;
-G = length(beg);
+worldvd = round([sdvdlow(:,1), sumVarianceDecomp(:,1), sdvdup(:,1)], 4) ;
 
-for g = 1:N
-    set1 = x{G+ g};
-    datapath = join([simpath,set1]);
-    ml1 = load(datapath, 'ml');
-    set2 = x{g};
-    datapath = join([simpath,set2]);
-    ml2 = load(datapath, 'ml');
-    sumMls(g,2) = ml1.ml + ml2.ml;
-    sumMls(g,1) = c;
-    c = c + 1;
-end
+matrix2latexmatrix( worldvd, join( [savepath, 'worldvd.tex'] ) )
 
+regionvd = round([sdvdlow(:,2) ,sumVarianceDecomp(:,2), sdvdup(:,2)], 4);
 
+matrix2latexmatrix(regionvd, join( [savepath, 'regionvd.tex'] ) )
+
+countryvd = round( [sdvdlow(:,3), sumVarianceDecomp(:,3), sdvdup(:,3)], 4)
+matrix2latexmatrix(countryvd, join( [savepath, 'countryvd.tex'] ) )
+
+% % Europe
+% figure
+% europe = plot(xaxis, sumFt(5,:), 'black')
+% shade([1974, 1980, 1992, 2008, 2011], [1975, 1982, 1993, 2009, 2013], 'black')
+% saveas(europe, join([savepath, 'europefactor.jpeg']))
+% hold off 
+% 
+% % North America
+% figure
+% na = plot(xaxis, sumFt(2,:), 'black')
+% shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
+% saveas(na, join([savepath,'nafactor.jpeg']))
+% hold off 
+% 
+% % United States
+% figure
+% usa = plot(xaxis, sumFt(9,:))
+% shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
+% hold off
+
+%Germany 
+figure 
+germ = plot(xaxis, sumFt(32,:), 'black')
+shade([1970, 1973, 1980, 1985, 1991, 2001, 2008, 2011], [1972, 1975, 1982, 1987, 1993,2005, 2009, 2013], 'black')

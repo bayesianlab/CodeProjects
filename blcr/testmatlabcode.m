@@ -1,20 +1,29 @@
 function[] = testmatlabcode()
+checkpointdir = '~/CodeProjects/blcr/Checkpoints/';
 c = 1;
-k = 1;
-t = 1;
-if exist('overwritethis.mat')
-    load('overwritethis.mat')
-    fprintf('load file')
-    c = k
+t = 0;
+maxi = 100;
+burnin = 3;
+if exist(checkpointdir)
+    load( join([checkpointdir, 'overwritethis.mat']) )
+    fprintf('loaded file')
+else
+    mkdir(checkpointdir)
 end
-for k = c:1000
-    k
-    
-    pause(1)
+for k = c:maxi
+    pause(.2)
     if mod(k, 5) == 0
-	fprintf('saved file')
-        save('overwritethis')
+        fprintf('saved file')
+        c = k;
+        save(join( [checkpointdir, 'overwritethis'] ) )
     end
-    t = t + 1
+    k
+    if k > burnin
+        t = t + 1
+    end
+    
 end
+t
+t/(maxi-3)
+rmdir(checkpointdir, 's')
 end
