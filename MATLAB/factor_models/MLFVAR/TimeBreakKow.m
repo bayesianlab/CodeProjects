@@ -1,4 +1,4 @@
-function [] = TimeBreakKow(Sims, burnin, ReducedRuns, DotMatFile)
+function [] = TimeBreakKow(Sims, burnin, ReducedRuns, DataLocation, DotMatFile)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -8,7 +8,7 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
-datalocation = join(['UnfinishedKOW/', DotMatFile]);
+datalocation = join([DataLocation,'/', DotMatFile]);
 disp(DotMatFile)
 load(datalocation, 'DataCell')
 yt = DataCell{1,1};
