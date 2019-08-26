@@ -147,6 +147,8 @@ if finishedMainRun == 0
                 end
             end
         end
+        drawnow
+        plot(1962:2014, sumFt(1,:))
     end
     finishedMainRun = 1;
     startRR = 1;
