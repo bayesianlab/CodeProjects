@@ -1,5 +1,5 @@
 clear;clc;
-filename = 'kowNoTransformation.mat', 'DataCell';
+filename = 'kowTimes100.mat', 'DataCell';
 load(filename)
 Sims=10;
 burnin =2;
