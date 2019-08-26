@@ -147,9 +147,7 @@ if finishedMainRun == 0
                 end
             end
         end
-        hold on
- drawnow
- plot(1962:2014, Ft(1,:))
+
     end
     finishedMainRun = 1;
     startRR = 1;
