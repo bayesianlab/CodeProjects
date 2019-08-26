@@ -1,8 +1,9 @@
 clear;clc;
-load('kowDataVar1NoTransformation.mat', 'DataCell')
-Sims=20;
+filename = 'kowNoTransformation.mat', 'DataCell';
+load(filename)
+Sims=10;
 burnin =2;
-ReducedRuns=8;
+ReducedRuns=10;
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
@@ -24,11 +25,11 @@ vecFt  =  kowUpdateLatent(yt(:) - (Xt*initBeta),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
 initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
-estML = 1;
+estML = 0;
 [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
     sumVarianceDecomp2, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
-    initStateTransitions, v0, r0, s0, d0, identification, estML);
-save('testkow_notransformation')
+    initStateTransitions, v0, r0, s0, d0, identification, estML, filename);
+save('testkow_checkpoint')
