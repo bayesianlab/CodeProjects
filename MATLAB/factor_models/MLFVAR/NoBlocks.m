@@ -5,7 +5,7 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
-checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/',...
+checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakDataKOW/',...
     DotMatFile(1:periodloc-1), 'Checkpoints/'] );
 checkpointfilename = 'ckpt';
 start = 1;
@@ -289,6 +289,6 @@ if estML == 1
     else
         ml = 'nothing';
     end
-    % rmdir(checkpointdir, 's')
+    rmdir(checkpointdir, 's')
 end
 
