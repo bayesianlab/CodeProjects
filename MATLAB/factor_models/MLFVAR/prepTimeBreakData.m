@@ -30,7 +30,7 @@
 %     save(fnameb, 'DataCell')
 % end
 % 
-load('kowDataVar1NoTransformation.mat')
+load('kowTimes100.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 [K,T] = size(yt);
