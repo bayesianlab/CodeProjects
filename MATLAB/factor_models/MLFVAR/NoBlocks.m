@@ -4,8 +4,9 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumVarianceDecomp2, ml] = NoBlocks(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
+periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/',...
-    DotMatFile, 'Checkpoints/'] );
+    DotMatFile(1:periodloc-1), 'Checkpoints/'] );
 checkpointfilename = 'ckpt';
 start = 1;
 saveFrequency = 10;
@@ -64,6 +65,7 @@ if exist(checkpointdir, 'dir')
         fprintf('Loaded checkpoint file\n')
     end
 else
+    checkpointdir
     mkdir(checkpointdir)
 end
 
