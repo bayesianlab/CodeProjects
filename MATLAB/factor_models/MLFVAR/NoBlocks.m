@@ -10,7 +10,7 @@ checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakDat
 
 checkpointfilename = 'ckpt';
 start = 1;
-saveFrequency = 2;
+saveFrequency = 10;
 finishedMainRun = 0;
 finishedFirstReducedRun = 0;
 finishedSecondReducedRun = 0;
