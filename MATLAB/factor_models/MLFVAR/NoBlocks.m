@@ -7,9 +7,10 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakDataKOW/',...
     DotMatFile(1:periodloc-1), 'Checkpoints/'] );
+
 checkpointfilename = 'ckpt';
 start = 1;
-saveFrequency = 10;
+saveFrequency = 2;
 finishedMainRun = 0;
 finishedFirstReducedRun = 0;
 finishedSecondReducedRun = 0;
@@ -147,7 +148,7 @@ if finishedMainRun == 0
                 end
             end
         end
-
+        
     end
     finishedMainRun = 1;
     startRR = 1;
@@ -212,83 +213,83 @@ if estML == 1
             StateObsModel = makeStateObsModel(currobsmod,Identities,0);
         end
     end
-        Astar = mean(Ag,3);
-        StateObsModelStar = makeStateObsModel(Astar,Identities,0);
-        bhatmean = zeros(1,dimX);
-        VarSum = zeros(dimX,dimX);
-        finishedFirstReducedRun = 1;
-        
-        startRR = 1;
-        if finishedSecondReducedRun == 0
-            for r = startRR:ReducedRuns
-                fprintf('Reduced Run %i\n', r)
-                if mod(r, saveFrequency) == 0
-                    fprintf('File saved at iteration count %i\n', r)
-                    start = iterator;
-                    save(join( [checkpointdir, 'ckpt'] ) )
-                end
-                [beta, ~, bhat, Variance] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
-                    StateObsModelStar, Sstar,  T);
-                Betag(:,r) = beta;
-                bhatmean = bhatmean + bhat';
-                VarSum = VarSum + Variance;
+    Astar = mean(Ag,3);
+    StateObsModelStar = makeStateObsModel(Astar,Identities,0);
+    bhatmean = zeros(1,dimX);
+    VarSum = zeros(dimX,dimX);
+    finishedFirstReducedRun = 1;
+    
+    startRR = 1;
+    if finishedSecondReducedRun == 0
+        for r = startRR:ReducedRuns
+            fprintf('Reduced Run %i\n', r)
+            if mod(r, saveFrequency) == 0
+                fprintf('File saved at iteration count %i\n', r)
+                start = iterator;
+                save(join( [checkpointdir, 'ckpt'] ) )
             end
-            BetaStar = mean(Betag,2);
-            piBetaStar = logmvnpdf(BetaStar', bhatmean./ReducedRuns, VarSum./ReducedRuns);
-            piAstarsum = 0;
-            priorAstar = zeros(1,levels);
-            mutStar = reshape(Xt*BetaStar,K,T);
-            for q = levelVec
-                ConditionalObsModel = makeStateObsModel(Astar, Identities, q);
-                mut = mutStar + ConditionalObsModel*sumFt;
-                ydemut = yt - mut;
-                priorAstar(q) = Apriors(Info,Astar);
-                Info = InfoCell{1,q};
-                factorIndx = factorInfo(q,:);
-                factorSelect = factorIndx(1):factorIndx(2);
-                factorVarianceSubset = sumFactorVar(factorSelect);
-                tempbackup = sumBackup(factorSelect,:);
-                piAstarsum = piAstarsum + sum(piAstar(Info, sumFt(factorSelect, :), ydemut, squeeze(Ag(:,q,:)),...
-                    Astar, sumST(factorSelect), factorVarianceSubset,...
-                    obsPrecisionStar, tempbackup,identification));
-            end
-            finishedSecondReducedRun = 1;
+            [beta, ~, bhat, Variance] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
+                StateObsModelStar, Sstar,  T);
+            Betag(:,r) = beta;
+            bhatmean = bhatmean + bhat';
+            VarSum = VarSum + Variance;
         end
-
-        
-        fprintf('Computing Marginal Likelihood\n')
-        
-        posteriorStar = sum(piObsVarianceStar) +  sum(piFactorVarianceStar) ...
-            + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
-        
-        mu = reshape(Xt*BetaStar,K,T) +  StateObsModelStar*sumFt ;
-        LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
-        
-        Kprecision = kowStatePrecision(diag(sumST), sumFactorVar, T);
-        Fpriorstar = logmvnpdf(sumFt(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T));
-        G = kron(eye(T), StateObsModelStar);
-        J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
-        piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
-        fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
-        
-        priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), 10.*eye(nFactors)));
-        priorObsVariance = sum(logigampdf(sumObsVariance, .5.*v0, .5.*d0));
-        priorFactorVar = sum(logigampdf(sumFactorVar, .5.*s0, .5.*d0));
-        priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), 10.*eye(dimX));
-        priorStar = sum([priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]);
-        
-        %     [LogLikelihood, piFtstarGivenyAndthetastar]
-        %     priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta, Fpriorstar ]
-        %     sum(priors)
-        %     posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar), ...
-        %         sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
-        
-        ml = fyGiventhetastar + priorStar - posteriorStar;
-        
-        fprintf('Marginal Likelihood of Model: %.3f\n', ml)
-    else
-        ml = 'nothing';
+        BetaStar = mean(Betag,2);
+        piBetaStar = logmvnpdf(BetaStar', bhatmean./ReducedRuns, VarSum./ReducedRuns);
+        piAstarsum = 0;
+        priorAstar = zeros(1,levels);
+        mutStar = reshape(Xt*BetaStar,K,T);
+        for q = levelVec
+            ConditionalObsModel = makeStateObsModel(Astar, Identities, q);
+            mut = mutStar + ConditionalObsModel*sumFt;
+            ydemut = yt - mut;
+            priorAstar(q) = Apriors(Info,Astar);
+            Info = InfoCell{1,q};
+            factorIndx = factorInfo(q,:);
+            factorSelect = factorIndx(1):factorIndx(2);
+            factorVarianceSubset = sumFactorVar(factorSelect);
+            tempbackup = sumBackup(factorSelect,:);
+            piAstarsum = piAstarsum + sum(piAstar(Info, sumFt(factorSelect, :), ydemut, squeeze(Ag(:,q,:)),...
+                Astar, sumST(factorSelect), factorVarianceSubset,...
+                obsPrecisionStar, tempbackup,identification));
+        end
+        finishedSecondReducedRun = 1;
     end
-    rmdir(checkpointdir, 's')
+    
+    
+    fprintf('Computing Marginal Likelihood\n')
+    
+    posteriorStar = sum(piObsVarianceStar) +  sum(piFactorVarianceStar) ...
+        + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
+    
+    mu = reshape(Xt*BetaStar,K,T) +  StateObsModelStar*sumFt ;
+    LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
+    
+    Kprecision = kowStatePrecision(diag(sumST), sumFactorVar, T);
+    Fpriorstar = logmvnpdf(sumFt(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T));
+    G = kron(eye(T), StateObsModelStar);
+    J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
+    piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
+    fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
+    
+    priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), 10.*eye(nFactors)));
+    priorObsVariance = sum(logigampdf(sumObsVariance, .5.*v0, .5.*d0));
+    priorFactorVar = sum(logigampdf(sumFactorVar, .5.*s0, .5.*d0));
+    priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), 10.*eye(dimX));
+    priorStar = sum([priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]);
+    
+    %     [LogLikelihood, piFtstarGivenyAndthetastar]
+    %     priors = [priorST,priorObsVariance,priorFactorVar, priorAstar,priorBeta, Fpriorstar ]
+    %     sum(priors)
+    %     posteriors = [   sum(piObsVarianceStar) , sum(piFactorVarianceStar), ...
+    %         sum(piFactorTransitionStar) , piBetaStar, piAstarsum]
+    
+    ml = fyGiventhetastar + priorStar - posteriorStar;
+    
+    fprintf('Marginal Likelihood of Model: %.3f\n', ml)
+else
+    ml = 'nothing';
+end
+rmdir(checkpointdir, 's')
 end
 

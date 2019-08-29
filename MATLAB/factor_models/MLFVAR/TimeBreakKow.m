@@ -35,7 +35,7 @@ StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt = ones(nFactors*T, 1);
 initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
-estML = 1;
+estML = 0;
 [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
@@ -45,11 +45,12 @@ estML = 1;
 period = strfind(DotMatFile, '.');
 
 fname = join(['Result_', DotMatFile(1:period-1)]);
-dirname = 'TBKOW/';
+dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/TBKOW/';
 if ~exist(dirname, 'dir')
     mkdir(dirname)
 end
-
-save(join([dirname,fname]))
+filename = join([dirname,fname])
+fprintf('Saving file %s \n', filename)
+save(filename)
 end
 
