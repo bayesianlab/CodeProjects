@@ -1,7 +1,7 @@
 #!/usr/bin/env/ python
 import csv, subprocess, os
 home = os.path.expanduser('~') + '/'
-files = os.listdir(home + 'CodeProjects/MATLAB/factor_models/MLFVAR/UnfinishedKOW2/')
+files = os.listdir(home + 'CodeProjects/MATLAB/factor_models/MLFVAR/UnfinishedKOW/')
 c = 0
 for f in files:
     qs = "qsub -v DATA={0} tbs_kow2.sh".format(f)

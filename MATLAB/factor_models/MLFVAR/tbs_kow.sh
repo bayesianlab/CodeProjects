@@ -1,13 +1,11 @@
-#!bin/bash
+#!/bin/bash
 #$ -S /bin/bash
-#$ -q its
-#$ -N kow
+#$ -q free64
+#$ -N tbs_kow
 #$ -l mem_free=2G
 #$ -cwd
-#$ -notify 
-#$ -M dillonflann@gmail.com
-#$ -m e
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
+#$ -ckpt restart
 module load MATLAB
-./KOW_TBS_Exec 1000 200 800 kowDataVar1NoTransformation.mat 
+./kow_exec 1000 200 800 TimeBreakDataKOW ${DATA} 

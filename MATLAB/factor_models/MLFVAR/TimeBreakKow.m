@@ -8,6 +8,8 @@ end
 if ischar(ReducedRuns)
     ReducedRuns = str2num(ReducedRuns);
 end
+fprintf('Current Working Directory\n')
+pwd
 datalocation = join([DataLocation,'/', DotMatFile]);
 disp(DotMatFile)
 load(datalocation, 'DataCell')

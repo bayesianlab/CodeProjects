@@ -1,13 +1,11 @@
-#!bin/bash
+#!/bin/bash
 #$ -S /bin/bash
+#$ -ckpt restart 
 #$ -q its
-#$ -N kow
+#$ -N kow_whole
 #$ -l mem_free=2G
 #$ -cwd
-#$ -notify 
-#$ -M dillonflann@gmail.com
-#$ -m e
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 module load MATLAB
-./bigmem2 1000 200 800 ${DATA} 
+./kow_exec 1000 200 800 UnfinishedKOW3 kowTimes100.mat 

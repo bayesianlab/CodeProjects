@@ -1,13 +1,11 @@
-#!bin/bash
+#!/bin/bash
 #$ -S /bin/bash
-#$ -q bigmemory
+#$ -q free64
 #$ -N kow
 #$ -l mem_free=2G
 #$ -cwd
-#$ -notify 
-#$ -M dillonflann@gmail.com
-#$ -m e
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
+#$ -ckpt restart
 module load MATLAB
-./bigmem 1000 200 800 ${DATA} 
+./kow_exec 1000 200 800 UnfinishedKOW ${DATA} 
