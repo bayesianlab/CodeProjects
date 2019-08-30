@@ -12,6 +12,9 @@ fprintf('Current Working Directory\n')
 pwd
 datalocation = join([DataLocation,'/', DotMatFile]);
 disp(DotMatFile)
+if ~exist('~/Checkpoints')
+    mkdir('~/Checkpoints')
+end
 load(datalocation, 'DataCell')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};

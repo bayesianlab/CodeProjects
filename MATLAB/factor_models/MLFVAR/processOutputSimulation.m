@@ -118,11 +118,11 @@ COLOR = [1,0,0];
 facealpha = .3;
 fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
-% h = fill(fillX(1,:), fillY(1,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on 
-% world = plot(xaxis, sumFt(1,:), 'black')
-% saveas(world, join([savepath, 'world.jpeg']))
+h = fill(fillX(1,:), fillY(1,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on 
+world = plot(xaxis, sumFt(1,:), 'black')
+saveas(world, join([savepath, 'world.jpeg']))
 
 vdc = sumVarianceDecomp2 - sumVarianceDecomp.^2;
 sdvardecomp = sqrt(vdc);
@@ -133,21 +133,27 @@ sdvdlow = sumVarianceDecomp-sdvd;
 
 % worldvd = round([sdvdlow(:,1), sumVarianceDecomp(:,1), sdvdup(:,1)], 4) 
 % matrix2latexmatrix( worldvd, join( [savepath, 'worldvd.tex'] ) )
-
-regionvd = round([sdvdlow(:,2) ,sumVarianceDecomp(:,2), sdvdup(:,2)], 4)
-matrix2latexmatrix(regionvd, join( [savepath, 'regionvd.tex'] ) )
+% 
+% regionvd = round([sdvdlow(:,2) ,sumVarianceDecomp(:,2), sdvdup(:,2)], 4)
+% matrix2latexmatrix(regionvd, join( [savepath, 'regionvd.tex'] ) )
 %
 % countryvd = round( [sdvdlow(:,3), sumVarianceDecomp(:,3), sdvdup(:,3)], 4)
 % matrix2latexmatrix(countryvd, join( [savepath, 'countryvd.tex'] ) )
 
-% % Europe
+%% Europe
 % figure
 % europe = plot(xaxis, sumFt(5,:), 'black')
 % shade([1974, 1980, 1992, 2008, 2011], [1975, 1982, 1993, 2009, 2013], 'black')
 % saveas(europe, join([savepath, 'europefactor.jpeg']))
 % hold off
+% figure
+% h = fill(fillX(1,:), fillY(5,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on 
+% europeregion  = plot(xaxis, sumFt(5,:), 'black')
+% saveas(europeregion, join([savepath, 'europeregionplot.jpeg']))
 
-% North America
+%% North America
 % figure
 % na = plot(xaxis, sumFt(2,:), 'black')
 % shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
@@ -160,13 +166,58 @@ matrix2latexmatrix(regionvd, join( [savepath, 'regionvd.tex'] ) )
 % naregion  = plot(xaxis, sumFt(2,:), 'black')
 % saveas(naregion, join([savepath, 'naregionplot.jpeg']))
 
-% % United States
+%% Asia Developed
+figure
+h = fill(fillX(1,:), fillY(8,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on 
+asia  = plot(xaxis, sumFt(8,:), 'black')
+saveas(asia, join([savepath, 'asia.jpeg']))
+%% Asia Developing
+figure
+h = fill(fillX(1,:), fillY(7,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on 
+asiadev  = plot(xaxis, sumFt(7,:), 'black')
+saveas(asiadev, join([savepath, 'asiadev.jpeg']))
+%% Latin America
+figure
+h = fill(fillX(1,:), fillY(4,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on 
+latinAmerica  = plot(xaxis, sumFt(4,:), 'black')
+ saveas(latinAmerica, join([savepath, 'latinAmerica.jpeg']))
+%% Africa
+figure
+h = fill(fillX(1,:), fillY(6,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on 
+africa  = plot(xaxis, sumFt(6,:), 'black')
+ saveas(africa, join([savepath, 'africa.jpeg']))
+%% Oceania
+figure
+h = fill(fillX(1,:), fillY(3,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on 
+oceania  = plot(xaxis, sumFt(3,:), 'black')
+ saveas(oceania, join([savepath, 'oceania.jpeg']))
+%% United States
 % figure
 % usa = plot(xaxis, sumFt(9,:), 'black')
 % shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
 % hold off
+% figure
+% h = fill(fillX(1,:), fillY(9,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on 
+% usa  = plot(xaxis, sumFt(9,:), 'black')
 % saveas(na, join([savepath,'usafactor.jpeg']))
-%Germany
+%% Germany
 % figure
 % germ = plot(xaxis, sumFt(32,:), 'black')
+% figure
+% h = fill(fillX(1,:), fillY(32,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on 
+% germany  = plot(xaxis, sumFt(32,:), 'black')
 % shade([1970, 1973, 1980, 1985, 1991, 2001, 2008, 2011], [1972, 1975, 1982, 1987, 1993,2005, 2009, 2013], 'black')
