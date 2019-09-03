@@ -1,7 +1,7 @@
 function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
-    sumVarianceDecomp2, ml] = NoBlocks(yt, Xt,  InfoCell, Sims,...
+    sumVarianceDecomp2, storeVarDecomp, ml] = NoBlocks(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
@@ -31,6 +31,7 @@ StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 Si = kowStatePrecision(diag(initStateTransitions),factorVariance,T);
 factorVariance = ones(nFactors,1);
 variancedecomp = zeros(K,levels);
+storeVarDecomp = zeros(K, levels, Sims-burnin);
 % Storage
 sumBeta = zeros(dimX,1);
 sumBeta2 = sumBeta;
@@ -76,8 +77,7 @@ if finishedMainRun == 0
             start = iterator;
             save(join( [checkpointdir, 'ckpt'] ) )
         end
-        
-        
+              
         fprintf('\nSimulation %i\n',iterator)
         [beta, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
             StateObsModel, Si,  T);
@@ -138,7 +138,7 @@ if finishedMainRun == 0
             sumVarianceDecomp = sumVarianceDecomp + variancedecomp;
             sumVarianceDecomp2 = sumVarianceDecomp2 + variancedecomp.^2;
             storeFactorParamb(:, v) =  factorParamb;
-            
+            storeVarDecomp(:,:,v) = variancedecomp;
             if estML == 1
                 for q = levelVec
                     factorIndx = factorInfo(q,:);
