@@ -52,8 +52,13 @@ dirname = join(['~/CodeProjects/MATLAB/factor_models/MLFVAR/',OutputDir]);
 if ~exist(dirname, 'dir')
     mkdir(dirname)
 end
+periodloc = strfind(DotMatFile, '.') ;
+checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
+    DotMatFile(1:periodloc-1), 'Checkpoints/'] );
 filename = join([dirname,'/',fname]);
 fprintf('Saving file %s \n', filename)
 save(filename)
+fprintf('Removing checkpoint dir\n')
+rmdir(checkpointdir, 's')
 end
 

@@ -10,7 +10,7 @@ checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/
 
 checkpointfilename = 'ckpt';
 start = 1;
-saveFrequency = 10;
+saveFrequency = 50;
 finishedMainRun = 0;
 finishedFirstReducedRun = 0;
 finishedSecondReducedRun = 0;
@@ -295,7 +295,6 @@ if estML == 1
 else
     ml = 'nothing';
 end
-fprintf('Removing checkpoint dir\n')
-rmdir(checkpointdir, 's')
+
 end
 
