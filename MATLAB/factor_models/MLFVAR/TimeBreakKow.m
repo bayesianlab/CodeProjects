@@ -1,4 +1,4 @@
-function [] = TimeBreakKow(Sims, burnin, ReducedRuns, DataLocation, DotMatFile)
+function [] = TimeBreakKow(Sims, burnin, ReducedRuns, DataLocation, DotMatFile, OutputDir)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -48,12 +48,17 @@ estML = 1;
 period = strfind(DotMatFile, '.');
 
 fname = join(['Result_', DotMatFile(1:period-1)]);
-dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/TBKOW/';
+dirname = join(['~/CodeProjects/MATLAB/factor_models/MLFVAR/',OutputDir]);
 if ~exist(dirname, 'dir')
     mkdir(dirname)
 end
-filename = join([dirname,fname]);
+periodloc = strfind(DotMatFile, '.') ;
+checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
+    DotMatFile(1:periodloc-1), 'Checkpoints/'] );
+filename = join([dirname,'/',fname]);
 fprintf('Saving file %s \n', filename)
 save(filename)
+fprintf('Removing checkpoint dir\n')
+rmdir(checkpointdir, 's')
 end
 
