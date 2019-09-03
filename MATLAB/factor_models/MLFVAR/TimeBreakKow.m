@@ -52,7 +52,7 @@ dirname = '~/CodeProjects/MATLAB/factor_models/MLFVAR/TBKOW/';
 if ~exist(dirname, 'dir')
     mkdir(dirname)
 end
-filename = join([dirname,fname])
+filename = join([dirname,fname]);
 fprintf('Saving file %s \n', filename)
 save(filename)
 end

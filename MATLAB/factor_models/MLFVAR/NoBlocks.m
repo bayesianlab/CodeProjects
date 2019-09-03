@@ -5,7 +5,7 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
-checkpointdir = join( [ '~/Checkpoints/',...
+checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
     DotMatFile(1:periodloc-1), 'Checkpoints/'] );
 
 checkpointfilename = 'ckpt';
@@ -67,6 +67,7 @@ if exist(checkpointdir, 'dir')
         fprintf('Loaded checkpoint file\n')
     end
 else
+    fprintf('Created a checkpoint dir in %s', checkpointdir')
     mkdir(checkpointdir)
 end
 
@@ -77,7 +78,7 @@ if finishedMainRun == 0
             start = iterator;
             save(join( [checkpointdir, 'ckpt'] ) )
         end
-              
+        
         fprintf('\nSimulation %i\n',iterator)
         [beta, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
             StateObsModel, Si,  T);
@@ -216,7 +217,12 @@ if estML == 1
     StateObsModelStar = makeStateObsModel(Astar,Identities,0);
     bhatmean = zeros(1,dimX);
     VarSum = zeros(dimX,dimX);
-    finishedFirstReducedRun = 1;
+    if finishedFirstReducedRun == 0
+        finishedFirstReducedRun = 1;
+        save(join( [checkpointdir, 'ckpt'] ) )
+    else
+        fprintf('Program started at second reduced run\n')
+    end
     
     startRR = 1;
     if finishedSecondReducedRun == 0
@@ -253,8 +259,8 @@ if estML == 1
                 obsPrecisionStar, tempbackup,identification));
         end
         finishedSecondReducedRun = 1;
+        save(join( [checkpointdir, 'ckpt'] ) )
     end
-    
     
     fprintf('Computing Marginal Likelihood\n')
     
@@ -289,6 +295,7 @@ if estML == 1
 else
     ml = 'nothing';
 end
+fprintf('Removing checkpoint dir\n')
 rmdir(checkpointdir, 's')
 end
 
