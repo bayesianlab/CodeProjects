@@ -106,6 +106,14 @@
 % end
 
 clear;clc;
+NA = 1:9;
+OCEAN = 10:15;
+LA = 16:69;
+EUR = 70:123;
+AFRICA = 124:144;
+ASIADEVLOP = 145:162;
+ASIA = 163:180;
+
 savepath = '~/GoogleDrive/statespace/'
 load('TBKOW/Result_kowTimes100.mat')
 xaxis = 1962:2014;
@@ -133,12 +141,12 @@ find( sum(sumVarianceDecomp,2) > 1 == 1)
 
 % Average vd for country factors
 % 70-123 Europe
-mean(sumVarianceDecomp(70:123,3))
+% mean(sumVarianceDecomp(70:123,3))
 % average vd for region in developing asia
 % 145-162 Developing Asia
-mean(sumVarianceDecomp(145:162,2))
-mean([sumVarianceDecomp(145:147,2); sumVarianceDecomp(151:162,2)])
-india = yt(148:150,:);
+% mean(sumVarianceDecomp(145:162,2))
+% mean([sumVarianceDecomp(145:147,2); sumVarianceDecomp(151:162,2)])
+% india = yt(148:150,:);
 % india_nomean = india - mean(india,2)
 % indiaz = india_nomean./std(india,[],2)
 % figure 
@@ -156,7 +164,7 @@ india = yt(148:150,:);
 % corr([indiaz', sumFt(58,:)'])
 
 % Pakistan
-pak = yt(154:156,:);
+% pak = yt(154:156,:);
 % pak_nomean = pak - mean(pak,2)
 % pakz = pak_nomean./std(pak,[],2)
 % figure 
@@ -171,10 +179,10 @@ pak = yt(154:156,:);
 % pakfigcons = plot(xaxis, pakz(2,:), 'black')
 % pakfigcons= plot(xaxis, sumFt(60,:), 'red')
 % saveas(pakfigcons, join([savepath,'pakfigcons.jpeg']))
-phl = yt(157:159,:);
-indo = yt(151:153,:);
-lka = yt(160:162,:);
-corr([india', pak', phl',  indo', lka', sumFt(58,:)'])
+% phl = yt(157:159,:);
+% indo = yt(151:153,:);
+% lka = yt(160:162,:);
+% corr([india', pak', phl',  indo', lka', sumFt(58,:)'])
 
 % 163-180 Developed Asia
 
@@ -186,6 +194,50 @@ corr([india', pak', phl',  indo', lka', sumFt(58,:)'])
 %
 % countryvd = round( [sdvdlow(:,3), sumVarianceDecomp(:,3), sdvdup(:,3)], 4)
 % matrix2latexmatrix(countryvd, join( [savepath, 'countryvd.tex'] ) )
+
+% North America
+disp('North America')
+navd = sumVarianceDecomp(NA, :);
+maxL = length(navd);
+disp('Region Consumption    Country Consumption     Region Output    Country Output')
+disp([mean(navd(2:3:maxL,2)),mean(navd(2:3:maxL,3)),mean(navd(1:3:maxL,2)),mean(navd(1:3:maxL,3))])
+
+% Europe
+disp('Europe')
+eurvd = sumVarianceDecomp(EUR, :);
+maxL =length(eurvd);
+[mean(eurvd(2:3:maxL,2)),mean(eurvd(2:3:maxL,3)),mean(eurvd(1:3:maxL,2)),mean(eurvd(1:3:maxL,3))]
+
+% Oceania
+disp('Ocean')
+oceanvd = sumVarianceDecomp(OCEAN, :);
+maxL =length(oceanvd);
+[mean(oceanvd(2:3:maxL,2)),mean(oceanvd(2:3:maxL,3)),mean(oceanvd(1:3:maxL,2)),mean(oceanvd(1:3:maxL,3))]
+
+% Asia dev
+disp('Asia Dev')
+asiadevvd = sumVarianceDecomp(ASIADEVLOP, :);
+maxL =length(asiadevvd);
+[mean(asiadevvd(2:3:maxL,2)),mean(asiadevvd(2:3:maxL,3)),mean(asiadevvd(1:3:maxL,2)),mean(asiadevvd(1:3:maxL,3))]
+
+% Asia 
+disp('Asia')
+asiavd = sumVarianceDecomp(ASIA, :);
+maxL =length(asiavd);
+[mean(asiavd(2:3:maxL,2)),mean(asiavd(2:3:maxL,3)),mean(asiavd(1:3:maxL,2)),mean(asiavd(1:3:maxL,3))]
+
+
+% 16-69 Latin America
+disp('Latin America')
+lavd = sumVarianceDecomp(LA, :);
+length(lavd);
+[mean(lavd(2:3:54,2)),mean(lavd(2:3:54,3)),mean(lavd(1:3:54,2)),mean(lavd(1:3:54,3))]
+
+% Africa
+disp('Africa')
+africa = sumVarianceDecomp(AFRICA, :);
+maxL = length(africa);
+[mean(lavd(2:3:maxL,2)),mean(lavd(2:3:maxL,3)),mean(lavd(1:3:maxL,2)),mean(lavd(1:3:maxL,3))]
 
 %% World
 % h = fill(fillX(1,:), fillY(1,:), COLOR);
@@ -218,7 +270,45 @@ corr([india', pak', phl',  indo', lka', sumFt(58,:)'])
 % hold on 
 % naregion  = plot(xaxis, sumFt(2,:), 'black')
 % saveas(naregion, join([savepath, 'naregionplot.jpeg']))
-% 
+%% Oceania
+% figure
+% ocean = plot(xaxis, sumFt(3,:), 'black')
+% shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
+% hold off
+% figure
+% h = fill(fillX(1,:), fillY(3,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on 
+% ocean  = plot(xaxis, sumFt(3,:), 'black')
+% saveas(ocean, join([savepath,'oceanfactor.jpeg']))
+% hold off
+%% N. Zealand
+figure
+nz = plot(xaxis, sumFt(13,:), 'black')
+shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
+hold off
+figure
+h = fill(fillX(1,:), fillY(13,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on 
+nz  = plot(xaxis, sumFt(13,:), 'black')
+saveas(nz, join([savepath,'nzfactor.jpeg']))
+hold off
+
+%% Aus
+figure
+aus = plot(xaxis, sumFt(12,:), 'black')
+shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
+hold off
+figure
+h = fill(fillX(1,:), fillY(12,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on 
+aus  = plot(xaxis, sumFt(12,:), 'black')
+saveas(aus, join([savepath,'ausfactor.jpeg']))
+hold off
+
+
 % %% Asia Developed
 % figure
 % h = fill(fillX(1,:), fillY(8,:), COLOR);
@@ -255,22 +345,24 @@ corr([india', pak', phl',  indo', lka', sumFt(58,:)'])
 % oceania  = plot(xaxis, sumFt(3,:), 'black')
 %  saveas(oceania, join([savepath, 'oceania.jpeg']))
 %% United States
-% figure
-% usa = plot(xaxis, sumFt(9,:), 'black')
-% shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
-% hold off
-% figure
-% h = fill(fillX(1,:), fillY(9,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on 
-% usa  = plot(xaxis, sumFt(9,:), 'black')
-% saveas(usa, join([savepath,'usafactor.jpeg']))
-% hold off
-%% Germany
 figure
-hold on
-plot(xaxis, yhat(32,:))
-plot(xaxis, yt(32,:))
+usa = plot(xaxis, sumFt(9,:), 'black')
+shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
+hold off
+saveas(usa, 'usashaded.jpeg')
+figure
+h = fill(fillX(1,:), fillY(9,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on 
+usa  = plot(xaxis, sumFt(9,:), 'black')
+saveas(usa, join([savepath,'usafactor.jpeg']))
+hold off
+
+%% Germany
+% figure
+% hold on
+% plot(xaxis, yhat(32,:))
+% plot(xaxis, yt(32,:))
 % germ = plot(xaxis, sumFt(5,:), 'black')
 % h = fill(fillX(1,:), fillY(5,:), COLOR);
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
@@ -278,3 +370,5 @@ plot(xaxis, yt(32,:))
 % hold on 
 % germany  = plot(xaxis, sumFt(32,:), 'black')
 % shade([1970, 1973, 1980, 1985, 1991, 2001, 2008, 2011], [1972, 1975, 1982, 1987, 1993,2005, 2009, 2013], 'black')
+
+

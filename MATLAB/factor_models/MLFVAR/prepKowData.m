@@ -11,8 +11,8 @@ InfoCell{1,3} = [(1:SeriesPerCountry:180)', (SeriesPerCountry:SeriesPerCountry:1
 
 % kowmus = mean(kow,2);
 % kow = kow - kowmus;
-% kow = kow./std(kow,[],2);
-kow = 100.*kow;
+kow = kow./std(kow,[],2);
+
 
 select = 1:SeriesPerCountry;
 dimX = (SeriesPerCountry+1)*SeriesPerCountry;
@@ -46,4 +46,4 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('kowTimes100.mat', 'DataCell')
+save('kowScaleIs1.mat', 'DataCell')
