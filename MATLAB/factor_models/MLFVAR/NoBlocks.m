@@ -66,7 +66,6 @@ if exist(checkpointdir, 'dir')
         fprintf('Loaded checkpoint file\n')
     end
 else
-    checkpointdir
     mkdir(checkpointdir)
 end
 
@@ -225,7 +224,7 @@ if estML == 1
             fprintf('Reduced Run %i\n', r)
             if mod(r, saveFrequency) == 0
                 fprintf('File saved at iteration count %i\n', r)
-                start = iterator;
+                startRR = iterator;
                 save(join( [checkpointdir, 'ckpt'] ) )
             end
             [beta, ~, bhat, Variance] = kowBetaUpdate(yt(:), Xt, obsPrecisionStar,...
