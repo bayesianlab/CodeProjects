@@ -30,8 +30,8 @@ Ft = initFactor;
 StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 Si = kowStatePrecision(diag(initStateTransitions),factorVariance,T);
 factorVariance = ones(nFactors,1);
-variancedecomp = zeros(K,levels);
-storeVarDecomp = zeros(K, levels, Sims-burnin);
+% variancedecomp = zeros(K,levels);
+% storeVarDecomp = zeros(K, levels, Sims-burnin);
 % Storage
 sumBeta = zeros(dimX,1);
 sumBeta2 = sumBeta;
@@ -99,7 +99,7 @@ if finishedMainRun == 0
                 obsPrecision, tempbackup, options, identification, vy);
             backupMeanAndHessian(factorSelect,:) = tempbackup;
             Ft(factorSelect,:) = f;
-            variancedecomp(:,q) = vdecomp;
+%             variancedecomp(:,q) = vdecomp;
             
         end
         
@@ -261,6 +261,8 @@ if estML == 1
         finishedSecondReducedRun = 1;
         save(join( [checkpointdir, 'ckpt'] ) )
     end
+    
+    
     
     fprintf('Computing Marginal Likelihood\n')
     
