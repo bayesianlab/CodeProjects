@@ -20,8 +20,8 @@ for m = 1:G
         factorPrecision = kowStatePrecision(stateTransitions(r), factorVariance(r), T);
         ObsPriorMean = ones(1, K-1);
         ObsPriorPrecision = 10.*eye(K-1);
-        LogLikePositive = @(v) LLRestrict (v, yslice,ObsPriorMean,...
-            ObsPriorPrecision, precisionSlice, Ft(r,:),factorPrecision);
+        LogLikePositive = @(v) LLRestrict (v, yslice(2:end,:),ObsPriorMean,...
+            ObsPriorPrecision, precisionSlice(2:end), Ft(r,:),factorPrecision);
         proposalDist = @(q) mvstudenttpdf(q, themean, V, df);
         
         alphagtostarq(r,m) = min(0, LogLikePositive(freeElemsStar) + proposalDist(freeElemsg') - ...

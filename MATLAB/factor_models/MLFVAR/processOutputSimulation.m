@@ -115,7 +115,7 @@ ASIADEVLOP = 145:162;
 ASIA = 163:180;
 
 % savepath = '~/GoogleDrive/statespace/'
-load('BigKowResults/Result_kowz.mat')
+load('experimental.mat')
 
 xaxis = 1962:2014;
 variance = sumFt2 - sumFt.^2;
@@ -129,11 +129,11 @@ fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
 
 Idens = MakeObsModelIdentity(InfoCell);
-Gt = makeStateObsModel(sumOM, Idens, 0);
+Gt = makeStateObsModel(sumOtherOM, Idens, 0);
 mut = reshape(Xt*sumBeta, K,T);
 mut2 = Gt*sumFt;
 yhat = mut+ mut2;
-vyt = var(yt-mut,[],2);
+vyt = var(yt,[],2);
 factorVariances = zeros(K,levels);
 facCount = 1;
 for k = 1:levels
@@ -146,23 +146,49 @@ for k = 1:levels
     for r = 1:Regions
         subsetSelect = Info(r,1):Info(r,2);
         regionmu = mut(subsetSelect,:);
-        factorVariances(subsetSelect,k) = var(sumOM(subsetSelect,k).*sumFt(facCount,:),[],2);
+        factorVariances(subsetSelect,k) = var(sumOtherOM(subsetSelect,k).*sumFt(facCount,:),[],2);
         facCount = facCount + 1;
     end
 end
 
+find (sum(factorVariances,2) > 1 )
+
+CMR = [mut(124,:)', sumFt(1,:)', sumFt(6,:)', sumFt(50,:)'];
+
+q = orthog(CMR);
 
 
-vd = factorVariances./vyt ;
 
-vd(70,:)
-vyt(70,:)
 
-mean(mut(70,:))
+% yy = var(yt,[],2);
+% varianceDecomp
+% sumOtherOM(1,:)
+
+
+A = sumOtherOM(124,1).*sumFt(1,:)
+B = sumOtherOM(124,2).*sumFt(6,:)
+C = sumOtherOM(124,3).*sumFt(50,:)
+
+ydemu = yt(124,:)-mut(124,:);
+E = ydemu-(A+B+C);
+
+vtot = var(A) + var(B) + var(C) + var(E)
+var(A)/vtot
+var(B)/vtot
+var(C)/vtot
+var(E)/vtot
+
+% errs = sum( (yt(70,:)).^2,2)
+% 
+% onlyregion = sum((sumOM(70,1).*sumFt(1,:)).^2,2)
+% 
+% onlyregion/errs
+
+% 
 
 hold on 
-plot(yt(70,:),'black')
-plot(sumOM(70,2)*sumFt(5,:))
+plot(yt(124,:),'black')
+plot(sumOM(124,3).*sumFt(50,:))
 
 
 
@@ -280,7 +306,7 @@ plot(sumOM(70,2)*sumFt(5,:))
 % [mean(lavd(2:3:maxL,2)),mean(lavd(2:3:maxL,3)),mean(lavd(1:3:maxL,2)),mean(lavd(1:3:maxL,3))]
 % mean(africa(3:3:maxL, 2))
 % mean(africa(3:3:maxL, 3))
-%% World
+% World
 % h = fill(fillX(1,:), fillY(1,:), COLOR);
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
