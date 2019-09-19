@@ -178,11 +178,12 @@ sumResiduals2 = sumResiduals2 ./Runs;
 sumFactorVar = sumFactorVar./Runs;
 sumFactorVar2 = sumFactorVar2./Runs;
 
+%% Variance Decompositions and resizing. (Hopefully
+   % Resizing gets removed, it is unneccessary. 
 reducedDimBackUps  = backupMeanAndHessian;
 varianceDecomp = zeros(K,levels);
 facCount = 1;
 for k = levelVec
-    
     factorIndx = factorInfo(k,:);
     factorSelect = factorIndx(1):factorIndx(2);
     [reducedDimBackUps(factorSelect,:), sumBackup(factorSelect,:)] =...
@@ -199,7 +200,8 @@ for k = levelVec
 end
 
 Gt = makeStateObsModel(sumOM, Identities, 0);
-vresids = var(yt - reshape(Xt*sumBeta,K,T) - Gt*sumFt,[],2);
+mut =  reshape(Xt*sumBeta,K,T);
+vresids = var(yt - mut - Gt*sumFt,[],2);
 vtot = sum([varianceDecomp,vresids],2);
 varianceDecomp = varianceDecomp./vtot;
 %% Marginal Likelihood
