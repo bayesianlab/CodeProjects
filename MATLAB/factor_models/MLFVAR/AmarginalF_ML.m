@@ -1,6 +1,6 @@
 function [obsupdate, backup, f] = ...
     AmarginalF_ML(Info, Factor, yt, currobsmod,  stateTransitions, factorVariance,...
-    obsPrecision, backup,  identification)
+    obsPrecision, backup,  options)
 
 [K,T] = size(yt);
 Regions = size(Info,1);

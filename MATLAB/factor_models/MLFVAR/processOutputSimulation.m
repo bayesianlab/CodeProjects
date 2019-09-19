@@ -129,7 +129,7 @@ fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
 
 Idens = MakeObsModelIdentity(InfoCell);
-Gt = makeStateObsModel(sumOtherOM, Idens, 0);
+Gt = makeStateObsModel(sumOM, Idens, 0);
 mut = reshape(Xt*sumBeta, K,T);
 mut2 = Gt*sumFt;
 yhat = mut+ mut2;
@@ -151,44 +151,12 @@ for k = 1:levels
     end
 end
 
-find (sum(factorVariances,2) > 1 )
-
-CMR = [mut(124,:)', sumFt(1,:)', sumFt(6,:)', sumFt(50,:)'];
-
-q = orthog(CMR);
-
-
-
-
-% yy = var(yt,[],2);
-% varianceDecomp
-% sumOtherOM(1,:)
-
-
-A = sumOtherOM(124,1).*sumFt(1,:)
-B = sumOtherOM(124,2).*sumFt(6,:)
-C = sumOtherOM(124,3).*sumFt(50,:)
-
-ydemu = yt(124,:)-mut(124,:);
-E = ydemu-(A+B+C);
-
-vtot = var(A) + var(B) + var(C) + var(E)
-var(A)/vtot
-var(B)/vtot
-var(C)/vtot
-var(E)/vtot
-
-% errs = sum( (yt(70,:)).^2,2)
-% 
-% onlyregion = sum((sumOM(70,1).*sumFt(1,:)).^2,2)
-% 
-% onlyregion/errs
-
-% 
-
+sumOM(61,:)
+varianceDecomp(61,:)
+[a,b] = max(varianceDecomp)
 hold on 
-plot(yt(124,:),'black')
-plot(sumOM(124,3).*sumFt(50,:))
+plot(yt(61,:)-mut(61,:),'black')
+plot(sumOM(61,3).*sumFt(29,:))
 
 
 

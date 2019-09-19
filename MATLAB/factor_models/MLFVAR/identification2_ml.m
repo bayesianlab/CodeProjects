@@ -1,7 +1,8 @@
 function [ retval, lastMean, lastCovar] = identification2_ml( x0, yt, obsPrecision, Ft, FtPrecision,...
     lastMean, lastCovar, options  )
+
 [K,T] = size(yt);
-df = 15;
+df = 7;
 w1 = sqrt(chi2rnd(df,1)/df);
 ObsPriorMean = ones(1, K);
 ObsPriorPrecision = eye(K);
@@ -19,10 +20,13 @@ else
     lastCovar = Hessian\eye(K);
     V = lastCovar;
 end
+
 proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
+
 
 LogLikePositive = @(v) LLRestrict (v, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
+
 proposal = themean + chol(V, 'lower')*normrnd(0,1, K,1)./w1;
 
 Num = LogLikePositive(proposal) + proposalDist(x0');

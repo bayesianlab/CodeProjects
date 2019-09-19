@@ -54,7 +54,8 @@ sumFactorVar2 = sumFactorVar;
 storeFactorParamb = zeros(nFactors, Sims-burnin);
 sumBackup = backupMeanAndHessian;
 
-c = 0;
+options = optimoptions(@fminunc,'FiniteDifferenceType', 'central',...
+    'StepTolerance', 1e-16, 'Display', 'off', 'OptimalityTolerance', 1e-14);
 
 
 levelVec = 1:levels;
@@ -93,17 +94,18 @@ if finishedMainRun == 0
             factorSelect = factorIndx(1):factorIndx(2);
             factorVarianceSubset = factorVariance(factorSelect);
             tempbackup = backupMeanAndHessian(factorSelect,:);
+            
             [currobsmod(:,q), tempbackup, f, otherOM(:,q)] = AmarginalF(Info, ...
                 Ft(factorSelect, :), ydemut, currobsmod(:,q), ...
                 stateTransitions(factorSelect), factorVarianceSubset,...
-                obsPrecision, tempbackup,  identification, otherOM(:,q));
+                obsPrecision, tempbackup,   otherOM(:,q), options);
+            
             backupMeanAndHessian(factorSelect,:) = tempbackup;
             Ft(factorSelect,:) = f;
             %             variancedecomp(:,q) = vdecomp;
             
         end
-        otherOM(70:75,:)
-        currobsmod(70:75,:)
+
         StateObsModel = makeStateObsModel(currobsmod,Identities,0);
         
         %% Variance
@@ -118,7 +120,6 @@ if finishedMainRun == 0
         
         if identification == 2
             [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
-            
         end
         %% Storage
         if iterator > burnin
@@ -177,21 +178,30 @@ sumResiduals2 = sumResiduals2 ./Runs;
 sumFactorVar = sumFactorVar./Runs;
 sumFactorVar2 = sumFactorVar2./Runs;
 
+reducedDimBackUps  = backupMeanAndHessian;
 varianceDecomp = zeros(K,levels);
 facCount = 1;
 for k = levelVec
+    
+    factorIndx = factorInfo(k,:);
+    factorSelect = factorIndx(1):factorIndx(2);
+    [reducedDimBackUps(factorSelect,:), sumBackup(factorSelect,:)] =...
+        reduceDimBackup(InfoCell{1,k}, backupMeanAndHessian(factorSelect,:), sumBackup(factorSelect,:));
     Info = InfoCell{1,k};
     Regions = size(Info,1);
     vydemut = var(yt,[],2);
     for r = 1:Regions
         subsetSelect = Info(r,1):Info(r,2);
-        varianceDecomp(subsetSelect,k) = var(sumOtherOM(subsetSelect,k).*sumFt(facCount,:),[],2);;
+        varianceDecomp(subsetSelect,k) = var(sumOM(subsetSelect,k).*sumFt(facCount,:),[],2);;
         facCount = facCount + 1;
     end
     varianceDecomp=varianceDecomp./vydemut;
 end
 
-
+Gt = makeStateObsModel(sumOM, Identities, 0);
+vresids = var(yt - reshape(Xt*sumBeta,K,T) - Gt*sumFt,[],2);
+vtot = sum([varianceDecomp,vresids],2);
+varianceDecomp = varianceDecomp./vtot;
 %% Marginal Likelihood
 [K,T] = size(yt);
 obsPrecisionStar = 1./sumObsVariance;
@@ -202,6 +212,7 @@ Ag = zeros(K,levels,ReducedRuns);
 Betag = zeros(dimX, ReducedRuns);
 Sstar =  kowStatePrecision(diag(sumST), sumFactorVar,T);
 currobsmod = sumOM;
+
 if estML == 1
     if finishedFirstReducedRun == 0
         for r = startRR:ReducedRuns
@@ -221,12 +232,12 @@ if estML == 1
                 factorIndx = factorInfo(q,:);
                 factorSelect = factorIndx(1):factorIndx(2);
                 factorVarianceSubset = sumFactorVar(factorSelect);
-                tempbackup = backupMeanAndHessian(factorSelect,:);
+                tempbackup = reducedDimBackUps(factorSelect,:);
                 [currobsmod(:,q), tempbackup, ~] = AmarginalF_ML(Info, ...
                     sumFt(factorSelect, :), ydemut, currobsmod(:,q), sumST(factorSelect),...
                     factorVarianceSubset,obsPrecisionStar, tempbackup,...
-                     identification);
-                backupMeanAndHessian(factorSelect,:) = tempbackup;
+                    options);
+                reducedDimBackUps(factorSelect,:) = tempbackup;
             end
             Ag(:,:,r) = currobsmod;
             StateObsModel = makeStateObsModel(currobsmod,Identities,0);

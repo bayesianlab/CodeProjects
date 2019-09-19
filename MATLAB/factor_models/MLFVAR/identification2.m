@@ -1,20 +1,18 @@
 function [ retval, lastMean, lastCovar, otherOM] = identification2( x0, yt, obsPrecision, Ft, FtPrecision,...
-    lastMean, lastCovar, x1  )
-options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-18, 'Display', 'iter', 'OptimalityTolerance', 1e-18,...
-    'FiniteDifferenceStepSize', 1e-17);
+    lastMean, lastCovar, x1,options  )
+
 [K,T] = size(yt);
-df = 6;
+df = 7;
 w1 = sqrt(chi2rnd(df,1)/df);
 ObsPriorMean = .5.*ones(1, K);
 ObsPriorPrecision = .1.*eye(K);
 LL = @(guess) -LLRestrict(guess, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 
-
 [themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x1, options);
-exitflag
+
 [~, p] = chol(Hessian);
+
 if p ~= 0
     themean = lastMean';
     V = lastCovar;

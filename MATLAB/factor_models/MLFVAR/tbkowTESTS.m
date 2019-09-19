@@ -2,7 +2,7 @@ clear;clc;
 filename = 'BigKow/kowz.mat', 'DataCell';
 load(filename)
 Sims=10;
-burnin =2;
+burnin =1;
 ReducedRuns=10;
 yt = DataCell{1,1};
 Xt = DataCell{1,2};

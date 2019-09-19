@@ -1,6 +1,6 @@
 function [obsupdate, backup, f, otherOMupdate] = ...
     AmarginalF(Info, Factor, yt, currobsmod,  stateTransitions, factorVariance,...
-    obsPrecision, backup,  identification, otherOM)
+    obsPrecision, backup,   otherOM, options)
 
 [K,T] = size(yt);
 Regions = size(Info,1);
@@ -20,7 +20,7 @@ for r = 1:Regions
     lastCovar = backup{r,2};
     [xt, lastMean, lastCovar, xt1] = identification2(x0, ySlice,precisionSlice,...
         Factor(r,:), factorPrecision, lastMean,...
-        lastCovar, x1);
+        lastCovar, x1, options);
 
     obsupdate(subsetSelect) = xt;
     otherOMupdate(subsetSelect) = xt1;
