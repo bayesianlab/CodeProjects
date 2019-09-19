@@ -36,7 +36,6 @@ Variance = Precision\speye(cx);
 bhat = Variance*(NumeratorTerm);
 [c, p] =chol(Variance,'lower');
 b = bhat + c*normrnd(0,1,cx,1);
-
 mut = reshape(SurX*b, nEqns, T);
 % fprintf('done...\n')
 end

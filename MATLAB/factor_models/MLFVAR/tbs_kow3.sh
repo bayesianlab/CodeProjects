@@ -2,10 +2,10 @@
 #$ -S /bin/bash
 #$ -ckpt restart 
 #$ -q its
-#$ -N kow_whole
-#$ -l mem_free=2G
+#$ -N resubBeg42
+#$ -l mem_free=4G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 module load MATLAB
-./kow_exec 1000 200 800 UnfinishedKOW3 kowTimes100.mat 
+./KOW 1000 200 800 TimeBreakDataKOW TimeBreakKowBeg42.mat TBKOW 

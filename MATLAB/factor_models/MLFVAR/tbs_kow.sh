@@ -1,8 +1,8 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -q free64
-#$ -N bmkow
-#$ -l mem_free=2G
+#$ -N bigkow
+#$ -l mem_free=4G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
@@ -11,5 +11,5 @@
 #$ -M dillonflann@gmail.com
 #$ -m e
 module load MATLAB
-./kow 1000 200 800 TimeBreakDataKOW ${DATA}
+./KOW 1000 200 800 TimeBreakDataKOW ${DATA} TBKOW
 ./job_end.sh
