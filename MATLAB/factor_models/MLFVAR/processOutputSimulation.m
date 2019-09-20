@@ -105,6 +105,8 @@
 %     c = c + 1;
 % end
 
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Application KOW dataset
 clear;clc;
 NA = 1:9;
 OCEAN = 10:15;
@@ -114,8 +116,8 @@ AFRICA = 124:144;
 ASIADEVLOP = 145:162;
 ASIA = 163:180;
 
-% savepath = '~/GoogleDrive/statespace/'
-load('experimental.mat')
+savepath = '~/GoogleDrive/statespace/'
+load('BigKowResults/Result_kowz.mat')
 
 xaxis = 1962:2014;
 variance = sumFt2 - sumFt.^2;
@@ -133,7 +135,8 @@ Gt = makeStateObsModel(sumOM, Idens, 0);
 mut = reshape(Xt*sumBeta, K,T);
 mut2 = Gt*sumFt;
 yhat = mut+ mut2;
-vyt = var(yt,[],2);
+ytdemut= yt-mut;
+errs = ytdemut - mut2;
 factorVariances = zeros(K,levels);
 facCount = 1;
 for k = 1:levels
@@ -141,53 +144,37 @@ for k = 1:levels
     Regions = size(Info,1);
     ConditionalOM = makeStateObsModel(sumOM, Identities, k);
     
-    mut = reshape(Xt*sumBeta,K,T);
-    vydemut = var(yt-mut,[],2);
     for r = 1:Regions
         subsetSelect = Info(r,1):Info(r,2);
         regionmu = mut(subsetSelect,:);
-        factorVariances(subsetSelect,k) = var(sumOtherOM(subsetSelect,k).*sumFt(facCount,:),[],2);
+        factorVariances(subsetSelect,k) = var(sumOM(subsetSelect,k).*sumFt(facCount,:),[],2);
         facCount = facCount + 1;
     end
 end
 
-sumOM(61,:)
-varianceDecomp(61,:)
-[a,b] = max(varianceDecomp)
-hold on 
-plot(yt(61,:)-mut(61,:),'black')
-plot(sumOM(61,3).*sumFt(29,:))
+E = var(errs,[],2);
+
+varDec = factorVariances./sum([factorVariances, E],2);
+[a,b] = max(varDec);
+
+naocla=varDec(1:69,:);
+[naocla(1:23,:), naocla(24:46,:), naocla(47:end,:)]
+csvwrite(join([savepath,'table1_na.csv']), naocla)
+
+eur = varDec(70:123,:);
+[eur(1:18,:), eur(19:36,:), eur(37:end,:)]
+csvwrite(join([savepath,'table2_eur.csv']), eur)
+
+afas = varDec(124:end,:);
+[afas(1:19,:), afas(20:38,:), afas(39:end,:)]
+csvwrite(join([savepath,'table3_afr.csv']), afas)
+
+%% Average vd for country factors Europe
+mean(sumVarianceDecomp(70:123,3))
+%% Average vd for region in developing asia
+mean(sumVarianceDecomp(145:162,2))
 
 
-
-% plot(sumOM(70,2)*sumFt(5,:))
-% plot(sumOM(1,3)*sumFt(9,:))
-% plot(sumOM(70,1)*sumFt(1,:))
-% sum([varianceDecomp] ,2)
-
-% Average vd for country factors
-% 70-123 Europe
-% mean(sumVarianceDecomp(70:123,3))
-% average vd for region in developing asia
-% 145-162 Developing Asia
-% mean(sumVarianceDecomp(145:162,2))
-% mean([sumVarianceDecomp(145:147,2); sumVarianceDecomp(151:162,2)])
-% india = yt(148:150,:);
-% india_nomean = india - mean(india,2)
-% indiaz = india_nomean./std(india,[],2)
-% figure
-% hold on
-% h = fill(fillX(1,:), fillY(58,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% indiafigcons = plot(xaxis, indiaz(2,:), 'black')
-% indiafigcons= plot(xaxis, sumFt(58,:), 'red')
-% saveas(indiafigcons, join([savepath,'indiafigcons.jpeg']))
-% figure
-% hold on
-% indiafigout = plot(xaxis, indiaz(1,:), 'black')
-% indiafigout= plot(xaxis, sumFt(58,:), 'red')
-% saveas(indiafigout, join([savepath,'indiafigout.jpeg']))
-% corr([indiaz', sumFt(58,:)'])
 
 % Pakistan
 % pak = yt(154:156,:);
