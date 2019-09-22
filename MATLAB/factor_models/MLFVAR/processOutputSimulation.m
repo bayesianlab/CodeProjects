@@ -117,7 +117,8 @@ ASIADEVLOP = 145:162;
 ASIA = 163:180;
 
 savepath = '~/GoogleDrive/statespace/'
-load('BigKowResults/Result_kowz.mat')
+load('experimental.mat')
+
 
 xaxis = 1962:2014;
 variance = sumFt2 - sumFt.^2;
@@ -157,22 +158,19 @@ E = var(errs,[],2);
 varDec = factorVariances./sum([factorVariances, E],2);
 [a,b] = max(varDec);
 
-naocla=varDec(1:69,:);
-[naocla(1:23,:), naocla(24:46,:), naocla(47:end,:)]
-csvwrite(join([savepath,'table1_na.csv']), naocla)
+% naocla=varDec(1:69,:);
+% naocla=[naocla(1:23,:), naocla(24:46,:), naocla(47:end,:)]
+% csvwrite(join([savepath,'table1_na.csv']), naocla)
+% 
+% eur = varDec(70:123,:);
+% eur = [eur(1:18,:), eur(19:36,:), eur(37:end,:)]
+% csvwrite(join([savepath,'table2_eur.csv']), eur)
+% 
+% afas = varDec(124:end,:);
+% afas=[afas(1:19,:), afas(20:38,:), afas(39:end,:)]
+% size(afas)
+% csvwrite(join([savepath,'table3_afr.csv']), afas)
 
-eur = varDec(70:123,:);
-[eur(1:18,:), eur(19:36,:), eur(37:end,:)]
-csvwrite(join([savepath,'table2_eur.csv']), eur)
-
-afas = varDec(124:end,:);
-[afas(1:19,:), afas(20:38,:), afas(39:end,:)]
-csvwrite(join([savepath,'table3_afr.csv']), afas)
-
-%% Average vd for country factors Europe
-mean(sumVarianceDecomp(70:123,3))
-%% Average vd for region in developing asia
-mean(sumVarianceDecomp(145:162,2))
 
 
 
@@ -261,11 +259,11 @@ mean(sumVarianceDecomp(145:162,2))
 % [mean(lavd(2:3:maxL,2)),mean(lavd(2:3:maxL,3)),mean(lavd(1:3:maxL,2)),mean(lavd(1:3:maxL,3))]
 % mean(africa(3:3:maxL, 2))
 % mean(africa(3:3:maxL, 3))
-% World
-% h = fill(fillX(1,:), fillY(1,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% world = plot(xaxis, sumFt(1,:), 'black')
+%% World
+h = fill(fillX(1,:), fillY(1,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on
+world = plot(xaxis, sumFt(1,:), 'black')
 % saveas(world, join([savepath, 'world.jpeg']))
 %% Europe
 % figure
@@ -282,21 +280,60 @@ mean(sumVarianceDecomp(145:162,2))
 
 %% North America
 % figure
-% na = plot(xaxis, sumFt(2,:), 'black')
+% na = plot(xaxis, sumFt(2,:), 'blue');
 % shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
 % saveas(na, join([savepath,'nafactorplot_recessions.jpeg']))
+% figure
+% hold on
+% box on
+% usaout = plot(xaxis,sumFt(2,:), 'red');
+% plot(xaxis,yt(1,:), 'black')
+% saveas(usaout, join([savepath,'usaoutVsRegion.jpeg']))
+% figure
+% hold on 
+% box on
+% usaconsump = plot(xaxis,sumFt(2,:), 'red');
+% plot(xaxis,yt(2,:), 'black')
+% saveas(usaconsump, join([savepath,'usaconsVsRegion.jpeg']))
+% figure
+% hold on 
+% box on
+% usainv = plot(xaxis, sumFt(2,:), 'red');
+% plot(xaxis, yt(3,:),'black')
+% saveas(usainv, join([savepath,'usainvVsRegion.jpeg']))
+% figure
+% hold on 
+% box on
+% usacountryout = plot(xaxis, sumFt(9,:), 'red');
+% plot(xaxis, yt(1,:),'black')
+% saveas(usacountryout, join([savepath,'usacountryout.jpeg']))
+% figure
+% hold on 
+% box on
+% usacountrycons = plot(xaxis, sumFt(9,:), 'red');
+% plot(xaxis, yt(2,:),'black')
+% saveas(usacountryout, join([savepath,'usacountrycons.jpeg']))
+% figure
+% hold on 
+% box on
+% usacountryinv = plot(xaxis, sumFt(9,:), 'red');
+% plot(xaxis, yt(3,:),'black')
+% saveas(usacountryinv, join([savepath,'usacountryinv.jpeg']))
 % hold off
 % figure
-% h = fill(fillX(1,:), fillY(2,:), COLOR);
+% h = fill(fillX(1,:), fillY(5,:), COLOR);
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
-% naregion  = plot(xaxis, sumFt(2,:), 'black')
+% naregion  = plot(xaxis, sumFt(5,:), 'black')
 % saveas(naregion, join([savepath, 'naregionplot.jpeg']))
+
+
 %% Oceania
+% hold off
 % figure
 % ocean = plot(xaxis, sumFt(3,:), 'black')
 % shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
-% hold off
+% 
 % figure
 % h = fill(fillX(1,:), fillY(3,:), COLOR);
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
