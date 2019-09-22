@@ -54,7 +54,8 @@ sumFactorVar2 = sumFactorVar;
 storeFactorParamb = zeros(nFactors, Sims-burnin);
 sumBackup = backupMeanAndHessian;
 
-options = optimoptions(@fminunc,'FiniteDifferenceType', 'central',...
+
+options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-16, 'Display', 'off', 'OptimalityTolerance', 1e-14);
 
 
@@ -87,7 +88,7 @@ if finishedMainRun == 0
         for q = levelVec
             fprintf('Level %i\n', q)
             ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
-            mut = xbt + ConditionalObsModel*Ft;
+            mut = xbt;% + ConditionalObsModel*Ft;
             ydemut = yt - mut;
             Info = InfoCell{1,q};
             factorIndx = factorInfo(q,:);
@@ -128,6 +129,8 @@ if finishedMainRun == 0
             sumFt2 = sumFt2 + Ft.^2;
             sumBeta = sumBeta + beta;
             sumBeta2 = beta.^2 + sumBeta2;
+            
+            storeBeta(:,v) = beta;
             sumObsVariance = sumObsVariance +  obsVariance;
             sumObsVariance2 = sumObsVariance2 + obsVariance.^2;
             sumOM= sumOM + currobsmod;

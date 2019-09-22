@@ -4,8 +4,8 @@ function [ retval, lastMean, lastCovar, otherOM] = identification2( x0, yt, obsP
 [K,T] = size(yt);
 df = 7;
 w1 = sqrt(chi2rnd(df,1)/df);
-ObsPriorMean = .5.*ones(1, K);
-ObsPriorPrecision = .1.*eye(K);
+ObsPriorMean = .25.*ones(1, K);
+ObsPriorPrecision = eye(K);
 LL = @(guess) -LLRestrict(guess, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 

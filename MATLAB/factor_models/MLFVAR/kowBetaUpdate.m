@@ -27,7 +27,7 @@ for t = 1:T
     Xstar(pick, :) = Astar*tmpx;
     ystar(pick, :) = Astar*tmpy;
 end
-B0 = .001.*speye(cx);
+B0 = speye(cx);
 b0 = zeros(cx,1);
 XstarPinv = Xstar'*(Inside\speye(size(Inside,1)));
 Precision = B0 + addup - (XstarPinv*Xstar);
