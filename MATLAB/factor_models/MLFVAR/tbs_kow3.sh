@@ -2,10 +2,10 @@
 #$ -S /bin/bash
 #$ -ckpt restart 
 #$ -q its
-#$ -N resubBeg42
+#$ -N bigJobs
 #$ -l mem_free=4G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 module load MATLAB
-./KOW 1000 200 800 TimeBreakDataKOW TimeBreakKowBeg42.mat TBKOW 
+./The_Real_Kow 10000 2000 8000 UnfinishedKOW3 ${DATA} BigKowResults2 
