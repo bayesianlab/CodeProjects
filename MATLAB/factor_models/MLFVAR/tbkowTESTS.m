@@ -1,8 +1,8 @@
 clear;clc;
-filename = 'BigKow/kowz.mat', 'DataCell';
+filename = 'BigKow/kowNoWorldz.mat', 'DataCell';
 load(filename)
 Sims=10;
-burnin =1;
+burnin =5;
 ReducedRuns=10;
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
@@ -15,18 +15,17 @@ v0=3;
 r0 =5;
 s0 = 3;
 d0 = 5;
-initBeta = .01.*ones(dimX,1);
+initBeta = .1.*ones(dimX,1);
 obsPrecision = ones(K,1);
-initStateTransitions = .01.*ones(nFactors,1);
+initStateTransitions = .1.*ones(nFactors,1);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-% initobsmodel = .01.*ones(K,levels);
-initobsmodel = unifrnd(.01,.1,K,levels);
+initobsmodel = .1.*ones(K,levels);
+% initobsmodel = zeros(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-% vecFt  =  kowUpdateLatent(yt(:) - (Xt*initBeta),  StateObsModel, ...
-%     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
-% vecFt = unifrnd(-.1,.1,nFactors*T, 1);
-vecFt = .5.*ones(nFactors*T, 1);
-initFactor = reshape(vecFt, nFactors,T);
+vecFt  =  kowUpdateLatent(yt(:) - (Xt*initBeta),  StateObsModel, ...
+    kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
+initFactor = reshape(vecFt,nFactors,T);
+% initFactor = normrnd(0,1,nFactors,T);
 identification = 2;
 estML = 0;
 [sumFt, sumFt2, sumOM, sumOM2, sumOtherOM, sumOtherOM2,...

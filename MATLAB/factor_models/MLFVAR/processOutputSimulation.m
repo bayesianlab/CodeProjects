@@ -116,7 +116,7 @@ AFRICA = 124:144;
 ASIADEVLOP = 145:162;
 ASIA = 163:180;
 
-savepath = '~/GoogleDrive/statespace/'
+savepath = '~/GoogleDrive/statespace/';
 load('experimental.mat')
 
 
@@ -260,10 +260,11 @@ varDec = factorVariances./sum([factorVariances, E],2);
 % mean(africa(3:3:maxL, 2))
 % mean(africa(3:3:maxL, 3))
 %% World
-h = fill(fillX(1,:), fillY(1,:), COLOR);
+fs =1
+h = fill(fillX(1,:), fillY(fs,:), COLOR);
 set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 hold on
-world = plot(xaxis, sumFt(1,:), 'black')
+world = plot(xaxis, sumFt(fs,:), 'black')
 % saveas(world, join([savepath, 'world.jpeg']))
 %% Europe
 % figure
