@@ -55,7 +55,7 @@ storeFactorParamb = zeros(nFactors, Sims-burnin);
 sumBackup = backupMeanAndHessian;
 
 
-options = optimoptions(@fminunc,'FiniteDifferenceType', 'central',...
+options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-14);
 
 
