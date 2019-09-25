@@ -2,7 +2,7 @@ function [ retval, lastMean, lastCovar, otherOM] = identification2( x0, yt, obsP
     lastMean, lastCovar, x1,options  )
 
 [K,T] = size(yt);
-df = 7;
+df = 15;
 w1 = sqrt(chi2rnd(df,1)/df);
 ObsPriorMean = .25.*ones(1, K);
 ObsPriorPrecision = eye(K);

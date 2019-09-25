@@ -62,7 +62,7 @@ sumBackup1 = backupMeanAndHessian1;
 sumBackup2 = backupMeanAndHessian2;
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-5, 'Display', 'off', 'OptimalityTolerance', 1e-4);
+    'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-6);
 
 % DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
 vy = var(yt,0,2);
