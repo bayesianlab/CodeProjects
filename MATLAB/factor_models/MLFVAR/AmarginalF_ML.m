@@ -20,7 +20,7 @@ for r = 1:Regions
     lastCovar = backup{r,2};
     [xt, lastMean, lastCovar] = identification2_ml(x0(2:end), ySlice(2:end,:),precisionSlice(2:end),...
         Factor(r,:), factorPrecision, lastMean,...
-        lastCovar);
+        lastCovar,options);
 
     obsupdate(subsetSelect) = xt;
     backup{r,1} = lastMean;
