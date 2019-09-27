@@ -306,7 +306,7 @@ if estML == 1
         priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), 10.*eye(nFactors)));
         priorObsVariance = sum(logigampdf(sumObsVariance, .5.*v0, .5.*d0));
         priorFactorVar = sum(logigampdf(sumFactorVar, .5.*s0, .5.*d0));
-        priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), 10.*eye(dimX));
+        priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), eye(dimX));
         priorStar = sum([priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]);
         
         %     [LogLikelihood, piFtstarGivenyAndthetastar]
