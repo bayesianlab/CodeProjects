@@ -167,6 +167,7 @@ mean(varDec(AFRICA,2))
 mean(varDec(ASIADEVELOP,2))
 mean(varDec(ASIA,2))
 
+ml
 %% World
 % h = fill(fillX(1,:), fillY(fs,:), COLOR);
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
@@ -368,8 +369,6 @@ mean(varDec(ASIA,2))
 % canada= plot(xaxis, yt(4,:), 'black');
 % plot(xaxis, sumOM(4,3)*sumFt(10,:), 'red')
 % saveas(canada, join([savepath,'canadafactor.jpeg']))
-
-
 
 %% Germany
 % figure
