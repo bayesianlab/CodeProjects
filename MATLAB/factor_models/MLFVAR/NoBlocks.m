@@ -54,13 +54,10 @@ sumFactorVar2 = sumFactorVar;
 storeFactorParamb = zeros(nFactors, Sims-burnin);
 sumBackup = backupMeanAndHessian;
 
-
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-14);
 
-
 levelVec = 1:levels;
-
 
 if exist(checkpointdir, 'dir')
     ckptfilename = join([checkpointdir, checkpointfilename, '.mat']);
@@ -128,8 +125,6 @@ if finishedMainRun == 0
             sumFt2 = sumFt2 + Ft.^2;
             sumBeta = sumBeta + beta;
             sumBeta2 = beta.^2 + sumBeta2;
-            
-            %             storeBeta(:,v) = beta;
             sumObsVariance = sumObsVariance +  obsVariance;
             sumObsVariance2 = sumObsVariance2 + obsVariance.^2;
             sumOM= sumOM + currobsmod;
@@ -303,7 +298,7 @@ if estML == 1
         piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
         fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
         
-        priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), 10.*eye(nFactors)));
+        priorST = sum(logmvnpdf(sumST, zeros(1,nFactors), eye(nFactors)));
         priorObsVariance = sum(logigampdf(sumObsVariance, .5.*v0, .5.*d0));
         priorFactorVar = sum(logigampdf(sumFactorVar, .5.*s0, .5.*d0));
         priorBeta = logmvnpdf(BetaStar', zeros(1, dimX), eye(dimX));
