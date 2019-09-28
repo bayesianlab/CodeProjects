@@ -1,11 +1,11 @@
 function [sumFt, sumFt2, sumOM, sumOM2, sumOtherOM, sumOtherOM2,...
     sumST, sumST2,sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2, varianceDecomp, ml] = NoBlocks(yt, Xt,  InfoCell, Sims,...
-    burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
+    burnin, ReducedRuns, initFactor, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
-    DotMatFile(1:periodloc-1), 'Checkpoints/'] );
+    DotMatFile(1:periodloc-1),'Checkpoints/'] );
 
 checkpointfilename = 'ckpt';
 start = 1;
@@ -30,8 +30,7 @@ Ft = initFactor;
 StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 Si = kowStatePrecision(diag(initStateTransitions),factorVariance,T);
 factorVariance = ones(nFactors,1);
-% variancedecomp = zeros(K,levels);
-% storeVarDecomp = zeros(K, levels, Sims-burnin);
+
 % Storage
 sumBeta = zeros(dimX,1);
 sumBeta2 = sumBeta;
@@ -49,8 +48,6 @@ sumOtherOM = zeros(K, levels);
 sumOtherOM2 = zeros(K, levels);
 sumFactorVar = zeros(nFactors,1);
 sumFactorVar2 = sumFactorVar;
-% sumVarianceDecomp = variancedecomp;
-% sumVarianceDecomp2 = variancedecomp;
 storeFactorParamb = zeros(nFactors, Sims-burnin);
 sumBackup = backupMeanAndHessian;
 
@@ -192,6 +189,7 @@ if finishedMainRun == 0
     vresids = var(yt - mut - Gt*sumFt,[],2);
     vtot = sum([varianceDecomp,vresids],2);
     varianceDecomp = varianceDecomp./vtot;
+    
     %% Marginal Likelihood
     [K,T] = size(yt);
     obsPrecisionStar = 1./sumObsVariance;

@@ -27,7 +27,6 @@ v0=6;
 r0 =10;
 s0 = 6;
 d0 = 10;
-initBeta = .1.*ones(dimX,1);
 obsPrecision = ones(K,1);
 initStateTransitions = .1.*ones(nFactors,1);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
@@ -38,26 +37,36 @@ vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
 % vecFt = .5.*ones(nFactors*T, 1);
 initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
-estML = 1;
+%%%%%%%%%%%%
+%%%%%%%%%%%%
+%DONT FORGET TO TURN THIS ON!!!!!!!!!
+%%%%%%%%%%%%
+%%%%%%%%%%%%
+estML = 1; %%%%%%
+%%%%%%%%%%%%
+%%%%%%%%%%%%
 [sumFt, sumFt2, sumOM, sumOM2, sumOtherOM, sumOtherOM2,...
     sumST, sumST2,sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2, varianceDecomp, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
-    burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
+    burnin, ReducedRuns, initFactor,  initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile);
 period = strfind(DotMatFile, '.');
 
+dateCreated = createDateString('');
 fname = join(['Result_', DotMatFile(1:period-1)]);
-dirname = join(['~/CodeProjects/MATLAB/factor_models/MLFVAR/',OutputDir]);
+dirname = join(['~/CodeProjects/MATLAB/factor_models/MLFVAR/', OutputDir, dateCreated]);
 if ~exist(dirname, 'dir')
     mkdir(dirname)
 end
 periodloc = strfind(DotMatFile, '.') ;
-checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
-    DotMatFile(1:periodloc-1), 'Checkpoints/'] );
-filename = join([dirname,'/',fname]);
+if (OutputDir == "")
+    filename = join([dirname,fname]);
+else
+    filename = join([dirname,'/',fname]);
+end
 fprintf('Saving file %s \n', filename)
 save(filename)
-fprintf('Removing checkpoint dir\n')
-rmdir(checkpointdir, 's')
+
+
 end
 
