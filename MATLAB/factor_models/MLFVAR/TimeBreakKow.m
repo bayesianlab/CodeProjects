@@ -54,15 +54,15 @@ period = strfind(DotMatFile, '.');
 
 dateCreated = createDateString('');
 fname = join(['Result_', DotMatFile(1:period-1)]);
-dirname = join(['~/CodeProjects/MATLAB/factor_models/MLFVAR/', OutputDir, dateCreated]);
+dirname = join(['~/CodeProjects/MATLAB/factor_models/MLFVAR/', OutputDir]);
 if ~exist(dirname, 'dir')
     mkdir(dirname)
 end
 periodloc = strfind(DotMatFile, '.') ;
 if (OutputDir == "")
-    filename = join([dirname,fname]);
+    filename = join([dirname,fname, '_', dateCreated]);
 else
-    filename = join([dirname,'/',fname]);
+    filename = join([dirname,'/',fname, '_', dateCreated]);
 end
 fprintf('Saving file %s \n', filename)
 save(filename)
