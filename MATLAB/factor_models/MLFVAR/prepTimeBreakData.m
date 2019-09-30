@@ -29,8 +29,9 @@
 %     DataCell{1,2} = Xtb;
 %     save(fnameb, 'DataCell')
 % end
-% 
-load('kowTimes100.mat')
+%
+clear;clc;
+load('BigKow/kowz.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 [K,T] = size(yt);
@@ -39,7 +40,9 @@ Factor = DataCell{1,4};
 Gamma = DataCell{1,6};
 
 Indx = 5:50;
-mkdir('TimeBreakDataKOW')
+if ~exist('TimeBreakDataKOW', 'dir')
+    mkdir('TimeBreakDataKOW')
+end
 for i = Indx
     yte = yt(:, 1:i);
     Xte = Xt(1:K*i, :);
@@ -57,7 +60,7 @@ for i = Indx
     save(fnameb, 'DataCell')
 end
 
-% load('mpy.mat')
+% load('MpyData/mpy.mat')
 % yt = DataCell{1,1};
 % Xt = DataCell{1,2};
 % [K,T] = size(yt);
@@ -66,7 +69,9 @@ end
 % Gamma = DataCell{1,6};
 % 
 % Indx = 5:45;
-% mkdir('TimeBreakDataMPY')
+% if ~exist('TimeBreakDataMPY', 'dir')
+%     mkdir('TimeBreakDataMPY')
+% end
 % for i = Indx
 %     yte = yt(:, 1:i);
 %     Xte = Xt(1:K*i, :);
