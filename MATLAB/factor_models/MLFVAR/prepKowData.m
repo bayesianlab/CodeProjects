@@ -12,9 +12,6 @@ InfoCell{1,3} = [(1:SeriesPerCountry:180)', (SeriesPerCountry:SeriesPerCountry:1
 kowmus = mean(kow,2);
 kow = kow - kowmus;
 kow = kow./std(kow,[],2);
-var(kow,[],2)
-% kow = 100.*kow;
-
 
 select = 1:SeriesPerCountry;
 dimX = (SeriesPerCountry+1)*SeriesPerCountry;

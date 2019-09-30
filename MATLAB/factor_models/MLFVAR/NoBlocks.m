@@ -1,4 +1,4 @@
-function [sumFt, sumFt2, sumOM, sumOM2, sumOtherOM, sumOtherOM2,...
+function [sumFt, sumFt2, sumOM, sumOM2,...
     sumST, sumST2,sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2, varianceDecomp, ml] = NoBlocks(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor, initobsmodel,...
@@ -25,7 +25,6 @@ factorVariance = ones(nFactors,1);
 obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
-otherOM = currobsmod;
 Ft = initFactor;
 StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 Si = kowStatePrecision(diag(initStateTransitions),factorVariance,T);
@@ -44,8 +43,6 @@ sumObsVariance = zeros(K,1);
 sumObsVariance2 = sumObsVariance;
 sumOM = zeros(K, levels);
 sumOM2= sumOM ;
-sumOtherOM = zeros(K, levels);
-sumOtherOM2 = zeros(K, levels);
 sumFactorVar = zeros(nFactors,1);
 sumFactorVar2 = sumFactorVar;
 storeFactorParamb = zeros(nFactors, Sims-burnin);
@@ -92,10 +89,10 @@ if finishedMainRun == 0
             factorVarianceSubset = factorVariance(factorSelect);
             tempbackup = backupMeanAndHessian(factorSelect,:);
             
-            [currobsmod(:,q), tempbackup, f, otherOM(:,q)] = AmarginalF(Info, ...
+            [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
                 Ft(factorSelect, :), ydemut, currobsmod(:,q), ...
                 stateTransitions(factorSelect), factorVarianceSubset,...
-                obsPrecision, tempbackup,  otherOM(:,q), options);
+                obsPrecision, tempbackup, options, identification);
             
             backupMeanAndHessian(factorSelect,:) = tempbackup;
             Ft(factorSelect,:) = f;
@@ -126,15 +123,15 @@ if finishedMainRun == 0
             sumObsVariance2 = sumObsVariance2 + obsVariance.^2;
             sumOM= sumOM + currobsmod;
             sumOM2 = sumOM2 + currobsmod.^2;
-            sumOtherOM = sumOtherOM + otherOM;
-            sumOtherOM2 = sumOtherOM2 + otherOM.^2;
             sumST = sumST + stateTransitions;
             storeStateTransitions(:,:,v) = stateTransitions;
             sumST2 = sumST2 + stateTransitions.^2;
             sumResiduals2 = sumResiduals2 + r2;
             sumFactorVar = sumFactorVar + factorVariance;
             sumFactorVar2 = sumFactorVar2 + factorVariance.^2;
-            storeFactorParamb(:, v) =  factorParamb;
+            if identification == 2
+                storeFactorParamb(:, v) =  factorParamb;
+            end
             if estML == 1
                 for q = levelVec
                     factorIndx = factorInfo(q,:);
@@ -145,7 +142,7 @@ if finishedMainRun == 0
         end
         
     end
-   
+    
     Runs = Sims- burnin;
     sumBeta = sumBeta./Runs;
     sumBeta2 = sumBeta2./Runs;
@@ -156,8 +153,6 @@ if finishedMainRun == 0
     sumObsVariance2 = sumObsVariance2 ./Runs;
     sumOM= sumOM ./Runs;
     sumOM2 = sumOM2 ./Runs;
-    sumOtherOM = sumOtherOM./Runs;
-    sumOtherOM2= sumOtherOM2./Runs;
     sumST = sumST./Runs;
     sumST2 = sumST2 ./Runs;
     sumResiduals2 = sumResiduals2 ./Runs;
@@ -194,7 +189,9 @@ if finishedMainRun == 0
     [K,T] = size(yt);
     obsPrecisionStar = 1./sumObsVariance;
     piObsVarianceStar = logigampdf(sumObsVariance, .5.*(T+v0), .5.*(sumResiduals2 + r0));
-    piFactorVarianceStar = logigampdf(sumFactorVar, .5.*(T+s0), .5.*(d0+mean(storeFactorParamb,2)));
+    if identification == 2
+        piFactorVarianceStar = logigampdf(sumFactorVar, .5.*(T+s0), .5.*(d0+mean(storeFactorParamb,2)));
+    end
     piFactorTransitionStar = kowArMl(storeStateTransitions, sumST, sumFt, sumFactorVar);
     Ag = zeros(K,levels,ReducedRuns);
     Betag = zeros(dimX, ReducedRuns);
@@ -282,10 +279,11 @@ if estML == 1
         save(join( [checkpointdir, 'ckpt'] ) )
         
         fprintf('Computing Marginal Likelihood\n')
-        
-        posteriorStar = sum(piObsVarianceStar) +  sum(piFactorVarianceStar) ...
+        posteriorStar = sum(piObsVarianceStar) +...
             + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
-        
+        if identification == 2
+        posteriorStar = posteriorStar + sum(piFactorVarianceStar);
+        end
         mu = reshape(Xt*BetaStar,K,T) +  StateObsModelStar*sumFt ;
         LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
         
