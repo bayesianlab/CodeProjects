@@ -79,35 +79,46 @@
 % matrix2latexmatrix(st,'st.tex')
 
 
-% clear;clc;
-% simpath = 'TBKOW/';
-% files = dir(join([simpath,'*.mat']));
-% x =natsortfiles({files.name});
-%
-% c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
-% N = floor(length(x)/2);
-% beg = 1:N;
-%
-% c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
-% N = floor(length(x)/2);
-% beg = 1:N;
-% G = length(beg);
-%
-% for g = 1:N
-%     set1 = x{G+ g};
-%     datapath = join([simpath,set1]);
-%     ml1 = load(datapath, 'ml');
-%     set2 = x{g};
-%     datapath = join([simpath,set2]);
-%     ml2 = load(datapath, 'ml');
-%     sumMls(g,2) = ml1.ml + ml2.ml;
-%     sumMls(g,1) = c;
-%     c = c + 1;
-% end
+clear;clc;
+savepath = '~/GoogleDrive/statespace/';
+simpath = 'TBKOW/OldResults/';
+files = dir(join([simpath,'*.mat']));
+x =natsortfiles({files.name});
+c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
+N = floor(length(x)/2);
+beg = 1:N;
+c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
+N = floor(length(x)/2);
+beg = 1:N;
+G = length(beg);
 
+for g = 1:N
+    set1 = x{G+ g};
+    datapath = join([simpath,set1]);
+    ml1 = load(datapath, 'ml');
+    set2 = x{g};
+    datapath = join([simpath,set2]);
+    ml2 = load(datapath, 'ml');
+    sumMls(g,2) = ml1.ml + ml2.ml;
+    sumMls(g,1) = c;
+    c = c + 1;
+end
+
+tbaxis = 1967:2010;
+
+
+mlfull = load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/TBKOW/Result_kowTimes100.mat', 'ml');
+mlfull = mlfull.ml;
+hold on 
+tbp = plot(tbaxis, ones(length(tbaxis),1).*mlfull);
+plot(tbaxis, sumMls(:,2))
+[a,b] = max(sumMls)
+saveas(tbp, join([savepath,'tbp.jpeg']))
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% Application KOW dataset
 clear;clc;
+savepath = '~/GoogleDrive/statespace/';
+load('BigKowResults/Result_kowz.mat')
 NA = 1:9;
 OCEAN = 10:15;
 LA = 16:69;
@@ -115,10 +126,6 @@ EUR = 70:123;
 AFRICA = 124:144;
 ASIADEVELOP = 145:162;
 ASIA = 163:180;
-
-savepath = '~/GoogleDrive/statespace/';
-load('BigKowResults/Result_kowz.mat')
-
 
 xaxis = 1962:2014;
 variance = sumFt2 - sumFt.^2;
@@ -158,6 +165,13 @@ E = var(errs,[],2);
 varDec = factorVariances./sum([factorVariances, E],2);
 [a,b] = max(varDec);
 
+filevardec= fopen('vardecomp.txt', 'w+');
+for j = 1:size(varDec,1)
+    fstr = sprintf('%.3f %.3f %.3f \n', varDec(j,1), varDec(j,2), varDec(j,3));
+    fprintf(filevardec, fstr);
+end
+fclose(filevardec');
+
 % Average var dec.
 mean(varDec(NA,2))
 mean(varDec(OCEAN,2))
@@ -167,14 +181,11 @@ mean(varDec(AFRICA,2))
 mean(varDec(ASIADEVELOP,2))
 mean(varDec(ASIA,2))
 
-ml
+
 %% World
-% h = fill(fillX(1,:), fillY(fs,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% world = plot(xaxis, sumFt(1,:), 'black');
-% saveas(world, join([savepath,'worldfactor.jpeg']))
-% saveas(world, join([savepath, 'world.jpeg']))
+figure
+world = plot(xaxis, sumFt(1,:), 'black');
+saveas(world, join([savepath, 'world.jpeg']))
 
 %% Europe
 % figure
