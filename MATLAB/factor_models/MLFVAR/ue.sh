@@ -2,10 +2,10 @@
 #$ -S /bin/bash
 #$ -ckpt restart 
 #$ -q its
-#$ -N whole
+#$ -N wue_CK4
 #$ -l mem_free=4G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 module load MATLAB
-./CorrectedPriors 1000 200 800 BigKow kowz.mat BigKowResults4/whole
+./CorrectedKow4 5000 1000 4000 Unemployment worldue.mat BigKowResults

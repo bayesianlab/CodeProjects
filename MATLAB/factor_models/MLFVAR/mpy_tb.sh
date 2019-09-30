@@ -1,11 +1,12 @@
 #!/bin/bash
 #$ -S /bin/bash
-#$ -ckpt restart 
-#$ -q its
-#$ -N whole
+#$ -q pub8i
+#$ -N mpy_tb
 #$ -l mem_free=4G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
+#$ -ckpt restart
 module load MATLAB
-./CorrectedPriors 1000 200 800 BigKow kowz.mat BigKowResults4/whole
+./mpy 5000 2000 3000 TimeBreakDataMPY ${DATA} MpyTb
+./job_end.sh

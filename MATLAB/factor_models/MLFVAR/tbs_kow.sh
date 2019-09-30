@@ -1,15 +1,12 @@
 #!/bin/bash
 #$ -S /bin/bash
-#$ -q free64
-#$ -N bigkow
+#$ -q pub8i
+#$ -N bk
 #$ -l mem_free=4G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 #$ -ckpt restart
-#$ -notify 
-#$ -M dillonflann@gmail.com
-#$ -m e
 module load MATLAB
-./KOW 1000 200 800 TimeBreakDataKOW ${DATA} TBKOW
+./CorrectedKow3 1000 200 800 TimeBreakDataKOW ${DATA} tbk_results
 ./job_end.sh
