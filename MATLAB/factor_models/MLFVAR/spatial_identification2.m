@@ -12,22 +12,27 @@ LL = @(guess) -spatial_LLRestrict(guess, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 freeElems = x0(2:end);
 [themean, ~,exitflag,~,~, Hessian] = fminunc(LL, freeElems, options);
+
 [~, p] = chol(Hessian);
 [themean, Hessian, lastMean, lastHessian] = ...
     optimCheck(p, themean,Hessian, lastMean, lastHessian);
-V = Hessian \ eye(length(themean));
+themean
+V = Hessian \ eye(length(themean-1));
 n = length(themean);
 proposal = themean + chol(V, 'lower')*normrnd(0,1, n,1)./w1;
 proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
+
 
 Num = LogLikePositive(proposal) + proposalDist(freeElems');
 Den = LogLikePositive(freeElems) + proposalDist(proposal');
 alpha = Num - Den;
 u = log(unifrnd(0,1,1));
-if u <= alpha 
-    retval = [1;proposal];
+if u <= alpha
+    proposal(1) = 1;
+    retval = proposal;
 else
-   retval = x0; 
+    x0(1) = 1;
+    retval = x0;
 end
 end
 

@@ -10,7 +10,6 @@ obsupdate = zeros(K,1);
 for r = 1:Regions
     subsetSelect = Info(r,1):Info(r,2);
     ySlice = yt(subsetSelect,:);
-    
     precisionSlice = obsPrecision(subsetSelect);
     x0 = currobsmod(subsetSelect);
     factorPrecision = kowStatePrecision(stateTransitions(r), factorVariance(r), T);

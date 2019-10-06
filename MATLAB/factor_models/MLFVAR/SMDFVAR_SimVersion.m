@@ -2,35 +2,31 @@ function [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
     sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2,sumVarianceDecomp,...
     sumVarianceDecomp2, storeParama] = ...
-    ...
-    SMDFVAR_SimVersion(yt,  InfoCell, CorrType, LocationCorrelation, cutpoints, Sims,...
+    SMDFVAR_SimVersion(yt,  InfoCell, SpatialInfo, CorrType, LocationCorrelation, cutpoints, Sims,...
     burnin, ReducedRuns, initFactor, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification)
 % Spatial version of MDFVAR
 % yt is K x T
 
-parama=.1;
+parama = 1;
 tuningVar=  .5;
 % Index information
 [nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);
 rowsCorr = size(LocationCorrelation,1);
 seriesPerY = K /rowsCorr ;
-nGroups = K/seriesPerY;
-
-[I1, I2, factorInfo] = SpatialMakeIdentities(K, seriesPerY, nGroups);
-
-G = [I1,I2];
-
-Gz1 = [zeros(size(I1,1) ,size(I1,2)), I2];
-Gz2 = [I1, zeros(size(I2,1), size(I2,2))];
 levels = length(InfoCell);
 backupMeanAndHessian  = setBackups(InfoCell, identification);
+[factorIden,~,factorInfo]  = MakeObsModelIdentity(InfoCell);
 % % Initializatitons
 LC = LocationCorrelation;
 obsPrecision = ones(K,1);
+obsVariance = obsPrecision;
 stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
+tbcom = currobsmod;
+StateObsModel = makeStateObsModel(currobsmod, factorIden, 0);
+
 Ft = initFactor;
 Si = kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T);
 factorVariance = ones(nFactors,1);
@@ -57,48 +53,29 @@ options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-9);
 
 % DisplayHelpfulInfo(K,T,nFactors,  Sims,burnin,ReducedRuns, options);
-vy = var(yt,0,2);
 
 for i = 1 : Sims
     fprintf('\nSimulation %i\n',i)
     [LocationCorrelation, Lower] = createSpatialCorr(LC, parama, CorrType);
-    LocationCorrelationPrecision = LocationCorrelation\speye(rowsCorr);
-    LocationCorrelationPrecision = kron(eye(seriesPerY), LocationCorrelationPrecision);
     
-    BigLower= kron(eye(seriesPerY), Lower);
+
+    LCinv = LocationCorrelation\eye(K)
     
-    ystar = BigLower\yt;
-    stateObs = ones(K,1);
-    LocationCorrelationPrecision = diag(stateObs);
     for q = 1:levels
-        Info = InfoCell{1,q};
-        factorIndx = factorInfo(q,:);
-        factorSelect = factorIndx(1):factorIndx(2);
-        factorVarianceSubset = factorVariance(factorSelect);
-        tempbackup = backupMeanAndHessian(factorSelect,:);
-        if q == 1
-            % Cross correlation ys
-            ty = ystar - Gz1*Ft;
-            [currobsmod(:,q), tempbackup, f, vdecomp] = ...
-                Spatial_AmarginalF(LocationCorrelationPrecision, ...
-                Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect),...
-                factorVarianceSubset, tempbackup,options, identification, vy);
-            backupMeanAndHessian(factorSelect,:) = tempbackup;
-            Ft(q,:) = f;
-            variancedecomp(:,q) = vdecomp;
-        else
-            % Within region ys
-            ty = ystar - Gz2*Ft;
-            [currobsmod(:,q), tempbackup, f, vdecomp] = Spatial_AmarginalF_Within_Region(Info, ...
-                Ft(factorSelect, :), ty, currobsmod(:,q), stateTransitions(factorSelect),...
-                factorVarianceSubset, obsPrecision, tempbackup,...
-                options, identification, vy);
-            backupMeanAndHessian(factorSelect,:) = tempbackup;
-            Ft(factorSelect,:) = f;
-            variancedecomp(:,q) = vdecomp;
-        end
+%         Info = InfoCell{1,q};
+%         factorIndx = factorInfo(q,:);
+%         factorSelect = factorIndx(1):factorIndx(2);
+%         factorVarianceSubset = factorVariance(factorSelect);
+%         tempbackup = backupMeanAndHessian(factorSelect,:);
+%         COM = makeStateObsModel(tbcom, factorIden, q);
+
+% spatial_identification2(currobsmod,yt, , Ft, Si, ones(K,1), eye(K), options)
+
+        
+
     end
-    StateObsModel = BigLower*[I1.*currobsmod(:,1), I2.*currobsmod(:,2)];
+    
+
     
     %% Variance
     residuals = yt - StateObsModel*Ft;
@@ -107,14 +84,14 @@ for i = 1 : Sims
     
     %% AR Parameters
     stateTransitions = kowUpdateArParameters(stateTransitions, Ft, factorVariance, 1);
-    
+    Si = kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T);
     if identification == 2
         factorVariance = drawFactorVariance(Ft, stateTransitions, s0, d0);
     end
     
     %% Spatial Parameter
     parama = drawCorrParam(parama, tuningVar, cutpoints, CorrType,  yt,...
-        StateObsModel, LC, Ft, seriesPerY);
+        StateObsModel, LC, Ft, seriesPerY)
     
     %% Storage
     if i > burnin
@@ -138,6 +115,7 @@ for i = 1 : Sims
         storeParama(v) = parama;
     end
 end
+
 
 Runs = Sims- burnin;
 sumFt = sumFt./Runs;

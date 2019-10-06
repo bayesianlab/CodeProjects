@@ -10,9 +10,14 @@ if ischar(ReducedRuns)
 end
 fprintf('Current Working Directory\n')
 pwd
-datalocation = join([DataLocation,'/', DotMatFile]);
-disp(DotMatFile)
-load(datalocation, 'DataCell')
+if (DataLocation == "")
+    load(DotMatFile)
+    disp(DotMatFile)
+else
+    datalocation = join([DataLocation,'/', DotMatFile]);
+    disp(DotMatFile)
+    load(datalocation, 'DataCell')
+end
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
@@ -30,10 +35,10 @@ initStateTransitions = .1.*ones(nFactors,1);
 initobsmodel = .1.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-    kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
+    kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
 % vecFt = .5.*ones(nFactors*T, 1);
 initFactor = reshape(vecFt, nFactors,T);
-identification = 1;
+identification = 2
 %%%%%%%%%%%%
 %%%%%%%%%%%%
 %DONT FORGET TO TURN THIS ON!!!!!!!!!
@@ -42,9 +47,9 @@ identification = 1;
 estML = 1; %%%%%%
 %%%%%%%%%%%%
 %%%%%%%%%%%%
-    [sumFt, sumFt2, sumOM, sumOM2,sumST, sumST2,sumBeta,...
-        sumBeta2, sumObsVariance, sumObsVariance2,...
-        sumFactorVar, sumFactorVar2, varianceDecomp, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
+[sumFt, sumFt2, sumOM, sumOM2,sumST, sumST2,sumBeta,...
+    sumBeta2, sumObsVariance, sumObsVariance2,...
+    sumFactorVar, sumFactorVar2, varianceDecomp, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
     burnin, ReducedRuns, initFactor,  initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile);
 period = strfind(DotMatFile, '.');

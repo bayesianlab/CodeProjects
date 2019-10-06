@@ -1,6 +1,6 @@
 function [parama] = drawCorrParam(parama, tuningVar, cutpoints, CorrType,  yt,...
     StateObsModel, LocationCorrelation, Ft, seriesPerY)
-priorVariance = 100;
+priorVariance = 10;
 if CorrType == 1
     % Nearest Neighbor
     Lower = (cutpoints(1) - parama)/tuningVar;

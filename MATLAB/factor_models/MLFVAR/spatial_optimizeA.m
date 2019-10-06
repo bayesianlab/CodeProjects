@@ -1,5 +1,6 @@
 function [xt, lastMean, lastHessian] = spatial_optimizeA(x0, ydemut, obsPrecision, factor,factorPrecision,...
       lastMean, lastHessian, options, identification)
+  identification
 if identification == 1
     [xt, lastMean, lastHessian] = restrictedDraw(x0, ydemut, obsPrecision, factor,...
         factorPrecision,  lastMean, lastHessian, options);

@@ -45,4 +45,4 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/kowz.mat', 'DataCell')
+% save('BigKow/kowz.mat', 'DataCell')

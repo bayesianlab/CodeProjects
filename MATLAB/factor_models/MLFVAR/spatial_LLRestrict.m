@@ -6,7 +6,7 @@ K = size(obsPrecision,1);
 nFactorsT = nFactors*T;
 nFactorsK = nFactors*K;
 allBut1 = 2:K;
-smallPrecision = obsPrecision(allBut1, allBut1);
+smallPrecision = obsPrecision(allBut1, allBut1)
 % A | F
 FtOF = kron(smallPrecision, factor*factor');
 Avariance = (ObsPriorPrecision + FtOF)\speye(nFactorsK-1, nFactorsK-1);

@@ -1,24 +1,18 @@
-function [obsupdate, backup, f, vdecomp] = ...
-    Spatial_AmarginalF( LocationCorrelationPrecision, Factor, yt, ...
-      currobsmod,  stateTransitions, factorVariance,...
-      backup, options, identification, vy)
+function [obsupdate, backup, f] = ...
+    Spatial_AmarginalF(  LocationCorrelationPrecision, Factor, yt, ...
+    currobsmod,  stateTransitions, factorVariance,...
+    backup, options, identification)
 [K,T] = size(yt);
-u = 0;
-vdecomp = zeros(K,1);
-factorPrecision = kowStatePrecision(stateTransitions, factorVariance, T);
+
+fp = kowStatePrecision(stateTransitions, factorVariance, T);
 lastMean = backup{1,1};
 lastHessian = backup{1,2};
 [obsupdate, lastMean, lastHessian] = spatial_optimizeA(currobsmod, yt,...
-    LocationCorrelationPrecision,  Factor, factorPrecision, lastMean, lastHessian, options, identification);
+    LocationCorrelationPrecision,  Factor, fp, lastMean, lastHessian, options, identification);
 backup{1,1} = lastMean;
 backup{1,2} = lastHessian;
-f =  spatial_UpdateLatent(yt(:),  obsupdate, factorPrecision, LocationCorrelationPrecision);
-obsmodSquared = obsupdate.^2;
+f =  spatial_UpdateLatent(yt(:),  obsupdate, fp, LocationCorrelationPrecision);
 
-for m = 1:size(yt,1)
-    u = u + 1;
-    vdecomp(u) = (obsmodSquared(m) .* var(f)) ./ vy(m);
-end
 
 end
 

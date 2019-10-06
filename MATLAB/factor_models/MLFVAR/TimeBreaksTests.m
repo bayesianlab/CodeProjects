@@ -8,10 +8,10 @@ burnin = 50;
 ReducedRuns = 100;
 ML = zeros(1,3);
 % timeBreak = 50;
-T = 50;
+T = 70;
 % K =6;
 % identification = 2;
-DataCell=SimDataMLF(T, 2, 3, 3, .55)
+DataCell=SimDataMLF(T, 2, 3, 5, .55);
 % load('totaltime.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
@@ -43,17 +43,17 @@ for q = 1:size(InfoCell,2)
     end
 end
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-% vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-%     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
-initFactor = ones(nFactors,T);
+vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
+    kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
+initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
 estML = 0;
 
 
-[sumFt, sumFt2, sumOM, sumOM2, sumOtherOM, sumOtherOM2,...
-    sumST, sumST2,sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
+[sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
+    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2, varianceDecomp, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
-    burnin, ReducedRuns, initFactor, initBeta, initobsmodel,...
+    burnin, ReducedRuns, initFactor, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, 'totaltime.mat');
 
 variance = sumFt2 - sumFt.^2;
@@ -65,13 +65,14 @@ COLOR = [1,0,0];
 facealpha = .3;
 fillX = [1:length(sumFt(1,:)), fliplr(1:length(sumFt(1,:)))];
 fillY = [upper, fliplr(lower)];
-fs =2;
+fs =1;
 mut = reshape(Xt*sumBeta,K,T);
-% h = fill(fillX(1,:), fillY(fs,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+figure
+h = fill(fillX(1,:), fillY(fs,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none');
 hold on
-world = plot(sumFt(fs,:), 'black')
-plot(Factor(fs,:))
+world = plot(sumFt(fs,:), 'black');
+% plot(Factor(fs,:), 'blue')
 
 % sumOM
 % sumBeta

@@ -78,47 +78,47 @@
 % matrix2latexmatrix(Beta, 'betamatrix.tex')
 % matrix2latexmatrix(st,'st.tex')
 
-
-clear;clc;
-savepath = '~/GoogleDrive/statespace/';
-simpath = 'TBKOW/OldResults/';
-files = dir(join([simpath,'*.mat']));
-x =natsortfiles({files.name});
-c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
-N = floor(length(x)/2);
-beg = 1:N;
-c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
-N = floor(length(x)/2);
-beg = 1:N;
-G = length(beg);
-
-for g = 1:N
-    set1 = x{G+ g};
-    datapath = join([simpath,set1]);
-    ml1 = load(datapath, 'ml');
-    set2 = x{g};
-    datapath = join([simpath,set2]);
-    ml2 = load(datapath, 'ml');
-    sumMls(g,2) = ml1.ml + ml2.ml;
-    sumMls(g,1) = c;
-    c = c + 1;
-end
-
-tbaxis = 1967:2010;
-
-
-mlfull = load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/TBKOW/Result_kowTimes100.mat', 'ml');
-mlfull = mlfull.ml;
-hold on 
-tbp = plot(tbaxis, ones(length(tbaxis),1).*mlfull);
-plot(tbaxis, sumMls(:,2))
-[a,b] = max(sumMls)
-saveas(tbp, join([savepath,'tbp.jpeg']))
+% 
+% clear;clc;
+% savepath = '~/GoogleDrive/statespace/';
+% simpath = 'TBKOW/OldResults/';
+% files = dir(join([simpath,'*.mat']));
+% x =natsortfiles({files.name});
+% c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
+% N = floor(length(x)/2);
+% beg = 1:N;
+% c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
+% N = floor(length(x)/2);
+% beg = 1:N;
+% G = length(beg);
+% 
+% for g = 1:N
+%     set1 = x{G+ g};
+%     datapath = join([simpath,set1]);
+%     ml1 = load(datapath, 'ml');
+%     set2 = x{g};
+%     datapath = join([simpath,set2]);
+%     ml2 = load(datapath, 'ml');
+%     sumMls(g,2) = ml1.ml + ml2.ml;
+%     sumMls(g,1) = c;
+%     c = c + 1;
+% end
+% 
+% tbaxis = 1967:2010;
+% 
+% 
+% mlfull = load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/TBKOW/Result_kowTimes100.mat', 'ml');
+% mlfull = mlfull.ml;
+% hold on 
+% tbp = plot(tbaxis, ones(length(tbaxis),1).*mlfull);
+% plot(tbaxis, sumMls(:,2))
+% [a,b] = max(sumMls)
+% saveas(tbp, join([savepath,'tbp.jpeg']))
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% Application KOW dataset
 clear;clc;
 savepath = '~/GoogleDrive/statespace/';
-load('BigKowResults/Result_kowz.mat')
+load('BigKowResults/Result_kowz_03_Oct_2019_07_13_54.mat')
 NA = 1:9;
 OCEAN = 10:15;
 LA = 16:69;
@@ -126,6 +126,8 @@ EUR = 70:123;
 AFRICA = 124:144;
 ASIADEVELOP = 145:162;
 ASIA = 163:180;
+
+
 
 xaxis = 1962:2014;
 variance = sumFt2 - sumFt.^2;
@@ -147,62 +149,78 @@ ytdemut= yt-mut;
 errs = ytdemut - mut2;
 factorVariances = zeros(K,levels);
 facCount = 1;
-for k = 1:levels
-    Info = InfoCell{1,k};
-    Regions = size(Info,1);
-    ConditionalOM = makeStateObsModel(sumOM, Identities, k);
-    
-    for r = 1:Regions
-        subsetSelect = Info(r,1):Info(r,2);
-        regionmu = mut(subsetSelect,:);
-        factorVariances(subsetSelect,k) = var(sumOM(subsetSelect,k).*sumFt(facCount,:),[],2);
-        facCount = facCount + 1;
-    end
+
+
+filevardec= fopen('navd.txt', 'w+');
+navd =  varianceDecomp(NA,:);
+for j = 1:size(navd,1)
+    fstr = sprintf('%.3f %.3f %.3f \n', navd(j,1), navd(j,2), navd(j,3));
+    fprintf(filevardec, fstr);
 end
-
-E = var(errs,[],2);
-
-varDec = factorVariances./sum([factorVariances, E],2);
-[a,b] = max(varDec);
-
-filevardec= fopen('vardecomp.txt', 'w+');
-for j = 1:size(varDec,1)
-    fstr = sprintf('%.3f %.3f %.3f \n', varDec(j,1), varDec(j,2), varDec(j,3));
+fclose(filevardec');
+filevardec= fopen('ocvd.txt', 'w+');
+ocvd =  varianceDecomp(OCEAN,:);
+for j = 1:size(ocvd,1)
+    fstr = sprintf('%.3f %.3f %.3f \n', ocvd(j,1), ocvd(j,2), ocvd(j,3));
+    fprintf(filevardec, fstr);
+end
+fclose(filevardec');
+filevardec= fopen('lavd.txt', 'w+');
+lavd =  varianceDecomp(LA,:);
+for j = 1:size(lavd,1)
+    fstr = sprintf('%.3f %.3f %.3f \n', lavd(j,1), lavd(j,2), lavd(j,3));
+    fprintf(filevardec, fstr);
+end
+fclose(filevardec');
+filevardec= fopen('eurvd.txt', 'w+');
+eurvd =  varianceDecomp(EUR,:);
+for j = 1:size(eurvd,1)
+    fstr = sprintf('%.3f %.3f %.3f \n', eurvd(j,1), eurvd(j,2), eurvd(j,3));
+    fprintf(filevardec, fstr);
+end
+fclose(filevardec');
+filevardec= fopen('afvd.txt', 'w+');
+afvd =  varianceDecomp(AFRICA,:);
+for j = 1:size(afvd,1)
+    fstr = sprintf('%.3f %.3f %.3f \n', afvd(j,1), afvd(j,2), afvd(j,3));
+    fprintf(filevardec, fstr);
+end
+fclose(filevardec');
+filevardec= fopen('asdvd.txt', 'w+');
+asdvd =  varianceDecomp(ASIADEVELOP,:);
+for j = 1:size(asdvd,1)
+    fstr = sprintf('%.3f %.3f %.3f \n', asdvd(j,1), asdvd(j,2), asdvd(j,3));
+    fprintf(filevardec, fstr);
+end
+fclose(filevardec');
+filevardec= fopen('asvd.txt', 'w+');
+asvd =  varianceDecomp(ASIA,:);
+for j = 1:size(asvd,1)
+    fstr = sprintf('%.3f %.3f %.3f \n', asvd(j,1), asvd(j,2), asvd(j,3));
     fprintf(filevardec, fstr);
 end
 fclose(filevardec');
 
 % Average var dec.
-mean(varDec(NA,2))
-mean(varDec(OCEAN,2))
-mean(varDec(LA,2))
-mean(varDec(EUR,2))
-mean(varDec(AFRICA,2))
-mean(varDec(ASIADEVELOP,2))
-mean(varDec(ASIA,2))
+mean(varianceDecomp(NA,2))
+mean(varianceDecomp(OCEAN,2))
+mean(varianceDecomp(LA,2))
+mean(varianceDecomp(EUR,2))
+mean(varianceDecomp(AFRICA,2))
+mean(varianceDecomp(ASIADEVELOP,2))
+mean(varianceDecomp(ASIA,2))
 
 
 %% World
-figure
-world = plot(xaxis, sumFt(1,:), 'black');
-saveas(world, join([savepath, 'world.jpeg']))
+% figure
+% world = plot(xaxis, sumFt(1,:), 'black');
+% saveas(world, join([savepath, 'world.jpeg']))
 
-%% Europe
-% figure
-% europe = plot(xaxis, sumFt(5,:), 'black')
-% shade([1974, 1980, 1992, 2008, 2011], [1975, 1982, 1993, 2009, 2013], 'black')
-% saveas(europe, join([savepath, 'europefactor.jpeg']))
-% hold off
-% figure
-% h = fill(fillX(1,:), fillY(5,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% europeregion  = plot(xaxis, sumFt(5,:), 'black')
-% saveas(europeregion, join([savepath, 'europeregionplot.jpeg']))
+
 
 %% North America
 % figure
-% na = plot(xaxis, sumFt(2,:), 'blue');
+% na = plot(xaxis, sumFt(2,:), 'black');
 % shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
 % saveas(na, join([savepath,'nafactorplot_recessions.jpeg']))
 % figure
@@ -243,26 +261,122 @@ saveas(world, join([savepath, 'world.jpeg']))
 % saveas(usacountryinv, join([savepath,'usacountryinv.jpeg']))
 % hold off
 % figure
-% h = fill(fillX(1,:), fillY(5,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
 % naregion  = plot(xaxis, sumFt(5,:), 'black')
 % saveas(naregion, join([savepath, 'naregionplot.jpeg']))
-
+% figure
+% h = fill(fillX(1,:), fillY(2,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on
+% naregion  = plot(xaxis, sumFt(2,:), 'black')
+% saveas(naregion, join([savepath, 'naregionplot.jpeg']))
 
 %% Oceania
-% hold off
-% figure
-% ocean = plot(xaxis, sumFt(3,:), 'black')
-% shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
-% 
 % figure
 % h = fill(fillX(1,:), fillY(3,:), COLOR);
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
-% ocean  = plot(xaxis, sumFt(3,:), 'black')
-% saveas(ocean, join([savepath,'oceanfactor.jpeg']))
+% oceania  = plot(xaxis, sumFt(3,:), 'black')
+%  saveas(oceania, join([savepath, 'oceania.jpeg']))
+
+%% Latin America
+% figure
+% h = fill(fillX(1,:), fillY(4,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on
+% latinAmerica  = plot(xaxis, sumFt(4,:), 'black')
+%  saveas(latinAmerica, join([savepath, 'latinAmerica.jpeg']))
+
+%% Africa
+% figure
+% h = fill(fillX(1,:), fillY(6,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on
+% africa  = plot(xaxis, sumFt(6,:), 'black')
+%  saveas(africa, join([savepath, 'africa.jpeg']))
+
+%% Latin America and Africa
+% figure
+% hold on
+% afrla = plot(xaxis, sumFt(4,:), 'black');
+% plot(xaxis, sumFt(6,:), 'blue')
+% saveas(afrla, join([savepath, 'afrla.jpeg']))
+
+%% Europe
+% figure
+% europe = plot(xaxis, sumFt(5,:), 'black')
+% shade([1974, 1980, 1992, 2008, 2011], [1975, 1982, 1993, 2009, 2013], 'black')
+% saveas(europe, join([savepath, 'europefactor.jpeg']))
 % hold off
+% figure
+% h = fill(fillX(1,:), fillY(5,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on
+% europeregion  = plot(xaxis, sumFt(5,:), 'black')
+% saveas(europeregion, join([savepath, 'europeregionplot.jpeg']))
+
+%% Asia Developed
+% figure
+% asia  = plot(xaxis, sumFt(8,:), 'black')
+% saveas(asia, join([savepath, 'asia.jpeg']))
+% figure
+% h = fill(fillX(1,:), fillY(8,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on
+% asia_stderrs  = plot(xaxis, sumFt(8,:), 'black')
+% saveas(asia_stderrs, join([savepath, 'asia_stderrs.jpeg']))
+
+%% Asia Developing
+% figure
+% h = fill(fillX(1,:), fillY(7,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on
+% asiadev_stderrs  = plot(xaxis, sumFt(7,:), 'black')
+% saveas(asiadev_stderrs, join([savepath, 'asiadev_stderrs.jpeg']))
+% figure
+% asiadevelop  = plot(xaxis, sumFt(7,:), 'black')
+% saveas(asiadevelop, join([savepath, 'asiadev.jpeg']))
+
+%% United States
+% figure
+% usa = plot(xaxis, sumFt(9,:), 'black')
+% shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
+% hold off
+% saveas(usa, 'usashaded.jpeg')
+% figure
+% h = fill(fillX(1,:), fillY(9,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on
+% usa  = plot(xaxis, sumFt(9,:), 'black')
+% saveas(usa, join([savepath,'usafactor.jpeg']))
+% hold off
+% 
+% figure
+% hold on
+% usa= plot(xaxis, yt(1,:), 'black');
+% plot(xaxis, sumOM(1,2)*sumFt(2,:), 'red')
+% plot(xaxis, sumOM(1,3)*sumFt(9,:), 'blue')
+% saveas(usa, join([savepath,'usaVsRegionCountry.jpeg']))
+
+%% Canada and Mexico
+% figure
+% hold on
+% canada= plot(xaxis, yt(4,:), 'black');
+% plot(xaxis, sumOM(4,2)*sumFt(2,:), 'red')
+% plot(xaxis, sumOM(4,3)*sumFt(10,:), 'blue')
+% saveas(canada, join([savepath,'canadaVsRegionCountry.jpeg']))
+% figure
+% hold on 
+% mexico= plot(xaxis, yt(7,:), 'black');
+% plot(xaxis, sumOM(7,2)*sumFt(2,:), 'red')
+% plot(xaxis, sumOM(7,3)*sumFt(11,:), 'blue')
+% saveas(mexico, join([savepath,'mexicoVsRegionCountry.jpeg']))
+% saveas(mexico, join([savepath,'mexicofactor.jpeg']))
+% figure
+% hold on
+% canada= plot(xaxis, yt(4,:), 'black');
+% plot(xaxis, sumOM(4,3)*sumFt(10,:), 'red')
+% saveas(canada, join([savepath,'canadafactor.jpeg']))
 %% N. Zealand
 % figure
 % nz = plot(xaxis, sumFt(13,:), 'black')
@@ -288,98 +402,6 @@ saveas(world, join([savepath, 'world.jpeg']))
 % aus  = plot(xaxis, sumFt(12,:), 'black')
 % saveas(aus, join([savepath,'ausfactor.jpeg']))
 % hold off
-
-%% Asia Developed
-% figure
-% h = fill(fillX(1,:), fillY(8,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% asia  = plot(xaxis, sumFt(8,:), 'black')
-% saveas(asia, join([savepath, 'asia.jpeg']))
-% ag = yt(ASIA,:);
-% asgdp = ag(1:3:size(ag,1),:);
-% plot(xaxis,asgdp(1,:))
-%% Asia Developing
-% figure
-% h = fill(fillX(1,:), fillY(7,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% asiadev  = plot(xaxis, sumFt(7,:), 'black')
-% agdp = yt(ASIADEVELOP,:);
-% agdp = agdp(1:3:size(agdp,1),:);
-% 1:3:size(agdp,1)
-% plot(xaxis, agdp(5,:))
-
-% saveas(asiadev, join([savepath, 'asiadev.jpeg']))
-
-%% Latin America
-% figure
-% h = fill(fillX(1,:), fillY(4,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% latinAmerica  = plot(xaxis, sumFt(4,:), 'black')
-%  saveas(latinAmerica, join([savepath, 'latinAmerica.jpeg']))
-
-%% Africa
-% figure
-% h = fill(fillX(1,:), fillY(6,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% africa  = plot(xaxis, sumFt(6,:), 'black')
-%  saveas(africa, join([savepath, 'africa.jpeg']))
-
-%% Latin America and Africa
-% figure
-% hold on
-% afrla = plot(xaxis, sumFt(4,:), 'black');
-% plot(xaxis, sumFt(6,:), 'blue')
-% saveas(afrla, join([savepath, 'afrla.jpeg']))
-
-%% Oceania
-% figure
-% h = fill(fillX(1,:), fillY(3,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% oceania  = plot(xaxis, sumFt(3,:), 'black')
-%  saveas(oceania, join([savepath, 'oceania.jpeg']))
-%% United States
-% figure
-% usa = plot(xaxis, sumFt(9,:), 'black')
-% shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
-% hold off
-% saveas(usa, 'usashaded.jpeg')
-% figure
-% h = fill(fillX(1,:), fillY(9,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% usa  = plot(xaxis, sumFt(9,:), 'black')
-% saveas(usa, join([savepath,'usafactor.jpeg']))
-% hold off
-% 
-% figure
-% hold on
-% usa= plot(xaxis, yt(1,:), 'black');
-% plot(xaxis, sumOM(1,2)*sumFt(2,:), 'red')
-% plot(xaxis, sumOM(1,3)*sumFt(9,:), 'blue')
-% saveas(usa, join([savepath,'usaVsRegionCountry.jpeg']))
-% figure
-% hold on
-% canada= plot(xaxis, yt(4,:), 'black');
-% plot(xaxis, sumOM(4,2)*sumFt(2,:), 'red')
-% plot(xaxis, sumOM(4,3)*sumFt(10,:), 'blue')
-% saveas(canada, join([savepath,'canadaVsRegionCountry.jpeg']))
-% figure
-% hold on 
-% mexico= plot(xaxis, yt(7,:), 'black');
-% plot(xaxis, sumOM(7,2)*sumFt(2,:), 'red')
-% plot(xaxis, sumOM(7,3)*sumFt(11,:), 'blue')
-% saveas(mexico, join([savepath,'mexicoVsRegionCountry.jpeg']))
-% saveas(mexico, join([savepath,'mexicofactor.jpeg']))
-% figure
-% hold on
-% canada= plot(xaxis, yt(4,:), 'black');
-% plot(xaxis, sumOM(4,3)*sumFt(10,:), 'red')
-% saveas(canada, join([savepath,'canadafactor.jpeg']))
 
 %% Germany
 % figure

@@ -4,7 +4,6 @@ nFactors =0;
 for q = 1:nlevels
     nFactors = nFactors + size(InfoCell{1,q},1);
 end
-InfoCell
 IdentityMat = zeros(K, nFactors);
 spast = 0;
 for c = 1:nlevels

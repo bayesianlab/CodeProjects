@@ -28,7 +28,7 @@ currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
 StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 Si = kowStatePrecision(diag(initStateTransitions),factorVariance,T);
-factorVariance = ones(nFactors,1);
+
 
 % Storage
 sumBeta = zeros(dimX,1);
@@ -80,25 +80,25 @@ if finishedMainRun == 0
         
         for q = levelVec
             fprintf('Level %i\n', q)
-            ConditionalObsModel = makeStateObsModel(currobsmod, Identities, q);
-            mut = xbt + ConditionalObsModel*Ft;
+            COM = makeStateObsModel(currobsmod, Identities, q);
+            mut = xbt + COM*Ft;
             ydemut = yt - mut;
             Info = InfoCell{1,q};
             factorIndx = factorInfo(q,:);
-            factorSelect = factorIndx(1):factorIndx(2);
-            factorVarianceSubset = factorVariance(factorSelect);
-            tempbackup = backupMeanAndHessian(factorSelect,:);
+            facSelect = factorIndx(1):factorIndx(2);
+            facVarSubset = factorVariance(facSelect);
+            tempbackup = backupMeanAndHessian(facSelect,:);
             
             [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
-                Ft(factorSelect, :), ydemut, currobsmod(:,q), ...
-                stateTransitions(factorSelect), factorVarianceSubset,...
+                Ft(facSelect, :), ydemut, currobsmod(:,q), ...
+                stateTransitions(facSelect), facVarSubset,...
                 obsPrecision, tempbackup, options, identification);
-            
-            backupMeanAndHessian(factorSelect,:) = tempbackup;
-            Ft(factorSelect,:) = f;
+            backupMeanAndHessian(facSelect,:) = tempbackup;
+            Ft(facSelect,:) = f;   
         end
         
         StateObsModel = makeStateObsModel(currobsmod,Identities,0);
+        Si = kowStatePrecision(diag(stateTransitions),factorVariance,T);
         
         %% Variance
         resids = yt - StateObsModel*Ft - xbt;
@@ -107,7 +107,6 @@ if finishedMainRun == 0
         
         %% AR Parameters
         stateTransitions = kowUpdateArParameters(stateTransitions, Ft, factorVariance, 1);
-        Si = kowStatePrecision(diag(stateTransitions),factorVariance,T);
         
         if identification == 2
             [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
@@ -135,8 +134,8 @@ if finishedMainRun == 0
             if estML == 1
                 for q = levelVec
                     factorIndx = factorInfo(q,:);
-                    factorSelect = factorIndx(1):factorIndx(2);
-                    sumBackup(factorSelect,:) = sumLastMeanHessian(InfoCell{1,q}, backupMeanAndHessian(factorSelect,:), sumBackup(factorSelect,:));
+                    facSelect = factorIndx(1):factorIndx(2);
+                    sumBackup(facSelect,:) = sumLastMeanHessian(InfoCell{1,q}, backupMeanAndHessian(facSelect,:), sumBackup(facSelect,:));
                 end
             end
         end
@@ -166,9 +165,9 @@ if finishedMainRun == 0
     facCount = 1;
     for k = levelVec
         factorIndx = factorInfo(k,:);
-        factorSelect = factorIndx(1):factorIndx(2);
-        [reducedDimBackUps(factorSelect,:), sumBackup(factorSelect,:)] =...
-            reduceDimBackup(InfoCell{1,k}, backupMeanAndHessian(factorSelect,:), sumBackup(factorSelect,:));
+        facSelect = factorIndx(1):factorIndx(2);
+        [reducedDimBackUps(facSelect,:), sumBackup(facSelect,:)] =...
+            reduceDimBackup(InfoCell{1,k}, backupMeanAndHessian(facSelect,:), sumBackup(facSelect,:));
         Info = InfoCell{1,k};
         Regions = size(Info,1);
         vydemut = var(yt,[],2);
@@ -219,14 +218,14 @@ if estML == 1
                 ydemut = yt - mut;
                 Info = InfoCell{1,q};
                 factorIndx = factorInfo(q,:);
-                factorSelect = factorIndx(1):factorIndx(2);
-                factorVarianceSubset = sumFactorVar(factorSelect);
-                tempbackup = reducedDimBackUps(factorSelect,:);
+                facSelect = factorIndx(1):factorIndx(2);
+                facVarSubset = sumFactorVar(facSelect);
+                tempbackup = reducedDimBackUps(facSelect,:);
                 [currobsmod(:,q), tempbackup, ~] = AmarginalF_ML(Info, ...
-                    sumFt(factorSelect, :), ydemut, currobsmod(:,q), sumST(factorSelect),...
-                    factorVarianceSubset,obsPrecisionStar, tempbackup,...
+                    sumFt(facSelect, :), ydemut, currobsmod(:,q), sumST(facSelect),...
+                    facVarSubset,obsPrecisionStar, tempbackup,...
                     options);
-                reducedDimBackUps(factorSelect,:) = tempbackup;
+                reducedDimBackUps(facSelect,:) = tempbackup;
             end
             Ag(:,:,r) = currobsmod;
             StateObsModel = makeStateObsModel(currobsmod,Identities,0);
@@ -268,11 +267,11 @@ if estML == 1
             priorAstar(q) = Apriors(Info,Astar);
             Info = InfoCell{1,q};
             factorIndx = factorInfo(q,:);
-            factorSelect = factorIndx(1):factorIndx(2);
-            factorVarianceSubset = sumFactorVar(factorSelect);
-            tempbackup = sumBackup(factorSelect,:);
-            piAstarsum = piAstarsum + sum(piAstar(Info, sumFt(factorSelect, :), ydemut, squeeze(Ag(:,q,:)),...
-                Astar, sumST(factorSelect), factorVarianceSubset,...
+            facSelect = factorIndx(1):factorIndx(2);
+            facVarSubset = sumFactorVar(facSelect);
+            tempbackup = sumBackup(facSelect,:);
+            piAstarsum = piAstarsum + sum(piAstar(Info, sumFt(facSelect, :), ydemut, squeeze(Ag(:,q,:)),...
+                Astar, sumST(facSelect), facVarSubset,...
                 obsPrecisionStar, tempbackup,identification));
         end
         finishedSecondReducedRun = 1;
@@ -282,7 +281,7 @@ if estML == 1
         posteriorStar = sum(piObsVarianceStar) +...
             + sum(piFactorTransitionStar) + piBetaStar + piAstarsum;
         if identification == 2
-        posteriorStar = posteriorStar + sum(piFactorVarianceStar);
+            posteriorStar = posteriorStar + sum(piFactorVarianceStar);
         end
         mu = reshape(Xt*BetaStar,K,T) +  StateObsModelStar*sumFt ;
         LogLikelihood = sum(logmvnpdf(yt', mu', diag(sumObsVariance)));
