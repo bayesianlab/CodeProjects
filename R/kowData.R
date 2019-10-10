@@ -124,9 +124,11 @@ colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rknaUSA',
   'rgdpnaSGP', 'rconnaSGP', 'rknaSGP',
   'rgdpnaTHA', 'rconnaTHA', 'rknaTHA')
 
-KOW <- log(KOW[2:55,2:181]) - log(KOW[1:54, 2:181])
+KOWpercent <- (KOW[2:55,2:181] - KOW[1:54, 2:181])/KOW[2:55, 2:181]
+KOWlfd <- log(KOW[2:55,2:181]) - log(KOW[1:54, 2:181])
 KOWrescaled <- KOW*100
 
-
-write.csv(KOW, '~/GoogleDrive/Datasets/kow_march6.csv', row.names = FALSE)
-write.csv(KOWrescaled, '~/GoogleDrive/Datasets/kow_march6_rescaled.csv', row.names = FALSE)
+write.csv(KOWpercent, '~/GoogleDrive/Datasets/kow_percent.csv', row.names = FALSE)
+write.csv(KOW, '~/GoogleDrive/Datasets/kow_raw.csv', row.names = FALSE)
+write.csv(KOWlfd, '~/GoogleDrive/Datasets/kow_march6.csv', row.names = FALSE)
+write.csv(KOWrescaled, '~/GoogleDrive/Datasets/kow.csv', row.names = FALSE)

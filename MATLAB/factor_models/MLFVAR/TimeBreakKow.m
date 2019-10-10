@@ -1,4 +1,5 @@
-function [] = TimeBreakKow(Sims, burnin, ReducedRuns, DataLocation, DotMatFile, OutputDir)
+function [] = TimeBreakKow(Sims, burnin, ReducedRuns, DataLocation,...
+    DotMatFile, OutputDir)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -38,7 +39,7 @@ vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
 % vecFt = .5.*ones(nFactors*T, 1);
 initFactor = reshape(vecFt, nFactors,T);
-identification = 2
+identification = 2;
 %%%%%%%%%%%%
 %%%%%%%%%%%%
 %DONT FORGET TO TURN THIS ON!!!!!!!!!

@@ -120,13 +120,33 @@ clear;clc;
 savepath = '~/GoogleDrive/statespace/';
 load('BigKowResults/Result_kowz_03_Oct_2019_07_13_54.mat')
 NA = 1:9;
+NAOUT = 1:3:9;
+NACONS = 2:3:8;
+NAINV = 3:3:7;
 OCEAN = 10:15;
+OCEANOUT = 10:3:15;
+OCEANCONS = 11:3:14;
+OCEANINV = 12:3:13;
 LA = 16:69;
+LAOUT = 16:3:69;
+LACONS = 17:3:68;
+LAINV = 18:3:67;
 EUR = 70:123;
+EUROUT = 70:3:123;
+EURCONS = 71:3:122;
+EURINV = 72:3:121;
 AFRICA = 124:144;
+AFRICAOUT = 124:3:144;
+AFRICACONS = 125:3:143;
+AFRICAINV = 126:3:142;
 ASIADEVELOP = 145:162;
+ASIADEVELOPOUT = 145:3:162;
+ASIADEVELOPCONS = 146:3:161;
+ASIADEVELOPINV = 147:3:160;
 ASIA = 163:180;
-
+ASIAOUT = 163:3:180;
+ASIACONS = 164:3:179;
+ASIAINV = 165:3:178;
 
 
 xaxis = 1962:2014;
@@ -147,8 +167,10 @@ mut2 = Gt*sumFt;
 yhat = mut+ mut2;
 ytdemut= yt-mut;
 errs = ytdemut - mut2;
-factorVariances = zeros(K,levels);
-facCount = 1;
+verrs = var(errs,[],2);
+vtot = sum([var(mut,[],2), varianceDecomp, verrs],2);
+var(mut,[],2)./vtot
+
 
 
 filevardec= fopen('navd.txt', 'w+');
@@ -202,6 +224,7 @@ end
 fclose(filevardec');
 
 % Average var dec.
+disp('Regional')
 mean(varianceDecomp(NA,2))
 mean(varianceDecomp(OCEAN,2))
 mean(varianceDecomp(LA,2))
@@ -211,6 +234,55 @@ mean(varianceDecomp(ASIADEVELOP,2))
 mean(varianceDecomp(ASIA,2))
 
 
+
+disp('Country')
+mean(varianceDecomp(OCEAN,3))
+mean(varianceDecomp(OCEAN,2))
+
+disp('Specific Series')
+round([mean(varianceDecomp(NAOUT,2)),
+mean(varianceDecomp(NACONS,2)),
+mean(varianceDecomp(NAINV,2)),
+mean(varianceDecomp(OCEANOUT,2)),
+mean(varianceDecomp(OCEANCONS,2)),
+mean(varianceDecomp(OCEANINV,2)),
+mean(varianceDecomp(LAOUT,2)),
+mean(varianceDecomp(LACONS,2)),
+mean(varianceDecomp(LAINV,2))
+mean(varianceDecomp(EUROUT,2)),
+mean(varianceDecomp(EURCONS,2)),
+mean(varianceDecomp(EURINV,2)),
+mean(varianceDecomp(AFRICAOUT,2)),
+mean(varianceDecomp(AFRICACONS,2)),
+mean(varianceDecomp(AFRICAINV,2)),
+mean(varianceDecomp(ASIADEVELOPOUT,2)),
+mean(varianceDecomp(ASIADEVELOPCONS,2)),
+mean(varianceDecomp(ASIADEVELOPINV,2)),
+mean(varianceDecomp(ASIAOUT,2)),
+mean(varianceDecomp(ASIACONS,2)),
+mean(varianceDecomp(ASIAINV,2))], 3)
+
+round([mean(varianceDecomp(NAOUT,3)),
+mean(varianceDecomp(NACONS,3)),
+mean(varianceDecomp(NAINV,3)),
+mean(varianceDecomp(OCEANOUT,3)),
+mean(varianceDecomp(OCEANCONS,3)),
+mean(varianceDecomp(OCEANINV,3)),
+mean(varianceDecomp(LAOUT,3)),
+mean(varianceDecomp(LACONS,3)),
+mean(varianceDecomp(LAINV,3)),
+mean(varianceDecomp(EUROUT,3)),
+mean(varianceDecomp(EURCONS,3)),
+mean(varianceDecomp(EURINV,3)),
+mean(varianceDecomp(AFRICAOUT,3)),
+mean(varianceDecomp(AFRICACONS,3)),
+mean(varianceDecomp(AFRICAINV,3)),
+mean(varianceDecomp(ASIADEVELOPOUT,3)),
+mean(varianceDecomp(ASIADEVELOPCONS,3)),
+mean(varianceDecomp(ASIADEVELOPINV,3)),
+mean(varianceDecomp(ASIAOUT,3)),
+mean(varianceDecomp(ASIACONS,3)),
+mean(varianceDecomp(ASIAINV,3))], 3)
 %% World
 % figure
 % world = plot(xaxis, sumFt(1,:), 'black');
@@ -261,10 +333,6 @@ mean(varianceDecomp(ASIA,2))
 % saveas(usacountryinv, join([savepath,'usacountryinv.jpeg']))
 % hold off
 % figure
-% hold on
-% naregion  = plot(xaxis, sumFt(5,:), 'black')
-% saveas(naregion, join([savepath, 'naregionplot.jpeg']))
-% figure
 % h = fill(fillX(1,:), fillY(2,:), COLOR);
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
@@ -289,8 +357,6 @@ mean(varianceDecomp(ASIA,2))
 
 %% Africa
 % figure
-% h = fill(fillX(1,:), fillY(6,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
 % africa  = plot(xaxis, sumFt(6,:), 'black')
 %  saveas(africa, join([savepath, 'africa.jpeg']))
@@ -371,7 +437,7 @@ mean(varianceDecomp(ASIA,2))
 % plot(xaxis, sumOM(7,2)*sumFt(2,:), 'red')
 % plot(xaxis, sumOM(7,3)*sumFt(11,:), 'blue')
 % saveas(mexico, join([savepath,'mexicoVsRegionCountry.jpeg']))
-% saveas(mexico, join([savepath,'mexicofactor.jpeg']))
+
 % figure
 % hold on
 % canada= plot(xaxis, yt(4,:), 'black');
