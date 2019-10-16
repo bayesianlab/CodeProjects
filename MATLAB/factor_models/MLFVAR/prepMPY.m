@@ -1,12 +1,11 @@
 clear;clc;
 money = importmoney('~/GoogleDrive/Datasets/Inflation and Growth/mpy.csv', 2,52 );
 mpy = money(:, 2:88);
-mpy = table2array(mpy);
+mpy = table2array(mpy)';
 
+smpy = std(mpy,[],2);
+mpy = (mpy - mean(mpy,2))./smpy;
 
-mpy = mpy./std(mpy, [], 1);
-% mpy = mpy - mean(mpy,1);
-mpy = mpy' ;
 [K,T] = size(mpy);
 SeriesPerCountry = 3;
 Countries = 29;

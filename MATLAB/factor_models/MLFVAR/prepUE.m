@@ -1,10 +1,10 @@
 clear;clc;
-ue = importfileue('~/GoogleDrive/Datasets/US unemployment/ue.csv', 2, 59 );
+ue = importfileue('~/GoogleDrive/Datasets/US unemployment/ue_ordered.csv', 290, 519 );
 importdates
-ue = table2array(ue);
-
-ue = ue./std(ue, [], 1);
-ue= ue' ;
+ue = table2array(ue)';
+ue = log(ue(:,2:end)) - log(ue(:, 1:end-1));
+ue = ue - mean(ue,2);
+ue = ue./std(ue,[],2);
 [K,T] = size(ue);
 SeriesPerCountry = 1;
 Countries = 50;
@@ -42,4 +42,4 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('ue.mat', 'DataCell')
+save('Unemployment/ue_big.mat', 'DataCell')

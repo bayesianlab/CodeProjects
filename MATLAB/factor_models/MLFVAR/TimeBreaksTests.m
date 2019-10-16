@@ -3,15 +3,15 @@
 % Full period
 clear;clc;
 rng(3)
-Sims = 100;
+Sims = 200;
 burnin = 50;
-ReducedRuns = 100;
+ReducedRuns = 200;
 ML = zeros(1,3);
 % timeBreak = 50;
 T = 70;
 % K =6;
 % identification = 2;
-DataCell=SimDataMLF(T, 2, 3, 5, .55);
+DataCell=SimDataMLF(T, 2, 2, 3, .55);
 % load('totaltime.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
@@ -47,7 +47,7 @@ vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions),ones(nFactors,1),T), obsPrecision);
 initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
-estML = 0;
+estML = 1;
 
 
 [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
@@ -67,11 +67,11 @@ fillX = [1:length(sumFt(1,:)), fliplr(1:length(sumFt(1,:)))];
 fillY = [upper, fliplr(lower)];
 fs =1;
 mut = reshape(Xt*sumBeta,K,T);
-figure
-h = fill(fillX(1,:), fillY(fs,:), COLOR);
-set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none');
-hold on
-world = plot(sumFt(fs,:), 'black');
+% figure
+% h = fill(fillX(1,:), fillY(fs,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none');
+% hold on
+% world = plot(sumFt(fs,:), 'black');
 % plot(Factor(fs,:), 'blue')
 
 % sumOM

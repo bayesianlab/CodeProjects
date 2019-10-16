@@ -18,10 +18,9 @@ for r = 1:Regions
     factorPrecision = kowStatePrecision(stateTransitions(r), factorVariance(r), T);
     lastMean = backup{r,1};
     lastCovar = backup{r,2};
-    [xt, lastMean, lastCovar] = identification2_ml(x0(2:end), ySlice(2:end,:),precisionSlice(2:end),...
+    [xt, lastMean, lastCovar] = identification2_ml(x0, ySlice,precisionSlice,...
         Factor(r,:), factorPrecision, lastMean,...
         lastCovar,options);
-
     obsupdate(subsetSelect) = xt;
     backup{r,1} = lastMean;
     backup{r,2} = lastCovar;

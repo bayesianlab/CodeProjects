@@ -28,8 +28,8 @@ elseif identification == 2
             index = sectorInfo(k,:);
             range = index(1):index(2);
             nrange = length(range);
-            backupcell{k+rowplace,1} = zeros(1,length(range));
-            backupcell{k+rowplace,2} = eye(nrange);
+            backupcell{k+rowplace,1} = zeros(1,length(range)-1);
+            backupcell{k+rowplace,2} = eye(nrange-1);
             
         end
         rowplace = nsectors+rowplace;

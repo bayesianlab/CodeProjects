@@ -4,12 +4,12 @@ function [ retval, lastMean, lastCovar] = identification2( x0, yt, obsPrecision,
 [K,T] = size(yt);
 df = 15;
 w1 = sqrt(chi2rnd(df,1)/df);
-ObsPriorMean = 1.*ones(1, K);
-ObsPriorPrecision = eye(K);
+ObsPriorMean = ones(1, K-1);
+ObsPriorPrecision = eye(K-1);
 LL = @(g) -LLRestrict (g, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 
-[themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0, options);
+[themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0(2:end), options);
 
 [~, p] = chol(Hessian);
 
@@ -18,21 +18,19 @@ if p ~= 0
     V = lastCovar;
 else
     lastMean = themean';
-    lastCovar = Hessian\eye(K);
+    lastCovar = Hessian\eye(K-1);
     V = lastCovar;
 end
-proposalDist = @(q) mvstudenttpdf(q, themean(2:end)', V(2:end,2:end), df);
+proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
 
-LogLikePositive = @(v) LLRestrict (v, yt(2:end,:),ObsPriorMean(2:end),...
-    ObsPriorPrecision(2:end,2:end), obsPrecision(2:end), Ft,FtPrecision);
-proposal = themean + chol(V, 'lower')*normrnd(0,1, K,1)./w1;
-proposal = proposal(2:end);
+LogLikePositive = @(v) LLRestrict (v, yt,ObsPriorMean,...
+    ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
+proposal = themean + chol(V, 'lower')*normrnd(0,1, K-1,1)./w1;
 freeElems = x0(2:end);
 Num = LogLikePositive(proposal) + proposalDist(freeElems');
 Den = LogLikePositive(freeElems) + proposalDist(proposal');
 alpha = Num - Den;
-u = log(unifrnd(0,1,1));
-if u <= alpha
+if log(unifrnd(0,1,1)) <= alpha
     retval = [1;proposal];
 else
     retval = x0;

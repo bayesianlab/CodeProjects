@@ -9,10 +9,10 @@ for r = 1:Regions
     lastMean2 = backup2{r,1};
     lastHessian2 = backup2{r,2};
     
-    blank1{r,1} = lastMean1(2:end);
-    blank1{r,2} = lastHessian1(2:end,2:end);
-    blank2{r,1} = lastMean2(2:end);
-    blank2{r,2} = lastHessian2(2:end,2:end);
+    blank1{r,1} = lastMean1;
+    blank1{r,2} = lastHessian1;
+    blank2{r,1} = lastMean2;
+    blank2{r,2} = lastHessian2;
     
 end
 end

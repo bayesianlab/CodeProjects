@@ -4,20 +4,20 @@ function [ retval, lastMean, lastCovar] = identification2_ml( x0, yt, obsPrecisi
 [K,T] = size(yt);
 df = 7;
 w1 = sqrt(chi2rnd(df,1)/df);
-ObsPriorMean = ones(1, K);
-ObsPriorPrecision = eye(K);
+ObsPriorMean = ones(1, K-1);
+ObsPriorPrecision = eye(K-1);
 LL = @(guess) -LLRestrict(guess, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 
-
-[themean, ~,exitflag,~,~, Hessian] = fminunc(LL, x0, options);
+freeElems = x0(2:end);
+[themean, ~,exitflag,~,~, Hessian] = fminunc(LL, freeElems, options);
 [~, p] = chol(Hessian);
 if p ~= 0
     themean = lastMean';
     V = lastCovar;
 else
     lastMean = themean';
-    lastCovar = Hessian\eye(K);
+    lastCovar = Hessian\eye(K-1);
     V = lastCovar;
 end
 
@@ -27,16 +27,16 @@ proposalDist = @(q) mvstudenttpdf(q, themean', V, df);
 LogLikePositive = @(v) LLRestrict (v, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);
 
-proposal = themean + chol(V, 'lower')*normrnd(0,1, K,1)./w1;
+proposal = themean + chol(V, 'lower')*normrnd(0,1, K-1,1)./w1;
 
-Num = LogLikePositive(proposal) + proposalDist(x0');
-Den = LogLikePositive(x0) + proposalDist(proposal');
+Num = LogLikePositive(proposal) + proposalDist(freeElems');
+Den = LogLikePositive(freeElems) + proposalDist(proposal');
 alpha = Num - Den;
 u = log(unifrnd(0,1,1));
 if u <= alpha
     retval = [1;proposal];
 else
-    retval = [1;x0];
+    retval = x0;
 end
 end
 
