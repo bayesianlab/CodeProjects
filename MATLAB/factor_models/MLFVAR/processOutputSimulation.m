@@ -123,7 +123,7 @@
 %% Application KOW dataset
 clear;clc;
 savepath = '~/GoogleDrive/statespace/';
-load('BigKowResults/Result_kow_stand.mat')
+load('TestDir/Result_kowz_17_Oct_2019_21_10_58.')
 % NA = 1:9;
 % NAOUT = 1:3:9;
 % NACONS = 2:3:8;
@@ -287,7 +287,10 @@ fillY = [upper, fliplr(lower)];
 % mean(varianceDecomp(ASIAINV,3))], 3)
 %% World
 figure
-world = plot(xaxis, sumFt(1,:), 'black');
+h = fill(fillX(1,:), fillY(9,:), COLOR);
+hold on 
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+world = plot(xaxis, sumFt(9,:), 'black');
 % saveas(world, join([savepath, 'world.jpeg']))
 
 
