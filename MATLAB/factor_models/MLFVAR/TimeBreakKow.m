@@ -1,4 +1,4 @@
-function [] = TimeBreakKow(Sims, burnin, ReducedRuns, DataLocation,...
+function [] = TimeBreakKow(Sims, burnin, DataLocation,...
     DotMatFile, OutputDir)
 if ischar(Sims)
     Sims = str2num(Sims);
@@ -6,9 +6,7 @@ end
 if ischar(burnin)
     burnin = str2num(burnin);
 end
-if ischar(ReducedRuns)
-    ReducedRuns = str2num(ReducedRuns);
-end
+
 fprintf('Current Working Directory\n')
 pwd
 if (DataLocation == "")
@@ -51,7 +49,7 @@ estML = 1; %%%%%%
 [sumFt, sumFt2, sumOM, sumOM2,sumST, sumST2,sumBeta,...
     sumBeta2, sumObsVariance, sumObsVariance2,...
     sumFactorVar, sumFactorVar2, varianceDecomp, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
-    burnin, ReducedRuns, initFactor,  initobsmodel,...
+    burnin, initFactor,  initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile);
 period = strfind(DotMatFile, '.');
 

@@ -1,7 +1,7 @@
-# source('~/R/Rprojects/finalproject/finalproject_functions.R')
+source('~/CodeProjects/R/Rprojects/finalproject/hal/finalproject_functions.R')
 
 
-source('~/Coding/R/Rprojects/finalproject/HAL/finalproject_functions.R')
+source('~/CodeProjects/R/Rprojects/finalproject/hal/finalproject_functions.R')
 
 # imputation code
 

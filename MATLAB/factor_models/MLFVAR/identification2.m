@@ -29,7 +29,7 @@ proposal = themean + chol(V, 'lower')*normrnd(0,1, K-1,1)./w1;
 freeElems = x0(2:end);
 Num = LogLikePositive(proposal) + proposalDist(freeElems');
 Den = LogLikePositive(freeElems) + proposalDist(proposal');
-alpha = Num - Den;
+alpha = min(0,Num - Den);
 if log(unifrnd(0,1,1)) <= alpha
     retval = [1;proposal];
 else

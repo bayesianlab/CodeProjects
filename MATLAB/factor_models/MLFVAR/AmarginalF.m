@@ -12,7 +12,7 @@ for r = 1:Regions
     ySlice = yt(subsetSelect,:);
     precisionSlice = obsPrecision(subsetSelect);
     x0 = currobsmod(subsetSelect);
-    factorPrecision = kowStatePrecision(stateTransitions(r), factorVariance(r), T);
+    factorPrecision = kowStatePrecision(stateTransitions(r), 1./factorVariance(r), T);
     lastMean = backup{r,1};
     lastCovar = backup{r,2};
     if identification == 1

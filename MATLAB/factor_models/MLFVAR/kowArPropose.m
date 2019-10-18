@@ -3,7 +3,7 @@ Arp = size(OldAr,1);
 
 P0old = sigma2/(1-OldAr^2);
 
-G = ((eye(Arp).*.01) +  (x*x')./sigma2 )\eye(Arp);
+G = ((eye(Arp).*.1) +  (x*x')./sigma2 )\eye(Arp);
 gammahat = G* ((x*y')./sigma2);
 valid = -1;
 c = 0;

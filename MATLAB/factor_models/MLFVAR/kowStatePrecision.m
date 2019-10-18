@@ -12,9 +12,9 @@ P0 = reshape(P0, nFactors,nFactors);
 P0 = P0\eye(nFactors);
 EmptySparse = sparse(nFactors, Tm1*nFactors);
 Top = [P0, EmptySparse];
-Omega = spdiags(repmat(statePre,Tm1,1), 0, Tm1*nFactors,Tm1*nFactors);
-Omega = [Top;EmptySparse', Omega];
+OmegaInv = spdiags(repmat(statePre,Tm1,1), 0, Tm1*nFactors,Tm1*nFactors);
+OmegaInv = [Top;EmptySparse', OmegaInv];
 H = kron(spdiags(ones(T,1),-1, T,T), -stateTransition) + speye(TnFactors,TnFactors);
-Precision = H*Omega*H' ;
+Precision = H*OmegaInv*H' ;
 end
 

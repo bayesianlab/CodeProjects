@@ -1,5 +1,5 @@
 # source('~/R/Rprojects/finalproject/obrfunctions.R')
-source('/Users/dillonflannery-valadez/Google Drive/CodeProjects/R/Rprojects/finalproject/HAL/obrfunctions.R')
+source('~/CodeProjects/R/Rprojects/finalproject/hal/obrfunctions.R')
 # NOTE: Took zip out of subset 7/28/16 to use it in ggmap
 cleanup <- function(finaldat){
   finaldat <- subset(finaldat, select=-c(CRUISE_START_DATE, CRUISE_END_DATE, PAX_MARINER_NO,

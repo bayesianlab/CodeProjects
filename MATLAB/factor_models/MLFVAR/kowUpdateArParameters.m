@@ -1,9 +1,7 @@
 function [ArParams] = kowUpdateArParameters(ArParams, StateVariables, factorVariance, Arp)
-% fprintf('\nUpdating ar parameters on state variables\n')
 [Rows, ~] = size(StateVariables);
 accept = 0;
 zeroarp = zeros(1,Arp);
-
 
 for i = 1: Rows
     sigma2 = factorVariance(i);
