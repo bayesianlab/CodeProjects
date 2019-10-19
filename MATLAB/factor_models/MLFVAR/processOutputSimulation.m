@@ -123,110 +123,99 @@
 %% Application KOW dataset
 clear;clc;
 savepath = '~/GoogleDrive/statespace/';
-load('TestDir/Result_kowz_17_Oct_2019_21_10_58.')
-% NA = 1:9;
-% NAOUT = 1:3:9;
-% NACONS = 2:3:8;
-% NAINV = 3:3:7;
-% OCEAN = 10:15;
-% OCEANOUT = 10:3:15;
-% OCEANCONS = 11:3:14;
-% OCEANINV = 12:3:13;
-% LA = 16:69;
-% LAOUT = 16:3:69;
-% LACONS = 17:3:68;
-% LAINV = 18:3:67;
-% EUR = 70:123;
-% EUROUT = 70:3:123;
-% EURCONS = 71:3:122;
-% EURINV = 72:3:121;
-% AFRICA = 124:144;
-% AFRICAOUT = 124:3:144;
-% AFRICACONS = 125:3:143;
-% AFRICAINV = 126:3:142;
-% ASIADEVELOP = 145:162;
-% ASIADEVELOPOUT = 145:3:162;
-% ASIADEVELOPCONS = 146:3:161;
-% ASIADEVELOPINV = 147:3:160;
-% ASIA = 163:180;
-% ASIAOUT = 163:3:180;
-% ASIACONS = 164:3:179;
-% ASIAINV = 165:3:178;
-% 
-% 
+% load('TestDir/Result_kowz_18_Oct_2019_16_55_15.mat')
+% sumFt = mean(storeFt,3);
+% sumBeta = mean(storeBeta, 2);
+% sumOM = mean(storeOM, 3);
+% sig = std(storeFt,[],3);
+% xaxis = 1962:2014;
+% sdband = 1.96.*sig;
+% upper = sumFt + sdband;
+% lower = sumFt - sdband;
+% LW = .75;
+% COLOR = [1,0,0];
+% facealpha = .3;
+% fillX = [xaxis, fliplr(xaxis)];
+% fillY = [upper, fliplr(lower)];
+
+
+
+
+% load('BigKowResults/Result_kowz_03_Oct_2019_07_13_54.mat')
+load('BigKowResults/Result_kowz__18_Oct_2019_16_31_05.mat')
+% load('BigKowResults/Result_kow_stand.mat')
+% load('BigKowResults/Old/Result_kowz.mat')
 xaxis = 1962:2014;
 variance = sumFt2 - sumFt.^2;
 sig = sqrt(variance);
-upper = sumFt + 1.5.*sig;
-lower = sumFt - 1.5.*sig;
+sdband = 1.9.*sig;
+upper = sumFt + sdband;
+lower = sumFt - sdband;
 LW = .75;
 COLOR = [1,0,0];
 facealpha = .3;
 fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
-% 
-% Idens = MakeObsModelIdentity(InfoCell);
-% Gt = makeStateObsModel(sumOM, Idens, 0);
-% mut = reshape(Xt*sumBeta, K,T);
-% mut2 = Gt*sumFt;
-% yhat = mut+ mut2;
-% ytdemut= yt-mut;
-% errs = ytdemut - mut2;
-% verrs = var(errs,[],2);
-% vtot = sum([var(mut,[],2), varianceDecomp, verrs],2);
-% var(mut,[],2)./vtot
-% 
-% 
-% 
-% filevardec= fopen('navd.txt', 'w+');
-% navd =  varianceDecomp(NA,:);
-% for j = 1:size(navd,1)
-%     fstr = sprintf('%.3f %.3f %.3f \n', navd(j,1), navd(j,2), navd(j,3));
-%     fprintf(filevardec, fstr);
-% end
-% fclose(filevardec');
-% filevardec= fopen('ocvd.txt', 'w+');
-% ocvd =  varianceDecomp(OCEAN,:);
-% for j = 1:size(ocvd,1)
-%     fstr = sprintf('%.3f %.3f %.3f \n', ocvd(j,1), ocvd(j,2), ocvd(j,3));
-%     fprintf(filevardec, fstr);
-% end
-% fclose(filevardec');
-% filevardec= fopen('lavd.txt', 'w+');
-% lavd =  varianceDecomp(LA,:);
-% for j = 1:size(lavd,1)
-%     fstr = sprintf('%.3f %.3f %.3f \n', lavd(j,1), lavd(j,2), lavd(j,3));
-%     fprintf(filevardec, fstr);
-% end
-% fclose(filevardec');
-% filevardec= fopen('eurvd.txt', 'w+');
-% eurvd =  varianceDecomp(EUR,:);
-% for j = 1:size(eurvd,1)
-%     fstr = sprintf('%.3f %.3f %.3f \n', eurvd(j,1), eurvd(j,2), eurvd(j,3));
-%     fprintf(filevardec, fstr);
-% end
-% fclose(filevardec');
-% filevardec= fopen('afvd.txt', 'w+');
-% afvd =  varianceDecomp(AFRICA,:);
-% for j = 1:size(afvd,1)
-%     fstr = sprintf('%.3f %.3f %.3f \n', afvd(j,1), afvd(j,2), afvd(j,3));
-%     fprintf(filevardec, fstr);
-% end
-% fclose(filevardec');
-% filevardec= fopen('asdvd.txt', 'w+');
-% asdvd =  varianceDecomp(ASIADEVELOP,:);
-% for j = 1:size(asdvd,1)
-%     fstr = sprintf('%.3f %.3f %.3f \n', asdvd(j,1), asdvd(j,2), asdvd(j,3));
-%     fprintf(filevardec, fstr);
-% end
-% fclose(filevardec');
-% filevardec= fopen('asvd.txt', 'w+');
-% asvd =  varianceDecomp(ASIA,:);
-% for j = 1:size(asvd,1)
-%     fstr = sprintf('%.3f %.3f %.3f \n', asvd(j,1), asvd(j,2), asvd(j,3));
-%     fprintf(filevardec, fstr);
-% end
-% fclose(filevardec');
+
+NA = 1:9;
+NAOUT = 1:3:9;
+NACONS = 2:3:8;
+NAINV = 3:3:7;
+OCEAN = 10:15;
+OCEANOUT = 10:3:15;
+OCEANCONS = 11:3:14;
+OCEANINV = 12:3:13;
+LA = 16:69;
+LAOUT = 16:3:69;
+LACONS = 17:3:68;
+LAINV = 18:3:67;
+EUR = 70:123;
+EUROUT = 70:3:123;
+EURCONS = 71:3:122;
+EURINV = 72:3:121;
+AFRICA = 124:144;
+AFRICAOUT = 124:3:144;
+AFRICACONS = 125:3:143;
+AFRICAINV = 126:3:142;
+ASIADEVELOP = 145:162;
+ASIADEVELOPOUT = 145:3:162;
+ASIADEVELOPCONS = 146:3:161;
+ASIADEVELOPINV = 147:3:160;
+ASIA = 163:180;
+ASIAOUT = 163:3:180;
+ASIACONS = 164:3:179;
+ASIAINV = 165:3:178;
+
+
+
+
+
+vd = zeros(K,3) ;
+vareps = var(reshape(Xt*sumBeta,K,T), [],2);
+facCount = 1;
+for k = 1:3
+    Info = InfoCell{1,k};
+    Regions = size(Info,1);
+    for r = 1:Regions
+        subsetSelect = Info(r,1):Info(r,2);
+        vd(subsetSelect,k) = var(sumOM(subsetSelect,k).*sumFt(facCount,:),[],2);
+        facCount = facCount + 1;
+    end
+end
+varianceDecomp = [vareps,vd];
+varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
+
+mean(sumOM(:,1))
+mean(varianceDecomp(:,2))
+
+writeVdToFile('navd.txt', varianceDecomp, NA)
+writeVdToFile('ocvd.txt', varianceDecomp, OCEAN)
+writeVdToFile('lavd.txt', varianceDecomp, LA)
+writeVdToFile('eurvd.txt', varianceDecomp, EUR)
+writeVdToFile('afrvd.txt', varianceDecomp, AFRICA)
+writeVdToFile('asiadevelopvd.txt', varianceDecomp, ASIADEVELOP)
+writeVdToFile('asiavd.txt', varianceDecomp, ASIA)
+
 
 % Average var dec.
 % disp('Regional')
@@ -285,13 +274,14 @@ fillY = [upper, fliplr(lower)];
 % mean(varianceDecomp(ASIAOUT,3)),
 % mean(varianceDecomp(ASIACONS,3)),
 % mean(varianceDecomp(ASIAINV,3))], 3)
+
 %% World
 figure
-h = fill(fillX(1,:), fillY(9,:), COLOR);
+h = fill(fillX(1,:), fillY(1,:), COLOR);
 hold on 
 set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-world = plot(xaxis, sumFt(9,:), 'black');
-% saveas(world, join([savepath, 'world.jpeg']))
+world = plot(xaxis, sumFt(1,:), 'black');
+saveas(world, join([savepath, 'world_with_sd.jpeg']))
 
 
 

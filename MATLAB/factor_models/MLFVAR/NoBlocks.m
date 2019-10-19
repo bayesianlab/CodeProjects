@@ -1,6 +1,6 @@
-function [sumFt, sumFt2, sumOM, sumOM2,...
-    sumST, sumST2,sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
-    sumFactorVar, sumFactorVar2, varianceDecomp, ml] = NoBlocks(yt, Xt,  InfoCell, Sims,...
+function [storeFt, storeBeta, storeOM, storeStateTransitions,...
+    storeObsPrecision, storeFactorVar,varianceDecomp, ml] =...
+    NoBlocks(yt, Xt,  InfoCell, Sims,...
     burnin, initFactor, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
@@ -177,22 +177,20 @@ if finishedMainRun == 0
     
     %% Variance Decompositions and resizing. (Hopefully
     % Resizing gets removed, it is unneccessary.
-    reducedDimBackUps  = backupMeanAndHessian;
-    varianceDecomp = zeros(K,levels);
+    
+    vareps = var(reshape(Xt*sumBeta,K,T), [],2);
     facCount = 1;
-    for k = levelVec
-        factorIndx = factorInfo(k,:);
-        facSelect = factorIndx(1):factorIndx(2);
-        [reducedDimBackUps(facSelect,:), sumBackup(facSelect,:)] =...
-            reduceDimBackup(InfoCell{1,k}, backupMeanAndHessian(facSelect,:), sumBackup(facSelect,:));
+    for k = 1:3
         Info = InfoCell{1,k};
         Regions = size(Info,1);
         for r = 1:Regions
             subsetSelect = Info(r,1):Info(r,2);
-            varianceDecomp(subsetSelect,k) = var(sumOM(subsetSelect,k).*sumFt(facCount,:),[],2);;
+            vd(subsetSelect,k) = var(sumOM(subsetSelect,k).*sumFt(facCount,:),[],2);
             facCount = facCount + 1;
         end
     end
+    varianceDecomp = [vareps,vd];
+    varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
     
     Gt = makeStateObsModel(sumOM, Identities, 0);
     mut =  reshape(Xt*sumBeta,K,T);
