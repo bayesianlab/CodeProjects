@@ -405,11 +405,13 @@ if estML == 1
     J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
     piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
     fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
-    posteriorStar = piBeta + piA + piST + piObsVariance + piFactorVariance + priorStar;
+    posteriorStar = piBeta + piA + piST + piObsVariance + piFactorVariance;
     ml = fyGiventhetastar + priorStar - posteriorStar;
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
+    rmdir(checkpointdir, 's')
 else
     ml = 'nothing';
+    rmdir(checkpointdir, 's')
 end
 end
 

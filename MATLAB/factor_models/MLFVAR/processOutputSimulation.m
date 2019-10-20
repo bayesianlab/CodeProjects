@@ -123,32 +123,14 @@
 %% Application KOW dataset
 clear;clc;
 savepath = '~/GoogleDrive/statespace/';
-% load('TestDir/Result_kowz_18_Oct_2019_16_55_15.mat')
-% sumFt = mean(storeFt,3);
-% sumBeta = mean(storeBeta, 2);
-% sumOM = mean(storeOM, 3);
-% sig = std(storeFt,[],3);
-% xaxis = 1962:2014;
-% sdband = 1.96.*sig;
-% upper = sumFt + sdband;
-% lower = sumFt - sdband;
-% LW = .75;
-% COLOR = [1,0,0];
-% facealpha = .3;
-% fillX = [xaxis, fliplr(xaxis)];
-% fillY = [upper, fliplr(lower)];
 
-
-
-
-% load('BigKowResults/Result_kowz_03_Oct_2019_07_13_54.mat')
-load('BigKowResults/Result_kowz__18_Oct_2019_16_31_05.mat')
-% load('BigKowResults/Result_kow_stand.mat')
-% load('BigKowResults/Old/Result_kowz.mat')
+load('TestDir/Result_kowz_19_Oct_2019_21_15_51.mat')
+sumFt = mean(storeFt,3);
+sumBeta = mean(storeBeta, 2);
+sumOM = mean(storeOM, 3);
+sig = std(storeFt,[],3);
 xaxis = 1962:2014;
-variance = sumFt2 - sumFt.^2;
-sig = sqrt(variance);
-sdband = 1.9.*sig;
+sdband = 1.96.*sig;
 upper = sumFt + sdband;
 lower = sumFt - sdband;
 LW = .75;
@@ -156,6 +138,23 @@ COLOR = [1,0,0];
 facealpha = .3;
 fillX = [xaxis, fliplr(xaxis)];
 fillY = [upper, fliplr(lower)];
+
+% load('BigKowResults/Result_kowz_03_Oct_2019_07_13_54.mat')
+% load('BigKowResults/Result_kowzb_19_Oct_2019_11_52_53.mat')
+% load('BigKowResults/Result_kowz__18_Oct_2019_16_31_05.mat')
+% load('BigKowResults/Result_kow_stand.mat')
+% load('BigKowResults/Old/Result_kowz.mat')
+% xaxis = 1962:2014;
+% variance = sumFt2 - sumFt.^2;
+% sig = sqrt(variance);
+% sdband = 1.9.*sig;
+% upper = sumFt + sdband;
+% lower = sumFt - sdband;
+% LW = .75;
+% COLOR = [1,0,0];
+% facealpha = .3;
+% fillX = [xaxis, fliplr(xaxis)];
+% fillY = [upper, fliplr(lower)];
 
 NA = 1:9;
 NAOUT = 1:3:9;
@@ -185,10 +184,6 @@ ASIA = 163:180;
 ASIAOUT = 163:3:180;
 ASIACONS = 164:3:179;
 ASIAINV = 165:3:178;
-
-
-
-
 
 vd = zeros(K,3) ;
 vareps = var(reshape(Xt*sumBeta,K,T), [],2);
@@ -276,12 +271,12 @@ writeVdToFile('asiavd.txt', varianceDecomp, ASIA)
 % mean(varianceDecomp(ASIAINV,3))], 3)
 
 %% World
-figure
-h = fill(fillX(1,:), fillY(1,:), COLOR);
-hold on 
-set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-world = plot(xaxis, sumFt(1,:), 'black');
-saveas(world, join([savepath, 'world_with_sd.jpeg']))
+% figure
+% h = fill(fillX(1,:), fillY(1,:), COLOR);
+% hold on 
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% world = plot(xaxis, sumFt(1,:), 'black');
+% saveas(world, join([savepath, 'world_with_sd.jpeg']))
 
 
 
@@ -377,26 +372,26 @@ saveas(world, join([savepath, 'world_with_sd.jpeg']))
 % saveas(europeregion, join([savepath, 'europeregionplot.jpeg']))
 
 %% Asia Developed
-% figure
-% asia  = plot(xaxis, sumFt(8,:), 'black')
-% saveas(asia, join([savepath, 'asia.jpeg']))
-% figure
-% h = fill(fillX(1,:), fillY(8,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% asia_stderrs  = plot(xaxis, sumFt(8,:), 'black')
-% saveas(asia_stderrs, join([savepath, 'asia_stderrs.jpeg']))
+figure
+asia  = plot(xaxis, sumFt(8,:), 'black')
+saveas(asia, join([savepath, 'asia.jpeg']))
+figure
+h = fill(fillX(1,:), fillY(8,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on
+asia_stderrs  = plot(xaxis, sumFt(8,:), 'black')
+saveas(asia_stderrs, join([savepath, 'asia_stderrs.jpeg']))
 
 %% Asia Developing
-% figure
-% h = fill(fillX(1,:), fillY(7,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% asiadev_stderrs  = plot(xaxis, sumFt(7,:), 'black')
-% saveas(asiadev_stderrs, join([savepath, 'asiadev_stderrs.jpeg']))
-% figure
-% asiadevelop  = plot(xaxis, sumFt(7,:), 'black')
-% saveas(asiadevelop, join([savepath, 'asiadev.jpeg']))
+figure
+h = fill(fillX(1,:), fillY(7,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on
+asiadev_stderrs  = plot(xaxis, sumFt(7,:), 'black')
+saveas(asiadev_stderrs, join([savepath, 'asiadev_stderrs.jpeg']))
+figure
+asiadevelop  = plot(xaxis, sumFt(7,:), 'black')
+saveas(asiadevelop, join([savepath, 'asiadev.jpeg']))
 
 %% United States
 % figure
