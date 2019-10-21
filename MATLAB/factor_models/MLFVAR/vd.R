@@ -70,11 +70,11 @@ out <- ggplot(data=comparelong) +
   labs(y="Average Variance Decomposition", x="Region") + 
   ggtitle("Variance Decompositions for Output") +
   scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +
-  theme(axis.text = element_text(size = 15)) +
-  theme(axis.title = element_text(size = 20)) +
-  theme(plot.title = element_text(size=30)) + 
-  theme(legend.title = element_text(size=20))+ 
-  theme(legend.text = element_text( size=15))
+  theme(axis.text = element_text(size = 8)) +
+  theme(axis.title = element_text(size = 10)) +
+  theme(plot.title = element_text(size=15)) + 
+  theme(legend.title = element_text(size=10))+ 
+  theme(legend.text = element_text( size=8))
 out
 
 subdata <- bothlong[(bothlong$variable == "RE") & (bothlong$series =="Cons"),]
@@ -89,11 +89,11 @@ cons <- ggplot(data=comparelong) +
   labs(y="Average Variance Decomposition", x="Region") + 
   ggtitle("Variance Decompositions for Consumption") +
   scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +
-  theme(axis.text = element_text(size = 15)) +
-  theme(axis.title = element_text(size = 20)) +
-  theme(plot.title = element_text(size=30)) + 
-  theme(legend.title = element_text(size=20))+ 
-  theme(legend.text = element_text( size=15))
+  theme(axis.text = element_text(size = 8)) +
+  theme(axis.title = element_text(size = 10)) +
+  theme(plot.title = element_text(size=15)) + 
+  theme(legend.title = element_text(size=10))+ 
+  theme(legend.text = element_text( size=8))
 cons
 
 subdata <- bothlong[(bothlong$variable == "RE") & (bothlong$series =="Inv"),]
@@ -110,11 +110,11 @@ inv <- ggplot(data=comparelong) +
   theme_bw()+
   labs(y="Average Variance Decomposition", x="Region")+
   ggtitle("Variance Decompositions for Investment") +
-  theme(axis.text = element_text(size = 15)) +
-  theme(axis.title = element_text(size = 20)) +
-  theme(plot.title = element_text(size=30)) + 
-  theme(legend.title = element_text(size=20))+ 
-  theme(legend.text = element_text( size=15))
+  theme(axis.text = element_text(size = 8)) +
+  theme(axis.title = element_text(size = 10)) +
+  theme(plot.title = element_text(size=15)) + 
+  theme(legend.title = element_text(size=10))+ 
+  theme(legend.text = element_text( size=8))
 
 ggsave(paste("~/GoogleDrive/statespace/", "out_bar.jpeg", sep=""), out)
 ggsave(paste("~/GoogleDrive/statespace/", "cons_bar.jpeg", sep=""), cons)
@@ -134,11 +134,11 @@ out <- ggplot(data=comparelong) +
   labs(y="Average Variance Decomposition", x="Region") + 
   ggtitle("Variance Decompositions for Output") +
   scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +
-  theme(axis.text = element_text(size = 15)) +
-  theme(axis.title = element_text(size = 20)) +
-  theme(plot.title = element_text(size=30)) + 
-  theme(legend.title = element_text(size=20))+ 
-  theme(legend.text = element_text( size=15))
+  theme(axis.text = element_text(size = 8)) +
+  theme(axis.title = element_text(size = 10)) +
+  theme(plot.title = element_text(size=15)) + 
+  theme(legend.title = element_text(size=10))+ 
+  theme(legend.text = element_text( size=8))
 
 
 subdata <- bothlong[(bothlong$variable == "CE") & (bothlong$series =="Cons"),]
@@ -155,11 +155,11 @@ cons <- ggplot(data=comparelong) +
   labs(y="Average Variance Decomposition", x="Region") + 
   ggtitle("Variance Decompositions for Consumption") +
   scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +
-  theme(axis.text = element_text(size = 15)) +
-  theme(axis.title = element_text(size = 20)) +
-  theme(plot.title = element_text(size=30)) + 
-  theme(legend.title = element_text(size=20))+ 
-  theme(legend.text = element_text( size=15))
+  theme(axis.text = element_text(size = 8)) +
+  theme(axis.title = element_text(size = 10)) +
+  theme(plot.title = element_text(size=15)) + 
+  theme(legend.title = element_text(size=10))+ 
+  theme(legend.text = element_text( size=8))
 cons
 
 subdata <- bothlong[(bothlong$variable == "CE") & (bothlong$series =="Inv"),]
@@ -176,11 +176,11 @@ inv <- ggplot(data=comparelong) +
   theme_bw()+
   labs(y="Average Variance Decomposition", x="Region")+
   ggtitle("Variance Decompositions for Investment") +
-  theme(axis.text = element_text(size = 15)) +
-  theme(axis.title = element_text(size = 20)) +
-  theme(plot.title = element_text(size=30)) + 
-  theme(legend.title = element_text(size=20))+ 
-  theme(legend.text = element_text( size=15))
+  theme(axis.text = element_text(size = 8)) +
+  theme(axis.title = element_text(size = 10)) +
+  theme(plot.title = element_text(size=15)) + 
+  theme(legend.title = element_text(size=10))+ 
+  theme(legend.text = element_text( size=8))
 
 ggsave(paste("~/GoogleDrive/statespace/", "out_country_bar.jpeg", sep=""), out)
 ggsave(paste("~/GoogleDrive/statespace/", "cons_country_bar.jpeg", sep=""), cons)

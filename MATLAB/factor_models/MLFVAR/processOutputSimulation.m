@@ -369,13 +369,13 @@ saveas(world, join([savepath, 'world_with_sd.jpeg']))
 % shade([1974, 1980, 1992, 2008, 2011], [1975, 1982, 1993, 2009, 2013], 'black')
 % saveas(europe, join([savepath, 'europefactor.jpeg']))
 % hold off
-% figure
-% h = fill(fillX(1,:), fillY(5,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% europeregion  = plot(xaxis, sumFt(5,:), 'black');
-% ylim([-2.25, 2.5])
-% saveas(europeregion, join([savepath, 'europeregionplot.jpeg']))
+figure
+h = fill(fillX(1,:), fillY(5,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on
+europeregion  = plot(xaxis, sumFt(5,:), 'black');
+ylim([-2.25, 2.5])
+saveas(europeregion, join([savepath, 'europeregionplot.jpeg']))
 
 
 %% Asia Developed

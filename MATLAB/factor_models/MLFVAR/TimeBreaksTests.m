@@ -11,7 +11,7 @@ ML = zeros(1,3);
 T = 70;
 % K =6;
 % identification = 2;
-DataCell=SimDataMLF(T, 2, 2, 3, .55);
+DataCell=SimDataMLF(T, 2, 2, 6, .55);
 save('simdata','DataCell')
 % load('totaltime.mat')
 yt = DataCell{1,1};
@@ -51,23 +51,23 @@ identification = 2;
 estML = 1;
 
 
-[sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
-    sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
-    sumFactorVar, sumFactorVar2, varianceDecomp, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
-    burnin, ReducedRuns, initFactor, initobsmodel,...
-    initStateTransitions, v0, r0, s0, d0, identification, estML, 'totaltime.mat');
+% [sumFt, sumFt2, sumOM, sumOM2, sumST, sumST2,...
+%     sumBeta, sumBeta2, sumObsVariance, sumObsVariance2,...
+%     sumFactorVar, sumFactorVar2, varianceDecomp, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
+%     burnin, ReducedRuns, initFactor, initobsmodel,...
+%     initStateTransitions, v0, r0, s0, d0, identification, estML, 'totaltime.mat');
 
-variance = sumFt2 - sumFt.^2;
-sig = sqrt(variance);
-upper = sumFt + 1.5.*sig;
-lower = sumFt - 1.5.*sig;
-LW = .75;
-COLOR = [1,0,0];
-facealpha = .3;
-fillX = [1:length(sumFt(1,:)), fliplr(1:length(sumFt(1,:)))];
-fillY = [upper, fliplr(lower)];
-fs =1;
-mut = reshape(Xt*sumBeta,K,T);
+% variance = sumFt2 - sumFt.^2;
+% sig = sqrt(variance);
+% upper = sumFt + 1.5.*sig;
+% lower = sumFt - 1.5.*sig;
+% LW = .75;
+% COLOR = [1,0,0];
+% facealpha = .3;
+% fillX = [1:length(sumFt(1,:)), fliplr(1:length(sumFt(1,:)))];
+% fillY = [upper, fliplr(lower)];
+% fs =1;
+% mut = reshape(Xt*sumBeta,K,T);
 % figure
 % h = fill(fillX(1,:), fillY(fs,:), COLOR);
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none');
