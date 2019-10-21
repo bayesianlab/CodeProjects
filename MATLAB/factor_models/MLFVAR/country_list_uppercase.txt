@@ -1,60 +1,326 @@
-USA
-CAN
-MEX
-AUS
-NZL
-CRI
-DOM
-SLV
-GTM
-HND
-JAM
-PAN
-TTO
-ARG
-BOL
-BRA
-CHL
-COL
-ECU
-PRY
-PER
-URY
-VEN
-FRA
-AUT
-BEL
-DNK
-FIN
-DEU
-GRC
-ISL
-IRL
-ITA
-LUX
-NLD
-NOR
-PRT
-ESP
-SWE
-CHE
-GBR
-CMR
-CIV
-KEN
-MAR
-SEN
-ZAF
-ZWE
-BGD
-IND
-IDN
-PAK
-PHL
-LKA
-HKG
-JPN
-KOR
-MYS
-SGP
-THA
+\begin{figure}
+\centering 
+% Row 1
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{USA}
+\caption{USA country factor}\label{USA}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{CAN}
+\caption{CAN country factor}\label{CAN}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{MEX}
+\caption{MEX country factor}\label{MEX}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{AUS}
+\caption{ AUS country factor}\label{ AUS }
+\end{subfigure}
+% Row 2
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{NZL}
+\caption{ NZL country factor}\label{ NZL}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{CRI}
+\caption{ CRI country factor}\label{ CRI}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{DOM}
+\caption{ DOM country factor}\label{ DOM}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{SLV}
+\caption{ SLV country factor}\label{ SLV}
+\end{subfigure}
+% Row 3
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{GTM}
+\caption{ GTM country factor}\label{ GTM}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{HND}
+\caption{ HND country factor}\label{ HND}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{JAM}
+\caption{ JAM country factor}\label{ JAM}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PAN}
+\caption{ PAN country factor}\label{ PAN}
+\end{subfigure}
+% Row 4
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{TTO}
+\caption{ TTO country factor}\label{ TTO}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ARG}
+\caption{ ARG country factor}\label{ ARG}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{BOL}
+\caption{ BOL country factor}\label{ BOL}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{BRA}
+\caption{ BRA country factor}\label{ BRA}
+\end{subfigure}
+% Row 5
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{CHL}
+\caption{ CHL country factor}\label{ CHL}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{COL}
+\caption{ COL country factor}\label{ COL}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ECU}
+\caption{ ECU country factor}\label{ ECU}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PRY}
+\caption{ PRY country factor}\label{ PRY}
+\end{subfigure}
+% Row 6
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PER}
+\caption{ PER country factor}\label{ PER}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{URY}
+\caption{ URY country factor}\label{ URY}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{VEN}
+\caption{ VEN country factor}\label{ VEN}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{FRA}
+\caption{ FRA country factor}\label{ FRA}
+\end{subfigure}
+\end{figure} 
+
+\being{figure} 
+\centering 
+% Row 1
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{AUT}
+\caption{ AUT country factor}\label{ AUT}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{BEL}
+\caption{ BEL country factor}\label{ BEL}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{DNK}
+\caption{ DNK country factor}\label{ DNK}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{FIN}
+\caption{ FIN country factor}\label{ FIN}
+\end{subfigure}
+% Row 2
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{DEU}
+\caption{ DEU country factor}\label{ DEU}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{GRC}
+\caption{ GRC country factor}\label{ GRC}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ISL}
+\caption{ ISL country factor}\label{ ISL}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{IRL}
+\caption{ IRL country factor}\label{ IRL}
+\end{subfigure}
+% Row 3 
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ITA}
+\caption{ ITA country factor}\label{ ITA}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{LUX}
+\caption{ LUX country factor}\label{ LUX}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{NLD}
+\caption{ NLD country factor}\label{ NLD}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{NOR}
+\caption{ NOR country factor}\label{ NOR}
+\end{subfigure}
+% Row 4 
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PRT}
+\caption{ PRT country factor}\label{ PRT}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ESP}
+\caption{ ESP country factor}\label{ ESP}
+\end{subfigure}
+\end{figure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{SWE}
+\caption{ SWE country factor}\label{ SWE}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{CHE}
+\caption{ CHE country factor}\label{ CHE}
+\end{subfigure}
+% Row 5
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{GBR}
+\caption{ GBR country factor}\label{ GBR}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{CMR}
+\caption{ CMR country factor}\label{ CMR}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{CIV}
+\caption{ CIV country factor}\label{ CIV}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{KEN}
+\caption{ KEN country factor}\label{ KEN}
+\end{subfigure}
+% Row 6 
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{MAR}
+\caption{ MAR country factor}\label{ MAR}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{SEN}
+\caption{ SEN country factor}\label{ SEN}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ZAF}
+\caption{ ZAF country factor}\label{ ZAF}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{ZWE}
+\caption{ ZWE country factor}\label{ ZWE}
+\end{subfigure}
+\end{figure}
+
+\begin{figure} 
+% Row 1
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{BGD}
+\caption{ BGD country factor}\label{ BGD}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{IND}
+\caption{ IND country factor}\label{ IND}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{IDN}
+\caption{ IDN country factor}\label{ IDN}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PAK}
+\caption{ PAK country factor}\label{ PAK}
+\end{subfigure}
+% Row 2
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{PHL}
+\caption{ PHL country factor}\label{ PHL}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{LKA}
+\caption{ LKA country factor}\label{ LKA}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{HKG}
+\caption{ HKG country factor}\label{ HKG}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{JPN}
+\caption{ JPN country factor}\label{ JPN}
+\end{subfigure}
+% Row 3 
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{KOR}
+\caption{ KOR country factor}\label{ KOR}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{MYS}
+\caption{ MYS country factor}\label{ MYS}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{SGP}
+\caption{ SGP country factor}\label{ SGP}
+\end{subfigure}
+\begin{subfigure}[t]{.2\textwidth}
+\centering
+\includegraphics[width=\textwidth]{THA}
+\caption{ THA country factor}\label{ THA}
+\end{subfigure}
+\end{figure}

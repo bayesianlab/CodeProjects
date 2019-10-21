@@ -64,7 +64,7 @@ compare <- data.frame(ba=factor(cbind(c(1,2))),rbind(before, after))
 comparelong <- melt(compare, id.vars = "ba")
 out <- ggplot(data=comparelong) +
   geom_bar(aes(x = variable, y = value, fill=ba),
-           stat="identity",position=position_dodge()) +
+           stat="identity",position=position_dodge(), colour= "black") +
   # scale_fill_discrete() + 
   theme_bw()+
   labs(y="Average Variance Decomposition", x="Region") + 
@@ -75,7 +75,7 @@ out <- ggplot(data=comparelong) +
   theme(plot.title = element_text(size=30)) + 
   theme(legend.title = element_text(size=20))+ 
   theme(legend.text = element_text( size=15))
-
+out
 
 subdata <- bothlong[(bothlong$variable == "RE") & (bothlong$series =="Cons"),]
 before <-by(subdata[subdata$variable=="RE" ,"value"], subdata$regions, mean)
@@ -85,10 +85,8 @@ compare <- data.frame(ba=factor(cbind(c(1,2))),rbind(before, after))
 comparelong <- melt(compare, id.vars = "ba")
 cons <- ggplot(data=comparelong) +
   geom_bar(aes(x = variable, y = value, fill=ba),
-           stat="identity",position=position_dodge()) +
-  # scale_fill_discrete(name="Period", labels=c("1962-1992", "1992-2014")) + 
-  theme_bw()+
-labs(y="Average Variance Decomposition", x="Region") + 
+           stat="identity",position=position_dodge(), colour="black") + theme_bw()+
+  labs(y="Average Variance Decomposition", x="Region") + 
   ggtitle("Variance Decompositions for Consumption") +
   scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +
   theme(axis.text = element_text(size = 15)) +
@@ -107,7 +105,7 @@ comparelong <- melt(compare, id.vars = "ba")
 
 inv <- ggplot(data=comparelong) +
   geom_bar(aes(x = variable, y = value, fill=ba),
-           stat="identity",position=position_dodge()) +
+           stat="identity",position=position_dodge(), colour="black") +
   scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +
   theme_bw()+
   labs(y="Average Variance Decomposition", x="Region")+
@@ -151,7 +149,7 @@ compare <- data.frame(ba=factor(cbind(c(1,2))),rbind(before, after))
 comparelong <- melt(compare, id.vars = "ba")
 cons <- ggplot(data=comparelong) +
   geom_bar(aes(x = variable, y = value, fill=ba),
-           stat="identity",position=position_dodge()) +
+           stat="identity",position=position_dodge(), colour="black") +
   # scale_fill_discrete(name="Period", labels=c("1962-1992", "1992-2014")) + 
   theme_bw()+
   labs(y="Average Variance Decomposition", x="Region") + 
@@ -173,7 +171,7 @@ comparelong <- melt(compare, id.vars = "ba")
 
 inv <- ggplot(data=comparelong) +
   geom_bar(aes(x = variable, y = value, fill=ba),
-           stat="identity",position=position_dodge()) +
+           stat="identity",position=position_dodge(), colour="black") +
   scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +
   theme_bw()+
   labs(y="Average Variance Decomposition", x="Region")+
@@ -187,3 +185,39 @@ inv <- ggplot(data=comparelong) +
 ggsave(paste("~/GoogleDrive/statespace/", "out_country_bar.jpeg", sep=""), out)
 ggsave(paste("~/GoogleDrive/statespace/", "cons_country_bar.jpeg", sep=""), cons)
 ggsave(paste("~/GoogleDrive/statespace/", "inv_country_bar.jpeg", sep=""), inv)
+
+
+varianceDecomp <- read_csv("CodeProjects/MATLAB/factor_models/MLFVAR/varianceDecomp.csv", col_names=FALSE)
+varianceDecomp <- 100*varianceDecomp
+
+
+africadf <- data.frame(Name = c("Idiosyncratic", "World", "Region", "Country"),
+              Africa=c(mean(varianceDecomp[AFRICA,1]), mean(varianceDecomp[AFRICA,2]),
+              mean(varianceDecomp[AFRICA,3]),mean(varianceDecomp[AFRICA,4])),
+              Asia=c(mean(varianceDecomp[ASIA,1]), mean(varianceDecomp[ASIA,2]),
+                     mean(varianceDecomp[ASIA,3]),mean(varianceDecomp[ASIA,4])),
+              "Developing Asia"=c(mean(varianceDecomp[ASIADEVELOP,1]), mean(varianceDecomp[ASIADEVELOP,2]),
+                               mean(varianceDecomp[ASIADEVELOP,3]),mean(varianceDecomp[ASIADEVELOP,4])),
+              Europe=c(mean(varianceDecomp[EUR,1]), mean(varianceDecomp[EUR,2]),
+                       mean(varianceDecomp[EUR,3]),mean(varianceDecomp[EUR,4])),
+              "L.A."=c(mean(varianceDecomp[LA,1]), mean(varianceDecomp[LA,2]),
+                   mean(varianceDecomp[LA,3]),mean(varianceDecomp[LA,4])),
+              "N.A."=c(mean(varianceDecomp[NAM,1]), mean(varianceDecomp[NAM,2]),
+                  mean(varianceDecomp[NAM,3]),mean(varianceDecomp[NAM,4])),
+              Ocean=c(mean(varianceDecomp[OCEAN,1]), mean(varianceDecomp[OCEAN,2]),
+                      mean(varianceDecomp[OCEAN,3]),mean(varianceDecomp[OCEAN,4])))
+africadflong <- melt(africadf)
+
+africadflong$Name <- relevel(africadflong$Name, ref="Idiosyncratic")
+
+ggplot(data=africadflong) + geom_bar(aes(x = variable, y = value, fill=Name),
+           stat="identity",position=position_dodge(), 
+           colour="black") + theme_bw()+ labs(y="Average Variance Decomposition", x="Region")+
+  scale_fill_aaas() +
+  ggtitle("Variance Decompositions Across Regions") +
+  theme(axis.text = element_text(size = 8)) +
+  theme(axis.title = element_text(size = 15)) +
+  theme(plot.title = element_text(size=20)) + 
+  theme(legend.title = element_text(size=15))+ 
+  theme(legend.text = element_text( size=15)) +
+  theme(legend.title = element_blank())

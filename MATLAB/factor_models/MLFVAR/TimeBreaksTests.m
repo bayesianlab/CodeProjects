@@ -12,6 +12,7 @@ T = 70;
 % K =6;
 % identification = 2;
 DataCell=SimDataMLF(T, 2, 2, 3, .55);
+save('simdata','DataCell')
 % load('totaltime.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};

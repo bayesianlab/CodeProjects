@@ -104,8 +104,6 @@ if finishedMainRun == 0
             backupMeanAndHessian(facSelect,:) = tempbackup;
             Ft(facSelect,:) = f;
         end
-        
-        
         StateObsModel = makeStateObsModel(currobsmod,Identities,0);
         Si = kowStatePrecision(diag(stateTransitions),1./factorVariance,T);
         
@@ -118,7 +116,7 @@ if finishedMainRun == 0
         stateTransitions = kowUpdateArParameters(stateTransitions, Ft, factorVariance, 1);
         
         if identification == 2
-            [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
+%             [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
         end
         %% Storage
         if iterator > burnin
@@ -126,7 +124,7 @@ if finishedMainRun == 0
             storeBeta(:, v) = beta;
             storeOM(:,:,v) = currobsmod;
             storeStateTransitions(:,:,v) = stateTransitions;
-            storeFt(:,:,v) = sumFt;
+            storeFt(:,:,v) = Ft;
             storeObsPrecision(:,v) = obsPrecision;
             storeFactorVar(:,v) = factorVariance;
             sumFt = sumFt + Ft;
@@ -143,7 +141,7 @@ if finishedMainRun == 0
             sumFactorVar = sumFactorVar + factorVariance;
             sumFactorVar2 = sumFactorVar2 + factorVariance.^2;
             if identification == 2
-                storeFactorParamb(:, v) =  factorParamb;
+%                 storeFactorParamb(:, v) =  factorParamb;
             end
             if estML == 1
                 for q = levelVec
@@ -279,8 +277,7 @@ if estML == 1
                 storeFactorVarj(:,r) = fvj;
             end
         end
-        piA = logAvg(stoAlphag) - logAvg(stoAlphaj);
-        piA = sum(piA);
+        piA = sum(logAvg(stoAlphag) - logAvg(stoAlphaj));
         StateObsModelStar =  makeStateObsModel(Astar,Identities,0);
         stStar = mean(storeStateTransitionsg,3);
         storeBetag = storeBetaj;
@@ -297,7 +294,6 @@ if estML == 1
         save(join( [checkpointdir, 'ckpt'] ) )
     end
     %% MH Step for State Transitions
-    
     if finishedSecondReducedRun == 0
         fprintf('Reduced run for state transitions\n')
         for r = startRR:Runs
@@ -308,7 +304,6 @@ if estML == 1
             storeStateTransitionsg(:,:,r) = stj;
             stoAlphaj(:,r) = alphaj;
             stoAlphag(:,r) = alphag;
-            
             if identification == 2
                 [fvj, factorParamb]  = drawFactorVariance(Ftj, stj, s0, d0);
                 storeFactorVarj(:,r) = fvj;
@@ -337,7 +332,6 @@ if estML == 1
         save(join( [checkpointdir, 'ckpt'] ) )
     end
     %% Reduced Run for beta
-    
     if finishedThirdReducedRun == 0
         fprintf('Reduced run for beta\n')
         for r = startRR:Runs
@@ -389,23 +383,29 @@ if estML == 1
             storePiFactorVarianceStar(:,r) = piOmegaStar(factorVarianceStar, stStar, Ftj, s0,d0);
         end
     end
-    piObsVariance = sum(logAvg(storePiObsVariance));
-    piFactorVariance = sum(logAvg(storePiFactorVarianceStar));
-    FtStar = mean(Ft,3);
-    LogLikelihood = sum(logmvnpdf(yt', muStar', diag(obsVarianceStar)));
+    
+    % Theta star
+    piObsVariance = sum(logAvg(storePiObsVariance))
+    piFactorVariance = sum(logAvg(storePiFactorVarianceStar))
+    posteriors = [piBeta, piA , piST,piObsVariance,piFactorVariance]
+    posteriorStar = sum(posteriors);
+    LogLikelihood = sum(logmvnpdf(yt', muStar', diag(obsVarianceStar)))
+    % Priors
     priorST = sum(logmvnpdf(stStar, zeros(1,nFactors), eye(nFactors)));
     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*d0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
     priorBeta = logmvnpdf(betaStar', zeros(1, dimX), eye(dimX));
     priorAstar = Apriors(Info, Astar);
+    priors = [priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]
     priorStar = sum([priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]);
+    % Integrated log likelihood
     Kprecision = kowStatePrecision(diag(stStar), 1./factorVarianceStar, T);
-    Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T));
+    Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T))
     G = kron(eye(T), StateObsModelStar);
     J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
-    piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  );
+    piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  )
     fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
-    posteriorStar = piBeta + piA + piST + piObsVariance + piFactorVariance;
+    % Log ml
     ml = fyGiventhetastar + priorStar - posteriorStar;
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
     rmdir(checkpointdir, 's')
