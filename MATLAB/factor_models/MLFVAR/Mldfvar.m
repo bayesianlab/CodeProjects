@@ -17,6 +17,7 @@ finishedThirdReducedRun = 0;
 [nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);
 [~, dimX] = size(Xt);
+InfoCell
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 levels = length(sectorInfo);
 backupMeanAndHessian  = setBackups(InfoCell, identification);
@@ -60,7 +61,7 @@ sumBackup = backupMeanAndHessian;
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-14);
 
-levelVec = 1:levels;
+levelVec = levels:(-1):1;
 
 if exist(checkpointdir, 'dir')
     ckptfilename = join([checkpointdir, checkpointfilename, '.mat']);
@@ -82,12 +83,12 @@ if finishedMainRun == 0
             start = iterator;
             save(join( [checkpointdir, 'ckpt'] ) )
         end
-        fprintf('\nSimulation %i\n',iterator)
+%         fprintf('\nSimulation %i\n',iterator)
         [beta, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
             StateObsModel, Si,  T);
         
         for q = levelVec
-            fprintf('Level %i\n', q)
+%             fprintf('Level %i\n', q)
             COM = makeStateObsModel(currobsmod, Identities, q);
             mut = xbt + COM*Ft;
             ydemut = yt - mut;
@@ -178,7 +179,7 @@ if finishedMainRun == 0
     
     vareps = var(reshape(Xt*sumBeta,K,T), [],2);
     facCount = 1;
-    for k = 1:3
+    for k = 1:levels
         Info = InfoCell{1,k};
         Regions = size(Info,1);
         for r = 1:Regions

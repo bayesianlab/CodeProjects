@@ -1,4 +1,5 @@
 function [Precision] = kowStatePrecision(stateTransition, statePre, T)
+%%%%%
 Tm1 = T-1;
 nFactors = size(stateTransition,1);
 TnFactors = T*nFactors;

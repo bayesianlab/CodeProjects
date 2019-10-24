@@ -8,10 +8,14 @@ if nFactors == 3
 end
 
 rdex = 1:Regions;
+if Regions == 1 & CountriesInRegion == 1
+    InfoCell{1,1} = [1,K];
+else
 InfoCell = cell(1,3);
 InfoCell{1,1} = [1,K];
 InfoCell{1,2} = [1:SeriesPerCountry*CountriesInRegion:K,;SeriesPerCountry*CountriesInRegion:SeriesPerCountry*CountriesInRegion:K]';
 InfoCell{1,3} = [(1:SeriesPerCountry:K)',(SeriesPerCountry:SeriesPerCountry:K)'];
+end
 levels = size(InfoCell,2);
 
 Xt = normrnd(0,1, K*T,(SeriesPerCountry+1));
@@ -51,8 +55,7 @@ end
 
 
 Gt = MakeObsModel(Gh, Imat, FactorIndices);
-size(Gt)
-size(Factor)
+
 muf = Gt*Factor;
 mu = reshape(Xt*beta,K,T);
 

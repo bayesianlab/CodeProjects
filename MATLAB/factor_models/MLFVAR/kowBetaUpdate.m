@@ -30,6 +30,7 @@ end
 B0 = speye(cx);
 b0 = zeros(cx,1);
 XstarPinv = Xstar'*(Inside\speye(size(Inside,1)));
+
 Precision = B0 + addup - (XstarPinv*Xstar);
 NumeratorTerm = sumup - (XstarPinv*ystar);
 Variance = Precision\speye(cx);
