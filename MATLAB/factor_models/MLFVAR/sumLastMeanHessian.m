@@ -1,7 +1,7 @@
 function [sumbackup] = sumLastMeanHessian(Info, backup, sumbackup)
 Regions = size(Info,1);
 for r = 1:Regions
-    
+
     lastMean = backup{r,1};
     lastHessian = backup{r,2};
 

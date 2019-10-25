@@ -1,7 +1,6 @@
 function [storeFt, storeBeta, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] =...
-    Mldfvar(yt, Xt,  InfoCell, Sims,...
-    burnin, initFactor, initobsmodel,...
+    Hdfvar(yt, Xt,  InfoCell, BlockingInfo, Sims,burnin, initFactor, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
@@ -19,13 +18,10 @@ finishedThirdReducedRun = 0;
 [~, dimX] = size(Xt);
 
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-
 levels = length(sectorInfo);
-backupMeanAndHessian  = setBackups(InfoCell, identification);
-
-
 restrictions = restrictedElements(InfoCell);
-
+backupMeanAndHessian=setBackupsForBlocks(BlockingInfo, identification, restrictions);
+backupIndices = setBackupIndices(BlockingInfo);
 % Initializatitons
 factorVariance = ones(nFactors,1);
 obsPrecision = ones(K,1);
@@ -45,21 +41,6 @@ storeStateTransitions = zeros(nFactors, arFactor, Runs);
 storeFactorParamb = zeros(nFactors, Runs);
 storeObsPrecision = zeros(K, Runs);
 storeFactorVar = zeros(nFactors,Runs);
-
-sumBeta = zeros(dimX,1);
-sumBeta2 = sumBeta;
-sumFt = zeros(nFactors, T);
-sumFt2 = sumFt.^2;
-sumResiduals2 = zeros(K,1);
-sumST = zeros(nFactors, 1);
-sumST2 = zeros(nFactors, 1);
-sumObsVariance = zeros(K,1);
-sumObsVariance2 = sumObsVariance;
-sumOM = zeros(K, levels);
-sumOM2= sumOM ;
-
-sumFactorVar = zeros(nFactors,1);
-sumFactorVar2 = sumFactorVar;
 sumBackup = backupMeanAndHessian;
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
@@ -87,12 +68,12 @@ if finishedMainRun == 0
             start = iterator;
             save(join( [checkpointdir, 'ckpt'] ) )
         end
-%         fprintf('\nSimulation %i\n',iterator)
+        fprintf('\nSimulation %i\n',iterator)
         [beta, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
             StateObsModel, Si,  T);
         
         for q = levelVec
-%             fprintf('Level %i\n', q)
+            fprintf('Level %i\n', q)
             COM = makeStateObsModel(currobsmod, Identities, q);
             mut = xbt + COM*Ft;
             ydemut = yt - mut;
@@ -100,22 +81,17 @@ if finishedMainRun == 0
             factorIndx = factorInfo(q,:);
             facSelect = factorIndx(1):factorIndx(2);
             facVarSubset = factorVariance(facSelect);
-            tempbackup = backupMeanAndHessian(facSelect,:);
+            tempBackupIndices = backupIndices(:,q);
+            tempBackupIndices = tempBackupIndices(1):tempBackupIndices(2);
+            tempbackup = backupMeanAndHessian(tempBackupIndices,:);
+            [currobsmod(:,q),tempbackup,f] = ExperimentalAmF(Info,...
+                BlockingInfo{q}, Ft(facSelect, :), ydemut, currobsmod(:,q), ...
+                stateTransitions(facSelect), facVarSubset,obsPrecision,...
+                tempbackup, options, identification,restrictions(:,q));
+            tempBackupIndices = backupIndices(:,q);
+            tempBackupIndices = tempBackupIndices(1):tempBackupIndices(2);
+            backupMeanAndHessian(tempBackupIndices,:) = tempbackup;
             
-            
-            
-            
-            exp = ExperimentalAmF(Info, InfoCell{1,levels}, Ft(facSelect, :), ydemut, currobsmod(:,q), ...
-                stateTransitions(facSelect), facVarSubset,...
-                obsPrecision, tempbackup, options, identification,restrictions(:,q))
-            
-            
-            [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
-                Ft(facSelect, :), ydemut, currobsmod(:,q), ...
-                stateTransitions(facSelect), facVarSubset,...
-                obsPrecision, tempbackup, options, identification);
-            currobsmod
-            backupMeanAndHessian(facSelect,:) = tempbackup;
             Ft(facSelect,:) = f;
         end
         StateObsModel = makeStateObsModel(currobsmod,Identities,0);
@@ -130,7 +106,7 @@ if finishedMainRun == 0
         stateTransitions = kowUpdateArParameters(stateTransitions, Ft, factorVariance, 1);
         
         if identification == 2
-%             [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
+            %             [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
         end
         %% Storage
         if iterator > burnin
@@ -140,75 +116,47 @@ if finishedMainRun == 0
             storeStateTransitions(:,:,v) = stateTransitions;
             storeFt(:,:,v) = Ft;
             storeObsPrecision(:,v) = obsPrecision;
-            storeFactorVar(:,v) = factorVariance;
-            sumFt = sumFt + Ft;
-            sumFt2 = sumFt2 + Ft.^2;
-            sumBeta = sumBeta + beta;
-            sumBeta2 = beta.^2 + sumBeta2;
-            sumObsVariance = sumObsVariance +  obsVariance;
-            sumObsVariance2 = sumObsVariance2 + obsVariance.^2;
-            sumOM= sumOM + currobsmod;
-            sumOM2 = sumOM2 + currobsmod.^2;
-            sumST = sumST + stateTransitions;
-            sumST2 = sumST2 + stateTransitions.^2;
-            sumResiduals2 = sumResiduals2 + r2;
-            sumFactorVar = sumFactorVar + factorVariance;
-            sumFactorVar2 = sumFactorVar2 + factorVariance.^2;
+            storeFactorVar(:,v) = factorVariance;            
             if identification == 2
-%                 storeFactorParamb(:, v) =  factorParamb;
+                %                 storeFactorParamb(:, v) =  factorParamb;
             end
             if estML == 1
-                for q = levelVec
-                    factorIndx = factorInfo(q,:);
-                    facSelect = factorIndx(1):factorIndx(2);
-                    sumBackup(facSelect,:) = sumLastMeanHessian(InfoCell{1,q}, backupMeanAndHessian(facSelect,:), sumBackup(facSelect,:));
+                rback = size(backupMeanAndHessian,1);
+                for r = 1:rback
+                    sumBackup{r,1} = sumBackup{r,1} + backupMeanAndHessian{r,1};
+                    sumBackup{r,2} = sumBackup{r,2} + backupMeanAndHessian{r,2};
                 end
+                options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
+                    'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-14,...
+                    'MaxIterations', 10);
             end
-            options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-                'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-14,...
-                'MaxIterations', 5);
         end
     end
     
     Runs = Sims- burnin;
-    sumBeta = sumBeta./Runs;
-    sumBeta2 = sumBeta2./Runs;
     sumBackup = cellfun(@(b)rdivide(b,Runs), sumBackup, 'UniformOutput', false);
-    
-    sumFt = sumFt./Runs;
-    sumFt2 = sumFt2./Runs;
-    sumObsVariance = sumObsVariance./Runs;
-    sumObsVariance2 = sumObsVariance2 ./Runs;
-    sumOM= sumOM ./Runs;
-    sumOM2 = sumOM2 ./Runs;
-    sumST = sumST./Runs;
-    sumST2 = sumST2 ./Runs;
-    sumResiduals2 = sumResiduals2 ./Runs;
-    sumFactorVar = sumFactorVar./Runs;
-    sumFactorVar2 = sumFactorVar2./Runs;
-    
+
+    betaBar = mean(storeBeta,2);
+    Ftbar = mean(storeFt,3);
+    omBar = mean(storeOM,3);
     %% Variance Decompositions and resizing. (Hopefully
     % Resizing gets removed, it is unneccessary.
     
-    vareps = var(reshape(Xt*sumBeta,K,T), [],2);
+    varMu = var(reshape(Xt*betaBar,K,T), [],2);
     facCount = 1;
+    vd = zeros(size(currobsmod,1),size(currobsmod,2));
     for k = 1:levels
         Info = InfoCell{1,k};
         Regions = size(Info,1);
         for r = 1:Regions
             subsetSelect = Info(r,1):Info(r,2);
-            vd(subsetSelect,k) = var(sumOM(subsetSelect,k).*sumFt(facCount,:),[],2);
+            vd(subsetSelect,k) = var(omBar(subsetSelect,k).*Ftbar(facCount,:),[],2);
             facCount = facCount + 1;
         end
     end
-    varianceDecomp = [vareps,vd];
+    varianceDecomp = [varMu,vd];
     varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
     
-    Gt = makeStateObsModel(sumOM, Identities, 0);
-    mut =  reshape(Xt*sumBeta,K,T);
-    vresids = var(yt - mut - Gt*sumFt,[],2);
-    vtot = sum([varianceDecomp,vresids],2);
-    varianceDecomp = varianceDecomp./vtot;
     
     %% Marginal Likelihood
     [K,T] = size(yt);
@@ -258,20 +206,23 @@ if estML == 1
                 factorIndx = factorInfo(q,:);
                 facSelect = factorIndx(1):factorIndx(2);
                 facVarSubset = fvj(facSelect);
-                tempbackup = sumBackup(facSelect,:);
-                [~, ~, f, alphaj] = AmarginalF_ML(Info, ...
+                tempBackupIndices = backupIndices(:,q);
+                tempBackupIndices = tempBackupIndices(1):tempBackupIndices(2);
+                tempbackup = sumBackup(tempBackupIndices,:);
+                save('errormat')
+                [~, ~, f, alphaj] = Amfj(Info, BlockingInfo{q},...
                     Ftj(facSelect, :), ydemut,  Astar(:,q), stj(facSelect),...
-                    facVarSubset,obsPrecisionj, tempbackup);
-                stoAlphaj(facSelect, r) = alphaj;
+                    facVarSubset,obsPrecisionj, tempbackup, restrictions(:,q));
+                stoAlphaj(tempBackupIndices, r) = alphaj;
                 Ftj(facSelect,:) = f;
                 omg = storeOM(:,:,r);
                 ConditionalObsModel = makeStateObsModel(omg, Identities, q);
                 mutg =  reshape(Xt*betag,K,T) + ConditionalObsModel*Ftg;
                 ydemut = yt - mutg;
-                stoAlphag(facSelect,r) = AmarginalF_alphag(Info,...
-                    Ftg(facSelect,:), ydemut, Astar(:,q), omg(:,q),...
-                    stg(facSelect,:), fv(facSelect),...
-                    opg, tempbackup);
+                stoAlphag(tempBackupIndices,r) = Amfg(Info,...
+                    BlockingInfo{q}, Ftg(facSelect,:), ydemut, Astar(:,q), omg(:,q),...
+                    stg(facSelect,:), fv(facSelect),opg, tempbackup,...
+                    restrictions(:,q));
             end
             StateObsModel = makeStateObsModel(Astar,Identities,0);
             Si = kowStatePrecision(diag(stj),1./fvj,T);
@@ -428,6 +379,7 @@ else
     rmdir(checkpointdir, 's')
 end
 end
+
 
 
 

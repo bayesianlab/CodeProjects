@@ -1,6 +1,8 @@
 function [pdfval] = LLRestrict(ObsModel,ydemut,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, factor,factorPrecision)
 
+
+%%%% DONT CHANGE %%%%%
 [nFactors, T ] = size(factor);
 K = length(obsPrecision);
 nFactorsT = nFactors*T;

@@ -1,22 +1,24 @@
 function [DataCell] = SimDataMLF(T, Regions, CountriesInRegion,SeriesPerCountry,beta)
-rng(66)
+rng(60)
 Countries = Regions*CountriesInRegion;
 K = Countries*SeriesPerCountry;
-nFactors = 1 + Regions + Countries;
-if nFactors == 3
-    nFactors = 1;
-end
-
-rdex = 1:Regions;
 if Regions == 1 & CountriesInRegion == 1
+    nFactors =1 ;
     InfoCell{1,1} = [1,K];
+elseif Regions == 1 & CountriesInRegion > 1
+    nFactors = 1 + CountriesInRegion;
+    InfoCell = cell(1,2);
+    InfoCell{1,1} = [1,K];
+    InfoCell{1,2} = [(1:SeriesPerCountry:K)',(SeriesPerCountry:SeriesPerCountry:K)'];
 else
-InfoCell = cell(1,3);
-InfoCell{1,1} = [1,K];
-InfoCell{1,2} = [1:SeriesPerCountry*CountriesInRegion:K,;SeriesPerCountry*CountriesInRegion:SeriesPerCountry*CountriesInRegion:K]';
-InfoCell{1,3} = [(1:SeriesPerCountry:K)',(SeriesPerCountry:SeriesPerCountry:K)'];
+    nFactors = 1 + Regions + Countries;
+    InfoCell = cell(1,3);
+    InfoCell{1,1} = [1,K];
+    InfoCell{1,2} = [1:SeriesPerCountry*CountriesInRegion:K,;SeriesPerCountry*CountriesInRegion:SeriesPerCountry*CountriesInRegion:K]';
+    InfoCell{1,3} = [(1:SeriesPerCountry:K)',(SeriesPerCountry:SeriesPerCountry:K)'];
 end
 levels = size(InfoCell,2);
+
 
 Xt = normrnd(0,1, K*T,(SeriesPerCountry+1));
 Xt(:,1) = ones(K*T,1);
@@ -41,16 +43,7 @@ FactorIndices = SetIndicesInFactor(InfoCell);
 [Imat] = MakeObsIdentities(InfoCell,  K);
 
 Xt = sparse(Xt);
-Gh =unifrnd(.1,.9,K, levels);
-for q = 1:levels
-    if q == 1
-        Gh(1,1) = 1;
-    elseif q==2
-        Gh(1:SeriesPerCountry*CountriesInRegion:K,2) = 1;
-    else        
-        Gh(1:SeriesPerCountry:K,3) = 1;
-    end
-end
+Gh =setGt(InfoCell);
 
 
 
@@ -69,7 +62,7 @@ DataCell{1,3} = InfoCell;
 DataCell{1,4} = Factor;
 DataCell{1,5} = beta;
 DataCell{1,6} = gamma;
-DataCell{1,7} = Gt;
+DataCell{1,7} = ConvertStateObsModel( Gt, FactorIndices);
 
 end
 

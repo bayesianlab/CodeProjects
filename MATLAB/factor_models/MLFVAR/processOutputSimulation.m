@@ -128,16 +128,16 @@ savepath = '~/GoogleDrive/statespace/';
 % sumFt = mean(storeFt,3);
 % sumBeta = mean(storeBeta, 2);
 % sumOM = mean(storeOM, 3);
-% sig = std(storeFt,[],3);
-% xaxis = 1962:2014;
-% sdband = 1.96.*sig;
-% upper = sumFt + sdband;
-% lower = sumFt - sdband;
-% LW = .75;
-% COLOR = [1,0,0];
-% facealpha = .3;
-% fillX = [xaxis, fliplr(xaxis)];
-% fillY = [upper, fliplr(lower)];
+sig = std(storeFt,[],3);
+xaxis = 1962:2014;
+sdband = 1.96.*sig;
+upper = sumFt + sdband;
+lower = sumFt - sdband;
+LW = .75;
+COLOR = [1,0,0];
+facealpha = .3;
+fillX = [xaxis, fliplr(xaxis)];
+fillY = [upper, fliplr(lower)];
 
 % load('BigKowResults/Result_kowz_03_Oct_2019_07_13_54.mat')
 load('BigKowResults/Result_kowzb_19_Oct_2019_11_52_53.mat')

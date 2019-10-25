@@ -1,5 +1,5 @@
 clear;clc;
-DataCell = SimDataMLF(100, 1, 1,3, 1);
+% DataCell = SimDataMLF(100, 1, 1,6, 1);
 % save('simdata', 'DataCell')
 % TimeBreakKow(200,  20, '', 'simdata.mat', 'TestDir')
 % TimeBreakKow(10,  2, 'BigKow', 'kowz.mat', 'TestDir')
@@ -12,21 +12,23 @@ DataCell = SimDataMLF(100, 1, 1,3, 1);
 % sig = std(storeFt,[],3);
 % up=sumft + 2.*sig;
 % down = sumft - 2.*sig;
-% 
+%
 % tf = DataCell{4};
-% hold on 
+% hold on
 % plot(up(1,:),   'r')
 % plot(down(1,:),   'r')
 % plot(sumft(1,:), 'black')
 
 
-DataCell = SimDataMLF(100, 1, 1,3, 1);
-Sims = 1;
-burnin = 1;
-estML = 0;
+DataCell = SimDataMLF(50, 1, 2,3, 1);
+Sims = 10;
+burnin = 5;
+estML = 1;
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
+Factor = DataCell{1,4};
+gamma = diag(DataCell{1,6});
 A = DataCell{1,7}
 [K,T] = size(yt);
 [~, dimX] = size(Xt);
@@ -44,9 +46,17 @@ StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
 % vecFt = .5.*ones(nFactors*T, 1);
-initFactor = reshape(vecFt, nFactors,T);
+% initFactor = reshape(vecFt, nFactors,T);
+
+initFactor = Factor;
+
 identification = 2;
+for u = 1:levels
+    BlockingInfo{u}  = InfoCell{levels};
+end
+
+
+
 [storeFt, storeBeta, storeOM, storeStateTransitions,...
-    storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Mldfvar(yt, Xt,  InfoCell, Sims,...
-    burnin, initFactor,  initobsmodel,...
-    initStateTransitions, v0, r0, s0, d0, identification, estML, '');
+    storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, BlockingInfo,...
+    Sims, burnin, initFactor,  A, gamma, v0, r0, s0, d0, identification, estML, '');
