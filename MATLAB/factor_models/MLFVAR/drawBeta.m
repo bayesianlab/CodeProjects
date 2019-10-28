@@ -1,8 +1,9 @@
-function [b,v,V] = drawBeta(yt,  xi, deltas,...
-    prmean, prcovar, obsVariance)
+function [b,v,V, ystar, xstar] = drawBeta(yt,  xi, deltas, obsVariance)
 [K,T] = size(yt);
 [~,lags] = size(deltas);
 [rx,dimx] = size(xi);
+prmean= ones(dimx,1);
+prcovar = 10.*eye( dimx );
 yinit = [zeros(K,lags), yt(:,1:lags)];
 yinit = lagMat(yinit, lags);
 Ly = lagMat(yt,lags);
