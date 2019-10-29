@@ -1,5 +1,5 @@
 function [storeMeans, storeLoadings, storePhi, storeFt, storeObsV] = ...
-    Baseline(yt, xt, Ft, MeansLoadings, deltas, gammas, Sims, bn)
+    Baseline(InfoCell,yt, xt, Ft, MeansLoadings, deltas, gammas, Sims, bn)
 %% Definitions
 % yt comes in as
 %[ y11...y1T;
@@ -25,81 +25,82 @@ function [storeMeans, storeLoadings, storePhi, storeFt, storeObsV] = ...
 % deltaKp ... deltaK1]
 
 % gammas comes in as deltas.
+%% Setup and indices
 igPriorA = 3;
 igPriorB = 6;
-[K,T] = size(yt);
+[K,T] = size(yt)
 igParamA = .5.*(igPriorA + T);
-[KT, dimx]= size(xt);
+[KT, meanIndex]= size(xt);
 [nFactors,  lagState] = size(gammas);
-meanIndex = dimx-nFactors;
 meanRange = 1:meanIndex;
-factorIndex = meanIndex+1:dimx;
+factorRange = meanIndex+1:meanIndex + nFactors;
 [~, lagObs] = size(deltas);
-
+[Identities,~,~]=MakeObsModelIdentity(InfoCell);
+levels=length(InfoCell);
 IT = ones(T,1);
-
-obsVariance = ones(K,1);
-factorVariance = ones(nFactors,1);
-X = zeros(K*T, (1 + nFactors)*K);
-R = zeros(K*lagObs,T-lagObs);
+FtIndexMat = CreateFactorIndexMat(InfoCell);
+subsetIndices = zeros(K,T);
+for k = 1:K
+    subsetIndices(k,:)= k:K:KT;
+end
 lagind = 1:lagObs;
-beta = zeros(dimx,K);
-meanFunction = zeros(length(meanRange),K);
-loadings = zeros(length(factorIndex),K);
-mut=zeros(K,T);
-phi = zeros(lagObs, K);
-
 IT = speye(T);
 
+%% Posterior Storage
 Runs = Sims-bn;
 storeMeans = zeros(K,Runs);
 storeLoadings = zeros(K, nFactors, Runs);
 storePhi = zeros(K, lagObs,Runs);
 storeFt = zeros(nFactors, T, Runs);
 storeObsV = zeros(K,Runs);
-subsetIndices = zeros(K,T);
-for k = 1:K
-    subsetIndices(k,:)= k:K:KT;
-end
+
+%% Initializations
+obsVariance = ones(K,1);
+factorVariance = ones(nFactors,1);
+beta = zeros(meanIndex+nFactors,K);
+meanFunction = zeros(meanIndex,K);
+loadings = zeros(nFactors,K);
+mut=zeros(K,T);
+phi = zeros(lagObs, K);
 
 meanFunction(:,:) = MeansLoadings(meanIndex,:)
-loadings(:,:) = MeansLoadings(factorIndex, :)
+loadings(:,:) = MeansLoadings(factorRange, :)
 for i = 1:Sims
+%     fprintf('Simulation i = %i\n',i)
     for k = 1:K
-                tempI = subsetIndices(k,:);
-                tempy = yt(k,:);
-                tempx = xt(tempI,:);
-                tempdel=deltas(k,:);
-                tempobv = obsVariance(k);
-                [beta(:,k), ~,~,ystar,xstar] = drawBeta(tempy, tempx,  tempdel, tempobv);
-                meanFunction(:,k) = beta(meanIndex,k);
-                loadings(:,k) = beta(factorIndex,k);
-                mut(k,:) = beta(:,k)'*tempx';
-                et = tempy-mut(k,:);
-                phi(:,k) = drawPhi(tempy,et, tempdel, tempobv);
-                igParamB=igPriorB+sum((ystar - MeansLoadings'*xstar').^2,2);
-                obsVariance = 1./gamrnd(igParamA, 2./igParamB);
+        tempI = subsetIndices(k,:);
+        tempy = yt(k,:);
+        tempx=[xt(tempI,:),Ft(FtIndexMat(k,:),:)'];
+        tempdel=deltas(k,:);
+        tempobv = obsVariance(k);
+        [tempD0, ~] = initCovar(tempdel);
+        [beta(:,k), ~,~,ystar,xstar, Cinv] = drawBeta(tempy, tempx,  tempdel, tempobv, tempD0);
+        meanFunction(:,k) = beta(meanRange,k);
+        loadings(:,k) = beta(factorRange,k);
+        phi(:,k) = drawPhi(tempy, tempx, beta(:,k),tempdel, tempobv, Cinv);
+        igParamB=igPriorB+sum((ystar - beta(:,k)'*xstar').^2,2);
+        obsVariance(k) = 1./gamrnd(igParamA, 2./igParamB);
     end
-    %     [D0, ssDeltas] = initCovar(deltas);
-    %     [L0, ssGammas] = initCovar(gammas);
-    %     [D,H] = FactorPrecision(ssDeltas,D0, 1./obsVariance,T);
-    %     Hinv = H\eye(KT);
-    %     Lambda = FactorPrecision(ssGammas,L0, 1./factorVariance, T);
-    %     z=yt(:)-Hinv*surForm(xt(:,meanRange),K)*meanFunction(:);
-    %     HinvD = Hinv*D;
-    % Need to define a better A when World Region and country are here
-    % Like in Hdfvar
-    %     KronLoads = kron(IT,loadings');
-    %     KronLoadsHinvD = KronLoads'*HinvD;
-    %     Omega = (KronLoadsHinvD*KronLoads + Lambda)\eye(nFactors*T, nFactors*T);
-    %     om = Omega*KronLoadsHinvD*z;
-    %     Ft = reshape(om + chol(Omega, 'lower')*normrnd(0,1,nFactors*T,1), nFactors,T);
-
+    
+%     [D0, ssDeltas] = initCovar(deltas);
+%     [L0, ssGammas] = initCovar(gammas);
+%     [D,H] = FactorPrecision(ssDeltas,D0, 1./obsVariance,T);
+%     Hinv = H\eye(KT);
+%     Lambda = FactorPrecision(ssGammas,L0, 1./factorVariance, T);
+%     z=yt(:)-Hinv*surForm(xt,K)*meanFunction(:);
+%     HinvD = Hinv*D;
+%     A = makeStateObsModel(loadings', Identities, 0);
+%     KronLoads = kron(IT,A);
+%     KronLoadsHinvD = KronLoads'*HinvD;
+%     Omega = (KronLoadsHinvD*KronLoads + Lambda)\eye(nFactors*T, nFactors*T);
+%     om = Omega*KronLoadsHinvD*z;
+%     Ft = reshape(om + chol(Omega, 'lower')*normrnd(0,1,nFactors*T,1), nFactors,T);
+    
     
     if i > bn
         v = i - bn;
         storeMeans(:,v)=beta(meanRange,:)';
-        storeLoadings(:,:,v) = beta(factorIndex,:)';
+        storeLoadings(:,:,v) = beta(factorRange,:)';
         storePhi(:, :,v) = phi';
         storeFt(:,:,v) = Ft;
         storeObsV(:,v) = obsVariance;

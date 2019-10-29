@@ -209,7 +209,6 @@ if estML == 1
                 tempBackupIndices = backupIndices(:,q);
                 tempBackupIndices = tempBackupIndices(1):tempBackupIndices(2);
                 tempbackup = sumBackup(tempBackupIndices,:);
-                save('errormat')
                 [~, ~, f, alphaj] = Amfj(Info, BlockingInfo{q},...
                     Ftj(facSelect, :), ydemut,  Astar(:,q), stj(facSelect),...
                     facVarSubset,obsPrecisionj, tempbackup, restrictions(:,q));

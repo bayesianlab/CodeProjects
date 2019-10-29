@@ -1,39 +1,38 @@
 %% Sample data single factor model
 clear;clc;
-% rng(12)
-K = 2;
-T = 200;
+% rng(1)
+K = 3;
+T = 100;
 KT = K*T;
 nFactors = 1;
 beta = .33;
 lags = 2;
+InfoCell{1} = [1,K];
 
 delta = initializeARparams(K,lags);
 gamma = initializeARparams(nFactors,lags);
 
 
 [ip, stateSpaceDeltas]= initCovar(delta);
-
 [S,H]=FactorPrecision(stateSpaceDeltas,ip, ones(K,1), T);
 gamma = [.1, .3];
 ip = initCovar(gamma);
 [Lambda,H]=FactorPrecision(gamma,ip, [1], T);
 Ft = mvnrnd(zeros(1,T), Lambda\eye(T));
-tempx = kron(ones(K,1), Ft);
+
 consAndMean = ones(KT,1);
-
-
-X = [consAndMean, tempx(:)];
-SurX = surForm(X,K);
+dimx = size(consAndMean,2);
+SurX = surForm(consAndMean,K);
 u = reshape(mvnrnd(zeros(1,K*T), eye(K*T)), K,T);
 indices = 1:K;
 
 
 
-dimx = size(X,2);
-Beta = kron(ones(K,1),ones(size(X,2),1));
 
-
+Beta = kron(ones(K,1),ones(size(consAndMean,2),1))
+Gh =setGt(InfoCell);
+[Identities,~,~] =MakeObsModelIdentity( InfoCell);
+Gt = makeStateObsModel(Gh, Identities,0);
 yt = zeros(K,T);
 
 et = zeros(K,T+ lags);
@@ -43,27 +42,30 @@ lagvec = 1:lags;
 ind = lags;
 for t = 1:T
     select = indices + (t-1)*K; 
-    yt(:,t) = SurX(select,:)*Beta + sum(delta .* et(:, lagvec),2) + normrnd(0,1,K,1);
+    yt(:,t) = SurX(select,:)*Beta + Gt*Ft(:,t) + sum(delta .* et(:, lagvec),2) + normrnd(0,1,K,1);
     et(:, t+lags)=  yt(:,t)-SurX(select,:)*Beta;
     lagvec = lagvec+1;
 end
 
 
-
-Sims = 100;
-bn = 10;
+Sims = 6000;
+bn = 600;
 igamma = gamma;
 iFt = Ft;
 idelta = delta;
 iBeta = reshape(Beta, K,dimx);
 
-[storeMean, storeLoadings, storePhi, storeFt, storeObsV] = Baseline(yt,X, iFt, iBeta, idelta, igamma, Sims, bn);
 
+
+
+[storeMean, storeLoadings, storePhi, storeFt, storeObsV] =...
+    Baseline(InfoCell, yt,consAndMean, iFt, iBeta, idelta, igamma, Sims, bn);
 % mean(storeMean,2)
 % mean(storeLoadings,3)
-% mean(storePhi,3)
+delta
+mean(storePhi,3)
 % sumFt = mean(storeFt,3);
-x=mean(storeObsV,2)
+% obv=mean(storeObsV,2)
 % plot(F)
 % hold on 
 % sig =2.*std(storeFt,[],3);

@@ -5,7 +5,7 @@ dis = (0:lags-1)*K;
 Phi = full(spdiags(params, dis, K, K*lags));
 G = [Phi;eye( (lags-1)*K),zeros( (lags-1)*K, K)];
 notvalid=0;
-if sum(eig(G) > 1) 
+if sum(abs(eig(G)) > 1) 
     notvalid = 1;
 end
 PhiKronPhi = kron(G,G);

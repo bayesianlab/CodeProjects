@@ -38,7 +38,7 @@ S = kowStatePrecision(gamma, ones(nFactors,1), T)\speye(nFactors*T);
 Factor = mvnrnd(zeros(nFactors*T,1), S);
 Factor = reshape(Factor,nFactors,T);
 
-FactorIndices = SetIndicesInFactor(InfoCell);
+FactorIndices = SetIndicesInFactor(InfoCell)
 
 [Imat] = MakeObsIdentities(InfoCell,  K);
 
