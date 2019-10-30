@@ -6,8 +6,8 @@ T = 54;
 kowdata = importRealData('~/GoogleDrive/Datasets/kow_march6.csv');
 kow = table2array(kowdata)';
 InfoCell{1,1} = [1,180];
-% InfoCell{1,2} = [1,9; 10,15; 16,69; 70,123; 124,144;145,162;163,180];
-% InfoCell{1,2} = [(1:SeriesPerCountry:180)', (SeriesPerCountry:SeriesPerCountry:180)'];
+InfoCell{1,2} = [1,9; 10,15; 16,69; 70,123; 124,144;145,162;163,180];
+InfoCell{1,3} = [(1:SeriesPerCountry:180)', (SeriesPerCountry:SeriesPerCountry:180)'];
 
 kowmus = mean(kow,2);
 kow = kow - kowmus;
@@ -33,7 +33,7 @@ for t = 1:T-1
     end
     X(Xrows, :) = tempX;
 end
-X = sparse(X);
+
 y = kow(:,2:54);
 
 

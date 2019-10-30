@@ -5,9 +5,12 @@ speyet = speye(T);
 FullPrecision = diag(preom);
 GtO = ObsModel'*FullPrecision;
 P = StatePrecision + kron(speyet, GtO*ObsModel);
-P = P\speye(size(P,1));
-mu = P*(kron(speyet,GtO)*vecresids);
-draw = mvnrnd(mu',P);
+LP = chol(P,'lower');
+LPi = LP\eye(size(P,1));
+mu = LPi'*LPi*(kron(speyet,GtO)*vecresids);
+u = normrnd(0,1,size(P,1),1);
+x = LPi' * u;
+draw = mu + x;
 end
 
 

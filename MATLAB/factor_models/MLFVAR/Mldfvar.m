@@ -87,12 +87,12 @@ if finishedMainRun == 0
             start = iterator;
             save(join( [checkpointdir, 'ckpt'] ) )
         end
-%         fprintf('\nSimulation %i\n',iterator)
+        fprintf('\nSimulation %i\n',iterator)
         [beta, xbt, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecision,...
             StateObsModel, Si,  T);
         
         for q = levelVec
-%             fprintf('Level %i\n', q)
+            fprintf('Level %i\n', q)
             COM = makeStateObsModel(currobsmod, Identities, q);
             mut = xbt + COM*Ft;
             ydemut = yt - mut;
@@ -101,20 +101,10 @@ if finishedMainRun == 0
             facSelect = factorIndx(1):factorIndx(2);
             facVarSubset = factorVariance(facSelect);
             tempbackup = backupMeanAndHessian(facSelect,:);
-            
-            
-            
-            
-            exp = ExperimentalAmF(Info, InfoCell{1,levels}, Ft(facSelect, :), ydemut, currobsmod(:,q), ...
-                stateTransitions(facSelect), facVarSubset,...
-                obsPrecision, tempbackup, options, identification,restrictions(:,q))
-            
-            
             [currobsmod(:,q), tempbackup, f] = AmarginalF(Info, ...
                 Ft(facSelect, :), ydemut, currobsmod(:,q), ...
                 stateTransitions(facSelect), facVarSubset,...
                 obsPrecision, tempbackup, options, identification);
-            currobsmod
             backupMeanAndHessian(facSelect,:) = tempbackup;
             Ft(facSelect,:) = f;
         end
