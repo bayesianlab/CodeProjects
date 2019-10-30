@@ -4,7 +4,7 @@ function [storeFt, storeBeta, storeOM, storeStateTransitions,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
-    DotMatFile(1:periodloc-1),'Checkpoints/'] );
+    DotMatFile(1:periodloc-1),'Checkpoints/'] )
 
 checkpointfilename = 'ckpt';
 start = 1;
