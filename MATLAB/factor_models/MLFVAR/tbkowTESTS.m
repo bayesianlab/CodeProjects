@@ -1,6 +1,6 @@
 clear;clc;
 
-DataCell = SimDataMLF(200, 1, 1,6, 1);
+DataCell = SimDataMLF(100, 1, 1,18, 1);
 save('simdata', 'DataCell')
 % RunHdfvar(2, 1, 'BigKow', 'kowz.mat', 'TestDir')
 RunHdfvar(100,  10, '', 'simdata.mat', 'TestDir')
