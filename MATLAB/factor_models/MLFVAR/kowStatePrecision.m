@@ -16,6 +16,6 @@ Top = [P0, EmptySparse];
 OmegaInv = spdiags(repmat(statePre,Tm1,1), 0, Tm1*nFactors,Tm1*nFactors);
 OmegaInv = [Top;EmptySparse', OmegaInv];
 H = kron(spdiags(ones(T,1),-1, T,T), -stateTransition) + speye(TnFactors,TnFactors);
-Precision = H*OmegaInv*H' ;
+Precision = H'*OmegaInv*H;
 end
 
