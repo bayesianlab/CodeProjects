@@ -1,4 +1,4 @@
-function [DataCell] = SimDataMLF(T, Regions, CountriesInRegion,SeriesPerCountry,beta)
+function [DataCell] = SimDataMLF(T, Regions, CountriesInRegion,SeriesPerCountry)
 rng(60)
 Countries = Regions*CountriesInRegion;
 K = Countries*SeriesPerCountry;
@@ -20,29 +20,22 @@ end
 levels = size(InfoCell,2);
 
 
-Xt = normrnd(0,1, K*T,(SeriesPerCountry+1));
-Xt(:,1) = ones(K*T,1);
-Xt = repmat(Xt,1,K);
-E = repmat(kron(eye(K),ones(1,(SeriesPerCountry+1))),T,1);
-Xt = E.*Xt;
+Xt = [ones(K*T,1),normrnd(0,1, K*T,3)];
+surX = surForm(Xt,K);
 
 % Parameter inits
-beta = beta.*ones(K, (SeriesPerCountry+1));
-beta= reshape(beta', (SeriesPerCountry+1)*K,1);
-
-
+beta = ones(size(surX,2),1);
 
 gamma = diag(unifrnd(0.1,.5,nFactors,1));
-speyet = speye(T);
+speyet = eye(T);
 S = kowStatePrecision(gamma, ones(nFactors,1), T)\speye(nFactors*T);
 Factor = mvnrnd(zeros(nFactors*T,1), S);
 Factor = reshape(Factor,nFactors,T);
 
-FactorIndices = SetIndicesInFactor(InfoCell)
+FactorIndices = SetIndicesInFactor(InfoCell);
 
 [Imat] = MakeObsIdentities(InfoCell,  K);
 
-Xt = sparse(Xt);
 Gh =setGt(InfoCell);
 
 
@@ -50,7 +43,7 @@ Gh =setGt(InfoCell);
 Gt = MakeObsModel(Gh, Imat, FactorIndices);
 
 muf = Gt*Factor;
-mu = reshape(Xt*beta,K,T);
+mu = reshape(surX*beta,K,T);
 
 yt = mu +muf + normrnd(0,1,K,T);
 

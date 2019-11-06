@@ -1,7 +1,7 @@
 function [draw, P] = kowUpdateLatent(vecresids, ObsModel, StatePrecision, preom)
 [Nobseqns] = size(ObsModel,1);
 T = length(vecresids)/Nobseqns;
-speyet = speye(T);
+speyet = eye(T);
 FullPrecision = diag(preom);
 GtO = ObsModel'*FullPrecision;
 P = StatePrecision + kron(speyet, GtO*ObsModel);

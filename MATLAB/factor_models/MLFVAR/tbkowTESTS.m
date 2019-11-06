@@ -1,8 +1,8 @@
 clear;clc;
 
-% DataCell = SimDataMLF(100, 1, 1,18, 1);
-% save('simdata', 'DataCell')
-RunHdfvar(30, 10, 'BigKow', 'kowz.mat', 'TestDir')
+DataCell = SimDataMLF(50, 1, 1,9);
+save('simdata', 'DataCell')
+% RunHdfvar(10, 2, 'BigKow', 'kowz.mat', 'TestDir')
 % RunHdfvar(100,  10, '', 'simdata.mat', 'TestDir')
 % TimeBreakKow(10,  2, 'BigKow', 'kowz.mat', 'TestDir')
 % TimeBreakKow(10, 4, 6, '', 'mpy.mat', 'TestDir')

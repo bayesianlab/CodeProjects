@@ -25,15 +25,19 @@ for t = 1:T
     Xstar(pick, :) = Astar*tmpx;
     ystar(pick, :) = Astar*tmpy;
 end
-B0 = speye(cx);
-XstarPinv = Xstar'*(Inside\speye(size(Inside,1)));
+
+
+B0 = eye(cx);
+XstarPinv = Xstar'*(Inside\eye(size(Inside,1)));
 Precision = B0 + addup - (XstarPinv*Xstar);
+C = chol(Precision,'lower');
+Cinv = C\eye(cx);
 NumeratorTerm = sumup - (XstarPinv*ystar);
-Variance = Precision\speye(cx);
-bhat = Variance*(NumeratorTerm);
-[c, p] =chol(Variance,'lower');
+Variance = Cinv'*Cinv;
+bhat = Cinv'*Cinv* NumeratorTerm;
+
+
 piBeta = logmvnpdf(betaStar', bhat', Variance);
-% b = bhat + c*normrnd(0,1,cx,1);
-% mut = reshape(SurX*b, nEqns, T);
+
 end
 

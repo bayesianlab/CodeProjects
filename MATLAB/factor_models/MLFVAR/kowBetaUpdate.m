@@ -27,8 +27,7 @@ for t = 1:T
     Xstar(pick, :) = Astar*tmpx;
     ystar(pick, :) = Astar*tmpy;
 end
-B0 = speye(cx);
-
+B0 = eye(cx);
 XstarPinv = Xstar'*(Inside\eye(size(Inside,1)));
 Precision = B0 + addup - (XstarPinv*Xstar);
 C = chol(Precision,'lower');
@@ -37,10 +36,5 @@ NumeratorTerm = sumup - (XstarPinv*ystar);
 bhat = Cinv'*Cinv* NumeratorTerm;
 u = normrnd(0,1,cx,1);
 b = bhat + Cinv'*u;
-% bhat = Variance*(NumeratorTerm);
-% Variance = Precision\eye(cx);
-% [c, p] =chol(Variance,'lower');
-% b = bhat + c*u;
 mut = reshape(SurX*b, nEqns, T);
-% fprintf('done...\n')
 end
