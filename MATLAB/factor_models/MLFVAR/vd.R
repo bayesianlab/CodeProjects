@@ -2,6 +2,7 @@ library(readr)
 library(ggplot2)
 library(reshape2)
 library(ggsci)
+
 vdend <- 100*read_csv("CodeProjects/MATLAB/factor_models/MLFVAR/vdend", col_names=FALSE)
 vdbeg <- 100*read_csv("CodeProjects/MATLAB/factor_models/MLFVAR/vdbeg", col_names=FALSE)
 NAM = seq(1,9)
@@ -70,11 +71,11 @@ out <- ggplot(data=comparelong) +
   labs(y="Average Variance Decomposition", x="Region") + 
   ggtitle("Variance Decompositions for Output") +
   scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +
-  theme(axis.text = element_text(size = 8)) +
-  theme(axis.title = element_text(size = 10)) +
-  theme(plot.title = element_text(size=15)) + 
-  theme(legend.title = element_text(size=10))+ 
-  theme(legend.text = element_text( size=8))
+  theme(axis.text = element_text(size = 21)) +
+  theme(axis.title = element_text(size = 21)) +
+  theme(plot.title = element_text(size=28)) + 
+  theme(legend.title = element_text(size=21))+ 
+  theme(legend.text = element_text( size=21))
 out
 
 subdata <- bothlong[(bothlong$variable == "RE") & (bothlong$series =="Cons"),]
@@ -221,3 +222,39 @@ ggplot(data=africadflong) + geom_bar(aes(x = variable, y = value, fill=Name),
   theme(legend.title = element_text(size=15))+ 
   theme(legend.text = element_text( size=15)) +
   theme(legend.title = element_blank())
+
+
+
+require(maps)
+require(viridis)
+library(ggplot2)
+library(dplyr)                 
+theme_set(
+  theme_void()
+)
+
+
+
+
+
+
+library(readr)
+country_names <- read_csv("CodeProjects/R/country_names.csv")
+
+world_map <- map_data("world")
+ggplot(world_map, aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill="lightgray", colour = "white")
+
+allcoun <- unique(world_map$region)
+notin <- setdiff(allcoun,country_names$KowCountry)
+
+x <- data.frame(cbind(notin, numeric(length=length(notin))))
+colnames(x) <- c("KowCountry", "Val")
+x$Val <- as.numeric(x$Val)
+x$Val <- 1
+country_names <- rbind(x, country_names)
+wor <- merge(world_map, country_names, by.x="region", by.y="KowCountry", all.x=TRUE)
+wor <- wor[order(wor$order),]
+
+ggplot(wor, aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill=wor$Val, colour = "white")
