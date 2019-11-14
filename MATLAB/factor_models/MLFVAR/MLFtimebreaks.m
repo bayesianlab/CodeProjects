@@ -12,7 +12,7 @@ beta = .4.*ones(xcols, 1);
 
 gam = unifrnd(.3, 1,nFactors,1);
 stateTransitionsAll = gam'.*eye(nFactors);
-speyeT = speye(T);
+speyeT = eye(T);
 
 S = kowStatePrecision(stateTransitionsAll, ones(nFactors,1), T) \ speyeT;
 Factor = mvnrnd(zeros(nFactors*T,1), S);

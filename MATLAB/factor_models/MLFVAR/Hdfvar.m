@@ -16,12 +16,12 @@ finishedThirdReducedRun = 0;
 [nFactors, arFactor] = size(initStateTransitions);
 [K,T] = size(yt);
 [~, dimX] = size(Xt);
-
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 levels = length(sectorInfo);
 restrictions = restrictedElements(InfoCell);
 backupMeanAndHessian=setBackupsForBlocks(BlockingInfo, identification, restrictions);
 backupIndices = setBackupIndices(BlockingInfo);
+
 % Initializatitons
 factorVariance = ones(nFactors,1);
 obsPrecision = ones(K,1);
@@ -30,7 +30,6 @@ currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
 StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 Si = kowStatePrecision(diag(initStateTransitions),factorVariance,T);
-
 
 % Storage
 Runs = Sims - burnin;

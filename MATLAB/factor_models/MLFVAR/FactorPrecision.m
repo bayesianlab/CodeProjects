@@ -16,6 +16,6 @@ H = spdiags(pdiags, dees ,nFactors*(T-lags), nFactors*T);
 H = [spdiags(ones(nFactors*lags,1),0, nFactors*lags, nFactors*T);H];
 Sinv = spdiags(repmat(precision, T,1), 0, nFactors*T, nFactors*T);
 Sinv(1:nFactors*lags, 1:nFactors*lags) = P0\eye(nFactors*lags);
-P = H*Sinv*H';
+P = H'*Sinv*H;
 end
 

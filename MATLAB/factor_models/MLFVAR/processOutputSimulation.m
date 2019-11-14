@@ -79,71 +79,36 @@
 % matrix2latexmatrix(st,'st.tex')
 % 
 % 
-% clear;clc;
-% savepath = '~/GoogleDrive/statespace/';
-% simpath = 'tbk_results/';
-% files = dir(join([simpath,'*.mat']));
-% x =natsortfiles({files.name});
-% c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
-% N = floor(length(x)/2);
-% beg = 1:N;
-% c = str2double(cell2mat(regexp(x{1}, '[0-9]','match')));
-% N = floor(length(x)/2);
-% beg = 1:N;
-% G = length(beg);
-% 
-% for g = 1:N
-%     set1 = x{G+ g}
-%     datapath = join([simpath,set1]);
-%     ml1 = load(datapath, 'ml');
-%     set2 = x{g}
-%     datapath = join([simpath,set2]);
-%     ml2 = load(datapath, 'ml');
-%     sumMls(g,2) = ml1.ml + ml2.ml;
-%     sumMls(g,1) = c;
-%     c = c + 1
-% end
-% 
-% [a, b] = max(sumMls(:,2))
-% tbaxis = 1966:2011;
-% mlfull = load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Old/Result_kowz.mat', 'ml');
-% mlfull = mlfull.ml
-% hold on 
-% tbp = plot(tbaxis, ones(length(tbaxis),1).*mlfull);
-% plot(tbaxis, sumMls(:,2))
-% [a,b] = max(sumMls)
-% saveas(tbp, join([savepath,'tbp.jpeg']))
-% Max occurs at End 25 Beg 26
-% load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/tbk_results/Result_TimeBreakKowEnd25.mat')
-% csvwrite('vdend', varianceDecomp)
-% load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/tbk_results/Result_TimeBreakKowBeg26.mat')
-% csvwrite('vdbeg', varianceDecomp)
-% plot(varianceDecomp(1:3:180,2), '.')
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% Application KOW dataset
 clear;clc;
 savepath = '~/GoogleDrive/statespace/';
 
+
+
 % load('TestDir/Result_kowz_20_Oct_2019_14_13_03.mat')
 % sumFt = mean(storeFt,3);
 % sumBeta = mean(storeBeta, 2);
 % sumOM = mean(storeOM, 3);
-sig = std(storeFt,[],3);
-xaxis = 1962:2014;
-sdband = 1.96.*sig;
-upper = sumFt + sdband;
-lower = sumFt - sdband;
-LW = .75;
-COLOR = [1,0,0];
-facealpha = .3;
-fillX = [xaxis, fliplr(xaxis)];
-fillY = [upper, fliplr(lower)];
+% sig = std(storeFt,[],3);
+% xaxis = 1962:2014;
+% sdband = 1.96.*sig;
+% upper = sumFt + sdband;
+% lower = sumFt - sdband;
+% LW = .75;
+% COLOR = [1,0,0];
+% facealpha = .3;
+% fillX = [xaxis, fliplr(xaxis)];
+% fillY = [upper, fliplr(lower)];
 
-% load('BigKowResults/Result_kowz_03_Oct_2019_07_13_54.mat')
 load('BigKowResults/Result_kowzb_19_Oct_2019_11_52_53.mat')
 % load('BigKowResults/Result_kowz__18_Oct_2019_16_31_05.mat')
 % load('BigKowResults/Result_kow_stand.mat')
 % load('BigKowResults/Old/Result_kowz.mat')
+csvwrite('sumOM.csv', sumOM)
+
 xaxis = 1962:2014;
 variance = sumFt2 - sumFt.^2;
 sig = sqrt(variance);
@@ -185,24 +150,7 @@ ASIAOUT = 163:3:180;
 ASIACONS = 164:3:179;
 ASIAINV = 165:3:178;
 
-vd = zeros(K,3) ;
-vareps = var(reshape(Xt*sumBeta,K,T), [],2);
-facCount = 1;
-for k = 1:3
-    Info = InfoCell{1,k};
-    Regions = size(Info,1);
-    for r = 1:Regions
-        subsetSelect = Info(r,1):Info(r,2);
-        vd(subsetSelect,k) = var(sumOM(subsetSelect,k).*sumFt(facCount,:),[],2);
-        facCount = facCount + 1;
-    end
-end
-varianceDecomp = [vareps,vd];
-varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
 
-mean(sumOM(:,1))
-mean(varianceDecomp(:,2))
-% csvwrite('varianceDecomp.csv', varianceDecomp)
 
 % writeVdToFile('navd.txt', varianceDecomp, NA)
 % writeVdToFile('ocvd.txt', varianceDecomp, OCEAN)

@@ -32,7 +32,7 @@ proposalDist = @(x)logmvnpdf(x, proposalMeanN', proposalVariance);
 alpha = min(0, (LL(draw, S0drawlowerinv)+proposalDist(deltas)) - ...
     (LL(deltas', Cinv)+proposalDist(draw'))   );
 if log(unifrnd(0,1)) < alpha
-    p = draw;
+    p = draw';
 else
     p = deltas;
 end

@@ -1,4 +1,8 @@
 function [U] = restrictedElements(M)
+%% Returns a matrix with 1 being the 
+% restricted loading using the identification restriction 
+% scheme given in CJ 2009, ones for each group of 
+% factors
 Q = M{1};
 NumberOfEquations = Q(end,end);
 LevelsColumns = length(M);

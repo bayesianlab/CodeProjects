@@ -10,7 +10,7 @@ if sum(abs(eig(G)) > 1)
 end
 PhiKronPhi = kron(G,G);
 Im = speye(size(PhiKronPhi,1));
-R = spdiags(ones(K), 0, K*lags,K);
+R = full(spdiags(ones(K), 0, K*lags,K));
 RRT = R*R';
 P0 = (Im - PhiKronPhi)\RRT(:);
 P0 = reshape(P0, K*lags,K*lags);

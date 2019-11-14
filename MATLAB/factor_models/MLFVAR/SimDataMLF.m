@@ -17,17 +17,14 @@ else
     InfoCell{1,2} = [1:SeriesPerCountry*CountriesInRegion:K,;SeriesPerCountry*CountriesInRegion:SeriesPerCountry*CountriesInRegion:K]';
     InfoCell{1,3} = [(1:SeriesPerCountry:K)',(SeriesPerCountry:SeriesPerCountry:K)'];
 end
-levels = size(InfoCell,2);
 
-
-Xt = [ones(K*T,1),normrnd(0,1, K*T,3)];
+Xt = [ones(K*T,1)];
 surX = surForm(Xt,K);
 
 % Parameter inits
 beta = ones(size(surX,2),1);
 
 gamma = diag(unifrnd(0.1,.5,nFactors,1));
-speyet = eye(T);
 S = kowStatePrecision(gamma, ones(nFactors,1), T)\speye(nFactors*T);
 Factor = mvnrnd(zeros(nFactors*T,1), S);
 Factor = reshape(Factor,nFactors,T);
