@@ -5,7 +5,7 @@ function [condLike] = MHphi(yp,xp,beta, sigma2, ystar, Xstar, phi, Cinv)
 % phi is a column
 lags = size(Cinv,1);
 K=length(sigma2);
-y1N = reshape( (Cinv*yp)- (Cinv*xp*beta),K,lags);
+y1N = reshape( (Cinv'*yp)- (Cinv'*xp*beta),K,lags);
 detpart = (-.5*lags).*2*sum(log(diag(Cinv)));
 kernalpart = (-.5).*(y1N'*y1N)./(sigma2);
 LLpart1 = detpart+kernalpart;

@@ -105,7 +105,7 @@ if finishedMainRun == 0
         stateTransitions = kowUpdateArParameters(stateTransitions, Ft, factorVariance, 1);
         
         if identification == 2
-            %             [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
+            [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
         end
         %% Storage
         if iterator > burnin
@@ -115,7 +115,7 @@ if finishedMainRun == 0
             storeStateTransitions(:,:,v) = stateTransitions;
             storeFt(:,:,v) = Ft;
             storeObsPrecision(:,v) = obsPrecision;
-            storeFactorVar(:,v) = factorVariance;            
+            storeFactorVar(:,v) = factorVariance;
             if identification == 2
                 %                 storeFactorParamb(:, v) =  factorParamb;
             end
@@ -134,7 +134,7 @@ if finishedMainRun == 0
     
     Runs = Sims- burnin;
     sumBackup = cellfun(@(b)rdivide(b,Runs), sumBackup, 'UniformOutput', false);
-
+    
     betaBar = mean(storeBeta,2);
     Ftbar = mean(storeFt,3);
     omBar = mean(storeOM,3);

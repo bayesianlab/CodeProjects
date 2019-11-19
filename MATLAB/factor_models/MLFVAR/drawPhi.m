@@ -1,4 +1,4 @@
-function [p] = drawPhi(yt, xt,beta,deltas, obsv, Cinv )
+function [p] = drawPhi(yt, xt,beta,deltas, obsv, Cinv  )
 [K,T] = size(yt);
 [~,lags] = size(deltas);
 deltasPriorMean = zeros(1,lags);

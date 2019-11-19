@@ -1,16 +1,17 @@
-function [draws, paramb] = drawFactorVariance(Factor, stateTransitions, s0, d0)
-[q,T ] = size(Factor);
+function [draws, paramb] = drawFactorVariance(Factor, stateTransitions, factorVariance, s0, d0)
+[NF,T ] = size(Factor);
+[~,lags] = size(stateTransitions);
 parama = .5.*(s0+T);
-paramb = zeros(q,1);
-draws = zeros(q,1);
-
-for t = 1 :q
-    fstar = [Factor(t,1)*sqrt(1-stateTransitions(t)^2), Factor(t,2:end)];
-    fhat = [0, Factor(t,2:end).*stateTransitions(t)];
-    demeaned = (fstar-fhat);    
-    paramb(t) = (d0 + demeaned*demeaned');
-    draws(t) = 1/gamrnd(parama,2/(paramb(t)) );
+paramb = zeros(NF,1);
+draws = zeros(NF,1);
+IP = eye(lags);
+for q = 1 :NF
+    [L0, ssterms] = initCovar(stateTransitions(q,:));
+    [~, H] = FactorPrecision(ssterms, L0, 1./factorVariance(q), T);
+    H(1:lags,1:lags) = (chol(L0,'lower')\IP)';
+    Hf = H*Factor(q,1:T)';
+    paramb(q)=d0+Hf'*Hf;
+    draws(q) = 1/gamrnd(parama,2/(paramb(q)) );
 end
-
 end
 
