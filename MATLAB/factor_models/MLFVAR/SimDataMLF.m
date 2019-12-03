@@ -1,5 +1,6 @@
 function [DataCell] = SimDataMLF(T, Regions, CountriesInRegion,SeriesPerCountry)
 rng(60)
+stateLags=2;
 Countries = Regions*CountriesInRegion;
 K = Countries*SeriesPerCountry;
 if Regions == 1 & CountriesInRegion == 1
@@ -23,22 +24,21 @@ surX = surForm(Xt,K);
 
 % Parameter inits
 beta = ones(size(surX,2),1);
-
-gamma = diag(unifrnd(0.1,.5,nFactors,1));
-S = kowStatePrecision(gamma, ones(nFactors,1), T)\speye(nFactors*T);
-Factor = mvnrnd(zeros(nFactors*T,1), S);
-Factor = reshape(Factor,nFactors,T);
-
+gamma = zeros(nFactors,stateLags);
+Factor = zeros(nFactors,T);
+for q = 1:nFactors
+    gamma(q,:) = initializeARparams(1,stateLags);
+    ip = initCovar(gamma(q,:));
+    [Lambda,~]=FactorPrecision(gamma(q,:),ip, 1, T);
+    Linv = chol(Lambda, 'lower')\eye(T);
+    Factor(q,:) = reshape(Linv'*normrnd(0,1,T,1),1,T);
+end
 FactorIndices = SetIndicesInFactor(InfoCell);
 
 [Imat] = MakeObsIdentities(InfoCell,  K);
 
 Gh =setGt(InfoCell);
-
-
-
 Gt = MakeObsModel(Gh, Imat, FactorIndices);
-
 muf = Gt*Factor;
 mu = reshape(surX*beta,K,T);
 

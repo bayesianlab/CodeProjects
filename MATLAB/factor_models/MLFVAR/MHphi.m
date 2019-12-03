@@ -3,6 +3,8 @@ function [condLike] = MHphi(yp,xp,beta, sigma2, ystar, Xstar, phi, Cinv)
 % ystar comes in as a column vector for 
 % conformity
 % phi is a column
+% C is not assumed to be correctly transposed when coming 
+% in, it is transposed inside
 lags = size(Cinv,1);
 K=length(sigma2);
 y1N = reshape( (Cinv'*yp)- (Cinv'*xp*beta),K,lags);

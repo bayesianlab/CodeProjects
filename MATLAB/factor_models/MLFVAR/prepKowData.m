@@ -16,26 +16,37 @@ kow = kow./std(kow,[],2);
 select = 1:SeriesPerCountry;
 dimX = (SeriesPerCountry+1)*SeriesPerCountry;
 colsX = 1:dimX;
-X = zeros(K*(T-1),  SeriesPerCountry*(SeriesPerCountry+1)*Countries);
+X = zeros(K*(T-1),SeriesPerCountry+1);
 
 I = kron(eye(K), ones(1,1+SeriesPerCountry));
 fillX = 1:K;
 tempX = X(1:K, :);
 
+d=0;
 for t = 1:T-1
     select2 = 1:SeriesPerCountry;
     select3 = 1:dimX;
     Xrows = fillX + (t-1)*K;
     for c = 1:Countries
         rows = select2 + (c-1)*SeriesPerCountry;
+        tempX(rows,:) =repmat([1, kow(rows, t)'],3,1);
         cols = colsX + (c-1)*dimX;
-        tempX(rows,cols)= kron(eye(SeriesPerCountry), [1, kow(rows, t)']);
     end
-    X(Xrows, :) = tempX;
+    X(Xrows,:) = tempX;
 end
 
 y = kow(:,2:54);
 
+
+DataCell = cell(1,7);
+DataCell{1,1} = y;
+DataCell{1,2} = surForm(X,K);
+DataCell{1,3} = InfoCell;
+DataCell{1,4} = 0;
+DataCell{1,5} = 0;
+DataCell{1,6} = 0;
+DataCell{1,7} = 0;
+save('BigKow/kowz.mat', 'DataCell')
 
 DataCell = cell(1,7);
 DataCell{1,1} = y;
@@ -45,4 +56,15 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/kowz_fast.mat', 'DataCell')
+save('BigKow/kowz_kose.mat', 'DataCell')
+
+DataCell = cell(1,7);
+DataCell{1,1} = y;
+DataCell{1,2} = surForm(ones(K*T,1),K);
+DataCell{1,3} = InfoCell;
+DataCell{1,4} = 0;
+DataCell{1,5} = 0;
+DataCell{1,6} = 0;
+DataCell{1,7} = 0;
+save('BigKow/kowz_resurrection.mat', 'DataCell')
+

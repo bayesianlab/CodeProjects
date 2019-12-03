@@ -13,7 +13,7 @@ finishedMainRun = 0;
 finishedFirstReducedRun = 0;
 finishedSecondReducedRun = 0;
 finishedThirdReducedRun = 0;
-[nFactors, arFactor] = size(initStateTransitions);
+[nFactors, lagState] = size(initStateTransitions);
 [K,T] = size(yt);
 [~, dimX] = size(Xt);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
@@ -29,14 +29,16 @@ stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
 StateObsModel = makeStateObsModel(currobsmod,Identities,0);
-Si = kowStatePrecision(diag(initStateTransitions),factorVariance,T);
-
+[iP, ssState] =initCovar(initStateTransitions);
+Si = FactorPrecision(ssState, iP, 1./factorVariance, T);
+fakeX = zeros(T,1);
+fakeB = zeros(1,1);
 % Storage
 Runs = Sims - burnin;
 storeBeta = zeros(dimX, Runs);
 storeOM = zeros(K, levels, Runs);
 storeFt = zeros(nFactors, T, Runs);
-storeStateTransitions = zeros(nFactors, arFactor, Runs);
+storeStateTransitions = zeros(nFactors, lagState, Runs);
 storeFactorParamb = zeros(nFactors, Runs);
 storeObsPrecision = zeros(K, Runs);
 storeFactorVar = zeros(nFactors,Runs);
@@ -94,18 +96,22 @@ if finishedMainRun == 0
             Ft(facSelect,:) = f;
         end
         StateObsModel = makeStateObsModel(currobsmod,Identities,0);
-        Si = kowStatePrecision(diag(stateTransitions),1./factorVariance,T);
-        
+        [iP, ssState] =initCovar(stateTransitions);
+        Si = FactorPrecision(ssState, iP, 1./factorVariance, T);
         %% Variance
         resids = yt - StateObsModel*Ft - xbt;
         [obsVariance,r2] = kowUpdateObsVariances(resids, v0,r0,T);
         obsPrecision = 1./obsVariance;
         
-        %% AR Parameters
-        stateTransitions = kowUpdateArParameters(stateTransitions, Ft, factorVariance, 1);
+        %% Factor AR Parameters
+        for n=1:nFactors
+            [L0, ~] = initCovar(stateTransitions(n,:));
+            Linv = chol(L0,'lower')\eye(lagState);
+            stateTransitions(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, stateTransitions(n,:), factorVariance(n), Linv);
+        end
         
         if identification == 2
-            [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, s0, d0);
+            [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
         end
         %% Storage
         if iterator > burnin
@@ -184,7 +190,8 @@ if estML == 1
         Ftj = mean(storeFt,3);
         obsPrecisionj = mean(storeObsPrecision,2);
         fvj = mean(storeFactorVar,2);
-        Si = kowStatePrecision(diag(stj),1./fvj,T);
+        [iP, ssState] =initCovar(stj);
+        Si = FactorPrecision(ssState, iP, 1./fvj, T);
         %% MH for factor loadings
         fprintf('Reduced run for factor loadings\n')
         for r = startRR:Runs
@@ -223,7 +230,8 @@ if estML == 1
                     restrictions(:,q));
             end
             StateObsModel = makeStateObsModel(Astar,Identities,0);
-            Si = kowStatePrecision(diag(stj),1./fvj,T);
+            [iP, ssState] =initCovar(stj);
+            Si = FactorPrecision(ssState, iP, 1./fvj, T);
             storeFtj(:,:,r) = Ftj;
             %% Variance
             resids = yt - StateObsModel*Ftj - xbtj;
@@ -232,11 +240,15 @@ if estML == 1
             storeObsPrecisionj(:,r) = obsPrecisionj;
             
             %% State Transitions
-            stj = kowUpdateArParameters(stj, Ftj, fvj, 1);
+            for n=1:nFactors
+                [L0, ~] = initCovar(stj(n,:));
+                Linv = chol(L0,'lower')\eye(lagState);
+                stj(n,:) = drawPhi(Ftj(n,:), fakeX, fakeB, stj(n,:), fvj(n), Linv);
+            end
             storeStateTransitionsj(:,:,r) = stj;
             
             if identification == 2
-                [fvj, factorParamb]  = drawFactorVariance(Ftj, stj, s0, d0);
+                [fvj, factorParamb]  = drawFactorVariance(Ftj, stj, fvj,s0, d0);
                 storeFactorVarj(:,r) = fvj;
             end
         end
@@ -261,17 +273,18 @@ if estML == 1
         fprintf('Reduced run for state transitions\n')
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
-            [stj, alphaj] = drawSTAlphaj(stStar, Ftj, fvj,1);
-            alphag = drawSTAlphag(storeStateTransitionsg(:,r), stStar,...
-                storeFtg(:,:,r), storeFactorVarg(:,r), 1);
+            [stj, alphaj] = drawSTAlphaj(stStar, Ftj, fvj,lagState);
+            alphag = drawSTAlphag(storeStateTransitionsg(:,:,r), stStar,...
+                storeFtg(:,:,r), storeFactorVarg(:,r), lagState);
             storeStateTransitionsg(:,:,r) = stj;
             stoAlphaj(:,r) = alphaj;
             stoAlphag(:,r) = alphag;
             if identification == 2
-                [fvj, factorParamb]  = drawFactorVariance(Ftj, stj, s0, d0);
+                [fvj, factorParamb]  = drawFactorVariance(Ftj, stj, fvj, s0, d0);
                 storeFactorVarj(:,r) = fvj;
             end
-            Si = kowStatePrecision(diag(stj), 1./fvj, T);
+            [iP, ssState] =initCovar(stj);
+            Si = FactorPrecision(ssState, iP, 1./fvj, T);
             [betaj, xbtj, ~, ~] = kowBetaUpdate(yt(:), Xt, obsPrecisionj,...
                 StateObsModelStar, Si,  T);
             storeBetaj(:,r) = betaj;
@@ -310,10 +323,11 @@ if estML == 1
             obsPrecisionj = 1./obsVariance;
             storeObsPrecisionj(:,r) = obsPrecisionj;
             if identification == 2
-                [fvj, factorParamb]  = drawFactorVariance(Ftj, stStar, s0, d0);
+                [fvj, factorParamb]  = drawFactorVariance(Ftj, stStar, fvj, s0, d0);
                 storeFactorVarj(:,r) = fvj;
             end
-            Si = kowStatePrecision(diag(stStar), 1./fvj, T);
+            [iP, ssState] =initCovar(stStar);
+            Si = FactorPrecision(ssState, iP, 1./fvj, T);
         end
         piBeta = logAvg(storePiBeta);
         FtStar = mean(Ft,3);
@@ -332,7 +346,8 @@ if estML == 1
     fprintf('Reduced run for obs variance and factor variance\n')
     for r = startRR:Runs
         fprintf('RR = %i\n', r)
-        Si = kowStatePrecision(diag(stStar), 1./factorVarianceStar, T);
+        [iP, ssState] =initCovar(stStar);
+        Si = FactorPrecision(ssState, iP, 1./fvj, T);
         Ftj = reshape(kowUpdateLatent(ydemut(:), StateObsModelStar,...
             Si,  obsPrecisionStar), nFactors, T);
         mutj = StateObsModelStar*Ftj + xbtStar;
@@ -354,7 +369,7 @@ if estML == 1
     posteriorStar = sum(posteriors);
     LogLikelihood = sum(logmvnpdf(yt', muStar', diag(obsVarianceStar)))
     % Priors
-    priorST = sum(logmvnpdf(stStar, zeros(1,nFactors), eye(nFactors)));
+    priorST = sum(logmvnpdf(stStar, zeros(1,lagState), eye(lagState)));
     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*d0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
     priorBeta = logmvnpdf(betaStar', zeros(1, dimX), eye(dimX));
@@ -362,7 +377,8 @@ if estML == 1
     priors = [priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]
     priorStar = sum([priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]);
     % Integrated log likelihood
-    Kprecision = kowStatePrecision(diag(stStar), 1./factorVarianceStar, T);
+    [iP, ssState] =initCovar(stStar);
+    Kprecision = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
     Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T))
     G = kron(eye(T), StateObsModelStar);
     J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
