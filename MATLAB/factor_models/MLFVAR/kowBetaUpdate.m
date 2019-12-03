@@ -36,5 +36,7 @@ NumeratorTerm = sumup - (XstarPinv*ystar);
 bhat = Cinv'*Cinv* NumeratorTerm;
 u = normrnd(0,1,cx,1);
 b = bhat + Cinv'*u;
+
+
 mut = reshape(SurX*b, nEqns, T);
 end

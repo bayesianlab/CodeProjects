@@ -4,6 +4,8 @@ clear;clc;
 % save('simdata', 'DataCell')
 % RunHdfvar(10, 2, 'BigKow', 'kowz.mat', 'TestDir')
 % RunHdfvar(100,  10, '', 'simdata.mat', 'TestDir')
+RunHdfvar(100,  10, 'BigKow', 'kowz_resurrection.mat', 'TestDir')
+
 % TimeBreakKow(10,  2, 'BigKow', 'kowz.mat', 'TestDir')
 % TimeBreakKow(10, 4, 6, '', 'mpy.mat', 'TestDir')
 % TimeBreakKow(10,4,'Unemployment', 'ue_big.mat','TestDir')

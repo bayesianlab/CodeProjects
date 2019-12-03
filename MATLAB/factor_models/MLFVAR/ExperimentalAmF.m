@@ -11,7 +11,8 @@ obsupdate = zeros(K,1);
 fpCell = cell(1,Regions);
 bcount = 0;
 for r = 1:Regions
-    factorPrecision = kowStatePrecision(stateTransitions(r), 1./factorVariance(r), T);
+    [iP, ssState] =initCovar(stateTransitions(r,:));
+    factorPrecision = FactorPrecision(ssState, iP, 1./factorVariance, T);
     fpCell{r} = factorPrecision;
     for b = 1:Blocks(r)
         bcount = bcount + 1;
@@ -28,13 +29,13 @@ for r = 1:Regions
                 Factor(r,:), factorPrecision, lastMean,...
                 lastCovar,  options);
             obsupdate(subsetSelect) = xt;
-
+            
             backup{bcount,1} = lastMean;
             backup{bcount,2} = lastCovar;
         elseif isRestr == 1
             [xt, lastMean, lastCovar] = identification2(x0, ySlice,precisionSlice,...
                 Factor(r,:), factorPrecision, lastMean,lastCovar,  options);
-                       
+            
             obsupdate(subsetSelect) = xt;
             backup{bcount,1} = lastMean;
             backup{bcount,2} = lastCovar;
