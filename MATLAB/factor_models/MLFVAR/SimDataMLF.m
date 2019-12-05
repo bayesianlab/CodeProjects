@@ -1,6 +1,6 @@
 function [DataCell] = SimDataMLF(T, Regions, CountriesInRegion,SeriesPerCountry)
 rng(60)
-stateLags=2;
+stateLags=1;
 Countries = Regions*CountriesInRegion;
 K = Countries*SeriesPerCountry;
 if Regions == 1 & CountriesInRegion == 1

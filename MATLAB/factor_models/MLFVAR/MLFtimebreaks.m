@@ -25,9 +25,6 @@ Gt2(1) = 1;
 mu1 = Gt1*Factor(1:timeBreak);
 mu2 = Gt2*Factor((timeBreak+1):end);
 m = reshape(Xt*beta,K,T);
-% m1 = zeros(K,timeBreak);
-% m2 = m(:, timeBreak+1:end);
-% MU = Gt*Factor + reshape(Xt*beta,K,T);
 MU = [mu1,mu2] + m;
 yt = MU + normrnd(0,1,K,T);
 
@@ -43,7 +40,7 @@ DataCell{1,6} = gam;
 DataCell{1,7} = Gt1;
 DataCell{1,8} = Gt2;
 
-save('totaltime.mat', 'DataCell')
+save('TimeBreakSimData/totaltime.mat', 'DataCell')
 
 % yt1 = yt(:,1:timeBreak);
 % [K,t1] = size(yt1);

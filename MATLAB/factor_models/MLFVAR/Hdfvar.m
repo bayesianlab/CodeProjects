@@ -36,7 +36,6 @@ obsPrecision = ones(K,1);
 stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
-StateObsModel = makeStateObsModel(currobsmod,Identities,0);
 [iP, ssState] =initCovar(initStateTransitions);
 Si = FactorPrecision(ssState, iP, 1./factorVariance, T);
 fakeX = zeros(T,1);
@@ -92,7 +91,7 @@ if finishedMainRun == 0
             gammas = stateTransitions(fidx,:);
             [L0, ssgam] = initCovar(diag(gammas));
             StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fidx), T);
-            [VAR(:,k), Xbeta(k,:),bhat1(:,k)] = betaDraw(tempy(:), tempx,...
+            [VAR(:,k), Xbeta(k,:)] = betaDraw(tempy(:), tempx,...
                 tempObsPrecision,tempOm,StatePrecision, betaPriorMean, betaPriorPre, T);
         end
         
@@ -229,10 +228,9 @@ if estML == 1
                 gammas = stateTransitions(fidx,:);
                 [L0, ssgam] = initCovar(diag(gammas));
                 StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fidx), T);
-                [VAR(:,k), Xbeta(k,:),bhat1(:,k)] = betaDraw(tempy(:), tempx,...
+                [VAR(:,k), Xbeta(k,:)] = betaDraw(tempy(:), tempx,...
                     tempObsPrecision,tempOm,StatePrecision, betaPriorMean, betaPriorPre, T);
             end
-            storeVARj(:,:,r) = VAR;
             storeVARj(:,:,r) = VAR;
             Ftg = storeFtg(:,:,r);
             stg = storeStateTransitionsg(:,:,r);
@@ -330,7 +328,7 @@ if estML == 1
                 gammas = stateTransitions(fidx,:);
                 [L0, ssgam] = initCovar(diag(gammas));
                 StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fidx), T);
-                [VAR(:,k), Xbeta(k,:),bhat1(:,k)] = betaDraw(tempy(:), tempx,...
+                [VAR(:,k), Xbeta(k,:)] = betaDraw(tempy(:), tempx,...
                     tempObsPrecision,tempOm,StatePrecision, betaPriorMean, betaPriorPre, T);
             end
             storeVARj(:,:,r) = VAR;
@@ -410,8 +408,8 @@ if estML == 1
     end
     
     % Theta star
-    piObsVariance = sum(logAvg(storePiObsVariance))
-    piFactorVariance = sum(logAvg(storePiFactorVarianceStar))
+    piObsVariance = sum(logAvg(storePiObsVariance));
+    piFactorVariance = sum(logAvg(storePiFactorVarianceStar));
     posteriors = [piBeta, piA , piST,piObsVariance,piFactorVariance]
     posteriorStar = sum(posteriors);
     LogLikelihood = sum(logmvnpdf(yt', muStar', diag(obsVarianceStar)))
@@ -419,14 +417,14 @@ if estML == 1
     priorST = sum(logmvnpdf(stStar, zeros(1,lagState), eye(lagState)));
     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*d0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
-    priorBeta = logmvnpdf(betaStar', zeros(1, dimX), eye(dimX));
+    priorBeta = logmvnpdf(betaStar', zeros(1, dimX), 10.*eye(dimX));
     priorAstar = Apriors(Info, Astar);
     priors = [priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]
     priorStar = sum([priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]);
     % Integrated log likelihood
     [iP, ssState] =initCovar(stStar);
     Kprecision = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
-    Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\speye(nFactors*T))
+    Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\eye(nFactors*T))
     G = kron(eye(T), StateObsModelStar);
     J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
     piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  )
