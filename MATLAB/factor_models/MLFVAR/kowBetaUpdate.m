@@ -6,8 +6,8 @@ nEqns = length(obsModelPrecision);
 nFactors = size(StateObsModel,2);
 i = 1:nEqns;
 j = 1:nFactors;
-fullpre = spdiags(obsModelPrecision,0, nEqns, nEqns);
-Inside = StatePrecision + kron(speye(T),...
+fullpre = diag(obsModelPrecision);
+Inside = StatePrecision + kron(eye(T),...
     StateObsModel'* fullpre *StateObsModel);
 
 Astar = StateObsModel'*fullpre;

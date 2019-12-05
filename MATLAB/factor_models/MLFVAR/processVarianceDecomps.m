@@ -55,46 +55,7 @@ end
 varianceDecomp = [vareps,vd];
 varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
 csvwrite('varianceDecompEnd.csv', varianceDecomp)
-%% Error bars for variance decompositions
-omvd = sumOM2 - sumOM.^2;
-sigomvd = sqrt(omvd);
-upperSumOM = sigomvd + sumOM;
-lowerSumOM = sumOM - sigomvd;
-vdupper = zeros(K,3) ;
-vareps = var(reshape(Xt*sumBeta,K,T), [],2);
-facCount = 1;
-for k = 1:3
-    Info = InfoCell{1,k};
-    Regions = size(Info,1);
-    for r = 1:Regions
-        subsetSelect = Info(r,1):Info(r,2);
-        vdupper(subsetSelect,k) = var(upperSumOM(subsetSelect,k).*sumFt(facCount,:),[],2);
-        facCount = facCount + 1;
-    end
-end
-varianceDecompUpper = [vareps,vdupper];
-varianceDecompUpper = varianceDecompUpper./sum(varianceDecompUpper,2);
-csvwrite('varianceDecompUpperEnd.csv', varianceDecompUpper)
 
-omvd = sumOM2 - sumOM.^2;
-sigomvd = sqrt(omvd);
-upperSumOM = sigomvd + sumOM;
-lowerSumOM = sumOM - sigomvd;
-vdlower = zeros(K,3) ;
-vareps = var(reshape(Xt*sumBeta,K,T), [],2);
-facCount = 1;
-for k = 1:3
-    Info = InfoCell{1,k};
-    Regions = size(Info,1);
-    for r = 1:Regions
-        subsetSelect = Info(r,1):Info(r,2);
-        vdlower(subsetSelect,k) = var(lowerSumOM(subsetSelect,k).*sumFt(facCount,:),[],2);
-        facCount = facCount + 1;
-    end
-end
-varianceDecompLower = [vareps,vdlower];
-varianceDecompLower = varianceDecompLower./sum(varianceDecompLower,2);
-csvwrite('varianceDecompLowerEnd.csv', varianceDecompLower)
 
 
 csvwrite('sumOM.csv', sumOM)

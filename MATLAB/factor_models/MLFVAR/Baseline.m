@@ -145,7 +145,6 @@ for i = 1:Sims
         storeFt(:,:,v) = Ft;
         storeObsV(:,v) = obsVariance;
         storeFactorVariance(:,v) = factorVariance;
-        
     end
 end
 end

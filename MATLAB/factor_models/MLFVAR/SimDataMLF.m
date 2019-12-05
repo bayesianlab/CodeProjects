@@ -5,7 +5,7 @@ Countries = Regions*CountriesInRegion;
 K = Countries*SeriesPerCountry;
 if Regions == 1 & CountriesInRegion == 1
     nFactors =1 ;
-    InfoCell{1,1} = [1,K];
+    InfoCell{1,1} = [1,K]
 elseif Regions == 1 & CountriesInRegion > 1
     nFactors = 1 + CountriesInRegion;
     InfoCell = cell(1,2);
