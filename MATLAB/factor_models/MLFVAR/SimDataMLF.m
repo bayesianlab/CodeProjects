@@ -23,7 +23,7 @@ Xt = [ones(K*T,1)];
 surX = surForm(Xt,K);
 
 % Parameter inits
-beta = ones(size(surX,2),1);
+beta = .5.*ones(size(surX,2),1);
 gamma = zeros(nFactors,stateLags);
 Factor = zeros(nFactors,T);
 for q = 1:nFactors
