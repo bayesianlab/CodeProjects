@@ -1,3 +1,3 @@
 % Create simulation data
-DataCell = SimDataMLF(200,1, 2, 5);
+DataCell = SimDataMLF(200,2, 2, 3);
 save('TestData/simdata', 'DataCell')

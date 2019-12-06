@@ -1,6 +1,6 @@
-function [bupdate, xbt, b, B] = betaDraw(vecy, vecx, obsModelPrecision,StateObsModel,  StatePrecision, b0,B0inv, T)
+function [pb] = pibeta(vecy, vecx, obsModelPrecision,StateObsModel,  StatePrecision, b0,B0inv, T)
 nEqns = length(obsModelPrecision);
-nFactors = size(StateObsModel,2);
+
 [~,dimx]=size(vecx);
 k = 1:nEqns;
 fullpre = diag(obsModelPrecision);
@@ -27,6 +27,5 @@ Blowerinv = chol(B,'lower')\eye(dimx);
 B = Blowerinv'*Blowerinv;
 b = B*(B0inv*b0 + xpy - XzPinv*yz);
 bupdate = b + Blowerinv'*normrnd(0,1,dimx,1);
-xbt = vecx*bupdate;
+pb = logmvnpdf(bupdate', b', B);
 end
-

@@ -3,7 +3,7 @@ function [retval, lastMean, lastCovar] = identification1(x0, yt, obsPrecision, F
 [K,T] = size(yt);
 df = 15;
 w1 = sqrt(chi2rnd(df,1)/df);
-ObsPriorMean = 1.*ones(1, K);
+ObsPriorMean = .5.*ones(1, K);
 ObsPriorPrecision = eye(K);
 LL = @(guess) -LLcond_ratio(guess, yt,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, Ft,FtPrecision);

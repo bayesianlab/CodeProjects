@@ -1,6 +1,6 @@
 function [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] =...
-    Hdfvar(yt, x,  InfoCell, BlockingInfo, Sims,burnin, initFactor, initobsmodel,...
+    Hdfvar(yt, x,  InfoCell,  Sims,burnin, initFactor, initobsmodel,...
     initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
@@ -21,8 +21,8 @@ SurX = surForm(x,K);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 levels = length(sectorInfo);
 restrictions = restrictedElements(InfoCell);
-backupMeanAndHessian=setBackupsForBlocks(BlockingInfo, identification, restrictions);
-backupIndices = setBackupIndices(BlockingInfo);
+% backupMeanAndHessian=setBackupsForBlocks(BlockingInfo, identification, restrictions);
+% backupIndices = setBackupIndices(BlockingInfo);
 [~,dimx]=size(x);
 FtIndexMat = CreateFactorIndexMat(InfoCell);
 subsetIndices = zeros(K,T);
@@ -53,10 +53,13 @@ storeStateTransitions = zeros(nFactors, lagState, Runs);
 storeFactorParamb = zeros(nFactors, Runs);
 storeObsPrecision = zeros(K, Runs);
 storeFactorVar = zeros(nFactors,Runs);
-sumBackup = backupMeanAndHessian;
-
+% sumBackup = backupMeanAndHessian;
+keepOmMeans = currobsmod;
+keepOmVariances = currobsmod;
+sumOmMeans = zeros(K,levels);
+sumOmVars = zeros(K,levels);
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-14);
+    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8);
 
 levelVec = levels:(-1):1;
 
@@ -81,46 +84,18 @@ if finishedMainRun == 0
             save(join( [checkpointdir, 'ckpt'] ) )
         end
         fprintf('\nSimulation %i\n',iterator)
-        for k=1:K
-            tempI = subsetIndices(k,:);
-            tempy = yt(k,:);
-            tempx = x(tempI,:);
-            tempObsPrecision = obsPrecision(k);
-            tempOm = currobsmod(k,:);
-            fidx=FtIndexMat(k,:);
-            gammas = stateTransitions(fidx,:);
-            [L0, ssgam] = initCovar(diag(gammas));
-            StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fidx), T);
-            [VAR(:,k), Xbeta(k,:)] = betaDraw(tempy(:), tempx,...
-                tempObsPrecision,tempOm,StatePrecision, betaPriorMean, betaPriorPre, T);
-        end
+        %% Draw VAR params
+        [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecision,...
+            currobsmod, stateTransitions, factorVariance, betaPriorMean,...
+            betaPriorPre, FtIndexMat, subsetIndices);
         
-        for q = levelVec
-            fprintf('Level %i\n', q)
-            COM = makeStateObsModel(currobsmod, Identities, q);
-            mut = Xbeta + COM*Ft;
-            ydemut = yt - mut;
-            Info = InfoCell{1,q};
-            factorIndx = factorInfo(q,:);
-            facSelect = factorIndx(1):factorIndx(2);
-            facVarSubset = factorVariance(facSelect);
-            tempBackupIndices = backupIndices(:,q);
-            tempBackupIndices = tempBackupIndices(1):tempBackupIndices(2);
-            tempbackup = backupMeanAndHessian(tempBackupIndices,:);
-            [currobsmod(:,q),tempbackup,f] = ExperimentalAmF(Info,...
-                BlockingInfo{q}, Ft(facSelect, :), ydemut, currobsmod(:,q), ...
-                stateTransitions(facSelect,:), facVarSubset,obsPrecision,...
-                tempbackup, options, identification,restrictions(:,q));
-            tempBackupIndices = backupIndices(:,q);
-            tempBackupIndices = tempBackupIndices(1):tempBackupIndices(2);
-            backupMeanAndHessian(tempBackupIndices,:) = tempbackup;
-            
-            Ft(facSelect,:) = f;
-        end
-        StateObsModel = makeStateObsModel(currobsmod,Identities,0);
-        [iP, ssState] =initCovar(stateTransitions);
-        Si = FactorPrecision(ssState, iP, 1./factorVariance, T);
+        %% Draw loadings and factors
+        [currobsmod, Ft, keepOmMeans, keepOmVariances]=...
+            LoadingsFactorsUpdate(yt,Xbeta, Ft, currobsmod, stateTransitions,...
+            obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances);
+        
         %% Variance
+        StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
         resids = yt - StateObsModel*Ft - Xbeta;
         [obsVariance,r2] = kowUpdateObsVariances(resids, v0,r0,T);
         obsPrecision = 1./obsVariance;
@@ -144,31 +119,31 @@ if finishedMainRun == 0
             storeFt(:,:,v) = Ft;
             storeObsPrecision(:,v) = obsPrecision;
             storeFactorVar(:,v) = factorVariance;
-            if identification == 2
-                %                 storeFactorParamb(:, v) =  factorParamb;
-            end
-            if estML == 1
-                rback = size(backupMeanAndHessian,1);
-                for r = 1:rback
-                    sumBackup{r,1} = sumBackup{r,1} + backupMeanAndHessian{r,1};
-                    sumBackup{r,2} = sumBackup{r,2} + backupMeanAndHessian{r,2};
-                end
-                options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-                    'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-14,...
-                    'MaxIterations', 10);
-            end
+            sumOmMeans = sumOmMeans + keepOmMeans;
+            sumOmVars = sumOmVars + keepOmVariances;
+            
+%             if estML == 1
+%                 rback = size(backupMeanAndHessian,1);
+%                 for r = 1:rback
+%                     sumBackup{r,1} = sumBackup{r,1} + backupMeanAndHessian{r,1};
+%                     sumBackup{r,2} = sumBackup{r,2} + backupMeanAndHessian{r,2};
+%                 end
+%                 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
+%                     'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-14,...
+%                     'MaxIterations', 10);
+%             end
         end
     end
     
     Runs = Sims- burnin;
-    sumBackup = cellfun(@(b)rdivide(b,Runs), sumBackup, 'UniformOutput', false);
+    averageOmMeans = sumOmMeans./Runs;
+    averageOmVariances = sumOmVars./Runs;
     
+%     sumBackup = cellfun(@(b)rdivide(b,Runs), sumBackup, 'UniformOutput', false);
     betaBar = reshape(mean(storeVAR,3), dimx*K,1);
     Ftbar = mean(storeFt,3);
     omBar = mean(storeOM,3);
-    %% Variance Decompositions and resizing. (Hopefully
-    % Resizing gets removed, it is unneccessary.
-    
+    %% Variance Decompositions
     varMu = var(reshape(SurX*betaBar,K,T), [],2);
     facCount = 1;
     vd = zeros(size(currobsmod,1),size(currobsmod,2));
@@ -197,12 +172,9 @@ if estML == 1
         Astar = mean(storeOM,3);
         stoAlphaj = zeros(nFactors, Runs);
         stoAlphag = zeros(nFactors, Runs);
-        storeFtg = storeFt;
         storeObsPrecisiong = storeObsPrecision;
-        storeFactorVarg = storeFactorVar;
         storeStateTransitionsg = storeStateTransitions;
         storeVARj = storeVAR;
-        storeVARg = storeVAR;
         storeFtj = storeFt;
         storeObsPrecisionj = storeObsPrecision;
         storeFactorVarj = storeFactorVar;
@@ -218,54 +190,25 @@ if estML == 1
         fprintf('Reduced run for factor loadings\n')
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
-            for k=1:K
-                tempI = subsetIndices(k,:);
-                tempy = yt(k,:);
-                tempx = x(tempI,:);
-                tempObsPrecision = obsPrecision(k);
-                tempOm = currobsmod(k,:);
-                fidx=FtIndexMat(k,:);
-                gammas = stateTransitions(fidx,:);
-                [L0, ssgam] = initCovar(diag(gammas));
-                StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fidx), T);
-                [VAR(:,k), Xbeta(k,:)] = betaDraw(tempy(:), tempx,...
-                    tempObsPrecision,tempOm,StatePrecision, betaPriorMean, betaPriorPre, T);
-            end
+            [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecisionj,...
+                Astar, stj, fvj, betaPriorMean, betaPriorPre, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
-            Ftg = storeFtg(:,:,r);
+            Ftg = storeFt(:,:,r);
             stg = storeStateTransitionsg(:,:,r);
-            fv = storeFactorVar(:,r);
+            fvj = storeFactorVar(:,r);
             opg = storeObsPrecisiong(:,r);
-            betag=reshape(storeVARg(:,:,r), dimx*K,1);
-            for q = levelVec
-                ConditionalObsModel = makeStateObsModel(Astar, Identities, q);
-                mutj = Xbeta + ConditionalObsModel*Ftj;
-                ydemut = yt - mutj;
-                Info = InfoCell{1,q};
-                factorIndx = factorInfo(q,:);
-                facSelect = factorIndx(1):factorIndx(2);
-                facVarSubset = fvj(facSelect);
-                tempBackupIndices = backupIndices(:,q);
-                tempBackupIndices = tempBackupIndices(1):tempBackupIndices(2);
-                tempbackup = sumBackup(tempBackupIndices,:);
-                [~, ~, f, alphaj] = Amfj(Info, BlockingInfo{q},...
-                    Ftj(facSelect, :), ydemut,  Astar(:,q), stj(facSelect),...
-                    facVarSubset,obsPrecisionj, tempbackup, restrictions(:,q));
-                stoAlphaj(tempBackupIndices, r) = alphaj;
-                Ftj(facSelect,:) = f;
-                omg = storeOM(:,:,r);
-                ConditionalObsModel = makeStateObsModel(omg, Identities, q);
-                mutg =  reshape(SurX*betag,K,T) + ConditionalObsModel*Ftg;
-                ydemut = yt - mutg;
-                stoAlphag(tempBackupIndices,r) = Amfg(Info,...
-                    BlockingInfo{q}, Ftg(facSelect,:), ydemut, Astar(:,q), omg(:,q),...
-                    stg(facSelect,:), fv(facSelect),opg, tempbackup,...
-                    restrictions(:,q));
-            end
+            
+            [~, Ftj, keepOmMeans, keepOmVariances, stoAlphaj(:,r)] = ...
+                LoadingsFactorsUpdate(yt,Xbeta,Ftj, Astar, stj,...
+                obsPrecisionj,fvj, Identities, InfoCell, keepOmMeans, keepOmVariances);
+            
+            stoAlphag(:,r) = LoadingsFactorsCJ_GStep(Astar, storeOM(:,:,r), ...
+                yt, Xbeta, Ftg, stg, opg, storeFactorVar(:,r), Identities,...
+                InfoCell, averageOmMeans, averageOmVariances);
+            
+            
             StateObsModel = makeStateObsModel(Astar,Identities,0);
-            [iP, ssState] =initCovar(stj);
-            Si = FactorPrecision(ssState, iP, 1./fvj, T);
-            storeFtj(:,:,r) = Ftj;
+            
             %% Variance
             resids = yt - StateObsModel*Ftj - Xbeta;
             [obsVariance,r2] = kowUpdateObsVariances(resids, v0,r0,T);
@@ -288,7 +231,6 @@ if estML == 1
         piA = sum(logAvg(stoAlphag) - logAvg(stoAlphaj));
         StateObsModelStar =  makeStateObsModel(Astar,Identities,0);
         stStar = mean(storeStateTransitionsg,3);
-        storeVARg = storeVARj;
         storeFtg = storeFtj;
         storeObsPrecisiong = storeObsPrecisionj;
         storeFactorVarg = storeFactorVarj;
@@ -306,39 +248,26 @@ if estML == 1
         fprintf('Reduced run for state transitions\n')
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
-            [stj, alphaj] = drawSTAlphaj(stStar, Ftj, fvj,lagState);
+            [~, alphaj] = drawSTAlphaj(stStar, Ftj, fvj,lagState);
             alphag = drawSTAlphag(storeStateTransitionsg(:,:,r), stStar,...
                 storeFtg(:,:,r), storeFactorVarg(:,r), lagState);
-            storeStateTransitionsg(:,:,r) = stj;
             stoAlphaj(:,r) = alphaj;
             stoAlphag(:,r) = alphag;
             if identification == 2
-                [fvj, factorParamb]  = drawFactorVariance(Ftj, stj, fvj, s0, d0);
+                [fvj, factorParamb]  = drawFactorVariance(Ftj, stStar, fvj, s0, d0);
                 storeFactorVarj(:,r) = fvj;
             end
-            [iP, ssState] =initCovar(stj);
-            Si = FactorPrecision(ssState, iP, 1./fvj, T);
-            for k=1:K
-                tempI = subsetIndices(k,:);
-                tempy = yt(k,:);
-                tempx = x(tempI,:);
-                tempObsPrecision = obsPrecision(k);
-                tempOm = currobsmod(k,:);
-                fidx=FtIndexMat(k,:);
-                gammas = stateTransitions(fidx,:);
-                [L0, ssgam] = initCovar(diag(gammas));
-                StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fidx), T);
-                [VAR(:,k), Xbeta(k,:)] = betaDraw(tempy(:), tempx,...
-                    tempObsPrecision,tempOm,StatePrecision, betaPriorMean, betaPriorPre, T);
-            end
+            [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecisionj,...
+                Astar, stStar, fvj, betaPriorMean, betaPriorPre, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
+            [iP, ssState] =initCovar(stStar);
+            Si = FactorPrecision(ssState, iP, 1./fvj, T);
             vecy = reshape(yt-Xbeta, K*T,1);
             Ftj = reshape(kowUpdateLatent(vecy, StateObsModelStar,...
                 Si, obsPrecisionj), nFactors, T);
             storeFtj(:,:,r) = Ftj;
-            StateObsModel = makeStateObsModel(Astar,Identities,0);
             %% Variance
-            resids = yt - StateObsModel*Ft - Xbeta;
+            resids = yt - StateObsModelStar*Ftj - Xbeta;
             [obsVariance,r2] = kowUpdateObsVariances(resids, v0,r0,T);
             obsPrecisionj = 1./obsVariance;
             storeObsPrecisionj(:,r) = obsPrecisionj;
@@ -348,7 +277,7 @@ if estML == 1
         betaStar = reshape(VARstar, dimx*K,1);
         xbtStar = reshape(SurX*betaStar,K,T);
         ydemut = yt - xbtStar;
-        storePiBeta = zeros(1,Runs);
+        storePiBeta = zeros(K,Runs);
         finishedSecondReducedRun = 1;
         save(join( [checkpointdir, 'ckpt'] ) )
     end
@@ -357,8 +286,8 @@ if estML == 1
         fprintf('Reduced run for beta\n')
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
-            storePiBeta(r) = piBetaStar(betaStar, yt(:), SurX, obsPrecisionj,...
-                StateObsModelStar, Si,  T);
+            storePiBeta(:,r) = piBetaStar(yt, x, obsPrecisionj,...
+                Astar, stStar, fvj, betaPriorMean, betaPriorPre, subsetIndices, FtIndexMat);
             Ftj = reshape(kowUpdateLatent(ydemut(:), StateObsModelStar,...
                 Si,  obsPrecisionj), nFactors, T);
             storeFtj(:,:,r) = Ftj;
@@ -374,25 +303,21 @@ if estML == 1
             [iP, ssState] =initCovar(stStar);
             Si = FactorPrecision(ssState, iP, 1./fvj, T);
         end
-        piBeta = logAvg(storePiBeta);
-        FtStar = mean(Ft,3);
-        muStar = StateObsModelStar*FtStar + xbtStar;
-        resids = yt - muStar;
-        fMean = zeros(1, nFactors*T);
-        storePiFactor = zeros(K,Runs);
+        piBeta = sum(logAvg(storePiBeta),1);
+        
         obsPrecisionStar = mean(storeObsPrecisionj, 2);
         obsVarianceStar = 1./obsPrecisionStar;
         factorVarianceStar = mean(storeFactorVarj,2);
         storePiObsVariance = zeros(K, Runs);
         storePiFactorVarianceStar = zeros(nFactors, Runs);
+        [iP, ssState] =initCovar(stStar);
+        Si = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
         finishedThirdReducedRun = 1;
         save(join( [checkpointdir, 'ckpt'] ) )
     end
     fprintf('Reduced run for obs variance and factor variance\n')
     for r = startRR:Runs
         fprintf('RR = %i\n', r)
-        [iP, ssState] =initCovar(stStar);
-        Si = FactorPrecision(ssState, iP, 1./fvj, T);
         Ftj = reshape(kowUpdateLatent(ydemut(:), StateObsModelStar,...
             Si,  obsPrecisionStar), nFactors, T);
         mutj = StateObsModelStar*Ftj + xbtStar;
@@ -400,13 +325,12 @@ if estML == 1
         r2 = sum(resids.^2,2);
         storeFtj(:,:,r) = Ftj;
         storePiObsVariance(:,r) = logigampdf(obsVarianceStar, .5.*(v0+T), .5.*(r0+r2));
-        obsPrecisionj = 1./obsVariance;
-        storeObsPrecisionj(:,r) = obsPrecisionj;
         if identification == 2
             storePiFactorVarianceStar(:,r) = piOmegaStar(factorVarianceStar, stStar, Ftj, s0,d0);
         end
     end
-    
+    FtStar = mean(storeFtj,3);
+    muStar = StateObsModelStar*FtStar + xbtStar;
     % Theta star
     piObsVariance = sum(logAvg(storePiObsVariance));
     piFactorVariance = sum(logAvg(storePiFactorVarianceStar));

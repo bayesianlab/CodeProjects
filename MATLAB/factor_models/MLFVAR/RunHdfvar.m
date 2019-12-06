@@ -45,11 +45,9 @@ identification = 2;
 estML = 1; %%%%%%
 %%%%%%%%%%%%
 %%%%%%%%%%%%
-for u = 1:levels
-    BlockingInfo{u}  = InfoCell{levels}
-end
+
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
-    storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell,BlockingInfo, Sims,...
+    storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile);
 period = strfind(DotMatFile, '.');
 
