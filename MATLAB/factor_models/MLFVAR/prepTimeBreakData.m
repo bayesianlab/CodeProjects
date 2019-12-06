@@ -12,7 +12,7 @@ InfoCell = DataCell{1,3};
 Factor = DataCell{1,4};
 Gamma = DataCell{1,6};
 
-Indx = 80:120;
+Indx = 60:140;
 mkdir('TimeBreakSimData')
 for i = Indx
     yte = yt(:, 1:i);
