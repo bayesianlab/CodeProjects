@@ -56,8 +56,8 @@ storeFactorVar = zeros(nFactors,Runs);
 % sumBackup = backupMeanAndHessian;
 keepOmMeans = currobsmod;
 keepOmVariances = currobsmod;
-sumOmMeans = zeros(K,levels);
-sumOmVars = zeros(K,levels);
+runningAvgOmMeans = zeros(K,levels);
+runningAvgOmVars = ones(K,levels);
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8);
 
@@ -92,7 +92,8 @@ if finishedMainRun == 0
         %% Draw loadings and factors
         [currobsmod, Ft, keepOmMeans, keepOmVariances]=...
             LoadingsFactorsUpdate(yt,Xbeta, Ft, currobsmod, stateTransitions,...
-            obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances);
+            obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances,... 
+            runningAvgOmMeans, runningAvgOmVars);
         
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
@@ -119,27 +120,15 @@ if finishedMainRun == 0
             storeFt(:,:,v) = Ft;
             storeObsPrecision(:,v) = obsPrecision;
             storeFactorVar(:,v) = factorVariance;
-            sumOmMeans = sumOmMeans + keepOmMeans;
-            sumOmVars = sumOmVars + keepOmVariances;
-            
-%             if estML == 1
-%                 rback = size(backupMeanAndHessian,1);
-%                 for r = 1:rback
-%                     sumBackup{r,1} = sumBackup{r,1} + backupMeanAndHessian{r,1};
-%                     sumBackup{r,2} = sumBackup{r,2} + backupMeanAndHessian{r,2};
-%                 end
-%                 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-%                     'StepTolerance', 1e-14, 'Display', 'off', 'OptimalityTolerance', 1e-14,...
-%                     'MaxIterations', 10);
-%             end
+            runningAvgOmMeans = (runningAvgOmMeans.*(v-1) + keepOmMeans)/v;
+            runningAvgOmVars = (runningAvgOmVars.*(v-1) + keepOmVariances)/v;
+        else
+            runningAvgOmMeans=keepOmMeans;
+            runningAvgOmVars=keepOmVariances;
         end
     end
     
     Runs = Sims- burnin;
-    averageOmMeans = sumOmMeans./Runs;
-    averageOmVariances = sumOmVars./Runs;
-    
-%     sumBackup = cellfun(@(b)rdivide(b,Runs), sumBackup, 'UniformOutput', false);
     betaBar = reshape(mean(storeVAR,3), dimx*K,1);
     Ftbar = mean(storeFt,3);
     omBar = mean(storeOM,3);
@@ -159,7 +148,6 @@ if finishedMainRun == 0
     varianceDecomp = [varMu,vd];
     varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
     
-    
     %% Marginal Likelihood
     [K,T] = size(yt);
     finishedMainRun = 1;
@@ -178,7 +166,6 @@ if estML == 1
         storeFtj = storeFt;
         storeObsPrecisionj = storeObsPrecision;
         storeFactorVarj = storeFactorVar;
-        
         storeStateTransitionsj = storeStateTransitions;
         stj = mean(storeStateTransitions,3);
         Ftj = mean(storeFt,3);
@@ -200,13 +187,14 @@ if estML == 1
             
             [~, Ftj, keepOmMeans, keepOmVariances, stoAlphaj(:,r)] = ...
                 LoadingsFactorsUpdate(yt,Xbeta,Ftj, Astar, stj,...
-                obsPrecisionj,fvj, Identities, InfoCell, keepOmMeans, keepOmVariances);
+                obsPrecisionj,fvj, Identities, InfoCell, keepOmMeans, keepOmVariances,...
+                runningAvgOmMeans, runningAvgOmVars);
             
             stoAlphag(:,r) = LoadingsFactorsCJ_GStep(Astar, storeOM(:,:,r), ...
                 yt, Xbeta, Ftg, stg, opg, storeFactorVar(:,r), Identities,...
-                InfoCell, averageOmMeans, averageOmVariances);
-            
-            
+                InfoCell, runningAvgOmMeans, runningAvgOmVars,...
+                runningAvgOmMeans, runningAvgOmVars);
+
             StateObsModel = makeStateObsModel(Astar,Identities,0);
             
             %% Variance
@@ -304,7 +292,6 @@ if estML == 1
             Si = FactorPrecision(ssState, iP, 1./fvj, T);
         end
         piBeta = sum(logAvg(storePiBeta),1);
-        
         obsPrecisionStar = mean(storeObsPrecisionj, 2);
         obsVarianceStar = 1./obsPrecisionStar;
         factorVarianceStar = mean(storeFactorVarj,2);

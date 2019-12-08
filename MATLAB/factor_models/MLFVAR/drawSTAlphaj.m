@@ -7,7 +7,6 @@ for i = 1: Rows
     notValid =1;
     count =0;
     sigma2 = factorVariance(i);
-    StateAR = stateTransitions(i,:);
     st = stateTransitions(i,:);
     [y,x] = kowLagStates(StateVariables(i,:), Arp);
     G = ((eye(Arp).*.1) +  (x*x')./sigma2 )\eye(Arp);

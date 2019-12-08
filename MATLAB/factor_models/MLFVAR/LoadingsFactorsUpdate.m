@@ -1,6 +1,7 @@
 function [currobsmod, Ft, keepOmMeans, keepOmVariances, alpha] = ...
     LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances)
+    obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances,...
+    runningAverageMean, runningAverageVar)
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8);
@@ -39,14 +40,16 @@ for q = 1:levels
         %% MH step
         ty = ydemut(subset,:);
         top = obsPrecision(subset);
-        omMu = keepOmMeans(subset,q);
-        omStd = sqrt(keepOmVariances(subset,q));
-        proposal = omMu + diag(omStd)*normrnd(0,1,length(subset), 1)./w1;
-        proposalDist = @(prop) mvstudenttpdf(prop, omMu', diag(keepOmVariances(subset,q)), df);
+        omMuNum = keepOmMeans(subset,q);
+        omStdNum = sqrt(keepOmVariances(subset,q));
+        omMuDen = runningAverageMean(subset,q);
+        proposal = omMuNum + diag(omStdNum)*normrnd(0,1,length(subset), 1)./w1;
+        proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(keepOmVariances(subset,q)), df);
+        proposalDistDen = @(prop) mvstudenttpdf(prop, omMuDen', diag(runningAverageVar(subset,q)), df);
         LogLikePositive = @(val) LLcond_ratio (val, ty, .5.*ones(1, length(subset)),...
             eye(length(subset)), top, tempf, StatePrecision);
-        Num = LogLikePositive(proposal) + proposalDist(currobsmod(subset,q)');
-        Den = LogLikePositive(currobsmod(subset,q)) + proposalDist(proposal');
+        Num = LogLikePositive(proposal) + proposalDistNum(currobsmod(subset,q)');
+        Den = LogLikePositive(currobsmod(subset,q)) + proposalDistDen(proposal');
         alpha(fcount) = min(0,Num - Den);
         u = log(unifrnd(0,1,1));
         if u <= alpha

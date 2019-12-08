@@ -1,6 +1,7 @@
 function [alpha_prop] = ...
     LoadingsFactorsCJ_GStep(fixedValueTheta, thetaG, yt, Xbeta, Ft, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances)
+    obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances,...
+    runningAvgMu, runningAvgVar)
 
 df = 15;
 [K,T] = size(yt);
@@ -24,15 +25,17 @@ for q = 1:levels
         %% MH step
         ty = ydemut(subset,:);
         top = obsPrecision(subset);
-        omMu = keepOmMeans(subset,q);
+        omMuNum = keepOmMeans(subset,q);
+        omMuDen = runningAvgMu(subset,q);
         fxTheta = fixedValueTheta(subset,q);
         gTheta = thetaG(subset, q);
-        proposalDist = @(prop) mvstudenttpdf(prop, omMu', diag(keepOmVariances(subset,q)), df);
+        proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(keepOmVariances(subset,q)), df);
+        proposalDistDen = @(prop) mvstudenttpdf(prop, omMuDen', diag(runningAvgVar(subset,q)), df);
         LogLikePositive = @(val) LLcond_ratio (val, ty, .5.*ones(1, length(subset)),...
             eye(length(subset)), top, tempf, StatePrecision);
-        Num = LogLikePositive(fxTheta) + proposalDist(gTheta');
-        Den = LogLikePositive(gTheta) + proposalDist(fxTheta');
-        alpha_prop(fcount) = min(0,Num - Den) +  proposalDist(fxTheta');
+        Num = LogLikePositive(fxTheta) + proposalDistNum(gTheta');
+        Den = LogLikePositive(gTheta) + proposalDistDen(fxTheta');
+        alpha_prop(fcount) = min(0,Num - Den) +  proposalDistDen(fxTheta');
     end
 end
 end
