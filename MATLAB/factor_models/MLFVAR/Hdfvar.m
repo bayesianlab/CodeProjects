@@ -44,8 +44,6 @@ betaPriorPre=eye(dimx).*.1;
 betaPriorMean = zeros(dimx,1);
 % Storage
 Runs = Sims - burnin;
-VAR = zeros(dimx,K);
-Xbeta = zeros(K,T);
 storeVAR = zeros(dimx,K,Runs);
 storeOM = zeros(K, levels, Runs);
 storeFt = zeros(nFactors, T, Runs);

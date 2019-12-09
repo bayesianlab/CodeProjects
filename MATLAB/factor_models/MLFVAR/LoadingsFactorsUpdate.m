@@ -22,9 +22,9 @@ for q = 1:levels
     regs = size(Info,1);
     for r=1:regs
         fcount = fcount+1;
-        gammas = stateTransitions(r,:);
+        gammas = stateTransitions(fcount,:);
         [L0, ssgam] = initCovar(diag(gammas));
-        StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(r), T);
+        StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fcount), T);
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);
         %% Optimization step
@@ -67,11 +67,10 @@ for q = 1:levels
         if u <= alpha(fcount)
             currobsmod(subset,q) = [1;proposal];
         end
-        %         currobsmod(subset(1),q) = 1;
         %% Update Factor
         ty = ydemut(subset,:);
         top = obsPrecision(subset);  
-        Ft(r,:) =  kowUpdateLatent(ty(:), currobsmod(subset,q), StatePrecision, top);
+        Ft(fcount,:) =  kowUpdateLatent(ty(:), currobsmod(subset,q), StatePrecision, top);
     end
 end
 end
