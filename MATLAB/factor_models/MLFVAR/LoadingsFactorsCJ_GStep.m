@@ -24,18 +24,25 @@ for q = 1:levels
         subset = Info(r,1):Info(r,2);
         %% MH step
         ty = ydemut(subset,:);
+        ty = ty(2:end,:);
         top = obsPrecision(subset);
+        top = top(2:end);
         omMuNum = keepOmMeans(subset,q);
         omMuDen = runningAvgMu(subset,q);
+        omVarDen = runningAverageVar(subset,q);
+        omMuNum = omMuNum(2:end);
+        omVarNum = omVarNum(2:end);
+        omMuDen = omMuDen(2:end);
+        omVarDen = omVarDen(2:end);
         fxTheta = fixedValueTheta(subset,q);
         gTheta = thetaG(subset, q);
-        proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(keepOmVariances(subset,q)), df);
-        proposalDistDen = @(prop) mvstudenttpdf(prop, omMuDen', diag(runningAvgVar(subset,q)), df);
-        LogLikePositive = @(val) LLcond_ratio (val, ty, .5.*ones(1, length(subset)),...
-            eye(length(subset)), top, tempf, StatePrecision);
-        Num = LogLikePositive(fxTheta) + proposalDistNum(gTheta');
-        Den = LogLikePositive(gTheta) + proposalDistDen(fxTheta');
-        alpha_prop(fcount) = min(0,Num - Den) +  proposalDistDen(fxTheta');
+        proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(omVarNum), df);
+        proposalDistDen = @(prop) mvstudenttpdf(prop, omMuDen', diag(omVarDen), df);
+        LogLikePositive = @(val) LLcond_ratio (val, ty, .5.*ones(1, length(subset)-1),...
+            eye(length(subset)-1), top, tempf, StatePrecision);
+        Num = LogLikePositive(fxTheta(2:end)) + proposalDistNum(gTheta(2:end)');
+        Den = LogLikePositive(gTheta(2:end)) + proposalDistDen(fxTheta(2:end)');
+        alpha_prop(fcount) = min(0,Num - Den) +  proposalDistDen(fxTheta(2:end)');
     end
 end
 end
