@@ -94,7 +94,7 @@ if finishedMainRun == 0
             LoadingsFactorsUpdate(yt,Xbeta, Ft, currobsmod, stateTransitions,...
             obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances,... 
             runningAvgOmMeans, runningAvgOmVars);
-keepOmVariances
+
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
         resids = yt - StateObsModel*Ft - Xbeta;
