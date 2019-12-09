@@ -44,6 +44,7 @@ for q = 1:levels
         omStdNum = sqrt(keepOmVariances(subset,q));
         omMuDen = runningAverageMean(subset,q);
         proposal = omMuNum + diag(omStdNum)*normrnd(0,1,length(subset), 1)./w1;
+        save('errormat')
         proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(keepOmVariances(subset,q)), df);
         proposalDistDen = @(prop) mvstudenttpdf(prop, omMuDen', diag(runningAverageVar(subset,q)), df);
         LogLikePositive = @(val) LLcond_ratio (val, ty, .5.*ones(1, length(subset)),...
