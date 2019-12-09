@@ -2,7 +2,7 @@ clear;clc;
 
 % DataCell = SimDataMLF(50, 1, 1,9);
 % save('simdata', 'DataCell')
-RunHdfvar(1000, 2000, 'BigKow', 'kowz_notcentered.mat', 'TestDir')
+RunHdfvar(10000, 2000, 'BigKow', 'kowz_notcentered.mat', 'TestDir')
 % RunHdfvar(100,  10, '', 'simdata.mat', 'TestDir')
 % RunHdfvar(20,  10, 'TestData', 'simdata.mat', 'TestDir')
 

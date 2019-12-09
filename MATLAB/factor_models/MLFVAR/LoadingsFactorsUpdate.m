@@ -12,6 +12,7 @@ fcount = 0;
 levels = length(InfoCell);
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 alpha = zeros(nFactors,1);
+
 for q = 1:levels
     ycount = 0;
     COM = makeStateObsModel(currobsmod, Identities, q);
@@ -34,34 +35,43 @@ for q = 1:levels
             x0 = currobsmod(k,q);
             LL = @(guess) -LLcond_ratio(guess, ty,.5, 1, top, tempf,StatePrecision);
             [themean, ~,~,~,~, Hessian] = fminunc(LL, x0, options);
+            if Hessian < 0 
+                Hessian = 1;
+            end
             keepOmVariances(k,q)= 1/Hessian;
             keepOmMeans(k,q)=themean;
         end
         %% MH step
         ty = ydemut(subset,:);
+        ty = ty(2:end,:);
         top = obsPrecision(subset);
+        top = top(2:end);
         omMuNum = keepOmMeans(subset,q);
-        omStdNum = sqrt(keepOmVariances(subset,q));
+        omVarNum = keepOmVariances(subset,q);
         omMuDen = runningAverageMean(subset,q);
-        proposal = omMuNum + diag(omStdNum)*normrnd(0,1,length(subset), 1)./w1;
-        save('errormat')
-        proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(keepOmVariances(subset,q)), df);
-        proposalDistDen = @(prop) mvstudenttpdf(prop, omMuDen', diag(runningAverageVar(subset,q)), df);
-        LogLikePositive = @(val) LLcond_ratio (val, ty, .5.*ones(1, length(subset)),...
-            eye(length(subset)), top, tempf, StatePrecision);
-        Num = LogLikePositive(proposal) + proposalDistNum(currobsmod(subset,q)');
-        Den = LogLikePositive(currobsmod(subset,q)) + proposalDistDen(proposal');
+        omVarDen = runningAverageVar(subset,q);
+        omMuNum = omMuNum(2:end);
+        omVarNum = omVarNum(2:end);
+        omMuDen = omMuDen(2:end);
+        omVarDen = omVarDen(2:end);
+        proposal = omMuNum + diag(sqrt(omVarNum))*normrnd(0,1,length(subset)-1, 1)./w1;
+        proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(omVarNum), df);
+        proposalDistDen = @(prop) mvstudenttpdf(prop, omMuDen', diag(omVarDen), df);
+        LogLikePositive = @(val) LLcond_ratio (val, ty, .5.*ones(1, length(subset)-1),...
+            eye(length(subset)-1), top, tempf, StatePrecision);
+        x0 = currobsmod(subset,q);
+        Num = LogLikePositive(proposal) + proposalDistNum(x0(2:end)');
+        Den = LogLikePositive(x0(2:end)) + proposalDistDen(proposal');
         alpha(fcount) = min(0,Num - Den);
-        u = log(unifrnd(0,1,1));
-        if u <= alpha
-            currobsmod(subset,q) = proposal;
+        u = log(unifrnd(0,1,1,1));
+        if u <= alpha(fcount)
+            currobsmod(subset,q) = [1;proposal];
         end
-        currobsmod(subset(1),q) = 1;
+        %         currobsmod(subset(1),q) = 1;
         %% Update Factor
+        ty = ydemut(subset,:);
+        top = obsPrecision(subset);  
         Ft(r,:) =  kowUpdateLatent(ty(:), currobsmod(subset,q), StatePrecision, top);
     end
 end
 end
-
-
-
