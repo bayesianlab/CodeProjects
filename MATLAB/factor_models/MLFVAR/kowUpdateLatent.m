@@ -4,7 +4,6 @@ T = length(vecresids)/Nobseqns;
 eyet = eye(T);
 FullPrecision = diag(preom);
 GtO = ObsModel'*FullPrecision;
-
 P = StatePrecision + kron(eyet, GtO*ObsModel);
 LP = chol(P,'lower');
 LPi = LP\eye(size(P,1));

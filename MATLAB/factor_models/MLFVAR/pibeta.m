@@ -1,4 +1,4 @@
-function [pb] = pibeta(vecy, vecx, obsModelPrecision,StateObsModel,  StatePrecision, b0,B0inv, T)
+function [pb] = pibeta(bstar, vecy, vecx, obsModelPrecision,StateObsModel,  StatePrecision, b0,B0inv, T)
 nEqns = length(obsModelPrecision);
 
 [~,dimx]=size(vecx);
@@ -26,6 +26,5 @@ B = (B0inv + xpx - XzPinv*Xz);
 Blowerinv = chol(B,'lower')\eye(dimx);
 B = Blowerinv'*Blowerinv;
 b = B*(B0inv*b0 + xpy - XzPinv*yz);
-bupdate = b + Blowerinv'*normrnd(0,1,dimx,1);
-pb = logmvnpdf(bupdate', b', B);
+pb = logmvnpdf(bstar', b', B);
 end

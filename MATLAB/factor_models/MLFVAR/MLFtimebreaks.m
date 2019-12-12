@@ -1,7 +1,6 @@
-function [DataCell] = MLFtimebreaks(K, T, timeBreak, identification)
+function [DataCell] = MLFtimebreaks(K, T, timeBreak)
 
 nFactors = 1;
-
 InfoCell = cell(1);
 InfoCell{1,1} = [1,K];
 xcols = 3;
@@ -9,18 +8,17 @@ Xt = normrnd(0,1, K*T, xcols);
 Xt(:,1) = ones(K*T,1);
 
 beta = .4.*ones(xcols, 1);
-
-gam = unifrnd(.3, 1,nFactors,1);
+gam = .3.*ones(nFactors,1);
 stateTransitionsAll = gam'.*eye(nFactors);
 speyeT = eye(T);
-
-S = kowStatePrecision(stateTransitionsAll, ones(nFactors,1), T) \ speyeT;
-Factor = mvnrnd(zeros(nFactors*T,1), S);
+[iP, ssState] =initCovar(stateTransitionsAll);
+Si = FactorPrecision(ssState, iP, 1./ones(nFactors,1), T)\ speyeT;
+Factor = mvnrnd(zeros(nFactors*T,1), Si);
 Factor = reshape(Factor,nFactors,T);
 
 
 Gt1 = zeros(K,1);
-Gt2 = unifrnd(.8,1,K,1);
+Gt2 = ones(K,1);
 Gt2(1) = 1;
 mu1 = Gt1*Factor(1:timeBreak);
 mu2 = Gt2*Factor((timeBreak+1):end);

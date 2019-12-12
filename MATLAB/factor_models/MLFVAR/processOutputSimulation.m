@@ -1,11 +1,11 @@
 clear;clc;
-simpath = 'TBSSimDec4/';
+simpath = 'TBSSimDec10/';
 files = dir(join([simpath,'*.mat']));
 x =natsortfiles({files.name});
-c=80
 N = floor(length(x)/2);
 beg = 1:N;
 G = length(beg);
+c=60;
 for g = 1:N
     set1 = x{G+ g};
     datapath = join([simpath,set1]);
@@ -18,10 +18,17 @@ for g = 1:N
     c = c + 1;
 end
 
+
+[a,b]=max(sumMls);
+tml = load('Result_totaltime_11_Dec_2019_03_28_38.mat', 'ml');
+tml=tml.ml;
+hold on
+plot(sumMls(:,1),sumMls(:,2))
+plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
 % hold on
-[a,b]=max(sumMls(:,2))
-sumMls(19,:)
-plot(80:120, sumMls(:,2))
+% [a,b]=max(sumMls(:,2))
+% sumMls(19,:)
+% plot(80:120, sumMls(:,2))
 % plot(1:200, -1895.*ones(1,200), 'black')
 % GreaterMls = sumMls(sumMls(:,2) > -1895, 1);
 

@@ -59,7 +59,7 @@ save('BigKow/kowz_notcentered_kose.mat', 'DataCell')
 
 DataCell = cell(1,7);
 DataCell{1,1} = y;
-DataCell{1,2} = surForm(ones(K*(T-1),1),K);
+DataCell{1,2} = ones(K*(T-1),1);
 DataCell{1,3} = InfoCell;
 DataCell{1,4} = 0;
 DataCell{1,5} = 0;

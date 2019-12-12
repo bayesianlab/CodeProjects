@@ -33,7 +33,7 @@ for q = 1:levels
             ty = ydemut(ycount,:);
             top = obsPrecision(ycount);
             x0 = currobsmod(k,q);
-            LL = @(guess) -LLcond_ratio(guess, ty,.5, 1, top, tempf,StatePrecision);
+            LL = @(guess) -LLcond_ratio(guess, ty,.25, 1, top, tempf,StatePrecision);
             [themean, ~,~,~,~, Hessian] = fminunc(LL, x0, options);
             if Hessian < 0 
                 Hessian = 1;
@@ -57,7 +57,7 @@ for q = 1:levels
         proposal = omMuNum + diag(sqrt(omVarNum))*normrnd(0,1,length(subset)-1, 1)./w1;
         proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(omVarNum), df);
         proposalDistDen = @(prop) mvstudenttpdf(prop, omMuDen', diag(omVarDen), df);
-        LogLikePositive = @(val) LLcond_ratio (val, ty, .5.*ones(1, length(subset)-1),...
+        LogLikePositive = @(val) LLcond_ratio (val, ty, .25.*ones(1, length(subset)-1),...
             eye(length(subset)-1), top, tempf, StatePrecision);
         x0 = currobsmod(subset,q);
         Num = LogLikePositive(proposal) + proposalDistNum(x0(2:end)');

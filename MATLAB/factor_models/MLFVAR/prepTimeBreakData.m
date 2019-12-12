@@ -1,34 +1,34 @@
 % clear;clc;
 % rng(3)
-% timeBreak = 100;
-% T = 200;
-% K =12;
-% identification = 2;
-% MLFtimebreaks(K, T, timeBreak, identification);
-% load('TimeBreakSimData/totaltime.mat')
-% yt = DataCell{1,1};
-% Xt = DataCell{1,2};
-% InfoCell = DataCell{1,3};
-% Factor = DataCell{1,4};
-% Gamma = DataCell{1,6};
-% 
-% Indx = 60:140;
-% mkdir('TimeBreakSimData')
-% for i = Indx
-%     yte = yt(:, 1:i);
-%     Xte = Xt(1:K*i, :);
-%     fnamee = sprintf('TimeBreakSimData/TimeBreakEnd%i',i);
-%     ytb = yt(:,i+1:end);
-%     Xtb = Xt(K*i + 1:end,:);
-%     fnameb = sprintf('TimeBreakSimData/TimeBreakBeg%i',i+1);
-%     DataCell{1,1} = yte;
-%     DataCell{1,2} = Xte;
-%     DataCell{1,3} = InfoCell;
-%     save(fnamee, 'DataCell')
-%     DataCell{1,1} = ytb;
-%     DataCell{1,2} = Xtb;
-%     save(fnameb, 'DataCell')
-% end
+timeBreak = 100;
+T = 200;
+K =15;
+identification = 2;
+MLFtimebreaks(K, T, timeBreak, identification);
+load('TimeBreakSimData/totaltime.mat')
+yt = DataCell{1,1};
+Xt = DataCell{1,2};
+InfoCell = DataCell{1,3};
+Factor = DataCell{1,4};
+Gamma = DataCell{1,6};
+
+Indx = 60:140;
+mkdir('TimeBreakSimData')
+for i = Indx
+    yte = yt(:, 1:i);
+    Xte = Xt(1:K*i, :);
+    fnamee = sprintf('TimeBreakSimData/TimeBreakEnd%i',i);
+    ytb = yt(:,i+1:end);
+    Xtb = Xt(K*i + 1:end,:);
+    fnameb = sprintf('TimeBreakSimData/TimeBreakBeg%i',i+1);
+    DataCell{1,1} = yte;
+    DataCell{1,2} = Xte;
+    DataCell{1,3} = InfoCell;
+    save(fnamee, 'DataCell')
+    DataCell{1,1} = ytb;
+    DataCell{1,2} = Xtb;
+    save(fnameb, 'DataCell')
+end
 
 % clear;clc;
 % load('BigKow/kowz_notcentered.mat')
