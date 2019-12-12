@@ -4,7 +4,7 @@ nFactors = 1;
 InfoCell = cell(1);
 InfoCell{1,1} = [1,K];
 xcols = 3;
-Xt = normrnd(0,1, K*T, xcols);
+Xt = normrnd(5,2.5, K*T, xcols);
 Xt(:,1) = ones(K*T,1);
 
 beta = .4.*ones(xcols, 1);
@@ -22,8 +22,10 @@ Gt2 = ones(K,1);
 Gt2(1) = 1;
 mu1 = Gt1*Factor(1:timeBreak);
 mu2 = Gt2*Factor((timeBreak+1):end);
-m = reshape(Xt*beta,K,T);
-MU = [mu1,mu2] + m;
+m1 = Xt(1:(timeBreak*K),:)*zeros(xcols,1);
+m2 = Xt( (timeBreak*K +1):end,:)*beta;
+m = reshape([m1;m2],K,T);
+MU = [mu1,mu2] + m
 yt = MU + normrnd(0,1,K,T);
 
 
