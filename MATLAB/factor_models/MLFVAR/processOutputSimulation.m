@@ -1,11 +1,11 @@
 clear;clc;
-simpath = 'TBSSimDec10/';
+simpath = 'TBS_Old/TimeBreakSimulations/';
 files = dir(join([simpath,'*.mat']));
 x =natsortfiles({files.name});
 N = floor(length(x)/2);
 beg = 1:N;
 G = length(beg);
-c=60;
+c=75;
 for g = 1:N
     set1 = x{G+ g};
     datapath = join([simpath,set1]);
@@ -20,11 +20,11 @@ end
 
 
 [a,b]=max(sumMls);
-tml = load('Result_totaltime_11_Dec_2019_03_28_38.mat', 'ml');
-tml=tml.ml;
+% tml = load('Result_totaltime_11_Dec_2019_03_28_38.mat', 'ml');
+% tml=tml.ml;
 hold on
 plot(sumMls(:,1),sumMls(:,2))
-plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
+% plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
 % hold on
 % [a,b]=max(sumMls(:,2))
 % sumMls(19,:)

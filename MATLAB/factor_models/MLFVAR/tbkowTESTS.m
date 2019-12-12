@@ -6,14 +6,17 @@ clear;clc;
 % RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
 % RunHdfvar(20,  10, 'TestData', 'simdata.mat', 'TestDir')
 % RunBaseline(60,10,'BigKow/kowz_kose.mat', 'TestDir')
-MLFtimebreaks(10,200,100)
+T = 200;
+K = 10;
+timebreak = 100;
+MLFtimebreaks(K,T,timebreak)
 load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakSimData/totaltime.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 [K,~]= size(yt);
-yt1 = yt(:,1:100);
-Xt1 = Xt(1:K*100,:);
-[K,T] = size(yt1);
+yt1 = yt(:,1:timebreak);
+Xt1 = Xt(1:K*timebreak,:);
+[K,T1] = size(yt1);
 InfoCell = DataCell{1,3};
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
@@ -27,8 +30,8 @@ initStateTransitions = .1.*ones(nFactors,1);
 initobsmodel = .1.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt1(:),  StateObsModel, ...
-    kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
-initFactor = reshape(vecFt, nFactors,T);
+    kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T1), obsPrecision);
+initFactor = reshape(vecFt, nFactors,T1);
 identification = 2;
 %%%%%%%%%%%%
 %%%%%%%%%%%%
@@ -44,9 +47,9 @@ burnin=10;
     storeObsPrecision, storeFactorVar,varianceDecomp, ml1] = Hdfvar(yt1, Xt1,  InfoCell, Sims,...
     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, 'TBTEST');
 
-yt2 = yt(:,101:200);
-Xt2 = Xt((K*100 + 1):end,:);
-[K,T] = size(yt1);
+yt2 = yt(:,(timebreak+1):end);
+Xt2 = Xt((K*timebreak + 1):end,:);
+[K,T1] = size(yt1);
 InfoCell = DataCell{1,3};
 [~, dimX] = size(Xt1);
 levels = size(InfoCell,2);
@@ -61,8 +64,8 @@ initStateTransitions = .1.*ones(nFactors,1);
 initobsmodel = .1.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt1(:),  StateObsModel, ...
-    kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
-initFactor = reshape(vecFt, nFactors,T);
+    kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T1), obsPrecision);
+initFactor = reshape(vecFt, nFactors,T1);
 identification = 2;
 %%%%%%%%%%%%
 %%%%%%%%%%%%
@@ -78,7 +81,7 @@ estML = 1; %%%%%%
     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, 'TBTEST');
 
 
-[K,T] = size(yt);
+[K,T1] = size(yt);
 InfoCell = DataCell{1,3};
 [~, dimX] = size(Xt1);
 levels = size(InfoCell,2);
@@ -93,8 +96,8 @@ initStateTransitions = .1.*ones(nFactors,1);
 initobsmodel = .1.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-    kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
-initFactor = reshape(vecFt, nFactors,T);
+    kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T1), obsPrecision);
+initFactor = reshape(vecFt, nFactors,T1);
 identification = 2;
 %%%%%%%%%%%%
 %%%%%%%%%%%%
