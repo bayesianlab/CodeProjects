@@ -1,11 +1,12 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -q free64
-#$ -N ssdec11
-#$ -l mem_free=10G
+#$ -N tbssim
+#$ -l mem_free=4G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 #$ -ckpt restart
 module load MATLAB
-./runhdfvardec11 10000 2000 SimulationStudy/TimeBreakSimData ${DATA} TBSSims/Dec11th 
+./runhdfvardec2 10000 2000 TimeBreakSimData ${DATA} TBSSimDec4 
+./job_end.sh

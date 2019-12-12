@@ -1,11 +1,11 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -ckpt restart 
-#$ -q pub8i
-#$ -N whole
-#$ -l mem_free=8G
+#$ -q its
+#$ -N wue_iden1
+#$ -l mem_free=4G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 module load MATLAB
-./runhdfvardec9 10000 2000 8000 BigKow kowz_notcentered.mat BigKowResults
+./iden1 5000 1000 4000 Unemployment worldue.mat BigKowResults

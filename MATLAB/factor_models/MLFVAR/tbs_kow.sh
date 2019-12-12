@@ -1,12 +1,12 @@
 #!/bin/bash
 #$ -S /bin/bash
 #$ -q pub8i
-#$ -N bk
-#$ -l mem_free=4G
+#$ -N kowdec11
+#$ -l mem_free=10G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 #$ -ckpt restart
 module load MATLAB
-./CorrectedKow3 1000 200 800 TimeBreakDataKOW ${DATA} tbk_results
+./runhdfvardec11 10000 2000 TimeBreakDataKOW ${DATA} TBSKow/Dec11th
 ./job_end.sh
