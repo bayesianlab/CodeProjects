@@ -18,7 +18,7 @@ else
     InfoCell{1,3} = [(1:SeriesPerCountry:K)',(SeriesPerCountry:SeriesPerCountry:K)'];
 end
 
-Xt = [ones(K*T,1)];
+Xt = [ones(K*T,1), unifrnd(-1,1,K*T,2)];
 surX = surForm(Xt,K);
 
 % Parameter inits

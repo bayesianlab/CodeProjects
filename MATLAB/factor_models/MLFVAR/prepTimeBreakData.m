@@ -4,7 +4,7 @@ timeBreak = 100;
 T = 200;
 K =15;
 identification = 2;
-MLFtimebreaks(K, T, timeBreak, identification);
+MLFtimebreaks(K, T, timeBreak);
 load('TimeBreakSimData/totaltime.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
@@ -12,7 +12,7 @@ InfoCell = DataCell{1,3};
 Factor = DataCell{1,4};
 Gamma = DataCell{1,6};
 
-Indx = 60:140;
+Indx = 40:160;
 mkdir('TimeBreakSimData')
 for i = Indx
     yte = yt(:, 1:i);

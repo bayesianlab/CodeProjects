@@ -41,31 +41,31 @@ ASIAINV = seq(165,178)
 
 vdbeg<-cbind(vdbeg,regions=c(rep('NRTH.AM.', 9),
                              rep('OCEAN', 6),
-                             rep('LA', 54),
+                             rep('L.A.', 54),
                              rep('EUR', 54),
                              rep('AFR', 21),
-                             rep('ASIADEV', 18),
+                             rep('DEV.ASIA', 18),
                              rep('ASIA', 18)),
              series=rep(c('Out', 'Cons','Inv'), 60))
 
 vdend<-cbind(vdend,regions=c(rep('NRTH.AM.', 9),
                              rep('OCEAN', 6),
-                             rep('LA', 54),
+                             rep('L.A.', 54),
                              rep('EUR', 54),
                              rep('AFR', 21),
-                             rep('ASIADEV', 18),
+                             rep('DEV.ASIA ', 18),
                              rep('ASIA', 18)),
              series=rep(c('Out', 'Cons','Inv'), 60))
 
 colnames(vdbeg)[1:3] <- c("WB", "RB", "CB")
 colnames(vdend)[1:3] <- c("WE", "RE", "CE")
 
-ggText <- theme(axis.text = element_text(size = 21)) +
-  theme(axis.title = element_text(size = 21)) +
-  theme(plot.title = element_text(size=28)) + 
-  theme(legend.title = element_text(size=21))+ 
-  theme(legend.text = element_text( size=21))+
-  theme_bw()
+ggText <-   theme_bw()+theme(axis.text.x = element_text(size = 20)) +
+  theme(axis.text.y = element_text(size = 20)) + 
+  theme(axis.title = element_text(size = 20)) +
+  theme(plot.title = element_text(size=20)) + 
+  theme(legend.title = element_text(size=25))+ 
+  theme(legend.text = element_text(size=25))
 
 both <- data.frame(cbind(vdbeg, vdend[,c(1,2,3)]))
 bothlong <- melt(both)
@@ -80,8 +80,7 @@ out <- ggplot(data=comparelong) +
            stat="identity",position=position_dodge(), colour= "black") +
   labs(y="Average Variance Decomposition", x="Region") + 
   ggtitle("Variance Decompositions for Output") +
-  scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +
-  ggText
+  scale_fill_aaas(name="Period", labels=c("1962-1992", "1992-2014")) +ggText
 out
 
 subdata <- bothlong[(bothlong$variable == "RE") & (bothlong$series =="Cons"),]
@@ -172,6 +171,7 @@ ggsave(paste("~/GoogleDrive/statespace/", "out_country_bar.jpeg", sep=""), out, 
 ggsave(paste("~/GoogleDrive/statespace/", "cons_country_bar.jpeg", sep=""), cons,width=12, height=8)
 ggsave(paste("~/GoogleDrive/statespace/", "inv_country_bar.jpeg", sep=""), inv,width=12, height=8)
 
+#####################
 
 varianceDecomp <- read_csv("CodeProjects/MATLAB/factor_models/MLFVAR/varianceDecomp.csv", col_names=FALSE)
 varianceDecomp <- 100*varianceDecomp
@@ -182,7 +182,7 @@ worlddf <- data.frame(Name = c("VAR(1)", "World", "Region", "Country"),
               mean(varianceDecomp[AFRICA,3]),mean(varianceDecomp[AFRICA,4])),
               Asia=c(mean(varianceDecomp[ASIA,1]), mean(varianceDecomp[ASIA,2]),
                      mean(varianceDecomp[ASIA,3]),mean(varianceDecomp[ASIA,4])),
-              "Developing Asia"=c(mean(varianceDecomp[ASIADEVELOP,1]), mean(varianceDecomp[ASIADEVELOP,2]),
+              "Dev.Asia"=c(mean(varianceDecomp[ASIADEVELOP,1]), mean(varianceDecomp[ASIADEVELOP,2]),
                                mean(varianceDecomp[ASIADEVELOP,3]),mean(varianceDecomp[ASIADEVELOP,4])),
               Europe=c(mean(varianceDecomp[EUR,1]), mean(varianceDecomp[EUR,2]),
                        mean(varianceDecomp[EUR,3]),mean(varianceDecomp[EUR,4])),
@@ -205,6 +205,7 @@ world<- ggplot(data=worlddflong) + geom_bar(aes(x = variable, y = value, fill=Na
 world
 ggsave(paste("~/GoogleDrive/statespace/", "full_sample_vd.jpeg", sep=""), world,width=12, height=8)
 
+###################
 require(maps)
 require(viridis)
 library(ggplot2)
