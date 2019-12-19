@@ -1,0 +1,9 @@
+#!/bin/bash
+#$ -S /bin/bash
+#$ -cwd
+#$ -q q
+#$ -N dis
+#$ -l mem_free=8G
+#$ -o bin/outputfiles/
+#$ -e bin/errorlogs/
+#$ -ckpt restart

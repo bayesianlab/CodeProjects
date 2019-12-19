@@ -1,0 +1,3 @@
+#!/bin/bash
+#$ -S /bin/bash
+#$ -cwd#$ -q its#$ -N whole#$ -o bin/outputfiles/#$ -e bin/errorlogs/#$-ckpt restart
