@@ -46,7 +46,6 @@ storeVAR = zeros(dimx,K,Runs);
 storeOM = zeros(K, levels, Runs);
 storeFt = zeros(nFactors, T, Runs);
 storeStateTransitions = zeros(nFactors, lagState, Runs);
-storeFactorParamb = zeros(nFactors, Runs);
 storeObsPrecision = zeros(K, Runs);
 storeFactorVar = zeros(nFactors,Runs);
 keepOmMeans = currobsmod;
@@ -67,6 +66,7 @@ else
 end
 
 
+
 if finishedMainRun == 0
     for iterator = start : Sims
         if mod(iterator, saveFrequency) == 0
@@ -74,12 +74,12 @@ if finishedMainRun == 0
             start = iterator;
             save(join( [checkpointdir, 'ckpt'] ) )
         end
-        %         fprintf('\nSimulation %i\n',iterator)
+                fprintf('\nSimulation %i\n',iterator)
         %% Draw VAR params
         [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecision,...
             currobsmod, stateTransitions, factorVariance, betaPriorMean,...
             betaPriorPre, FtIndexMat, subsetIndices);
-        
+
         %% Draw loadings and factors
         [currobsmod, Ft, keepOmMeans, keepOmVariances]=...
             LoadingsFactorsUpdate(yt,Xbeta, Ft, currobsmod, stateTransitions,...
@@ -138,8 +138,13 @@ if finishedMainRun == 0
     end
     varianceDecomp = [varMu,vd];
     varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
-    
+ 
+    %%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%
     %% Marginal Likelihood
+    %%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%
+    
     [K,T] = size(yt);
     finishedMainRun = 1;
     startRR = 1;
@@ -320,8 +325,8 @@ if estML == 1
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
     priorBeta = logmvnpdf(betaStar', zeros(1, dimX), eye(dimX));
     priorAstar = Apriors(InfoCell, Astar);
-    [iP, ssState] =initCovar(stStar);
-    Kprecision = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
+    [iP, ssState] =initCovar(initStateTransitions);
+    Kprecision = FactorPrecision(ssState, iP, 1./ones(nFactors,1), T);
     Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\eye(nFactors*T));
     
     priors = [Fpriorstar, priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]

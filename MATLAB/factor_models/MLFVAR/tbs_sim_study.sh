@@ -2,7 +2,7 @@
 #$ -S /bin/bash
 #$ -q pub8i
 #$ -N sim_study
-#$ -l mem_free=2G
+#$ -l mem_free=6G
 #$ -cwd
 #$ -notify 
 #$ -M dillonflann@gmail.com
@@ -10,4 +10,4 @@
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
 module load MATLAB
-./TimeBreak 10000 2000 8000 ${DATA} 
+./runhdvardec11 10000 2000 8000 ${DATA} 
