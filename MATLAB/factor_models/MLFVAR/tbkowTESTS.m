@@ -1,18 +1,21 @@
-clear;clc;
-% DataCell = SimDataMLF(100, 2,2,5);
-% save('simdata', 'DataCell')
-RunHdfvar(30, 10, 'BigKow', 'kow_standardized.mat', 'TestDir')
-% RunHdfvar(20, 10, 'BigKow', 'kowz_notcentered_resurrection.mat', 'TestDir')
-% RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
-% RunHdfvar(20,  10, 'TestData', 'simdata.mat', 'TestDir')
-% RunBaseline(60,10,'BigKow/kowz_kose.mat', 'TestDir')
+% clear;clc;
+% % DataCell = SimDataMLF(100, 2,2,5);
+% % save('simdata', 'DataCell')
+% % RunHdfvar(30, 10, 'BigKow', 'kow_standardized.mat', 'TestDir')
+% % RunHdfvar(20, 10, 'BigKow', 'kowz_notcentered_resurrection.mat', 'TestDir')
+% % RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
+% % RunHdfvar(20,  10, 'TestData', 'simdata.mat', 'TestDir')
+% % RunBaseline(60,10,'BigKow/kowz_kose.mat', 'TestDir')
 % T = 200;
 % K = 10;
 % timebreak = 100;
-% MLFtimebreaks(K,T,timebreak)
+MLFtimebreaks(K,T,timebreak)
 % load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakSimData/totaltime.mat')
 % yt = DataCell{1,1};
 % Xt = DataCell{1,2};
+% Ft = DataCell{4};
+% drawnow
+% plot(Ft)
 % [K,~]= size(yt);
 % yt1 = yt(:,1:timebreak);
 % Xt1 = Xt(1:K*timebreak,:);
@@ -41,8 +44,8 @@ RunHdfvar(30, 10, 'BigKow', 'kow_standardized.mat', 'TestDir')
 % estML = 1; %%%%%
 % %%%%%%%%%%%%
 % %%%%%%%%%%%%
-% Sims = 10;
-% burnin=10;
+% Sims = 200;
+% burnin=100;
 % [storeFt, storeVAR, storeOM, storeStateTransitions,...
 %     storeObsPrecision, storeFactorVar,varianceDecomp, ml1] = Hdfvar(yt1, Xt1,  InfoCell, Sims,...
 %     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, 'TBTEST');
@@ -114,4 +117,5 @@ RunHdfvar(30, 10, 'BigKow', 'kow_standardized.mat', 'TestDir')
 % 
 % A=ml1+ml2
 % B=ml
-% A>B
+% A-B
+% disp(A>B)

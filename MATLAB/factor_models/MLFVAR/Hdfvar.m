@@ -38,8 +38,10 @@ Ft = initFactor;
 Si = FactorPrecision(ssState, iP, 1./factorVariance, T);
 fakeX = zeros(T,1);
 fakeB = zeros(1,1);
-betaPriorPre=eye(dimx);
+betaPriorPre=.1.*eye(dimx);
 betaPriorMean = zeros(dimx,1);
+g0 = zeros(1,lagState);
+G0 = eye(lagState);
 % Storage
 Runs = Sims - burnin;
 storeVAR = zeros(dimx,K,Runs);
@@ -74,12 +76,12 @@ if finishedMainRun == 0
             start = iterator;
             save(join( [checkpointdir, 'ckpt'] ) )
         end
-                fprintf('\nSimulation %i\n',iterator)
+        fprintf('\nSimulation %i\n',iterator)
         %% Draw VAR params
         [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecision,...
             currobsmod, stateTransitions, factorVariance, betaPriorMean,...
             betaPriorPre, FtIndexMat, subsetIndices);
-
+        
         %% Draw loadings and factors
         [currobsmod, Ft, keepOmMeans, keepOmVariances]=...
             LoadingsFactorsUpdate(yt,Xbeta, Ft, currobsmod, stateTransitions,...
@@ -138,7 +140,7 @@ if finishedMainRun == 0
     end
     varianceDecomp = [varMu,vd];
     varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
- 
+    
     %%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%
     %% Marginal Likelihood
@@ -230,9 +232,9 @@ if estML == 1
         fprintf('Reduced run for state transitions\n')
         for r = startRR:Runs
             %             fprintf('RR = %i\n', r)
-            [~, alphaj] = drawSTAlphaj(stStar, Ftj, fvj,lagState);
+            [~, alphaj] = drawSTAlphaj(stStar, Ftj, fvj, g0, G0);
             alphag = drawSTAlphag(storeStateTransitionsg(:,:,r), stStar,...
-                storeFtg(:,:,r), storeFactorVarg(:,r), lagState);
+                storeFtg(:,:,r), storeFactorVarg(:,r), g0, G0);
             stoAlphaj(:,r) = alphaj;
             stoAlphag(:,r) = alphag;
             if identification == 2
@@ -289,8 +291,6 @@ if estML == 1
         obsPrecisionStar = mean(storeObsPrecisionj, 2);
         obsVarianceStar = 1./obsPrecisionStar;
         factorVarianceStar = mean(storeFactorVarj,2);
-        [iP, ssState] =initCovar(stStar);
-        Si = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
         finishedThirdReducedRun = 1;
         save(join( [checkpointdir, 'ckpt'] ) )
     end
@@ -310,6 +310,7 @@ if estML == 1
         storePiFt(:,r) = piFtStar(FtStar, yt, xbtStar, Astar, stStar,...
             obsPrecisionj, fvj, Identities, InfoCell);
     end
+
     piFt = sum(logAvg(storePiFt));
     obsPrecisionStar = mean(storeObsPrecisionj,2);
     factorVarianceStar = mean(storeFactorVarj,2);
@@ -319,14 +320,14 @@ if estML == 1
     posteriors = [piFt, piBeta, piA , piST, piObsVariance, piFactorVariance]
     
     LogLikelihood=sum(logmvnpdf(residsStar', zeros(1,K), diag(obsVarianceStar)))
-    
+
     priorST = sum(logmvnpdf(stStar, zeros(1,lagState), eye(lagState)));
     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*d0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
     priorBeta = logmvnpdf(betaStar', zeros(1, dimX), eye(dimX));
     priorAstar = Apriors(InfoCell, Astar);
-    [iP, ssState] =initCovar(initStateTransitions);
-    Kprecision = FactorPrecision(ssState, iP, 1./ones(nFactors,1), T);
+    [iP, ssState] =initCovar(stStar);
+    Kprecision = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
     Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\eye(nFactors*T));
     
     priors = [Fpriorstar, priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]
@@ -338,52 +339,8 @@ if estML == 1
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
     rmdir(checkpointdir, 's')
     
-    
-    %     fprintf('Reduced run for obs variance and factor variance\n')
-    %     for r = startRR:Runs
-    %         fprintf('RR = %i\n', r)
-    %         Ftj = reshape(kowUpdateLatent(ydemutStar(:), StateObsModelStar,...
-    %             Si,  obsPrecisionStar), nFactors, T);
-    %         mutj = StateObsModelStar*Ftj + xbtStar;
-    %         resids = yt - mutj;
-    %         r2 = sum(resids.^2,2);
-    %         storeFtj(:,:,r) = Ftj;
-    %         storePiObsVariance(:,r) = logigampdf(obsVarianceStar, .5.*(v0+T), .5.*(r0+r2));
-    %         if identification == 2
-    %             storePiFactorVarianceStar(:,r) = piOmegaStar(factorVarianceStar, stStar, Ftj, s0,d0);
-    %         end
-    %     end
-    %     FtStar = mean(storeFtj,3);
-    %     muStar = StateObsModelStar*FtStar + xbtStar;
-    %     % Theta star
-    %     piObsVariance = sum(logAvg(storePiObsVariance));
-    %     piFactorVariance = sum(logAvg(storePiFactorVarianceStar));
-    %     posteriors = [piBeta, piA , piST,piObsVariance,piFactorVariance]
-    %     posteriorStar = sum(posteriors);
-    %     LogLikelihood = sum(logmvnpdf(yt', muStar', diag(obsVarianceStar)))
-    %     % Priors
-    %     priorST = sum(logmvnpdf(stStar, zeros(1,lagState), eye(lagState)));
-    %     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*d0));
-    %     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
-    %     priorBeta = logmvnpdf(betaStar', zeros(1, dimX), 10.*eye(dimX));
-    %     priorAstar = Apriors(Info, Astar);
-    %     [iP, ssState] =initCovar(stStar);
-    %     Kprecision = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
-    %     Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\eye(nFactors*T))
-    %     priors = [priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]
-    %     priorStar = sum([priorST,priorObsVariance,priorFactorVar, sum(priorAstar),priorBeta ]);
-    %     % Integrated log likelihood
-    %     [iP, ssState] =initCovar(stStar);
-    %     Kprecision = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
-    %     Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\eye(nFactors*T))
-    %     G = kron(eye(T), StateObsModelStar);
-    %     J = Kprecision + G'*spdiags(repmat(obsPrecisionStar,T,1), 0, K*T, K*T)*G;
-    %     piFtstarGivenyAndthetastar = .5*(  logdet(J) -  (log(2*pi)*nFactors*T)  )
-    %     fyGiventhetastar =  LogLikelihood + Fpriorstar - piFtstarGivenyAndthetastar;
-    %     % Log ml
-    %     ml = fyGiventhetastar + priorStar - posteriorStar;
-    %     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
-    %     rmdir(checkpointdir, 's')
+%     fytheta = LogLikelihood + Fpriorstar - piFt;
+%     my = fytheta + sum([priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]) - sum([piBeta, piA , piST, piObsVariance, piFactorVariance])
 else
     ml = 'nothing';
     rmdir(checkpointdir, 's')
