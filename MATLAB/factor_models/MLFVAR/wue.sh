@@ -1,11 +1,11 @@
 #!/bin/bash
 #$ -S /bin/bash
+#$ -ckpt restart 
 #$ -q its
-#$ -N itskow
+#$ -N wue_iden1
 #$ -l mem_free=4G
 #$ -cwd
 #$ -o bin/outputfiles/
 #$ -e bin/errorlogs/
-#$ -ckpt restart
 module load MATLAB
-./kow2 10000 2000 8000 BigKow ${DATA} BigKowResults
+./iden1 5000 1000 4000 Unemployment worldue.mat BigKowResults
