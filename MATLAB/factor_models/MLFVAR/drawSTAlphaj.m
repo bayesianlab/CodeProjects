@@ -12,13 +12,15 @@ for i = 1: Rows
     [y,x] = kowLagStates(StateVariables(i,:), Arp);
     G = ((G0\ones(Arp)) +  (x*x')./sigma2 )\eye(Arp);
     gammahat = G* ( (G0\g0) +(x*y')./sigma2);
-    while notValid == 1 & count < 20
+    while notValid == 1 & count < 100
         proposal = (gammahat+chol(G,'lower')*normrnd(0,1,Arp,1))';
         [P0,~,~,notValid]= initCovar(proposal);
         count = count + 1;
     end
+    if count == 100 & notValid==1
+        P0 = eye(Arp);
+    end
     [P0old,~,~,~]=initCovar(st);
-    
     num = logmvnpdf(StateVariables(i,1:Arp), zeroarp, P0);
     den = logmvnpdf(StateVariables(i, 1:Arp), zeroarp, P0old);
     alphaj(i) = min(0, num-den);

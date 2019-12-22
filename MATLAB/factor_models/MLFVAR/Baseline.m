@@ -1,6 +1,6 @@
 function [storeMeans, storeLoadings, storeOmArTerms,...
-    storeStateArTerms, storeFt, storeObsV, storeFactorVariance] = ...
-    Baseline(InfoCell,yt, xt, Ft, MeansLoadings,  omArTerms,...
+    storeStateArTerms, storeFt, storeObsV, storeFactorVariance,...
+    varianceDecomp] = Baseline(InfoCell,yt, xt, Ft, MeansLoadings,  omArTerms,...
     stateArTerms, v0,d0, Sims, bn, autoRegressiveErrors)
 %% Definitions
 % yt comes in as
@@ -43,6 +43,7 @@ factorRange  = (meanIndex+1):M;
 restrictions = restrictedElements(InfoCell);
 FtIndexMat = CreateFactorIndexMat(InfoCell);
 subsetIndices = zeros(K,T);
+
 for k = 1:K
     subsetIndices(k,:)= k:K:KT;
 end
@@ -147,5 +148,25 @@ for i = 1:Sims
         storeFactorVariance(:,v) = factorVariance;
     end
 end
+beta = mean(storeMeans,3);
+om = mean(storeLoadings,3);
+Ft = mean(storeFt,3);
+StateOM = makeStateObsModel(om, Identities,0);
+mu1 = reshape(surForm(xt,K)*beta(:),K,T);
+varMu1 = var(mu1, [], 2);
+facCount = 1;
+vd = zeros(K,levels);
+for k = 1:levels
+    Info = InfoCell{1,k};
+    Regions = size(Info,1);
+    for r = 1:Regions
+        subsetSelect = Info(r,1):Info(r,2);
+        vd(subsetSelect,k) = var(om(subsetSelect,k).*Ft(facCount,:),[],2);
+        facCount = facCount + 1;
+    end
+end
+varianceDecomp = [varMu1,vd];
+varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
+
 end
 
