@@ -13,10 +13,11 @@ Im = speye(size(PhiKronPhi,1));
 R = full(spdiags(ones(K), 0, K*lags,K));
 RRT = R*R';
 P0 = (Im - PhiKronPhi)\RRT(:);
+P0 = reshape(P0, K*lags,K*lags);
 [~,p] = chol(P0);
 if p ~= 0 
     notvalid = 1;
 end
-P0 = reshape(P0, K*lags,K*lags);
+
 end
 
