@@ -1,5 +1,5 @@
 clear;clc;
-simpath = 'TBS_Old/TimeBreakSimulations/';
+simpath = 'SimResultsDec22/';
 files = dir(join([simpath,'*.mat']));
 x =natsortfiles({files.name});
 N = floor(length(x)/2);
@@ -19,12 +19,12 @@ for g = 1:N
 end
 
 
-[a,b]=max(sumMls);
-% tml = load('Result_totaltime_11_Dec_2019_03_28_38.mat', 'ml');
-% tml=tml.ml;
+[a,b]=max(sumMls)
+tml = load('BigKowResults/Result_totaltime_22_Dec_2019_08_50_32.mat', 'ml');
+tml=tml.ml;
 hold on
 plot(sumMls(:,1),sumMls(:,2))
-% plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
+plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
 % hold on
 % [a,b]=max(sumMls(:,2))
 % sumMls(19,:)
@@ -92,8 +92,8 @@ plot(sumMls(:,1),sumMls(:,2))
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% Application KOW dataset
-clear;clc;
-savepath = '~/GoogleDrive/statespace/';
+% clear;clc;
+% savepath = '~/GoogleDrive/statespace/';
 
 
 

@@ -7,9 +7,9 @@ xcols = 3;
 Xt = normrnd(5,.5*1, K*T, xcols);
 Xt(:,1) = ones(K*T,1);
 
-beta = .35.*ones(xcols, 1);
+beta = -.35.*ones(xcols, 1);
 % beta=unifrnd(-.5, .5, xcols,1);
-gam = .5.*ones(nFactors,1);
+gam = .75.*ones(nFactors,1);
 stateTransitionsAll = gam'.*eye(nFactors);
 speyeT = eye(T);
 [iP, ssState] =initCovar(stateTransitionsAll);
