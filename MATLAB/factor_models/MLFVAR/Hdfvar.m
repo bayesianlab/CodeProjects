@@ -38,7 +38,7 @@ Ft = initFactor;
 Si = FactorPrecision(ssState, iP, 1./factorVariance, T);
 fakeX = zeros(T,1);
 fakeB = zeros(1,1);
-betaPriorPre=.1.*eye(dimx);
+betaPriorPre= eye(dimx);
 betaPriorMean = zeros(dimx,1);
 g0 = zeros(1,lagState);
 G0 = eye(lagState);
@@ -174,7 +174,7 @@ if estML == 1
         %% MH for factor loadings
         fprintf('Reduced run for factor loadings\n')
         for r = startRR:Runs
-            %             fprintf('RR = %i\n', r)
+            fprintf('RR = %i\n', r)
             [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecisionj,...
                 Astar, stj, fvj, betaPriorMean, betaPriorPre, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
@@ -231,7 +231,7 @@ if estML == 1
     if finishedSecondReducedRun == 0
         fprintf('Reduced run for state transitions\n')
         for r = startRR:Runs
-            %             fprintf('RR = %i\n', r)
+            fprintf('RR = %i\n', r)
             [~, alphaj] = drawSTAlphaj(stStar, Ftj, fvj, g0, G0);
             alphag = drawSTAlphag(storeStateTransitionsg(:,:,r), stStar,...
                 storeFtg(:,:,r), storeFactorVarg(:,r), g0, G0);
@@ -269,7 +269,7 @@ if estML == 1
     if finishedThirdReducedRun == 0
         fprintf('Reduced run for beta\n')
         for r = startRR:Runs
-            %             fprintf('RR = %i\n', r)
+            fprintf('RR = %i\n', r)
             storePiBeta(:,r) = piBetaStar(VARstar, yt, x, obsPrecisionj,...
                 Astar, stStar, fvj, betaPriorMean, betaPriorPre, subsetIndices, FtIndexMat);
             Ftj = reshape(kowUpdateLatent(ydemutStar(:), StateObsModelStar,...
@@ -318,6 +318,7 @@ if estML == 1
     piFactorVariance = sum(piOmegaStar(factorVarianceStar, stStar, FtStar, s0,d0));
     
     posteriors = [piFt, piBeta, piA , piST, piObsVariance, piFactorVariance]
+    posteriorStar = sum(posteriors)
     
     LogLikelihood=sum(logmvnpdf(residsStar', zeros(1,K), diag(obsVarianceStar)))
 
@@ -331,10 +332,9 @@ if estML == 1
     Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\eye(nFactors*T));
     
     priors = [Fpriorstar, priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]
-    
     priorStar = sum(priors)
     
-    posteriorStar = sum(posteriors);
+   
     ml = (LogLikelihood+priorStar)-posteriorStar;
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
     rmdir(checkpointdir, 's')

@@ -3,13 +3,13 @@ function [DataCell] = MLFtimebreaks(K, T, timeBreak)
 nFactors = 1;
 InfoCell = cell(1);
 InfoCell{1,1} = [1,K];
-xcols = 3;
-Xt = normrnd(5,.5*1, K*T, xcols);
+xcols = 2;
+Xt = unifrnd(0,1, K*T, xcols);
 Xt(:,1) = ones(K*T,1);
 
-beta = -.35.*ones(xcols, 1);
+beta = ones(xcols, 1);
 % beta=unifrnd(-.5, .5, xcols,1);
-gam = .75.*ones(nFactors,1);
+gam = .1.*ones(nFactors,1);
 stateTransitionsAll = gam'.*eye(nFactors);
 speyeT = eye(T);
 [iP, ssState] =initCovar(stateTransitionsAll);
@@ -19,7 +19,7 @@ Factor = reshape(Factor,nFactors,T);
 
 
 Gt1 = zeros(K,1);
-Gt2 = ones(K,1);
+Gt2 = ones( K,1);
 mu1 = Gt1*Factor(1:timeBreak);
 mu2 = Gt2*Factor((timeBreak+1):end);
 % m1 = Xt(1:(timeBreak*K),:)*unifrnd(-.05,.05, xcols,1);

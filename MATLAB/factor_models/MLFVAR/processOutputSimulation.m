@@ -1,13 +1,13 @@
 clear;clc;
-simpath = 'SimResultsDec22/';
+simpath = 'TBSSimDec26/';
 files = dir(join([simpath,'*.mat']));
 x =natsortfiles({files.name});
 N = floor(length(x)/2);
 beg = 1:N;
 G = length(beg);
-c=75;
+c=40;
 for g = 1:N
-    set1 = x{G+ g};
+    set1 = x{G+ g}
     datapath = join([simpath,set1]);
     ml1 = load(datapath, 'ml');
     set2 = x{g};
@@ -20,7 +20,7 @@ end
 
 
 [a,b]=max(sumMls)
-tml = load('BigKowResults/Result_totaltime_22_Dec_2019_08_50_32.mat', 'ml');
+tml = load('TBSSimDec26/Result_totaltime_24_Dec_2019_06_13_43.mat', 'ml');
 tml=tml.ml;
 hold on
 plot(sumMls(:,1),sumMls(:,2))

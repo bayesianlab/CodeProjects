@@ -5,7 +5,7 @@ function [currobsmod, Ft, keepOmMeans, keepOmVariances, alpha] = ...
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8);
-df = 15;
+df = 20;
 [K,T] = size(yt);
 w1 = sqrt(chi2rnd(df,1)/df);
 fcount = 0;
@@ -27,13 +27,15 @@ for q = 1:levels
         StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fcount), T);
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);
+        a0 = ones(1, length(subset)-1);
+        A0=eye(length(subset)-1);
         %% Optimization step
         for k =subset
             ycount = ycount + 1;
             ty = ydemut(ycount,:);
             top = obsPrecision(ycount);
             x0 = currobsmod(k,q);
-            LL = @(guess) -LLcond_ratio(guess, ty,.25, 1, top, tempf,StatePrecision);
+            LL = @(guess) -LLcond_ratio(guess, ty, 1, 1, top, tempf,StatePrecision);
             [themean, ~,~,~,~, Hessian] = fminunc(LL, x0, options);
             if Hessian < 0 
                 Hessian = 1;
@@ -57,8 +59,7 @@ for q = 1:levels
         proposal = omMuNum + diag(sqrt(omVarNum))*normrnd(0,1,length(subset)-1, 1)./w1;
         proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(omVarNum), df);
         proposalDistDen = @(prop) mvstudenttpdf(prop, omMuDen', diag(omVarDen), df);
-        LogLikePositive = @(val) LLcond_ratio (val, ty, .25.*ones(1, length(subset)-1),...
-            eye(length(subset)-1), top, tempf, StatePrecision);
+        LogLikePositive = @(val) LLcond_ratio (val, ty, a0,A0, top, tempf, StatePrecision);
         x0 = currobsmod(subset,q);
         Num = LogLikePositive(proposal) + proposalDistNum(x0(2:end)');
         Den = LogLikePositive(x0(2:end)) + proposalDistDen(proposal');

@@ -11,7 +11,7 @@ for q=1:levels
         K = length(subsetSelect);
         astar = Astar(subsetSelect,q);
         astar = reshape(astar(2:end), 1, K-1);
-        ObsPriorMean = .5.*ones(1, K-1);
+        ObsPriorMean = ones(1, K-1);
         ObsPriorVariance = eye(K-1);
         priorAstar = priorAstar + logmvnpdf(astar, ObsPriorMean, ObsPriorVariance);
     end

@@ -16,11 +16,12 @@ for q = 1:levels
     regs = size(Info,1);
     for r=1:regs
         fcount = fcount+1;
-        gammas = stateTransitions(fcount,:);
-        [L0, ssgam] = initCovar(diag(gammas));
+        [L0, ssgam] = initCovar(stateTransitions(fcount,:));
         StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fcount), T);
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);
+        a0 = ones(1, length(subset)-1);
+        A0 =  eye(length(subset)-1);
         %% MH step
         ty = ydemut(subset,:);
         ty = ty(2:end,:);
@@ -33,8 +34,7 @@ for q = 1:levels
         fxTheta = fixedValueTheta(subset,q);
         gTheta = thetaG(subset, q);
         proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(omVarNum), df);
-        LogLikePositive = @(val) LLcond_ratio (val, ty, .25.*ones(1, length(subset)-1),...
-            eye(length(subset)-1), top, tempf, StatePrecision);
+        LogLikePositive = @(val) LLcond_ratio (val, ty, a0, A0, top, tempf, StatePrecision);
         Num = LogLikePositive(fxTheta(2:end)) + proposalDistNum(gTheta(2:end)');
         Den = LogLikePositive(gTheta(2:end)) + proposalDistNum(fxTheta(2:end)');
         alpha_prop(fcount) = min(0,Num - Den) +  proposalDistNum(fxTheta(2:end)');
