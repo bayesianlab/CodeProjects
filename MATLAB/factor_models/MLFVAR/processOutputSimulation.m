@@ -1,16 +1,16 @@
 clear;clc;
-simpath = 'TBSSimDec26/';
+simpath = 'TbsSimDec19/';
 files = dir(join([simpath,'*.mat']));
 x =natsortfiles({files.name});
 N = floor(length(x)/2);
 beg = 1:N;
 G = length(beg);
-c=40;
+c=70;
 for g = 1:N
     set1 = x{G+ g}
     datapath = join([simpath,set1]);
     ml1 = load(datapath, 'ml');
-    set2 = x{g};
+    set2 = x{g}
     datapath = join([simpath,set2]);
     ml2 = load(datapath, 'ml');
     sumMls(g,2) = ml1.ml + ml2.ml;
@@ -19,12 +19,36 @@ for g = 1:N
 end
 
 
-[a,b]=max(sumMls)
-tml = load('TBSSimDec26/Result_totaltime_24_Dec_2019_06_13_43.mat', 'ml');
+[a,b]=max(sumMls);
+tml = load('Result_totaltime_28_Dec_2019_19_50_09.mat', 'ml');
 tml=tml.ml;
 hold on
 plot(sumMls(:,1),sumMls(:,2))
 plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
+tml
+% clear;clc;
+% load('Result_totaltime_28_Dec_2019_19_50_09.mat');
+% mean(mean(storeVAR,3),2)
+% mean(std(storeVAR,[],3),2)
+% mean(storeOM,3)
+% std(storeOM,[],3)
+% mean(storeStateTransitions,3)
+% std(storeStateTransitions,[],3)
+% load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/TbsSimDec19/Result_TimeBreakEnd101_27_Dec_2019_01_40_36.mat')
+% mean(mean(storeVAR,3),2)
+% mean(std(storeVAR,[],3),2)
+% mean(storeOM,3)
+% std(storeOM,[],3)
+% mean(storeStateTransitions,3)
+% std(storeStateTransitions,[],3)
+% load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/TbsSimDec19/Result_TimeBreakBeg102_27_Dec_2019_01_24_42.mat')
+% mean(mean(storeVAR,3),2)
+% mean(std(storeVAR,[],3),2)
+% mean(storeOM,3)
+% std(storeOM,[],3)
+% mean(storeStateTransitions,3)
+% std(storeStateTransitions,[],3)
+
 % hold on
 % [a,b]=max(sumMls(:,2))
 % sumMls(19,:)
