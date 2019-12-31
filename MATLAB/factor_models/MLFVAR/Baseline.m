@@ -70,6 +70,9 @@ meanFunction = MeansLoadings(:,meanRange)';
 loadings = MeansLoadings(:, factorRange);
 fakeX = zeros(T,1);
 fakeB = zeros(1,1);
+if autoRegressiveErrors == 0
+    omArTerms=zeros(K,lagObs);
+end
 for i = 1:Sims
     fprintf('Simulation i = %i\n',i)
     
@@ -108,14 +111,26 @@ for i = 1:Sims
             subsI = Info(w,1):Info(w,2);
             commonPrecisionComponent = zeros(T,T);
             commonMeanComponent = zeros(T,1);
-            for k = subsI
-                % Equation level
-                ty = tempyt(k,:);
-                [D0, ssOmArTerms] = initCovar(omArTerms(k,:));
-                OmPrecision = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
-                A = kron(IT,alpha(k,:));
-                commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
-                commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+            if autoRegressiveErrors == 1
+                for k = subsI
+                    % Equation level
+                    ty = tempyt(k,:);
+                    [D0, ssOmArTerms] = initCovar(omArTerms(k,:));
+                    OmPrecision = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
+                    A = kron(IT,alpha(k,:));
+                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                end
+            else
+                for k = subsI
+                    % Equation level
+                    ty = tempyt(k,:);
+                    OmPrecision = kron(IT,1./obsVariance(k));
+                    A = kron(IT,alpha(k,:));
+                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                end
+                
             end
             [L0, ssGammas] = initCovar(stateArTerms(c,:));
             StatePrecision = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);

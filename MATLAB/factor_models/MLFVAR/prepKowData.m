@@ -48,25 +48,25 @@ y = kow(:,2:54);
 % DataCell{1,7} = 0;
 % save('BigKow/kow.mat', 'DataCell')
 
-DataCell = cell(1,7);
-DataCell{1,1} = y;
-DataCell{1,2} = ones(K*(T-1),1);
-DataCell{1,3} = InfoCell;
-DataCell{1,4} = 0;
-DataCell{1,5} = 0;
-DataCell{1,6} = 0;
-DataCell{1,7} = 0;
-save('BigKow/kose_replication_notstandardized.mat', 'DataCell')
-
-DataCell = cell(1,7);
-DataCell{1,1} = y;
-DataCell{1,2} = ones(K*(T-1),1);
-DataCell{1,3} = InfoCell;
-DataCell{1,4} = 0;
-DataCell{1,5} = 0;
-DataCell{1,6} = 0;
-DataCell{1,7} = 0;
-save('BigKow/kose_replication_standardized.mat', 'DataCell')
+% DataCell = cell(1,7);
+% DataCell{1,1} = y;
+% DataCell{1,2} = ones(K*(T-1),1);
+% DataCell{1,3} = InfoCell;
+% DataCell{1,4} = 0;
+% DataCell{1,5} = 0;
+% DataCell{1,6} = 0;
+% DataCell{1,7} = 0;
+% save('BigKow/kose_replication_notstandardized.mat', 'DataCell')
+% 
+% DataCell = cell(1,7);
+% DataCell{1,1} = y;
+% DataCell{1,2} = ones(K*(T-1),1);
+% DataCell{1,3} = InfoCell;
+% DataCell{1,4} = 0;
+% DataCell{1,5} = 0;
+% DataCell{1,6} = 0;
+% DataCell{1,7} = 0;
+% save('BigKow/kose_replication_standardized.mat', 'DataCell')
 
 % DataCell = cell(1,7);
 % DataCell{1,1} = y;

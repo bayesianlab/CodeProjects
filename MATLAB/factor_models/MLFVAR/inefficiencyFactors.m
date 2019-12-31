@@ -12,7 +12,6 @@ for m = 1:M
         break
     end
 end
-
 factor=1+2*ineff;
 end
 
