@@ -5,7 +5,7 @@ clear;clc;
 % % RunHdfvar(20, 10, 'BigKow', 'kowz_notcentered_resurrection.mat', 'TestDir')
 % % RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
 % % RunHdfvar(20,  10, 'TestData', 'simdata.mat', 'TestDir')
-% RunBaseline(5,2,'BigKow/kow_standardized.mat', 'TestDir')
+RunBaseline(5,2,'BigKow/kow_standardized.mat', 'TestDir')
 
 % rng(9)
 % T = 200;
