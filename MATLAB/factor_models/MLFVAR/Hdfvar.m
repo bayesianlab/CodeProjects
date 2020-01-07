@@ -76,7 +76,7 @@ if finishedMainRun == 0
             start = iterator;
             save(join( [checkpointdir, 'ckpt'] ) )
         end
-        fprintf('\nSimulation %i\n',iterator)
+        fprintf('\nSimulation %i',iterator)
         %% Draw VAR params
         [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecision,...
             currobsmod, stateTransitions, factorVariance, betaPriorMean,...

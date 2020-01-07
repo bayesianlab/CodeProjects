@@ -1,5 +1,34 @@
+% clear;clc;
+% simpath = 'TbsSimDec19/';
+% files = dir(join([simpath,'*.mat']));
+% x =natsortfiles({files.name});
+% N = floor(length(x)/2);
+% beg = 1:N;
+% G = length(beg);
+% c=70;
+% for g = 1:N
+%     set1 = x{G+ g}
+%     datapath = join([simpath,set1]);
+%     ml1 = load(datapath, 'ml');
+%     set2 = x{g}
+%     datapath = join([simpath,set2]);
+%     ml2 = load(datapath, 'ml');
+%     sumMls(g,2) = ml1.ml + ml2.ml;
+%     sumMls(g,1) = c;
+%     c = c + 1;
+% end
+% 
+% 
+% [a,b]=max(sumMls);
+% tml = load('Result_totaltime_28_Dec_2019_19_50_09.mat', 'ml');
+% tml=tml.ml;
+% hold on
+% plot(sumMls(:,1),sumMls(:,2))
+% plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
+% tml
+
 clear;clc;
-simpath = 'TbsSimDec19/';
+simpath = 'Jan1/';
 files = dir(join([simpath,'*.mat']));
 x =natsortfiles({files.name});
 N = floor(length(x)/2);
@@ -20,12 +49,13 @@ end
 
 
 [a,b]=max(sumMls);
-tml = load('Result_totaltime_28_Dec_2019_19_50_09.mat', 'ml');
-tml=tml.ml;
+% load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Result_kow_standardized_31_Dec_2019_13_22_05.mat', 'ml')
+% tml=tml.ml;
 hold on
 plot(sumMls(:,1),sumMls(:,2))
-plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
-tml
+% plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
+
+
 % clear;clc;
 % load('Result_totaltime_28_Dec_2019_19_50_09.mat');
 % mean(mean(storeVAR,3),2)

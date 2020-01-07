@@ -60,10 +60,10 @@ vdend<-cbind(vdend,regions=c(rep('NRTH.AM.', 9),
 colnames(vdbeg)[1:3] <- c("WB", "RB", "CB")
 colnames(vdend)[1:3] <- c("WE", "RE", "CE")
 
-ggText <-   theme_bw()+theme(axis.text.x = element_text(size = 20)) +
+ggText <-   theme_bw()+theme(axis.text.x = element_text(size = 18)) +
   theme(axis.text.y = element_text(size = 20)) + 
-  theme(axis.title = element_text(size = 20)) +
-  theme(plot.title = element_text(size=20)) + 
+  theme(axis.title = element_text(size = 30)) +
+  theme(plot.title = element_text(size=34)) + 
   theme(legend.title = element_text(size=25))+ 
   theme(legend.text = element_text(size=25))
 
