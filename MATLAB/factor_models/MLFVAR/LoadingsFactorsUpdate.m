@@ -14,13 +14,13 @@ nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 alpha = zeros(nFactors,1);
 
 for q = 1:levels
-    ycount = 0;
+
     COM = makeStateObsModel(currobsmod, Identities, q);
     mut = Xbeta + COM*Ft;
     ydemut = yt - mut;
     Info = InfoCell{1,q};
-    regs = size(Info,1);
-    for r=1:regs
+    region = size(Info,1);
+    for r=1:region
         fcount = fcount+1;
         gammas = stateTransitions(fcount,:);
         [L0, ssgam] = initCovar(diag(gammas));
@@ -31,18 +31,19 @@ for q = 1:levels
         A0=eye(length(subset)-1);
         %% Optimization step
         for k =subset
-            ycount = ycount + 1;
-            ty = ydemut(ycount,:);
-            top = obsPrecision(ycount);
+            ty = ydemut(k,:);
+            top = obsPrecision(k);
             x0 = currobsmod(k,q);
             LL = @(guess) -LLcond_ratio(guess, ty, 1, 1, top, tempf,StatePrecision);
             [themean, ~,~,~,~, Hessian] = fminunc(LL, x0, options);
+
             if Hessian < 0 
                 Hessian = 1;
             end
             keepOmVariances(k,q)= 1/Hessian;
             keepOmMeans(k,q)=themean;
         end
+        
         %% MH step
         ty = ydemut(subset,:);
         ty = ty(2:end,:);

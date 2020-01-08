@@ -30,7 +30,7 @@ d0 = 10;
 obsPrecision = ones(K,1);
 initStateTransitions = .1.*ones(nFactors,1);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-initobsmodel = ones(K,levels);
+initobsmodel = .1.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);

@@ -1,9 +1,10 @@
 clear;clc;
-% % DataCell = SimDataMLF(100, 2,2,5);
-% % save('simdata', 'DataCell')
-RunHdfvar(10, 2, 'BigKow', 'kow_raw.mat', 'TestDir')
+DataCell = SimDataMLF(200, 2,2,5);
+save('simdata', 'DataCell')
+rng(1)
+RunHdfvar(200, 2, 'BigKow', 'kow_raw.mat', 'TestDir')
 % % RunHdfvar(20, 10, 'BigKow', 'kowz_notcentered_resurrection.mat', 'TestDir')
-% % RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
+% RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
 % % RunHdfvar(20,  10, 'TestData', 'simdata.mat', 'TestDir')
 % RunBaseline(5,2,'BigKow/kow_standardized.mat', 'TestDir')
 

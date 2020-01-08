@@ -20,7 +20,6 @@ SurX = surForm(x,K);
 [~, dimX] = size(SurX);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 levels = length(sectorInfo);
-restrictions = restrictedElements(InfoCell);
 [~,dimx]=size(x);
 FtIndexMat = CreateFactorIndexMat(InfoCell);
 subsetIndices = zeros(K,T);
@@ -66,8 +65,6 @@ else
     fprintf('Created a checkpoint dir in %s\n', checkpointdir')
     mkdir(checkpointdir)
 end
-
-
 
 if finishedMainRun == 0
     for iterator = start : Sims
