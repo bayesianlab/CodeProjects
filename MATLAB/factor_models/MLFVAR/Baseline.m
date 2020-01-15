@@ -1,7 +1,7 @@
 function [storeMeans, storeLoadings, storeOmArTerms,...
     storeStateArTerms, storeFt, storeObsV, storeFactorVariance,...
     varianceDecomp] = Baseline(InfoCell,yt, xt, Ft, MeansLoadings,  omArTerms,...
-    stateArTerms, v0,d0, Sims, bn, autoRegressiveErrors)
+    stateArTerms, v0,d0, Sims, burnin, autoRegressiveErrors)
 %% Definitions
 % yt comes in as
 %[ y11...y1T;
@@ -52,7 +52,7 @@ IT = eye(T);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 
 %% Posterior Storage
-Runs = Sims-bn;
+Runs = Sims-burnin;
 storeMeans = zeros(K,meanIndex, Runs);
 storeLoadings = zeros(K, levels, Runs);
 storeOmArTerms = zeros(K, lagObs,Runs);
@@ -152,8 +152,8 @@ for i = 1:Sims
     [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateArTerms, factorVariance, v0, d0);
     
     %% Store post burn-in runs
-    if i > bn
-        v = i - bn;
+    if i > burnin
+        v = i - burnin;
         storeMeans(:,:,v)=beta(meanRange,:)';
         storeLoadings(:,:,v) = loadings;
         storeOmArTerms(:, :,v) = omArTerms;
@@ -166,7 +166,6 @@ end
 beta = mean(storeMeans,3);
 om = mean(storeLoadings,3);
 Ft = mean(storeFt,3);
-StateOM = makeStateObsModel(om, Identities,0);
 mu1 = reshape(surForm(xt,K)*beta(:),K,T);
 varMu1 = var(mu1, [], 2);
 facCount = 1;
@@ -182,6 +181,176 @@ for k = 1:levels
 end
 varianceDecomp = [varMu1,vd];
 varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
+
+ReducedRuns = Sims-burnin;
+betaStar = mean([storeMeans, storeLoadings],3);
+storePiBeta = zeros(K,ReducedRuns);
+storeFactorRR = zeros(nFactors, T,ReducedRuns);
+storeObsVarianceRR = zeros(K, ReducedRuns);
+for rr = 1:ReducedRuns
+    for k = 1:K
+        tempI = subsetIndices(k,:);
+        tempy = yt(k,:);
+        tempx=[xt(tempI,:),Ft(FtIndexMat(k,:),:)'];
+        tempdel=omArTerms(k,:);
+        tempD0 = initCovar(omArTerms(k,:));
+        tempobv = obsVariance(k);
+        [storePiBeta(k,rr), ystar, xstar, Cinv] = drawBetaML(betaStar(k,:), tempy, tempx,  tempdel, tempobv, tempD0);
+        if autoRegressiveErrors == 1
+            omArTerms(k,:) = drawPhi(tempy, tempx, betaStar(k,:)',tempdel, tempobv, Cinv);
+        end
+        igParamB=d0+sum((ystar - betaStar(k,:)*xstar').^2,2);
+        obsVariance(k) = 1./gamrnd(igParamA, 2./igParamB);
+    end
+    storeObsVarianceRR(:,rr) = obsVariance;
+    %% Draw Factors
+    SurX = surForm(xt,K);
+    mu1t = reshape(SurX*meanFunction(:),K,T);
+    demuyt = yt - mu1t;
+    c=0;
+    for q = 1:levels
+        Info = InfoCell{1,q};
+        COM = makeStateObsModel(loadings, Identities, q);
+        alpha =loadings(:,q);
+        tempyt = demuyt - COM*Ft;
+        for w = 1:size(Info,1)
+            % Factor level
+            c=c+1;
+            subsI = Info(w,1):Info(w,2);
+            commonPrecisionComponent = zeros(T,T);
+            commonMeanComponent = zeros(T,1);
+            if autoRegressiveErrors == 1
+                for k = subsI
+                    % Equation level
+                    ty = tempyt(k,:);
+                    [D0, ssOmArTerms] = initCovar(omArTerms(k,:));
+                    OmPrecision = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
+                    A = kron(IT,alpha(k,:));
+                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                end
+            else
+                for k = subsI
+                    % Equation level
+                    ty = tempyt(k,:);
+                    OmPrecision = kron(IT,1./obsVariance(k));
+                    A = kron(IT,alpha(k,:));
+                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                end
+                
+            end
+            [L0, ssGammas] = initCovar(stateArTerms(c,:));
+            StatePrecision = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
+            OmegaInv = commonPrecisionComponent + StatePrecision;
+            Linv = chol(OmegaInv,'lower')\IT;
+            omega = Linv'*Linv*commonMeanComponent;
+            Ft(c,:) = omega + Linv' * normrnd(0,1,T,1);
+        end
+    end
+    storeFactorRR(:,:, rr) = Ft;
+    
+    %% Draw Factor AR Parameters
+    for n=1:nFactors
+        [L0, ~] = initCovar(stateArTerms(n,:));
+        Linv = chol(L0,'lower')\eye(lagState);
+        stateArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, stateArTerms(n,:), factorVariance(n), Linv);
+    end
+    
+    %% Draw Factor Variances
+    [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateArTerms, factorVariance, v0, d0);
+end
+
+piBeta = sum(logAvg(storePiBeta));
+%%%%%%%%%%%%%%%%
+%% Reudced Runs for Factors
+FactorStar = mean(storeFactorRR,3);
+storePiFactor = zeros(nFactors,ReducedRuns);
+for rr = 1:ReducedRuns
+    for k = 1:K
+        tempI = subsetIndices(k,:);
+        tempy = yt(k,:);
+        tempx=[xt(tempI,:),FactorStar(FtIndexMat(k,:),:)'];
+        tempdel=omArTerms(k,:);
+        tempobv = obsVariance(k);
+        if autoRegressiveErrors == 1
+            omArTerms(k,:) = drawPhi(tempy, tempx, betaStar(k,:)',tempdel, tempobv, Cinv);
+        end
+        igParamB=d0+sum((ystar - betaStar(k,:)*xstar').^2,2);
+        obsVariance(k) = 1./gamrnd(igParamA, 2./igParamB);
+    end
+    storeObsVarianceRR(:,rr) = obsVariance;
+    %% Draw Factors
+    SurX = surForm(xt,K);
+    mu1t = reshape(SurX*meanFunction(:),K,T);
+    demuyt = yt - mu1t;
+    c=0;
+    for q = 1:levels
+        Info = InfoCell{1,q};
+        COM = makeStateObsModel(loadings, Identities, q);
+        alpha =loadings(:,q);
+        tempyt = demuyt - COM*FactorStar;
+        for w = 1:size(Info,1)
+            % Factor level
+            c=c+1;
+            subsI = Info(w,1):Info(w,2);
+            commonPrecisionComponent = zeros(T,T);
+            commonMeanComponent = zeros(T,1);
+            if autoRegressiveErrors == 1
+                for k = subsI
+                    % Equation level
+                    ty = tempyt(k,:);
+                    [D0, ssOmArTerms] = initCovar(omArTerms(k,:));
+                    OmPrecision = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
+                    A = kron(IT,alpha(k,:));
+                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                end
+            else
+                for k = subsI
+                    % Equation level
+                    ty = tempyt(k,:);
+                    OmPrecision = kron(IT,1./obsVariance(k));
+                    A = kron(IT,alpha(k,:));
+                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                end
+                
+            end
+            [L0, ssGammas] = initCovar(stateArTerms(c,:));
+            StatePrecision = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
+            OmegaInv = commonPrecisionComponent + StatePrecision;
+            Linv = chol(OmegaInv,'lower')\IT;
+            omega = Linv'*Linv*commonMeanComponent;
+            storePiFactor(c,rr)=logmvnpdf(FactorStar(c,:), omega', Linv'*Linv);
+        end
+    end
+end
+piFactor =sum(logAvg(storePiFactor));
+
+
+
+
+
+
+
+
+
+for rr = 1:ReducedRuns
+    for k = 1:K
+        tempI = subsetIndices(k,:);
+        tempy = yt(k,:);
+        tempx=[xt(tempI,:),Ft(FtIndexMat(k,:),:)'];
+        tempdel=omArTerms(k,:);
+        tempobv = obsVariance(k);
+        
+        if autoRegressiveErrors == 1
+            omArTerms(k,:) = drawPhi(tempy, tempx, betaStar(k,:)',tempdel, tempobv, Cinv);
+        end
+        igParamB=d0+sum((ystar - betaStar(k,:)*xstar').^2,2);
+        obsVariance(k) = 1./gamrnd(igParamA, 2./igParamB);
+    end
+end
 
 end
 

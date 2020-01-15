@@ -73,7 +73,7 @@ if finishedMainRun == 0
             start = iterator;
             save(join( [checkpointdir, 'ckpt'] ) )
         end
-        fprintf('\nSimulation %i',iterator)
+        fprintf('Simulation %i\n',iterator)
         %% Draw VAR params
         [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecision,...
             currobsmod, stateTransitions, factorVariance, betaPriorMean,...
@@ -88,7 +88,7 @@ if finishedMainRun == 0
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
         resids = yt - StateObsModel*Ft - Xbeta;
-        [obsVariance,r2] = kowUpdateObsVariances(resids, v0,r0,T);
+        [obsVariance,~] = kowUpdateObsVariances(resids, v0,r0,T);
         obsPrecision = 1./obsVariance;
         
         %% Factor AR Parameters

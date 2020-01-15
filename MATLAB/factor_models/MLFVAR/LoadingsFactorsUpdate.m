@@ -27,7 +27,7 @@ for q = 1:levels
         StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fcount), T);
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);
-        a0 = ones(1, length(subset)-1);
+        a0 = zeros(1, length(subset)-1);
         A0=eye(length(subset)-1);
         %% Optimization step
         for k =subset
