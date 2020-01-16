@@ -1,4 +1,4 @@
-function [] = RunHdfvar(Sims, burnin, DataLocation,DotMatFile, OutputDir)
+function [] = RunHdfvar(Sims, burnin, DataLocationFullPath,DotMatFile, OutputDirFullPath)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -8,11 +8,11 @@ end
 
 fprintf('Current Working Directory\n')
 pwd
-if (DataLocation == "")
+if (DataLocationFullPath == "")
     load(DotMatFile)
     disp(DotMatFile)
 else
-    datalocation = join([DataLocation,'/', DotMatFile]);
+    datalocation = join([DataLocationFullPath,'/', DotMatFile]);
     disp(DotMatFile)
     load(datalocation, 'DataCell')
 end
@@ -41,7 +41,7 @@ identification = 2;
 %DONT FORGET TO TURN THIS ON!!!!!!!!!
 %%%%%%%%%%%%
 %%%%%%%%%%%%
-estML = 0; %%%%%%
+estML = 1; %%%%%%
 %%%%%%%%%%%%
 %%%%%%%%%%%%
 
@@ -49,21 +49,8 @@ estML = 0; %%%%%%
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile);
 period = strfind(DotMatFile, '.');
-
-dateCreated = createDateString('');
-fname = join(['Result_', DotMatFile(1:period-1)]);
-dirname = join(['~/CodeProjects/MATLAB/factor_models/MLFVAR/', OutputDir]);
-if ~exist(dirname, 'dir')
-    mkdir(dirname)
-end
-periodloc = strfind(DotMatFile, '.') ;
-if (OutputDir == "")
-    filename = join([dirname,fname, '_', dateCreated]);
-else
-    filename = join([dirname,'/',fname, '_', dateCreated]);
-end
-fprintf('Saving file %s \n', filename)
-save(filename)
-
-
+fname = join(['Result_', DotMatFile(1:period-1),]);
+savedfile = join([OutputDirFullPath, fname,createDateString('')]);
+fprintf('Saving file %s \n', savedfile)
+save(savedfile)
 end

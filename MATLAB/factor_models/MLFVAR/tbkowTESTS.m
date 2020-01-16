@@ -1,12 +1,12 @@
-clear;clc;
-DataCell = SimDataMLF(200, 2,2,5);
-save('simdata', 'DataCell')
-rng(1)
-RunHdfvar(50, 10, 'BigKow', 'kowz.mat', 'TestDir')
+% clear;clc;
+% DataCell = SimDataMLF(200, 2,2,5);
+% save('simdata', 'DataCell')
+% rng(1)
+RunHdfvar(5, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kowz.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 % % RunHdfvar(20, 10, 'BigKow', 'kowz_notcentered_resurrection.mat', 'TestDir')
 % RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
 % RunHdfvar(20,  10, 'TestData', 'simdata.mat', 'TestDir')
-% RunBaseline(5,2,'BigKow/kose_replication_raw.mat', 'TestDir')
+% RunBaseline(5,2,'BigKow/kose_replication_raw.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 % rng(9)
 % T = 200;
@@ -121,3 +121,4 @@ RunHdfvar(50, 10, 'BigKow', 'kowz.mat', 'TestDir')
 % B=ml
 % A-B
 % disp(A>B)
+
