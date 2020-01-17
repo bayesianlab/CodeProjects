@@ -50,6 +50,9 @@ estML = 1; %%%%%%
     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile);
 period = strfind(DotMatFile, '.');
 fname = join(['Result_', DotMatFile(1:period-1),]);
+if OutputDirFullPath(end) ~= '/'
+    OutputDirFullPath = join([OutputDirFullPath, '/']);
+end
 savedfile = join([OutputDirFullPath, fname,createDateString('')]);
 fprintf('Saving file %s \n', savedfile)
 save(savedfile)
