@@ -29,7 +29,7 @@
 % end
 
 clear;clc;
-load('BigKow/kowz.mat')
+load('BigKow/kowz2.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 [K,T] = size(yt);
@@ -44,11 +44,11 @@ end
 for i = Indx
     yte = yt(:, 1:i);
     Xte = Xt(1:K*i, :);
-    fnamee = sprintf('TimeBreakDataKOW/TimeBreakKowEnd%i',i);
+    fnamee = sprintf('TimeBreakDataKOW/TimeEnd%i',i);
     ytb = yt(:,i+1:end);
     Xtb = Xt(K*i + 1:end,:);
 
-    fnameb = sprintf('TimeBreakDataKOW/TimeBreakKowBeg%i',i+1);
+    fnameb = sprintf('TimeBreakDataKOW/TimeBeg%i',i+1);
     DataCell{1,1} = yte;
     DataCell{1,2} = Xte;
     DataCell{1,3} = InfoCell;

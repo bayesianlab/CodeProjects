@@ -41,7 +41,7 @@ identification = 2;
 %DONT FORGET TO TURN THIS ON!!!!!!!!!
 %%%%%%%%%%%%
 %%%%%%%%%%%%
-estML = 1; %%%%%%
+estML = 0; %%%%%%
 %%%%%%%%%%%%
 %%%%%%%%%%%%
 
@@ -53,7 +53,7 @@ fname = join(['Result_', DotMatFile(1:period-1),]);
 if OutputDirFullPath(end) ~= '/'
     OutputDirFullPath = join([OutputDirFullPath, '/']);
 end
-savedfile = join([OutputDirFullPath, fname,createDateString('')]);
+savedfile = join([OutputDirFullPath, fname,'_',createDateString('')]);
 fprintf('Saving file %s \n', savedfile)
 save(savedfile)
 end
