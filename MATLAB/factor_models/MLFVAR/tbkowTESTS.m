@@ -8,7 +8,7 @@ RunHdfvar(5, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kowz.mat',
 % % RunHdfvar(20, 10, 'BigKow', 'kowz_notcentered_resurrection.mat', 'TestDir')
 % RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
 % RunHdfvar(20,  10, 'TestData', 'simdata.mat', 'TestDir')
-RunBaseline(5,2,'BigKow/kose_replication_raw.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+% RunBaseline(5,2,'BigKow/kose_replication_raw.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 % rng(9)
 % T = 200;

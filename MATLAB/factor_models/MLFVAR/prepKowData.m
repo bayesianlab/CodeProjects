@@ -91,10 +91,7 @@ DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
 save('BigKow/kow_raw.mat', 'DataCell')
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 kowdata = importRealData('~/GoogleDrive/Datasets/kow_march6.csv');
 kow = table2array(kowdata)';

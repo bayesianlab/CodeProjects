@@ -32,8 +32,9 @@ initStateTransitions = .1.*ones(nFactors,1);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 initobsmodel = .01.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-    kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
+% vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
+%     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
+vecFt = zeros(nFactors*T,1);
 initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
 %%%%%%%%%%%%
