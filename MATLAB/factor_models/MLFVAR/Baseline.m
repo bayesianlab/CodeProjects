@@ -1,7 +1,7 @@
 function [storeMeans, storeLoadings, storeOmArTerms,...
     storeStateArTerms, storeFt, storeObsV, storeFactorVariance,...
     varianceDecomp] = Baseline(InfoCell,yt, xt, Ft, MeansLoadings,  omArTerms,...
-    stateArTerms, v0,d0, Sims, burnin, autoRegressiveErrors)
+    factorArTerms, v0,d0, Sims, burnin, autoRegressiveErrors)
 %% Definitions
 % yt comes in as
 %[ y11...y1T;
@@ -31,7 +31,7 @@ function [storeMeans, storeLoadings, storeOmArTerms,...
 
 [K,T] = size(yt);
 [KT, meanIndex]= size(xt);
-[nFactors,  lagState] = size(stateArTerms);
+[nFactors,  lagState] = size(factorArTerms);
 meanRange = 1:meanIndex;
 levels=length(InfoCell);
 [~,M] =size(MeansLoadings);
@@ -132,7 +132,7 @@ for i = 1:Sims
                 end
                 
             end
-            [L0, ssGammas] = initCovar(stateArTerms(c,:));
+            [L0, ssGammas] = initCovar(factorArTerms(c,:));
             StatePrecision = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
             OmegaInv = commonPrecisionComponent + StatePrecision;
             Linv = chol(OmegaInv,'lower')\IT;
@@ -143,13 +143,13 @@ for i = 1:Sims
     
     %% Draw Factor AR Parameters
     for n=1:nFactors
-        [L0, ~] = initCovar(stateArTerms(n,:));
+        [L0, ~] = initCovar(factorArTerms(n,:));
         Linv = chol(L0,'lower')\eye(lagState);
-        stateArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, stateArTerms(n,:), factorVariance(n), Linv);
+        factorArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, factorArTerms(n,:), factorVariance(n), Linv);
     end
     
     %% Draw Factor Variances
-    [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateArTerms, factorVariance, v0, d0);
+    [factorVariance, factorParamb]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
     
     %% Store post burn-in runs
     if i > burnin
@@ -157,12 +157,14 @@ for i = 1:Sims
         storeMeans(:,:,v)=beta(meanRange,:)';
         storeLoadings(:,:,v) = loadings;
         storeOmArTerms(:, :,v) = omArTerms;
-        storeStateArTerms(:,:,v) = stateArTerms;
+        storeStateArTerms(:,:,v) = factorArTerms;
         storeFt(:,:,v) = Ft;
         storeObsV(:,v) = obsVariance;
         storeFactorVariance(:,v) = factorVariance;
     end
 end
+
+%% Variance decomposition
 beta = mean(storeMeans,3);
 om = mean(storeLoadings,3);
 Ft = mean(storeFt,3);
@@ -182,11 +184,13 @@ end
 varianceDecomp = [varMu1,vd];
 varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
 
+%% Marginal likelihood
 ReducedRuns = Sims-burnin;
 betaStar = mean([storeMeans, storeLoadings],3);
 storePiBeta = zeros(K,ReducedRuns);
 storeFactorRR = zeros(nFactors, T,ReducedRuns);
-storeObsVarianceRR = zeros(K, ReducedRuns);
+
+%% Reduced run for betas
 for rr = 1:ReducedRuns
     for k = 1:K
         tempI = subsetIndices(k,:);
@@ -202,7 +206,6 @@ for rr = 1:ReducedRuns
         igParamB=d0+sum((ystar - betaStar(k,:)*xstar').^2,2);
         obsVariance(k) = 1./gamrnd(igParamA, 2./igParamB);
     end
-    storeObsVarianceRR(:,rr) = obsVariance;
     %% Draw Factors
     SurX = surForm(xt,K);
     mu1t = reshape(SurX*meanFunction(:),K,T);
@@ -240,7 +243,7 @@ for rr = 1:ReducedRuns
                 end
                 
             end
-            [L0, ssGammas] = initCovar(stateArTerms(c,:));
+            [L0, ssGammas] = initCovar(factorArTerms(c,:));
             StatePrecision = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
             OmegaInv = commonPrecisionComponent + StatePrecision;
             Linv = chol(OmegaInv,'lower')\IT;
@@ -252,13 +255,13 @@ for rr = 1:ReducedRuns
     
     %% Draw Factor AR Parameters
     for n=1:nFactors
-        [L0, ~] = initCovar(stateArTerms(n,:));
+        [L0, ~] = initCovar(factorArTerms(n,:));
         Linv = chol(L0,'lower')\eye(lagState);
-        stateArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, stateArTerms(n,:), factorVariance(n), Linv);
+        factorArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, factorArTerms(n,:), factorVariance(n), Linv);
     end
     
     %% Draw Factor Variances
-    [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateArTerms, factorVariance, v0, d0);
+    [factorVariance, factorParamb]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
 end
 
 piBeta = sum(logAvg(storePiBeta));
@@ -266,20 +269,24 @@ piBeta = sum(logAvg(storePiBeta));
 %% Reudced Runs for Factors
 FactorStar = mean(storeFactorRR,3);
 storePiFactor = zeros(nFactors,ReducedRuns);
+storeOMARRRg = zeros(K, lagObs,ReducedRuns);
+storeFactorARRR = zeros(nFactors, lagState, ReducedRuns);
 for rr = 1:ReducedRuns
     for k = 1:K
         tempI = subsetIndices(k,:);
         tempy = yt(k,:);
         tempx=[xt(tempI,:),FactorStar(FtIndexMat(k,:),:)'];
         tempdel=omArTerms(k,:);
+        tempD0 = initCovar(tempdel);
         tempobv = obsVariance(k);
+        [~, ystar, xstar, Cinv] = drawBetaML(betaStar(k,:), tempy, tempx,  tempdel, tempobv, tempD0);
         if autoRegressiveErrors == 1
             omArTerms(k,:) = drawPhi(tempy, tempx, betaStar(k,:)',tempdel, tempobv, Cinv);
         end
         igParamB=d0+sum((ystar - betaStar(k,:)*xstar').^2,2);
         obsVariance(k) = 1./gamrnd(igParamA, 2./igParamB);
     end
-    storeObsVarianceRR(:,rr) = obsVariance;
+    storeOMARRRg(:,:,rr)=omArTerms;
     %% Draw Factors
     SurX = surForm(xt,K);
     mu1t = reshape(SurX*meanFunction(:),K,T);
@@ -317,7 +324,7 @@ for rr = 1:ReducedRuns
                 end
                 
             end
-            [L0, ssGammas] = initCovar(stateArTerms(c,:));
+            [L0, ssGammas] = initCovar(factorArTerms(c,:));
             StatePrecision = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
             OmegaInv = commonPrecisionComponent + StatePrecision;
             Linv = chol(OmegaInv,'lower')\IT;
@@ -325,32 +332,66 @@ for rr = 1:ReducedRuns
             storePiFactor(c,rr)=logmvnpdf(FactorStar(c,:), omega', Linv'*Linv);
         end
     end
+    
+    %% Draw Factor AR Parameters
+    for n=1:nFactors
+        
+        [L0, ~] = initCovar(factorArTerms(n,:));
+        Linv = chol(L0,'lower')\eye(lagState);
+        factorArTerms(n,:) = drawPhi(FactorStar(n,:), fakeX, fakeB, factorArTerms(n,:), factorVariance(n), Linv);
+    end
+    storeFactorARRR(:,:, rr) = factorArTerms;
+    %% Draw Factor Variances
+    [factorVariance, factorParamb]  = drawFactorVariance(FactorStar, factorArTerms, factorVariance, v0, d0);
 end
 piFactor =sum(logAvg(storePiFactor));
 
-
-
-
-
-
-
-
-
+%% OM AR Reduced Run
+omARStar = mean(storeOMARRRg,3);
+factorARStar = mean(storeFactorARRR,3);
+storeAlphaOMARj = zeros(K, ReducedRuns);
+storeAlphaFactorj = zeros(K,ReducedRuns);
+quantOMARg = zeros(K,ReducedRuns);
+quantFactorg = zeros(K,ReducedRuns);
 for rr = 1:ReducedRuns
     for k = 1:K
         tempI = subsetIndices(k,:);
         tempy = yt(k,:);
         tempx=[xt(tempI,:),Ft(FtIndexMat(k,:),:)'];
-        tempdel=omArTerms(k,:);
+        tempdelstar=omARStar(k,:);
+        tempD0Star = initCovar(tempdelstar);
+        tempdelg=storeOMARRRg(k,:,rr);
+        tempD0g = initCovar(tempdelg);
         tempobv = obsVariance(k);
-        
+        [~, ~, ~, Cinvstar] = drawBetaML(betaStar(k,:), tempy, tempx,...
+            omARStar(k,:), tempobv, tempD0Star);
+        [~, ystar, xstar, Cinvg] = drawBetaML(betaStar(k,:), tempy, tempx,...
+            tempdelg, tempobv, tempD0g);
         if autoRegressiveErrors == 1
-            omArTerms(k,:) = drawPhi(tempy, tempx, betaStar(k,:)',tempdel, tempobv, Cinv);
+            [~, storeAlphaOMARj(k,rr)]  = drawPhi(tempy, tempx, betaStar(k,:)', omARStar(k,:), tempobv, Cinvstar);
+            quantOMARg(k,rr) = drawPhiG(omARStar(k,:),tempy, tempx, betaStar(k,:)', tempdelg, tempobv, Cinvg);
         end
         igParamB=d0+sum((ystar - betaStar(k,:)*xstar').^2,2);
         obsVariance(k) = 1./gamrnd(igParamA, 2./igParamB);
     end
+    
+    %% Draw Factor AR Parameters
+    for n=1:nFactors
+        [L0g, ~] = initCovar(storeFactorARRR(n,:,rr));
+        Linvg = chol(L0g,'lower')\eye(lagState);
+        [L0star, ~] = initCovar(factorARStar(n,:));
+        Linvstar = chol(L0star,'lower')\eye(lagState);
+        [~, storeAlphaFactorj(n,rr)] = drawPhi(FactorStar(n,:), fakeX, fakeB, factorARStar(n,:), factorVariance(n), Linvstar);
+        quantFactorg(k,rr)=drawPhiG(factorARStar(n,:), FactorStar(n,:), fakeX, fakeB,...
+            factorArTerms(n,:), factorVariance(n), Linvg);
+    end
+    
+    %% Draw Factor Variances
+    [factorVariance, factorParamb]  = drawFactorVariance(FactorStar, factorARStar, factorVariance, v0, d0);
 end
+
+piOMAR = sum(logAvg(quantOMARg) - logAvg(storeAlphaOMARj));
+piFactorAR = sum(logAvg(quantFactorg)-logAvg(storeAlphaFactorj));
 
 end
 

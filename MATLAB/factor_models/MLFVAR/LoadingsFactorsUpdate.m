@@ -14,7 +14,6 @@ nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 alpha = zeros(nFactors,1);
 
 for q = 1:levels
-
     COM = makeStateObsModel(currobsmod, Identities, q);
     mut = Xbeta + COM*Ft;
     ydemut = yt - mut;
