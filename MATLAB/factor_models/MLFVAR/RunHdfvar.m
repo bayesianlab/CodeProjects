@@ -27,11 +27,11 @@ v0=6;
 r0 =10;
 s0 = 6;
 d0 = 10;
-obsPrecision = ones(K,1);
 initStateTransitions = .1.*ones(nFactors,1);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 initobsmodel = .01.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
+% obsPrecision = 1./var(yt,[],2);
 % vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
 %     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
 vecFt = zeros(nFactors*T,1);
@@ -49,6 +49,13 @@ estML = 1; %%%%%%
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile);
+muvar = mean(storeVAR,3);
+SX = surForm(Xt,K);
+Xbeta = reshape(SX*muvar(:),K,T);
+Som = makeStateObsModel(mean(storeOM,3), Identities,0);
+Ft = mean(storeFt,3);
+GFt = Som*Ft;
+yhat = Xbeta+GFt;
 period = strfind(DotMatFile, '.');
 fname = join(['Result_', DotMatFile(1:period-1),]);
 if OutputDirFullPath(end) ~= '/'

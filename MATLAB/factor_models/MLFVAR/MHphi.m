@@ -13,7 +13,7 @@ kernalpart = (-.5).*(y1N'*y1N)./(sigma2);
 LLpart1 = detpart+kernalpart;
 Y = ystar - Xstar*phi;
 LLpart2 = (-.5*(Y'*Y)./sigma2);
-LLpart3 = logmvnpdf(phi', zeros(1,lags), 10.*eye(lags));
+LLpart3 = logmvnpdf(phi', zeros(1,lags), eye(lags));
 condLike = LLpart1+LLpart2+LLpart3;
 end
 

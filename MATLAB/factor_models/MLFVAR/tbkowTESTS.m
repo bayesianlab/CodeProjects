@@ -2,8 +2,8 @@
 % DataCell = SimDataMLF(200, 2,2,5);
 % save('simdata', 'DataCell')
 % rng(1)
-RunHdfvar(5, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kowz.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
-% RunHdfvar(5, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_raw.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+% RunHdfvar(5, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kowz.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+RunHdfvar(10, 5, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_raw.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 % % RunHdfvar(20, 10, 'BigKow', 'kowz_notcentered_resurrection.mat', 'TestDir')
 % RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')

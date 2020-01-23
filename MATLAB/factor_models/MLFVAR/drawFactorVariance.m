@@ -10,8 +10,8 @@ for q = 1 :NF
     [~, H] = FactorPrecision(ssterms, L0, 1./factorVariance(q), T);
     H(1:lags,1:lags) = (chol(L0,'lower')\IP)';
     Hf = H*Factor(q,1:T)';
-    paramb(q)=d0+Hf'*Hf;
-    draws(q) = 1/gamrnd(parama,2/(paramb(q)) );
+    paramb(q)=.5*(d0+Hf'*Hf);
+    draws(q) = 1/gamrnd(parama, paramb(q) );
 end
 end
 

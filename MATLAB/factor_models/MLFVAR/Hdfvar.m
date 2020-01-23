@@ -28,13 +28,11 @@ for k = 1:K
 end
 
 % Initializatitons
-factorVariance = ones(nFactors,1);
-obsPrecision = ones(K,1);
+factorVariance = var(yt,[],2);
+obsPrecision = 1./var(yt,[],2);
 stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
-[iP, ssState] =initCovar(initStateTransitions);
-Si = FactorPrecision(ssState, iP, 1./factorVariance, T);
 fakeX = zeros(T,1);
 fakeB = zeros(1,1);
 betaPriorPre= eye(dimx);
@@ -90,7 +88,7 @@ if finishedMainRun == 0
         resids = yt - StateObsModel*Ft - Xbeta;
         [obsVariance,~] = kowUpdateObsVariances(resids, v0,r0,T);
         obsPrecision = 1./obsVariance;
-        
+
         %% Factor AR Parameters
         for n=1:nFactors
             [L0, ~] = initCovar(stateTransitions(n,:));
@@ -101,6 +99,7 @@ if finishedMainRun == 0
         if identification == 2
             [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
         end
+        
         %% Storage
         if iterator > burnin
             v = iterator - burnin;
@@ -297,6 +296,7 @@ if estML == 1
     residsStar = yt - muStar;
     r2Star = sum(residsStar.*residsStar,2);
     for r = startRR:Runs
+        fprintf('Reduced run for Factor\n')
         [obsVariance,~] = kowUpdateObsVariances(residsStar, v0,r0,T);
         obsPrecisionj = 1./obsVariance;
         storeObsPrecisionj(:,r) = obsPrecisionj;
