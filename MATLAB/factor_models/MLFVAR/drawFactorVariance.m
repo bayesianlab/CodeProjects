@@ -11,7 +11,7 @@ for q = 1 :NF
     H(1:lags,1:lags) = (chol(L0,'lower')\IP)';
     Hf = H*Factor(q,1:T)';
     paramb(q)=.5*(d0+Hf'*Hf);
-    draws(q) = 1/gamrnd(parama, paramb(q) );
+    draws(q) = 1/gamrnd(parama, 1./paramb(q) );
 end
 end
 
