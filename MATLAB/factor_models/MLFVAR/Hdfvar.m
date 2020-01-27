@@ -90,7 +90,6 @@ if finishedMainRun == 0
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
         resids = yt - StateObsModel*Ft - Xbeta;
         obsVariance = kowUpdateObsVariances(resids, v0,r0,T);
-        obsVariance
         obsPrecision = 1./obsVariance;
 
         %% Factor AR Parameters

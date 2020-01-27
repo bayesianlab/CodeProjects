@@ -24,7 +24,8 @@ InfoCell = DataCell{1,3};
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 
-v0=mean(mean(yt,2));
+
+v0= .01.*mean(var(yt,[],2));
 r0 =v0;
 s0 = v0;
 d0 = v0;
