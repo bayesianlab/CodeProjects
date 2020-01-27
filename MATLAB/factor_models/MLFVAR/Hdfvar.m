@@ -82,16 +82,16 @@ if finishedMainRun == 0
         
         %% Draw loadings and factors
         [currobsmod, Ft, keepOmMeans, keepOmVariances]=...
-            LoadingsFactorsUpdate(yt,Xbeta, Ft, currobsmod, stateTransitions,...
+            LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
             obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances,...
             runningAvgOmMeans, runningAvgOmVars);
         
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
-        resids = yt - StateObsModel*Ft - Xbeta;
+        resids = yt - (StateObsModel*Ft) - Xbeta;
         obsVariance = kowUpdateObsVariances(resids, v0,r0,T);
         obsPrecision = 1./obsVariance;
-
+        
         %% Factor AR Parameters
         for n=1:nFactors
             stateTransitions(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, stateTransitions(n,:), factorVariance(n), g0,G0);
@@ -198,7 +198,7 @@ if estML == 1
             
             %% State Transitions
             for n=1:nFactors
-
+                
                 stj(n,:) = drawPhi(Ftj(n,:), fakeX, fakeB, stj(n,:), fvj(n), g0, G0);
             end
             storeStateTransitionsj(:,:,r) = stj;
@@ -295,8 +295,9 @@ if estML == 1
     muStar = StateObsModelStar*FtStar + xbtStar;
     residsStar = yt - muStar;
     r2Star = sum(residsStar.*residsStar,2);
+    fprintf('Reduced run for Factor\n')
     for r = startRR:Runs
-        fprintf('Reduced run for Factor\n')
+        fprintf('RR = %i\n', r)
         obsVariance = kowUpdateObsVariances(residsStar, v0,r0,T);
         obsPrecisionj = 1./obsVariance;
         storeObsPrecisionj(:,r) = obsPrecisionj;
@@ -307,7 +308,7 @@ if estML == 1
         storePiFt(:,r) = piFtStar(FtStar, yt, xbtStar, Astar, stStar,...
             obsPrecisionj, fvj, Identities, InfoCell);
     end
-
+    
     piFt = sum(logAvg(storePiFt));
     obsPrecisionStar = mean(storeObsPrecisionj,2);
     factorVarianceStar = mean(storeFactorVarj,2);
@@ -318,7 +319,7 @@ if estML == 1
     posteriorStar = sum(posteriors)
     
     LogLikelihood=sum(logmvnpdf(residsStar', zeros(1,K), diag(obsVarianceStar)))
-
+    
     priorST = sum(logmvnpdf(stStar, zeros(1,lagState), eye(lagState)));
     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*d0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
@@ -331,13 +332,13 @@ if estML == 1
     priors = [Fpriorstar, priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]
     priorStar = sum(priors)
     
-   
+    
     ml = (LogLikelihood+priorStar)-posteriorStar;
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
     rmdir(checkpointdir, 's')
     
-%     fytheta = LogLikelihood + Fpriorstar - piFt;
-%     my = fytheta + sum([priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]) - sum([piBeta, piA , piST, piObsVariance, piFactorVariance])
+    %     fytheta = LogLikelihood + Fpriorstar - piFt;
+    %     my = fytheta + sum([priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]) - sum([piBeta, piA , piST, piObsVariance, piFactorVariance])
 else
     ml = 'nothing';
     rmdir(checkpointdir, 's')

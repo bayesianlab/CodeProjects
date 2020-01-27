@@ -12,7 +12,6 @@ fcount = 0;
 levels = length(InfoCell);
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 alpha = zeros(nFactors,1);
-currobsmod=currobsmod;
 a0 = 1;
 A0= 10;
 for q = 1:levels
@@ -36,7 +35,7 @@ for q = 1:levels
             ty = ydemut(k,:);
             top = obsPrecision(k);
             x0 = currobsmod(k,q);
-            LL = @(guess) -LLcond_ratio(guess, ty, 1, 1, top, tempf,StatePrecision);
+            LL = @(guess) -LLcond_ratio(guess, ty, a0, A0, top, tempf,StatePrecision);
             [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
             Covar = (1/Covar);
             if  Covar < 0
@@ -49,7 +48,7 @@ for q = 1:levels
             proposalDistNum = @(prop) mvstudenttpdf(prop, themean', diag(Covar), df);
             proposalDistDen = @(prop) mvstudenttpdf(prop, runningAverageMean(k,q)', diag(runningAverageVar(k,q)), df);
             
-            LogLikePositive = @(val) LLcond_ratio (val, ty, 1,2, top, tempf, StatePrecision);
+            LogLikePositive = @(val) LLcond_ratio (val, ty, a0,A0, top, tempf, StatePrecision);
             
             Num = LogLikePositive(proposal) + proposalDistNum(x0);
             Den = LogLikePositive(x0) + proposalDistDen(proposal');

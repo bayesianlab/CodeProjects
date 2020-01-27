@@ -24,14 +24,15 @@ InfoCell = DataCell{1,3};
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 
+yt=yt-mean(yt,2);
 
-v0= .01.*mean(var(yt,[],2));
-r0 =v0;
+v0= 6;
+r0 = .1.*mean(var(yt,[],2));
 s0 = v0;
-d0 = v0;
+d0 = r0;
 initStateTransitions = .1.*ones(nFactors,1);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
-initobsmodel = .01.*ones(K,levels);
+initobsmodel = ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 PriorBeta = .01.*ones(dimX, K);
 ydemut = yt - reshape(surForm(Xt,K)*PriorBeta(:), K,T);  

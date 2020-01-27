@@ -3,7 +3,7 @@
 % save('simdata', 'DataCell')
 % rng(1)
 % RunHdfvar(5, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kowz.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
-RunHdfvar(10, 5, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_raw.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+RunHdfvar(20, 2, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_raw.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 % % RunHdfvar(20, 10, 'BigKow', 'kowz_notcentered_resurrection.mat', 'TestDir')
 % RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
@@ -129,20 +129,21 @@ RunHdfvar(10, 5, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_raw.m
 % Xt = DataCell{1,2};
 % Ft = DataCell{4};
 % 
-% [K,~]= size(yt);
+% [K,T]= size(yt);
 % 
 % [K,T1] = size(yt);
 % InfoCell = DataCell{1,3};
 % levels = size(InfoCell,2);
 % nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-% v0=6;
-% r0 =6;
-% s0 = 6;
-% d0 = 6;
+% v0= .1.*mean(var(yt,[],2));
+% r0 =v0;
+% s0 = v0;
+% d0 = v0;
 % obsPrecision = .5.*ones(K,1);
 % initStateTransitions = .01.*ones(nFactors,1);
 % [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 % initobsmodel = .1.*ones(K,levels);
+% initObsPrecision = 1./var(yt,[],2);
 % StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 % vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
 %     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T1), obsPrecision);
@@ -157,8 +158,14 @@ RunHdfvar(10, 5, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_raw.m
 % estML = 0; %%%%%
 % %%%%%%%%%%%%
 % %%%%%%%%%%%%
+% identification=2;
 % Sims = 150;
 % burnin=50;
 % [storeFt, storeVAR, storeOM, storeStateTransitions,...
 %     storeObsPrecision, storeFactorVar,varianceDecomp, ml1] = Hdfvar(yt, Xt,  InfoCell, Sims,...
-%     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, 'TBTEST');
+%     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, v0, r0, s0, d0, identification, estML, 'TBTEST');
+% 
+% betas = mean(storeVAR,3);
+% mu1 = reshape(surForm(Xt, K)*betas(:),K,T);
+% mu2 = makeStateObsModel(mean(storeOM,3),Identities,0)*mean(storeFt,3);
+% yhat=mu1+mu2;
