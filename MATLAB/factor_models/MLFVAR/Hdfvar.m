@@ -1,7 +1,7 @@
 function [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] =...
-    Hdfvar(yt, x,  InfoCell,  Sims,burnin, initFactor, initobsmodel,...
-    initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile)
+    Hdfvar(yt, Xt,  InfoCell,  Sims,burnin, initFactor, initobsmodel,...
+    initStateTransitions, initObsPrecision, v0, r0, s0, d0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
     DotMatFile(1:periodloc-1),'Checkpoints/'] )
@@ -16,11 +16,12 @@ finishedThirdReducedRun = 0;
 [nFactors, lagState] = size(initStateTransitions);
 [K,T] = size(yt);
 KT = K*T;
-SurX = surForm(x,K);
-[~, dimX] = size(SurX);
+SurX = surForm(Xt,K);
+[~, dimX] = size(Xt);
+dimSurX = dimX*K;
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 levels = length(sectorInfo);
-[~,dimx]=size(x);
+[~,dimx]=size(Xt);
 FtIndexMat = CreateFactorIndexMat(InfoCell);
 subsetIndices = zeros(K,T);
 for k = 1:K
@@ -28,8 +29,8 @@ for k = 1:K
 end
 
 % Initializatitons
-factorVariance = var(yt,[],2);
-obsPrecision = 1./var(yt,[],2);
+obsPrecision = initObsPrecision;
+factorVariance = 1./obsPrecision;
 stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
@@ -39,6 +40,7 @@ betaPriorPre= eye(dimx);
 betaPriorMean = zeros(dimx,1);
 g0 = zeros(1,lagState);
 G0 = eye(lagState);
+
 % Storage
 Runs = Sims - burnin;
 storeVAR = zeros(dimx,K,Runs);
@@ -64,6 +66,7 @@ else
     mkdir(checkpointdir)
 end
 
+
 if finishedMainRun == 0
     for iterator = start : Sims
         if mod(iterator, saveFrequency) == 0
@@ -73,7 +76,7 @@ if finishedMainRun == 0
         end
         fprintf('Simulation %i\n',iterator)
         %% Draw VAR params
-        [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecision,...
+        [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecision,...
             currobsmod, stateTransitions, factorVariance, betaPriorMean,...
             betaPriorPre, FtIndexMat, subsetIndices);
         
@@ -86,14 +89,13 @@ if finishedMainRun == 0
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
         resids = yt - StateObsModel*Ft - Xbeta;
-        [obsVariance,~] = kowUpdateObsVariances(resids, v0,r0,T);
+        obsVariance = kowUpdateObsVariances(resids, v0,r0,T);
+        obsVariance
         obsPrecision = 1./obsVariance;
 
         %% Factor AR Parameters
         for n=1:nFactors
-            [L0, ~] = initCovar(stateTransitions(n,:));
-            Linv = chol(L0,'lower')\eye(lagState);
-            stateTransitions(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, stateTransitions(n,:), factorVariance(n), Linv);
+            stateTransitions(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, stateTransitions(n,:), factorVariance(n), g0,G0);
         end
         
         if identification == 2
@@ -171,7 +173,7 @@ if estML == 1
         fprintf('Reduced run for factor loadings\n')
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
-            [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecisionj,...
+            [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecisionj,...
                 Astar, stj, fvj, betaPriorMean, betaPriorPre, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
             Ftg = storeFt(:,:,r);
@@ -191,15 +193,14 @@ if estML == 1
             
             %% Variance
             resids = yt - StateObsModel*Ftj - Xbeta;
-            [obsVariance,r2] = kowUpdateObsVariances(resids, v0,r0,T);
+            obsVariance = kowUpdateObsVariances(resids, v0,r0,T);
             obsPrecisionj = 1./obsVariance;
             storeObsPrecisionj(:,r) = obsPrecisionj;
             
             %% State Transitions
             for n=1:nFactors
-                [L0, ~] = initCovar(stj(n,:));
-                Linv = chol(L0,'lower')\eye(lagState);
-                stj(n,:) = drawPhi(Ftj(n,:), fakeX, fakeB, stj(n,:), fvj(n), Linv);
+
+                stj(n,:) = drawPhi(Ftj(n,:), fakeX, fakeB, stj(n,:), fvj(n), g0, G0);
             end
             storeStateTransitionsj(:,:,r) = stj;
             
@@ -237,7 +238,7 @@ if estML == 1
                 [fvj, factorParamb]  = drawFactorVariance(Ftj, stStar, fvj, s0, d0);
                 storeFactorVarj(:,r) = fvj;
             end
-            [VAR, Xbeta] = VAR_ParameterUpdate(yt, x, obsPrecisionj,...
+            [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecisionj,...
                 Astar, stStar, fvj, betaPriorMean, betaPriorPre, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
             [iP, ssState] =initCovar(stStar);
@@ -248,7 +249,7 @@ if estML == 1
             storeFtj(:,:,r) = Ftj;
             %% Variance
             resids = yt - StateObsModelStar*Ftj - Xbeta;
-            [obsVariance,r2] = kowUpdateObsVariances(resids, v0,r0,T);
+            obsVariance = kowUpdateObsVariances(resids, v0,r0,T);
             obsPrecisionj = 1./obsVariance;
             storeObsPrecisionj(:,r) = obsPrecisionj;
         end
@@ -266,14 +267,14 @@ if estML == 1
         fprintf('Reduced run for beta\n')
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
-            storePiBeta(:,r) = piBetaStar(VARstar, yt, x, obsPrecisionj,...
+            storePiBeta(:,r) = piBetaStar(VARstar, yt, Xt, obsPrecisionj,...
                 Astar, stStar, fvj, betaPriorMean, betaPriorPre, subsetIndices, FtIndexMat);
             Ftj = reshape(kowUpdateLatent(ydemutStar(:), StateObsModelStar,...
                 Si,  obsPrecisionj), nFactors, T);
             storeFtj(:,:,r) = Ftj;
             %% Variance
             resids = yt - StateObsModelStar*Ftj - xbtStar;
-            [obsVariance,~] = kowUpdateObsVariances(resids, v0,r0,T);
+            obsVariance= kowUpdateObsVariances(resids, v0,r0,T);
             obsPrecisionj = 1./obsVariance;
             storeObsPrecisionj(:,r) = obsPrecisionj;
             if identification == 2
@@ -297,7 +298,7 @@ if estML == 1
     r2Star = sum(residsStar.*residsStar,2);
     for r = startRR:Runs
         fprintf('Reduced run for Factor\n')
-        [obsVariance,~] = kowUpdateObsVariances(residsStar, v0,r0,T);
+        obsVariance = kowUpdateObsVariances(residsStar, v0,r0,T);
         obsPrecisionj = 1./obsVariance;
         storeObsPrecisionj(:,r) = obsPrecisionj;
         if identification == 2
@@ -322,7 +323,7 @@ if estML == 1
     priorST = sum(logmvnpdf(stStar, zeros(1,lagState), eye(lagState)));
     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*d0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
-    priorBeta = logmvnpdf(betaStar', zeros(1, dimX), eye(dimX));
+    priorBeta = logmvnpdf(betaStar', zeros(1, dimSurX), eye(dimSurX));
     priorAstar = Apriors(InfoCell, Astar);
     [iP, ssState] =initCovar(stStar);
     Kprecision = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);

@@ -23,18 +23,20 @@ InfoCell = DataCell{1,3};
 [~, dimX] = size(Xt);
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-v0=6;
-r0 =.01;
-s0 = 6;
-d0 = .01;
+
+v0=mean(mean(yt,2));
+r0 =v0;
+s0 = v0;
+d0 = v0;
 initStateTransitions = .1.*ones(nFactors,1);
-[Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+[Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
 initobsmodel = .01.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-% obsPrecision = 1./var(yt,[],2);
-% vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-%     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
-vecFt = zeros(nFactors*T,1);
+PriorBeta = .01.*ones(dimX, K);
+ydemut = yt - reshape(surForm(Xt,K)*PriorBeta(:), K,T);  
+initObsPrecision = 1./var(yt,[],2);
+vecFt  =  kowUpdateLatent(ydemut(:),  StateObsModel, ...
+    kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), initObsPrecision);
 initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
 %%%%%%%%%%%%
@@ -48,7 +50,8 @@ estML = 1; %%%%%%
 
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
-    burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, DotMatFile);
+    burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, v0, r0, s0, d0,...
+    identification, estML, DotMatFile);
 muvar = mean(storeVAR,3);
 SX = surForm(Xt,K);
 Xbeta = reshape(SX*muvar(:),K,T);

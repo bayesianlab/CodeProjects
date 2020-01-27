@@ -1,5 +1,5 @@
 % clear;clc;
-% DataCell = SimDataMLF(200, 2,2,5);
+% DataCell = SimDataMLF(100, 1,1,15);
 % save('simdata', 'DataCell')
 % rng(1)
 % RunHdfvar(5, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kowz.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
@@ -123,4 +123,42 @@ RunHdfvar(10, 5, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_raw.m
 % B=ml
 % A-B
 % disp(A>B)
-
+% 
+% load('simdata.mat')
+% yt = DataCell{1,1};
+% Xt = DataCell{1,2};
+% Ft = DataCell{4};
+% 
+% [K,~]= size(yt);
+% 
+% [K,T1] = size(yt);
+% InfoCell = DataCell{1,3};
+% levels = size(InfoCell,2);
+% nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
+% v0=6;
+% r0 =6;
+% s0 = 6;
+% d0 = 6;
+% obsPrecision = .5.*ones(K,1);
+% initStateTransitions = .01.*ones(nFactors,1);
+% [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+% initobsmodel = .1.*ones(K,levels);
+% StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
+% vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
+%     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T1), obsPrecision);
+% initFactor = reshape(vecFt, nFactors,T1);
+% % initFactor = DataCell{4};
+% % identification = 2;
+% %%%%%%%%%%%%
+% %%%%%%%%%%%%
+% %DONT FORGET TO TURN THIS ON!!!!!!!!!
+% %%%%%%%%%%%%
+% %%%%%%%%%%%%
+% estML = 0; %%%%%
+% %%%%%%%%%%%%
+% %%%%%%%%%%%%
+% Sims = 150;
+% burnin=50;
+% [storeFt, storeVAR, storeOM, storeStateTransitions,...
+%     storeObsPrecision, storeFactorVar,varianceDecomp, ml1] = Hdfvar(yt, Xt,  InfoCell, Sims,...
+%     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, 'TBTEST');

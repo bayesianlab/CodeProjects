@@ -27,7 +27,7 @@
 % plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
 % tml
 
-clear;clc;
+% clear;clc;
 % simpath = 'TBKRAW_Standardized/';
 % simpath='TBKRAW_Standardized/'
 % files = dir(join([simpath,'*.mat']));
@@ -57,8 +57,8 @@ clear;clc;
 % plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
 
 
-clear;clc;
-load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Result_kowz18_Jan_2020_04_00_15.mat')
+% clear;clc;
+% load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Result_kowz18_Jan_2020_04_00_15.mat')
 
 % load('Result_totaltime_28_Dec_2019_19_50_09.mat');
 % mean(mean(storeVAR,3),2)

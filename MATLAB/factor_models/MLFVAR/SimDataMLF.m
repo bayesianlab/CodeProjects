@@ -29,8 +29,8 @@ for q = 1:nFactors
     gamma(q,:) = initializeARparams(1,stateLags);
     ip = initCovar(gamma(q,:));
     [Lambda,~]=FactorPrecision(gamma(q,:),ip, 1, T);
-    Linv = chol(Lambda, 'lower')\eye(T);
-    Factor(q,:) = reshape(Linv'*normrnd(0,1,T,1),1,T);
+    Linv=Lambda\eye(T);
+    Factor(q,:) = mvnrnd(zeros(1, T),Linv);
 end
 FactorIndices = SetIndicesInFactor(InfoCell);
 

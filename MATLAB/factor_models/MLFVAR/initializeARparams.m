@@ -6,7 +6,7 @@ notvalid = 1;
 
 while notvalid == 1
     for k = 1:K
-        ar = unifrnd(0, .3);
+        ar = .5;
         for b = 1:p
             arcoefs(k,p+1-b) = ar.^(b);
         end
