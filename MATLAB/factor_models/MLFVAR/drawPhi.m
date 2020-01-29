@@ -39,7 +39,7 @@ S0drawlowerinv = S0drawlower\eye(p);
 Yp1 = ((S0drawlowerinv*yp) - (S0drawlowerinv*xp)*beta)';
 Y1 = [Yp1; epsilont - (Lagepsilont*deltas')];
 Yp2 = ((Cinv*yp) - (Cinv*xp)*beta)';
-Y2 = [Yp2; epsilont - (Lagepsilont*draw)];
+Y2 = [Yp2; epsilont - (Lagepsilont*draw')];
 
 LL = @(yt1,  phi)MHphi(yt1, obsv, phi, delta0, Delta0);
 proposalDist = @(x)logmvnpdf(x, proposalMeanN', proposalVariance);
@@ -51,4 +51,3 @@ else
     newvalue = deltas;
 end
 end
-

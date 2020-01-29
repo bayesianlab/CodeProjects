@@ -1,7 +1,8 @@
 function [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] =...
     Hdfvar(yt, Xt,  InfoCell,  Sims,burnin, initFactor, initobsmodel,...
-    initStateTransitions, initObsPrecision, v0, r0, s0, d0, identification, estML, DotMatFile)
+    initStateTransitions, initObsPrecision, initFactorVar, beta0, B0,...
+    v0, r0, s0, d0, a0, A0inv, g0,G0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
     DotMatFile(1:periodloc-1),'Checkpoints/'] )
@@ -30,16 +31,14 @@ end
 
 % Initializatitons
 obsPrecision = initObsPrecision;
-factorVariance = 1./obsPrecision;
+factorVariance = initFactorVar;
 stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell, identification);
 Ft = initFactor;
 fakeX = zeros(T,1);
 fakeB = zeros(1,1);
-betaPriorPre= eye(dimx);
-betaPriorMean = zeros(dimx,1);
-g0 = zeros(1,lagState);
-G0 = eye(lagState);
+
+
 
 % Storage
 Runs = Sims - burnin;
@@ -77,14 +76,14 @@ if finishedMainRun == 0
         fprintf('Simulation %i\n',iterator)
         %% Draw VAR params
         [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecision,...
-            currobsmod, stateTransitions, factorVariance, betaPriorMean,...
-            betaPriorPre, FtIndexMat, subsetIndices);
+            currobsmod, stateTransitions, factorVariance, beta0,...
+            B0, FtIndexMat, subsetIndices);
         
         %% Draw loadings and factors
         [currobsmod, Ft, keepOmMeans, keepOmVariances]=...
             LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
             obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances,...
-            runningAvgOmMeans, runningAvgOmVars);
+            runningAvgOmMeans, runningAvgOmVars, a0, A0inv);
         
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
@@ -94,11 +93,11 @@ if finishedMainRun == 0
         
         %% Factor AR Parameters
         for n=1:nFactors
-            stateTransitions(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, stateTransitions(n,:), factorVariance(n), g0,G0);
+            stateTransitions(n,:)= drawStateTransitions(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);
         end
         
         if identification == 2
-            [factorVariance, factorParamb]  = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
+            factorVariance = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
         end
         
         %% Storage
@@ -118,6 +117,7 @@ if finishedMainRun == 0
         end
     end
     
+        
     Runs = Sims- burnin;
     betaBar = reshape(mean(storeVAR,3), dimx*K,1);
     Ftbar = mean(storeFt,3);
@@ -182,11 +182,11 @@ if estML == 1
             [~, Ftj, keepOmMeans, keepOmVariances, stoAlphaj(:,r)] = ...
                 LoadingsFactorsUpdate(yt,Xbeta,Ftj, Astar, stj,...
                 obsPrecisionj,fvj, Identities, InfoCell, keepOmMeans, keepOmVariances,...
-                runningAvgOmMeans, runningAvgOmVars);
+                runningAvgOmMeans, runningAvgOmVars, a0, A0inv);
             
             stoAlphag(:,r) = LoadingsFactorsCJ_GStep(Astar, storeOM(:,:,r), ...
                 yt, Xbeta, Ftg, stg, opg, storeFactorVar(:,r), Identities,...
-                InfoCell, runningAvgOmMeans, runningAvgOmVars);
+                InfoCell, runningAvgOmMeans, runningAvgOmVars, a0, A0inv);
             
             StateObsModel = makeStateObsModel(Astar,Identities,0);
             
@@ -198,8 +198,9 @@ if estML == 1
             
             %% State Transitions
             for n=1:nFactors
+                %                 stj(n,:) = drawPhi(Ftj(n,:), fakeX, fakeB, stj(n,:), fvj(n), g0, G0);
+                stj(n,:) = drawStateTransitions(stateTransitions(n,:), Ftj(n,:), fvj(n), g0,G0);
                 
-                stj(n,:) = drawPhi(Ftj(n,:), fakeX, fakeB, stj(n,:), fvj(n), g0, G0);
             end
             storeStateTransitionsj(:,:,r) = stj;
             

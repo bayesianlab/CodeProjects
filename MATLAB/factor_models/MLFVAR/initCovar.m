@@ -1,4 +1,4 @@
-function [P0, Phi, G,notvalid] = initCovar(params)
+function [P0, Phi, G,notvalid] = initCovar(params, sigmau)
 
 [K,lags] = size(params);
 dis = (0:lags-1)*K;
@@ -14,6 +14,7 @@ R = full(spdiags(ones(K), 0, K*lags,K));
 RRT = R*R';
 P0 = (Im - PhiKronPhi)\RRT(:);
 P0 = reshape(P0, K*lags,K*lags);
+% P0 = diag(kron(ones(lags,1), sigmau))*P0;
 [~,p] = chol(P0);
 if p ~= 0 
     notvalid = 1;

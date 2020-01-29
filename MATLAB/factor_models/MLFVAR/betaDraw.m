@@ -27,7 +27,7 @@ XzzPinv = Xzz'*InsideInv;
 B = (B0inv + xpx - XzzPinv*Xzz);
 Blowerinv = chol(B,'lower')\eye(dimx);
 B = Blowerinv'*Blowerinv;
-b = B*(B0inv*b0 + xpy - XzzPinv*yzz);
+b = B*(B0inv*b0' + xpy - XzzPinv*yzz);
 bupdate = b + Blowerinv'*normrnd(0,1,dimx,1);
 xbt = vecx*bupdate;
 end
