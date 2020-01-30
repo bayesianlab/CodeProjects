@@ -10,6 +10,7 @@ for q = 1 :NF
     [~, H] = FactorPrecision(ssterms, L0, 1./factorVariance(q), T);
     H(1:lags,1:lags) = (chol(L0,'lower')\IP)'*sqrt(factorVariance(q));
     Hf = H*Factor(q,1:T)';
+    
     paramb(q)=.5*(d0+Hf'*Hf);
 %     Hf'*Hf
 %     moment1 = paramb(q)/(parama-1);
