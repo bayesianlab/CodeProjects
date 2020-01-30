@@ -10,7 +10,7 @@ c=0;
 MAXTRIES = 10;
 while notvalid == 1
     c = c + 1;
-    proposal = tnormrnd(-1,1,g1, G1);
+    proposal = tnormrnd(-.99,.99,g1, G1);
     [P1,~,~,notvalid] = initCovar(proposal, sigma2);
     if notvalid == 0
         break
