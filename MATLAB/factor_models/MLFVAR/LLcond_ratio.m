@@ -7,10 +7,11 @@ nFactorsK = nFactors*K;
 % A | F
 OmegaI = diag(obsPrecision);
 FtOF = kron(OmegaI, factor*factor');
-
 Avariance = (ObsPriorPrecision + FtOF)\eye(nFactorsK);
 Term = ((factor*ydemut').*obsPrecision');    
+
 Amean = Avariance*(ObsPriorPrecision*ObsPriorMean' + Term(:));
+
 pdfA = logmvnpdf(ObsModel', Amean', Avariance);
 % F | A
 OmegaI = diag(obsPrecision);

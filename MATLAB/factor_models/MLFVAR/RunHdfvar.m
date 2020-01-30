@@ -37,6 +37,7 @@ A0inv = 1;
 g0 = zeros(1,lagState);
 G0 = eye(lagState);
 beta0 = [mean(yt,2)'; zeros(dimX-1, K)];
+beta0 = zeros(dimX,K);
 B0inv = .01.*eye(dimX);
 
 initStateTransitions = zeros(nFactors,lagState);

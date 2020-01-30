@@ -14,7 +14,7 @@ for k=1:K
     [L0, ssgam] = initCovar(diag(gammas));
     StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fidx), T);
     pb(k)= pibeta(VARstar(:,k), tempy(:), tempx, tempObsPrecision,...
-        tempOm, StatePrecision, betaPriorMean, betaPriorPre, T);
+        tempOm, StatePrecision, betaPriorMean(:,k), betaPriorPre, T);
 end
 
 end

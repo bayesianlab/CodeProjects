@@ -1,6 +1,6 @@
 function [alpha_prop] = ...
     LoadingsFactorsCJ_GStep(fixedValueTheta, thetaG, yt, Xbeta, Ft, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell,runningAvgMu, runningAvgVar)
+    obsPrecision, factorVariance, Identities, InfoCell,runningAvgMu, runningAvgVar, a0, A0)
 
 df = 15;
 [K,T] = size(yt);
@@ -20,8 +20,8 @@ for q = 1:levels
         StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fcount), T);
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);
-        a0 = ones(1, length(subset)-1);
-        A0 =  eye(length(subset)-1);
+        apriormean = a0.*ones(1, length(subset)-1);
+        Apriorprecision =  A0.*eye(length(subset)-1);
         %% MH step
         ty = ydemut(subset,:);
         ty = ty(2:end,:);
@@ -34,7 +34,7 @@ for q = 1:levels
         fxTheta = fixedValueTheta(subset,q);
         gTheta = thetaG(subset, q);
         proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(omVarNum), df);
-        LogLikePositive = @(val) LLcond_ratio (val, ty, a0, A0, top, tempf, StatePrecision);
+        LogLikePositive = @(val) LLcond_ratio (val, ty, apriormean, Apriorprecision, top, tempf, StatePrecision);
         Num = LogLikePositive(fxTheta(2:end)) + proposalDistNum(gTheta(2:end)');
         Den = LogLikePositive(gTheta(2:end)) + proposalDistNum(fxTheta(2:end)');
         alpha_prop(fcount) = min(0,Num - Den) +  proposalDistNum(fxTheta(2:end)');

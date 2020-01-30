@@ -95,7 +95,7 @@ if finishedMainRun == 0
         for n=1:nFactors
             stateTransitions(n,:)= drawStateTransitions(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);
         end
-        
+
         if identification == 2
             factorVariance = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
         end
@@ -173,7 +173,7 @@ if estML == 1
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
             [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecisionj,...
-                Astar, stj, fvj, betaPriorMean, betaPriorPre, FtIndexMat, subsetIndices);
+                Astar, stj, fvj, beta0, B0, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
             Ftg = storeFt(:,:,r);
             stg = storeStateTransitionsg(:,:,r);
@@ -239,7 +239,7 @@ if estML == 1
                 storeFactorVarj(:,r) = fvj;
             end
             [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecisionj,...
-                Astar, stStar, fvj, betaPriorMean, betaPriorPre, FtIndexMat, subsetIndices);
+                Astar, stStar, fvj, beta0, B0, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
             [iP, ssState] =initCovar(stStar);
             Si = FactorPrecision(ssState, iP, 1./fvj, T);
@@ -268,7 +268,7 @@ if estML == 1
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
             storePiBeta(:,r) = piBetaStar(VARstar, yt, Xt, obsPrecisionj,...
-                Astar, stStar, fvj, betaPriorMean, betaPriorPre, subsetIndices, FtIndexMat);
+                Astar, stStar, fvj, beta0, B0, subsetIndices, FtIndexMat);
             Ftj = reshape(kowUpdateLatent(ydemutStar(:), StateObsModelStar,...
                 Si,  obsPrecisionj), nFactors, T);
             storeFtj(:,:,r) = Ftj;
@@ -321,11 +321,14 @@ if estML == 1
     
     LogLikelihood=sum(logmvnpdf(residsStar', zeros(1,K), diag(obsVarianceStar)))
     
-    priorST = sum(logmvnpdf(stStar, zeros(1,lagState), eye(lagState)));
-    priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*d0));
+    priorST = sum(logmvnpdf(stStar, g0, G0));
+    priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*r0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
-    priorBeta = logmvnpdf(betaStar', zeros(1, dimSurX), eye(dimSurX));
-    priorAstar = Apriors(InfoCell, Astar);
+    B0=diag(repmat(1./diag(B0), K,1));
+
+
+    priorBeta = logmvnpdf(betaStar', beta0(:)', B0);
+    priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
     [iP, ssState] =initCovar(stStar);
     Kprecision = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
     Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\eye(nFactors*T));
