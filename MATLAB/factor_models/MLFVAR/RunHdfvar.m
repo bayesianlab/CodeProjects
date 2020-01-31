@@ -29,7 +29,7 @@ yt=yt./std(yt,[],2);
 v0= 6;
 r0 = 4;
 s0 = 6;
-d0 = 12;
+d0 = 4;
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
 a0=1;
@@ -71,13 +71,13 @@ Som = makeStateObsModel(mean(storeOM,3), Identities,0);
 Ft = mean(storeFt,3);
 GFt = Som*Ft;
 yhat = Xbeta+GFt;
-figure
-plot(yt(1,:))
-hold on
-plot(yhat(1,:))
-pA = sprintf('v0=%d r0=%.3f, s0=%d d0=%.3f,', v0,r0,s0,d0);
-pB = sprintf('a0=%d, A0inv=%.3f,g0=%d, G0=%d', a0,A0inv,g0,G0);
-title({pA; pB})
+% figure
+% plot(yt(1,:))
+% hold on
+% plot(yhat(1,:))
+% pA = sprintf('v0=%d r0=%.3f, s0=%d d0=%.3f,', v0,r0,s0,d0);
+% pB = sprintf('a0=%d, A0inv=%.3f,g0=%d, G0=%d', a0,A0inv,g0,G0);
+% title({pA; pB})
 
 period = strfind(DotMatFile, '.');
 fname = join(['Result_', DotMatFile(1:period-1),]);
