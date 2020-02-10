@@ -1,11 +1,12 @@
 % clear;clc;
-% simpath = 'TbsSimDec19/';
+% simpath = 'Trial3/matches/';
 % files = dir(join([simpath,'*.mat']));
 % x =natsortfiles({files.name});
-% N = floor(length(x)/2);
+% length(x)
+% N = floor(length(x)/2)
 % beg = 1:N;
 % G = length(beg);
-% c=70;
+% c=1981;
 % for g = 1:N
 %     set1 = x{G+ g}
 %     datapath = join([simpath,set1]);
@@ -19,14 +20,14 @@
 % end
 % 
 % 
-% [a,b]=max(sumMls);
-% tml = load('Result_totaltime_28_Dec_2019_19_50_09.mat', 'ml');
+% [a,b]=max(sumMls)
+% tml = load('BigKowResults/Result_kow_raw_04_Feb_2020_05_00_28.mat', 'ml');
 % tml=tml.ml;
 % hold on
 % plot(sumMls(:,1),sumMls(:,2))
 % plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
 % tml
-
+% 
 % clear;clc;
 % simpath = 'TBKRAW_Standardized/';
 % simpath='TBKRAW_Standardized/'
@@ -149,7 +150,14 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% Application KOW dataset
-% clear;clc;
+clear;clc;
+load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Result_kow_raw_04_Feb_2020_05_00_28.mat')
+hold on
+plot(yt(1,:))
+plot(Ft(1,:))
+plot(Ft(2,:))
+plot(Ft(9,:))
+plot(yhat(1,:))
 % savepath = '~/GoogleDrive/statespace/';
 
 
@@ -168,6 +176,7 @@
 % facealpha = .3;
 % fillX = [xaxis, fliplr(xaxis)];
 % fillY = [upper, fliplr(lower)];
+
 
 % load('BigKowResults/Result_kowzb_19_Oct_2019_11_52_53.mat')
 % load('BigKowResults/Result_kowz__18_Oct_2019_16_31_05.mat')

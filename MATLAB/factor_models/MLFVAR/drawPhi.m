@@ -32,19 +32,23 @@ while unitCircle >=1
         break
     end
 end
-S0draw = initCovar(draw');
+
+S0draw = initCovar(draw);
 S0drawlower= chol(S0draw,'lower');
 S0drawlowerinv = S0drawlower\eye(p);
 
-Yp1 = ((S0drawlowerinv*yp) - (S0drawlowerinv*xp)*beta)';
-Y1 = [Yp1; epsilont - (Lagepsilont*deltas')];
-Yp2 = ((Cinv*yp) - (Cinv*xp)*beta)';
-Y2 = [Yp2; epsilont - (Lagepsilont*draw')];
+Yp1 = ((S0drawlowerinv*yp') - (S0drawlowerinv*xp)*beta)';
+Y1 = [Yp1'; epsilont - (Lagepsilont*deltas')];
+Yp2 = ((Cinv*yp') - (Cinv*xp)*beta)';
+Y2 = [Yp2'; epsilont - (Lagepsilont*draw')];
 
 LL = @(yt1,  phi)MHphi(yt1, obsv, phi, delta0, Delta0);
 proposalDist = @(x)logmvnpdf(x, proposalMeanN', proposalVariance);
-alpha = min(0, (LL(Y2, draw)+proposalDist(deltas)) - ...
-    (LL(Y1, deltas')+proposalDist(draw'))  );
+
+
+alpha = min(0, (LL(Y2, draw')+proposalDist(deltas)) - ...
+    (LL(Y1, deltas')+proposalDist(draw))  );
+
 if log(unifrnd(0,1)) < alpha
     newvalue = draw';
 else

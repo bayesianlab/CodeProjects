@@ -95,7 +95,7 @@ if finishedMainRun == 0
         for n=1:nFactors
             stateTransitions(n,:)= drawStateTransitions(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);
         end
-
+        
         if identification == 2
             factorVariance = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
         end
@@ -117,7 +117,7 @@ if finishedMainRun == 0
         end
     end
     
-        
+    
     Runs = Sims- burnin;
     betaBar = reshape(mean(storeVAR,3), dimx*K,1);
     Ftbar = mean(storeFt,3);
@@ -325,14 +325,18 @@ if estML == 1
     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*r0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
     B0=diag(repmat(1./diag(B0), K,1));
-
-
+    
+    
     priorBeta = logmvnpdf(betaStar', beta0(:)', B0);
     priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
-    [iP, ssState] =initCovar(stStar);
-    Kprecision = FactorPrecision(ssState, iP, 1./factorVarianceStar, T);
-    Fpriorstar = logmvnpdf(FtStar(:)', zeros(1,nFactors*T ), Kprecision\eye(nFactors*T));
-    
+
+    Fpriorstar = zeros(nFactors,1);
+    for j = 1:nFactors
+        [iP, ssFactorARStar] =initCovar(stStar(j,:));
+        Kprecision = FactorPrecision(ssFactorARStar, iP, 1./factorVarianceStar(j), T);
+        Fpriorstar(j) = logmvnpdf(FtStar(j,:), zeros(1,T ), Kprecision\eye(T));
+    end
+    Fpriorstar=sum(Fpriorstar);
     priors = [Fpriorstar, priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]
     priorStar = sum(priors)
     

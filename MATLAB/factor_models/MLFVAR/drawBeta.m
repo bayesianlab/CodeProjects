@@ -1,9 +1,7 @@
-function [b,v,V, ystar, xstar, Cinv] = drawBeta(yt,  xt, deltas, obsVariance, P0)
+function [b,v,V, ystar, xstar, Cinv] = drawBeta(yt,  xt, deltas, obsVariance, P0, prmean, prcovar)
 [K,T] = size(yt);
 [~,lags] = size(deltas);
 [rx,dimx] = size(xt);
-prmean= ones(dimx,1);
-prcovar = 10.*eye( dimx );
 x1 = xt(1:lags,:);
 x2 =xt(lags+1:end,:);
 Cinv = chol(P0,'lower')\eye(lags);
@@ -19,9 +17,10 @@ for g = 1:lags
 end
 xstar = [xstar1;x2-sx];
 xstarystar = xstar'*ystar';
-B0inv = diag((diag(prcovar).^(-1)));
-V = ((xstar'*xstar)./obsVariance+ B0inv)\eye(dimx) ;
-prs = (B0inv*prmean);
+B0inv = prcovar\eye(dimx);
+V = ((xstar'*xstar)./obsVariance+ B0inv)\eye(dimx);
+
+prs = (B0inv*prmean');
 v = V* (((xstarystar)./obsVariance) + prs);
 b = v + chol(V,'lower')*normrnd(0,1, dimx,1);
 end

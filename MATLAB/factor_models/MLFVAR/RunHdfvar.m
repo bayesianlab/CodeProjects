@@ -1,4 +1,4 @@
-function [] = RunHdfvar(Sims, burnin, DataLocationFullPath,DotMatFile, OutputDirFullPath)
+function [] = RunHdfvar(Sims, burnin, DataPath,DotMatFile, OutputDirFullPath)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -8,11 +8,11 @@ end
 
 fprintf('Current Working Directory\n')
 pwd
-if (DataLocationFullPath == "")
+if (DataPath == "")
     load(DotMatFile)
     disp(DotMatFile)
 else
-    datalocation = join([DataLocationFullPath,'/', DotMatFile]);
+    datalocation = join([DataPath,'/', DotMatFile]);
     disp(DotMatFile)
     load(datalocation, 'DataCell')
 end
@@ -35,9 +35,9 @@ d0 = 4;
 a0=1;
 A0inv = .1;
 g0 = zeros(1,lagState);
-G0 = .001.*eye(lagState);
+G0 = .01.*eye(lagState);
 beta0 = [mean(yt,2)'; zeros(dimX-1, K)];
-B0inv = .001.*eye(dimX);
+B0inv = .01.*eye(dimX);
 
 initStateTransitions = .5.*ones(nFactors,lagState);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
