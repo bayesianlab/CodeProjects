@@ -142,8 +142,6 @@ for i = 1:Sims
     
     %% Draw Factor AR Parameters
     for n=1:nFactors
-        [L0, ~] = initCovar(factorArTerms(n,:));
-        Linv = chol(L0,'lower')\eye(lagState);
         factorArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, factorArTerms(n,:), factorVariance(n), g0,G0);
     end
     

@@ -1,33 +1,31 @@
-% clear;clc;
-% simpath = 'Trial3/matches/';
-% files = dir(join([simpath,'*.mat']));
-% x =natsortfiles({files.name});
-% length(x)
-% N = floor(length(x)/2)
-% beg = 1:N;
-% G = length(beg);
-% c=1981;
-% for g = 1:N
-%     set1 = x{G+ g}
-%     datapath = join([simpath,set1]);
-%     ml1 = load(datapath, 'ml');
-%     set2 = x{g}
-%     datapath = join([simpath,set2]);
-%     ml2 = load(datapath, 'ml');
-%     sumMls(g,2) = ml1.ml + ml2.ml;
-%     sumMls(g,1) = c;
-%     c = c + 1;
-% end
-% 
-% 
-% [a,b]=max(sumMls)
-% tml = load('BigKowResults/Result_kow_raw_04_Feb_2020_05_00_28.mat', 'ml');
-% tml=tml.ml;
-% hold on
-% plot(sumMls(:,1),sumMls(:,2))
-% plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
-% tml
-% 
+clear;clc;
+simpath = 'SimulationStudyResults/Results_Timebreak_Files/';
+files = dir(join([simpath,'*.mat']));
+x =natsortfiles({files.name});
+length(x)
+N = floor(length(x)/2)
+beg = 1:N;
+G = length(beg);
+c=40;
+for g = 1:N
+    set1 = x{G+ g}
+    datapath = join([simpath,set1]);
+    ml1 = load(datapath, 'ml');
+    set2 = x{g}
+    datapath = join([simpath,set2]);
+    ml2 = load(datapath, 'ml');
+    sumMls(g,2) = ml1.ml + ml2.ml;
+    sumMls(g,1) = c;
+    c = c + 1;
+end
+[a,b]=max(sumMls)
+tml = load( 'SimulationStudyResults/Result_totaltime.mat', 'ml');
+tml=tml.ml;
+hold on
+plot(sumMls(:,1),sumMls(:,2))
+plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
+tml
+
 % clear;clc;
 % simpath = 'TBKRAW_Standardized/';
 % simpath='TBKRAW_Standardized/'
@@ -48,8 +46,7 @@
 %     sumMls(g,1) = c;
 %     c = c + 1;
 % end
-
-
+% 
 % [a,b]=max(sumMls);
 % load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Result_kowz18_Jan_2020_04_00_15.mat', 'ml')
 % tml=ml;
@@ -150,14 +147,14 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% Application KOW dataset
-clear;clc;
-load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Result_kow_raw_04_Feb_2020_05_00_28.mat')
-hold on
-plot(yt(1,:))
-plot(Ft(1,:))
-plot(Ft(2,:))
-plot(Ft(9,:))
-plot(yhat(1,:))
+% clear;clc;
+% load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Feb4th_NewMethod.mat')
+% hold on
+% plot(yt(1,:))
+% plot(Ft(1,:))
+% plot(Ft(2,:))
+% plot(Ft(9,:))
+% plot(yhat(1,:))
 % savepath = '~/GoogleDrive/statespace/';
 
 

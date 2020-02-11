@@ -14,7 +14,7 @@ xp = xt(1:p, :);
 
 mut = reshape(xt*beta,K,T);
 epsilont = (yt - mut);
-Lagepsilont = lagMat(epsilont, p)';
+Lagepsilont = lagMat(epsilont, p)';;
 epsilont = epsilont(:,p+1:end)';
 
 % Propose a candidate
