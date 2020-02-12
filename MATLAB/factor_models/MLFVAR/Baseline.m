@@ -116,26 +116,26 @@ for i = 1:Sims
                     % Equation level
                     ty = tempyt(k,:);
                     [D0, ssOmArTerms] = initCovar(omArTerms(k,:));
-                    OmPrecision = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
-                    A = kron(IT,alpha(k,:));
-                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
-                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                    [~, Q] = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
+                    QQsigma = (Q'*Q)/obsVariance(k);
+                    commonMeanComponent = commonMeanComponent + alpha(k)*QQsigma*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                 end
             else
                 for k = subsI
                     % Equation level
                     ty = tempyt(k,:);
-                    OmPrecision = kron(IT,1./obsVariance(k));
-                    A = kron(IT,alpha(k,:));
-                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
-                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                    QQsigma = IT* (1./obsVariance(k));
+                    commonMeanComponent = commonMeanComponent + alpha(k)*QQsigma*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                 end
             end
             [L0, ssGammas] = initCovar(factorArTerms(c,:));
-            StatePrecision = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
-            OmegaInv = commonPrecisionComponent + StatePrecision;
+            [~,Gamma] = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
+            OmegaInv = commonPrecisionComponent + (Gamma'*Gamma)/factorVariance(c);
             Linv = chol(OmegaInv,'lower')\IT;
-            omega = Linv'*Linv*commonMeanComponent;
+            Omega= Linv'*Linv;
+            omega = Omega*commonMeanComponent;
             Ft(c,:) = omega + Linv' * normrnd(0,1,T,1);
         end
     end
@@ -144,7 +144,7 @@ for i = 1:Sims
     for n=1:nFactors
         factorArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, factorArTerms(n,:), factorVariance(n), g0,G0);
     end
-    
+     omArTerms
     %% Draw Factor Variances
     [factorVariance,~]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
     
@@ -226,27 +226,26 @@ for rr = 1:ReducedRuns
                     % Equation level
                     ty = tempyt(k,:);
                     [D0, ssOmArTerms] = initCovar(omArTerms(k,:));
-                    OmPrecision = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
-                    A = kron(IT,alpha(k,:));
-                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
-                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                    [~, Q] = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
+                    QQsigma = (Q'*Q)/obsVariance(k);
+                    commonMeanComponent = commonMeanComponent + alpha(k)*QQsigma*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                 end
             else
                 for k = subsI
                     % Equation level
                     ty = tempyt(k,:);
-                    OmPrecision = kron(IT,1./obsVariance(k));
-                    A = kron(IT,alpha(k,:));
-                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
-                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                    QQsigma = IT* (1./obsVariance(k));
+                    commonMeanComponent = commonMeanComponent + alpha(k)*QQsigma*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                 end
-                
             end
             [L0, ssGammas] = initCovar(factorArTerms(c,:));
             StatePrecision = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
             OmegaInv = commonPrecisionComponent + StatePrecision;
             Linv = chol(OmegaInv,'lower')\IT;
-            omega = Linv'*Linv*commonMeanComponent;
+            Omega= Linv'*Linv;
+            omega =Omega*commonMeanComponent;
             Ft(c,:) = omega + Linv' * normrnd(0,1,T,1);
         end
     end
@@ -254,13 +253,11 @@ for rr = 1:ReducedRuns
     
     %% Draw Factor AR Parameters
     for n=1:nFactors
-        [L0, ~] = initCovar(factorArTerms(n,:));
-        Linv = chol(L0,'lower')\eye(lagState);
         factorArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, factorArTerms(n,:), factorVariance(n), g0,G0);
     end
     
     %% Draw Factor Variances
-    [factorVariance, factorParamb]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
+    [factorVariance, ~]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
 end
 piBeta = sum(logAvg(storePiBeta));
 
@@ -309,33 +306,31 @@ for rr = 1:ReducedRuns
                     % Equation level
                     ty = tempyt(k,:);
                     [D0, ssOmArTerms] = initCovar(omArTerms(k,:));
-                    OmPrecision = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
-                    A = kron(IT,alpha(k,:));
-                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
-                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                    [~, Q] = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
+                    QQsigma = (Q'*Q)/obsVariance(k);
+                    commonMeanComponent = commonMeanComponent + alpha(k)*QQsigma*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                 end
             else
                 for k = subsI
                     % Equation level
                     ty = tempyt(k,:);
-                    OmPrecision = kron(IT,1./obsVariance(k));
-                    A = kron(IT,alpha(k,:));
-                    commonMeanComponent = commonMeanComponent + A'*OmPrecision*ty(:);
-                    commonPrecisionComponent = commonPrecisionComponent + A'*OmPrecision*A;
+                    QQsigma = IT* (1./obsVariance(k));
+                    commonMeanComponent = commonMeanComponent + alpha(k)*QQsigma*ty(:);
+                    commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                 end
             end
             [L0, ssGammas] = initCovar(factorArTerms(c,:));
             StatePrecision = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
             OmegaInv = commonPrecisionComponent + StatePrecision;
             Linv = chol(OmegaInv,'lower')\IT;
-            omega = Linv'*Linv*commonMeanComponent;
-            storePiFactor(c,rr)=logmvnpdf(FactorStar(c,:), omega', Linv'*Linv);
+            Omega= Linv'*Linv;
+            omega =Omega*commonMeanComponent;
+            storePiFactor(c,rr)=logmvnpdf(FactorStar(c,:), omega', Omega);
         end
     end
     %% Draw Factor AR Parameters
     for n=1:nFactors
-        [L0, ~] = initCovar(factorArTerms(n,:));
-        Linv = chol(L0,'lower')\eye(lagState);
         factorArTerms(n,:) = drawPhi(FactorStar(n,:), fakeX, fakeB, factorArTerms(n,:),...
             factorVariance(n), g0,G0);
     end

@@ -50,7 +50,7 @@ iFt = ones(nFactors,T).*.01;
 calcML=1;  %
 %%%%%%%
 %%%%%%%%%%%%%%
-autoregressiveErrors=0;%
+autoregressiveErrors=1;%
 %%%%%%%%%%%%%%
 
 [storeMean, storeLoadings, storeOmArTerms, storeStateArTerms,...
