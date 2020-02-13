@@ -144,6 +144,7 @@ for i = 1:Sims
     for n=1:nFactors
         factorArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, factorArTerms(n,:), factorVariance(n), g0,G0);
     end
+   
     %% Draw Factor Variances
     [factorVariance,~]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
     

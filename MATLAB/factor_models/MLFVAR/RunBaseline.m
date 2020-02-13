@@ -23,8 +23,8 @@ InfoCell = DataCell{1,3};
 yt=yt./std(yt,[],2);
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-lagOm = 1;
-lagFac = 1;
+lagOm = 3;
+lagFac = 3;
 b0 = zeros(1,dimX + levels);
 B0 =100.*eye(dimX + levels);
 v0=6;
@@ -51,10 +51,10 @@ StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 iFt = ones(nFactors,T).*.01;
 
 %%%%%%%
-calcML=0;  %
+calcML=1;  %
 %%%%%%%
 %%%%%%%%%%%%%%
-autoregressiveErrors=0;%
+autoregressiveErrors=1;%
 %%%%%%%%%%%%%%
 
 [storeMean, storeLoadings, storeOmArTerms, storeStateArTerms,...
