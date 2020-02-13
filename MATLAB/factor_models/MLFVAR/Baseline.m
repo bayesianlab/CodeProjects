@@ -100,6 +100,7 @@ for i = 1:Sims
     mu1t = reshape(SurX*meanFunction(:),K,T);
     demuyt = yt - mu1t;
     c=0;
+    save('errormat.mat')
     for q = 1:levels
         Info = InfoCell{1,q};
         COM = makeStateObsModel(loadings, Identities, q);
@@ -147,7 +148,7 @@ for i = 1:Sims
    
     %% Draw Factor Variances
     [factorVariance,~]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
-    
+    factorVariance
     %% Store post burn-in runs
     if i > burnin
         v = i - burnin;
