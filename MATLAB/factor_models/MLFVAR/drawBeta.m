@@ -19,7 +19,6 @@ xstar = [xstar1;x2-sx];
 xstarystar = xstar'*ystar';
 B0inv = prcovar\eye(dimx);
 V = ((xstar'*xstar)./obsVariance+ B0inv)\eye(dimx);
-
 prs = (B0inv*prmean');
 v = V* (((xstarystar)./obsVariance) + prs);
 b = v + chol(V,'lower')*normrnd(0,1, dimx,1);

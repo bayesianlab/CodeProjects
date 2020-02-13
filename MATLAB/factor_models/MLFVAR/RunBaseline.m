@@ -50,11 +50,11 @@ iFt = ones(nFactors,T).*.01;
 calcML=1;  %
 %%%%%%%
 %%%%%%%%%%%%%%
-autoregressiveErrors=1;%
+autoregressiveErrors=0;%
 %%%%%%%%%%%%%%
 
 [storeMean, storeLoadings, storeOmArTerms, storeStateArTerms,...
-    storeFt, storeObsV, storeFactorVariance, varianceDecomp] =...
+    storeFt, storeObsV, storeFactorVariance, varianceDecomp, ML] =...
     Baseline(InfoCell, yt,Xt, iFt, iBeta, idelta, igamma,...
     b0, B0, v0,r0, g0, G0, Sims, burnin, autoregressiveErrors, calcML);
 
@@ -62,7 +62,7 @@ autoregressiveErrors=1;%
 StateObsModel = makeStateObsModel(mean(storeLoadings,3),Identities,0);
 
 beta=mean(storeMean,3)';
-beta = beta(:); 
+beta = beta(:);
 mu1 = surForm(Xt, K)*beta;
 Ft = mean(storeFt,3);
 mu2=StateObsModel*Ft;

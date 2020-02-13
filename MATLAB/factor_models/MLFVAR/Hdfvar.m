@@ -351,6 +351,7 @@ else
     ml = 'nothing';
     rmdir(checkpointdir, 's')
 end
+fprintf('New Method Estimation\n')
 end
 
 
