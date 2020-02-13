@@ -23,8 +23,8 @@ InfoCell = DataCell{1,3};
 yt=yt./std(yt,[],2);
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-lagOm = 3;
-lagFac = 3;
+lagOm = 1;
+lagFac = 1;
 b0 = zeros(1,dimX + levels);
 B0 =100.*eye(dimX + levels);
 v0=6;
@@ -32,7 +32,11 @@ r0 =4;
 s0 = 6;
 d0 = 4;
 g0 = zeros(1,lagFac);
-G0 = diag([.25, .5,1])*eye(lagFac);
+if lagFac == 3
+    G0 = diag([.25, .5,1])*eye(lagFac);
+else
+    G0 = 1;
+end
 obsPrecision = ones(K,1);
 initStateTransitions = .1.*ones(nFactors,1);
 iBeta = [ones(K,dimX), unifrnd(0,1,K,levels)];
@@ -47,7 +51,7 @@ StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 iFt = ones(nFactors,T).*.01;
 
 %%%%%%%
-calcML=1;  %
+calcML=0;  %
 %%%%%%%
 %%%%%%%%%%%%%%
 autoregressiveErrors=0;%

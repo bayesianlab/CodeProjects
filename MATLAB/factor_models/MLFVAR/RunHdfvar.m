@@ -71,13 +71,6 @@ Som = makeStateObsModel(mean(storeOM,3), Identities,0);
 Ft = mean(storeFt,3);
 GFt = Som*Ft;
 yhat = Xbeta+GFt;
-% figure
-% plot(yt(1,:))
-% hold on
-% plot(yhat(1,:))
-% pA = sprintf('v0=%d r0=%.3f, s0=%d d0=%.3f,', v0,r0,s0,d0);
-% pB = sprintf('a0=%d, A0inv=%.3f,g0=%d, G0=%d', a0,A0inv,g0,G0);
-% title({pA; pB})
 
 period = strfind(DotMatFile, '.');
 fname = join(['Result_', DotMatFile(1:period-1),]);
