@@ -24,20 +24,19 @@ InfoCell = DataCell{1,3};
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 lagState=1;
-% yt=yt-mean(yt,2);
-yt=yt./std(yt,[],2);
-v0= 6;
-r0 = 4;
-s0 = 6;
-d0 = 4;
+
+v0= 6
+r0 = 10
+s0 = 6
+d0 = 10
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
-a0=1;
-A0inv = .1;
-g0 = zeros(1,lagState);
-G0 = .01.*eye(lagState);
-beta0 = [mean(yt,2)'; zeros(dimX-1, K)];
-B0inv = .01.*eye(dimX);
+a0=1
+A0inv = .2
+g0 = zeros(1,lagState)
+G0 = eye(lagState)
+beta0 = [mean(yt,2)'; zeros(dimX-1, K)]
+B0inv = .1.*eye(dimX)
 
 initStateTransitions = .5.*ones(nFactors,lagState);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
@@ -56,7 +55,7 @@ identification = 2;
 %DONT FORGET TO TURN THIS ON!!!!!!!!!
 %%%%%%%%%%%%
 %%%%%%%%%%%%
-estML = 1; %%%%%%
+estML = 0; %%%%%%
 %%%%%%%%%%%%
 %%%%%%%%%%%%
 

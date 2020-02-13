@@ -1,10 +1,10 @@
 function [currobsmod, Ft, keepOmMeans, keepOmVariances, alpha] = ...
     LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
     obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances,...
-    runningAverageMean, runningAverageVar, a0, A0)
+    runningAverageMean, runningAverageVar, a0, A0inv)
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-10, 'Display', 'off', 'OptimalityTolerance', 1e-10);
+    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8);
 df = 20;
 [K,T] = size(yt);
 w1 = sqrt(chi2rnd(df,1)/df);
@@ -34,7 +34,7 @@ for q = 1:levels
             ty = ydemut(k,:);
             top = obsPrecision(k);
             x0 = currobsmod(k,q);
-            LL = @(guess) -LLcond_ratio(guess, ty, a0, A0, top, tempf,StatePrecision);
+            LL = @(guess) -LLcond_ratio(guess, ty, a0, A0inv, top, tempf,StatePrecision);
             [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
             Covar = (1/Covar)';
             if  Covar < 0
@@ -47,7 +47,7 @@ for q = 1:levels
             proposalDistNum = @(prop) mvstudenttpdf(prop, themean', diag(Covar), df);
             proposalDistDen = @(prop) mvstudenttpdf(prop, runningAverageMean(k,q)', diag(runningAverageVar(k,q)), df);
             
-            LogLikePositive = @(val) LLcond_ratio (val, ty, a0,A0, top, tempf, StatePrecision);
+            LogLikePositive = @(val) LLcond_ratio (val, ty, a0,A0inv, top, tempf, StatePrecision);
             
             Num = LogLikePositive(proposal) + proposalDistNum(x0);
             Den = LogLikePositive(x0) + proposalDistDen(proposal');

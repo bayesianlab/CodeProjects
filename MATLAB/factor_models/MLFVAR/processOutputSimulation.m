@@ -5,7 +5,7 @@
 %% Application KOW dataset
 clear;clc;
 savepath = '~/GoogleDrive/statespace/';
-load('ResultsUsedInPaper/Feb4th_NewMethod.mat')
+load('ResultsUsedInPaper/NewMethod_Feb4th.mat')
 % hold on
 % plot(yt(1,:))
 % plot(Ft(1,:))
@@ -54,7 +54,6 @@ ASIA = 163:180;
 ASIAOUT = 163:3:180;
 ASIACONS = 164:3:179;
 ASIAINV = 165:3:178;
-
 
 
 % writeVdToFile('navd.txt', varianceDecomp, NA)
@@ -153,12 +152,12 @@ ASIAINV = 165:3:178;
 % usaconsump = plot(xaxis,Ft(2,:), 'red');
 % plot(xaxis,yt(2,:), 'black')
 % saveas(usaconsump, join([savepath,'usaconsVsRegion.jpeg']))
-usainv=figure;
-hold on 
-box on
-plot(xaxis, Ft(2,:), 'red');
-plot(xaxis, yt(3,:)- Xbeta(3,:),'black')
-saveas(usainv, join([savepath,'usainvVsRegion.jpeg']))
+% usainv=figure;
+% hold on 
+% box on
+% plot(xaxis, Ft(2,:), 'red');
+% plot(xaxis, yt(3,:)- Xbeta(3,:),'black')
+% saveas(usainv, join([savepath,'usainvVsRegion.jpeg']))
 % figure
 % hold on 
 % box on
@@ -203,13 +202,12 @@ saveas(usainv, join([savepath,'usainvVsRegion.jpeg']))
 %  saveas(latinAmerica, join([savepath, 'latinAmerica.jpeg']))
 
 %% Africa
-% figure
-% h = fill(fillX(1,:), fillY(6,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% africa  = plot(xaxis, Ft(6,:), 'black');
-% ylim([-2.25, 2.5])
-%  saveas(africa, join([savepath, 'africa.jpeg']))
+figure
+h = fill(fillX(1,:), fillY(6,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on
+africa  = plot(xaxis, Ft(6,:), 'black');
+ saveas(africa, join([savepath, 'africa.jpeg']))
  
 % Latin America and Africa
 % figure
@@ -229,7 +227,7 @@ saveas(usainv, join([savepath,'usainvVsRegion.jpeg']))
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
 % europeregion  = plot(xaxis, Ft(5,:), 'black');
-% ylim([-2.25, 2.5])
+% ylim([-.6, .6])
 % saveas(europeregion, join([savepath, 'europeregionplot.jpeg']))
 % 
 % 

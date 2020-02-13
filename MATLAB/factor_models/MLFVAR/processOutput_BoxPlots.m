@@ -1,6 +1,7 @@
 %% process kose output
-clear;clc;
-load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Result_kow_standardized_31_Dec_2019_13_22_05.mat')
+clear;
+clc;
+load('ResultsUsedInPaper/Kose_Observables_Feb10th.mat')
 [r,c,d]=size(storeMean);
 reshapedmu = reshape(permute(storeMean,[2,1,3]), r*c,d);
 constants = 1:4:r*c;
@@ -33,14 +34,17 @@ cl1 = CalcIneffFactors(countryLoading,500);
 st = squeeze(storeStateArTerms);
 st1 = CalcIneffFactors(st,500);
 
-% centered=yt-mut;
-% mean_beta = mean(reshapedmu,2);
-% om=mean(storeLoadings,3);
-% mut = reshape(surForm(Xt,K)*mean_beta,K,T);
-% factors=mean(storeFt,3);
-% CalcVarDecomp(InfoCell, surForm(Xt,K), mean_beta, mean(storeLoadings,3), factors)
-
-load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/BigKowResults/Result_kow_standardized_22_Dec_2019_19_29_03.mat')
+mean_beta = mean(reshapedmu,2);
+om=mean(storeLoadings,3);
+mut = reshape(surForm(Xt,K)*mean_beta,K,T);
+factors=mean(storeFt,3);
+CalcVarDecomp(InfoCell, surForm(Xt,K), mean_beta, mean(storeLoadings,3), factors)
+load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/ResultsUsedInPaper/NewMethod_Feb4th.mat')
+[r,c,d]=size(storeVAR);
+constants = 1:4:r*c;
+beta1 = 2:4:r*c;
+beta2 = 3:4:r*c;
+beta3 = 4:4:r*c;
 [r,c,d] = size(storeVAR);
 vars = reshape(storeVAR,r*c,d);
 [method2c, m2c] =CalcIneffFactors(vars(constants,:), 500);
@@ -53,12 +57,12 @@ m2 = [mean(m2c);
 mean(m2b1);
 mean(m2b3);
 mean(m2b3)];
-beta_ineff = [m1,m2]
-
+beta_ineff = [m1,m2];
 
 figure
 boxplot([avg_method1, avg_method2], 'symbol', '', 'Labels', {'Full Conditionals (K.O.W.)', 'New Method'})
-ylim([-40,500])
+ylim([-40,1000])
+saveas(gcf, '~/GoogleDrive/statespace/boxplot_beta.jpeg')
 
 worldLoading = squeeze(storeOM(2:180,1,:));
 wl2 = CalcIneffFactors(worldLoading,500);
@@ -78,10 +82,12 @@ g6 = repmat({'New Method:Country'}, 120,1);
 g=[g1;g2;g3;g4;g5;g6];
 figure
 boxplot(bpdata, g,'symbol', '')
-ylim([0,55])
+ylim([-20,300])
 xtickangle(25)
+saveas(gcf, '~/GoogleDrive/statespace/boxplot_loadings.jpeg')
 st = squeeze(storeStateTransitions);
 st2 = CalcIneffFactors(st,500);
 figure
 boxplot([st1,st2], 'symbol','', 'Labels', {'Full Conditionals (K.O.W.)', 'New Method'})
-ylim([0,70])
+ylim([-1,25])
+saveas(gcf, '~/GoogleDrive/statespace/boxplot_state_transitions.jpeg')

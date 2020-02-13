@@ -8,8 +8,8 @@ for j = 1:size(subsetvd,1)
     worldstr = num2str(world(j),  ['%.1e', 3]);
     eloc = strfind(worldstr, 'e');
     p=worldstr(eloc+1:end-1);
-    numchar = num2str(str2double(convertCharsToStrings(p)));
-    worldstr = join(['$', worldstr(1:eloc-1), ' \\times 10^{', numchar,'}$&']);
+    exponent = num2str(str2double(convertCharsToStrings(p)));
+    worldstr = join(['$', worldstr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
     
     if floor(subsetvd(j,3)) < 10
         part1 = sprintf(' %.1f &', subsetvd(j,3));

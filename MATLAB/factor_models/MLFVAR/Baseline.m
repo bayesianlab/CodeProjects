@@ -148,7 +148,6 @@ for i = 1:Sims
    
     %% Draw Factor Variances
     [factorVariance,~]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
-    factorVariance
     %% Store post burn-in runs
     if i > burnin
         v = i - burnin;

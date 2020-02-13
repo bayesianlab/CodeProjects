@@ -33,7 +33,7 @@ end
 obsPrecision = initObsPrecision;
 factorVariance = initFactorVar;
 stateTransitions = initStateTransitions;
-currobsmod = setObsModel(initobsmodel, InfoCell, identification);
+currobsmod = setObsModel(initobsmodel, InfoCell);
 Ft = initFactor;
 fakeX = zeros(T,1);
 fakeB = zeros(1,1);
