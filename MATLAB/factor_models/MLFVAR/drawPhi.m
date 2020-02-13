@@ -14,12 +14,10 @@ xp = xt(1:p, :);
 
 mut = reshape(xt*beta,K,T);
 epsilont = (yt - mut);
-Lagepsilont = lagMat(epsilont, p)';;
+Lagepsilont = lagMat(epsilont, p)';
 epsilont = epsilont(:,p+1:end)';
 
 % Propose a candidate
- Lagepsilont'*Lagepsilont
- Delta0
 proposalVariance = (Delta0 +( Lagepsilont'*Lagepsilont)./obsv)\eye(p);
 proposalMeanN = proposalVariance*(Delta0delta0 + (Lagepsilont'*epsilont)./obsv);
 c=0;
