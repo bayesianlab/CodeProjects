@@ -56,13 +56,13 @@ ASIACONS = 164:3:179;
 ASIAINV = 165:3:178;
 
 
-% writeVdToFile('navd.txt', varianceDecomp, NA)
-% writeVdToFile('ocvd.txt', varianceDecomp, OCEAN)
-% writeVdToFile('lavd.txt', varianceDecomp, LA)
-% writeVdToFile('eurvd.txt', varianceDecomp, EUR)
-% writeVdToFile('afrvd.txt', varianceDecomp, AFRICA)
-% writeVdToFile('asiadevelopvd.txt', varianceDecomp, ASIADEVELOP)
-% writeVdToFile('asiavd.txt', varianceDecomp, ASIA)
+writeVdToFile('navd.txt', varianceDecomp, NA)
+writeVdToFile('ocvd.txt', varianceDecomp, OCEAN)
+writeVdToFile('lavd.txt', varianceDecomp, LA)
+writeVdToFile('eurvd.txt', varianceDecomp, EUR)
+writeVdToFile('afrvd.txt', varianceDecomp, AFRICA)
+writeVdToFile('asiadevelopvd.txt', varianceDecomp, ASIADEVELOP)
+writeVdToFile('asiavd.txt', varianceDecomp, ASIA)
 
 
 % Average var dec.
@@ -202,12 +202,12 @@ ASIAINV = 165:3:178;
 %  saveas(latinAmerica, join([savepath, 'latinAmerica.jpeg']))
 
 %% Africa
-figure
-h = fill(fillX(1,:), fillY(6,:), COLOR);
-set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-hold on
-africa  = plot(xaxis, Ft(6,:), 'black');
- saveas(africa, join([savepath, 'africa.jpeg']))
+% figure
+% h = fill(fillX(1,:), fillY(6,:), COLOR);
+% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+% hold on
+% africa  = plot(xaxis, Ft(6,:), 'black');
+%  saveas(africa, join([savepath, 'africa.jpeg']))
  
 % Latin America and Africa
 % figure
