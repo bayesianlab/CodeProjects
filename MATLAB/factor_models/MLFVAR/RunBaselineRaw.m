@@ -40,9 +40,9 @@ nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 b0 = zeros(1,dimX + levels)
 B0 =eye(dimX + levels)
 v0=6
-r0 =4
+r0 =.001
 s0 = 6
-d0 = 4
+d0 = .001
 g0 = zeros(1,lagFac);
 if lagFac == 3
     G0 = diag([.25, .5,1])*eye(lagFac);

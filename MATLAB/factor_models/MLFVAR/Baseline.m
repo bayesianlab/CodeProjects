@@ -101,7 +101,6 @@ for i = 1:Sims
     mu1t = reshape(SurX*meanFunction(:),K,T);
     demuyt = yt - mu1t;
     c=0;
-    save('errormat.mat')
     for q = 1:levels
         Info = InfoCell{1,q};
         COM = makeStateObsModel(loadings, Identities, q);
@@ -160,6 +159,7 @@ for i = 1:Sims
         storeObsV(:,v) = obsVariance;
         storeFactorVariance(:,v) = factorVariance;
     end
+    
 end
 
 %% Variance decomposition

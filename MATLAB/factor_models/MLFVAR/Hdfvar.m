@@ -5,8 +5,8 @@ function [storeFt, storeVAR, storeOM, storeStateTransitions,...
     v0, r0, s0, d0, a0, A0inv, g0,G0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
-    DotMatFile(1:periodloc-1),'Checkpoints/'] )
-
+    DotMatFile(1:periodloc-1),'_Checkpoints/'] )
+fprintf('Hdfvar Estimation\n')
 checkpointfilename = 'ckpt';
 start = 1;
 saveFrequency = 50;
