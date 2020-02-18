@@ -1,4 +1,4 @@
-function [] = RunHdfvar(Sims, burnin, DataPath,DotMatFile, OutputDirFullPath)
+function [] = RunHdfvar(Sims, burnin, DataPath,DotMatFile, Job_Name_In_Queue, OutputDirFullPath)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -76,7 +76,7 @@ fname = join(['Result_', DotMatFile(1:period-1),]);
 if OutputDirFullPath(end) ~= '/'
     OutputDirFullPath = join([OutputDirFullPath, '/']);
 end
-savedfile = join([OutputDirFullPath, fname,'_',createDateString('')]);
+savedfile = join([OutputDirFullPath, fname,'_', Job_Name_In_Queue, '_', createDateString('')]);
 fprintf('Saving file %s \n', savedfile)
 save(savedfile)
 end

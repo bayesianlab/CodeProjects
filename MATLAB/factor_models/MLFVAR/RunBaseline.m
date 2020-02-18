@@ -1,4 +1,4 @@
-function [] = RunBaseline(Sims, burnin, DataPath,DotMatFile, OutputDirFullPath)
+function [] = RunBaseline(Sims, burnin, DataPath,DotMatFile, Job_Name_In_Queue, OutputDirFullPath)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -23,14 +23,14 @@ InfoCell = DataCell{1,3};
 yt=yt./std(yt,[],2);
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-lagOm = 3;
-lagFac = 3;
-b0 = zeros(1,dimX + levels);
-B0 =eye(dimX + levels);
-v0=6;
-r0 =4;
-s0 = 6;
-d0 = 4;
+lagOm = 3
+lagFac = 3
+b0 = zeros(1,dimX + levels)
+B0 =eye(dimX + levels)
+v0=6
+r0 =4
+s0 = 6
+d0 = 4
 g0 = zeros(1,lagFac);
 if lagFac == 3
     G0 = diag([.25, .5,1])*eye(lagFac);
@@ -45,9 +45,6 @@ igamma=.1.*ones(nFactors, lagFac);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity(InfoCell);
 initobsmodel = .1.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-% vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-%     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T), obsPrecision);
-% iFt = reshape(vecFt, nFactors,T);
 iFt = ones(nFactors,T).*.01;
 
 %%%%%%%
@@ -72,19 +69,12 @@ Ft = mean(storeFt,3);
 mu2=StateObsModel*Ft;
 yhat=reshape(mu1,K,T)+mu2;
 
-% SX = surForm(Xt,K);
-% Xbeta = reshape(SX*muvar(:),K,T);
-% Som = makeStateObsModel(mean(storeOM,3), Identities,0);
-% Ft = mean(storeFt,3);
-% GFt = Som*Ft;
-% yhat = Xbeta+GFt;
-
 period = strfind(DotMatFile, '.');
 fname = join(['Result_', DotMatFile(1:period-1),]);
 if OutputDirFullPath(end) ~= '/'
     OutputDirFullPath = join([OutputDirFullPath, '/']);
 end
-savedfile = join([OutputDirFullPath, fname,'_',createDateString('')]);
+savedfile = join([OutputDirFullPath, fname,'_', Job_Name_In_Queue, '_', createDateString('')]);
 fprintf('Saving file %s \n', savedfile)
 save(savedfile)
 

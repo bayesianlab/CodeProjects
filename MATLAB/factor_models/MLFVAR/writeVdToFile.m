@@ -5,7 +5,7 @@ filevardec= fopen(saveTostatespace, 'w+');
 subvd = varianceDecomp(subset,:);
 world = subvd(:,2);
 region =subvd(:,3);
-country= subvd(:,3);
+country= subvd(:,4);
 vard = subvd(:,1);
 for j = 1:size(subvd,1)
     if world(j) < .1
@@ -13,36 +13,36 @@ for j = 1:size(subvd,1)
         eloc = strfind(worldstr, 'e');
         p=worldstr(eloc+1:end-1);
         exponent = num2str(str2double(convertCharsToStrings(p)));
-        worldstr = join(['$', worldstr(1:eloc-1), ' \\times 10^{', exponent,'}$ &']);
+        worldstr = join(['$', worldstr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
     else
-        worldstr = sprintf(' %.1f &', subvd(j,2));
+        worldstr = sprintf('%.1f&', subvd(j,2));
     end
     if region(j) < .1
         regionstr = num2str(region(j),  ['%.1e', 3]);
         eloc = strfind(regionstr, 'e');
         p=regionstr(eloc+1:end-1);
         exponent = num2str(str2double(convertCharsToStrings(p)));
-        regionstr = join([' $', regionstr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
+        regionstr = join(['$', regionstr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
     else
-        regionstr = sprintf(' %.1f &', subvd(j,3));
+        regionstr = sprintf('%.1f&', subvd(j,3));
     end
     if country(j) < .1
         countrystr = num2str(country(j),  ['%.1e', 3]);
         eloc = strfind(countrystr, 'e');
         p=countrystr(eloc+1:end-1);
         exponent = num2str(str2double(convertCharsToStrings(p)));
-        countrystr = join([' $', countrystr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
+        countrystr = join(['$', countrystr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
     else
-        countrystr = sprintf(' %.1f &', subvd(j,4));
+        countrystr = sprintf('%.1f&', subvd(j,4));
     end
     if vard(j) < .1
         vardstr = num2str(vard(j),  ['%.1e', 3]);
         eloc = strfind(countrystr, 'e');
         p=vardstr(eloc+1:end-1);
         exponent = num2str(str2double(convertCharsToStrings(p)));
-        vardstr = join([' $', vardstr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
+        vardstr = join(['$', vardstr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
     else
-        vardstr = sprintf(' %.1f &', subvd(j,1));
+        vardstr = sprintf('%.1f&', subvd(j,1));
     end
     fstr = join([worldstr, regionstr, countrystr, vardstr, '\n']);
     fprintf(filevardec, fstr);
