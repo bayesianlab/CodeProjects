@@ -5,7 +5,7 @@ function [newvalue, alpha] = drawPhi(yt, xt, beta, deltas, obsv, delta0, Delta0)
 % This code has been checked
 [K,T] = size(yt);
 [~,p] = size(deltas);
-[L0, ~] = initCovar(deltas);
+[L0, ~] = initCovar(deltas, obsv);
 Cinv = chol(L0,'lower')\eye(p);
 Delta0delta0 = Delta0*delta0';
 
@@ -33,7 +33,7 @@ while unitCircle >=1
     end
 end
 
-S0draw = initCovar(draw);
+S0draw = initCovar(draw, obsv);
 S0drawlower= chol(S0draw,'lower');
 S0drawlowerinv = S0drawlower\eye(p);
 
