@@ -1,5 +1,5 @@
 function [P0, Phi, G,notvalid] = initCovar(params, sigmau)
-
+%% sigmau is a row
 [K,lags] = size(params);
 dis = (0:lags-1)*K;
 Phi = full(spdiags(params, dis, K, K*lags));
@@ -10,11 +10,10 @@ if sum(abs(eig(G)) > 1)
 end
 PhiKronPhi = kron(G,G);
 Im = speye(size(PhiKronPhi,1));
-R = full(spdiags(ones(K), 0, K*lags,K));
+R = sigmau'.*full(spdiags(ones(K), 0, K*lags,K));
 RRT = R*R';
-P0 = (Im - PhiKronPhi)\RRT(:);
+P0 = ((Im - PhiKronPhi)\RRT(:));
 P0 = reshape(P0, K*lags,K*lags);
-% P0 = diag(kron(ones(lags,1), sigmau))*P0;
 [~,p] = chol(P0);
 if p ~= 0 
     notvalid = 1;

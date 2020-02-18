@@ -26,9 +26,9 @@ nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 lagState=1;
 
 v0= 6
-r0 = 10
+r0 = .001
 s0 = 6
-d0 = 10
+d0 = .0001
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
 a0=1
@@ -38,7 +38,7 @@ G0 = eye(lagState)
 beta0 = [mean(yt,2)'; zeros(dimX-1, K)]
 B0inv = .1.*eye(dimX)
 
-initStateTransitions = .5.*ones(nFactors,lagState);
+initStateTransitions = .0.*ones(nFactors,lagState);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
 initobsmodel = .25.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);

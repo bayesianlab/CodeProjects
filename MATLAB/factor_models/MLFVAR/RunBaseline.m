@@ -40,8 +40,8 @@ end
 obsPrecision = ones(K,1);
 initStateTransitions = .1.*ones(nFactors,1);
 iBeta = [ones(K,dimX), unifrnd(0,1,K,levels)];
-idelta = .1.*ones(K,lagOm);
-igamma=.1.*ones(nFactors, lagFac);
+idelta = 0.*ones(K,lagOm);
+igamma=0.*ones(nFactors, lagFac);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity(InfoCell);
 initobsmodel = .1.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
