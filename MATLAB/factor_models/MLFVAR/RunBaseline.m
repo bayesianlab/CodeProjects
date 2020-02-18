@@ -1,10 +1,24 @@
-function [] = RunBaseline(Sims, burnin, calcML, autoregressiveErrors, DataPath,DotMatFile, Job_Name_In_Queue, OutputDirFullPath)
+function [] = RunBaseline(Sims, burnin, calcML, autoregressiveErrors, lagOM,...
+    lagFac, DataPath,DotMatFile, Job_Name_In_Queue, OutputDirFullPath)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
 if ischar(burnin)
     burnin = str2num(burnin);
 end
+if ischar(calcML)
+    calcML = str2num(calcML);
+end
+if ischar(autoregressiveErrors)
+    autoregressiveErrors = str2num(autoregressiveErrors);
+end
+if ischar(lagOM)
+    lagOM = str2num(lagOM);
+end
+if ischar(lagFac)
+    lagFac = str2num(lagFac);
+end
+
 fprintf('Current Working Directory\n')
 pwd
 if (DataPath == "")
@@ -23,8 +37,7 @@ InfoCell = DataCell{1,3};
 yt=yt./std(yt,[],2);
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-lagOm = 3
-lagFac = 3
+
 b0 = zeros(1,dimX + levels)
 B0 =eye(dimX + levels)
 v0=6

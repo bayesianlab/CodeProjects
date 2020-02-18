@@ -27,14 +27,14 @@ end
 y = kow(:,1:54);
 
 DataCell = cell(1,7);
-DataCell{1,1} = y;
-DataCell{1,2} = ones(K*T,1);
+DataCell{1,1} = y(:,1:30);
+DataCell{1,2} = ones(K*(T-24),1);
 DataCell{1,3} = InfoCell;
 DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/kose_rep_raw.mat', 'DataCell')
+save('BigKow/kose_aer_rep_raw.mat', 'DataCell')
 DataCell = cell(1,7);
 DataCell{1,1} = y(:,2:end);
 DataCell{1,2} = ones(K*(T-1),1);
@@ -43,7 +43,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/compare_raw.mat', 'DataCell')
+save('BigKow/newmethod_only_constant.mat', 'DataCell')
 DataCell = cell(1,7);
 DataCell{1,1} = y(:,2:end);
 DataCell{1,2} = X;
@@ -86,7 +86,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/kose_replication_standardized.mat', 'DataCell')
+save('BigKow/kose_compare_standardized.mat', 'DataCell')
 
 DataCell = cell(1,7);
 DataCell{1,1} = y(:, 1:30);
@@ -107,8 +107,6 @@ DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
 save('BigKow/kow_standardized.mat', 'DataCell')
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 

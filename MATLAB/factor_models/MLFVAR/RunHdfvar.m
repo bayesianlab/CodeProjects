@@ -5,6 +5,9 @@ end
 if ischar(burnin)
     burnin = str2num(burnin);
 end
+if ischar(estML)
+    estML = str2num(estML);
+end
 
 fprintf('Current Working Directory\n')
 pwd
