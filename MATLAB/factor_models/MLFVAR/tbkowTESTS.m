@@ -4,12 +4,12 @@ rng(65)
 % save('simdata', 'DataCell')
 % rng(1)
 % RunHdfvar(49, 0, '~/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakDataKOW', 'TimeEnd15.mat', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
-% RunHdfvar(22, 5, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'raw_data.mat','null', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+RunHdfvar(22, 5, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_standardized.mat','null', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 % % RunHdfvar(20, 10, 'BigKow', 'kowz_notcentered_resurrection.mat', 'TestDir')
 % RunHdfvar(30,  10, '', 'simdata.mat', 'TestDir')
 
-RunBaseline(10,1,'BigKow/', 'kose_rep_raw.mat', 'null', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+% RunBaseline(10,1,'BigKow/', 'kow_standardized.mat', 'null', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 % rng(9)
 % T = 200;

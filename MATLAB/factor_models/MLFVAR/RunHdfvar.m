@@ -1,4 +1,4 @@
-function [] = RunHdfvar(Sims, burnin, DataPath,DotMatFile, Job_Name_In_Queue, OutputDirFullPath)
+function [] = RunHdfvar(Sims, burnin, estML, DataPath,DotMatFile, Job_Name_In_Queue, OutputDirFullPath)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -26,9 +26,9 @@ nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 lagState=1;
 
 v0= 6
-r0 = .001
+r0 = 4
 s0 = 6
-d0 = .0001
+d0 = 4
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
 a0=1
@@ -50,14 +50,7 @@ vecFt  =  kowUpdateLatent(ydemut(:),  StateObsModel, ...
     kowStatePrecision(diag(initStateTransitions), initFactorVar, T), initObsPrecision);
 initFactor = reshape(vecFt, nFactors,T);
 identification = 2;
-%%%%%%%%%%%%
-%%%%%%%%%%%%
-%DONT FORGET TO TURN THIS ON!!!!!!!!!
-%%%%%%%%%%%%
-%%%%%%%%%%%%
-estML = 0; %%%%%%
-%%%%%%%%%%%%
-%%%%%%%%%%%%
+
 
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...

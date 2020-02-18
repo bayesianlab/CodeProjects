@@ -1,4 +1,4 @@
-function [] = RunBaseline(Sims, burnin, DataPath,DotMatFile, Job_Name_In_Queue, OutputDirFullPath)
+function [] = RunBaseline(Sims, burnin, calcML, autoregressiveErrors, DataPath,DotMatFile, Job_Name_In_Queue, OutputDirFullPath)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -47,12 +47,8 @@ initobsmodel = .1.*ones(K,levels);
 StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
 iFt = ones(nFactors,T).*.01;
 
-%%%%%%%
-calcML=1;  %
-%%%%%%%
-%%%%%%%%%%%%%%
-autoregressiveErrors=1;%
-%%%%%%%%%%%%%%
+
+
 
 [storeMean, storeLoadings, storeOmArTerms, storeStateArTerms,...
     storeFt, storeObsV, storeFactorVariance, varianceDecomp, ML] =...
