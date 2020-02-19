@@ -1,0 +1,27 @@
+Wednesday Feb 12th, 2020
+Submitted kose_fullT which is Kose's model on the full T
+observations of the data. For comparison to the new method, 
+the ML should be less than the new method. 
+
+Submitted constant_only which is my model using only a constant.
+ This should bring back the world factor. 
+
+Submitted aer_rep which is the attempt at repclicating Koses results
+from his 2003 AER paper. 
+
+Submitted eff_fac which is Kose's method using my model,
+for comparison of efficiency factors. Does not 
+compute ML. 
+
+Thursday Feb 13th, 2020
+
+All Kose Replication studies are wrong. They were compiled using RunHdfvar.m on accident.
+All other results are suspect because yt was standardized but not Xt.
+This seems to have no effect on the variance decompositions, but it should be rerun 
+so that he coefficients are not suspiciously large. 
+
+Priors were adjusted and runhdfvar was recompiled to reflect that. Priors on 
+Factor variance should be sufficiently large so that large loadings do not need 
+to be fit. 
+
+runbaseline_AER_REP is compiled RunBaseline.m
