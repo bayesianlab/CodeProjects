@@ -5,9 +5,12 @@ function [newvalue, alpha] = drawPhi(yt, xt, beta, deltas, obsv, delta0, Delta0)
 % This code has been checked
 [K,T] = size(yt);
 [~,p] = size(deltas);
-[L0, ~] = initCovar(deltas, obsv);
-Cinv = chol(L0,'lower')\eye(p);
-Delta0delta0 = Delta0*delta0';
+L0 = initCovar(deltas, obsv);
+[Clower,pd]=chol(L0,'lower');
+if pd ~= 0
+    Clower = eye(pd);
+end
+Cinv = Clower\eye(p);
 
 yp = yt(:,1:p);
 xp = xt(1:p, :);
@@ -19,7 +22,7 @@ epsilont = epsilont(:,p+1:end)';
 
 % Propose a candidate
 proposalVariance = (Delta0 +( Lagepsilont'*Lagepsilont)./obsv)\eye(p);
-proposalMeanN = proposalVariance*(Delta0delta0 + (Lagepsilont'*epsilont)./obsv);
+proposalMeanN = proposalVariance*(( Delta0\delta0')+ (Lagepsilont'*epsilont)./obsv);
 c=0;
 unitCircle = 2;
 while unitCircle >=1
@@ -37,20 +40,19 @@ S0draw = initCovar(draw, obsv);
 S0drawlower= chol(S0draw,'lower');
 S0drawlowerinv = S0drawlower\eye(p);
 
-Yp1 = ((S0drawlowerinv*yp') - (S0drawlowerinv*xp)*beta)';
-Y1 = [Yp1'; epsilont - (Lagepsilont*deltas')];
-Yp2 = ((Cinv*yp') - (Cinv*xp)*beta)';
-Y2 = [Yp2'; epsilont - (Lagepsilont*draw')];
+Yp1 = ((S0drawlowerinv'*yp') - (S0drawlowerinv'*xp)*beta)';
+Y1 = [Yp1'; (epsilont - (Lagepsilont*draw'))./obsv];
+Yp2 = ((Cinv'*yp') - (Cinv'*xp)*beta)';
+Y2 = [Yp2'; (epsilont - (Lagepsilont*deltas'))./obsv];
 
-LL = @(yt1,  phi)MHphi(yt1, obsv, phi, delta0, Delta0);
 proposalDist = @(x)logmvnpdf(x, proposalMeanN', proposalVariance);
 
-
-alpha = min(0, (LL(Y2, draw')+proposalDist(deltas)) - ...
-    (LL(Y1, deltas')+proposalDist(draw))  );
+Num=MHphi(Y1, S0drawlowerinv, draw', delta0, Delta0)+proposalDist(deltas);
+Den=MHphi(Y2, Cinv, deltas', delta0, Delta0)+proposalDist(draw);
+alpha = min(0, Num-Den);
 
 if log(unifrnd(0,1)) < alpha
-    newvalue = draw';
+    newvalue = draw;
 else
     newvalue = deltas;
 end

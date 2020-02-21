@@ -11,8 +11,8 @@ for i = 1: Rows
     [y,x] = kowLagStates(Factor(i,:), Arp);
     G = ((G0\eye(Arp)) +  (x*x')./sigma2 )\eye(Arp);
     gammahat = (G* ((G0\g0) +  (x*y')./sigma2))';
-    num = logmvnpdf(Factor(i,1), zeroarp, initCovar(stStar));
-    den = logmvnpdf(Factor(i,1), zeroarp, initCovar(stg));
+    num = logmvnpdf(Factor(i,1), zeroarp, initCovar(stStar,sigma2));
+    den = logmvnpdf(Factor(i,1), zeroarp, initCovar(stg, sigma2));
     alphag(i) = min(0, num-den) + logmvnpdf(stStar, gammahat,G);
 end
 end

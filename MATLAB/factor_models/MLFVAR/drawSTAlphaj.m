@@ -15,13 +15,13 @@ for i = 1: Rows
     gammahat = G* ( (G0\g0) + (x*y')./sigma2);
     while notValid == 1 & count < MAXCOUNT
         proposal = (gammahat+chol(G,'lower')*normrnd(0,1,Arp,1))';
-        [P0,~,~,notValid]= initCovar(proposal');
+        [P0,~,~,notValid]= initCovar(proposal', sigma2);
         count = count + 1;
     end
     if notValid==1
         P0 = eye(Arp);
     end
-    [P0old,~,~,~]=initCovar(st);
+    [P0old,~,~,~]=initCovar(st, sigma2);
     num = logmvnpdf(StateVariables(i,1:Arp), zeroarp, P0);
     den = logmvnpdf(StateVariables(i, 1:Arp), zeroarp, P0old);
     alphaj(i) = min(0, num-den);

@@ -11,7 +11,7 @@ for k=1:K
     tempOm = currobsmod(k,:);
     fidx=FtIndexMat(k,:);
     gammas = stateTransitions(fidx,:);
-    [L0, ssgam] = initCovar(diag(gammas));
+    [L0, ssgam] = initCovar(diag(gammas), factorVariance(fidx));
     StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fidx), T);
     pb(k)= pibeta(VARstar(:,k), tempy(:), tempx, tempObsPrecision,...
         tempOm, StatePrecision, betaPriorMean(:,k), betaPriorPre, T);

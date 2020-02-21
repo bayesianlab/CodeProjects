@@ -1,7 +1,7 @@
 function [storeMeans, storeLoadings, storeOmArTerms,...
     storeStateArTerms, storeFt, storeObsV, storeFactorVariance,...
-    varianceDecomp, ML] = Baseline(InfoCell,yt, xt, Ft, MeansLoadings,  omArTerms,...
-    factorArTerms, b0,B0, v0,d0, g0,G0, Sims, burnin, autoRegressiveErrors, calcML)
+    varianceDecomp, ML, vd] = Baseline(InfoCell,yt, xt, Ft, MeansLoadings,  omArTerms,...
+    factorArTerms, b0,B0, v0,d0, s0, r0, g0,G0, Sims, burnin, autoRegressiveErrors, calcML)
 %% Definitions
 % yt comes in as
 %[ y11...y1T;
@@ -36,7 +36,7 @@ meanRange = 1:meanIndex;
 levels=length(InfoCell);
 [~,M] =size(MeansLoadings);
 factorRange  = (meanIndex+1):M;
-
+allLevels = 1:levels;
 
 [~, lagOm] = size(omArTerms);
 [~, lagState]= size(factorArTerms);
@@ -66,7 +66,6 @@ igParamA = .5.*(v0 + T);
 obsVariance = ones(K,1);
 factorVariance = ones(nFactors,1);
 beta = zeros(levels+meanIndex,K);
-mut=zeros(K,T);
 meanFunction = MeansLoadings(:,meanRange)';
 loadings = MeansLoadings(:, factorRange);
 fakeX = zeros(T,1);
@@ -76,7 +75,7 @@ if autoRegressiveErrors == 0
 end
 for i = 1:Sims
     fprintf('Simulation i = %i\n',i)
-    
+
     %% Draw Mean, Loadings and AR Parameters
     for k = 1:K
         tempI = subsetIndices(k,:);
@@ -84,24 +83,28 @@ for i = 1:Sims
         tempx=[xt(tempI,:),Ft(FtIndexMat(k,:),:)'];
         tempdel=omArTerms(k,:);
         tempobv = obsVariance(k);
-        
         tempD0 = initCovar(omArTerms(k,:), tempobv);
         [beta(:,k), ~,~,ystar,xstar, ~] = drawBeta(tempy, tempx,  tempdel, tempobv, tempD0, b0, B0);
-        meanFunction(meanRange,k) = beta(meanRange,k)';
         loadings(k,:) = beta(factorRange,k);
-        loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*restrictions(k,:));
+        loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*double(restrictions(k,:) > 0));
+        beta(factorRange,k) = loadings(k,:)';
         if autoRegressiveErrors == 1
             omArTerms(k,:) = drawPhi(tempy, tempx, beta(:,k),tempdel, tempobv, g0,G0);
-        end
-        igParamB=d0+sum((ystar - beta(:,k)'*xstar').^2,2);
-        obsVariance(k) = 1./gamrnd(igParamA, 2./igParamB);
+        end        
+        igParamB=.5.*(d0+sum(  (ystar - (xstar*beta(:,k))').^2,2));
+        obsVariance(k) = 1./gamrnd(igParamA, 1./igParamB);
     end
-    %% Draw Factors
+    meanFunction= beta(meanRange,:);
+
+                %% Draw Factors
     SurX = surForm(xt,K);
     mu1t = reshape(SurX*meanFunction(:),K,T);
     demuyt = yt - mu1t;
     c=0;
-    for q = 1:levels
+    sorder = 1:levels;
+%     sorder = levels:(-1):1;
+%     sorder = randsample(allLevels, levels);
+    for q = sorder
         Info = InfoCell{1,q};
         COM = makeStateObsModel(loadings, Identities, q);
         alpha =loadings(:,q);
@@ -137,7 +140,7 @@ for i = 1:Sims
             Linv = chol(OmegaInv,'lower')\IT;
             Omega= Linv'*Linv;
             omega = Omega*commonMeanComponent;
-            Ft(c,:) = omega + Linv' * normrnd(0,1,T,1);
+            Ft(c,:) = (omega + Linv' * normrnd(0,1,T,1))';
         end
     end
     
@@ -147,7 +150,7 @@ for i = 1:Sims
     end
     
     %% Draw Factor Variances
-    [factorVariance,~]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
+    [factorVariance,~]  = drawFactorVariance(Ft, factorArTerms, factorVariance, s0, r0);
     %% Store post burn-in runs
     if i > burnin
         v = i - burnin;
@@ -163,24 +166,43 @@ for i = 1:Sims
 end
 
 %% Variance decomposition
-beta = mean(storeMeans,3);
 om = mean(storeLoadings,3);
+beta = mean(storeMeans,3);
 Ft = mean(storeFt,3);
 mu1 = reshape(surForm(xt,K)*beta(:),K,T);
-varMu1 = var(mu1, [], 2);
-facCount = 1;
-vd = zeros(K,levels);
-for k = 1:levels
-    Info = InfoCell{1,k};
-    Regions = size(Info,1);
-    for r = 1:Regions
-        subsetSelect = Info(r,1):Info(r,2);
-        vd(subsetSelect,k) = var(om(subsetSelect,k).*Ft(facCount,:),[],2);
-        facCount = facCount + 1;
+if autoRegressiveErrors == 1
+    vd_eps = levels+2;
+    vd = zeros(K,vd_eps);
+    omAr = mean(storeOmArTerms,3);
+    S = makeStateObsModel(om, Identities,0);
+    mu2 = S*Ft;
+    resids = yt - mu1 - mu2;
+    mu1 = reshape(surForm(xt,K)*beta(:),K,T);
+    vd(:,1) = var(mu1, [], 2);
+    for k = 1:K
+        epslag = lagMat(resids(k,:), lagOm)';
+        vd(k, vd_eps)=var(epslag*omAr(k,:)');
+        for j = 1:levels
+            tempF = Ft(FtIndexMat(k,j),:);
+            vd(k,j+1)=var(tempF*om(k,j));
+        end
     end
+    
+    varianceDecomp = vd./sum(vd,2);    
+    mean(varianceDecomp)
+else
+    vd = zeros(K,levels+1);
+    mu1 = reshape(surForm(xt,K)*beta(:),K,T);
+    vd(:,1) = var(mu1, [], 2);
+    for k = 1:K
+        for j = 1:levels
+            tempF = Ft(FtIndexMat(k,j),:);
+            vd(k,j+1)=var(tempF*om(k,j));
+        end
+    end
+    varianceDecomp = vd./sum(vd,2);
 end
-varianceDecomp = [varMu1,vd];
-varianceDecomp = varianceDecomp./sum(varianceDecomp,2);
+
 if calcML == 1
     %% Marginal likelihood
     ReducedRuns = Sims-burnin;
@@ -259,7 +281,7 @@ if calcML == 1
         end
         
         %% Draw Factor Variances
-        [factorVariance, ~]  = drawFactorVariance(Ft, factorArTerms, factorVariance, v0, d0);
+        [factorVariance, ~]  = drawFactorVariance(Ft, factorArTerms, factorVariance, s0, r0);
     end
     piBeta = sum(logAvg(storePiBeta));
     
@@ -338,7 +360,7 @@ if calcML == 1
         end
         storeFactorARRR(:,:, rr) = factorArTerms;
         %% Draw Factor Variances
-        [factorVariance, ~]  = drawFactorVariance(FactorStar, factorArTerms, factorVariance, v0, d0);
+        [factorVariance, ~]  = drawFactorVariance(FactorStar, factorArTerms, factorVariance, s0, r0);
     end
     piFactor =sum(logAvg(storePiFactor));
     
@@ -384,7 +406,7 @@ if calcML == 1
         end
         %% Draw Factor Variances
         [factorVariance, ~]  = drawFactorVariance(FactorStar, factorARStar, factorVariance,...
-            v0, d0);
+            s0, r0);
         storeFactorVarianceRR(:,rr) = factorVariance;
     end
     if autoRegressiveErrors== 1
@@ -403,7 +425,7 @@ if calcML == 1
         tempx=[xt(tempI,:),Ft(FtIndexMat(k,:),:)'];
         tempdelg=storeOMARRRg(k,:,rr);
         tempobv = omVarStar(k);
-        tempD0g = initCovar(tempdelg, tempobv);        
+        tempD0g = initCovar(tempdelg, tempobv);
         [~, ystar, xstar, ~] = drawBetaML(betaStar(k,:), tempy, tempx,...
             tempdelg, tempobv, tempD0g, b0, B0);
         igParamB=d0+sum((ystar - betaStar(k,:)*xstar').^2,2);
@@ -444,13 +466,15 @@ if calcML == 1
     priorOMAR = logmvnpdf( reshape(omARStar, 1, K*lagOm), zeros(1, K*lagOm), eye(K*lagOm));
     priorFactorAR = logmvnpdf(reshape(factorARStar', 1, nFactors*lagState),...
         zeros(1,nFactors*lagState), eye(nFactors*lagState));
-    priorVar = sum(logigampdf(omVarStar,v0,d0));
-    priorFactorVar = sum(logigampdf(factorVarStar,v0,d0));
+    priorVar = sum(logigampdf(omVarStar,.5.*v0,.5.*d0));
+    priorFactorVar = sum(logigampdf(factorVarStar, .5.*s0, .5.*r0));
     PRIORS = [priorBeta, Fpriorstar, priorOMAR, priorFactorAR, priorVar, priorFactorVar]
+    sum(PRIORS)
     if autoRegressiveErrors==1
-        POSTERIORS = [piBeta, piFactor, piOMAR, piFactorAR, piOmVar, piFV]
+        POSTERIORS = [ piFactor,piBeta, piOMAR, piFactorAR, piOmVar, piFV]
+        sum(POSTERIORS)
     else
-        POSTERIORS = [piBeta, piFactor,  piFactorAR, piOmVar, piFV]
+        POSTERIORS = [piFactor,piBeta,  piFactorAR, piOmVar, piFV]
     end
     
     ML = LL + sum(PRIORS) - sum(POSTERIORS)

@@ -166,7 +166,7 @@ if estML == 1
         Ftj = mean(storeFt,3);
         obsPrecisionj = mean(storeObsPrecision,2);
         fvj = mean(storeFactorVar,2);
-        [iP, ssState] =initCovar(stj);
+        [iP, ssState] =initCovar(stj, fvj);
         Si = FactorPrecision(ssState, iP, 1./fvj, T);
         %% MH for factor loadings
         fprintf('Reduced run for factor loadings\n')
@@ -241,7 +241,7 @@ if estML == 1
             [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecisionj,...
                 Astar, stStar, fvj, beta0, B0, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
-            [iP, ssState] =initCovar(stStar);
+            [iP, ssState] =initCovar(stStar, fvj);
             Si = FactorPrecision(ssState, iP, 1./fvj, T);
             vecy = reshape(yt-Xbeta, K*T,1);
             Ftj = reshape(kowUpdateLatent(vecy, StateObsModelStar,...
@@ -281,7 +281,7 @@ if estML == 1
                 [fvj, ~]  = drawFactorVariance(Ftj, stStar, fvj, s0, d0);
                 storeFactorVarj(:,r) = fvj;
             end
-            [iP, ssState] =initCovar(stStar);
+            [iP, ssState] =initCovar(stStar, fvj);
             Si = FactorPrecision(ssState, iP, 1./fvj, T);
         end
         piBeta = sum(logAvg(storePiBeta),1);
@@ -332,7 +332,7 @@ if estML == 1
 
     Fpriorstar = zeros(nFactors,1);
     for j = 1:nFactors
-        [iP, ssFactorARStar] =initCovar(stStar(j,:));
+        [iP, ssFactorARStar] =initCovar(stStar(j,:), factorVarianceStar(j));
         Kprecision = FactorPrecision(ssFactorARStar, iP, 1./factorVarianceStar(j), T);
         Fpriorstar(j) = logmvnpdf(FtStar(j,:), zeros(1,T ), Kprecision\eye(T));
     end
