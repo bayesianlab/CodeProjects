@@ -363,11 +363,11 @@ if calcML == 1
         [factorVariance, ~]  = drawFactorVariance(FactorStar, factorArTerms, factorVariance, s0, r0);
     end
     piFactor =sum(logAvg(storePiFactor));
-    
+    save('baseline_backup')
     %%%%%%%%%%%%%%%%%%%%
     %% OM AR Reduced Run
     fprintf('O.M. AR/Factor AR RR\n')
-    omARStar = mean(storeOMARRRg,3);
+    omARStar = mean(storeOMARRRg,3)
     factorARStar = mean(storeFactorARRR,3);
     storeAlphaOMARj = zeros(K,  ReducedRuns);
     storeAlphaFactorj = zeros(K, ReducedRuns);

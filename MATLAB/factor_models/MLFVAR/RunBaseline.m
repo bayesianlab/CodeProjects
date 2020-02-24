@@ -45,9 +45,9 @@ B0 =1.*eye(dimX + levels);
 B0(1,1) = 10;
 B0
 v0=6
-r0 = 10
+r0 = 4
 s0 = 6
-d0 = 10
+d0 = 4
 [m,v]=invGammaMoments(v0/2, r0/2)
 g0 = zeros(1,lagFac);
 if lagFac == 3
