@@ -5,7 +5,7 @@
 %% Application KOW dataset
 clear;clc;
 savepath = '~/GoogleDrive/statespace/';
-load('ResultsUsedInPaper/NewMethod_Feb4th.mat')
+load('ResultsUsedInPaper/NewMethod_Feb23rd.mat')
 % hold on
 % plot(yt(1,:))
 % plot(Ft(1,:))
@@ -55,6 +55,17 @@ ASIAOUT = 163:3:180;
 ASIACONS = 164:3:179;
 ASIAINV = 165:3:178;
 
+
+FtIndexMat = CreateFactorIndexMat(InfoCell);
+muOm = mean(storeOM,3);
+vdecomp = zeros(K,4);
+vdecomp(:,4) = var(Xbeta,[],2);
+for k = 1:size(FtIndexMat,1)
+    fidx = FtIndexMat(k,:);
+    vdecomp(k,1:3) = (var(muOm(k,:)'.*Ft(fidx,:),[],2))';
+    
+end
+vdecomp./sum(vdecomp,2)
 
 writeVdToFile('navd.txt', varianceDecomp, NA)
 writeVdToFile('ocvd.txt', varianceDecomp, OCEAN)
@@ -135,7 +146,6 @@ writeVdToFile('asiavd.txt', varianceDecomp, ASIA)
 % figure
 % na = plot(xaxis, Ft(2,:), 'black');
 % shade([1970, 1973, 1980, 1982, 1990, 2001, 2008], [1971, 1975, 1981, 1983, 1991, 2002, 2009], 'black')
-% ylim([-.6, .45])
 % saveas(na, join([savepath,'nafactorplot_recessions.jpeg']))
 
 % figure
@@ -193,41 +203,39 @@ writeVdToFile('asiavd.txt', varianceDecomp, ASIA)
 %  saveas(oceania, join([savepath, 'oceania.jpeg']))
 
 %% Latin America
-% figure
-% h = fill(fillX(1,:), fillY(4,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% latinAmerica  = plot(xaxis, Ft(4,:), 'black');
-% ylim([-2.25, 2.5])
-%  saveas(latinAmerica, join([savepath, 'latinAmerica.jpeg']))
+figure
+h = fill(fillX(1,:), fillY(4,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on
+latinAmerica  = plot(xaxis, Ft(4,:), 'black');
+ saveas(latinAmerica, join([savepath, 'latinAmerica.jpeg']))
 
 %% Africa
-% figure
-% h = fill(fillX(1,:), fillY(6,:), COLOR);
-% set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
-% hold on
-% africa  = plot(xaxis, Ft(6,:), 'black');
-%  saveas(africa, join([savepath, 'africa.jpeg']))
+figure
+h = fill(fillX(1,:), fillY(6,:), COLOR);
+set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
+hold on
+africa  = plot(xaxis, Ft(6,:), 'black');
+ saveas(africa, join([savepath, 'africa.jpeg']))
  
 % Latin America and Africa
-% figure
-% hold on
-% afrla = plot(xaxis, Ft(4,:), 'black');
-% plot(xaxis, Ft(6,:), 'blue')
-% saveas(afrla, join([savepath, 'afrla.jpeg']))
+figure
+hold on
+afrla = plot(xaxis, Ft(4,:), 'black');
+plot(xaxis, Ft(6,:), 'blue')
+saveas(afrla, join([savepath, 'afrla.jpeg']))
 
 %% Europe
 % figure
 % europe = plot(xaxis, Ft(5,:), 'black');
 % shade([1974, 1980, 1992, 2008, 2011], [1975, 1982, 1993, 2009, 2013], 'black')
-% saveas(europe, join([savepath, 'europefactor.jpeg']))
+% saveas(europe, join([savepath, 'europefactor_recessions.jpeg']))
 % hold off
 % figure
 % h = fill(fillX(1,:), fillY(5,:), COLOR);
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
 % europeregion  = plot(xaxis, Ft(5,:), 'black');
-% ylim([-.6, .6])
 % saveas(europeregion, join([savepath, 'europeregionplot.jpeg']))
 % 
 % 
@@ -240,7 +248,6 @@ writeVdToFile('asiavd.txt', varianceDecomp, ASIA)
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
 % asia_stderrs  = plot(xaxis, Ft(8,:), 'black');
-% ylim([-2.25, 2.5])
 % saveas(asia_stderrs, join([savepath, 'asia_stderrs.jpeg']))
 
 
@@ -250,8 +257,7 @@ writeVdToFile('asiavd.txt', varianceDecomp, ASIA)
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
 % asiadev_stderrs  = plot(xaxis, Ft(7,:), 'black');
-% ylim([-2.25, 2.5])
-% saveas(asiadev_stderrs, join([savepath, 'asiadev_stderrs.jpeg']))
+% saveas(asiadev_stderrs, join([savepath, 'asiadeveloping_stderrs.jpeg']))
 
 % figure
 % asiadevelop  = plot(xaxis, Ft(7,:), 'black');

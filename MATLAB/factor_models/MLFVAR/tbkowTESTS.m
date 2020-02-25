@@ -3,11 +3,11 @@ clear;clc;
 % DataCell = SimDataMLF(100, 1,1,15);
 % save('simdata', 'DataCell')
 % rng(1)
-% RunHdfvar( 22, 5, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_standardized.mat','memtest', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+RunHdfvar( 22, 5, 0, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_standardized.mat','memtest', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 % RunBaselineRaw(100, 10, 0, 1, 3, 3, 'BigKow/', 'kose_aer_rep_raw.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 % RunBaseline(22, 5, 0, 1, 3, 3, 'BigKow/', 'kose_compare_standardized.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
-RunBaseline(10000,2000, 1, 1, 3, 3, 'BigKow/', 'newmethod_only_constant_standardized.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+% RunBaseline(10000,2000, 1, 1, 3, 3, 'BigKow/', 'newmethod_only_constant_standardized.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 % rng(9)
 % T = 200;
