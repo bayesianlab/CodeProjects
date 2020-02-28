@@ -58,14 +58,14 @@
 % end
 
 clear;clc;
-load('BigKow/kose_replication_raw.mat')
+load('BigKow/kow_standardized.mat')
 yt = DataCell{1,1};
 Xt = DataCell{1,2};
 [K,T] = size(yt);
 InfoCell = DataCell{1,3};
 Factor = DataCell{1,4};
 Gamma = DataCell{1,6};
-Indx = 15:45;
+Indx = 19:34;
 if ~exist('TBKose', 'dir')
     mkdir('TBKose')
 end

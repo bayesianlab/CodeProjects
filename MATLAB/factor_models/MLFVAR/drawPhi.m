@@ -21,7 +21,7 @@ Lagepsilont = lagMat(epsilont, p)';
 epsilont = epsilont(:,p+1:end)';
 
 % Propose a candidate
-proposalVariance = (Delta0 +( Lagepsilont'*Lagepsilont)./obsv)\eye(p);
+proposalVariance = ((Delta0\eye(p)) +( Lagepsilont'*Lagepsilont)./obsv)\eye(p);
 proposalMeanN = proposalVariance*(( Delta0\delta0')+ (Lagepsilont'*epsilont)./obsv);
 c=0;
 unitCircle = 2;

@@ -367,7 +367,7 @@ if calcML == 1
     %%%%%%%%%%%%%%%%%%%%
     %% OM AR Reduced Run
     fprintf('O.M. AR/Factor AR RR\n')
-    omARStar = mean(storeOMARRRg,3)
+    omARStar = mean(storeOMARRRg,3);
     factorARStar = mean(storeFactorARRR,3);
     storeAlphaOMARj = zeros(K,  ReducedRuns);
     storeAlphaFactorj = zeros(K, ReducedRuns);
@@ -380,10 +380,9 @@ if calcML == 1
         for k = 1:K
             tempI = subsetIndices(k,:);
             tempy = yt(k,:);
-            tempx=[xt(tempI,:),Ft(FtIndexMat(k,:),:)'];
+            tempx=[xt(tempI,:),FactorStar(FtIndexMat(k,:),:)'];
             tempdelg=storeOMARRRg(k,:,rr);
             tempobv = obsVariance(k);
-            
             tempD0g = initCovar(tempdelg, tempobv);
             [~, ystar, xstar, ~] = drawBetaML(betaStar(k,:), tempy, tempx,...
                 tempdelg, tempobv, tempD0g, b0, B0);
@@ -442,7 +441,7 @@ if calcML == 1
     for k = 1:K
         tempI = subsetIndices(k,:);
         tempy = yt(k,:);
-        tempx=[xt(tempI,:),Ft(FtIndexMat(k,:),:)'];
+        tempx=[xt(tempI,:),FactorStar(FtIndexMat(k,:),:)'];
         tempdelg=storeOMARRRg(k,:,rr);
         tempobv = omVarStar(k);
         tempD0g = initCovar(tempdelg, tempobv);
@@ -463,9 +462,9 @@ if calcML == 1
         Fpriorstar(j) = logmvnpdf(FactorStar(j,:), zeros(1,T ), Kprecision\eye(T));
     end
     Fpriorstar=sum(Fpriorstar);
-    priorOMAR = logmvnpdf( reshape(omARStar, 1, K*lagOm), zeros(1, K*lagOm), eye(K*lagOm));
+    priorOMAR = logmvnpdf( reshape(omARStar, 1, K*lagOm), zeros(1, K*lagOm), kron(eye(K),G0));
     priorFactorAR = logmvnpdf(reshape(factorARStar', 1, nFactors*lagState),...
-        zeros(1,nFactors*lagState), eye(nFactors*lagState));
+        zeros(1,nFactors*lagState), kron(eye(nFactors),G0));
     priorVar = sum(logigampdf(omVarStar,.5.*v0,.5.*d0));
     priorFactorVar = sum(logigampdf(factorVarStar, .5.*s0, .5.*r0));
     PRIORS = [priorBeta, Fpriorstar, priorOMAR, priorFactorAR, priorVar, priorFactorVar]
