@@ -1,16 +1,16 @@
 %% Sample data single factor model
 clear;clc;
 % rng(1)
-K = 10;
+K = 25;
 subGroup = 5;
 subSubGroup = 2;
-T = 100;
+T = 200;
 KT = K*T;
 beta = .33;
-lags = 2;
+lags = 3;
 InfoCell{1} = [1,K];
-InfoCell{2} = [(1:subGroup:K)', (subGroup:subGroup:K)'];
-InfoCell{3} = [(1:subSubGroup:K)',(subSubGroup:subSubGroup:K)'];
+% InfoCell{2} = [(1:subGroup:K)', (subGroup:subGroup:K)'];
+% InfoCell{3} = [(1:subSubGroup:K)',(subSubGroup:subSubGroup:K)'];
 levels=length(InfoCell);
 nFactors =0;
 for i = 1:levels
@@ -26,7 +26,7 @@ end
 Ft = zeros(nFactors,T);
 for q = 1:nFactors
     gamma(q,:) = initializeARparams(1,lags);
-    ip = initCovar(gamma(q,:));
+    ip = initCovar(gamma(q,:),1);
     [Lambda,~]=FactorPrecision(gamma(q,:),ip, 1, T);
     Linv = chol(Lambda, 'lower')\eye(T);
     Ft(q,:) = reshape(Linv'*normrnd(0,1,T,1),1,T);
@@ -54,8 +54,8 @@ for t = 1:T
 end
 
 
-Sims = 60;
-bn = 10;
+Sims = 1000;
+bn = 100;
 %% True values
 igamma = gamma;
 iFt = Ft;
@@ -72,9 +72,32 @@ iBeta = [iBeta,Gh];
 % iGh = unifrnd(0,1,K,levels)
 % iBeta = [iBeta,Gh];
 % 
-v0 = 3;
-d0 = 6;
+dimX=size(consAndMean,2);
+b0 = ones(1,dimX + levels);
+b0(1) = 1;
+
+B0 =10.*eye(dimX + levels);
+B0(1,1) = 1;
+B0
+v0=6
+r0 = 4
+s0 = 6
+d0 = 4
+autoregressiveErrors=1;
+calcML =0;
+g0 = zeros(1,lags);
+if lags == 3
+    G0 = diag([.25, .5,1])*eye(lags);
+else
+    G0 = 1;
+end
 [storeMean, storeLoadings, storeOmArTerms, storeStateArTerms,...
     storeFt, storeObsV, storeFactorVariance] =...
     Baseline(InfoCell, yt,consAndMean, iFt, iBeta, idelta, igamma,...
-    v0,d0, Sims, bn,1);
+    b0, B0, v0,r0, s0, d0, g0, G0, Sims, bn, autoregressiveErrors, calcML);
+mFt = mean(storeFt,3);
+plot(Ft)
+hold on
+plot(mFt)
+mean(mean(storeMean,3))
+(Ft - mFt)*(Ft-mFt)'

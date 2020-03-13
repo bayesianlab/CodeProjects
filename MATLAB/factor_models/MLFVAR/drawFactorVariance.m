@@ -6,7 +6,6 @@ paramb = zeros(NF,1);
 draws = zeros(NF,1);
 IP = eye(lags);
 for q = 1 :NF
-
     [L0, ssterms] = initCovar(stateTransitions(q,:), factorVariance(q));
     [~, H] = FactorPrecision(ssterms, L0, 1./factorVariance(q), T);
     H(1:lags,1:lags) = (chol(L0,'lower')\IP)'*sqrt(factorVariance(q));

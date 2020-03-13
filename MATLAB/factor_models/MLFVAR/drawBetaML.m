@@ -13,6 +13,7 @@ ystar1=Cinv'*y1;
 iyt = lagMat(yt, lags);
 ystar = [reshape(ystar1,K,lags),y2 - deltas*iyt];
 sx = zeros(rx-lags, dimx);
+
 for g = 1:lags    
     sx = sx+deltas(g).* xt(g:T-lags + (g-1),:);
 end

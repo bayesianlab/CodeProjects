@@ -22,15 +22,14 @@
 % end
 % [a,b]=max(sumMls)
 % tml = load( 'SimulationStudyResults/Result_totaltime.mat', 'ml');
-% tml=tml.ml;
+% tml=tml.ml
 % hold on
 % plot(sumMls(:,1),sumMls(:,2))
 % plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
+% saveas(gcf, '~/GoogleDrive/statespace/sim_study_timebreak.jpg')
 
-
-% Feb. 10, 2020 Checked
 clear;clc;
-simpath = 'Trial2/';
+simpath = 'ResultsUsedInPaper/Trial4/';
 files = dir(join([simpath,'*.mat']));
 x =natsortfiles({files.name});
 length(x)
@@ -49,12 +48,13 @@ for g = 1:N
     sumMls(g,1) = c;
     c = c + 1;
 end
-[a,b]=max(sumMls)
-tml = load( 'ResultsUsedInPaper/Result_kow_standardized_reg_tests_27_Feb_2020_10_28_56.mat', 'ml');
+[a,b]=max(sumMls(:,2))
+tml =load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/ResultsUsedInPaper/Result_kow_standardized_reg_tests_27_Feb_2020_10_28_56.mat')
 tml=tml.ml;
 hold on
 plot(sumMls(:,1),sumMls(:,2))
 plot(sumMls(:,1),ones(size(sumMls,1),1).*tml)
+saveas(gcf, '~/GoogleDrive/statespace/fig:timebreak.jpg')
 
 
 % mean(mean(storeVAR,3),2)

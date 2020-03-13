@@ -65,17 +65,20 @@ Xt = DataCell{1,2};
 InfoCell = DataCell{1,3};
 Factor = DataCell{1,4};
 Gamma = DataCell{1,6};
-Indx = 19:34;
-if ~exist('TBKose', 'dir')
-    mkdir('TBKose')
+Indx = 18:28;
+folder = 'TimeBreakData';
+if ~exist(folder, 'dir')
+    mkdir(folder)
 end
 for i = Indx
     yte = yt(:, 1:i);
     Xte = Xt(1:K*i, :);
-    fnamee = sprintf('TBKose/TimeEnd%i',i);
+    nameB = sprintf( '/TimeEnd%i',i);
+    fnamee =join([folder,nameB]);
     ytb = yt(:,i+1:end);
     Xtb = Xt(K*i + 1:end,:);
-    fnameb = sprintf('TBKose/TimeBeg%i',i+1);
+    nameE = sprintf('/TimeBeg%i',i+1);
+    fnameb = join([folder, nameE]);
     DataCell{1,1} = yte;
     DataCell{1,2} = Xte;
     DataCell{1,3} = InfoCell;

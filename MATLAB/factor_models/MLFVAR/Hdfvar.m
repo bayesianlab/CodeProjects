@@ -198,14 +198,12 @@ if estML == 1
             
             %% State Transitions
             for n=1:nFactors
-                %                 stj(n,:) = drawPhi(Ftj(n,:), fakeX, fakeB, stj(n,:), fvj(n), g0, G0);
-                stj(n,:) = drawStateTransitions(stateTransitions(n,:), Ftj(n,:), fvj(n), g0,G0);
-                
+                stj(n,:) = drawStateTransitions(stateTransitions(n,:), Ftj(n,:), fvj(n), g0,G0);                
             end
             storeStateTransitionsj(:,:,r) = stj;
             
             if identification == 2
-                [fvj, factorParamb]  = drawFactorVariance(Ftj, stj, fvj,s0, d0);
+                [fvj, ~]  = drawFactorVariance(Ftj, stj, fvj,s0, d0);
                 storeFactorVarj(:,r) = fvj;
             end
         end
@@ -325,7 +323,6 @@ if estML == 1
     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*r0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
     B0=diag(repmat(1./diag(B0), K,1));
-    
     
     priorBeta = logmvnpdf(betaStar', beta0(:)', B0);
     priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
