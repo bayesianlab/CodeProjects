@@ -1,7 +1,7 @@
 function [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] =...
     Hdfvar(yt, Xt,  InfoCell,  Sims,burnin, initFactor, initobsmodel,...
-    initStateTransitions, initObsPrecision, initFactorVar, beta0, B0,...
+    initStateTransitions, initObsPrecision, initFactorVar, beta0, B0inv,...
     v0, r0, s0, d0, a0, A0inv, g0,G0, identification, estML, DotMatFile)
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
@@ -15,7 +15,7 @@ finishedFirstReducedRun = 0;
 finishedSecondReducedRun = 0;
 finishedThirdReducedRun = 0;
 [nFactors, lagState] = size(initStateTransitions);
-[K,T] = size(yt);
+[K,T] = size(yt)
 KT = K*T;
 SurX = surForm(Xt,K);
 [~, dimX] = size(Xt);
@@ -77,7 +77,7 @@ if finishedMainRun == 0
         %% Draw VAR params
         [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecision,...
             currobsmod, stateTransitions, factorVariance, beta0,...
-            B0, FtIndexMat, subsetIndices);
+            B0inv, FtIndexMat, subsetIndices);
         
         %% Draw loadings and factors
         [currobsmod, Ft, keepOmMeans, keepOmVariances]=...
@@ -123,6 +123,7 @@ if finishedMainRun == 0
     Ftbar = mean(storeFt,3);
     omBar = mean(storeOM,3);
     %% Variance Decompositions
+    size(SurX)
     varMu = var(reshape(SurX*betaBar,K,T), [],2);
     facCount = 1;
     vd = zeros(size(currobsmod,1),size(currobsmod,2));
@@ -173,7 +174,7 @@ if estML == 1
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
             [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecisionj,...
-                Astar, stj, fvj, beta0, B0, FtIndexMat, subsetIndices);
+                Astar, stj, fvj, beta0, B0inv, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
             Ftg = storeFt(:,:,r);
             stg = storeStateTransitionsg(:,:,r);
@@ -237,7 +238,7 @@ if estML == 1
                 storeFactorVarj(:,r) = fvj;
             end
             [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecisionj,...
-                Astar, stStar, fvj, beta0, B0, FtIndexMat, subsetIndices);
+                Astar, stStar, fvj, beta0, B0inv, FtIndexMat, subsetIndices);
             storeVARj(:,:,r) = VAR;
             [iP, ssState] =initCovar(stStar, fvj);
             Si = FactorPrecision(ssState, iP, 1./fvj, T);
@@ -266,7 +267,7 @@ if estML == 1
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
             storePiBeta(:,r) = piBetaStar(VARstar, yt, Xt, obsPrecisionj,...
-                Astar, stStar, fvj, beta0, B0, subsetIndices, FtIndexMat);
+                Astar, stStar, fvj, beta0, B0inv, subsetIndices, FtIndexMat);
             Ftj = reshape(kowUpdateLatent(ydemutStar(:), StateObsModelStar,...
                 Si,  obsPrecisionj), nFactors, T);
             storeFtj(:,:,r) = Ftj;
@@ -322,9 +323,9 @@ if estML == 1
     priorST = sum(logmvnpdf(stStar, g0, G0));
     priorObsVariance = sum(logigampdf(obsVarianceStar, .5.*v0, .5.*r0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
-    B0=diag(repmat(1./diag(B0), K,1));
+    B0inv=diag(repmat(1./diag(B0inv), K,1));
     
-    priorBeta = logmvnpdf(betaStar', beta0(:)', B0);
+    priorBeta = logmvnpdf(betaStar', beta0(:)', B0inv);
     priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
 
     Fpriorstar = zeros(nFactors,1);

@@ -4,10 +4,10 @@ rng(65)
 % save('simdata', 'DataCell')
 % rng(1)
 % RunHdfvar( 20, 2, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakData', 'TimeEnd23.mat','breaktest', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
-% RunHdfvar( 20, 2, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_standardized.mat','NM_ML', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+RunHdfvar( 20, 2, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_standardized.mat','NM_ML', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 % RunBaselineRaw(100, 10, 0, 1, 3, 3, 'BigKow/', 'kose_aer_rep_raw.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 % RunBaseline(22, 5, 0, 1, 3, 3, 'BigKow/', 'kose_compare_standardized.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
-RunBaseline(10000,2000, 1, 1,3, 3, 'BigKow/', 'kose_compare_standardized.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+% RunBaseline(10000,2000, 1, 1,3, 3, 'BigKow/', 'kose_compare_standardized.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 % rng(9)
 % T = 200;

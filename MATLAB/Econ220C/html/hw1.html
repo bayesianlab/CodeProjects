@@ -1,0 +1,169 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>hw1</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2020-04-20"><meta name="DC.source" content="hw1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Homework 1</a></li><li><a href="#2">OLS Estimates</a></li><li><a href="#3">Maximum Likelihood</a></li><li><a href="#4">Bayes Estimation</a></li><li><a href="#5">Results Compared</a></li><li><a href="#6">Expectations and Variability of estimators</a></li></ul></div><h2 id="1">Homework 1</h2><pre class="codeinput">clear;clc;
+rng(11)
+N=250;
+K=4;
+X = [ones(N,1), normrnd(0,5, N,K-1)];
+beta = ones(4,1);
+sigma2 = 1;
+y=X*beta + normrnd(0,sigma2, N,1);
+</pre><h2 id="2">OLS Estimates</h2><pre class="codeinput">bls = (X'*X)\(X'*y);
+e = (1/sqrt(N-K))*(y-X*bls);
+sebls = sqrt(diag( e'*e.*inv(X'*X) ));
+bls = round(bls,3);
+sebls = round(sebls,3);
+</pre><h2 id="3">Maximum Likelihood</h2><pre class="codeinput">negLL = @(b)  .5*(N*log(2*pi*b(end)) +  (y-X*b(1:end-1))'*(y-X*b(1:end-1))/b(end));
+options = optimoptions(@fminunc, <span class="string">'FiniteDifferenceType'</span>, <span class="string">'forward'</span>, <span class="string">'display'</span>, <span class="string">'off'</span>);
+[bmle, ~,~,~,~,H] = fminunc(negLL, [beta;sigma2], options);
+semle = sqrt(diag(H\eye(K+1)));
+</pre><h2 id="4">Bayes Estimation</h2><pre class="codeinput">b0 = zeros(K,1);
+B0 = 100*eye(K);
+nu0 = 6;
+d0 = 4;
+Sims = 11000;
+burnin = 1000;
+[storeb, stores2] = SimpleGibbsLS(y,X, b0, B0, nu0, d0, Sims, burnin);
+betaBayes = round(mean(storeb,2),3);
+sdBetaBayes = round(std(storeb,[],2),3);
+</pre><h2 id="5">Results Compared</h2><pre class="codeinput">betamle = round(bmle(1:end-1),3);
+semle = round(semle(1:end-1),3);
+table(bls, sebls, betamle, semle, betaBayes, sdBetaBayes)
+</pre><pre class="codeoutput">
+ans =
+
+  4&times;6 table
+
+     bls     sebls    betamle    semle    betaBayes    sdBetaBayes
+    _____    _____    _______    _____    _________    ___________
+
+    1.024     0.06     1.024      0.06      1.024         0.061   
+    0.987    0.012     0.987     0.012      0.987         0.012   
+    0.977    0.012     0.977     0.012      0.977         0.012   
+    0.995    0.012     0.995     0.012      0.995         0.012   
+
+</pre><h2 id="6">Expectations and Variability of estimators</h2><p>The expectaions in OLS and MLE depend on data not yet observed. In OLS the expectation is taken over the distribution of the beta OLS but this distribution may not exist, for instance, if the experiment is not repeatable. The OLS estimator could be far into the tail in this case and it would not be known. The MLE estimator is similar. The Asymptotic variance and mean may not be met in finite samples. Only as the limit of the sample size goes to infinity does the Asymptotic behavior of the CRLB actually achieved. In small samples the variance could be quite large, and it is doubtful that it is close to the CRLB in most cases. The Bayes estimator only averages over the posterior distribution, which is derived conditional only on the data observed. The intervals are more intuitive than the corresponding frequentist intervals, which only give confidence to the procedure in which the estimator was calculated. The confidence intervals do not give a probability of the true parameter lying within their domain in the Frequentist setting, but Bayesian credible intervals do have a probabilistic interpretation.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Homework 1
+clear;clc;
+rng(11)
+N=250;
+K=4;
+X = [ones(N,1), normrnd(0,5, N,K-1)];
+beta = ones(4,1);
+sigma2 = 1;
+y=X*beta + normrnd(0,sigma2, N,1);
+
+%% OLS Estimates 
+bls = (X'*X)\(X'*y);
+e = (1/sqrt(N-K))*(y-X*bls);
+sebls = sqrt(diag( e'*e.*inv(X'*X) ));
+bls = round(bls,3);
+sebls = round(sebls,3);
+
+%% Maximum Likelihood
+negLL = @(b)  .5*(N*log(2*pi*b(end)) +  (y-X*b(1:end-1))'*(y-X*b(1:end-1))/b(end));
+options = optimoptions(@fminunc, 'FiniteDifferenceType', 'forward', 'display', 'off');
+[bmle, ~,~,~,~,H] = fminunc(negLL, [beta;sigma2], options);
+semle = sqrt(diag(H\eye(K+1)));
+
+%% Bayes Estimation
+b0 = zeros(K,1);
+B0 = 100*eye(K);
+nu0 = 6;
+d0 = 4;
+Sims = 11000;
+burnin = 1000;
+[storeb, stores2] = SimpleGibbsLS(y,X, b0, B0, nu0, d0, Sims, burnin);
+betaBayes = round(mean(storeb,2),3);
+sdBetaBayes = round(std(storeb,[],2),3);
+
+%% Results Compared 
+betamle = round(bmle(1:end-1),3);
+semle = round(semle(1:end-1),3);
+table(bls, sebls, betamle, semle, betaBayes, sdBetaBayes)
+
+%% Expectations and Variability of estimators
+% The expectaions in OLS and MLE depend on data not yet observed. 
+% In OLS the expectation is taken over the distribution of the beta OLS
+% but this distribution may not exist, for instance, if the experiment is not 
+% repeatable. The OLS estimator could be far into the tail in this case and it 
+% would not be known. The MLE estimator is similar. The Asymptotic variance
+% and mean may not be met in finite samples. Only as the limit of the sample
+% size goes to infinity does the Asymptotic behavior of the CRLB actually 
+% achieved. In small samples the variance could be quite large, and it is doubtful
+% that it is close to the CRLB in most cases. 
+% The Bayes estimator only averages over the posterior distribution, which is derived
+% conditional only on the data observed. The intervals are more intuitive than the 
+% corresponding frequentist intervals, which only give confidence to the procedure
+% in which the estimator was calculated. The confidence intervals do not give 
+% a probability of the true parameter lying within their domain in the Frequentist setting,
+% but Bayesian credible intervals do have a probabilistic interpretation. 
+##### SOURCE END #####
+--></body></html>

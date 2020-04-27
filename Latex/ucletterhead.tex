@@ -1,0 +1,261 @@
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{ucletter}
+
+\RequirePackage{ifthen}
+\RequirePackage{graphics}
+\RequirePackage{mathptm}
+\RequirePackage{times}
+
+% Default is short return address
+\newcommand{\ucl@fromaddr}{short}
+
+% Defaults are for the Computer Science Department at UCSC...
+\newcommand{\ucl@univ}{UCI}
+\newcommand{\ucl@campus}{Irvine}
+\newcommand{\ucl@school}{School of Social Sciences}
+\newcommand{\ucl@univstreet}{3151 Social Sciences Plaza}
+\newcommand{\ucl@univtown}{Irvine, California 92697-5100 }
+\newcommand{\ucl@dept}{Department of Economics}
+\newcommand{\ucl@deptphone}{(949) 824-2182 }
+\newcommand{\ucl@deptfax}{+1 (831) 459-4829}
+\newcommand{\ucl@depturl}{http://www.cs.ucsc.edu/}
+\newcommand{\ucl@deptemail}{econ@uci.edu}
+\newcommand{\ucl@telephone}{}
+\newcommand{\ucl@email}{}
+\newcommand{\ucl@fax}{}
+\newcommand{\dept}[1]{\renewcommand{\ucl@dept}{#1}}
+\newboolean{ucl@firstfooter}
+\setboolean{ucl@firstfooter}{false}
+\newboolean{ucl@otherfooter}
+\setboolean{ucl@otherfooter}{false}
+\newcommand{\ucl@pagetitle}{}
+
+% These commands show up in the return address, but NOT in the footer on each page
+\newcommand{\email}[1]{\renewcommand{\ucl@email}{#1}}
+\newcommand{\fax}[1]{\renewcommand{\ucl@fax}{#1}}
+
+
+\DeclareOption{ucsc}{
+	\renewcommand{\ucl@univ}{UCSC}
+	\renewcommand{\ucl@campus}{Santa Cruz}
+	\renewcommand{\ucl@depturl}{http://www.soe.ucsc.edu/}
+	\renewcommand{\ucl@univstreet}{Baskin Engineering Building}
+	\renewcommand{\ucl@univtown}{Santa Cruz, California 95064}
+	\DeclareOption{soe}{
+		\dept{Jack Baskin School of Engineering}
+		\renewcommand{\ucl@deptphone}{+1 (831) 459-2158}
+		\renewcommand{\ucl@school}{Jack Baskin School of Engineering}
+		\renewcommand{\ucl@deptfax}{+1 (831) 459-4829}
+		\renewcommand{\ucl@depturl}{http://www.soe.ucsc.edu/}
+	}
+	\DeclareOption{cs}{
+		\dept{Computer Science Department}
+		\renewcommand{\ucl@deptphone}{+1 (831) 459-5745}
+		\renewcommand{\ucl@school}{Jack Baskin School of Engineering}
+		\renewcommand{\ucl@deptfax}{+1 (831) 459-4829}
+		\renewcommand{\ucl@depturl}{http://www.cs.ucsc.edu/}
+	}
+	\DeclareOption{ce}{
+		\dept{Computer Engineering Department}
+		\renewcommand{\ucl@school}{Jack Baskin School of Engineering}
+		\renewcommand{\ucl@deptphone}{+1 (831) 459-5745}
+		\renewcommand{\ucl@deptfax}{+1 (831) 459-4829}
+		\renewcommand{\ucl@depturl}{http://www.ce.ucsc.edu/}
+	}
+	\DeclareOption{ee}{
+		\dept{Electrical Engineering Department}
+		\renewcommand{\ucl@school}{Jack Baskin School of Engineering}
+		\renewcommand{\ucl@deptphone}{+1 (831) 459-5745}
+		\renewcommand{\ucl@deptfax}{+1 (831) 459-4829}
+		\renewcommand{\ucl@depturl}{http://www.ee.ucsc.edu/}
+	}
+	\DeclareOption{econ}{
+		\dept{Economics Department}
+		\renewcommand{\ucl@deptphone}{+1 (949)-824-2766}
+		\renewcommand{\ucl@depturl}{http://www.economics.uci.edu}
+	}
+	\DeclareOption{ams}{
+		\dept{Applied Mathematics \& Statistics}
+		\renewcommand{\ucl@school}{Jack Baskin School of Engineering}
+		\renewcommand{\ucl@deptphone}{+1 (831) 459-4822}
+		\renewcommand{\ucl@deptfax}{+1 (831) 459-4829}
+		\renewcommand{\ucl@depturl}{http://www.ams.ucsc.edu/}
+	}
+}
+
+\DeclareOption{ucsb}{
+	\renewcommand{\ucl@univ}{UCSB}
+	\renewcommand{\ucl@campus}{Santa Barbara}
+	\renewcommand{\ucl@school}{}
+	\DeclareOption{cs}{
+		\renewcommand{\ucl@dept}{Department of Computer Science}
+		\renewcommand{\ucl@deptphone}{}
+		\renewcommand{\ucl@deptfax}{}
+		\renewcommand{\ucl@depturl}{http://www.cs.ucsb.edu/}
+		\renewcommand{\ucl@univstreet}{}
+		\renewcommand{\ucl@univtown}{Santa Barbara, California 93106-5110}
+	}
+}
+
+\DeclareOption{uci}{
+	\renewcommand{\ucl@univ}{UCI}
+	\renewcommand{\ucl@campus}{Irvine}
+	\renewcommand{\ucl@school}{Henri Samueli School of Engineering}
+	
+	\DeclareOption{eecs}{
+		\renewcommand{\ucl@dept}{Department of Electrical Engineering and Computer Science}
+		\renewcommand{\ucl@deptphone}{949-824-4821}
+		\renewcommand{\ucl@deptfax}{}
+		\renewcommand{\ucl@depturl}{http://www.eng.uci.edu/}
+		\renewcommand{\ucl@univstreet}{325 Engineering Tower}
+		\renewcommand{\ucl@univtown}{Irvine, California 92697-2625}
+	}
+}
+
+\DeclareOption{nofrom}{
+	\renewcommand{\ucl@fromaddr}{none}
+}
+
+\DeclareOption{shortfrom}{
+	\renewcommand{\ucl@fromaddr}{short}
+}
+
+\DeclareOption{fullfrom}{
+	\renewcommand{\ucl@fromaddr}{full}
+}
+
+\DeclareOption{datefrom}{
+	\renewcommand{\ucl@fromaddr}{date}
+}
+
+\DeclareOption{noaddrfooter}{
+	\setboolean{ucl@firstfooter}{false}
+	\setboolean{ucl@otherfooter}{false}
+}
+
+\DeclareOption{addrfooterall}{
+	\setboolean{ucl@firstfooter}{true}
+	\setboolean{ucl@otherfooter}{true}
+}
+
+\DeclareOption{addrfooter}{
+	\setboolean{ucl@firstfooter}{false}
+	\setboolean{ucl@otherfooter}{true}
+}
+
+\DeclareOption*{\PassOptionsToClass{\CurrentOption}{letter}}
+\ProcessOptions
+
+\LoadClass{letter}
+\RequirePackage{fullpage}
+
+\renewcommand{\telephone}[1]{\renewcommand{\ucl@telephone}{#1}}
+\newcommand{\@sixrm}{\fontfamily{ptm}\fontsize{6}{8}\selectfont}
+\newcommand{\@svnrm}{\fontfamily{ptm}\fontsize{7}{9}\selectfont}
+\newcommand{\@egtrm}{\fontfamily{ptm}\fontsize{8}{10}\selectfont}
+\newcommand{\@twlrm}{\fontfamily{ptm}\fontsize{12}{14}\selectfont}
+\newcommand{\@ctrdot}{\hspace*{1.4pt}$\cdot$\hspace*{1.4pt}}
+
+% Build the UC letterhead
+\newsavebox{\@ucletterhead}
+\sbox{\@ucletterhead}{\parbox[b]{7in}{
+		\begin{tabular*}{7in}{@{}l@{\extracolsep\fill}r@{}}
+			\@twlrm\selectfont UNIVERSITY OF CALIFORNIA, {\MakeUppercase \ucl@campus} &
+		\end{tabular*}\\
+		\begin{tabular*}{7in}{@{}l@{}c@{}r@{}}
+			\parbox{4.60in}{\rule{4.55in}{0.25pt} \\
+				\@svnrm BERKELEY\@ctrdot DAVIS\@ctrdot \textbf{ IRVINE}\@ctrdot
+				LOS ANGELES\@ctrdot MERCED\@ctrdot RIVERSIDE\@ctrdot
+				SAN DIEGO\@ctrdot SAN FRANCISCO\hspace\fill \\
+				\rule[3pt]{4.55in}{0.25pt}} &
+			\parbox{0.75in}{\resizebox{0.75in}{!}{\includegraphics{ucsealnew}}}
+			\parbox{1.6in}{\rule{1.6in}{0.25pt} \\
+				\rule{0mm}{4pt}\hspace\fill
+				\@svnrm SANTA BARBARA\@ctrdot SANTA CRUZ\hspace*{1pt} \\
+				\rule[3pt]{1.6in}{0.25pt}}
+		\end{tabular*}
+		\vspace*{24pt}
+		% HERE IS THE RETURN ADDRESS CODE
+		\begin{minipage}[b]{7in}
+			\vspace{10pt}
+			\begin{flushright}
+				\begin{tabular}{l} 
+					\large \textbf{\ucl@dept} \\
+					\normalsize
+					\ucl@univstreet \\ 
+					\ucl@univtown \\
+					\ucl@deptphone \\
+					\ucl@deptemail \\
+				\end{tabular} 
+			\end{flushright}
+		\end{minipage}
+	}
+}
+
+\newcommand{\@ucaddress}{
+	\begin{minipage}[t]{2.2in}
+		\ifthenelse{\equal{\ucl@fromaddr}{full}}{
+			\ifthenelse{\equal{\ucl@dept}{}}{}{\ucl@dept\\}
+			\ucl@school \\
+			University of California \\
+			\ifthenelse{\equal{\ucl@univstreet}{}}{}{\ucl@univstreet\\}
+			\ucl@univtown \\
+		}
+		{}
+	\end{minipage}
+}
+
+% Dot with spacing around it
+\newcommand{\@spcdot}{\hspace{7pt}$\cdot$\hspace{7pt}}
+
+
+\newcommand{\pagetitle}[1]{\renewcommand{\ucl@pagetitle}{#1}}
+
+\setlength{\topmargin}{-0.5in}
+\setlength{\footskip}{0.5in}
+\setlength{\textwidth}{7in}
+\setlength{\oddsidemargin}{-0.25in}
+\setlength{\evensidemargin}{-0.25in}
+
+
+\newlength{\@ucaddrht}
+\renewcommand{\ps@firstpage}
+{
+	\setlength{\headheight}{0.9in}
+	\setlength{\headsep}{0.10in}
+	\setlength{\textheight}{8.5in}
+	\renewcommand{\@oddhead}{\centerline{\parbox{7in}{\usebox{\@ucletterhead}}}}
+	\renewcommand{\@evenhead}{}
+	% Use a blank for the page number - no number on the first page of the letter
+	\renewcommand{\@oddfoot}{\ifthenelse{\boolean{ucl@firstfooter}}{\@addrfoot{~}}{}}
+	\renewcommand{\@evenfoot}{\@oddfoot}
+}
+
+\renewcommand{\ps@headings}{
+	\setlength{\headheight}{0.25in}
+	\setlength{\headsep}{0.25in}
+	\setlength{\textheight}{9in}
+	% Right justify the page number
+	\renewcommand{\@oddhead}{\hspace*{\fill}\ucl@pagetitle\hspace*{\fill}\thepage}
+	\renewcommand{\@evenhead}{\@oddhead}
+	% Pass the page number to the footer, which doesn't do anything currently
+	\renewcommand{\@oddfoot}{\ifthenelse{\boolean{ucl@otherfooter}}{\@addrfoot{\thepage}}{}}
+	\renewcommand{\@evenfoot}{\@oddfoot}
+}
+
+\pagestyle{headings}
+
+\renewcommand{\opening}[1]{
+	\thispagestyle{firstpage}
+	\vspace*{0.25in}
+	\ifthenelse{\equal{\ucl@fromaddr}{none}}{}{
+		\noindent\rule{4.25in}{0mm}
+		\@ucaddress
+	}
+	\par\noindent\toname \\ \toaddress
+	
+	\vspace{1ex}
+	
+	\noindent #1
+}

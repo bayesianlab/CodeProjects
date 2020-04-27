@@ -74,6 +74,14 @@ def searchAndDropDups(lenders, allocation, startEndDates, leadList):
     return (lenders, allocation, startEndDates, leadList)
 
 
+1. good variable names and function names (descriptive-their names are what they do) 
+	a. Function names as verbs, variable names as nouns 
+	b. Should have a naming convention that you follow, and stick to it
+
+2. functions should be short (<20 lines)
+
+3. should not repeat yourself in your code
+
 
 def searchForMatch(file, borrowerIdCol, lenderIdCol, packageIdCol, allocationCol, startDateCol, endDateCol,
                    leadArrangerCredit, baseRateCol):

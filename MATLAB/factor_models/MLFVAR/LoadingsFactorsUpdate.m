@@ -15,7 +15,7 @@ alpha = zeros(nFactors,1);
 
 for q = 1:levels
     COM = makeStateObsModel(currobsmod, Identities, q);
-    mut = Xbeta + COM*Ft;
+    mut = reshape(Xbeta, K,T) + COM*Ft;
     ydemut = yt - mut;
     Info = InfoCell{1,q};
     region = size(Info,1);

@@ -31,15 +31,16 @@ lagState=1;
 v0= 6
 r0 = 4
 s0 = 6
-d0 = 10
+d0 = 4
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
 a0=1
 A0inv = 1
 g0 = zeros(1,lagState)
 G0 = eye(lagState)
+yt
 beta0 = [mean(yt,2)'; zeros(dimX-1, K)]
-B0inv = 10.*eye(dimX)
+B0inv = 1.*eye(dimX)
 
 initStateTransitions = zeros(nFactors,lagState);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);

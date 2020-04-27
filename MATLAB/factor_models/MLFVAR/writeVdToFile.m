@@ -5,7 +5,7 @@ filevardec= fopen(saveTostatespace, 'w+');
 subvd = varianceDecomp(subset,:);
 world = subvd(:,2);
 region =subvd(:,3);
-country= subvd(:,4);
+% country= subvd(:,4);
 vard = subvd(:,1);
 for j = 1:size(subvd,1)
     if world(j) < .1
@@ -26,15 +26,15 @@ for j = 1:size(subvd,1)
     else
         regionstr = sprintf('%.1f&', subvd(j,3));
     end
-    if country(j) < .1
-        countrystr = num2str(country(j),  ['%.1e', 3]);
-        eloc = strfind(countrystr, 'e');
-        p=countrystr(eloc+1:end-1);
-        exponent = num2str(str2double(convertCharsToStrings(p)));
-        countrystr = join(['$', countrystr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
-    else
-        countrystr = sprintf('%.1f&', subvd(j,4));
-    end
+%     if country(j) < .1
+%         countrystr = num2str(country(j),  ['%.1e', 3]);
+%         eloc = strfind(countrystr, 'e');
+%         p=countrystr(eloc+1:end-1);
+%         exponent = num2str(str2double(convertCharsToStrings(p)));
+%         countrystr = join(['$', countrystr(1:eloc-1), ' \\times 10^{', exponent,'}$&']);
+%     else
+%         countrystr = sprintf('%.1f&', subvd(j,4));
+%     end
     if vard(j) < .1
         vardstr = num2str(vard(j),  ['%.1e', 3]);
         eloc = strfind(countrystr, 'e');
@@ -44,7 +44,9 @@ for j = 1:size(subvd,1)
     else
         vardstr = sprintf('%.1f&', subvd(j,1));
     end
-    fstr = join([worldstr, regionstr, countrystr, vardstr, '\n']);
+%     fstr = join([worldstr, regionstr, countrystr, vardstr, '\n']);
+%     fprintf(filevardec, fstr);
+        fstr = join([worldstr, regionstr,vardstr, '\n']);
     fprintf(filevardec, fstr);
 end
 fclose(filevardec');
