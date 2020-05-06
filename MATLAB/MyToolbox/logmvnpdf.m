@@ -5,7 +5,7 @@ function [logp] = logmvnpdf(x,mu,Sigma)
 const = -0.5 * D * log(2*pi);
 xc = bsxfun(@minus,x,mu);
 term1 = -0.5 * sum((xc / Sigma) .* xc, 2); % N x 1
-term2 = const - 0.5 * logdet(Sigma);    % scalar
+term2 = const - 0.5 * logdet(Sigma)  ;  % scalar
 logp = term1' + term2;
     function y = logdet(A)
         

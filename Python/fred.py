@@ -9,6 +9,7 @@ import pickle
 import os.path
 from os import path
 import sys
+import subprocess
 
 RedownloadData = input('Redownload Data? y/n ')
 YES = ['Y', 'y', 'Yes', 'yes']
@@ -72,23 +73,21 @@ Code = ['AL',
 'WI',
 'WY']
 if not path.exists('/home/precision/CodeProjects/Python/fredata.p') or  flag == 1:
-   # print('Redownloading data')
-   # c =0
-   # ed = {}
-   # for i in search['id']:
-   #     if 'CLAIMS' in i:
-   #         if i[0:2] in Code:
-   #             c = c+ 1;
-   #             print(i, c)
-   #             x=fred.get_series(i) 
-   #             ed[i] = x
-   # pickle.dump( ed, open( "fredata.p", "wb"  )  )
+    print('Redownloading data')
+    c =0
+    ed = {}
+    for i in search['id']:
+        if 'CLAIMS' in i:
+            if i[0:2] in Code:
+                c = c+ 1;
+                print(i, c)
+                x=fred.get_series(i) 
+                ed[i] = x
+    pickle.dump( ed, open( "fredata.p", "wb"  )  )
     ed=pickle.load(open('fredata.p', 'rb'))
     FredFrame = pd.DataFrame(ed)
     FredFrame = FredFrame.T
-    print(FredFrame)
     FredFrame=FredFrame.iloc[:, 1859:]
-    print(FredFrame) 
     FredFrame.to_csv('JoblessClaims.csv')
 
     print('Downloading covid data') 
@@ -108,18 +107,15 @@ else:
     ed=pickle.load(open('fredata.p', 'rb'))
     FredFrame = pd.DataFrame(ed)
     FredFrame = FredFrame.T
-    FredFrame=FredFrame.iloc[1100:]
+    FredFrame=FredFrame.iloc[:,1859:]
     FredFrame.T.to_csv('JoblessClaims.csv')
 
-
-
-
-
-
 stateCovid = pd.read_csv('statebystate.csv')
-
 stateCovid=stateCovid.groupby('State').sum()
 #print(stateCovid)
 stateCovid=stateCovid.drop(columns=['countyFIPS','stateFIPS'])
 #print(stateCovid)
 stateCovid.to_csv('statecovid.csv')
+print('Executing R commands...')
+subprocess.call('/home/precision/CodeProjects/R/statecovid_to_weekly.R')
+print('Done')
