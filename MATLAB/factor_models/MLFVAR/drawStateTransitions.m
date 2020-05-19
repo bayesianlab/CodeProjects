@@ -16,7 +16,7 @@ while notvalid == 1
         break
     end
     if c == MAXTRIES
-        proposal=tnormrnd(-.95, .95, 0,1);
+        proposal=tnormrnd(-.99, .99, 0,1);
         P1 = 1;
         break
     end

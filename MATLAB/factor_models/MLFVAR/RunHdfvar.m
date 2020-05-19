@@ -1,4 +1,5 @@
-function [] = RunHdfvar(Sims, burnin, estML, DataPath,DotMatFile, Job_Name_In_Queue, OutputDirFullPath)
+function [] = RunHdfvar(Sims, burnin, estML, DataPath, DotMatFile, Job_Name_In_Queue,...
+    OutputDirFullPath)
 if ischar(Sims)
     Sims = str2num(Sims);
 end
@@ -38,7 +39,7 @@ a0=1
 A0inv = 1
 g0 = zeros(1,lagState)
 G0 = eye(lagState)
-yt
+
 beta0 = [mean(yt,2)'; zeros(dimX-1, K)]
 B0inv = 1.*eye(dimX)
 

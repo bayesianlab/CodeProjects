@@ -4,167 +4,144 @@ rng(65)
 % save('simdata', 'DataCell')
 % rng(1)
 % RunHdfvar( 20, 2, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakData', 'TimeEnd23.mat','breaktest', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
-RunHdfvar( 20, 2, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_standardized.mat','NM_ML', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+% RunHdfvar( 20, 2, 1, '~/CodeProjects/MATLAB/factor_models/MLFVAR/BigKow', 'kow_standardized.mat','NM_ML', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 % RunBaselineRaw(100, 10, 0, 1, 3, 3, 'BigKow/', 'kose_aer_rep_raw.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 % RunBaseline(22, 5, 0, 1, 3, 3, 'BigKow/', 'kose_compare_standardized.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 % RunBaseline(10000,2000, 1, 1,3, 3, 'BigKow/', 'kose_compare_standardized.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
-% rng(9)
-% T = 200;
+
+% T=200;
 % K = 10;
-% timebreak = 100;
-% MLFtimebreaks(K,T,timebreak)
-% load('/home/precision/CodeProjects/MATLAB/factor_models/MLFVAR/TimeBreakSimData/totaltime.mat')
-% yt = DataCell{1,1};
-% Xt = DataCell{1,2};
-% Ft = DataCell{4};
-% 
-% [K,~]= size(yt);
-% yt1 = yt(:,1:timebreak);
-% Xt1 = Xt(1:K*timebreak,:);
-% [K,T1] = size(yt1);
-% InfoCell = DataCell{1,3};
+% gamma = .2;
+%
+% [P0] = initCovar(gamma, 1) ;
+% Ki = FactorPrecision(gamma, P0, 1, T);
+% Lk = chol(Ki,'lower')\eye(T);
+% F = Lk'*normrnd(0,1,T,1);
+% Xt = normrnd(0,1,T*K,1);
+% beta = ones(1,1);
+% Xbeta = Xt*beta;
+% A = ones(K,1);
+% AF = A*F';
+% yt = reshape(Xbeta + AF(:) + normrnd(0,1,T*K,1), K,T);
+%
+%
+% InfoCell = {[1,K]}
+% [K,T] = size(yt);
+% [~, dimX] = size(Xt);
 % levels = size(InfoCell,2);
 % nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-% v0=6;
-% r0 =10;
-% s0 = 6;
-% d0 = 10;
-% obsPrecision = ones(K,1);
-% initStateTransitions = .5.*ones(nFactors,1);
-% [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-% initobsmodel = ones(K,levels);
-% StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-% vecFt  =  kowUpdateLatent(yt1(:),  StateObsModel, ...
-%     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T1), obsPrecision);
-% initFactor = reshape(vecFt, nFactors,T1);
-% identification = 2;
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% %DONT FORGET TO TURN THIS ON!!!!!!!!!
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% estML = 1; %%%%%
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% Sims = 150;
-% burnin=50;
-% [storeFt, storeVAR, storeOM, storeStateTransitions,...
-%     storeObsPrecision, storeFactorVar,varianceDecomp, ml1] = Hdfvar(yt1, Xt1,  InfoCell, Sims,...
-%     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, 'TBTEST');
-% 
-% yt2 = yt(:,(timebreak+1):end);
-% Xt2 = Xt((K*timebreak + 1):end,:);
-% [K,T1] = size(yt2);
-% InfoCell = DataCell{1,3};
-% [~, dimX] = size(Xt1);
-% levels = size(InfoCell,2);
-% nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-% v0=6;
-% r0 =10;
-% s0 = 6;
-% d0 = 10;
-% obsPrecision = ones(K,1);
-% initStateTransitions = .1.*ones(nFactors,1);
-% [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-% initobsmodel = ones(K,levels);
-% StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-% vecFt  =  kowUpdateLatent(yt2(:),  StateObsModel, ...
-%     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T1), obsPrecision);
-% initFactor = reshape(vecFt, nFactors,T1);
-% identification = 2;
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% %DONT FORGET TO TURN THIS ON!!!!!!!!!
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% estML = 1; %%%%%%
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% 
-% [storeFt, storeVAR, storeOM, storeStateTransitions,...
-%     storeObsPrecision, storeFactorVar,varianceDecomp, ml2] = Hdfvar(yt2, Xt2,  InfoCell, Sims,...
-%     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, 'TBTEST');
-% 
-% 
-% [K,T1] = size(yt);
-% InfoCell = DataCell{1,3};
-% [~, dimX] = size(Xt1);
-% levels = size(InfoCell,2);
-% nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-% v0=6;
-% r0 =10;
-% s0 = 6;
-% d0 = 10;
-% obsPrecision = ones(K,1);
-% initStateTransitions = .5.*ones(nFactors,1);
-% [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-% initobsmodel = ones(K,levels);
-% StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-% vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-%     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T1), obsPrecision);
-% initFactor = reshape(vecFt, nFactors,T1);
-% identification = 2;
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% %DONT FORGET TO TURN THIS ON!!!!!!!!!
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% estML = 1; %%%%%%
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% 
+% lagState=1;
+% v0= 6
+% r0 = 6
+% s0 = 6
+% d0 = 6
+% [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
+% [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
+% a0=0
+% A0inv = 5
+% g0 = zeros(1,lagState)
+% G0 = eye(lagState)
+%
+% beta0 = [mean(yt,2)'; zeros(dimX-1, K)]
+% B0inv = 10.*eye(dimX)
+%
+%
+% Sims = 50;
+% burnin = 5;
+% initFactor = zeros(1,T);
+% initStateTransitions = 0;
+% initObsPrecision = ones(10,1);
+% initFactorVar = 10;
+% initobsmodel = A;
+% identification=2;
+% estML=0;
 % [storeFt, storeVAR, storeOM, storeStateTransitions,...
 %     storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
-%     burnin, initFactor,  initobsmodel, initStateTransitions, v0, r0, s0, d0, identification, estML, 'TBTEST');
-% 
-% A=ml1+ml2
-% B=ml
-% A-B
-% disp(A>B)
-% 
-% load('simdata.mat')
-% yt = DataCell{1,1};
-% Xt = DataCell{1,2};
-% Ft = DataCell{4};
-% 
-% [K,T]= size(yt);
-% 
-% [K,T1] = size(yt);
-% InfoCell = DataCell{1,3};
+%     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...
+%     beta0, B0inv, v0, r0, s0, d0, a0,A0inv, g0, G0, identification, estML, 'Tests');
+% Fhat = mean(storeFt,3);
+% figure
+% plot(F)
+% hold on
+% plot(Fhat)
+% fprintf('\nVAR PARAMS\n')
+% disp(mean(storeVAR,3))
+% fprintf('\n OBS MODEL \n')
+% disp(mean(storeOM,3))
+% fprintf('\n State Transitions\n')
+% disp(mean(storeStateTransitions,3))
+% fprintf('\n OBS VARIANCE \n')
+% disp(1./mean(storeObsPrecision,2))
+% fprintf('\n FACTOR VARIANCE \n')
+% disp(mean(storeFactorVar,2))
+% fprintf('\n VARIANCE DECOMP\n')
+% disp(varianceDecomp)
+
+clear;
+
+ModuleTests()
+
+% [P0] = initCovar(gamma, 1) ;
+% Ki = FactorPrecision(gamma, P0, 1, T);
+% Lk = chol(Ki,'lower')\eye(T);
+% F = Lk'*normrnd(0,1,T,1);
+% Xt = normrnd(0,1,T*K,1);
+% beta = ones(1,1);
+% Xbeta = Xt*beta;
+% A = ones(K,1);
+% AF = A*F';
+% yt = reshape(Xbeta + AF(:) + normrnd(0,1,T*K,1), K,T);
+%
+%
+% InfoCell = {[1,K]}
+% [K,T] = size(yt);
+% [~, dimX] = size(Xt);
 % levels = size(InfoCell,2);
 % nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-% v0= .1.*mean(var(yt,[],2));
-% r0 =v0;
-% s0 = v0;
-% d0 = v0;
-% obsPrecision = .5.*ones(K,1);
-% initStateTransitions = .01.*ones(nFactors,1);
-% [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
-% initobsmodel = .1.*ones(K,levels);
-% initObsPrecision = 1./var(yt,[],2);
-% StateObsModel = makeStateObsModel(initobsmodel,Identities,0);
-% vecFt  =  kowUpdateLatent(yt(:),  StateObsModel, ...
-%     kowStatePrecision(diag(initStateTransitions), ones(nFactors,1),T1), obsPrecision);
-% initFactor = reshape(vecFt, nFactors,T1);
-% % initFactor = DataCell{4};
-% % identification = 2;
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% %DONT FORGET TO TURN THIS ON!!!!!!!!!
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
-% estML = 0; %%%%%
-% %%%%%%%%%%%%
-% %%%%%%%%%%%%
+% lagState=1;
+% v0= 6
+% r0 = 6
+% s0 = 6
+% d0 = 6
+% [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
+% [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
+% a0=0
+% A0inv = 5
+% g0 = zeros(1,lagState)
+% G0 = eye(lagState)
+%
+% beta0 = [mean(yt,2)'; zeros(dimX-1, K)]
+% B0inv = 10.*eye(dimX)
+%
+%
+% Sims = 50;
+% burnin = 5;
+% initFactor = zeros(1,T);
+% initStateTransitions = 0;
+% initObsPrecision = ones(10,1);
+% initFactorVar = 10;
+% initobsmodel = A;
 % identification=2;
-% Sims = 150;
-% burnin=50;
+% estML=0;
 % [storeFt, storeVAR, storeOM, storeStateTransitions,...
-%     storeObsPrecision, storeFactorVar,varianceDecomp, ml1] = Hdfvar(yt, Xt,  InfoCell, Sims,...
-%     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, v0, r0, s0, d0, identification, estML, 'TBTEST');
-% 
-% betas = mean(storeVAR,3);
-% mu1 = reshape(surForm(Xt, K)*betas(:),K,T);
-% mu2 = makeStateObsModel(mean(storeOM,3),Identities,0)*mean(storeFt,3);
-% yhat=mu1+mu2;
+%     storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
+%     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...
+%     beta0, B0inv, v0, r0, s0, d0, a0,A0inv, g0, G0, identification, estML, 'Tests');
+% Fhat = mean(storeFt,3);
+% figure
+% plot(F)
+% hold on
+% plot(Fhat)
+% fprintf('\nVAR PARAMS\n')
+% disp(mean(storeVAR,3))
+% fprintf('\n OBS MODEL \n')
+% disp(mean(storeOM,3))
+% fprintf('\n State Transitions\n')
+% disp(mean(storeStateTransitions,3))
+% fprintf('\n OBS VARIANCE \n')
+% disp(1./mean(storeObsPrecision,2))
+% fprintf('\n FACTOR VARIANCE \n')
+% disp(mean(storeFactorVar,2))
+% fprintf('\n VARIANCE DECOMP\n')
+% disp(varianceDecomp)

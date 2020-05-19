@@ -3,6 +3,8 @@ function [storeFt, storeVAR, storeOM, storeStateTransitions,...
     Hdfvar(yt, Xt,  InfoCell,  Sims,burnin, initFactor, initobsmodel,...
     initStateTransitions, initObsPrecision, initFactorVar, beta0, B0inv,...
     v0, r0, s0, d0, a0, A0inv, g0,G0, identification, estML, DotMatFile)
+% Statetransitions are stored [world;regions;country]
+
 periodloc = strfind(DotMatFile, '.') ;
 checkpointdir = join( [ '~/CodeProjects/MATLAB/factor_models/MLFVAR/Checkpoints/',...
     DotMatFile(1:periodloc-1),'_Checkpoints/'] )
@@ -15,7 +17,7 @@ finishedFirstReducedRun = 0;
 finishedSecondReducedRun = 0;
 finishedThirdReducedRun = 0;
 [nFactors, lagState] = size(initStateTransitions);
-[K,T] = size(yt)
+[K,T] = size(yt);
 KT = K*T;
 SurX = surForm(Xt,K);
 [~, dimX] = size(Xt);
@@ -23,7 +25,7 @@ dimSurX = dimX*K;
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 levels = length(sectorInfo);
 [~,dimx]=size(Xt);
-FtIndexMat = CreateFactorIndexMat(InfoCell);
+FtIndexMat = CreateFactorIndexMat(InfoCell)
 subsetIndices = zeros(K,T);
 for k = 1:K
     subsetIndices(k,:)= k:K:KT;
@@ -37,8 +39,6 @@ currobsmod = setObsModel(initobsmodel, InfoCell);
 Ft = initFactor;
 fakeX = zeros(T,1);
 fakeB = zeros(1,1);
-
-
 
 % Storage
 Runs = Sims - burnin;
@@ -123,7 +123,6 @@ if finishedMainRun == 0
     Ftbar = mean(storeFt,3);
     omBar = mean(storeOM,3);
     %% Variance Decompositions
-    size(SurX)
     varMu = var(reshape(SurX*betaBar,K,T), [],2);
     facCount = 1;
     vd = zeros(size(currobsmod,1),size(currobsmod,2));
