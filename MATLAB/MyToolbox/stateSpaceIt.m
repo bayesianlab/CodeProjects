@@ -1,7 +1,8 @@
-function [ss] = stateSpaceIt(params)
+function [ssgamma] = stateSpaceIt(Gamma,lags)
 % Give params as row vec
-lags = size(params,2) ;
-zb = zeros(lags-1, 1);
-ss = [params;eye(lags-1),zb];
+KL = K*lags;
+padding = spdiags(ones(KL),0,K*(lags-1),KL);
+ssgamma = [Gamma; padding];
+
 end
 

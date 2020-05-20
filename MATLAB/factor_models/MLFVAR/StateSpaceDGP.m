@@ -4,9 +4,8 @@ function [F, H, Rs, vt] = StateSpaceDGP(Gamma, sigma2, T)
 
 K=size(Gamma,1);
 lags= size(Gamma,2)/K;
-KL = K*lags;
-padding = spdiags(ones(KL),0,K*(lags-1),KL);
-ssgamma = [Gamma; padding];
+KL= K*lags;
+ssgamma= stateSpaceIt(Gamma,lags);
 [P0, P0lower, R, notvalid] = CalcInitCovar(ssgamma, sigma2, lags);
 F = zeros(KL, T);
 vt = zeros(K,T);

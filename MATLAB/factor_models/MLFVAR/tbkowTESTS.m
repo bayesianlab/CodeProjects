@@ -82,6 +82,21 @@ clear;
 
 ModuleTests()
 
+x= normrnd(0,1,5,1);
+mu = ones(5,1);
+Sigma = wishrnd(eye(5), 5)
+
+
+SL  = chol(Sigma,'lower')\eye(5);
+z=x-mu;
+sx = z'*SL';
+
+
+adj = sum(log(diag(SL)));
+
+logmvnpdf(x',mu',Sigma)
+adjustedlogmvnpdf(sx, SL)
+
 % [P0] = initCovar(gamma, 1) ;
 % Ki = FactorPrecision(gamma, P0, 1, T);
 % Lk = chol(Ki,'lower')\eye(T);
