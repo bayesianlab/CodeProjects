@@ -7,6 +7,7 @@ nFactorsK = nFactors*K;
 % A | F
 OmegaI = diag(obsPrecision);
 FtOF = kron(OmegaI, factor*factor');
+
 Avariance = (ObsPriorPrecision + FtOF)\eye(nFactorsK);
 Term = ((factor*ydemut').*obsPrecision');    
 

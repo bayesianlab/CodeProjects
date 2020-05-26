@@ -5,17 +5,15 @@ function [P,H] = FactorPrecision(params, P0, precision, T)
  %                     Frt
  %                      Fct ]
  % F = Vectorized (F1, F2,...,FT)
-[nFactors,columns] = size(params);
-lags =columns/nFactors;
-dees = (0:lags-1)*nFactors;
-exdiags = dees;
-pdiags = -repmat(spdiags(params, exdiags), T,1);
-dees = (0:lags)*nFactors;
-pdiags = [pdiags, ones(nFactors*T,1)];
-H = spdiags(pdiags, dees ,nFactors*(T-lags), nFactors*T);
-H = [spdiags(ones(nFactors*lags,1),0, nFactors*lags, nFactors*T);H];
-Sinv = spdiags(repmat(precision, T,1), 0, nFactors*T, nFactors*T);
-Sinv(1:nFactors*lags, 1:nFactors*lags) = P0\eye(nFactors*lags);
+[K,columns] = size(params);
+lags =columns;
+dees = (0:lags)*K;
+newp = [-params, ones(K,1)];
+H = spdiags(repmat(newp,T,1), dees, (T-lags)*K, T*K);
+topblock=spdiags(ones(K*lags,1), 0, lags*K, T*K);
+H = [topblock;H];
+Sinv = spdiags(repmat(precision, T,1), 0, K*T, K*T);
+Sinv(1:K*lags, 1:K*lags) = P0\eye(K*lags);
 P = H'*Sinv*H;
 end
 

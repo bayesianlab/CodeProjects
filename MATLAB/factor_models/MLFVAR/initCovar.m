@@ -4,7 +4,11 @@ function [P0, Phi, G,notvalid] = initCovar(params, sigmau)
 %                       gamma_region_lag1,...,gamma_region_lagP; 
 % ...
 %                       ...]
-[K,lags] = size(params);
+K=length(sigmau);
+[K1,lags] = size(params);
+if K ~=K1
+    error('sigmau needs to have same number of rows as params.')
+end
 dis = (0:lags-1)*K;
 Phi = full(spdiags(params, dis, K, K*lags));
 G = [Phi;eye( (lags-1)*K),zeros( (lags-1)*K, K)];
@@ -19,6 +23,5 @@ P0 = reshape(P0, K*lags,K*lags);
 if p ~= 0 
     notvalid = 1;
 end
-
 end
 

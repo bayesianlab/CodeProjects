@@ -8,6 +8,7 @@ for q=1:levels
     for r = 1:Regions
         fcount = fcount+1;
         subsetSelect = Info(r,1):Info(r,2);
+        
         K = length(subsetSelect);
         astar = Astar(subsetSelect,q);
         astar = reshape(astar(2:end), 1, K-1);

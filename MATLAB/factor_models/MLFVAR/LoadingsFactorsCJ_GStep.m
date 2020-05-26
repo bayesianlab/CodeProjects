@@ -1,6 +1,6 @@
 function [alpha_prop] = ...
     LoadingsFactorsCJ_GStep(fixedValueTheta, thetaG, yt, Xbeta, Ft, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell,runningAvgMu, runningAvgVar, a0, A0)
+    obsPrecision, factorVariance, Identities, InfoCell,runningAvgMu, runningAvgVar, a0, A0inv)
 
 df = 15;
 [K,T] = size(yt);
@@ -13,15 +13,16 @@ for q = 1:levels
     mut = Xbeta + COM*Ft;
     ydemut = yt - mut;
     Info = InfoCell{1,q};
+    
     regs = size(Info,1);
     for r=1:regs
         fcount = fcount+1;
         [L0, ssgam] = initCovar(stateTransitions(fcount,:), factorVariance(fcount));
         StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fcount), T);
         tempf = Ft(fcount,:);
-        subset = Info(r,1):Info(r,2);
-        apriormean = a0.*ones(1, length(subset)-1);
-        Apriorprecision =  A0.*eye(length(subset)-1);
+        subset = Info(r,1):Info(r,2);        
+        apriormean = a0.*zeros(1, length(subset)-1);
+        Apriorprecision =  A0inv.*eye(length(subset)-1);
         %% MH step
         ty = ydemut(subset,:);
         ty = ty(2:end,:);
@@ -39,6 +40,7 @@ for q = 1:levels
         Den = LogLikePositive(gTheta(2:end)) + proposalDistNum(fxTheta(2:end)');
         alpha_prop(fcount) = min(0,Num - Den) +  proposalDistNum(fxTheta(2:end)');
     end
+    
 end
 end
 
