@@ -27,21 +27,21 @@ InfoCell = DataCell{1,3};
 [~, dimX] = size(Xt);
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-lagState=1;
+lags=1;
 
 v0= 6
-r0 = 4
+r0 = 8
 s0 = 6
-d0 = 4
+d0 = 8
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
 a0=1
 A0inv = 1
 g0 = zeros(1,lagState)
-G0 = eye(lagState)
+G0=diag(fliplr(.5.^(0:lags-1)));
 
-beta0 = [mean(yt,2)'; zeros(dimX-1, K)]
-B0inv = 1.*eye(dimX)
+beta0 = [mean(yt,2)'; zeros(dimX-1, K)];
+B0inv = 1.*eye(dimX);
 
 initStateTransitions = zeros(nFactors,lagState);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
