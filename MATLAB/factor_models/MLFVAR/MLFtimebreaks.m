@@ -12,8 +12,8 @@ beta = ones(xcols, 1);
 gam = .1.*ones(nFactors,1);
 stateTransitionsAll = gam'.*eye(nFactors);
 speyeT = eye(T);
-[iP, ssState] =initCovar(stateTransitionsAll);
-Si = FactorPrecision(ssState, iP, 1./(ones(nFactors,1)), T)\ speyeT;
+[iP, ~] =initCovar(stateTransitionsAll, ones(nFactors,1));
+Si = FactorPrecision(stateTransitionsAll, iP, 1./(ones(nFactors,1)), T)\ speyeT;
 Factor = mvnrnd(zeros(nFactors*T,1), Si);
 Factor = reshape(Factor,nFactors,T);
 

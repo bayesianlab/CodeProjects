@@ -66,12 +66,16 @@ for q = 1:levels
         LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
         [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
         H = Covar\eye(length(s2));
+        [Hlower, p] = chol(H,'lower');
+        if p ~= 0 
+            Hlower = eye(length(s2));
+        end
         ty = ydemut(subset,:);
         ty = ty(2:end,:);
         top = obsPrecision(subset);
         top = top(2:end);
         
-        proposal = themean + chol(H,'lower')*normrnd(0,1,length(s2), 1)./w1;
+        proposal = themean + Hlower*normrnd(0,1,length(s2), 1)./w1;
         proposalDist= @(prop) mvstudenttpdf(prop, themean', H, df);
         
         LogLikePositive = @(val) LLcond_ratio (val, ty, a0m,A0invp, top, tempf, StatePrecision);

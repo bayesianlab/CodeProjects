@@ -37,13 +37,13 @@ d0 = 8
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
 a0=1
 A0inv = 1
-g0 = zeros(1,lagState)
+g0 = zeros(1,lags)
 G0=diag(fliplr(.5.^(0:lags-1)));
 
 beta0 = [mean(yt,2)'; zeros(dimX-1, K)];
 B0inv = 1.*eye(dimX);
 
-initStateTransitions = zeros(nFactors,lagState);
+initStateTransitions = zeros(nFactors,lags);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
 initobsmodel = ones(K,levels);
 initObsPrecision = 1./var(yt,[],2);

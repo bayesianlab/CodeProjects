@@ -1,4 +1,10 @@
 clear;clc;
+if ~exist('BigKow/', 'dir')
+    mkdir('BigKow')
+end
+if ~exist('BigKow/RegionTests', 'dir')
+    mkdir('BigKow/RegionTests')
+end
 SeriesPerCountry= 3;
 Countries = 60;
 K = 180;
