@@ -69,6 +69,7 @@ for q = 1:levels
         [Hlower, p] = chol(H,'lower');
         if p ~= 0 
             Hlower = eye(length(s2));
+            H = eye(length(s2));
         end
         ty = ydemut(subset,:);
         ty = ty(2:end,:);
