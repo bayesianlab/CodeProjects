@@ -1,6 +1,6 @@
 clear;clc;
-% rng(1001)
-N = 150;
+
+N = 250;
 K=4;
 Q = 3;
 X = [ones(N*K,1), normrnd(0,1,N*K, Q-1)];
@@ -15,12 +15,22 @@ mean(zt,2)
 
 
 b0= ones(Q,1);
-B0 = 100.*eye(Q);
+B0 = 10.*eye(Q);
 Sims=100;
-bn = 10;
+bn = 20;
 tau0 = 0;
 T0 = .5;
-[storeSigma0, storeBeta]=GeneralMvProbit(yt, X, R,Sims, bn, b0, B0, tau0, T0);
 
-mean(storeSigma0,3)
-mean(storeBeta,2)
+s0 = vech(R, -1);
+S0 = .5.*eye(size(s0,1));
+R0 = eye(K);
+[storeSigma0, storeBeta]=GeneralMvProbit(yt, X, R0, b0, B0, tau0, T0, s0, S0, Sims, bn, zt);
+
+musig = mean(storeSigma0,2);
+Q = unVechMatrixMaker(K, -1);
+Qmu = reshape(Q*musig,K,K);
+
+Rest = round(Qmu + Qmu' + eye(K),3);
+table(Rest,R )
+mubeta = round(mean(storeBeta,2),3);
+table(mubeta,beta(:) )

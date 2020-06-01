@@ -1,6 +1,6 @@
 function [draws] = NormalTruncatedPositive(mu, sigma2, N)
 draws = zeros(N,1);
-newCut = -mu/sigma2;
+newCut = -mu/sqrt(sigma2);
 for i = 1:N
     if newCut > 5
         draws(i)=mu+sqrt(sigma2)*drawRobertTruncated(newCut);

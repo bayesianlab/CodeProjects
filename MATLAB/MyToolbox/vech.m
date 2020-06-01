@@ -1,11 +1,7 @@
-function[v] = vech(matA)
-[M,N] = size(matA);
-if (M == N)
-    v  = [];
-    for ii=1:M
-        v = [v; matA(ii:end,ii)];
-    end
-else
-     error('Input must be a symmetric matrix.')
+function [v] = vech(Matrix, diag)
+if diag > 0
+    error('diag cannot be greater than 0')
 end
+v = Matrix(tril(true(size(Matrix)),diag));
 end
+
