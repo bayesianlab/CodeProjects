@@ -22,7 +22,7 @@ storeBeta = zeros(KP,StationaryRuns);
 
 
 unvech = unVechMatrixMaker(K,-1);
-
+vechIndex = vechIndices(K);
 mut = reshape(surX*beta,K,T);
 
 for s = 1:Sims
@@ -36,7 +36,8 @@ for s = 1:Sims
     demuyt = zt-mut;
     
     % Sample Correlation Mat
-    Sigma0 = mvp_rwSigmaDraw(Sigma0,demuyt, tau0, T0, s0, S0, unvech);
+    Sigma0 = mvp_rwSigmaDraw(Sigma0,demuyt, tau0, T0, s0, S0, unvech,...
+        vechIndex);
     
     % Store Posteriors
     if s > bn

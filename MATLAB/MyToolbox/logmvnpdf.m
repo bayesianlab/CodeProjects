@@ -7,6 +7,7 @@ xc = bsxfun(@minus,x,mu);
 term1 = -0.5 * sum((xc / Sigma) .* xc, 2); % N x 1
 term2 = const - 0.5 * logdet(Sigma)  ;  % scalar
 logp = term1' + term2;
+
     function y = logdet(A)
         
         U = chol(A);
