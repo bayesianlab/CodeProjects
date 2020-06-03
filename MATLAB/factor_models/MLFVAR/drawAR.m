@@ -21,12 +21,10 @@ while notvalid == 1
     c = c + 1;
     candidate = g1 + G1lower*normrnd(0,1,lags,1);
     [P1,~,~,notvalid] = CalcInitCovar(stateSpaceIt(candidate',lags), sigma2);
-    if notvalid == 0
-        break
-    end
     if c == MAXTRIES
         candidate = zeros(lags,1);
         P1 = eye(lags);
+        break
 end
 
 Xp = zeros(lags, lags);
@@ -39,6 +37,7 @@ end
 
 
 Scurr = spdiags(repmat(sigma2,T,1), 0, T, T);
+
 Snew = Scurr;
 
 

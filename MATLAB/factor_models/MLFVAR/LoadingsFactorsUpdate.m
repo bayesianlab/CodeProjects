@@ -4,7 +4,7 @@ function [currobsmod, Ft, keepOmMeans, keepOmVariances, alpha] = ...
     runningAverageMean, runningAverageVar, a0, A0inv)
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-8, 'Display', 'iter', 'OptimalityTolerance', 1e-8, 'MaxIterations', 5);
+    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 5);
 df = 20;
 [K,T] = size(yt);
 w1 = sqrt(chi2rnd(df,1)/df);

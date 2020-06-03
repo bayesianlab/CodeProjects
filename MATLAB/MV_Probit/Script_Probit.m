@@ -24,10 +24,10 @@ T0 = .5;
 s0 = vech(R, -1);
 S0 = .5;
 R0 = eye(K);
+cg = 1;
 
-
-
-[storeSigma0, storeBeta]=GeneralMvProbit(yt, X, R0, b0, B0, tau0, T0, s0, S0, Sims, bn, zt);
+[storeBeta, storeSigma0]=GeneralMvProbit(yt, X, R0, b0, B0, tau0, T0, s0, S0, Sims, bn,...
+    cg);
 
 musig = mean(storeSigma0,2);
 Q = unVechMatrixMaker(K, -1);
