@@ -20,7 +20,6 @@ B = K*(K-1)/2;
 storeSigma0 = zeros(B, StationaryRuns);
 storeBeta = zeros(KP,StationaryRuns);
 
-
 unvech = unVechMatrixMaker(K,-1);
 vechIndex = vechIndices(K);
 mut = reshape(surX*beta,K,T);
@@ -46,7 +45,6 @@ for s = 1:Sims
         storeSigma0(:,m) = sigmas;
         storeBeta(:,m) = beta;
     end
-    
     
 end
 

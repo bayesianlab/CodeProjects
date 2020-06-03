@@ -24,6 +24,9 @@ while notvalid == 1
     if notvalid == 0
         break
     end
+    if c == MAXTRIES
+        candidate = zeros(lags,1);
+        P1 = eye(lags);
 end
 
 Xp = zeros(lags, lags);
