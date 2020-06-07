@@ -7,7 +7,7 @@ Pknotk = zeros(K,K-1);
 for k = 1:K
     Pknotk(k,:) = Precision(k, selectMat(k,:));
 end
-zt = zeros(K,T);
+% zt = zeros(K,T);
 J=3;
 for t = 1:T
     ytt = yt(:,t);

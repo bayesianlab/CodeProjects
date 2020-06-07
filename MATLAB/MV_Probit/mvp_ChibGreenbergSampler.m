@@ -1,5 +1,5 @@
-function [storeBeta, storeSigma0] = mvp_ChibGreenbergSampler(yt, X, Sigma0, b0, B0, tau0, T0, s0, S0,...
-    Sims,bn)
+function [storeBeta, storeSigma0] = mvp_ChibGreenbergSampler(yt, X, Sigma0, Sims,bn, ...
+    b0, B0, tau0, T0, s0, S0)
 [K,T]=size(yt);
 [~,P]=size(X);
 KT =K*T;
