@@ -1,10 +1,9 @@
-function [currobsmod, Ft, keepOmMeans, keepOmVariances, alpha, d] = ...
+function [currobsmod, Ft, alpha, d] = ...
     mvp_LoadFacUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances,...
-    runningAverageMean, runningAverageVar, a0, A0inv)
+    obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv)
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 5);
+    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 25);
 df = 20;
 [K,T] = size(yt);
 w1 = sqrt(chi2rnd(df,1)/df);
@@ -28,8 +27,6 @@ for q = 1:levels
         subset = Info(r,1):Info(r,2);
         s2 = (Info(r,1)+1):Info(r,2);
 
-        
-        
         ty = ydemut(s2,:);
         top = obsPrecision(s2);
         x0 = currobsmod(s2,q);
@@ -55,7 +52,7 @@ for q = 1:levels
         d= diag(D);
         temp = D*[1;proposal];        
         proposal = temp(2:end);
-        
+                
         proposalDist= @(prop) mvstudenttpdf(prop, themean', H, df);
         LogLikePositive = @(val) LLcond_ratio (val, ty, a0m,A0invp, top, tempf, StatePrecision);
         Num = LogLikePositive(proposal) + proposalDist(x0');
@@ -65,9 +62,13 @@ for q = 1:levels
         if u <= alpha(fcount)
             currobsmod(subset,q) = [temp(1);proposal];
         end
+        
         %% Update Factor
         ty = ydemut(subset,:);
-        top = obsPrecision(subset);
+        
+        top = D*obsPrecision;
+        
+        top = top(subset);
         Ft(fcount,:) =  kowUpdateLatent(ty(:), currobsmod(subset,q), StatePrecision, top);
     end
 end

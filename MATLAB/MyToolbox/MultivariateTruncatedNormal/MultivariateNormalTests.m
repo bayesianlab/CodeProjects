@@ -56,7 +56,7 @@ if sum(sum(Samples < 0)) == 0
 else
     disp('Test FAILED')
 end
-histogram(Samples(4,:), 50)
+% histogram(Samples(4,:), 50)
 
 
 mu = 100.*ones(J,1);
@@ -67,5 +67,5 @@ if sum(sum(NegativeSamples) > 0) == 0
 else
     disp('Test FAILED')
 end
-figure
-histogram(NegativeSamples(4,:), 50)
+% figure
+% histogram(NegativeSamples(4,:), 50)

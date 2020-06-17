@@ -1,18 +1,17 @@
-function [currobsmod, Ft, alpha] = ...
-    LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell,...
- a0, A0inv)
+function [storeMeans, storeVars] = ...
+    ComputeMeansVars(yt, Xbeta, Ft, currobsmod, stateTransitions,...
+    obsPrecision, factorVariance, Identities, InfoCell, a0, A0inv)
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 25);
 df = 20;
 [K,T] = size(yt);
-w1 = sqrt(chi2rnd(df,1)/df);
 fcount = 0;
 levels = length(InfoCell);
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
-alpha = zeros(nFactors,1);
 xb = reshape(Xbeta, K,T);
+storeMeans = cell([1,nFactors]);
+storeVars = storeMeans;
 for q = 1:levels
     COM = makeStateObsModel(currobsmod, Identities, q);
     mut =  xb + COM*Ft;
@@ -40,27 +39,11 @@ for q = 1:levels
         if p ~= 0 
             Hlower = eye(length(s2));
             H = eye(length(s2));
-        end
-        ty = ydemut(subset,:);
-        ty = ty(2:end,:);
-        top = obsPrecision(subset);
-        top = top(2:end);
-        
-        proposal = themean + Hlower*normrnd(0,1,length(s2), 1)./w1;
-        proposalDist= @(prop) mvstudenttpdf(prop, themean', H, df);
-        
-        LogLikePositive = @(val) LLcond_ratio (val, ty, a0m,A0invp, top, tempf, StatePrecision);
-        Num = LogLikePositive(proposal) + proposalDist(x0');
-        Den = LogLikePositive(x0) + proposalDist(proposal');
-        alpha(fcount) = min(0,Num - Den);
-        u = log(unifrnd(0,1,1,1));
-        if u <= alpha(fcount)
-            currobsmod(subset,q) = [1;proposal];
-        end
-        %% Update Factor
-        ty = ydemut(subset,:);
-        top = obsPrecision(subset);
-        Ft(fcount,:) =  kowUpdateLatent(ty(:), currobsmod(subset,q), StatePrecision, top);
+        end        
+        storeMeans{fcount} = themean;
+        storeVars{fcount} = H;
+
+
     end
 end
 

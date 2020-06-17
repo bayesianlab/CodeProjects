@@ -1,29 +1,30 @@
-function [Output] = GeneralMvProbit(yt, X, Sigma0, Sims, bn, estMethod, varargin)
+function [Output] = GeneralMvProbit(yt, X, Sims, bn, estMethod, varargin)
+args = nargin - 5;
 b0 = varargin{1};
+
 B0 = varargin{2};
-s0 = varargin{3};
-S0 = varargin{4};
-v0 = varargin{5};
-r0 = varargin{6};
-g0 = varargin{7};
-G0 = varargin{8} ;
-a0 = varargin{9};
-A0 = varargin{10};
-InfoCell = varargin{11};
+g0 = varargin{3};
+G0 = varargin{4} ;
+a0 = varargin{5};
+if args > 6
+    A0 = varargin{6};
+    initFt = varargin{7};
+    InfoCell = varargin{8};
+end
+
 if estMethod == 1
-    [storeBeta, storeSigma0] = mvp_ChibGreenbergSampler(yt, X, Sigma0, Sims,bn,  b0, B0,  s0, S0);
+    [storeBeta, storeSigma0] = mvp_ChibGreenbergSampler(yt, X, a0, Sims,bn,  b0, B0,  g0, G0);
     Output{1} = storeBeta;
     Output{2} = storeSigma0;
 else
-    [storeBeta, storeFt, storeSt, storeFv, storeOv, storeOm, storeD]  = mvp_WithFactors(yt, X, Sigma0, Sims, bn, InfoCell,...
-        b0, B0,s0, S0, v0, r0, g0, G0, a0, A0);
+    [storeBeta, storeFt, storeSt, storeOm, storeD, ml]  = mvp_WithFactors(yt, X, Sims, bn,...
+        InfoCell, b0, B0, g0, G0, a0, A0, initFt);
     Output{1} = storeBeta;
     Output{2} = storeFt;
     Output{3} = storeSt;
-    Output{4} = storeFv;
-    Output{5} = storeOv;
-    Output{6} = storeOm;
-    Output{7} = storeD;
+    Output{4} = storeOm;
+    Output{5} = storeD;
+    Output{6} = ml;
 end
 end
 

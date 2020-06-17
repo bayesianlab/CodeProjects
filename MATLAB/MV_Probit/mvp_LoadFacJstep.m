@@ -1,5 +1,5 @@
 function [alpha_prop] = ...
-    LoadingsFactorsCJ_GStep(fixedValueTheta, thetaG, yt, Xbeta, Ft, stateTransitions,...
+    mvp_LoadFacJstep(fixedValueTheta, thetaG, yt, Xbeta, Ft, stateTransitions,...
     obsPrecision, factorVariance, Identities, InfoCell,a0, A0inv,storeMeans, storeVars)
 
 df = 15;
@@ -28,13 +28,13 @@ for q = 1:levels
         ty = ty(2:end,:);
         top = obsPrecision(subset);
         top = top(2:end);
-        omMuNum = storeMeans(subset,q);
-        omVarNum = storeVars(subset,q);
-        omMuNum = omMuNum(2:end);
-        omVarNum=omVarNum(2:end);
+        omMuNum = storeMeans{fcount};
+        omVarNum = storeVars{fcount};
+%         omMuNum = omMuNum(2:end);
+%         omVarNum=omVarNum(2:end);
         fxTheta = fixedValueTheta(subset,q);
         gTheta = thetaG(subset, q);
-        proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', diag(omVarNum), df);
+        proposalDistNum = @(prop) mvstudenttpdf(prop, omMuNum', omVarNum, df);
         LogLikePositive = @(val) LLcond_ratio (val, ty, apriormean, Apriorprecision, top, tempf, StatePrecision);
         Num = LogLikePositive(fxTheta(2:end)) + proposalDistNum(gTheta(2:end)');
         Den = LogLikePositive(gTheta(2:end)) + proposalDistNum(fxTheta(2:end)');

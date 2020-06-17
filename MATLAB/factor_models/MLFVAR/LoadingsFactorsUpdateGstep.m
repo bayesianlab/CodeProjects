@@ -1,7 +1,7 @@
-function [currobsmod, Ft, alpha] = ...
-    LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
+function [currobsmod, Ft,  alpha] = ...
+    LoadingsFactorsUpdateGstep(yt, Xbeta, Ft, currobsmod, stateTransitions,...
     obsPrecision, factorVariance, Identities, InfoCell,...
- a0, A0inv)
+    runningAverageMean, runningAverageVar, a0, A0inv)
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 25);
@@ -28,19 +28,14 @@ for q = 1:levels
         subset = Info(r,1):Info(r,2);
         s2 = (Info(r,1)+1):Info(r,2);
 
-        ty = ydemut(s2,:);
-        top = obsPrecision(s2);
+
         x0 = currobsmod(s2,q);
         a0m = a0.*ones(1,length(s2));
         A0invp = A0inv.*eye(length(s2));
-        LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
-        [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
-        H = Covar\eye(length(s2));
-        [Hlower, p] = chol(H,'lower');
-        if p ~= 0 
-            Hlower = eye(length(s2));
-            H = eye(length(s2));
-        end
+        
+        themean = runningAverageMean{fcount};
+        H = runningAverageVar{fcount};
+        Hlower = chol(H,'lower');
         ty = ydemut(subset,:);
         ty = ty(2:end,:);
         top = obsPrecision(subset);

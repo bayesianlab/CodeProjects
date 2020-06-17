@@ -98,10 +98,9 @@ if finishedMainRun == 0
             B0inv, FtIndexMat, subsetIndices);
         
         %% Draw loadings and factors
-        [currobsmod, Ft, keepOmMeans, keepOmVariances]=...
+        [currobsmod, Ft]=...
             LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-            obsPrecision, factorVariance, Identities, InfoCell, keepOmMeans, keepOmVariances,...
-            runningAvgOmMeans, runningAvgOmVars, a0, A0inv);
+            obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv);
         
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
@@ -111,9 +110,7 @@ if finishedMainRun == 0
         
         %% Factor AR Parameters
         for n=1:nFactors
-            stateTransitions(n,:)= drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);
-            %             drawStateTransitions(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);
-            
+            stateTransitions(n,:)= drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);            
         end
         
         if identification == 2
@@ -129,11 +126,6 @@ if finishedMainRun == 0
             storeFt(:,:,v) = Ft;
             storeObsPrecision(:,v) = obsPrecision;
             storeFactorVar(:,v) = factorVariance;
-            runningAvgOmMeans = (runningAvgOmMeans.*(v-1) + keepOmMeans)/v;
-            runningAvgOmVars = (runningAvgOmVars.*(v-1) + keepOmVariances)/v;
-        else
-            runningAvgOmMeans=keepOmMeans;
-            runningAvgOmVars=keepOmVariances;
         end
     end
     
@@ -188,6 +180,11 @@ if estML == 1
         fvj = mean(storeFactorVar,2);
         [iP, ~] =initCovar(stj, fvj);
         Si = FactorPrecision(stj, iP, 1./fvj, T);
+
+        [storeMeans, storeVars] = ComputeMeansVars(yt, Xbeta, Ft, Astar, stateTransitions,...
+            obsPrecision, factorVariance, Identities, InfoCell,...
+            a0, A0inv);
+        
         %% MH for factor loadings
         fprintf('Reduced run for factor loadings\n')
         for r = startRR:Runs
@@ -199,10 +196,10 @@ if estML == 1
             stg = storeStateTransitionsg(:,:,r);
             opg = storeObsPrecisiong(:,r);
             
-            [~, Ftj, keepOmMeans, keepOmVariances, stoAlphaj(:,r)] = ...
-                LoadingsFactorsUpdate(yt,Xbeta,Ftj, Astar, stj,...
-                obsPrecisionj,fvj, Identities, InfoCell, keepOmMeans, keepOmVariances,...
-                runningAvgOmMeans, runningAvgOmVars, a0, A0inv);
+            [~, Ftj,  stoAlphaj(:,r)] = ...
+                LoadingsFactorsUpdateJstep(yt,Xbeta,Ftj, Astar, stj,obsPrecisionj,fvj, Identities,...
+                InfoCell, storeMeans, storeVars,...
+                a0, A0inv);
             
             stoAlphag(:,r) = LoadingsFactorsCJ_GStep(Astar, storeOM(:,:,r), ...
                 yt, Xbeta, Ftg, stg, opg, storeFactorVar(:,r), Identities,...

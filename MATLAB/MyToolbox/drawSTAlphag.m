@@ -1,5 +1,5 @@
-function [alphag] = drawSTAlphag(stateTransitionsg, stateTransitionsStar, Factor,...
-    factorVariance, g0, G0)
+function [alphag] = drawSTAlphag(stateTransitionsg,...
+    stateTransitionsStar, Factor, factorVariance, g0, G0)
 [Rows, ~] = size(Factor);
 T=size(Factor,2);
 [~, lags] = size(stateTransitionsg);
@@ -38,6 +38,7 @@ for r = 1: Rows
     yg = Sglower*( yt' - Xss*stg');
         
     G1 = ((G0\IP) +  (Xt'*Xt)./sigma2 )\IP;
+
     g1= (G1* ((G0\g0') +  (Xt'*ytstar')./sigma2))';
 
     Num = adjustedlogmvnpdf(ystar', Sstarlowerinv)+logmvnpdf(stStar, g0, G0)+logmvnpdf(stg, g1, G1);
