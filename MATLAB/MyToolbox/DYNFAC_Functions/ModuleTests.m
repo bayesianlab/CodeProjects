@@ -107,7 +107,7 @@ end
 if Test3 == 1
     clear;
     
-    T=100;
+    T=200;
     lags =3;
     % When making gamma,
     % the first element reaches back to the first time period, so
@@ -115,7 +115,7 @@ if Test3 == 1
     % columns.
     
     
-    [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([5,2], lags, T);
+    [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([30], lags, T);
     
     [K,T] =size(yt)
     levels= length(InfoCell)

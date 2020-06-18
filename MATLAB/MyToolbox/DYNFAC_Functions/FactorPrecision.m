@@ -1,10 +1,10 @@
 function [P,H] = FactorPrecision(params, P0, precision, T)
 % Factor precision is column
-% Row 1 of params is [pw 0 0 pr 0 0 pc 0 0 ]
-% Factors are Ft = [ Fwt
+% Factors are assumed Ft = [ Fwt
  %                     Frt
  %                      Fct ]
  % F = Vectorized (F1, F2,...,FT)
+ 
 [K,columns] = size(params);
 lags =columns;
 dees = (0:lags)*K;

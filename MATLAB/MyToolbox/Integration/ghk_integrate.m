@@ -1,4 +1,8 @@
 function [prob] = ghk_integrate(y, Xbeta, Sigma, Sims)
+%% ghk_integrate help notes:
+% y must come in as y1 y2 ...yT, y1 = (y11 y21 ... yK1)^T 
+% Similar Xbeta must be the mean of y and come in with the same rows and 
+% columns as y. 
 [K,T]=size(Xbeta);
 si = 2.*y-1;
 L = chol(Sigma,'lower');

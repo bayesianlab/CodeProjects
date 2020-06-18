@@ -1,5 +1,5 @@
-function [storeBeta, storeSigma0] = mvp_ChibGreenbergSampler(yt, X, Sigma0, Sims,bn, ...
-    b0, B0, tau0, T0, s0, S0)
+function [storeBeta, storeSigma0] = mvp_ChibGreenbergSampler(yt, X, Sims,bn, estml, ...
+    b0, B0, s0, S0, Sigma0)
 [K,T]=size(yt);
 [~,P]=size(X);
 KT =K*T;
@@ -10,7 +10,8 @@ subsetIndices=reshape(1:KT, K,T);
 IK = eye(K);
 ZeroK = zeros(1,K);
 
-beta = repmat(b0,K,1);
+
+beta = repmat(b0,K,1)
 kronB0inv=kron(eye(K), diag(1./diag(B0)));
 kronB0invb0=kronB0inv*beta;
 zt = yt;
@@ -22,6 +23,8 @@ storeBeta = zeros(KP,StationaryRuns);
 
 unvech = unVechMatrixMaker(K,-1);
 vechIndex = vechIndices(K);
+
+size(beta)
 mut = reshape(surX*beta,K,T);
 
 for s = 1:Sims
@@ -34,7 +37,7 @@ for s = 1:Sims
     demuyt = zt-mut;
     
     % Sample Correlation Mat
-    Sigma0 = mvp_rwSigmaDraw(Sigma0,demuyt, tau0, T0, s0, S0, unvech,...
+    Sigma0 = mvp_rwSigmaDraw(Sigma0,demuyt,  s0, S0, unvech,...
         vechIndex);
     
     % Store Posteriors
@@ -46,5 +49,13 @@ for s = 1:Sims
     end
     
 end
+
+freeelems = reshape(unvech*msig, K,K) ;
+SigmaStar = freeelems + freeelems + eye(K);
+runs = s -bn;
+for r = 1 : runs
+    
+end
+
 end
 

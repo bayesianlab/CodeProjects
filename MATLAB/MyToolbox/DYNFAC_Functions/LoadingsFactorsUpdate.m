@@ -1,10 +1,9 @@
-function [currobsmod, Ft, alpha] = ...
+function [currobsmod, Ft,  alpha] = ...
     LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell,...
- a0, A0inv)
+    obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv)
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 25);
+    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 5);
 df = 20;
 [K,T] = size(yt);
 w1 = sqrt(chi2rnd(df,1)/df);
@@ -27,7 +26,37 @@ for q = 1:levels
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);
         s2 = (Info(r,1)+1):Info(r,2);
-
+        %% Optimization step
+        %         for k =s2
+        %             ty = ydemut(k,:);
+        %             top = obsPrecision(k);
+        %             x0 = currobsmod(k,q);
+        %             LL = @(guess) -LLcond_ratio(guess, ty, a0, A0inv, top, tempf,StatePrecision);
+        %             [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
+        %             Covar = (1/Covar)';
+        %             if  Covar < 0
+        %                 Covar = 1;
+        %             end
+        %             keepOmVariances(k,q)= Covar;
+        %             keepOmMeans(k,q)=themean;
+        %
+        %             proposal = themean + diag(sqrt(Covar))*normrnd(0,1,1, 1)./w1;
+        %             proposalDistNum = @(prop) mvstudenttpdf(prop, themean', diag(Covar), df);
+        %             proposalDistDen = @(prop) mvstudenttpdf(prop, runningAverageMean(k,q)', diag(runningAverageVar(k,q)), df);
+        %
+        %             LogLikePositive = @(val) LLcond_ratio (val, ty, a0,A0inv, top, tempf, StatePrecision);
+        %
+        %             Num = LogLikePositive(proposal) + proposalDistNum(x0);
+        %             Den = LogLikePositive(x0) + proposalDistDen(proposal');
+        %             alpha(fcount) = min(0,Num - Den);
+        %             u = log(unifrnd(0,1,1,1));
+        %             if u <= alpha(fcount)
+        %                 currobsmod(k,q) = proposal;
+        %             end
+        %         end
+        
+        
+        
         ty = ydemut(s2,:);
         top = obsPrecision(s2);
         x0 = currobsmod(s2,q);

@@ -9,6 +9,7 @@ surX = surForm(Xt,K);
 subsetIndices=reshape(1:KT, K,T);
 IK = eye(K);
 ZeroK = zeros(1,K);
+
 FtIndexMat = CreateFactorIndexMat(InfoCell);
 levels = size(InfoCell,2);
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
@@ -123,8 +124,8 @@ if estml == 1
     storeFtg = storeFtj;
     storeStateTransitionsg = storeStateTransitionsj;
     Ftj = mean(storeFtg,3);
-    obsPrecisionj = mean(storeObsPrecisiong,2);
-    fvj = mean(storeFactorVarg,2);
+    obsPrecisionj = obsPrecision;
+    fvj =factorVariance;
     stoAlphaj = zeros(nFactors, Runs);
     stoAlphag = zeros(nFactors, Runs);
     
@@ -214,8 +215,8 @@ if estml == 1
     posteriors = [piFt, piBeta, piA , piST]
     posteriorStar = sum(posteriors)
     muStar = StateObsModelStar*FtStar + xbtStar;
-    residsStar = tzt - muStar;
-    LogLikelihood=sum(logmvnpdf(residsStar', zeros(1,K), diag(obsVariance)))
+    LogLikelihood = sum(ghk_integrate(yt, xbtStar, eye(K), 1000));
+
     
     priorST = sum(logmvnpdf(stStar, g0, G0));
     B0inv=diag(repmat(1./diag(B0inv), K,1));

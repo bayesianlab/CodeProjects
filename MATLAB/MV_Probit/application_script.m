@@ -62,7 +62,8 @@ initobsmodel = ones(K,levels);
 initObsPrecision = 1./var(yt,[],2);
 initFactorVar = ones(nFactors,1);
 initFactor = normrnd(0,1,nFactors,T);
-[Output] =GeneralMvProbit(yt, Xt, Sims, bn, cg, beta0, B0,g0, G0,...
+estml = 1;
+[Output] =GeneralMvProbit(yt, Xt, Sims, bn, cg, estml, beta0, B0,g0, G0,...
     a0, A0, initFactor, InfoCell);
 
 storeBeta=Output{1};

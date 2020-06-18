@@ -1,5 +1,7 @@
 function [CurrentSigma] = mvp_rwSigmaDraw(CurrentSigma, zt, sig0, Sig0, unvech,...
     vechIndex)
+%% Help for mvp_rwSigmaDraw
+% sig0 and Sig0 are priors for CurrentSigma
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 25);
 [K,~]=size(CurrentSigma);
@@ -16,10 +18,10 @@ for k = 1:K-1
     x0 = constelems(vindx);
     [candmu, ~, ~, ~, ~, H] = fminunc(negLL, x0, options);
     [Hlower, p] =chol(H,'lower');
-    if p ~= 0
+    test2 = (nsubk^2 == sum(sum(isfinite(Hlower))));
+    if p ~= 0 || test2 == 0
         Covar = eye(nsubk);
     else
-        
         Covar = Hlower\eye(nsubk);
     end
     df = 15;
@@ -33,7 +35,12 @@ for k = 1:K-1
     Cand = Q + Q' + eye(K);
     [~, pp] = chol(Cand);
     if pp == 0
+
         ProposalCovar = Covar'*Covar;
+        [~, p] = chol(ProposalCovar,'lower');
+        if p ~= 0
+            ProposalCovar = eye(nsubk);
+        end
         LL = @(P)  sum(logmvnpdf(zt', mu, P)) ;
         Prior = @(P)  logmvnpdf(P, s0', S0);
         Prop = @(P) mvstudenttpdf(P, candmu', ProposalCovar, df);

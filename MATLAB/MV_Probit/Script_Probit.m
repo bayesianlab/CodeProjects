@@ -1,8 +1,8 @@
 clear;clc;
-cg = 0;
-
+cg = 1;
+rng ( 11) 
 if cg == 1
-    T = 100;
+    T = 10;
     K=10;
     Q = 3;
     X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
@@ -18,16 +18,20 @@ if cg == 1
     b0= zeros(Q,1);
     B0 =100.*eye(Q);
     Sims=1000;
-    bn = 100;
+    bn = 10;
     tau0 = 0;
     T0 = .5;
-    
     s0 = vech(R, -1);
     S0 = .5;
     R0 = eye(K);
     
-    % [storeBeta, storeSigma0]=GeneralMvProbit(yt, X, R0, b0, B0, tau0, T0, s0, S0, Sims, bn,...
-    %     cg);
+    estml =1 ;
+    [Output]=GeneralMvProbit(yt, X,Sims, bn, cg, estml, b0, B0,  s0, S0, R0);
+    storeBeta = Output{1};
+    storeSigma = Output{2};
+    msig = mean(storeSigma,2);
+    unvech = unVechMatrixMaker(K,-1);
+    reshape(unvech*msig, K,K) + reshape(unvech*msig, K,K)' + eye(K)
     
 else
     T = 100;
@@ -41,13 +45,12 @@ else
     Astar = diag(D)*A;
     gamma = .5;
     P0= initCovar(gamma, 1);
-    
     FP = FactorPrecision(gamma,P0, 1, T)\eye(T) ;
     Ft = mvnrnd(zeros(1,T), FP,1);
-    beta = ones(Q,1);
-    
-    zt = reshape(X*beta,K,T) + Astar*Ft + normrnd(0,1,K,T);
+    beta = ones(Q,1);    
+    zt = reshape(X*beta,K,T) + Astar*Ft + normrnd(0,1/sqrt(2),K,T);
     yt = double(zt > 0);
+    
     lags = 1;
     R0 = ones(K,1);
     g0 = zeros(1,lags);
