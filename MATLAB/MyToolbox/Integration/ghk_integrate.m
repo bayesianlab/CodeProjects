@@ -13,6 +13,7 @@ cij = zeros(K,T,Sims);
 estProb = zeros(T, Sims);
 uHat = unifrnd(0,1, K,T,Sims);
 for t = 1:T
+    fprintf('T = %i\n', t)
     mu = Xbeta(:,t);
     tsi = si(:,t);
     for s = 1:Sims

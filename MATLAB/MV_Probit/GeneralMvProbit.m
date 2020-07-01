@@ -7,7 +7,7 @@ if args > 1
 end
 
 if estMethod == 1
-    [storeBeta, storeSigma0] = mvp_ChibGreenbergSampler(yt, X, Sims,bn,  estml, b0, B0,  g0, G0, a0);
+    [storeBeta, storeSigma0,ml] = mvp_ChibGreenbergSampler(yt, X, Sims,bn,  estml, b0, B0,  g0, G0, a0);
     Output{1} = storeBeta;
     Output{2} = storeSigma0;
 else

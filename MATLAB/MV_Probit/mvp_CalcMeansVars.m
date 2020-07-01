@@ -1,18 +1,18 @@
-function [CurrentSigma] = mvp_rwSigmaDraw(CurrentSigma, zt, sig0, Sig0, unvech,...
-    vechIndex, start)
-%% Help for mvp_rwSigmaDraw
-% sig0 and Sig0 are priors for CurrentSigma
+function [storeMeans, storeVars] = mvp_CalcMeansVars(SigmaStar,zt, sig0, Sig0, unvech,...
+    vechIndex)
+
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 25);
-[K,~]=size(CurrentSigma);
-
-for k = start:K-1
+K=size(zt,1);
+storeMeans = cell(K-1);
+storeVars = cell(K-1);
+for k = 1:K-1
     vindx = vechIndex(k,1) : vechIndex(k,2);
     nsubk = length(vindx);
     mu = zeros(1,K);
     s0 = sig0(vindx);
     S0 = Sig0.*eye(nsubk);
-    constelems = vech(CurrentSigma, -1);
+    constelems = vech(SigmaStar, -1);
     
     negLL = @(vs)  mvp_likelihood(vs, constelems, zt, mu, s0, S0, unvech, vindx);
     x0 = constelems(vindx);
@@ -35,23 +35,15 @@ for k = start:K-1
     Cand = Q + Q' + eye(K);
     [~, pp] = chol(Cand);
     if pp == 0
-
         ProposalCovar = Covar'*Covar;
         [~, p] = chol(ProposalCovar,'lower');
         if p ~= 0
             ProposalCovar = eye(nsubk);
         end
-        LL = @(P)  sum(logmvnpdf(zt', mu, P)) ;
-        Prior = @(P)  logmvnpdf(P, s0', S0);
-        Prop = @(P) mvstudenttpdf(P, candmu', ProposalCovar, df);
-        Num = LL(Cand) + Prior(candidate') + Prop(x0');
-        Den = LL(CurrentSigma) + Prior(x0') + Prop(candidate');
-        alpha = min( 0, Num - Den );
-        lu = log(unifrnd(0,1));
-        if lu < alpha
-            CurrentSigma = Cand;
-        end
+        storeMeans{k} = candmu;
+        storeVars{k} = ProposalCovar;
     end
     
 end
 end
+

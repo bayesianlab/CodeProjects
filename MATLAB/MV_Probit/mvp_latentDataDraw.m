@@ -7,19 +7,15 @@ Pknotk = zeros(K,K-1);
 for k = 1:K
     Pknotk(k,:) = Precision(k, selectMat(k,:));
 end
-% zt = zeros(K,T);
-J=3;
 for t = 1:T
     ytt = yt(:,t);
     mutt = mut(:,t);
-    for j = 1:J
-        for k = 1:K
-            condmean = mutt(k) - Pkkinv(k)*Pknotk(k,:)*(zt(selectMat(k,:),t) - mutt(selectMat(k,:)));
-            if ytt(k) > 0
-                zt(k,t) = NormalTruncatedPositive(condmean,Pkkinv(k), 1);
-            else
-                zt(k,t) = -NormalTruncatedPositive(-condmean,Pkkinv(k), 1);
-            end
+    for k = 1:K
+        condmean = mutt(k) - Pkkinv(k)*Pknotk(k,:)*(zt(selectMat(k,:),t) - mutt(selectMat(k,:)));
+        if ytt(k) > 0
+            zt(k,t) = NormalTruncatedPositive(condmean,Pkkinv(k), 1);
+        else
+            zt(k,t) = -NormalTruncatedPositive(-condmean,Pkkinv(k), 1);
         end
     end
 end

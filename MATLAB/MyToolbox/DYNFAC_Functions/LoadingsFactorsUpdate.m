@@ -3,7 +3,7 @@ function [currobsmod, Ft,  alpha] = ...
     obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv)
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 5);
+    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 20);
 df = 20;
 [K,T] = size(yt);
 w1 = sqrt(chi2rnd(df,1)/df);
@@ -13,6 +13,7 @@ nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 alpha = zeros(nFactors,1);
 xb = reshape(Xbeta, K,T);
 for q = 1:levels
+    fprintf('\tLevel %i\n', q)
     COM = makeStateObsModel(currobsmod, Identities, q);
     mut =  xb + COM*Ft;
     ydemut = yt - mut;
@@ -63,10 +64,15 @@ for q = 1:levels
         a0m = a0.*ones(1,length(s2));
         A0invp = A0inv.*eye(length(s2));
         LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
-        [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
+        if length(s2) < 25
+            [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
+        else
+            [themean, Covar] = bfgs(x0, A0invp, LL);
+        end
         H = Covar\eye(length(s2));
+        
         [Hlower, p] = chol(H,'lower');
-        if p ~= 0 
+        if p ~= 0
             Hlower = eye(length(s2));
             H = eye(length(s2));
         end

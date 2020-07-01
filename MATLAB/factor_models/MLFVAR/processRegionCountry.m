@@ -2,6 +2,7 @@
 clear;clc;
 savepath = '~/GoogleDrive/statespace/';
 load('ResultsUsedInPaper/Result_region_country_march18_21_Mar_2020_01_46_29.mat')
+sortFt = sort(storeFt,3);
 
 sig = std(storeFt,[],3);
 xaxis = 1962:2014;
@@ -96,6 +97,8 @@ mean(varianceDecomp(OUT,1))
 % figure
 % hold on 
 % h = fill(fillX(1,:), fillY(8,:), COLOR);
+% USA=patch([xaxis, fliplr(xaxis)], [sortFt(8,:,200), fliplr(sortFt(8,:,7800)) ], 'red', 'FaceAlpha', facealpha )
+
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % USA = plot(xaxis,Ft(8,:), 'black')
 % saveas(USA, join([savepath, 'USA.jpeg']))
@@ -136,8 +139,22 @@ mean(varianceDecomp(OUT,1))
 % set(h, 'FaceAlpha', facealpha, 'LineStyle', 'none')
 % hold on
 % latinAmerica  = plot(xaxis, Ft(3,:), 'black');
+% shade([1980, 2007], [1983, 2009], 'black')
 %  saveas(latinAmerica, join([savepath, 'latinAmerica.jpeg']))
 
+%  figure 
+%  hold on 
+%  chile  = plot(xaxis, Ft(24,:), 'black');
+%  plot(xaxis, yt(49,:))
+%  plot(xaxis, yt(50,:))
+%  plot(xaxis, yt(51,:))
+
+% hold on 
+% chile=patch([xaxis, fliplr(xaxis)], [sortFt(24,:,200), fliplr(sortFt(24,:,7800)) ], 'red', 'FaceAlpha', facealpha )
+% plot(xaxis,sortFt(24,:,4000), '--')
+%  saveas(chile, join([savepath, 'chile.jpeg']))
+
+ % plot(xaxis,yt(49,:))
 %% Oceania
 % figure
 % h = fill(fillX(1,:), fillY(2,:), COLOR);
@@ -176,3 +193,33 @@ mean(varianceDecomp(OUT,1))
 % hold on
 % asia_stderrs  = plot(xaxis, Ft(7,:), 'black');
 % saveas(asia_stderrs, join([savepath, 'asia_stderrs.jpeg']))
+
+% Ftindxmat = CreateFactorIndexMat(InfoCell);
+% muvar = mean(storeVAR,3)';
+% must = mean(storeStateTransitions,3);
+% muom = mean(storeOM,3);
+% 
+
+% must(Ftindxmat(1,:),:)
+% yirf= HdfvarIRF(must(Ftindxmat(1,:),:), muvar(1,:), muom(1:3,:), 50, [1;0]);
+% hold on
+% plot(yirf(1,:))
+% plot(yirf(2,:))
+% plot(yirf(3,:))
+
+
+% svar = sort(storeVAR, 3);
+% lovar = svar(:,:,200)';
+% hivar = svar(:,:,7800)';
+% sst = sort(storeStateTransitions,3);
+% lost = sst(:,:,200);
+% hist = sst(:,:,7800);
+% som = sort(storeOM,3);
+% loom = som(:,:,200);
+% hiom = som(:,:,7800);
+% 
+% yirf= HdfvarIRF(lost(Ftindxmat(1,:),:), lovar(1,:), loom(1:3,:), 50, [1;0]);
+% loom(1:3,:)
+% plot(yirf(1,:))
+
+

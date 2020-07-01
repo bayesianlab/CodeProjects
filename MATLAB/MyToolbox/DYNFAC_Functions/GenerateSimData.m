@@ -9,18 +9,26 @@ P0 = initCovar(gammas, factorvar);
 [C, H] = FactorPrecision(gammas, P0, factorvar, T);
 Kinvlower = chol(C, 'lower')\eye(T*nFactors) ;
 Factors = reshape(Kinvlower'*normrnd(0,1,nFactors*T,1), nFactors,T); % Transpose is important!
-Xt = normrnd(0,1,T*K,1);
+p = 2;
+Vt = normrnd(0,1,K*T, p-1);
+const = ones(K*T,1);
+Xt = [const, Vt];
+Xt = surForm(Xt, K);
+
 beta = 1;
-betas = beta.*ones(K,1);
-Xbeta = Xt*beta;
+betas = beta.*ones(K*p,1);
+
+Xbeta = reshape(Xt*betas, K,T);
+
 InfoCell = CreateInfoCell(SizesClusters, K, levels);
 A = ones(K,levels);
 % A = unifrnd(0,1,K,levels);
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 OM = makeStateObsModel(A, Identities, 0);
-AF = kron(eye(T),OM)*Factors(:);
+AF = reshape(kron(eye(T),OM)*Factors(:), K,T);
+
 sigma2= 1;
-yt = reshape(Xbeta + AF + normrnd(0,sigma2,T*K,1), K,T);
+yt = Xbeta + AF + normrnd(0,sigma2,K,T);
 omvar = sigma2.*ones(K,1);
 end
 

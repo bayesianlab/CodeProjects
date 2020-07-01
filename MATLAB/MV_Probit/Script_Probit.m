@@ -2,8 +2,8 @@ clear;clc;
 cg = 1;
 rng ( 11) 
 if cg == 1
-    T = 10;
-    K=10;
+    T = 100;
+    K=3;
     Q = 3;
     X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
     beta = ones(Q,K);
@@ -15,13 +15,13 @@ if cg == 1
     
     mean(zt,2)
     
-    b0= zeros(Q,1);
-    B0 =100.*eye(Q);
-    Sims=1000;
+    b0= 0;
+    B0 =100;
+    Sims=200;
     bn = 10;
     tau0 = 0;
     T0 = .5;
-    s0 = vech(R, -1);
+    s0 = vech(R, -1).*0;
     S0 = .5;
     R0 = eye(K);
     
@@ -29,9 +29,10 @@ if cg == 1
     [Output]=GeneralMvProbit(yt, X,Sims, bn, cg, estml, b0, B0,  s0, S0, R0);
     storeBeta = Output{1};
     storeSigma = Output{2};
-    msig = mean(storeSigma,2);
-    unvech = unVechMatrixMaker(K,-1);
-    reshape(unvech*msig, K,K) + reshape(unvech*msig, K,K)' + eye(K)
+%     mean(storeBeta,2)
+%     msig = mean(storeSigma,2);
+%     unvech = unVechMatrixMaker(K,-1);
+%     reshape(unvech*msig, K,K) + reshape(unvech*msig, K,K)' + eye(K)
     
 else
     T = 100;
