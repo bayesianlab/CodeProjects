@@ -70,7 +70,8 @@ keepOmMeans = currobsmod;
 keepOmVariances = currobsmod;
 runningAvgOmMeans = zeros(K,levels);
 runningAvgOmVars = ones(K,levels);
-
+g1bar = zeros(lagState,1)
+G1bar = zeros(lagState);
 if exist(checkpointdir, 'dir')
     ckptfilename = join([checkpointdir, checkpointfilename, '.mat']);
     if exist(ckptfilename, 'file')
@@ -110,7 +111,7 @@ if finishedMainRun == 0
         
         %% Factor AR Parameters
         for n=1:nFactors
-            stateTransitions(n,:)= drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);            
+            [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);            
         end
         
         if identification == 2
@@ -126,6 +127,8 @@ if finishedMainRun == 0
             storeFt(:,:,v) = Ft;
             storeObsPrecision(:,v) = obsPrecision;
             storeFactorVar(:,v) = factorVariance;
+            g1bar = g1bar + g1;
+            G1bar = G1bar + G1;
         end
     end
     
@@ -134,6 +137,8 @@ if finishedMainRun == 0
     betaBar = reshape(mean(storeVAR,3), dimx*K,1);
     Ftbar = mean(storeFt,3);
     omBar = mean(storeOM,3);
+    g1bar = g1bar./Runs;
+    G1bar = G1bar./Runs;
     %% Variance Decompositions
     varMu = var(reshape(SurX*betaBar,K,T), [],2);
     facCount = 1;
@@ -244,7 +249,7 @@ if estML == 1
         for r = startRR:Runs
             fprintf('RR = %i\n', r)
             for n = 1:nFactors
-                [~,stoAlphaj(n,r)] = drawAR(stStar(n,:), Ftj(n,:), fvj(n), g0, G0);
+                 stoAlphaj(n,r) = drawAR_Jstep(stStar(n,:), Ftj(n,:), fvj(n), g0, G0, g1bar, G1bar);
             end
             alphag = drawSTAlphag(storeStateTransitionsg(:,:,r), stStar,...
                 storeFtg(:,:,r), storeFactorVarg(:,r), g0, G0);
