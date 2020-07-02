@@ -1,4 +1,4 @@
-function [current, alpha] = drawAR(current, yt, sigma2, g0, G0)
+function [current, alpha, g1, G1] = drawAR(current, yt, sigma2, g0, G0)
 % Use lagMat!
 % It correctly stores the lags in rows, not lag input, otherwise
 % things are upside down.
