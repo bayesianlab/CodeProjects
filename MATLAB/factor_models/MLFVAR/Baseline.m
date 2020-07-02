@@ -381,7 +381,6 @@ if calcML == 1
     omARStar = mean(storeOMARRRg,3);
     omARStar = vetARStar(omARStar, yt, xt, FactorStar, betaStar,...
         obsVariance, g0, G0, subsetIndices, FtIndexMat);
-    fprintf('where print\n')
     factorARStar = mean(storeFactorARRR,3);
     storeAlphaOMARj = zeros(K,  ReducedRuns);
     storeAlphaFactorj = zeros(K, ReducedRuns);
