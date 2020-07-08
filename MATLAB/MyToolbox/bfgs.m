@@ -1,39 +1,39 @@
-function [xkk, Bki] = bfgs(xk, Bki, Function)
-Bkki = Bki;
+function [x1, B0] = bfgs(x0, B0, Function)
+B1 = B0;
 CalcGrad = @(guess) FiniteDifferencer(guess, Function, 1);
-gradk = CalcGrad(xk);
-opts =  optimoptions(@fmincon, 'Display', 'off', 'FiniteDifferenceType', 'forward');
-K = 30;
-alphak = 1;
+
+grad0 = CalcGrad(x0);
+p0 = -B1*grad0;
+
+K = 100;
+alpha0 = 0;
+a1 =  1;
 opttol = 1e-4;
+xdifftol = 1e-4;
+fprintf('Iteration  Function Value\n')
 for k = 1:K
-    pk = -Bkki*gradk;
-    LineSearch = @(alpha) Function(xk + alpha*pk);
-    alphak  = fmincon(LineSearch, alphak, [],[],[],[],0, Inf,[],opts);
-    sk = alphak * pk;
-    xkk = xk + sk;
-    stop2 = norm(xk - xkk);
-    fvalk = Function(xk);
-    xk = xkk;
-    stop1 = max(abs(gradk)) ;
-    if stop1 < opttol || stop2 < opttol
+    Phi = @(a) Function(x0 + a.*p0);
+    DPhi = @(a) CalcGrad(x0 + a.*p0)'*p0;
+    alpha1 = LineSearch(alpha0, a1, Phi, DPhi);
+    sk = alpha1 * p0;
+    x1 = x0 + sk;
+    stop2 = norm(x0 - x1);
+    fval0 = Function(x0);
+    stop1 = max(abs(grad0));
+    if stop1 < opttol || stop2 < xdifftol
         break
     end
-    gradkk = CalcGrad(xkk);
-    yk = gradkk - gradk;
-    sktyk = sk'*yk;
-    skykt = sk*yk';
-    skyktBki = skykt*Bki;
-    num1 = (sktyk+ yk'*Bki*yk)*(sk*sk');
-    num2 = -(skyktBki' + skyktBki);
-    Bkki = Bki + (num1/sktyk^2)  + (num2/sktyk);
-    Bki = Bkki ;
-    gradk = gradkk;
-    fvalkk = Function(xkk);
-    if abs(fvalkk-fvalk) < opttol
-         break
+    grad1 = CalcGrad(x1);
+    p0 = -B1*grad1;
+    B1 = BFGS_Hessian(grad0, grad1, sk, B0);
+    B0 = B1;
+    x0 = x1;
+    grad0 = grad1;
+    fval1 = Function(x1);
+    fprintf('%i             %3g\n', k, fval1)
+    if abs(fval1-fval0) < opttol
+        break
     end
-%     fprintf('%i   %3g\n', k, fvalkk)
 end
 end
 
