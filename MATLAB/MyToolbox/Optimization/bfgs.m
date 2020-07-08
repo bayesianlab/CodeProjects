@@ -16,6 +16,7 @@ for k = 1:MaxIterations
     LS = @(alpha) Function(x0 + alpha*p0);
     
 %     alpha1 = LS_BackTrack(1, Phi, DPhi);
+% Faster
     alpha1  = fmincon(LS, alpha1, [],[],[],[],0, Inf,[],opts);
     
     sk = alpha1 * p0;
