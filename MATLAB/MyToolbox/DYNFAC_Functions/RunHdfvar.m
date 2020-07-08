@@ -45,7 +45,7 @@ B0inv = 1.*eye(dimX);
 
 initStateTransitions = zeros(nFactors,lags);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
-initobsmodel = ones(K,levels);
+initobsmodel = unifrnd(0,1,K,levels);
 initObsPrecision = 1./var(yt,[],2);
 initFactorVar = ones(nFactors,1);
 initFactor = normrnd(0,1,nFactors,T);

@@ -2,9 +2,10 @@ function [currobsmod, Ft,  alpha] = ...
     LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
     obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv)
 
+MaxIterations = 20;
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
-    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 20);
-df = 20;
+    'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', MaxIterations);
+df = 8;
 [K,T] = size(yt);
 w1 = sqrt(chi2rnd(df,1)/df);
 fcount = 0;
@@ -12,6 +13,8 @@ levels = length(InfoCell);
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 alpha = zeros(nFactors,1);
 xb = reshape(Xbeta, K,T);
+
+tau = 10;
 for q = 1:levels
     fprintf('\tLevel %i\n', q)
     COM = makeStateObsModel(currobsmod, Identities, q);
@@ -66,10 +69,12 @@ for q = 1:levels
         LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
         if length(s2) < 25
             [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
+            H = Covar\eye(length(s2));
         else
-            [themean, Covar] = bfgs(x0, A0invp, LL);
+            [themean, Covar] = bfgs(x0, A0invp, LL, MaxIterations);
+            H = Covar;
         end
-        H = Covar\eye(length(s2));
+        
         
         [Hlower, p] = chol(H,'lower');
         if p ~= 0
@@ -84,11 +89,13 @@ for q = 1:levels
         proposal = themean + Hlower*normrnd(0,1,length(s2), 1)./w1;
         proposalDist= @(prop) mvstudenttpdf(prop, themean', H, df);
         
-        LogLikePositive = @(val) LLcond_ratio (val, ty, a0m,A0invp, top, tempf, StatePrecision);
+        LogLikePositive = @(val) LLcond_ratio (val, ty, a0m, A0invp, top, tempf, StatePrecision);
         Num = LogLikePositive(proposal) + proposalDist(x0');
         Den = LogLikePositive(x0) + proposalDist(proposal');
         alpha(fcount) = min(0,Num - Den);
         u = log(unifrnd(0,1,1,1));
+%         [Num,Den,alpha(fcount), proposalDist(x0'), proposalDist(proposal')]
+
         if u <= alpha(fcount)
             currobsmod(subset,q) = [1;proposal];
         end

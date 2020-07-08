@@ -1,10 +1,12 @@
 clear;clc;
 
-
+rng(59)
 % DataCell = SimDataMLF(100, 1,1,15);
 % save('simdata', 'DataCell')
 % rng(1)
+tic
 RunHdfvar( 20, 2, 1, '/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow', 'kow_standardized.mat','NM_ML', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+toc
 % RunBaseline(22, 5, 1, 1, 3, 3, '/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow', 'kose_compare_standardized.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 
