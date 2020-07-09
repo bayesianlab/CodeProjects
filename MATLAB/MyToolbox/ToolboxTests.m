@@ -147,11 +147,11 @@ if ghktests == 1
     S = createSigma(-.7,K);
     ghk_integrate(y, mua, S, sims)
     
-    T = 100;
-    y = (normrnd(0,1, K, T) > 0);
-    Xbeta = zeros(K,T);
-    S = createSigma(-.7,K);
-    sum(ghk_integrate(y, Xbeta, S, 1000))
+%     T = 100;
+%     y = (normrnd(0,1, K, T) > 0);
+%     Xbeta = zeros(K,T);
+%     S = createSigma(-.7,K);
+%     sum(ghk_integrate(y, Xbeta, S, 1000))
 end
 
 

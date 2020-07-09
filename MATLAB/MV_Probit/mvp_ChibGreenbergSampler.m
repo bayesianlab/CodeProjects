@@ -32,32 +32,58 @@ for s = 1:Sims
     beta = mvp_betadraw(zt,surX, Sigma0, subsetIndices, kronB0inv, kronB0invb0);
     mut = reshape(surX*beta,K,T);
     demuyt = zt-mut;
-    
+
     % Sample Correlation Mat
     Sigma0 = mvp_rwSigmaDraw(Sigma0,demuyt,  s0, S0, unvech,...
         vechIndex, begIndexOptimize);
-    
+
     % Store Posteriors
     if s > bn
         m = s-bn;
         sigmas = vech(Sigma0, -1);
         storeSigma(:,m) = sigmas;
         storeBeta(:,m) = beta;
+        storeLatent(:,:,m) = zt;
     end
-    
-end
 
-msig = mean(storeSigma,2);
-free_elems = reshape(unvech*msig, K,K) ;
-SigmaStar = free_elems + free_elems' + eye(K);
+end
+storeLatentj = storeLatent;
+betaStar = mean(storeBeta,2);
+mutStar = reshape(surX*betaStar,K,T);
+storePibetastar = zeros(1,Runs);
+storeSigma0j = zeros(B,Runs);
+for r = 1 : Runs
+    fprintf('Reduced run beta %i \n', r)
+    Sigma0g = storeSigma(:,r);
+    Q = unvech*Sigma0g;
+    Q =reshape(Q,K,K);
+    Sigma0g = Q + Q' + eye(K);
+    ztg = storeLatent(:,:,r);
+    storePibetastar(r) = mvp_pibeta(betaStar, ztg,surX, Sigma0g, subsetIndices, kronB0inv, kronB0invb0);
+    demuyt = zt-mutStar;
+
+    Sigma0j = mvp_rwSigmaDraw(Sigma0g,demuyt,  s0, S0, unvech,...
+        vechIndex, begIndexOptimize);
+    storeLatentj(:,:,r) = mvp_latentDataDraw(zt,yt,mutStar,Sigma0g);
+    sigmasj = vech(Sigma0j, -1);
+    storeSigma0j(:,r) = sigmasj;
+end
+betaprior = logmvnpdf(betaStar', beta0',  diag(ones(KP,1).*B0));
+piBetaOrdinate = logAvg(storePibetastar);
+storeLatent = storeLatentj;
+storeSigma0g = storeSigma0j;
+
+msig = mean(storeSigma0g,2);
+SigmaStar = reshape(unvech*msig, K,K) ;
+SigmaStar = SigmaStar + SigmaStar' + eye(K);
+SigmaStarG = SigmaStar;
 star = vech(SigmaStar,-1);
-storesks =  std(storeSigma,[],2);
+storesks =  std(storeSigma0g,[],2);
 storeKsums = zeros(K-1,Runs);
 
-storeSigmag = storeSigma;
-storeSigmagCopy = storeSigmag;
-storeBetag = zeros(KP,Runs);
+storeSigmagCopy = storeSigma0g;
 
+piSigma = zeros(K-1,1);
 sigPriors = zeros(1,K-1);
 for k = 1:K-2
     vindx = vechIndex(k,1) : vechIndex(k,2);
@@ -66,58 +92,71 @@ for k = 1:K-2
     bk = storesks(k)*Runs^(-1/(4+nsubk));
     sstar = star(vindx);
     sigPriors(k) = logmvnpdf(sstar', s0(vindx)', S0.*eye(nsubk));
+    fprintf('Block %i\n',k)
     for r = 1 : Runs
-        fprintf('Reduced run %i block %i \n', r,k)
-        sg = storeSigmag(:,r);
+        fprintf('\tReduced run %i \n', r)
+        sg = storeSigma0g(:,r);
         sgfree = sg(vindx);
+        
         kprod = zeros(nsubk,1);
         for j = 1:nsubk
             kprod(j) = logmvnpdf( (sstar(j) - sgfree(j) )./bk,0,1 ) - log(bk);
         end
-        storeKsums(k,r) = sum(kprod);
+        storeKsums(k,r) = prod(exp(kprod));
         star(vplus) = sg(vplus);
         t = reshape(unvech*star, K,K);
         CurStar = t + t' + eye(K);
-        storeLatent(:,:,r) = mvp_latentDataDraw(zt,yt,mut,CurStar);
-        storeBetag(:,r) = mvp_betadraw(zt,surX, CurStar, subsetIndices, kronB0inv, kronB0invb0);
-        Sigma0 = mvp_rwSigmaDraw(CurStar,demuyt,  s0, S0, unvech,...
-            vechIndex, k+1);
-        s=vech(Sigma0,-1);
-        storeSigmagCopy(vindx,r) = sstar;
-        storeSigmagCopy(vplus,r) = s(vplus);
+        [~,p]= chol(CurStar);
+        if p~=0
+            zt = mvp_latentDataDraw(zt,yt,mutStar,SigmaStar);
+            storeLatentj(:,:,r) = zt;
+            demuyt = zt-mutStar;
+            Sigma0g = mvp_rwSigmaDraw(SigmaStar,demuyt,  s0, S0, unvech,...
+                vechIndex, k+1);
+            s=vech(Sigma0g,-1);
+            storeSigmagCopy(vindx,r) = sstar;
+            storeSigmagCopy(vplus,r) = s(vplus);
+        else
+            zt = mvp_latentDataDraw(zt,yt,mutStar,CurStar);
+            storeLatentj(:,:,r) = zt;
+            demuyt = zt-mutStar;
+            Sigma0g = mvp_rwSigmaDraw(CurStar,demuyt,  s0, S0, unvech,...
+                vechIndex, k+1);
+            s=vech(Sigma0g,-1);
+            storeSigmagCopy(vindx,r) = sstar;
+            storeSigmagCopy(vplus,r) = s(vplus);
+        end
     end
-    storeSigmag = storeSigmagCopy;
+    piSigma(k) = -log(Runs) + log(sum(storeKsums(k,:),2));
+    storeSigma0g = storeSigmagCopy;
 end
-SigmaStar = mean(storeSigmag,2);
+SigmaStar = mean(storeSigma0g,2);
+star = SigmaStar(end);
 vv = vechIndex(K-1,1):vechIndex(K-1,2);
-star = mean(storeSigmagCopy(vv,:),2);
-SigmaStar(end) = star;
 SigmaStar = reshape(unvech*SigmaStar,K,K);
 SigmaStar = SigmaStar + SigmaStar' + eye(K);
+[~,m]=chol(SigmaStar);
+if m~=0
+    SigmaStar = SigmaStarG;
+end
 bk = storesks(end)*Runs^(-.2);
+
+fprintf('Last block\n')
 for r = 1 : Runs
-    fprintf('Reduced run %i last block \n', r)
-    x= storeSigmagCopy(vv,:);
-    storeKsums(K-1, r) = logmvnpdf( (star - x )./bk,0,1 ) - log(bk);
+    fprintf('\tReduced run %i \n', r)
+    x= storeSigma0g(vv,r);
+    storeKsums(K-1, r) = exp(logmvnpdf( (star - x )./bk,0,1 ) - log(bk));
 end
 sigPriors(end) = logmvnpdf(star, s0(end), S0);
-piSigmaStar = sum(logAvg(storeKsums));
+piSigma(end) = -log(Runs) + log(sum(storeKsums(K-1,:),2));
+piSigma = sum(piSigma);
 
-betaStar = mean(storeBeta,2);
-storePibetastar = zeros(1,Runs);
-for r = 1 : Runs
-    fprintf('Reduced run beta %i \n', r)
-    zt = mvp_latentDataDraw(zt,yt,mut,SigmaStar);
-    storePibetastar(r) = mvp_pibeta(betaStar, zt,surX, SigmaStar, subsetIndices, kronB0inv, kronB0invb0);
-end
-betaprior = logmvnpdf(betaStar', beta0',  diag(ones(KP,1).*B0));
-piBetaStar = logAvg(storePibetastar);
 
-Xbeta = reshape(surX*betaStar,K,T);
-fprintf('Computing log likelihood\n')
-LogLikelihood = sum(ghk_integrate(yt, Xbeta, SigmaStar, 1000));
+
+% fprintf('Computing log likelihood\n')
+LogLikelihood = sum(ghk_integrate(yt, mutStar, SigmaStar, 1000));
 priors = [betaprior, sum(sigPriors)]
-posterior = [piSigmaStar, piBetaStar]
+posterior = [piSigma, piBetaOrdinate]
 LL = LogLikelihood
 ml=LL + sum(priors) - sum(posterior)
 end

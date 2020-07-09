@@ -9,11 +9,11 @@ options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
 for k = start:K-1
     vindx = vechIndex(k,1) : vechIndex(k,2);
     nsubk = length(vindx);
+    tau = sqrt(nsubk);
     mu = zeros(1,K);
     s0 = sig0(vindx);
     S0 = Sig0.*eye(nsubk);
     constelems = vech(CurrentSigma, -1);
-    
     negLL = @(vs)  mvp_likelihood(vs, constelems, zt, mu, s0, S0, unvech, vindx);
     x0 = constelems(vindx);
     [candmu, ~, ~, ~, ~, H] = fminunc(negLL, x0, options);
@@ -26,7 +26,6 @@ for k = start:K-1
     end
     df = 15;
     w = chi2rnd(df) ;
-      
     candidate = candmu + Covar'*normrnd(0,1,nsubk,1)/sqrt(w);
     constelems(vindx) = candidate;
     candidate1 = constelems;
@@ -35,15 +34,15 @@ for k = start:K-1
     Cand = Q + Q' + eye(K);
     [~, pp] = chol(Cand);
     if pp == 0
-
         ProposalCovar = Covar'*Covar;
         [~, p] = chol(ProposalCovar,'lower');
         if p ~= 0
             ProposalCovar = eye(nsubk);
         end
+
         LL = @(P)  sum(logmvnpdf(zt', mu, P)) ;
         Prior = @(P)  logmvnpdf(P, s0', S0);
-        Prop = @(P) mvstudenttpdf(P, candmu', ProposalCovar, df);
+        Prop = @(P) mvstudenttpdf(P, candmu', tau.*ProposalCovar, df);
         Num = LL(Cand) + Prior(candidate') + Prop(x0');
         Den = LL(CurrentSigma) + Prior(x0') + Prop(candidate');
         alpha = min( 0, Num - Den );
