@@ -54,7 +54,5 @@ Num=MHphi(Y1, S0drawlowerinv, proposal', delta0, Delta0)+proposalDist(deltas);
 Den=MHphi(Y2, Cinv, deltas', delta0, Delta0)+proposalDist(proposal);
 alpha = min(0, Num-Den);
 
-
-end
 end
 
