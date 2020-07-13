@@ -1,17 +1,19 @@
-function [CurrentSigma] = mvp_rwSigmaDraw(CurrentSigma, zt, sig0, Sig0, unvech,...
-    vechIndex, start)
+function [CurrentSigma, accept] = mvp_rwSigmaDraw(CurrentSigma, zt, sig0, Sig0, unvech,...
+    vechIndex, start, tau)
 %% Help for mvp_rwSigmaDraw
 % sig0 and Sig0 are priors for CurrentSigma
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 25);
 [K,~]=size(CurrentSigma);
+accept = zeros(K-1,1);
+df = 15;
 
 for k = start:K-1
     vindx = vechIndex(k,1) : vechIndex(k,2);
     nsubk = length(vindx);
-    tau = sqrt(nsubk);
+    
     mu = zeros(1,K);
-    s0 = sig0(vindx);
+    s0 = ones(nsubk,1).*sig0;
     S0 = Sig0.*eye(nsubk);
     constelems = vech(CurrentSigma, -1);
     negLL = @(vs)  mvp_likelihood(vs, constelems, zt, mu, s0, S0, unvech, vindx);
@@ -24,7 +26,6 @@ for k = start:K-1
     else
         Covar = Hlower\eye(nsubk);
     end
-    df = 15;
     w = chi2rnd(df) ;
     candidate = candmu + Covar'*normrnd(0,1,nsubk,1)/sqrt(w);
     constelems(vindx) = candidate;
@@ -39,15 +40,16 @@ for k = start:K-1
         if p ~= 0
             ProposalCovar = eye(nsubk);
         end
-
+        
         LL = @(P)  sum(logmvnpdf(zt', mu, P)) ;
         Prior = @(P)  logmvnpdf(P, s0', S0);
-        Prop = @(P) mvstudenttpdf(P, candmu', tau.*ProposalCovar, df);
+        Prop = @(P) mvstudenttpdf(P, candmu', tau(k).*ProposalCovar, df);
         Num = LL(Cand) + Prior(candidate') + Prop(x0');
         Den = LL(CurrentSigma) + Prior(x0') + Prop(candidate');
         alpha = min( 0, Num - Den );
         lu = log(unifrnd(0,1));
         if lu < alpha
+            accept(k) = 1;
             CurrentSigma = Cand;
         end
     end

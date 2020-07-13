@@ -7,11 +7,9 @@ function [prob] = ghk_integrate(y, Xbeta, Sigma, Sims)
 si = 2.*y-1;
 L = chol(Sigma,'lower');
 offDiag = tril(L, -1);
-djj = diag(L)
+djj = diag(L);
 cij = zeros(K,T,Sims);
 estProb = zeros(T, Sims);
-e = estProb;
-uHat = unifrnd(0,1, K,T,Sims);
 for t = 1:T
     fprintf('T = %i\n', t)
     mu = Xbeta(:,t);
@@ -20,12 +18,15 @@ for t = 1:T
         te = zeros(K,1);
         for k = 1:K
             meanUpdate = tsi(k)*(mu(k) + (offDiag(k,:)*te))/djj(k);
-            te(k) = tsi(k)*NormalTruncatedPositive(tsi(k)*(mu(k) + (offDiag(k,:)*te)), djj(k), 1);
+            te(k) = tsi(k)*NormalTruncatedPositive(meanUpdate, djj(k)^2, 1);
             cij(k,t,s) = normcdf(meanUpdate);
+
         end
-        estProb(t,s) = prod(cij(:,t,s));        
+        estProb(t,s) = prod(cij(:,t,s));    
+
     end
 end
+sum(estProb,2)
 prob = -log(Sims) + log(sum(estProb,2));
 end
 

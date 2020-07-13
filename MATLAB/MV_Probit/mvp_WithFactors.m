@@ -22,17 +22,13 @@ B0inv = B0\eye(size(b0,1));
 A0inv = 1/A0;
 beta = repmat(b0,K,1);
 
-
 zt = yt;
-
 obsVariance = ones(K,1);
 obsPrecision = 1./obsVariance;
 factorVariance = ones(nFactors,1);
 currobsmod = setObsModel(zeros(K,levels), InfoCell);
 currobsmod(1) = 1/sqrt(2);
 stateTransitions = .5.*ones(size(g0,1), nFactors);
-size(surX)
-size(b0(:))
 Xbeta = reshape(surX*b0(:), K,T);
 Ft =initFt;
 
@@ -100,7 +96,6 @@ if estml == 1
     storeStateTransitionsj = storeSt;
     storeLatentDataj = storeLatentData;
     stj = mean(storeSt,3);
-    Ftj = mean(storeFt,3);
     fvj = factorVariance;
     [iP, ~] =initCovar(stj, fvj);
     Si = FactorPrecision(stj, iP, 1./fvj, T);
@@ -109,6 +104,10 @@ if estml == 1
     
     [storeMeans, storeVars] = ComputeMeansVars(yt, Xbeta, Ft, Astar, stateTransitions,...
         obsPrecision, factorVariance, Identities, InfoCell, a0, A0inv);
+    ztj = mean(storeLatentData,3);
+    Xbetaj = reshape(surX*mean(storeBeta,2), K,T);
+    Aj = mean(storeOm,3);
+    
     %% Reduced Run 1
     fprintf('Reduced Run for loadings\n')
     for r = 1:Runs
@@ -117,23 +116,20 @@ if estml == 1
         Ftg = storeFt(:,:,r);
         stg = storeStateTransitionsg(:,:,r);
         betag = storeBeta(:,r);
-        Afg = Astar*Ftg;
-        Ag = storeOm(:,:,r);
         Xbetag = reshape(surX*betag, K,T);
-        
         [~, Ftj, stoAlphag(:,r)] =  mvp_LoadFacGstep(ztg, Xbetag, Ftg, Astar, stg,...
             obsVariance,factorVariance, Identities, InfoCell, a0, A0inv, storeMeans, storeVars);
         
-        stoAlphaj(:,r) = mvp_LoadFacJstep(Astar, Ag, ...
-            ztg, Xbetag, Ftg, stg, obsPrecision, factorVariance, Identities,...
+        Afj = Astate*Ftj;
+        stoAlphaj(:,r) = mvp_LoadFacJstep(Astar, Aj, ...
+            ztj, Xbetaj, Ftj, stj, obsPrecision, factorVariance, Identities,...
             InfoCell,  a0, A0inv, storeMeans, storeVars);
-        
-        ztj = mvp_latentDataDraw(zt,yt, Xbetag + Afg, diag(obsVariance));
-        [VAR, ~] = VAR_ParameterUpdate(ztg, Xt, obsVariance,...
-            Astar, stg, factorVariance, b0, B0inv, FtIndexMat, subsetIndices);
+        ztj = mvp_latentDataDraw(ztj,yt, Xbetaj + Afj, diag(obsVariance));
+        [VAR, ~] = VAR_ParameterUpdate(ztj, Xt, obsVariance,...
+            Astar, stj, factorVariance, b0, B0inv, FtIndexMat, subsetIndices);
         % State transitions
         for n=1:nFactors
-            [storeStateTransitionsj(n,:), ~, ~, ~] = drawAR(stg(n,:), Ftg(n,:), factorVariance(n), g0,G0);
+            [storeStateTransitionsj(n,:), ~, ~, ~] = drawAR(stj(n,:), Ftj(n,:), factorVariance(n), g0,G0);
         end
         storeBetaj(:,r) = VAR(:);
         storeFtj(:,:,r) = Ftj;
