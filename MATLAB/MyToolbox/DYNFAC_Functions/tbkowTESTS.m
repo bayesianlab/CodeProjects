@@ -1,6 +1,6 @@
 clear;clc;
 
-rng(59)
+
 % DataCell = SimDataMLF(100, 1,1,15);
 % save('simdata', 'DataCell')
 % rng(1)

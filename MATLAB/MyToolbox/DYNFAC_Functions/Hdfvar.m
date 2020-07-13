@@ -2,7 +2,7 @@ function [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] =...
     Hdfvar(yt, Xt,  InfoCell,  Sims,burnin, initFactor, initobsmodel,...
     initStateTransitions, initObsPrecision, initFactorVar, beta0, B0inv,...
-    v0, r0, s0, d0,  a0, A0inv, g0,G0, identification, estML, DotMatFile)
+    v0, r0, s0, d0,  a0, A0inv, g0,G0, tau, identification, estML, DotMatFile)
 % Statetransitions are stored [world;regions;country]
 
 [checkfr, checkfc] = size(initFactor);
@@ -56,7 +56,7 @@ factorVariance = initFactorVar;
 stateTransitions = initStateTransitions;
 currobsmod = setObsModel(initobsmodel, InfoCell);
 Ft = initFactor;
-
+ap = zeros(nFactors,1);
 
 % Storage
 Runs = Sims - burnin;
@@ -99,9 +99,9 @@ if finishedMainRun == 0
             B0inv, FtIndexMat, subsetIndices);
         
         %% Draw loadings and factors
-        [currobsmod, Ft]=...
+        [currobsmod, Ft, ~, accept]=...
             LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-            obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv);
+            obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau);
         
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
@@ -111,7 +111,8 @@ if finishedMainRun == 0
         
         %% Factor AR Parameters
         for n=1:nFactors
-            [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0, G0);
+            [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n),...
+                g0, G0);
         end
         
         if identification == 2
@@ -130,10 +131,12 @@ if finishedMainRun == 0
             g1bar = g1bar + g1;
             G1bar = G1bar + G1;
         end
+        ap = ap + accept;
     end
     
     
     Runs = Sims- burnin;
+    accept_probability = ap./Sims
     betaBar = reshape(mean(storeVAR,3), dimx*K,1);
     Ftbar = mean(storeFt,3);
     omBar = mean(storeOM,3);

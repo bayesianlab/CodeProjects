@@ -36,7 +36,7 @@ d0 = 8
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
 a0=1
-A0inv = 1
+A0inv = .2
 g0 = zeros(1,lags)
 G0=diag(fliplr(.5.^(0:lags-1)));
 
@@ -45,17 +45,17 @@ B0inv = 1.*eye(dimX);
 
 initStateTransitions = zeros(nFactors,lags);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
-initobsmodel = unifrnd(0,1,K,levels);
+initobsmodel = zeros(K,levels);
 initObsPrecision = 1./var(yt,[],2);
 initFactorVar = ones(nFactors,1);
 initFactor = normrnd(0,1,nFactors,T);
 identification = 2;
-
+tau = [4.*ones(1,8), .25.*ones(1,60)] 
 
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...
-    beta0, B0inv, v0, r0, s0, d0, a0,A0inv, g0, G0, identification, estML, DotMatFile);
+    beta0, B0inv, v0, r0, s0, d0, a0,A0inv, g0, G0, tau, identification, estML, DotMatFile);
 muvar = mean(storeVAR,3);
 SX = surForm(Xt,K);
 Xbeta = reshape(SX*muvar(:),K,T);

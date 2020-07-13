@@ -48,7 +48,7 @@ for s = 1:Sims
     end
 
 end
-ap./Sims
+accept_probability = ap./Sims;
 storeLatentj = storeLatent;
 ztj = mean(storeLatentj,3);
 Sigma0j = Sigma0;

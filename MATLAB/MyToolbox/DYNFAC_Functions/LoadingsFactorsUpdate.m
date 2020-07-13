@@ -1,6 +1,6 @@
-function [currobsmod, Ft,  alpha] = ...
+function [currobsmod, Ft,  alpha, accept] = ...
     LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv)
+    obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau)
 
 MaxIterations = 20;
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
@@ -14,7 +14,7 @@ nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 alpha = zeros(nFactors,1);
 xb = reshape(Xbeta, K,T);
 
-tau = 10;
+accept = zeros(nFactors,1);
 for q = 1:levels
     fprintf('\tLevel %i\n', q)
     COM = makeStateObsModel(currobsmod, Identities, q);
@@ -87,7 +87,7 @@ for q = 1:levels
         top = top(2:end);
         
         proposal = themean + Hlower*normrnd(0,1,length(s2), 1)./w1;
-        proposalDist= @(prop) mvstudenttpdf(prop, themean', H, df);
+        proposalDist= @(prop) mvstudenttpdf(prop, themean', tau(fcount).*H, df);
         
         LogLikePositive = @(val) LLcond_ratio (val, ty, a0m, A0invp, top, tempf, StatePrecision);
         Num = LogLikePositive(proposal) + proposalDist(x0');
@@ -97,6 +97,7 @@ for q = 1:levels
 %         [Num,Den,alpha(fcount), proposalDist(x0'), proposalDist(proposal')]
 
         if u <= alpha(fcount)
+            accept(fcount) = 1;
             currobsmod(subset,q) = [1;proposal];
         end
         %% Update Factor
