@@ -1,9 +1,9 @@
 clear;clc;
-if ~exist('BigKow/', 'dir')
-    mkdir('BigKow')
+if ~exist('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow', 'dir')
+    mkdir('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow')
 end
-if ~exist('BigKow/RegionTests', 'dir')
-    mkdir('BigKow/RegionTests')
+if ~exist('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests', 'dir')
+    mkdir('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests')
 end
 SeriesPerCountry= 3;
 Countries = 60;
@@ -92,7 +92,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/constant_std.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/constant_std.mat', 'DataCell')
 
 DataCell = cell(1,7);
 DataCell{1,1} = y(:, 1:30);
@@ -102,7 +102,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/aerreplication_std.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/aerreplication_std.mat', 'DataCell')
 
 kowdata = importRealData('~/GoogleDrive/Datasets/kow_march6.csv');
 InfoCell{1,1} = [1,180];
@@ -135,7 +135,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/var1_std.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/var1_std.mat', 'DataCell')
 
 
 DataCell = cell(1,7);
@@ -146,7 +146,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/constant_std.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/constant_std.mat', 'DataCell')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% World Region
 clear;clc
@@ -186,7 +186,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/RegionTests/world_region.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests/world_region.mat', 'DataCell')
 
 %%  World Country
 clear;clc;
@@ -226,7 +226,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/RegionTests/world_country.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests/world_country.mat', 'DataCell')
 
 %%  World only
 clear;clc;
@@ -266,7 +266,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/RegionTests/world_only.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests/world_only.mat', 'DataCell')
 
 %%  Region only
 clear;clc;
@@ -306,7 +306,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/RegionTests/region_only.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests/region_only.mat', 'DataCell')
 
 %%  Country only
 clear;clc;
@@ -346,7 +346,7 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/RegionTests/country_only.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests/country_only.mat', 'DataCell')
 
 
 %%  Region Country
@@ -387,4 +387,4 @@ DataCell{1,4} = 0;
 DataCell{1,5} = 0;
 DataCell{1,6} = 0;
 DataCell{1,7} = 0;
-save('BigKow/RegionTests/region_country.mat', 'DataCell')
+save('/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests/region_country.mat', 'DataCell')

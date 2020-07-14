@@ -134,7 +134,6 @@ if finishedMainRun == 0
         ap = ap + accept;
     end
     
-    
     Runs = Sims- burnin;
     accept_probability = ap./Sims
     betaBar = reshape(mean(storeVAR,3), dimx*K,1);
@@ -207,8 +206,8 @@ if estML == 1
             Xbetag = reshape(SurX*betag(:), K,T);
             fvg = storeFactorVar(:,r);
             stoAlphag(:,r) = LoadingsFactorsUpdate_GStep(Astar, storeOM(:,:,r), ...
-                yt, Xbeta, Ftg, stg, opg, fvg, Identities,...
-                InfoCell,  a0, A0inv,storeMeans, storeVars);
+                yt, Xbeta, Ftg, stg, opg, fvg, Identities, InfoCell,  a0, A0inv, ...
+                storeMeans, storeVars);
             
             [VARj, Xbetaj] = VAR_ParameterUpdate(yt, Xt, opj,...
                 Astar, stj, fvj, beta0, B0inv, FtIndexMat, subsetIndices);
@@ -371,12 +370,12 @@ if estML == 1
     priorStar = sum(priors)
     
     
-    ml = (LogLikelihood+priorStar)-posteriorStar;
+    ml = (LogLikelihood+priorStar)-posteriorStar
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
     rmdir(checkpointdir, 's')
     
-    %     fytheta = LogLikelihood + Fpriorstar - piFt;
-    %     my = fytheta + sum([priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]) - sum([piBeta, piA , piST, piObsVariance, piFactorVariance])
+    fytheta = LogLikelihood + Fpriorstar - piFt;
+    my = fytheta + sum([priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]) - sum([piBeta, piA , piST, piObsVariance, piFactorVariance])
 else
     ml = 'nothing';
     rmdir(checkpointdir, 's')

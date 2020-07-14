@@ -92,10 +92,10 @@ for i = 1:Sims
         loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*double(restrictions(k,:) > 0));
         beta(factorRange,k) = loadings(k,:)';
         if autoRegressiveErrors == 1
-            omArTerms(k,:) = drawPhi(tempy, tempx, beta(:,k),tempdel, tempobv, g0,G0);
+            epsi = tempy - tempx*beta(k,:)';
+            omArTerms(k,:)= drawAR(tempdel,epsi, tempobv, g0,G0);
         end
         [~, H]= FactorPrecision(tempdel, tempD0, 1/tempobv, T);
-        sum( ( (H*tempy') -  (H*(tempx*beta(:,k) ) ) ).^2);
         igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*( tempx*beta(:,k) ) ) ).^2));
         obsVariance(k) = 1./gamrnd(igParamA, 1./igParamB);
     end
@@ -151,7 +151,7 @@ for i = 1:Sims
     %% Draw Factor AR Parameters
     
     for n=1:nFactors
-        factorArTerms(n,:) = drawPhi(Ft(n,:), fakeX, fakeB, factorArTerms(n,:), factorVariance(n), g0,G0);
+        factorArTerms(n,:)= drawAR(factorArTerms(n,:),Ft(n,:), factorVariance(n), g0,G0);
     end
     
     %% Draw Factor Variances
@@ -169,6 +169,8 @@ for i = 1:Sims
     end
     
 end
+
+
 
 %% Variance decomposition
 om = mean(storeLoadings,3);
@@ -250,7 +252,8 @@ if calcML == 1
             loadings(k,:) = betaStar(k,factorRange);
             loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*double(restrictions(k,:) > 0));
             if autoRegressiveErrors == 1
-                omArTermsj(k,:) = drawPhi(tempy, tempx, betaStar(k,:)',tempdel, tempobv, g0,G0);
+                epsi = tempy - tempx*betaStar(k,:)';
+                omArTermsj(k,:)= drawAR(tempdel,epsi, tempobv, g0,G0);
             end
             igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(k,:)' ) ) ).^2));
             ovj(k) = 1./gamrnd(igParamA, 1./igParamB);
@@ -305,8 +308,7 @@ if calcML == 1
         
         % Draw Factor AR Parameters
         for n=1:nFactors
-            factorArTermsj(n,:) = drawPhi(Ftj(n,:), fakeX, fakeB, factorArTermsj(n,:),...
-                factorVariancej(n), g0,G0);
+            factorArTermsj(n,:)= drawAR(factorArTerms(n,:),Ft(n,:), factorVariance(n), g0,G0);
         end
         
         % Draw Factor Variances
@@ -325,15 +327,13 @@ if calcML == 1
     fprintf('Factor RR\n')
     FactorStar = mean(storeFtj,3);
     storePiFactor = zeros(nFactors,ReducedRuns);
-    storeOMARRRg = zeros(K, lagOm,ReducedRuns);
-    storeFactorARRR = zeros(nFactors, lagState, ReducedRuns);
+    
     
     storeOmArg = storeOmArj;
     storeObsVg = storeObsVj;
     
     for rr = 1:ReducedRuns
         fprintf('RR = %i\n', rr)
-        
         omarg = storeOmArg(:,:,rr);
         ovg = storeObsVg(:,rr);
         for k = 1:K
@@ -348,7 +348,8 @@ if calcML == 1
             loadings(k,:) = betaStar(k,factorRange);
             loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*double(restrictions(k,:) > 0));
             if autoRegressiveErrors == 1
-                omArTermsj(k,:) = drawPhi(tempy, tempx, betaStar(k,:)',tempdel, tempobv, g0,G0);
+                epsi = tempy - tempx*betaStar(k,:)';
+                omArTermsj(k,:)= drawAR(tempdel,epsi, tempobv, g0,G0);
             end
             ovj(k) = 1./gamrnd(igParamA, 1./igParamB);
         end
@@ -366,7 +367,7 @@ if calcML == 1
                 % Factor level
                 c=c+1;
                 fvcj = factorVariancej(c);
-                farcj = factorArTermsj(c,:);
+                farcj = factorArTermsj(c,:)./2;
                 subsI = Info(w,1):Info(w,2);
                 commonPrecisionComponent = zeros(T,T);
                 commonMeanComponent = zeros(T,1);
@@ -384,7 +385,7 @@ if calcML == 1
                     for k = subsI
                         % Equation level
                         ty = tempyt(k,:);
-                        QQsigma = IT* (1./ovj(k));
+                        QQsigma = IT* (1./(ovj(k)));
                         commonMeanComponent = commonMeanComponent + alpha(k)*QQsigma*ty(:);
                         commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                     end
@@ -395,13 +396,14 @@ if calcML == 1
                 Linv = chol(OmegaInv,'lower')\IT;
                 Omega= Linv'*Linv;
                 omega =Omega*commonMeanComponent;
+
+%                 [FactorStar(c,:)', omega]
                 storePiFactor(c,rr)=logmvnpdf(FactorStar(c,:), omega', Omega);
-            end
+            end            
         end
         %% Draw Factor AR Parameters
         for n=1:nFactors
-            factorArTermsj(n,:) = drawPhi(FactorStar(n,:), fakeX, fakeB, factorArTermsj(n,:),...
-                factorVariancej(n), g0,G0);
+            factorArTermsj(n,:)= drawAR(factorArTermsj(n,:),FactorStar(n,:), factorVariancej(n), g0,G0);
         end
         storeStateArj(:,:, rr) = factorArTermsj;
         %% Draw Factor Variances
@@ -411,6 +413,7 @@ if calcML == 1
         storeObsVj(:,v) = ovj;
         storeFactorVariancej(:,v) = factorVariancej;
     end
+
     piFactor =sum(logAvg(storePiFactor));
     
     %%%%%%%%%%%%%%%%%%%%
@@ -464,13 +467,13 @@ if calcML == 1
             s0, r0);
         
         storeFactorVariancej(:,rr) = factorVariancej;
-        storeObsVj(:,rr) = ovj;        
+        storeObsVj(:,rr) = ovj;
     end
     if autoRegressiveErrors== 1
         piOMAR = sum(logAvg(quantOMARg) - logAvg(storeAlphaOMARj));
     end
     piFactorAR = sum(logAvg(quantFactorg)-logAvg(storeAlphaFactorj));
-
+    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Last RR
     omVarStar = mean(storeObsVj,2);
@@ -504,10 +507,10 @@ if calcML == 1
         S = P\eye(T);
         Slowerinv = chol(S,'lower')\eye(T);
         LL(k) = adjustedlogmvnpdf( ((Slowerinv*tempy') - Slowerinv*(tempx*betaStar(k,:)'))', Slowerinv);
-%     LL(k) = logmvnpdf((tempy' - tempx*betaStar(k,:)')', zeros(1,T), S);
+        %     LL(k) = logmvnpdf((tempy' - tempx*betaStar(k,:)')', zeros(1,T), S);
     end
-% [LL, LL2']
-LL = sum(LL)
+    % [LL, LL2']
+    LL = sum(LL)
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Marginal Likelihood
@@ -532,6 +535,8 @@ LL = sum(LL)
         sum(POSTERIORS)
     else
         POSTERIORS = [piFactor,piBeta,  piFactorAR, piOmVar, piFV]
+        sum(POSTERIORS)
+        
     end
     
     ML = LL + sum(PRIORS) - sum(POSTERIORS)

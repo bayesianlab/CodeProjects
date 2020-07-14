@@ -47,8 +47,6 @@ Snewlower = chol(Snew,'lower');
 
 Xss = [Xp;Xt];
 
-ystarcurr = Scurrlower*( yt' - Xss*current');
-ystarnew = Snewlower*( yt' - Xss*candidate);
 
 Snewlowerinv  = Scurrlower\eye(T);
 Scurrlowerinv = Snewlower\eye(T);

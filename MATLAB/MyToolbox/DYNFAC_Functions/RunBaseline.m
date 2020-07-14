@@ -45,16 +45,12 @@ B0 =5.*eye(dimX + levels);
 B0(1,1) = 10;
 B0
 v0=6
-r0 = 4
+r0 = 8
 s0 = 6
-d0 = 4
+d0 = 8
 [m,v]=invGammaMoments(v0/2, r0/2)
-g0 = zeros(1,lagFac);
-if lagFac == 3
-    G0 = diag([.25, .5,1])*eye(lagFac);
-else
-    G0 = 1;
-end
+g0 = zeros(1,lagFac)
+G0=diag(fliplr(.5.^(0:lagFac-1)))
 
 iBeta = [ones(K,dimX), ones(K,levels)];
 idelta = zeros(K,lagOM);

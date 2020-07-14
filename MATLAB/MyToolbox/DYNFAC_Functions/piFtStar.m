@@ -12,22 +12,25 @@ for q = 1:levels
     Info = InfoCell{1,q};
     regs = size(Info,1);
     for r=1:regs
+        commonPrecisionComponent = zeros(T,T);
+        commonMeanComponent = zeros(T,1);
         subset = Info(r,1):Info(r,2);
+
+        ObsModel = currobsmod(:,q);
         fcount = fcount+1;
+        for k = subset            
+            commonMeanComponent = commonMeanComponent + (ObsModel(k).*ydemut(k,:))'.*obsPrecision(k);
+            commonPrecisionComponent = commonPrecisionComponent + ...
+                (ObsModel(k)^2)*eye(T).*obsPrecision(k);
+        end
         [L0, ssgam] = initCovar(stateTransitions(fcount,:), factorVariance(fcount));
         StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fcount), T);
-        ty = ydemut(subset,:);
-        top = obsPrecision(subset);
-        ObsModel = currobsmod(subset,q);
-        eyet = eye(T);
-        FullPrecision = diag(top);
-        GtO = ObsModel'*FullPrecision;
-        P = StatePrecision + kron(eyet, GtO*ObsModel);
-        LP = chol(P,'lower');
-        LPi = LP\eye(size(P,1));
-        B = LPi'*LPi;
-        mu = B*(kron(eyet,GtO)*ty(:));
-        pival(fcount) = logmvnpdf(FtStar(fcount,:), mu', B);
+      
+        H = (StatePrecision + commonPrecisionComponent)\eye(T);
+        mu = H*commonMeanComponent;
+
+        pival(fcount) = logmvnpdf(FtStar(fcount,:), mu', H);
+        
     end
 end
 

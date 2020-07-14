@@ -94,8 +94,6 @@ for q = 1:levels
         Den = LogLikePositive(x0) + proposalDist(proposal');
         alpha(fcount) = min(0,Num - Den);
         u = log(unifrnd(0,1,1,1));
-%         [Num,Den,alpha(fcount), proposalDist(x0'), proposalDist(proposal')]
-
         if u <= alpha(fcount)
             accept(fcount) = 1;
             currobsmod(subset,q) = [1;proposal];
