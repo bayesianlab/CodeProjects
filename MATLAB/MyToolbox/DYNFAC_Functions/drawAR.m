@@ -52,6 +52,8 @@ ystarnew = Snewlower*( yt' - Xss*candidate);
 
 Snewlowerinv  = Scurrlower\eye(T);
 Scurrlowerinv = Snewlower\eye(T);
+ystarcurr = Scurrlowerinv'*( yt' - Xss*current');
+ystarnew = Snewlowerinv'*( yt' - Xss*candidate);
 Num = adjustedlogmvnpdf(ystarnew', Snewlowerinv)+logmvnpdf(candidate', g0, G0)+logmvnpdf(current, g1', G1);
 Den = adjustedlogmvnpdf(ystarcurr', Scurrlowerinv)+logmvnpdf(current, g0, G0)+logmvnpdf(candidate', g1', G1);
 if ~isscalar(Num-Den)

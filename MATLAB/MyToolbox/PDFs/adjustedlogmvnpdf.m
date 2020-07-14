@@ -5,6 +5,5 @@ D=size(z,2);
 term1 = -0.5 * sum(z  .* z, 2); % N x 1
 term2 =-0.5 * D * log(2*pi) +sum(log(diag(SigmaLowerInv))) ; % scalar
 logp = term1' + term2;
-
 end
 

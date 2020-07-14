@@ -16,6 +16,7 @@ Lagepsilont = lagMat(epsilont, p)';
 epsilont = epsilont(:,p+1:end)';
 
 % Propose a candidate
+
 proposalVariance = (Delta0 +( Lagepsilont'*Lagepsilont)./obsv)\eye(p);
 proposalMeanN = proposalVariance*(Delta0delta0 + (Lagepsilont'*epsilont)./obsv);
 S0draw = initCovar(deltas, obsv);
