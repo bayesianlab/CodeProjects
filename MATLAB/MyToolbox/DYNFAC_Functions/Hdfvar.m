@@ -105,6 +105,7 @@ if finishedMainRun == 0
             LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
             obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau);
 
+
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
         resids = yt - (StateObsModel*Ft) - Xbeta;
@@ -259,7 +260,7 @@ if estML == 1
             stoAlphag(:,r) = drawSTAlpha_Gstep(stg, stStar, Ftg, fvg, g0, G0);
             
             Ftj = drawFactor(Ftj, yt, Xbeta, Astar, stateTransitions,...
-                obsPrecision, factorVariance, Identities, InfoCell, arerrors);
+                opg, factorVariance, Identities, InfoCell, arerrors);
             if identification == 2
                 [fvj, ~]  = drawFactorVariance(Ftj, stStar, fvj, s0, d0);
                 storeFactorVarj(:,r) = fvj;
