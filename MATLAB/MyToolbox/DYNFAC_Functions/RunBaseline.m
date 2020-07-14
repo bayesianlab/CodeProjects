@@ -39,10 +39,8 @@ InfoCell = DataCell{1,3};
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 b0 = ones(1,dimX + levels);
-b0(1) = 0;
 
 B0 =5.*eye(dimX + levels);
-B0(1,1) = 10;
 B0
 v0=6
 r0 = 8

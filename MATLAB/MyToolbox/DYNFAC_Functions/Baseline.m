@@ -231,7 +231,6 @@ if calcML == 1
     for rr = 1:ReducedRuns
         fprintf('RR = %i\n', rr)
         
-        
         Ftg = storeFt(:,:,rr);
         omarg = storeOmArTerms(:,:,rr);
         ovg = storeObsV(:,rr);
@@ -327,10 +326,14 @@ if calcML == 1
     fprintf('Factor RR\n')
     FactorStar = mean(storeFtj,3);
     storePiFactor = zeros(nFactors,ReducedRuns);
-    
-    
     storeOmArg = storeOmArj;
     storeObsVg = storeObsVj;
+    storeStateArg = storeStateArj;
+    storeFactorVarianceg = storeFactorVariancej;
+    
+    SurX = surForm(xt,K);
+    mu1t = reshape(SurX*meanFunction(:),K,T);
+    demuyt = yt - mu1t;
     
     for rr = 1:ReducedRuns
         fprintf('RR = %i\n', rr)
@@ -354,9 +357,7 @@ if calcML == 1
             ovj(k) = 1./gamrnd(igParamA, 1./igParamB);
         end
         % Draw Factors
-        SurX = surForm(xt,K);
-        mu1t = reshape(SurX*meanFunction(:),K,T);
-        demuyt = yt - mu1t;
+        
         c=0;
         for q = 1:levels
             Info = InfoCell{1,q};
@@ -366,8 +367,8 @@ if calcML == 1
             for w = 1:size(Info,1)
                 % Factor level
                 c=c+1;
-                fvcj = factorVariancej(c);
-                farcj = factorArTermsj(c,:)./2;
+                fvcg = storeFactorVarianceg(c,rr);
+                farcg = storeStateArg(c,:, rr);
                 subsI = Info(w,1):Info(w,2);
                 commonPrecisionComponent = zeros(T,T);
                 commonMeanComponent = zeros(T,1);
@@ -375,9 +376,9 @@ if calcML == 1
                     for k = subsI
                         % Equation level
                         ty = tempyt(k,:);
-                        ovkj = ovj(k);
-                        [D0, ssOmArTerms] = initCovar(omArTermsj(k,:), ovkj);
-                        [CV, ~] = FactorPrecision(ssOmArTerms, D0, 1./ovkj, T);
+                        ovkg = ovg(k);
+                        [D0, ssOmArTerms] = initCovar(omArTermsj(k,:), ovkg);
+                        [CV, ~] = FactorPrecision(ssOmArTerms, D0, 1./ovkg, T);
                         commonMeanComponent = commonMeanComponent + alpha(k)*CV*ty(:);
                         commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*CV;
                     end
@@ -385,21 +386,17 @@ if calcML == 1
                     for k = subsI
                         % Equation level
                         ty = tempyt(k,:);
-                        QQsigma = IT* (1./(ovj(k)));
+                        QQsigma = IT* (1./(ovg(k)));
                         commonMeanComponent = commonMeanComponent + alpha(k)*QQsigma*ty(:);
                         commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                     end
                 end
-                [L0, ssGammas] = initCovar(farcj, fvcj);
-                StatePrecision = FactorPrecision(ssGammas, L0, 1./fvcj, T);
-                OmegaInv = commonPrecisionComponent + StatePrecision;
-                Linv = chol(OmegaInv,'lower')\IT;
-                Omega= Linv'*Linv;
+                [L0, ssGammas] = initCovar(farcg, fvcg);
+                StatePrecision = FactorPrecision(ssGammas, L0, 1./fvcg, T);
+                Omega = (commonPrecisionComponent + StatePrecision)\IT;
                 omega =Omega*commonMeanComponent;
-
-%                 [FactorStar(c,:)', omega]
                 storePiFactor(c,rr)=logmvnpdf(FactorStar(c,:), omega', Omega);
-            end            
+            end
         end
         %% Draw Factor AR Parameters
         for n=1:nFactors
@@ -413,7 +410,6 @@ if calcML == 1
         storeObsVj(:,v) = ovj;
         storeFactorVariancej(:,v) = factorVariancej;
     end
-
     piFactor =sum(logAvg(storePiFactor));
     
     %%%%%%%%%%%%%%%%%%%%
