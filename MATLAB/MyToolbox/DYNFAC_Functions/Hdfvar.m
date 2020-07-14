@@ -96,9 +96,11 @@ if finishedMainRun == 0
         end
         fprintf('Simulation %i\n',iterator)
         %% Draw VAR params
+        
         [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecision,...
             currobsmod, stateTransitions, factorVariance, beta0,...
             B0inv, FtIndexMat, subsetIndices);
+        
         
         %% Draw loadings
         [currobsmod, Ft, ~, accept]=...
@@ -237,12 +239,9 @@ if estML == 1
         piA = sum(logAvg(stoAlphag) - logAvg(stoAlphaj));
         StateObsModelStar =  makeStateObsModel(Astar,Identities,0);
         stStar = mean(storeStateTransitionsg,3);
-        storeVARg = storeVARj;
-        storeFtg = storeFtj;
         storeObsPrecisiong = storeObsPrecisionj;
         storeFactorVarg = storeFactorVarj;
         storeStateTransitionsg = storeStateTransitionsj;
-        obsPrecisionj = mean(storeObsPrecisiong,2);
         stoAlphaj = zeros(nFactors, Runs);
         stoAlphag = zeros(nFactors, Runs);
         finishedFirstReducedRun = 1;

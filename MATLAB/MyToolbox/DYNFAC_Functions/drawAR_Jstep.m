@@ -20,9 +20,9 @@ end
 
 Scurr = spdiags(repmat(sigma2,T,1), 0, T, T);
 Snew = Scurr;
-
 P0 = CalcInitCovar(stateSpaceIt(current,lags), sigma2);
-P1 = CalcInitCovar(stateSpaceIt(candidate,lags), sigma2);
+
+P1 = CalcInitCovar(stateSpaceIt(candidate',lags), sigma2);
 
 
 Scurr(1:lags, 1:lags) = P0;

@@ -13,12 +13,12 @@ p = 2;
 Vt = normrnd(0,1,K*T, p-1);
 const = ones(K*T,1);
 Xt = [const, Vt];
-Xt = surForm(Xt, K);
+SurXt = surForm(Xt, K);
 
 beta = 1;
 betas = beta.*ones(K*p,1);
 
-Xbeta = reshape(Xt*betas, K,T);
+Xbeta = reshape(SurXt*betas, K,T);
 
 InfoCell = CreateInfoCell(SizesClusters, K, levels);
 A = ones(K,levels);

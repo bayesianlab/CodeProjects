@@ -115,7 +115,7 @@ if Test3 == 1
     % columns.
     
     
-    [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([30], lags, T);
+    [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([10], lags, T);
     
     [K,T] =size(yt)
     levels= length(InfoCell)
@@ -146,15 +146,18 @@ if Test3 == 1
     initFactorVar = ones(nFactors,1);
     initobsmodel = A;
     identification=2;
-    estML=1;
+    estML=0;
+    tau = ones(1,nFactors);
     [storeFt, storeVAR, storeOM, storeStateTransitions,...
         storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
         burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...
-        beta0, B0inv, v0, r0, s0, d0, a0, A0inv, g0, G0, identification, estML, 'Tests');
+        beta0, B0inv, v0, r0, s0, d0, a0, A0inv, g0, G0, tau, identification, estML, 'Tests');
     
-    EstimatedVAR = mean(storeVAR,3)';
-    Actual = betas;
-    table(round(EstimatedVAR,3), Actual)
+    EstimatedVAR = mean(storeVAR,3)
+%     Actual = betas
+%     size(Actual)
+%     estVAR = round(EstimatedVAR,3)
+%     table(estVAR, Actual)
     EstimatedOM = round(mean(storeOM,3),2);
     Actual = A;
     table(EstimatedOM, Actual)
@@ -170,7 +173,10 @@ if Test3 == 1
     vd = round(varianceDecomp,3);
     table(vd)
     
-    % Fhat = mean(storeFt,3);
+    Fhat = mean(storeFt,3);
+    hold on
+    plot(Factors(1,:))
+    plot(Fhat(1,:))
     %
     % for t = 1:size(Factors,1)
     %     figure

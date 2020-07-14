@@ -12,6 +12,7 @@ xpy = zeros(dimx,1);
 Xzz = zeros(rowx*nFactors,dimx);
 yzz = zeros(size(vecy,1)*nFactors, 1);
 
+
 for t=1:T
     select1 = k1 + (t-1)*nEqns;
     select2 = k2 + (t-1)*nFactors;
