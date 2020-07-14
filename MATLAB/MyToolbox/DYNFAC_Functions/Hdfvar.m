@@ -278,14 +278,11 @@ if estML == 1
                 stoAlphaj(n,r) = drawAR_Jstep(stStar(n,:), Ftj(n,:), fvj(n), g0, G0, g1bar, G1bar);
             end
         end
-        storeVARg = storeVARj;
-        storeFtg = storeFtj;
         storeFactorVarg = storeFactorVarj;
         piST = sum(logAvg(stoAlphag) - logAvg(stoAlphaj));
         VARstar = mean(storeVARj,3);
         betaStar = reshape(VARstar, dimx*K,1);
         xbtStar = reshape(SurX*betaStar,K,T);
-        ydemutStar = yt - xbtStar;
         storePiBeta = zeros(K,Runs);
         finishedSecondReducedRun = 1;
         save(join( [checkpointdir, 'ckpt'] ) )
@@ -327,7 +324,6 @@ if estML == 1
     
     %% Reduced Run for Factors
     fprintf('Reduced run for Factor\n')
-    save('factor')
     for r = startRR:Runs
         fprintf('RR = %i\n', r)
         opg = storeObsPrecisiong(:,r);

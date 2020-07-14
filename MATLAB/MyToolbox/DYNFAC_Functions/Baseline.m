@@ -146,7 +146,7 @@ for i = 1:Sims
             Ft(c,:) = (omega + Linv' * normrnd(0,1,T,1))';
         end
     end
-    
+
     
     %% Draw Factor AR Parameters
     
