@@ -86,10 +86,7 @@ else
     mkdir(checkpointdir)
 end
 
-%%%%%
-accept=0
 
-%%%%%%
 if finishedMainRun == 0
     for iterator = start : Sims
         if mod(iterator, saveFrequency) == 0
