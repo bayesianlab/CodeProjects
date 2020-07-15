@@ -1,5 +1,5 @@
 function [pb] = piBetaStar(VARstar, yt, x, obsPrecision,currobsmod,...
-    stateTransitions, factorVariance, betaPriorMean, betaPriorPre, subsetIndices, FtIndexMat)
+    stateTransitions, factorVariance, b0, B0inv, subsetIndices, FtIndexMat)
 
 [K,T] = size(yt);
 pb = zeros(K,1);
@@ -14,7 +14,7 @@ for k=1:K
     [L0, ~] = initCovar(gammas, factorVariance(fidx));
     StatePrecision = FactorPrecision(gammas, L0, 1./factorVariance(fidx), T);
     pb(k)= pibeta(VARstar(:,k), tempy(:), tempx, tempObsPrecision,...
-        tempOm, StatePrecision, betaPriorMean(:,k), betaPriorPre, T);
+        tempOm, StatePrecision, b0, B0inv, T);
 end
 
 end

@@ -107,24 +107,25 @@ end
 if Test3 == 1
     clear;
     
-    T=200;
+    T=50;
     lags =3;
+%     rng(1)
     % When making gamma,
     % the first element reaches back to the first time period, so
     % remember that the small state transition will appear in the first
     % columns.
     
     
-    [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([10], lags, T);
+    [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([3], lags, T);
     
     [K,T] =size(yt)
     levels= length(InfoCell)
     nFactors=size(gammas,1);
     [~, dimX] = size(Xt);
     v0= 6;
-    r0 = 8;
+    r0 = 6;
     s0 = 6;
-    d0 =  9;
+    d0 =  6;
     a0 = 1;
     A0inv = 1;
     [Ey, Vy]=invGammaMoments(.5*v0, .5*r0);
@@ -132,22 +133,22 @@ if Test3 == 1
     
     g0 = zeros(1,lags);
     G0=diag(fliplr(.5.^(0:lags-1)));
+    beta0 = 0;
+    B0inv = .1;
     
     
-    beta0 = zeros(dimX,K);
-    B0inv = .01.*eye(dimX);
-    
-    
-    Sims = 10;
-    burnin = 3;
-    initFactor = Factors;
-    initStateTransitions = gammas;
-    initObsPrecision = ones(K,1);
+    Sims = 100;
+    burnin = 10;
+%     initFactor = Factors;
+    initFactor = normrnd(0,1,nFactors,T);
+%     initStateTransitions = gammas;
+    initStateTransitions = zeros(nFactors,lags);
+    initObsPrecision = ones(K,1);    
     initFactorVar = ones(nFactors,1);
-    initobsmodel = A;
+    initobsmodel = zeros(K,levels);
     identification=2;
-    estML=0;
-    tau = ones(1,nFactors);
+    estML=1;
+    tau = .01.*ones(1,nFactors);
     [storeFt, storeVAR, storeOM, storeStateTransitions,...
         storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
         burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...

@@ -11,19 +11,17 @@ for q = 1:levels
     ydemut = yt - mut;
     Info = InfoCell{1,q};
     regs = size(Info,1);
-    
     for r=1:regs
-
         subset = Info(r,1):Info(r,2);
         fcount = fcount+1;
         ty = ydemut(subset,:);
         top = obsPrecision(subset);
         gammas = stateTransitions(fcount,:);
+        factorVariance(fcount) = 1;
         L0 = initCovar(gammas, factorVariance(fcount));
         StatePrecision = FactorPrecision(gammas, L0, 1./factorVariance(fcount), T);
         pival(fcount,:) =  factor_pdf(FtStar(fcount,:), ty(:), currobsmod(subset,q), StatePrecision, top);
     end
 end
-
 end
 

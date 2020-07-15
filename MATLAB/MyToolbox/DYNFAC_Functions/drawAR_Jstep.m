@@ -7,9 +7,23 @@ function [alpha] = drawAR_Jstep(current, yt, sigma2, g0, G0, g1bar, G1bar)
 [K,T]=size(yt);
 lags = size(current,2);
 Xt = lagMat(yt,lags)';
-
+P0 = CalcInitCovar(stateSpaceIt(current,lags), sigma2);
+G1barlower= chol(G1bar,'lower');
 
 candidate = g1bar + chol(G1bar,'lower')*normrnd(0,1,lags,1);
+MAXTRIES = 10;
+notvalid=1;
+c=0;
+while notvalid == 1
+    c = c + 1;
+    candidate = g1bar + G1barlower*normrnd(0,1,lags,1);
+    [P1,~,~,notvalid] = CalcInitCovar(stateSpaceIt(candidate',lags), sigma2);
+    if c == MAXTRIES
+        candidate = current';
+        P1 = P0;
+        break
+    end
+end
 
 Xp = zeros(lags, lags);
 c=lags;
@@ -20,16 +34,11 @@ end
 
 Scurr = spdiags(repmat(sigma2,T,1), 0, T, T);
 Snew = Scurr;
-P0 = CalcInitCovar(stateSpaceIt(current,lags), sigma2);
-
-P1 = CalcInitCovar(stateSpaceIt(candidate',lags), sigma2);
-
 
 Scurr(1:lags, 1:lags) = P0;
 Scurrlower = chol(Scurr, 'lower');
 Snew(1:lags, 1:lags) = P1;
 Snewlower = chol(Snew,'lower');
-
 
 Xss = [Xp;Xt];
 

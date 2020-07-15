@@ -19,6 +19,8 @@ for t=1:T
     xpx = xpx + vecx(select,:)'*tx;
     xpy = xpy + vecx(select,:)'*ty;
 end
+b0 = b0.*ones(1,dimx);
+B0inv = eye(dimx).*B0inv;
 Xz = kron(eye(T), StateObsModel')*Xz;
 yz = kron(eye(T), StateObsModel')*yz;
 XzPinv = Xz'*InsideInv;

@@ -35,22 +35,22 @@ s0 = 6
 d0 = 8
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
-a0=1
-A0inv = .2
+a0=0
+A0inv = 1
 g0 = zeros(1,lags)
 G0=diag(fliplr(.5.^(0:lags-1)))
 
-beta0 = [mean(yt,2)'; zeros(dimX-1, K)];
-B0inv = 1.*eye(dimX);
+beta0 =0;
+B0inv = .1;
 
 initStateTransitions = zeros(nFactors,lags);
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
-initobsmodel = zeros(K,levels);
+initobsmodel = unifrnd(0,1,K,levels);
 initObsPrecision = 1./var(yt,[],2);
 initFactorVar = ones(nFactors,1);
 initFactor = normrnd(0,1,nFactors,T);
 identification = 2;
-tau = [.5.*ones(1,8), .25.*ones(1,60)] 
+tau = [.01.*ones(1,8), .1.*ones(1,60)] 
 
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...

@@ -5,6 +5,7 @@ parama = .5.*(s0+T);
 paramb = zeros(NF,1);
 draws = zeros(NF,1);
 IP = eye(lags);
+
 for q = 1 :NF
     [~, H] = FactorPrecision(stateTransitions(q,:), IP, 1./factorVariance(q), T);
     Hf = H*Factor(q,1:T)';

@@ -86,7 +86,10 @@ else
     mkdir(checkpointdir)
 end
 
+%%%%%
+accept=0
 
+%%%%%%
 if finishedMainRun == 0
     for iterator = start : Sims
         if mod(iterator, saveFrequency) == 0
@@ -106,7 +109,6 @@ if finishedMainRun == 0
         [currobsmod, Ft, ~, accept]=...
             LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
             obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau);
-
 
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
@@ -173,6 +175,7 @@ if finishedMainRun == 0
     startRR = 1;
     save(join( [checkpointdir, 'ckpt'] ) )
 end
+
 
 if estML == 1
     if finishedFirstReducedRun == 0
@@ -296,8 +299,8 @@ if estML == 1
             storePiBeta(:,r) = piBetaStar(VARstar, yt, Xt, opg,...
                 Astar, stStar, fvg, beta0, B0inv, subsetIndices, FtIndexMat);
             
-            Ftj = drawFactor(Ftj, yt, Xbeta, currobsmod, stateTransitions,...
-                obsPrecision, factorVariance, Identities, InfoCell, arerrors);
+            Ftj = drawFactor(Ftj, yt, xbtStar, currobsmod, stateTransitions,...
+                obsPrecisionj, fvj, Identities, InfoCell, arerrors);
             storeFtj(:,:,r) = Ftj;
             %% Variance
             resids = yt - StateObsModelStar*Ftj - xbtStar;
@@ -323,6 +326,9 @@ if estML == 1
     
     %% Reduced Run for Factors
     fprintf('Reduced run for Factor\n')
+    
+    save('factor')
+
     for r = startRR:Runs
         fprintf('RR = %i\n', r)
         opg = storeObsPrecisiong(:,r);

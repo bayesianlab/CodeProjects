@@ -7,7 +7,6 @@ options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', MaxIterations);
 df = 8;
 [K,T] = size(yt);
-w1 = sqrt(chi2rnd(df,1)/df);
 fcount = 0;
 levels = length(InfoCell);
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
@@ -23,6 +22,7 @@ for q = 1:levels
     Info = InfoCell{1,q};
     region = size(Info,1);
     for r=1:region
+        w1 = sqrt(chi2rnd(df,1)/df);
         fcount = fcount+1;
         gammas = stateTransitions(fcount,:);
         L0 = initCovar(gammas, factorVariance(fcount));
