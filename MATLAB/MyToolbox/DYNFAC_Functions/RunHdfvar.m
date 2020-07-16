@@ -30,7 +30,7 @@ nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 lags=1;
 
 v0= 6
-r0 = 8
+r0 = 10
 s0 = 6
 d0 = 8
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)

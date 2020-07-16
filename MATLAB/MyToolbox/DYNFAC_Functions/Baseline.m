@@ -521,11 +521,12 @@ if calcML == 1
     priorBeta = sum(priorBeta);
     Fpriorstar = zeros(nFactors,1);
     for j = 1:nFactors
-        [iP, ss] =initCovar(g0, 1);
-        Kprecision = FactorPrecision(ss, iP, 1, T);
+        vv = factorVarStar(j);
+        [iP, ss] =initCovar(factorARStar(j,:), vv);
+        Kprecision = FactorPrecision(ss, iP, 1/vv, T);
         Fpriorstar(j) = logmvnpdf(FactorStar(j,:), zeros(1,T ), Kprecision\eye(T));
     end
-    Fpriorstar=sum(Fpriorstar)
+    Fpriorstar=sum(Fpriorstar);
     
     priorFactorAR = logmvnpdf(reshape(factorARStar', 1, nFactors*lagState),...
         zeros(1,nFactors*lagState), kron(eye(nFactors),G0));

@@ -7,6 +7,10 @@ rng(1)
 T=50;
 lags =1;
 [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([3], lags, T);
+[K,T] =size(yt)
+levels= length(InfoCell)
+nFactors=size(gammas,1);
+initFactor = normrnd(0,1,nFactors,T);
 
 if TestDGP == 1
     clc
@@ -119,12 +123,10 @@ if Test3 == 1
     % columns.
     
     
-    [K,T] =size(yt)
-    levels= length(InfoCell)
-    nFactors=size(gammas,1);
+    
     [~, dimX] = size(Xt);
     v0= 6;
-    r0 = 6;
+    r0 = 12;
     s0 = 6;
     d0 =  6;
     a0 = 1;
@@ -138,10 +140,9 @@ if Test3 == 1
     B0inv = .1;
     
     
-    Sims = 1000;
-    burnin = 100;
+    Sims = 500;
+    burnin = 50;
     %     initFactor = Factors;
-    initFactor = normrnd(0,1,nFactors,T);
     %     initStateTransitions = gammas;
     initStateTransitions = zeros(nFactors,lags);
     initObsPrecision = ones(K,1);
@@ -175,11 +176,11 @@ if Test3 == 1
     vd = round(varianceDecomp,3);
     table(vd)
     
-%     Fhat = mean(storeFt,3);
-%     hold on
-%     plot(Factors(1,:))
-%     plot(Fhat(1,:))
-%     %
+    %     Fhat = mean(storeFt,3);
+    %     hold on
+    %     plot(Factors(1,:))
+    %     plot(Fhat(1,:))
+    %     %
     % for t = 1:size(Factors,1)
     %     figure
     %     plot(Factors(t,:))
@@ -205,7 +206,7 @@ if Test4 == 1
     nFactors=size(gammas,1);
     [~, dimX] = size(Xt);
     v0= 6;
-    r0 = 6;
+    r0 = 12;
     s0 = 6;
     d0 =  6;
     a0 = 1;
@@ -225,9 +226,9 @@ if Test4 == 1
     initFactor = normrnd(0,1,nFactors,T);
     %     initStateTransitions = gammas;
     idelta = zeros(K,lagOM);
-    igamma=zeros(nFactors, lagFac);   
-    iBeta = [ones(K,dimX), ones(K,levels)];
-
+    igamma=zeros(nFactors, lagFac);
+    iBeta = [zeros(K,dimX), zeros(K,levels)];
+    
     estML=1;
     arerrors = 0;
     [storeMeans, storeLoadings, storeOmArTerms,...
@@ -235,10 +236,10 @@ if Test4 == 1
         varianceDecomp, ML, vd, summary2] = Baseline(InfoCell,yt,Xt, initFactor, iBeta,...
         idelta, igamma, beta0, B0inv, v0, r0, s0, d0, g0, G0, Sims, burnin, arerrors, estML);
     
-        summary'
-        sum(summary)
-        summary2'
-        sum(summary2)
+    summary'
+    sum(summary)
+    summary2'
+    sum(summary2)
     
     
     

@@ -352,6 +352,7 @@ if estML == 1
     posteriors = [piFt, piBeta, piA , piST, piObsVariance, piFactorVariance]
     posteriorStar = sum(posteriors)
     
+    
     LogLikelihood=sum(logmvnpdf(residsStar', zeros(1,K), diag(1./obsPrecisionStar)))
     
     priorST = sum(logmvnpdf(stStar, g0, G0));
@@ -367,11 +368,12 @@ if estML == 1
     end
     priorBeta = sum(priorBeta);
     priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
-
+    
     Fpriorstar = zeros(nFactors,1);
     for j = 1:nFactors
-        [iP, ss] =initCovar(g0, 1);
-        Kprecision = FactorPrecision(ss, iP, 1, T);
+        vv = factorVarianceStar(j);
+        [iP, ss] =initCovar(stStar(j,:), 1);
+        Kprecision = FactorPrecision(ss, iP, 1/vv, T);
         Fpriorstar(j) = logmvnpdf(FtStar(j,:), zeros(1,T ), Kprecision\eye(T));
     end
     Fpriorstar=sum(Fpriorstar)
