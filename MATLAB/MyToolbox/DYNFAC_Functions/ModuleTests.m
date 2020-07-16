@@ -2,6 +2,11 @@ function [] = ModuleTests()
 
 TestDGP=0;
 Test3=1;
+Test4 = 1;
+rng(1)
+    T=50;
+    lags =1;
+    [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([3], lags, T);
 
 if TestDGP == 1
     clc
@@ -105,19 +110,15 @@ end
 
 
 if Test3 == 1
-    clear;
     
-    T=50;
-    lags =3;
-%     rng(1)
+
+    %     rng(1)
     % When making gamma,
     % the first element reaches back to the first time period, so
     % remember that the small state transition will appear in the first
     % columns.
     
-    
-    [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([3], lags, T);
-    
+        
     [K,T] =size(yt)
     levels= length(InfoCell)
     nFactors=size(gammas,1);
@@ -139,26 +140,26 @@ if Test3 == 1
     
     Sims = 100;
     burnin = 10;
-%     initFactor = Factors;
+    %     initFactor = Factors;
     initFactor = normrnd(0,1,nFactors,T);
-%     initStateTransitions = gammas;
+    %     initStateTransitions = gammas;
     initStateTransitions = zeros(nFactors,lags);
-    initObsPrecision = ones(K,1);    
+    initObsPrecision = ones(K,1);
     initFactorVar = ones(nFactors,1);
     initobsmodel = zeros(K,levels);
     identification=2;
     estML=1;
     tau = .01.*ones(1,nFactors);
     [storeFt, storeVAR, storeOM, storeStateTransitions,...
-        storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
+        storeObsPrecision, storeFactorVar,varianceDecomp, ml, summary] = Hdfvar(yt, Xt,  InfoCell, Sims,...
         burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...
         beta0, B0inv, v0, r0, s0, d0, a0, A0inv, g0, G0, tau, identification, estML, 'Tests');
     
-    EstimatedVAR = mean(storeVAR,3)
-%     Actual = betas
-%     size(Actual)
-%     estVAR = round(EstimatedVAR,3)
-%     table(estVAR, Actual)
+    EstimatedVAR = mean(storeVAR,3);
+    Actual = betas
+    size(Actual)
+    estVAR = round(EstimatedVAR,3)
+    table(estVAR(:), Actual)
     EstimatedOM = round(mean(storeOM,3),2);
     Actual = A;
     table(EstimatedOM, Actual)
@@ -191,8 +192,65 @@ if Test3 == 1
     %     plot(Factors(t,:))
     % end
     % end
+end
+
+if Test4 == 1
+    
+    T=50;
+    lagOM=1;
+    lagFac= lagOM;
+    
+    [K,T] =size(yt)
+    levels= length(InfoCell)
+    nFactors=size(gammas,1);
+    [~, dimX] = size(Xt);
+    v0= 6;
+    r0 = 6;
+    s0 = 6;
+    d0 =  6;
+    a0 = 1;
+    A0inv = 1;
+    [Ey, Vy]=invGammaMoments(.5*v0, .5*r0);
+    [Ey, Vy] =invGammaMoments(.5*s0, .5*d0);
+    
+    g0 = zeros(1,lagOM);
+    G0=diag(fliplr(.5.^(0:lagOM-1)));
+    beta0 = 1;
+    B0inv = .1;
+    
+    
+    Sims = 100;
+    burnin = 10;
+    %     initFactor = Factors;
+    initFactor = normrnd(0,1,nFactors,T);
+    %     initStateTransitions = gammas;
+    idelta = zeros(K,lagOM);
+    igamma=zeros(nFactors, lagFac);    iBeta = [ones(K,dimX), ones(K,levels)];
+    initObsPrecision = ones(K,1);
+    initFactorVar = ones(nFactors,1);
+    identification=2;
+    estML=1;
+    arerrors = 0;
+    tau = .01.*ones(1,nFactors);
+    [storeMeans, storeLoadings, storeOmArTerms,...
+    storeStateArTerms, storeFt, storeObsV, storeFactorVariance,...
+    varianceDecomp, ML, vd, summary2] = Baseline(InfoCell,yt,Xt, initFactor, iBeta,...
+        idelta, igamma, beta0, B0inv, v0, r0, s0, d0, g0, G0, Sims, burnin, arerrors, estML);
+    
+    summary'
+    sum(summary)
+    summary2'
+    sum(summary2)
     
     
     
+    mean(storeObsV,2)
+    mean(storeFactorVar,2)
+    mean(storeStateArTerms,3)
     
+    figure
+    Fhat = mean(storeFt,3);
+    hold on
+    plot(Factors(1,:))
+    plot(Fhat(1,:))
 end

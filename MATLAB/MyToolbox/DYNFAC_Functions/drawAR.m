@@ -6,9 +6,11 @@ function [current, alpha, g1, G1] = drawAR(current, yt, sigma2, g0, G0)
 % This cannot be easily changed!
 [K,T]=size(yt);
 lags = size(current,2);
+
 Xt = lagMat(yt,lags)';
 ytstar = yt(lags+1:T);
 eP = eye(lags);
+
 G1 = ((G0\eP) + (Xt'*Xt)/sigma2)\eP;
 G1lower = chol(G1,'lower');
 

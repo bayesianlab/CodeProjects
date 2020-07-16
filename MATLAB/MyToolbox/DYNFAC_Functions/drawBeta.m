@@ -1,4 +1,4 @@
-function [b,v,V, ystar, xstar, Cinv] = drawBeta(yt,  xt,  deltas, obsVariance, P0, prmean, prcovar)
+function [b,v,V, ystar, xstar, Cinv] = drawBeta(yt,  xt,  deltas, obsVariance, P0, prmean, prprecision)
 [K,T] = size(yt);
 [~,lags] = size(deltas);
 [rx,dimx] = size(xt);
@@ -10,7 +10,7 @@ y2=yt(:,lags+1:end);
 xstar1=Cinv'*x1;
 ystar1=Cinv'*y1;
 
-
+prmean = prmean.*ones(1,dimx);
 iyt = lagMat(yt, lags);
 ystar = [reshape(ystar1,K,lags),y2 - deltas*iyt];
 
@@ -24,7 +24,7 @@ end
 xstar = [xstar1;x2-sx];
 
 xstarystar = xstar'*ystar';
-B0inv = prcovar\eye(dimx);
+B0inv = prprecision.*eye(dimx);
 V = (((xstar'*xstar)./obsVariance)+ B0inv)\eye(dimx);
 prs = (B0inv*prmean');
 v = V* (((xstarystar)./obsVariance) + prs);

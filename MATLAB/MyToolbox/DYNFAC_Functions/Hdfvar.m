@@ -1,5 +1,5 @@
 function [storeFt, storeVAR, storeOM, storeStateTransitions,...
-    storeObsPrecision, storeFactorVar,varianceDecomp, ml] =...
+    storeObsPrecision, storeFactorVar,varianceDecomp, ml, summary] =...
     Hdfvar(yt, Xt,  InfoCell,  Sims,burnin, initFactor, initobsmodel,...
     initStateTransitions, initObsPrecision, initFactorVar, beta0, B0inv,...
     v0, r0, s0, d0,  a0, A0inv, g0,G0, tau, identification, estML, DotMatFile)
@@ -360,9 +360,8 @@ if estML == 1
 
     
     betaprior = beta0.*ones(1,dimX);
-    B0inv
-    BetaPrior = (1/B0inv).*eye(dimX)
-    priorBeta = logmvnpdf(betaStar', betaprior', B0inv);
+    BetaPrior = (1/B0inv).*eye(dimX);
+    priorBeta = logmvnpdf(betaStar', betaprior', BetaPrior);
     priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
     
     Fpriorstar = zeros(nFactors,1);
@@ -372,11 +371,12 @@ if estML == 1
         Fpriorstar(j) = logmvnpdf(FtStar(j,:), zeros(1,T ), Kprecision\eye(T));
     end
     Fpriorstar=sum(Fpriorstar);
-    priors = [Fpriorstar, priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]
+    priors = [priorBeta, Fpriorstar, priorST,priorObsVariance, priorFactorVar, sum(priorAstar)]
     priorStar = sum(priors)
     
     
     ml = (LogLikelihood+priorStar)-posteriorStar
+    summary = [LogLikelihood; priors'; -posteriors']
     fprintf('Marginal Likelihood of Model: %.3f\n', ml)
     rmdir(checkpointdir, 's')
     

@@ -1,7 +1,7 @@
 function [storeMeans, storeLoadings, storeOmArTerms,...
     storeStateArTerms, storeFt, storeObsV, storeFactorVariance,...
-    varianceDecomp, ML, vd] = Baseline(InfoCell,yt, xt, Ft, MeansLoadings,  omArTerms,...
-    factorArTerms, b0,B0, v0,d0, s0, r0, g0,G0, Sims, burnin, autoRegressiveErrors, calcML)
+    varianceDecomp, ML, vd, Summary] = Baseline(InfoCell,yt, xt, Ft, MeansLoadings,  omArTerms,...
+    factorArTerms, b0,B0inv, v0,d0, s0, r0, g0,G0, Sims, burnin, autoRegressiveErrors, calcML)
 %% Definitions
 % yt comes in as
 %[ y11...y1T;
@@ -30,12 +30,12 @@ function [storeMeans, storeLoadings, storeOmArTerms,...
 %% Setup and indices
 
 [K,T] = size(yt);
-[KT, meanIndex]= size(xt);
+[KT, nObservablesCols]= size(xt);
 [nFactors,  lagState] = size(factorArTerms);
-meanRange = 1:meanIndex;
+meanRange = 1:nObservablesCols;
 levels=length(InfoCell);
 [~,M] =size(MeansLoadings);
-factorRange  = (meanIndex+1):M;
+factorRange  = (nObservablesCols+1):M;
 allLevels = 1:levels;
 
 [~, lagOm] = size(omArTerms);
@@ -54,7 +54,7 @@ IT = eye(T);
 
 %% Posterior Storage
 Runs = Sims-burnin;
-storeMeans = zeros(K,meanIndex, Runs);
+storeMeans = zeros(K,nObservablesCols, Runs);
 storeLoadings = zeros(K, levels, Runs);
 storeOmArTerms = zeros(K, lagOm,Runs);
 storeStateArTerms = zeros(nFactors, lagState,Runs);
@@ -65,7 +65,8 @@ storeFactorVariance = zeros(nFactors,Runs);
 igParamA = .5.*(v0 + T);
 obsVariance = ones(K,1);
 factorVariance = ones(nFactors,1);
-beta = zeros(levels+meanIndex,K);
+dimx = nObservablesCols + levels;
+beta = zeros(dimx,K);
 meanFunction = MeansLoadings(:,meanRange)';
 loadings = MeansLoadings(:, factorRange);
 fakeX = zeros(T,1);
@@ -87,12 +88,13 @@ for i = 1:Sims
         tempobv = obsVariance(k);
         tempD0 = initCovar(omArTerms(k,:), tempobv);
         
-        [beta(:,k), ~,~,~,~, ~] = drawBeta(tempy, tempx,  tempdel, tempobv, tempD0, b0, B0);
+        [beta(:,k), ~,~,~,~, ~] = drawBeta(tempy, tempx,  tempdel, tempobv, tempD0, b0, B0inv);
         loadings(k,:) = beta(factorRange,k);
         loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*double(restrictions(k,:) > 0));
         beta(factorRange,k) = loadings(k,:)';
         if autoRegressiveErrors == 1
-            epsi = tempy - tempx*beta(k,:)';
+            
+            epsi = tempy - reshape(tempx*beta(:,k),1,T);
             omArTerms(k,:)= drawAR(tempdel,epsi, tempobv, g0,G0);
         end
         [~, H]= FactorPrecision(tempdel, tempD0, 1/tempobv, T);
@@ -146,7 +148,7 @@ for i = 1:Sims
             Ft(c,:) = (omega + Linv' * normrnd(0,1,T,1))';
         end
     end
-
+    
     
     %% Draw Factor AR Parameters
     
@@ -213,7 +215,7 @@ end
 if calcML == 1
     %% Marginal likelihood
     ReducedRuns = Sims-burnin;
-    betaStar = mean([storeMeans, storeLoadings],3);
+    betaStar = mean([storeMeans, storeLoadings],3)';
     storePiBeta = zeros(K,ReducedRuns);
     storeFtj = zeros(nFactors, T,ReducedRuns);
     storeOmArj = storeOmArTerms;
@@ -241,20 +243,20 @@ if calcML == 1
             tempdel=omarg(k,:);
             tempobv = ovg(k);
             tempD0 = initCovar(tempdel, tempobv);
-            [storePiBeta(k,rr), ~, ~, ~] = drawBetaML(betaStar(k,:), tempy, tempx,  tempdel,...
-                tempobv, tempD0, b0, B0);
+            [storePiBeta(k,rr), ~, ~, ~] = drawBetaML(betaStar(:,k), tempy, tempx,  tempdel,...
+                tempobv, tempD0, b0, B0inv);
             
             tempdel=omarj(k,:);
             tempobv = ovj(k);
             tempD0 = initCovar(tempdel, tempobv);
             [~, H]= FactorPrecision(tempdel, tempD0, 1/tempobv, T);
-            loadings(k,:) = betaStar(k,factorRange);
+            loadings(k,:) = betaStar(factorRange,k);
             loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*double(restrictions(k,:) > 0));
             if autoRegressiveErrors == 1
-                epsi = tempy - tempx*betaStar(k,:)';
+                epsi = tempy - reshape(tempx*betaStar(:,k),1,T);
                 omArTermsj(k,:)= drawAR(tempdel,epsi, tempobv, g0,G0);
             end
-            igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(k,:)' ) ) ).^2));
+            igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(:,k)) ) ).^2));
             ovj(k) = 1./gamrnd(igParamA, 1./igParamB);
         end
         % Draw Factors
@@ -347,11 +349,11 @@ if calcML == 1
             tempobv = ovg(k);
             tempD0 = initCovar(tempdel, tempobv);
             [~, H]= FactorPrecision(tempdel, tempD0, 1/tempobv, T);
-            igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(k,:)' ) ) ).^2));
-            loadings(k,:) = betaStar(k,factorRange);
+            igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(:,k) ) ) ).^2));
+            loadings(k,:) = betaStar(factorRange,k);
             loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*double(restrictions(k,:) > 0));
             if autoRegressiveErrors == 1
-                epsi = tempy - tempx*betaStar(k,:)';
+                epsi = tempy - reshape(tempx*betaStar(:,k),1,T);
                 omArTermsj(k,:)= drawAR(tempdel,epsi, tempobv, g0,G0);
             end
             ovj(k) = 1./gamrnd(igParamA, 1./igParamB);
@@ -441,12 +443,12 @@ if calcML == 1
             tempobv = ovg(k);
             tempD0star = initCovar(tempdelg, tempobv);
             [~, H]= FactorPrecision(delgstar, tempD0star, 1/tempobv, T);
-            igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(k,:)' ) ) ).^2));
+            igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(:,k) ) ) ).^2));
             if autoRegressiveErrors == 1
                 quantOMARg(k,rr) = drawPhiG(delgstar,tempy, tempx,...
-                    betaStar(k,:)', tempdelg, tempobv, g0,G0);
+                    betaStar(:,k), tempdelg, tempobv, g0,G0);
                 
-                [ storeAlphaOMARj(k,rr)]  = drawPhiJ(tempy, tempx, betaStar(k,:)',...
+                [ storeAlphaOMARj(k,rr)]  = drawPhiJ(tempy, tempx, betaStar(:,k),...
                     delgstar, tempobv, g0,G0);
                 ovj(k) = 1./gamrnd(igParamA, 1./igParamB);
             end
@@ -483,7 +485,7 @@ if calcML == 1
         tempobv = omVarStar(k);
         tempD0g = initCovar(tempdelg, tempobv);
         [~, H]= FactorPrecision(tempdelg, tempD0g, 1/tempobv, T);
-        igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(k,:)' ) ) ).^2));
+        igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(:,k)) ) ).^2));
         piOmVar(k) = logigampdf(omVarStar(k), igParamA, igParamB);
     end
     piOmVar = sum(piOmVar);
@@ -502,16 +504,21 @@ if calcML == 1
         [P, ~]= FactorPrecision(tempdelg, tempD0g, 1/tempobv, T);
         S = P\eye(T);
         Slowerinv = chol(S,'lower')\eye(T);
-        LL(k) = adjustedlogmvnpdf( ((Slowerinv*tempy') - Slowerinv*(tempx*betaStar(k,:)'))', Slowerinv);
+        LL(k) = adjustedlogmvnpdf( ((Slowerinv*tempy') - Slowerinv*(tempx*betaStar(:,k)))', Slowerinv);
         %     LL(k) = logmvnpdf((tempy' - tempx*betaStar(k,:)')', zeros(1,T), S);
     end
     % [LL, LL2']
-    LL = sum(LL)
+    LL = sum(LL);
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Marginal Likelihood
-    [b0r, b0c] = size(betaStar);
-    priorBeta = logmvnpdf( reshape(betaStar',1, b0r*b0c) ,zeros(1, b0r*b0c), kron(eye(b0r), B0));
+    bprior = b0.*ones(1,dimx);
+    Bprior = B0inv.*eye(dimx);
+    priorBeta = zeros(K,1);
+    for k = 1:K
+        priorBeta(k) = logmvnpdf(betaStar(:,k)', bprior, Bprior);
+    end
+    priorBeta = sum(priorBeta);
     Fpriorstar = zeros(nFactors,1);
     for j = 1:nFactors
         [iP, ssFactorARStar] =initCovar(factorArTerms(j,:), factorVarStar(j));
@@ -519,23 +526,24 @@ if calcML == 1
         Fpriorstar(j) = logmvnpdf(FactorStar(j,:), zeros(1,T ), Kprecision\eye(T));
     end
     Fpriorstar=sum(Fpriorstar);
-    priorOMAR = logmvnpdf( reshape(omARStar, 1, K*lagOm), zeros(1, K*lagOm), kron(eye(K),G0));
     priorFactorAR = logmvnpdf(reshape(factorARStar', 1, nFactors*lagState),...
         zeros(1,nFactors*lagState), kron(eye(nFactors),G0));
     priorVar = sum(logigampdf(omVarStar,.5.*v0,.5.*d0));
     priorFactorVar = sum(logigampdf(factorVarStar, .5.*s0, .5.*r0));
-    PRIORS = [priorBeta, Fpriorstar, priorOMAR, priorFactorAR, priorVar, priorFactorVar]
-    sum(PRIORS)
+    
     if autoRegressiveErrors==1
-        POSTERIORS = [ piFactor,piBeta, piOMAR, piFactorAR, piOmVar, piFV]
-        sum(POSTERIORS)
+        priorOMAR = logmvnpdf( reshape(omARStar, 1, K*lagOm), zeros(1, K*lagOm), kron(eye(K),G0));
+        PRIORS = [priorBeta, Fpriorstar,  priorOMAR, priorFactorAR, priorVar, priorFactorVar];
+        
+        POSTERIORS = [ piFactor,piBeta, piOMAR, piFactorAR, piOmVar, piFV];
     else
-        POSTERIORS = [piFactor,piBeta,  piFactorAR, piOmVar, piFV]
-        sum(POSTERIORS)
+        PRIORS = [priorBeta, Fpriorstar, priorFactorAR, priorVar, priorFactorVar];
+        
+        POSTERIORS = [piFactor,piBeta,  piFactorAR, piOmVar, piFV];
         
     end
-    
-    ML = LL + sum(PRIORS) - sum(POSTERIORS)
+    Summary = [LL;PRIORS';-POSTERIORS'];
+    ML = sum(Summary)
 else
     fprintf('Not calculating ML\n')
     ML=0;

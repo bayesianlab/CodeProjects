@@ -1,4 +1,4 @@
-function [pib, ystar, xstar, Cinv] = drawBetaML(betaStar, yt,  xt, deltas, obsVariance, P0, b0, B0)
+function [pib, ystar, xstar, Cinv] = drawBetaML(betaStar, yt,  xt, deltas, obsVariance, P0, b0, B0inv)
 [K,T] = size(yt);
 [~,lags] = size(deltas);
 [rx,dimx] = size(xt);
@@ -19,10 +19,11 @@ for g = 1:lags
 end
 xstar = [xstar1;x2-sx];
 xstarystar = xstar'*ystar';
-B0inv = diag((diag(B0).^(-1)));
+B0inv = eye(dimx).*B0inv;
+b0 = b0.*ones(1,dimx);
 V = ((xstar'*xstar)./obsVariance+ B0inv)\eye(dimx) ;
 prs = (B0inv*b0');
 v = V* (((xstarystar)./obsVariance) + prs);
-pib = logmvnpdf(betaStar, v', V);
+pib = logmvnpdf(betaStar', v', V);
 end
 

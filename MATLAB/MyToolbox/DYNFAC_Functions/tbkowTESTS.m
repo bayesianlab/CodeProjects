@@ -4,8 +4,8 @@ clear;clc;
 % DataCell = SimDataMLF(100, 1,1,15);
 % save('simdata', 'DataCell')
 % rng(1)
-RunHdfvar( 20, 2, 1, '/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests', 'country_only.mat','NM_ML', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
-% RunBaseline(20, 2, 1, 0, 1, 1, '/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow', 'constant_std.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+% RunHdfvar( 20, 2, 1, '/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow/RegionTests', 'country_only.mat','NM_ML', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
+RunBaseline(20, 2, 1, 0, 1, 1, '/home/precision/CodeProjects/MATLAB/MatlabReadyData/BigKow', 'constant_std.mat', 'TEST', '~/CodeProjects/MATLAB/factor_models/MLFVAR/TestDir')
 
 
 
