@@ -357,9 +357,12 @@ if estML == 1
     priorST = sum(logmvnpdf(stStar, g0, G0));
     priorObsVariance = sum(logigampdf(1./obsPrecisionStar, .5.*v0, .5.*r0));
     priorFactorVar = sum(logigampdf(factorVarianceStar, .5.*s0, .5.*d0));
-    B0inv=diag(repmat(1./diag(B0inv), K,1));
+
     
-    priorBeta = logmvnpdf(betaStar', beta0(:)', B0inv);
+    betaprior = beta0.*ones(1,dimX);
+    B0inv
+    BetaPrior = (1/B0inv).*eye(dimX)
+    priorBeta = logmvnpdf(betaStar', betaprior', B0inv);
     priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
     
     Fpriorstar = zeros(nFactors,1);

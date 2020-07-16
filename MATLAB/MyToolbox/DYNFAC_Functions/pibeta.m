@@ -27,6 +27,6 @@ XzPinv = Xz'*InsideInv;
 B = (B0inv + xpx - XzPinv*Xz);
 Blowerinv = chol(B,'lower')\eye(dimx);
 B = Blowerinv'*Blowerinv;
-b = B*(B0inv*b0 + xpy - XzPinv*yz);
+b = B*(B0inv*b0' + xpy - XzPinv*yz);
 pb = logmvnpdf(bstar', b', B);
 end
