@@ -1,12 +1,12 @@
 function [] = ModuleTests()
-
+clear;clc;
 TestDGP=0;
 Test3=1;
 Test4 = 1;
 rng(1)
-    T=50;
-    lags =1;
-    [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([3], lags, T);
+T=50;
+lags =1;
+[yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([3], lags, T);
 
 if TestDGP == 1
     clc
@@ -111,14 +111,14 @@ end
 
 if Test3 == 1
     
-
+    
     %     rng(1)
     % When making gamma,
     % the first element reaches back to the first time period, so
     % remember that the small state transition will appear in the first
     % columns.
     
-        
+    
     [K,T] =size(yt)
     levels= length(InfoCell)
     nFactors=size(gammas,1);
@@ -138,8 +138,8 @@ if Test3 == 1
     B0inv = .1;
     
     
-    Sims = 100;
-    burnin = 10;
+    Sims = 1000;
+    burnin = 100;
     %     initFactor = Factors;
     initFactor = normrnd(0,1,nFactors,T);
     %     initStateTransitions = gammas;
@@ -175,11 +175,11 @@ if Test3 == 1
     vd = round(varianceDecomp,3);
     table(vd)
     
-    Fhat = mean(storeFt,3);
-    hold on
-    plot(Factors(1,:))
-    plot(Fhat(1,:))
-    %
+%     Fhat = mean(storeFt,3);
+%     hold on
+%     plot(Factors(1,:))
+%     plot(Fhat(1,:))
+%     %
     % for t = 1:size(Factors,1)
     %     figure
     %     plot(Factors(t,:))
@@ -216,41 +216,39 @@ if Test4 == 1
     g0 = zeros(1,lagOM);
     G0=diag(fliplr(.5.^(0:lagOM-1)));
     beta0 = 1;
-    B0inv = .1;
+    B0inv = 1;
     
     
-    Sims = 100;
-    burnin = 10;
+    Sims = 1000;
+    burnin = 100;
     %     initFactor = Factors;
     initFactor = normrnd(0,1,nFactors,T);
     %     initStateTransitions = gammas;
     idelta = zeros(K,lagOM);
-    igamma=zeros(nFactors, lagFac);    iBeta = [ones(K,dimX), ones(K,levels)];
-    initObsPrecision = ones(K,1);
-    initFactorVar = ones(nFactors,1);
-    identification=2;
+    igamma=zeros(nFactors, lagFac);   
+    iBeta = [ones(K,dimX), ones(K,levels)];
+
     estML=1;
     arerrors = 0;
-    tau = .01.*ones(1,nFactors);
     [storeMeans, storeLoadings, storeOmArTerms,...
-    storeStateArTerms, storeFt, storeObsV, storeFactorVariance,...
-    varianceDecomp, ML, vd, summary2] = Baseline(InfoCell,yt,Xt, initFactor, iBeta,...
+        storeStateArTerms, storeFt, storeObsV, storeFactorVariance,...
+        varianceDecomp, ML, vd, summary2] = Baseline(InfoCell,yt,Xt, initFactor, iBeta,...
         idelta, igamma, beta0, B0inv, v0, r0, s0, d0, g0, G0, Sims, burnin, arerrors, estML);
     
-    summary'
-    sum(summary)
-    summary2'
-    sum(summary2)
+        summary'
+        sum(summary)
+        summary2'
+        sum(summary2)
     
     
     
-    mean(storeObsV,2)
-    mean(storeFactorVar,2)
-    mean(storeStateArTerms,3)
-    
-    figure
-    Fhat = mean(storeFt,3);
-    hold on
-    plot(Factors(1,:))
-    plot(Fhat(1,:))
+    %     mean(storeObsV,2)
+    %     mean(storeFactorVar,2)
+    %     mean(storeStateArTerms,3)
+    %
+    %     figure
+    %     Fhat = mean(storeFt,3);
+    %     hold on
+    %     plot(Factors(1,:))
+    %     plot(Fhat(1,:))
 end

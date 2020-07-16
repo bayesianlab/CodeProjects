@@ -38,10 +38,8 @@ InfoCell = DataCell{1,3};
 [~, dimX] = size(Xt);
 levels = size(InfoCell,2);
 nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
-b0 = ones(1,dimX + levels);
-
-B0 =5.*eye(dimX + levels);
-B0
+b0 = 1;
+B0inv =.1;
 v0=6
 r0 = 8
 s0 = 6
@@ -60,7 +58,7 @@ iFt = normrnd(0,1,nFactors,T);
 [storeMean, storeLoadings, storeOmArTerms, storeStateArTerms,...
     storeFt, storeObsV, storeFactorVariance, varianceDecomp, ML] =...
     Baseline(InfoCell, yt,Xt, iFt, iBeta, idelta, igamma,...
-    b0, B0, v0,r0, s0, d0, g0, G0, Sims, burnin, autoregressiveErrors, calcML);
+    b0, B0inv, v0,r0, s0, d0, g0, G0, Sims, burnin, autoregressiveErrors, calcML);
 
 
 StateObsModel = makeStateObsModel(mean(storeLoadings,3),Identities,0);

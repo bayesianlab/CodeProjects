@@ -513,7 +513,7 @@ if calcML == 1
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Marginal Likelihood
     bprior = b0.*ones(1,dimx);
-    Bprior = B0inv.*eye(dimx);
+    Bprior = (1/B0inv).*eye(dimx);
     priorBeta = zeros(K,1);
     for k = 1:K
         priorBeta(k) = logmvnpdf(betaStar(:,k)', bprior, Bprior);
@@ -521,11 +521,12 @@ if calcML == 1
     priorBeta = sum(priorBeta);
     Fpriorstar = zeros(nFactors,1);
     for j = 1:nFactors
-        [iP, ssFactorARStar] =initCovar(factorArTerms(j,:), factorVarStar(j));
-        Kprecision = FactorPrecision(ssFactorARStar, iP, 1./factorVarStar(j), T);
+        [iP, ss] =initCovar(g0, 1);
+        Kprecision = FactorPrecision(ss, iP, 1, T);
         Fpriorstar(j) = logmvnpdf(FactorStar(j,:), zeros(1,T ), Kprecision\eye(T));
     end
-    Fpriorstar=sum(Fpriorstar);
+    Fpriorstar=sum(Fpriorstar)
+    
     priorFactorAR = logmvnpdf(reshape(factorARStar', 1, nFactors*lagState),...
         zeros(1,nFactors*lagState), kron(eye(nFactors),G0));
     priorVar = sum(logigampdf(omVarStar,.5.*v0,.5.*d0));
@@ -542,7 +543,7 @@ if calcML == 1
         POSTERIORS = [piFactor,piBeta,  piFactorAR, piOmVar, piFV];
         
     end
-    Summary = [LL;PRIORS';-POSTERIORS'];
+    Summary = [LL;PRIORS';-POSTERIORS']
     ML = sum(Summary)
 else
     fprintf('Not calculating ML\n')
