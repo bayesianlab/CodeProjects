@@ -84,16 +84,22 @@ for i = 1:Sims
         tempI = subsetIndices(k,:);
         tempy = yt(k,:);
         tempx=[xt(tempI,:),Ft(FtIndexMat(k,:),:)'];
-        tempdel=omArTerms(k,:);
         tempobv = obsVariance(k);
-        tempD0 = initCovar(omArTerms(k,:), tempobv);
-        
+        if autoRegressiveErrors == 1
+            tempdel=omArTerms(k,:);
+            [tempD0,~,~,w] = initCovar(tempdel, tempobv);
+            if w ~=0
+                tempD0 = eye(length(tempdel));
+            end
+        else
+            tempdel = 0;
+            tempD0 = tempobv;
+        end
         [beta(:,k), ~,~,~,~, ~] = drawBeta(tempy, tempx,  tempdel, tempobv, tempD0, b0, B0inv);
         loadings(k,:) = beta(factorRange,k);
         loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*double(restrictions(k,:) > 0));
         beta(factorRange,k) = loadings(k,:)';
         if autoRegressiveErrors == 1
-            
             epsi = tempy - reshape(tempx*beta(:,k),1,T);
             omArTerms(k,:)= drawAR(tempdel,epsi, tempobv, g0,G0);
         end
@@ -125,7 +131,10 @@ for i = 1:Sims
                 for k = subsI
                     % Equation level
                     ty = tempyt(k,:);
-                    [D0, ssOmArTerms] = initCovar(omArTerms(k,:), obsVariance(k));
+                    [D0, ssOmArTerms,~,nv] = initCovar(omArTerms(k,:), obsVariance(k));
+                    if nv~=0
+                        D0 = eye(length(omArTerms(k,:)));
+                    end
                     [CV, ~] = FactorPrecision(ssOmArTerms, D0, 1./obsVariance(k), T);
                     commonMeanComponent = commonMeanComponent + alpha(k)*CV*ty(:);
                     commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*CV;
@@ -139,7 +148,10 @@ for i = 1:Sims
                     commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                 end
             end
-            [L0, ssGammas] = initCovar(factorArTerms(c,:), factorVariance(c));
+            [L0, ssGammas,~,nv] = initCovar(factorArTerms(c,:), factorVariance(c));
+            if nv~=0
+                L0 = eye(length(factorArTerms(c,:)));
+            end
             [CV,~] = FactorPrecision(ssGammas, L0, 1./factorVariance(c), T);
             OmegaInv = (commonPrecisionComponent +CV);
             Linv = chol(OmegaInv,'lower')\IT;
@@ -225,7 +237,7 @@ if calcML == 1
     factorArTermsj = factorArTerms;
     omArTermsj = omArTerms;
     Ftj = mean(storeFt,3);
-    omarj = mean(storeOmArTerms,3);
+    
     ovj = mean(storeObsV,2);
     factorVariancej = mean(storeFactorVariance,2);
     %% Reduced run for betas
@@ -242,13 +254,19 @@ if calcML == 1
             tempx=[xt(tempI,:),Ftg(FtIndexMat(k,:),:)'];
             tempdel=omarg(k,:);
             tempobv = ovg(k);
-            tempD0 = initCovar(tempdel, tempobv);
+            [tempD0,~,~,w] = initCovar(tempdel, tempobv);
+            if w~=0
+                tempD0 = eye(length(tempdel));
+            end
             [storePiBeta(k,rr), ~, ~, ~] = drawBetaML(betaStar(:,k), tempy, tempx,  tempdel,...
                 tempobv, tempD0, b0, B0inv);
             
-            tempdel=omarj(k,:);
+            tempdel=omArTermsj(k,:);
             tempobv = ovj(k);
-            tempD0 = initCovar(tempdel, tempobv);
+            [tempD0,~,~,w] = initCovar(tempdel, tempobv);
+            if w ~= 0
+                tempD0 = eye(length(tempdel));
+            end
             [~, H]= FactorPrecision(tempdel, tempD0, 1/tempobv, T);
             loadings(k,:) = betaStar(factorRange,k);
             loadings(k,:) = (loadings(k,:) + restrictions(k,:)) - (loadings(k,:).*double(restrictions(k,:) > 0));
@@ -282,7 +300,10 @@ if calcML == 1
                         % Equation level
                         ty = tempyt(k,:);
                         ovkj = ovj(k);
-                        [D0, ssOmArTerms] = initCovar(omArTermsj(k,:), ovkj);
+                        [D0, ssOmArTerms,~,w] = initCovar(omArTermsj(k,:), ovkj);
+                        if w ~= 0
+                            D0 = eye(length(omArTermsj(k,:)));
+                        end
                         [CV, ~] = FactorPrecision(ssOmArTerms, D0, 1./ovkj, T);
                         commonMeanComponent = commonMeanComponent + alpha(k)*CV*ty(:);
                         commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*CV;
@@ -296,7 +317,10 @@ if calcML == 1
                         commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                     end
                 end
-                [L0, ssGammas] = initCovar(farcj, fvcj);
+                [L0, ssGammas,~,w] = initCovar(farcj, fvcj);
+                if w~=0
+                    L0 = eye(length(farcj));
+                end
                 StatePrecision = FactorPrecision(ssGammas, L0, 1./fvcj, T);
                 OmegaInv = commonPrecisionComponent + StatePrecision;
                 Linv = chol(OmegaInv,'lower')\IT;
@@ -347,7 +371,10 @@ if calcML == 1
             tempx=[xt(tempI,:),FactorStar(FtIndexMat(k,:),:)'];
             tempdel=omarg(k,:);
             tempobv = ovg(k);
-            tempD0 = initCovar(tempdel, tempobv);
+            [tempD0,~,~,w] = initCovar(tempdel, tempobv);
+            if w~=0
+                tempD0 = eye(length(tempdel));
+            end
             [~, H]= FactorPrecision(tempdel, tempD0, 1/tempobv, T);
             igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(:,k) ) ) ).^2));
             loadings(k,:) = betaStar(factorRange,k);
@@ -379,7 +406,10 @@ if calcML == 1
                         % Equation level
                         ty = tempyt(k,:);
                         ovkg = ovg(k);
-                        [D0, ssOmArTerms] = initCovar(omArTermsj(k,:), ovkg);
+                        [D0, ssOmArTerms,~,w] = initCovar(omArTermsj(k,:), ovkg);
+                        if w ~=0
+                            D0 = eye(length(omArTermsj(k,:)));
+                        end
                         [CV, ~] = FactorPrecision(ssOmArTerms, D0, 1./ovkg, T);
                         commonMeanComponent = commonMeanComponent + alpha(k)*CV*ty(:);
                         commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*CV;
@@ -393,7 +423,10 @@ if calcML == 1
                         commonPrecisionComponent = commonPrecisionComponent + (alpha(k)^2)*QQsigma;
                     end
                 end
-                [L0, ssGammas] = initCovar(farcg, fvcg);
+                [L0, ssGammas,~,w] = initCovar(farcg, fvcg);
+                if w ~= 0
+                    L0 = eye(length(farcg));
+                end
                 StatePrecision = FactorPrecision(ssGammas, L0, 1./fvcg, T);
                 Omega = (commonPrecisionComponent + StatePrecision)\IT;
                 omega =Omega*commonMeanComponent;
@@ -417,9 +450,13 @@ if calcML == 1
     %%%%%%%%%%%%%%%%%%%%
     %% OM AR Reduced Run
     fprintf('O.M. AR/Factor AR RR\n')
-    omARStar = mean(storeOmArj,3);
-    omARStar = vetARStar(omARStar, yt, xt, FactorStar, betaStar,...
-        obsVariance, g0, G0, subsetIndices, FtIndexMat);
+    if autoRegressiveErrors == 1
+        omARStar = mean(storeOmArj,3);
+        omARStar = vetARStar(omARStar, yt, xt, FactorStar, betaStar,...
+            obsVariance, g0, G0, subsetIndices, FtIndexMat);
+    else
+        omARStar = zeros(K,lagOm);
+    end
     factorARStar = mean(storeStateArj,3);
     storeAlphaOMARj = zeros(K,  ReducedRuns);
     storeAlphaFactorj = zeros(K, ReducedRuns);
@@ -441,7 +478,10 @@ if calcML == 1
             tempdelg=omarg(k,:);
             delgstar = omARStar(k,:);
             tempobv = ovg(k);
-            tempD0star = initCovar(tempdelg, tempobv);
+            [tempD0star, ~,~,w] = initCovar(tempdelg, tempobv);
+            if w~= 0
+                tempD0star = eye(length(tempdelg));
+            end
             [~, H]= FactorPrecision(delgstar, tempD0star, 1/tempobv, T);
             igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(:,k) ) ) ).^2));
             if autoRegressiveErrors == 1
@@ -481,9 +521,17 @@ if calcML == 1
         tempI = subsetIndices(k,:);
         tempy = yt(k,:);
         tempx=[xt(tempI,:),FactorStar(FtIndexMat(k,:),:)'];
-        tempdelg=omARStar(k,:);
         tempobv = omVarStar(k);
-        tempD0g = initCovar(tempdelg, tempobv);
+        if autoRegressiveErrors == 1
+            tempdelg=omARStar(k,:);
+            [tempD0g,~,~,nv] = initCovar(tempdelg, tempobv);
+            if nv~=0
+                tempD0g = eye(length(tempdelg));
+            end
+        else
+            tempdelg = zeros(1,lagOm);
+            tempD0g = tempobv;
+        end
         [~, H]= FactorPrecision(tempdelg, tempD0g, 1/tempobv, T);
         igParamB=.5.*(d0+sum( ( (H*tempy') -  (H*(tempx*betaStar(:,k)) ) ).^2));
         piOmVar(k) = logigampdf(omVarStar(k), igParamA, igParamB);
@@ -498,14 +546,21 @@ if calcML == 1
         tempI = subsetIndices(k,:);
         tempy = yt(k,:);
         tempx=[xt(tempI,:),FactorStar(FtIndexMat(k,:),:)'];
-        tempdelg=omARStar(k,:);
         tempobv = omVarStar(k);
-        tempD0g = initCovar(tempdelg, tempobv);
+        if autoRegressiveErrors == 1
+            tempdelg=omARStar(k,:);
+            [tempD0g,~,~,nv] = initCovar(tempdelg, tempobv);
+            if nv~=0
+                tempD0g = eye(length(tempdelg));
+            end
+        else
+            tempdelg = zeros(1,lagOm);
+            tempD0g = tempobv;
+        end
         [P, ~]= FactorPrecision(tempdelg, tempD0g, 1/tempobv, T);
         S = P\eye(T);
         Slowerinv = chol(S,'lower')\eye(T);
         LL(k) = adjustedlogmvnpdf( ((Slowerinv*tempy') - Slowerinv*(tempx*betaStar(:,k)))', Slowerinv);
-        %     LL(k) = logmvnpdf((tempy' - tempx*betaStar(k,:)')', zeros(1,T), S);
     end
     % [LL, LL2']
     LL = sum(LL);
@@ -515,15 +570,19 @@ if calcML == 1
     bprior = b0.*ones(1,dimx);
     Bprior = (1/B0inv).*eye(dimx);
     priorBeta = zeros(K,1);
+    
     for k = 1:K
         priorBeta(k) = logmvnpdf(betaStar(:,k)', bprior, Bprior);
     end
     priorBeta = sum(priorBeta);
     Fpriorstar = zeros(nFactors,1);
     for j = 1:nFactors
-        vv = factorVarStar(j);
-        [iP, ss] =initCovar(factorARStar(j,:), vv);
-        Kprecision = FactorPrecision(ss, iP, 1/vv, T);
+        qq = factorVarStar(j);
+        [iP, ss,~,w] =initCovar(factorARStar(j,:), qq);
+        if w ~= 0
+            iP = eye(length(factorARStar(j,:)));
+        end
+        Kprecision = FactorPrecision(ss, iP, 1/qq, T);
         Fpriorstar(j) = logmvnpdf(FactorStar(j,:), zeros(1,T ), Kprecision\eye(T));
     end
     Fpriorstar=sum(Fpriorstar);
@@ -546,11 +605,11 @@ if calcML == 1
     end
     Summary = [LL;PRIORS';-POSTERIORS']
     ML = sum(Summary)
-else
-    fprintf('Not calculating ML\n')
-    ML=0;
-end
-fprintf('Baseline Model Estimation\n')
-
+    % else
+    %     fprintf('Not calculating ML\n')
+    %     ML=0;
+    % end
+    fprintf('Baseline Model Estimation\n')
+    
 end
 

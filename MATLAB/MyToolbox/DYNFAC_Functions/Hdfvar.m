@@ -189,7 +189,10 @@ if estML == 1
         stj = mean(storeStateTransitions,3);
         Ftj = mean(storeFt,3);
         fvj = mean(storeFactorVar,2);
-        [iP, ~] =initCovar(stj, fvj);
+        [iP, ~, ~, w] =initCovar(stj, fvj);
+        if w~=0
+            iP = eye(length(stj));
+        end
         Si = FactorPrecision(stj, iP, 1./fvj, T);
         
         [storeMeans, storeVars] = ComputeMeansVars(yt, Xbeta, Ft, Astar, stateTransitions,...
@@ -308,7 +311,10 @@ if estML == 1
                 [fvj, ~]  = drawFactorVariance(Ftj, stStar, fvj, s0, d0);
                 storeFactorVarj(:,r) = fvj;
             end
-            [iP, ~] =initCovar(stStar, fvj);
+            [iP, ~,~,w] =initCovar(stStar, fvj);
+            if w~=0
+                iP = eye(length(stStar));
+            end
             Si = FactorPrecision(stStar, iP, 1./fvj, T);
         end
         piBeta = sum(logAvg(storePiBeta),1);
@@ -353,7 +359,17 @@ if estML == 1
     posteriorStar = sum(posteriors)
     
     
-    LogLikelihood=sum(logmvnpdf(residsStar', zeros(1,K), diag(1./obsPrecisionStar)))
+    
+    LL = zeros(K,1);
+    for k = 1:K
+        tempy = yt(k,:);
+        tempobv = 1./obsPrecisionStar(k);
+        [P, ~]= FactorPrecision(0, tempobv, 1/tempobv, T);
+        S = P\eye(T);
+        Slowerinv = chol(S,'lower')\eye(T);
+        LL(k) = adjustedlogmvnpdf( ((Slowerinv*tempy') - Slowerinv*muStar(k,:)' )', Slowerinv);
+    end
+    LogLikelihood = sum(LL);
     
     priorST = sum(logmvnpdf(stStar, g0, G0));
     priorObsVariance = sum(logigampdf(1./obsPrecisionStar, .5.*v0, .5.*r0));
@@ -363,16 +379,20 @@ if estML == 1
     betaprior = beta0.*ones(1,dimX);
     BetaPrior = (1/B0inv).*eye(dimX);
     priorBeta = zeros(K,1);
+    
     for k = 1:K
         priorBeta(k) = logmvnpdf(VARstar(:,k)', betaprior, BetaPrior);
     end
     priorBeta = sum(priorBeta);
-    priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
     
+    priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
     Fpriorstar = zeros(nFactors,1);
     for j = 1:nFactors
         vv = factorVarianceStar(j);
-        [iP, ss] =initCovar(stStar(j,:), 1);
+        [iP, ss,~,w] =initCovar(stStar(j,:), 1);
+        if w~=0
+            iP = eye(length(stStar(j,:)));
+        end
         Kprecision = FactorPrecision(ss, iP, 1/vv, T);
         Fpriorstar(j) = logmvnpdf(FtStar(j,:), zeros(1,T ), Kprecision\eye(T));
     end

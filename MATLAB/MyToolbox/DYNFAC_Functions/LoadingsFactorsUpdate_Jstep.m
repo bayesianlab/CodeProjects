@@ -20,7 +20,10 @@ for q = 1:levels
     for r=1:region
         fcount = fcount+1;
         gammas = stateTransitions(fcount,:);
-        L0 = initCovar(gammas, factorVariance(fcount));
+        [L0,~,~,w] = initCovar(gammas, factorVariance(fcount));
+        if w ~=0
+            L0 = eye(length(gammas))
+        end
         StatePrecision = FactorPrecision(gammas, L0, 1./factorVariance(fcount), T);
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);

@@ -11,7 +11,7 @@ for jj = 1:K
     S0draw = initCovar(test, tempobv);
     [~, pd] = chol(S0draw,'lower');
     if pd ~= 0
-        mut = reshape(tempx*beta(jj,:)',K,T);
+        mut = reshape(tempx*beta(:,jj),1,T);
         epsilont = (tempy- mut);
         Lagepsilont = lagMat(epsilont, lags)';
         epsilont = epsilont(:,lags+1:end)';
@@ -33,7 +33,6 @@ for jj = 1:K
             end
         end
     end
-    
 end
 end
 

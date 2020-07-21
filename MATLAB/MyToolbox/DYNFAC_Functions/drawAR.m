@@ -16,7 +16,10 @@ G1lower = chol(G1,'lower');
 
 g1 = G1*( (G0\g0') + (Xt'*ytstar')/sigma2);
 notvalid=1;
-P0 = CalcInitCovar(stateSpaceIt(current,lags), sigma2);
+[P0,~,~,w] = CalcInitCovar(stateSpaceIt(current,lags), sigma2);
+if w~=0
+    P0 = eye(lags);
+end
 c=0;
 MAXTRIES = 10;
 while notvalid == 1

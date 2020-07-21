@@ -17,7 +17,10 @@ for q = 1:levels
     regs = size(Info,1);
     for r=1:regs
         fcount = fcount+1;
-        [L0, ssgam] = initCovar(stateTransitions(fcount,:), factorVariance(fcount));
+        [L0, ssgam, ~,w] = initCovar(stateTransitions(fcount,:), factorVariance(fcount));
+        if w~=0
+            L0 = eye(length(stateTransitions(fcount,:)));
+        end
         StatePrecision = FactorPrecision(ssgam, L0, 1./factorVariance(fcount), T);
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);
