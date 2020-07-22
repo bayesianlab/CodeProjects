@@ -141,8 +141,8 @@ beta0 = 1;
 B0inv = 1;
 
 
-Sims = 50;
-burnin = 5;
+Sims = 500;
+burnin = 50;
 initFactor = normrnd(0,1,nFactors,T);
 initStateTransitions = zeros(nFactors,lags);
 %     initFactor = Factors;
@@ -208,8 +208,7 @@ beta0 = 1;
 B0inv = 1;
 
 
-Sims = 50;
-burnin = 5;
+
 %     initFactor = Factors;
 initFactor = normrnd(0,1,nFactors,T);
 %     initStateTransitions = gammas;
@@ -248,10 +247,10 @@ table(ar_baseline, st)
 table(load_baseline, EstOM)
 
 
-plot(yhat1(1,:))
-hold on
-plot(yhat2(1,:))
-plot(yt(1,:))
+% plot(yhat1(1,:))
+% hold on
+% plot(yhat2(1,:))
+% plot(yt(1,:))
 
 
 

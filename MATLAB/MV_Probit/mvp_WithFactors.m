@@ -16,11 +16,8 @@ nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
 lags = size(g0,1);
 
-b0 = ones(P,1).*b0;
-b0 = repmat(b0, 1,K);
-B0inv = B0\eye(size(b0,1));
+
 A0inv = 1/A0;
-beta = repmat(b0,K,1);
 
 zt = yt;
 obsVariance = ones(K,1);
@@ -29,7 +26,7 @@ factorVariance = ones(nFactors,1);
 currobsmod = setObsModel(zeros(K,levels), InfoCell);
 currobsmod(1) = 1/sqrt(2);
 stateTransitions = .5.*ones(size(g0,1), nFactors);
-Xbeta = reshape(surX*b0(:), K,T);
+Xbeta = reshape(surX*ones(size(surX,2),1), K,T);
 Ft =initFt;
 
 Runs = Sims-bn;
@@ -53,7 +50,7 @@ for s = 1:Sims
     % Sample beta
     [beta, Xbeta] = VAR_ParameterUpdate(zt, Xt, obsPrecision,...
         currobsmod, stateTransitions, factorVariance, b0,...
-        B0inv, FtIndexMat, subsetIndices);
+        1/B0, FtIndexMat, subsetIndices);
     
     % Factors loadings
     [currobsmod, Ft,~, d]=...
@@ -126,7 +123,7 @@ if estml == 1
             InfoCell,  a0, A0inv, storeMeans, storeVars);
         ztj = mvp_latentDataDraw(ztj,yt, Xbetaj + Afj, diag(obsVariance));
         [VAR, ~] = VAR_ParameterUpdate(ztj, Xt, obsVariance,...
-            Astar, stj, factorVariance, b0, B0inv, FtIndexMat, subsetIndices);
+            Astar, stj, factorVariance, b0, 1/B0, FtIndexMat, subsetIndices);
         % State transitions
         for n=1:nFactors
             [storeStateTransitionsj(n,:), ~, ~, ~] = drawAR(stj(n,:), Ftj(n,:), factorVariance(n), g0,G0);
@@ -165,7 +162,7 @@ if estml == 1
 
         ztj= mvp_latentDataDraw(ztg,yt, Xbeta + Afg, diag(obsVariance));
         [VAR, Xbeta] = VAR_ParameterUpdate(ztg, Xt, obsPrecisionj,...
-            Astar, stStar, fvj, b0, B0inv, FtIndexMat, subsetIndices);
+            Astar, stStar, fvj, b0, 1/B0, FtIndexMat, subsetIndices);
         [iP, ~] =initCovar(stStar, fvj);
         Si = FactorPrecision(stStar, iP, 1./fvj, T);
         veczt = reshape(ztg-Xbetag, K*T,1);
@@ -190,7 +187,7 @@ if estml == 1
         Ftg = storeFtg(:,:,r);
         Afg = Astar*Ftg;
         storePiBeta(:,r) = piBetaStar(VARstar, ztg, Xt, obsVariance,...
-            Astar, stStar, fvj, b0, B0inv, subsetIndices, FtIndexMat);
+            Astar, stStar, fvj, b0, 1/B0inv, subsetIndices, FtIndexMat);
         
         ztj = mvp_latentDataDraw(ztg,yt, xbtStar + Afg, diag(obsVariance));
         ztdemut = ztg - xbtStar;
@@ -218,9 +215,9 @@ if estml == 1
     posteriorStar = sum(posteriors)
     
     priorST = sum(logmvnpdf(stStar, g0, G0));
-    B0inv=diag(repmat(1./diag(B0inv), K,1));
+    B=diag(repmat(1./diag(B0), K,1));
     
-    priorBeta = logmvnpdf(betaStar', b0(:)', B0inv);
+    priorBeta = logmvnpdf(betaStar', b0(:)', B);
     priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
     
     Fpriorstar = zeros(nFactors,1);

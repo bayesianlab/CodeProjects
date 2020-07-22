@@ -1,9 +1,8 @@
 function [Output] = GeneralMvProbit(yt, X, Sims, bn, estMethod, estml, b0, B0, g0, G0, a0, tau, varargin)
 args = nargin - 12;
 if args > 1
-    A0 = varargin{1};
-    initFt = varargin{2};
-    InfoCell = varargin{3};
+    initFt = varargin{1};
+    InfoCell = varargin{2};
 end
 
 if estMethod == 1
@@ -13,7 +12,7 @@ if estMethod == 1
     Output{6} = ml;
 else
     [storeBeta, storeFt, storeSt, storeOm, storeD, ml]  = mvp_WithFactors(yt, X, Sims, bn,...
-        InfoCell, b0, B0, g0, G0, a0, A0, initFt, estml);
+        InfoCell, b0, B0, g0, G0, a0, tau, initFt, estml);
     Output{1} = storeBeta;
     Output{2} = storeFt;
     Output{3} = storeSt;

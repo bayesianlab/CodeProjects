@@ -361,6 +361,7 @@ if estML == 1
     
     
     LL = zeros(K,1);
+    1./obsPrecisionStar
     for k = 1:K
         tempy = yt(k,:);
         tempobv = 1./obsPrecisionStar(k);
@@ -368,6 +369,8 @@ if estML == 1
         S = P\eye(T);
         Slowerinv = chol(S,'lower')\eye(T);
         LL(k) = adjustedlogmvnpdf( ((Slowerinv*tempy') - Slowerinv*muStar(k,:)' )', Slowerinv);
+% g = ones( 1,T);
+% LL(k) = adjustedlogmvnpdf( ((Slowerinv*g') - Slowerinv*g' )', Slowerinv)
     end
     LogLikelihood = sum(LL);
     

@@ -57,7 +57,7 @@ rng(11)
     g0 = zeros(1,lags);
     G0=diag(fliplr(.5.^(0:lags-1)));
     b0= 0;
-    B0 =100.*eye(Q);
+    B0 =100;
     a0 = 1;
     A0= 1;
     s0 = 6;
