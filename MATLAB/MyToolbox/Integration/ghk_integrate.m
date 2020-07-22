@@ -26,7 +26,6 @@ for t = 1:T
 
     end
 end
-sum(estProb,2)
 prob = -log(Sims) + log(sum(estProb,2));
 end
 

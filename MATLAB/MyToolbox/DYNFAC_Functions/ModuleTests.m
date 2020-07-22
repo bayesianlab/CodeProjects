@@ -7,7 +7,7 @@ Test4 = 1;
 % rng(88)
 
 
-T=100;
+T=50;
 lags =1;
 [yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([3], lags, T);
 [K,T] =size(yt)
@@ -141,8 +141,8 @@ beta0 = 1;
 B0inv = 1;
 
 
-Sims = 500;
-burnin = 50;
+Sims = 800;
+burnin = 100;
 initFactor = normrnd(0,1,nFactors,T);
 initStateTransitions = zeros(nFactors,lags);
 %     initFactor = Factors;

@@ -1,6 +1,6 @@
 function [alpha_prop] = ...
     mvp_LoadFacJstep(fixedValueTheta, thetaG, yt, Xbeta, Ft, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell,a0, A0inv,storeMeans, storeVars)
+    obsPrecision, factorVariance, Identities, InfoCell,a0, A0,storeMeans, storeVars)
 
 df = 15;
 [K,T] = size(yt);
@@ -22,7 +22,7 @@ for q = 1:levels
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);        
         apriormean = a0.*ones(1, length(subset)-1);
-        Apriorprecision =  A0inv.*eye(length(subset)-1);
+        Apriorprecision =  (1/A0).*eye(length(subset)-1);
         %% MH step
         ty = ydemut(subset,:);
         ty = ty(2:end,:);

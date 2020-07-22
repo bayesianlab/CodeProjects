@@ -1,4 +1,4 @@
-function [storeBeta, storeFt, storeSt, storeOm, storeD, ml] = mvp_WithFactors(yt, Xt,...
+function [storeBeta, storeFt, storeSt, storeOm, storeD, ml, overview] = mvp_WithFactors(yt, Xt,...
     Sims,bn, InfoCell, b0, B0,g0, G0, a0, A0, initFt, estml)
 [K,T]=size(yt);
 [~,P]=size(Xt);
@@ -16,8 +16,6 @@ nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
 lags = size(g0,1);
 
-
-A0inv = 1/A0;
 
 zt = yt;
 obsVariance = ones(K,1);
@@ -38,7 +36,7 @@ storeD = zeros(K,Runs);
 storeLatentData = zeros(K,T,Runs);
 g1bar = zeros(1,lags);
 G1bar = zeros(lags);
-
+ap=zeros(nFactors,1);
 
 for s = 1:Sims
     fprintf('Simulation %i\n', s)
@@ -53,10 +51,10 @@ for s = 1:Sims
         1/B0, FtIndexMat, subsetIndices);
     
     % Factors loadings
-    [currobsmod, Ft,~, d]=...
+    [currobsmod, Ft,~, d, acc]=...
         mvp_LoadFacUpdate(zt, Xbeta, Ft, currobsmod, stateTransitions,...
-        obsPrecision, factorVariance, Identities, InfoCell, a0, A0inv);
-    
+        obsPrecision, factorVariance, Identities, InfoCell, a0, A0);
+    ap = ap + acc;
     % State transitions
     for n=1:nFactors
         [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);
@@ -76,7 +74,7 @@ for s = 1:Sims
     end
     
 end
-
+acceptance_prob = ap ./ Sims
 
 %%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%
@@ -100,7 +98,7 @@ if estml == 1
     G1bar = G1bar./Runs;
     
     [storeMeans, storeVars] = ComputeMeansVars(yt, Xbeta, Ft, Astar, stateTransitions,...
-        obsPrecision, factorVariance, Identities, InfoCell, a0, A0inv);
+        obsPrecision, factorVariance, Identities, InfoCell, a0, A0);
     ztj = mean(storeLatentData,3);
     Xbetaj = reshape(surX*mean(storeBeta,2), K,T);
     Aj = mean(storeOm,3);
@@ -115,12 +113,12 @@ if estml == 1
         betag = storeBeta(:,r);
         Xbetag = reshape(surX*betag, K,T);
         [~, Ftj, stoAlphag(:,r)] =  mvp_LoadFacGstep(ztg, Xbetag, Ftg, Astar, stg,...
-            obsVariance,factorVariance, Identities, InfoCell, a0, A0inv, storeMeans, storeVars);
+            obsVariance,factorVariance, Identities, InfoCell, a0, A0, storeMeans, storeVars);
         
         Afj = Astate*Ftj;
         stoAlphaj(:,r) = mvp_LoadFacJstep(Astar, Aj, ...
             ztj, Xbetaj, Ftj, stj, obsPrecision, factorVariance, Identities,...
-            InfoCell,  a0, A0inv, storeMeans, storeVars);
+            InfoCell,  a0, A0, storeMeans, storeVars);
         ztj = mvp_latentDataDraw(ztj,yt, Xbetaj + Afj, diag(obsVariance));
         [VAR, ~] = VAR_ParameterUpdate(ztj, Xt, obsVariance,...
             Astar, stj, factorVariance, b0, 1/B0, FtIndexMat, subsetIndices);
@@ -187,7 +185,7 @@ if estml == 1
         Ftg = storeFtg(:,:,r);
         Afg = Astar*Ftg;
         storePiBeta(:,r) = piBetaStar(VARstar, ztg, Xt, obsVariance,...
-            Astar, stStar, fvj, b0, 1/B0inv, subsetIndices, FtIndexMat);
+            Astar, stStar, fvj, b0, 1/B0, subsetIndices, FtIndexMat);
         
         ztj = mvp_latentDataDraw(ztg,yt, xbtStar + Afg, diag(obsVariance));
         ztdemut = ztg - xbtStar;
@@ -215,10 +213,9 @@ if estml == 1
     posteriorStar = sum(posteriors)
     
     priorST = sum(logmvnpdf(stStar, g0, G0));
-    B=diag(repmat(1./diag(B0), K,1));
-    
-    priorBeta = logmvnpdf(betaStar', b0(:)', B);
-    priorAstar = Apriors(InfoCell, Astar, a0, A0inv);
+    B=B0.*eye(P*K);
+    priorBeta = logmvnpdf(betaStar', b0.*ones(1,P*K), B);
+    priorAstar = Apriors(InfoCell, Astar, a0, A0);
     
     Fpriorstar = zeros(nFactors,1);
     for j = 1:nFactors
@@ -230,6 +227,8 @@ if estml == 1
     priors = [Fpriorstar, priorST, sum(priorAstar), priorBeta]
     priorStar = sum(priors)
     ml = (LogLikelihood+priorStar)-posteriorStar
+    overview = table({'LogLikelihood', 'Fpriorstar', 'priorST', 'priorAstar', 'priorBeta', 'piFt', 'piBeta', 'piA' , 'piST'}', [LogLikelihood, priors, -posteriors]');
+
     
 else
     ml=0;

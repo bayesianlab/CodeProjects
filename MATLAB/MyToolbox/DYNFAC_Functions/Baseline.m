@@ -559,9 +559,9 @@ if calcML == 1
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Log likelihood
     
-    omVarStar
     
     LL = zeros(K,1);
+    %%%%%%%%%%%%
     for k = 1:K
         tempI = subsetIndices(k,:);
         tempy = yt(k,:);
@@ -581,14 +581,8 @@ if calcML == 1
         S = P\eye(T);
         Slowerinv = chol(S,'lower')\eye(T);
         LL(k) = adjustedlogmvnpdf( ((Slowerinv*tempy') - Slowerinv*(tempx*betaStar(:,k)))', Slowerinv);
-        %         g = ones(1,T);
-        %         LL(k) = adjustedlogmvnpdf( ((Slowerinv*g') - Slowerinv*g')', Slowerinv);
     end
-    % [LL, LL2']
     LL = sum(LL);
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% Marginal Likelihood
     bprior = b0.*ones(1,dimx);
     Bprior = (1/B0inv).*eye(dimx);
     priorBeta = zeros(K,1);
@@ -598,6 +592,7 @@ if calcML == 1
     end
     priorBeta = sum(priorBeta);
     Fpriorstar = zeros(nFactors,1);
+    %%%%%%%%%%%%%%
     for j = 1:nFactors
         qq = factorVarStar(j);
         [iP, ss,~,w] =initCovar(factorARStar(j,:), qq);

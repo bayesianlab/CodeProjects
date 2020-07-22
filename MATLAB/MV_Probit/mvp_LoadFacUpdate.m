@@ -1,6 +1,6 @@
-function [currobsmod, Ft, alpha, d] = ...
+function [currobsmod, Ft, alpha, d, accept] = ...
     mvp_LoadFacUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv)
+    obsPrecision, factorVariance, Identities, InfoCell,  a0, A0)
 
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', 25);
@@ -12,6 +12,7 @@ levels = length(InfoCell);
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 alpha = zeros(nFactors,1);
 xb = reshape(Xbeta, K,T);
+accept = zeros(nFactors,1);
 for q = 1:levels
     COM = makeStateObsModel(currobsmod, Identities, q);
     mut =  xb + COM*Ft;
@@ -31,7 +32,7 @@ for q = 1:levels
         top = obsPrecision(s2);
         x0 = currobsmod(s2,q);
         a0m = a0.*ones(1,length(s2));
-        A0invp = A0inv.*eye(length(s2));
+        A0invp = (1/A0).*eye(length(s2));
         LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
         [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
         H = Covar\eye(length(s2));
@@ -60,6 +61,7 @@ for q = 1:levels
         alpha(fcount) = min(0,Num - Den);
         u = log(unifrnd(0,1,1,1));
         if u <= alpha(fcount)
+            accept(fcount) =  1;
             currobsmod(subset,q) = [temp(1);proposal];
         end
         

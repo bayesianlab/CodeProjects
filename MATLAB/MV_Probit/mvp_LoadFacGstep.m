@@ -1,6 +1,6 @@
 function [currobsmod, Ft, alpha, d] = ...
     mvp_LoadFacGstep(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv,storeMeans, storeVars)
+    obsPrecision, factorVariance, Identities, InfoCell,  a0, A0,storeMeans, storeVars)
 
 
 df = 20;
@@ -28,7 +28,7 @@ for q = 1:levels
 
         x0 = currobsmod(s2,q);
         a0m = a0.*ones(1,length(s2));
-        A0invp = A0inv.*eye(length(s2));
+        A0invp = (1/A0).*eye(length(s2));
         
         themean = storeMeans{fcount};
         H = storeVars{fcount};

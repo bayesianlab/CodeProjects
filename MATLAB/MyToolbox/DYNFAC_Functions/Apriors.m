@@ -1,4 +1,4 @@
-function [priorAstar] = Apriors(InfoCell, Astar, a0, A0inv)
+function [priorAstar] = Apriors(InfoCell, Astar, a0, A0)
 priorAstar=0;
 levels= length(InfoCell);
 fcount = 0;
@@ -13,7 +13,7 @@ for q=1:levels
         astar = Astar(subsetSelect,q);
         astar = reshape(astar(2:end), 1, K-1);
         ObsPriorMean = a0.*ones(1, K-1);
-        ObsPriorVariance = (1/A0inv).*eye(K-1);
+        ObsPriorVariance = (A0).*eye(K-1);
         priorAstar = priorAstar + logmvnpdf(astar, ObsPriorMean, ObsPriorVariance);
     end
 end

@@ -1,4 +1,4 @@
-function [storeBeta, storeSigma,ml] = mvp_ChibGreenbergSampler(yt, X, Sims,bn, estml, ...
+function [storeBeta, storeSigma,ml, summary] = mvp_ChibGreenbergSampler(yt, X, Sims,bn, estml, ...
     b0, B0, s0, S0, Sigma0, tau)
 [K,T]=size(yt);
 [~,P]=size(X);
@@ -48,7 +48,7 @@ for s = 1:Sims
     end
 
 end
-accept_probability = ap./Sims;
+accept_probability = ap./Sims
 storeLatentj = storeLatent;
 ztj = mean(storeLatentj,3);
 Sigma0j = Sigma0;
@@ -91,8 +91,7 @@ storeKsums = zeros(K-1,Runs);
 
 storeSigmagCopy = storeSigma0g;
 
-save('errormat')
-% load('errormat')
+
 piSigma = zeros(K-1,1);
 sigPriors = zeros(1,K-1);
 for k = 1:K-2
@@ -169,4 +168,6 @@ priors = [betaprior, sum(sigPriors)]
 posterior = [piSigma, piBetaOrdinate]
 LL = LogLikelihood
 ml=LL + sum(priors) - sum(posterior)
+summary = table({'LogLikelihood', 'betaprior', 'sigPriors', 'piSigma', 'piBetaOrdinate'}',[LogLikelihood, priors, -posterior]')
+
 end
