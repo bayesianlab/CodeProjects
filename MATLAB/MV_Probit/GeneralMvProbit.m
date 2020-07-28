@@ -10,17 +10,16 @@ if estMethod == 1
     Output{1} = storeBeta;
     Output{2} = storeSigma0;
     Output{6} = ml;
-    Output{7} = overview;
+    Output{6} = overview;
 else
-    [storeBeta, storeFt, storeSt, storeOm, storeD, ml, overview]  = mvp_WithFactors(yt, X, Sims, bn,...
+    [storeBeta, storeFt, storeSt, storeOm, ml, overview]  = mvp_WithFactors(yt, X, Sims, bn,...
         InfoCell, b0, B0, g0, G0, a0, tau, initFt, estml);
     Output{1} = storeBeta;
     Output{2} = storeFt;
     Output{3} = storeSt;
     Output{4} = storeOm;
-    Output{5} = storeD;
-    Output{6} = ml;
-    Output{7} = overview;
+    Output{5} = ml;
+    Output{6} = overview;
 end
 end
 

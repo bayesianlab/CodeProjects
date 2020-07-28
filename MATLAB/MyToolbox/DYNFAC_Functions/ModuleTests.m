@@ -225,8 +225,8 @@ v0= 6;
 r0 = 6;
 s0 = 6;
 d0 = K;
-a0 = 1;
-A0inv = 1/K;
+a0 = .5;
+A0inv = .01;
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0);
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0);
 
@@ -251,7 +251,7 @@ initobsmodel = ones(K,levels);
 identification=2;
 estML=0;
 % tau = ones(1,nFactors);
-tau =ones(K,1);
+tau =10*ones(K,1);
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml, summary] = Hdfvar(yt, Xt,  InfoCell, Sims,...
     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...

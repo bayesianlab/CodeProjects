@@ -1,4 +1,4 @@
-function [storeBeta, storeFt, storeSt, storeOm, storeD, ml, overview] = mvp_WithFactors(yt, Xt,...
+function [storeBeta, storeFt, storeSt, storeOm,  ml, overview] = mvp_WithFactors(yt, Xt,...
     Sims,bn, InfoCell, b0, B0,g0, G0, a0, A0, initFt, estml)
 [K,T]=size(yt);
 [~,P]=size(Xt);
@@ -14,16 +14,21 @@ FtIndexMat = CreateFactorIndexMat(InfoCell);
 levels = size(InfoCell,2);
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
-lags = size(g0,1);
-
+lags = size(g0,2);
+restrictions = restrictedElements(InfoCell);
+zerorestrictions = (restrictions < 0);
 
 zt = yt;
 obsVariance = ones(K,1);
 obsPrecision = 1./obsVariance;
 factorVariance = ones(nFactors,1);
 currobsmod = setObsModel(zeros(K,levels), InfoCell);
-currobsmod(1) = 1/sqrt(2);
-stateTransitions = .5.*ones(size(g0,1), nFactors);
+currobsmod = currobsmod + restrictions - (currobsmod.*restrictions);
+currobsmod(zerorestrictions) = 0;
+d =diag(currobsmod*currobsmod' + eye(K));
+Astate = diag(d.^(-.5))*currobsmod
+
+stateTransitions = .5.*ones(nFactors, lags)
 Xbeta = reshape(surX*ones(size(surX,2),1), K,T);
 Ft =initFt;
 
@@ -51,7 +56,7 @@ for s = 1:Sims
         1/B0, FtIndexMat, subsetIndices);
     
     % Factors loadings
-    [currobsmod, Ft,~, d, acc]=...
+    [currobsmod, Ft,~,  acc]=...
         mvp_LoadFacUpdate(zt, Xbeta, Ft, currobsmod, stateTransitions,...
         obsPrecision, factorVariance, Identities, InfoCell, a0, A0);
     ap = ap + acc;
@@ -67,7 +72,6 @@ for s = 1:Sims
         storeFt(:,:,m) = Ft;
         storeSt(:,:,m) = stateTransitions;
         storeOm(:,:,m) = currobsmod;
-        storeD(:,m) = d;
         storeLatentData(:,:,m) = zt;
         g1bar = g1bar + g1;
         G1bar = G1bar + G1;
@@ -232,6 +236,7 @@ if estml == 1
     
 else
     ml=0;
+    overview=0;
 end
 end
 

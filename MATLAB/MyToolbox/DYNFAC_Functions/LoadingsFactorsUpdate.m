@@ -39,7 +39,7 @@ for q = 1:levels
         top = obsPrecision(s2);
         x0 = currobsmod(s2,q);
         a0m = a0.*ones(1,ns2);
-        A0invp = (1/ns2).*eye(ns2);
+        A0invp = A0inv.*eye(ns2);
         LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
         if length(s2) < 20
             [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);

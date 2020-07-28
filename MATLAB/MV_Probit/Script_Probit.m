@@ -6,18 +6,28 @@ T = 100;
 K=8;
 Q = 3;
 X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
-A = ones(K,1);
+A = ones(K,2);
+A(1,2) = 0;
 A(2:end,1) = ones(K-1,1).*.1;
+A(3:end, 2) = ones( K-2,1).*.1;
+
 C = A*A' + diag(ones(K,1));
 D = diag(C).^(-.5);
 Astar = diag(D)*A;
+
 gamma = .5;
 P0= initCovar(gamma, 1);
 FP = FactorPrecision(gamma,P0, 1, T)\eye(T) ;
-Ft = mvnrnd(zeros(1,T), FP,1);
+F1 = mvnrnd(zeros(1,T), FP,1);
+F2 = mvnrnd(zeros(1,T), FP,1);
+Factors = [F1;F2] ;
+nFactors = size(Factors,1);
 beta = ones(Q,1);
-zt = reshape(X*beta,K,T) + Astar*Ft + normrnd(0,1/sqrt(2),K,T);
+zt = reshape(X*beta,K,T) + Astar*Factors+ normrnd(0,1/sqrt(2),K,T);
 yt = double(zt > 0);
+Sims=50;
+bn = 10;
+
 
 %     T = 100;
 %     K=10;
@@ -25,7 +35,7 @@ yt = double(zt > 0);
 %     X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
 %     beta = ones(Q,K);
 %     surX = surForm(X, K);
-R = createSigma(.5,K);
+% R = createSigma(.5,K);
 %     epsilon = mvnrnd(zeros(1,K), R, T)';
 %     zt=reshape(surX*beta(:) + epsilon(:), K,T);
 %     yt = double(zt > 0);
@@ -33,8 +43,7 @@ R = createSigma(.5,K);
 
 % b0= 0;
 % B0 =100;
-% Sims=50;
-% bn = 10;
+
 % tau0 = 0;
 % T0 = .5;
 % s0 = 0;
@@ -52,7 +61,7 @@ R = createSigma(.5,K);
 
 
 cg = 0;
-initFt = normrnd(0,1,1,T);
+initFt = normrnd(0,1,nFactors,T);
 lags = 1;
 R0 = ones(K,1);
 g0 = zeros(1,lags);
@@ -60,35 +69,34 @@ G0=diag(fliplr(.5.^(0:lags-1)));
 b0= 0;
 B0 =10;
 a0 = 1;
-A0= 2;
+A0= 100;
 s0 = 6;
 S0 = 6;
 v0 = 6;
 r0 = K;
-InfoCell = {[1,K]};
-estml = 1;
+InfoCell = {[1,K], [2,K]};
+estml = 0;
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
-    Ft, InfoCell);
+    initFt, InfoCell);
 
 storeBeta = Output{1};
 storeFt= Output{2};
 storeSt= Output{3};
 storeOm = Output{4};
-storeD = Output{5};
-summary2 = Output{7};
+summary2 = Output{6};
 mubeta = round(mean(storeBeta,2),3);
 table(mubeta,repmat(beta(:), K,1) )
-
-meanst = round(mean( squeeze(storeSt)),3);
-table( meanst, gamma)
-
-ombar = round(mean(storeOm,3),3);
-table(ombar, Astar)
-
-summary1
-summary2
-sum(table2array(summary1(:,2)))
-sum(table2array(summary2(:,2)))
+% 
+% meanst = round(mean( squeeze(storeSt)),3);
+% table( meanst, gamma)
+% 
+% ombar = round(mean(storeOm,3),3);
+% table(ombar, Astar)
+% 
+% summary1
+% summary2
+% sum(table2array(summary1(:,2)))
+% sum(table2array(summary2(:,2)))
 % Fhat = mean(storeFt,3);
 % hold on
 % plot(Ft)

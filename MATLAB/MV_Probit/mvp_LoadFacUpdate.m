@@ -1,4 +1,4 @@
-function [currobsmod, Ft, alpha, d, accept] = ...
+function [currobsmod, Ft, alpha,  accept] = ...
     mvp_LoadFacUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
     obsPrecision, factorVariance, Identities, InfoCell,  a0, A0)
 
@@ -32,7 +32,7 @@ for q = 1:levels
         top = obsPrecision(s2);
         x0 = currobsmod(s2,q);
         a0m = a0.*ones(1,length(s2));
-        A0invp = (1/ns2).*eye(length(s2));
+        A0invp = (1/A0).*eye(length(s2));
         LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
         [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
         H = Covar\eye(length(s2));
@@ -46,15 +46,14 @@ for q = 1:levels
         top = obsPrecision(subset);
         top = top(2:end);
         
-        proposal = themean + Hlower*normrnd(0,1,length(s2), 1)./w1;
-        
-        C = diag([1;proposal]*[1;proposal]' + diag(1./obsPrecision));        
+        proposal = themean + Hlower*normrnd(0,1, ns2, 1)./w1;
+        C = diag([1;proposal]*[1;proposal]' + eye(ns2+1));        
         D = diag(C.^(-.5));
         d= diag(D);
         temp = D*[1;proposal];        
         proposal = temp(2:end);
                 
-        proposalDist= @(prop) mvstudenttpdf(prop, themean', H, df);
+        proposalDist= @(prop) mvstudenttpdf(prop, themean', 10*H, df);
         LogLikePositive = @(val) LLcond_ratio (val, ty, a0m,A0invp, top, tempf, StatePrecision);
         Num = LogLikePositive(proposal) + proposalDist(x0');
         Den = LogLikePositive(x0) + proposalDist(proposal');
@@ -68,9 +67,8 @@ for q = 1:levels
         %% Update Factor
         ty = ydemut(subset,:);
         
-        top = D*obsPrecision;
+        top = diag(D*eye(ns2+1));
         
-        top = top(subset);
         Ft(fcount,:) =  kowUpdateLatent(ty(:), currobsmod(subset,q), StatePrecision, top);
     end
 end
