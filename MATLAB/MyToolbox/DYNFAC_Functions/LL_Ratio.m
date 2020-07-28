@@ -1,4 +1,4 @@
-function [pdfval] = LLcond_ratio(ObsModel,ydemut,ObsPriorMean,...
+function [pdfval] = LL_Ratio(ObsModel,ydemut,ObsPriorMean,...
     ObsPriorPrecision, obsPrecision, factor,factorPrecision)
 [nFactors, T ] = size(factor);
 K = length(obsPrecision);
@@ -13,18 +13,17 @@ Term = ((factor*ydemut').*obsPrecision');
 
 Amean = Avariance*(ObsPriorPrecision*ObsPriorMean' + Term(:));
 
-pdfA = logmvnpdf(ObsModel', Amean', Avariance);
+pdfA = logmvnpdf(ObsModel, Amean', Avariance);
 % F | A
 OmegaI = diag(obsPrecision);
+
+
 AOI = ObsModel'*OmegaI;
 
-
-
 Fvariance = (factorPrecision + kron(eye(T),AOI*ObsModel))\eye(nFactorsT);
+
+
 
 Fmean = Fvariance*(kron(eye(T), AOI)*ydemut(:));
 pdfF = logmvnpdf(factor(:)', Fmean', Fvariance);
 pdfval = pdfA- pdfF;
-end
-
-

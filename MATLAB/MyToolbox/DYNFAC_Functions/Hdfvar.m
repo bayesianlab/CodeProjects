@@ -47,6 +47,8 @@ dimSurX = dimX*K;
 levels = length(sectorInfo);
 [~,dimx]=size(Xt);
 FtIndexMat = CreateFactorIndexMat(InfoCell);
+restrictions = restrictedElements(InfoCell)
+zerorestrictions = (restrictions < 0)
 subsetIndices = zeros(K,T);
 for k = 1:K
     subsetIndices(k,:)= k:K:KT;
@@ -86,7 +88,8 @@ else
     mkdir(checkpointdir)
 end
 
-
+Xbeta = zeros(K,T);
+VAR = 0;
 if finishedMainRun == 0
     for iterator = start : Sims
         if mod(iterator, saveFrequency) == 0
@@ -106,7 +109,10 @@ if finishedMainRun == 0
         [currobsmod, Ft, ~, accept]=...
             LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
             obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau);
+        currobsmod = currobsmod + restrictions - (currobsmod.*restrictions);
+        currobsmod(zerorestrictions) = 0;
         
+
         %% Variance
         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
         resids = yt - (StateObsModel*Ft) - Xbeta;
@@ -142,7 +148,7 @@ if finishedMainRun == 0
     accept_probability = ap./Sims
     betaBar = reshape(mean(storeVAR,3), dimx*K,1);
     Ftbar = mean(storeFt,3);
-    omBar = mean(storeOM,3);
+    omBar = mean(storeOM,3)
     g1bar = g1bar./Runs;
     G1bar = G1bar./Runs;
     %% Variance Decompositions
@@ -413,6 +419,7 @@ if estML == 1
     my = fytheta + sum([priorST,priorObsVariance, priorFactorVar, sum(priorAstar), priorBeta]) - sum([piBeta, piA , piST, piObsVariance, piFactorVariance])
 else
     ml = 'nothing';
+    summary =0;
     rmdir(checkpointdir, 's')
 end
 fprintf('New Method Estimation\n')

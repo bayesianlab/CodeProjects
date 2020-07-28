@@ -17,5 +17,12 @@ for q= 1:length(M)
         U(z(1):z(2),q) = b;
     end
 end
+
+for m = 1:length(M)
+    u = M{m};
+    if u > 1
+        zeroindexs = 1:(u(1)-1);
+        U(zeroindexs,m) = -1;
+    end
 end
 

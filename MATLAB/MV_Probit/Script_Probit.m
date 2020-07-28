@@ -31,24 +31,24 @@ R = createSigma(.5,K);
 %     yt = double(zt > 0);
 
 
-b0= 0;
-B0 =100;
-Sims=50;
-bn = 10;
-tau0 = 0;
-T0 = .5;
-s0 = 0;
-S0 = 2;
-R0 = eye(K);
-tau = [1, .9, .9, .5, .1, .1, .1, .1, .1]
-estml =1 ;
-[Output]=GeneralMvProbit(yt, X,Sims, bn, cg, estml, b0, B0,  s0, S0, R0, tau);
-storeBeta = Output{1};
-storeSigma = Output{2};
-summary1 = Output{7};
-sum(table2array(summary1(:,2)))
-mubeta = mean(storeBeta,2);
-table(mubeta, ones(Q*K,1))
+% b0= 0;
+% B0 =100;
+% Sims=50;
+% bn = 10;
+% tau0 = 0;
+% T0 = .5;
+% s0 = 0;
+% S0 = 2;
+% R0 = eye(K);
+% tau = [1, .9, .9, .5, .1, .1, .1, .1, .1]
+% estml =1 ;
+% [Output]=GeneralMvProbit(yt, X,Sims, bn, cg, estml, b0, B0,  s0, S0, R0, tau);
+% storeBeta = Output{1};
+% storeSigma = Output{2};
+% summary1 = Output{7};
+% sum(table2array(summary1(:,2)))
+% mubeta = mean(storeBeta,2);
+% table(mubeta, ones(Q*K,1))
 
 
 cg = 0;
@@ -58,13 +58,13 @@ R0 = ones(K,1);
 g0 = zeros(1,lags);
 G0=diag(fliplr(.5.^(0:lags-1)));
 b0= 0;
-B0 =100;
+B0 =10;
 a0 = 1;
 A0= 2;
 s0 = 6;
 S0 = 6;
 v0 = 6;
-r0 = 6;
+r0 = K;
 InfoCell = {[1,K]};
 estml = 1;
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...

@@ -2,7 +2,7 @@ function [currobsmod, Ft,  alpha, accept] = ...
     LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
     obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau)
 
-MaxIterations = 20;
+MaxIterations = 50;
 options = optimoptions(@fminunc,'FiniteDifferenceType', 'forward',...
     'StepTolerance', 1e-8, 'Display', 'off', 'OptimalityTolerance', 1e-8, 'MaxIterations', MaxIterations);
 df = 8;
@@ -33,14 +33,15 @@ for q = 1:levels
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);
         s2 = (Info(r,1)+1):Info(r,2);
+        ns2 = length(s2);
         
         ty = ydemut(s2,:);
         top = obsPrecision(s2);
         x0 = currobsmod(s2,q);
-        a0m = a0.*ones(1,length(s2));
-        A0invp = A0inv.*eye(length(s2));
+        a0m = a0.*ones(1,ns2);
+        A0invp = (1/ns2).*eye(ns2);
         LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
-        if length(s2) < 25
+        if length(s2) < 20
             [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
             H = Covar\eye(length(s2));
         else
@@ -54,17 +55,15 @@ for q = 1:levels
             Hlower = eye(length(s2));
             H = eye(length(s2));
         end
-        ty = ydemut(subset,:);
-        ty = ty(2:end,:);
-        top = obsPrecision(subset);
-        top = top(2:end);
-        
+%         ty = ydemut(subset,:);
+%         ty = ty(2:end,:);
+%         top = obsPrecision(subset);
+%         top = top(2:end);
         proposal = themean + Hlower*normrnd(0,1,length(s2), 1)./w1;
         proposalDist= @(prop) mvstudenttpdf(prop, themean', tau(fcount).*H, df);
-        
-        LogLikePositive = @(val) LLcond_ratio (val, ty, a0m, A0invp, top, tempf, StatePrecision);
-        Num = LogLikePositive(proposal) + proposalDist(x0');
-        Den = LogLikePositive(x0) + proposalDist(proposal');
+
+        Num = -LL(proposal) + proposalDist(x0');
+        Den = -LL(x0) + proposalDist(proposal');
         alpha(fcount) = min(0,Num - Den);
         u = log(unifrnd(0,1,1,1));
         if u <= alpha(fcount)

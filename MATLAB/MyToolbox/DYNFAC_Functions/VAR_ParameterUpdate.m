@@ -9,12 +9,14 @@ lags = size(stateTransitions,2);
 for k=1:K
     tempI = subsetIndices(k,:);
     fidx=FtIndexMat(k,:);
+    nz = find(fidx);
+    fidx = fidx(nz);
     [L0,~,~,w] = initCovar(stateTransitions(fidx,:), factorVariance(fidx));
     if w~=0
         L0 = eye(lenght(stateTransitions(fixdx,:)));
     end
     [VAR(:,k), Xbeta(k,:)] = betaDraw(yt(k,:), x(tempI,:),...
-        obsPrecision(k),currobsmod(k,:), FactorPrecision(stateTransitions(fidx,:),...
+        obsPrecision(k),currobsmod(k,nz), FactorPrecision(stateTransitions(fidx,:),...
         L0, 1./factorVariance(fidx), T), b0, B0inv, T);
 end
 end

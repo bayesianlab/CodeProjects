@@ -1,5 +1,5 @@
 function [FtUpdate] = drawFactor(Ft, yt, Xbeta, currobsmod, stateTransitions,...
-    obsPrecision, factorVariance, Identities, InfoCell, autoregressiveErrors, varargin)
+    obsPrecision, factorVariance, Identities, InfoCell, varargin)
 if nargin > 10
     ar = varargin{1};
 else

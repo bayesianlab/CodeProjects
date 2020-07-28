@@ -5,7 +5,6 @@ parama = .5.*(s0+T);
 paramb = zeros(NF,1);
 draws = zeros(NF,1);
 
-
 for q = 1 :NF
     st = stateTransitions(q,:);
     fv = factorVariance(q);

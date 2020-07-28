@@ -27,12 +27,12 @@ for q = 1:levels
         tempf = Ft(fcount,:);
         subset = Info(r,1):Info(r,2);
         s2 = (Info(r,1)+1):Info(r,2);
-
+        ns2 = length(s2);
         ty = ydemut(s2,:);
         top = obsPrecision(s2);
         x0 = currobsmod(s2,q);
         a0m = a0.*ones(1,length(s2));
-        A0invp = (1/A0).*eye(length(s2));
+        A0invp = (1/ns2).*eye(length(s2));
         LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
         [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
         H = Covar\eye(length(s2));
