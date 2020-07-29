@@ -186,7 +186,7 @@ end
 rng(16)
 g = [.1,.3];
 lags = length(g) ;
-T = 100;
+T = 50;
 K = 40;
 P0 = initCovar(g, 1);
 P = FactorPrecision(g, P0, 1, T);
@@ -222,13 +222,13 @@ nFactors=size(g,1);
 initFactor = normrnd(0,1,nFactors,T);
 [~, dimX] = size(Xt);
 v0= 6;
-r0 = 6;
+r0 = 10;
 s0 = 6;
-d0 = K;
+d0 = 10;
 a0 = .5;
 A0inv = .01;
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0);
-[Ey, Vy] =invGammaMoments(.5*s0, .5*d0);
+[Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
 
 g0 = zeros(1,lags);
 G0=diag(fliplr(.5.^(0:lags-1)));
@@ -251,7 +251,7 @@ initobsmodel = ones(K,levels);
 identification=2;
 estML=0;
 % tau = ones(1,nFactors);
-tau =10*ones(K,1);
+tau =ones(nFactors,1);
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml, summary] = Hdfvar(yt, Xt,  InfoCell, Sims,...
     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...

@@ -53,7 +53,7 @@ for q = 1:levels
         temp = D*[1;proposal];        
         proposal = temp(2:end);
                 
-        proposalDist= @(prop) mvstudenttpdf(prop, themean', 10*H, df);
+        proposalDist= @(prop) mvstudenttpdf(prop, themean', H, df);
         LogLikePositive = @(val) LLcond_ratio (val, ty, a0m,A0invp, top, tempf, StatePrecision);
         Num = LogLikePositive(proposal) + proposalDist(x0');
         Den = LogLikePositive(x0) + proposalDist(proposal');
