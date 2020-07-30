@@ -3,7 +3,7 @@ function [] = RunMvprobit(filename, K)
 
 T = 100;
 Q = 1;
-X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
+X = [ones(T*K,1)];
 A = zeros(K,1);
 A(1:end,1) = .3.*ones(K,1);
 % A(2:end, 2) = .3.*ones(K-1,1)
