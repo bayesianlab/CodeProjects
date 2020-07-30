@@ -41,7 +41,7 @@ InfoCell{1} = [1,K];
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
     initFt, InfoCell);
 
-save(filename, Output)
+save(filename)
 
 end
 
