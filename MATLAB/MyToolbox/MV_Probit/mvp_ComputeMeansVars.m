@@ -39,8 +39,7 @@ for q = 1:levels
             Hlower = eye(length(subset));
             H = eye(length(subset));
         end        
-        size(themean)
-        size(H)
+
         storeMeans{fcount} = themean;
         storeVars{fcount} = H;
 

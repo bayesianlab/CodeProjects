@@ -106,17 +106,5 @@ InfoCell{1} = [1,K];
 %     plot(Fhat(f,:))
 % end
 
-rng(11)
+RunMvprobit_Correlation('test', 10, 2)
 
-T = 50;
-K=10;
-Q = 1;
-X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
-
-
-R = createSigma(.7, K);
-beta = ones(Q,1);
-zt = reshape(X*beta,K,T) + chol(R,'lower')*normrnd(0,1,K,1);
-yt = double(zt > 0);
-Sims=100;
-bn = 10;

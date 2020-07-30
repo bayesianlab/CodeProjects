@@ -9,8 +9,8 @@ beta = ones(Q,1);
 zt = reshape(X*beta,K,T) +  chol(R,'lower')*normrnd(0,1,K,1);
 yt = double(zt > 0);
 
-Sims=10000;
-bn = 1000;
+Sims=10;
+bn = 1;
 cg = 0;
 initFt = normrnd(0,1,nFactors,T);
 lags = 1;
@@ -23,7 +23,7 @@ A0= 10;
 estml = 1;
 
 for k = 1:nFactors
-    InfoCell{k} = [k, K]
+    InfoCell{k} = [k, K];
 end
 
 
