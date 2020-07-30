@@ -39,6 +39,8 @@ end
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
     initFt, InfoCell);
 
-save(filename)
+name = createDateString(filename)
+
+save(name)
 
 end
