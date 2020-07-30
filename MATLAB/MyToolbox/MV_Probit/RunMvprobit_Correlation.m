@@ -1,6 +1,16 @@
 function [] = RunMvprobit_Correlation(filename, K, nFactors)
-
-
+if ischar(K)
+    K = str2num(K);
+end
+if ischar(Sims)
+    Sims= str2num(Sims);
+end
+if ischar(bn)
+    bn= str2num(bn);
+end
+if ischar(nFactors)
+    nFactors= str2num(nFactors);
+end
 T = 100;
 Q = 1;
 X = [ones(T*K,1)];
