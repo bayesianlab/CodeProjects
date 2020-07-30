@@ -30,12 +30,12 @@ nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 lags=1;
 
 v0= 6
-r0 = 10
+r0 = .01
 s0 = 6
-d0 = 8
+d0 = .01
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
-a0=1
+a0=.5
 A0inv = 1
 g0 = zeros(1,lags)
 G0=diag(fliplr(.5.^(0:lags-1)))

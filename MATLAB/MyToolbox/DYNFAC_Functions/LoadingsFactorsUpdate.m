@@ -41,7 +41,7 @@ for q = 1:levels
         a0m = a0.*ones(1,ns2);
         A0invp = A0inv.*eye(ns2);
         LL = @(guess) -LLcond_ratio(guess, ty, a0m, A0invp, top, tempf,StatePrecision);
-        if length(s2) < 20
+        if length(s2) < 1000
             [themean, ~,~,~,~, Covar] = fminunc(LL, x0, options);
             H = Covar\eye(length(s2));
         else
