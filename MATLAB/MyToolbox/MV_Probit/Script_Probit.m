@@ -1,6 +1,6 @@
 clear;clc;
 cg = 1;
-% rng(11)
+rng(11)
 
 T = 50;
 K=10;
@@ -66,7 +66,7 @@ initFt = normrnd(0,1,nFactors,T);
 lags = 1;
 R0 = ones(K,1);
 g0 = zeros(1,lags);
-G0=diag(fliplr(.5.^(0:lags-1)));
+G0=diag(fliplr(.75.^(0:lags-1)));
 b0= 0;
 B0 =1;
 a0 = .5;
@@ -78,7 +78,7 @@ r0 = 6;
 InfoCell{1} = [1,K];
 % InfoCell{2} = [2,K];
 
-estml = 1;
+estml = 0;
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
     initFt, InfoCell);
 
