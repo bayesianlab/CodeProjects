@@ -3,7 +3,7 @@ function [] = RunMvprobit_Correlation(filename, K, nFactors)
 
 T = 100;
 Q = 1;
-X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
+X = [ones(T*K,1)];
 R = createSigma(.7, K);
 beta = ones(Q,1);
 zt = reshape(X*beta,K,T) +  chol(R,'lower')*normrnd(0,1,K,1);
