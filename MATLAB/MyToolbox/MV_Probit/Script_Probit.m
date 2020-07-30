@@ -77,6 +77,7 @@ v0 = 6;
 r0 = 6;
 InfoCell{1} = [1,K];
 % InfoCell{2} = [2,K];
+RunMvprobit('test', 10)
 
 estml = 0;
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
