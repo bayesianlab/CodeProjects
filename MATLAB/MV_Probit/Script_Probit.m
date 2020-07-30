@@ -8,7 +8,7 @@ Q = 1;
 X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
 A = zeros(K,1);
 A(1:end,1) = .3.*ones(K,1);
-A(2:end, 2) = .3.*ones(K-1,1)
+% A(2:end, 2) = .3.*ones(K-1,1)
 
 C = A*A' + eye(K);
 D = diag(C).^(-.5);
@@ -20,14 +20,14 @@ gamma = .3;
 P0= initCovar(gamma, 1);
 FP = FactorPrecision(gamma,P0, 1, T)\eye(T) ;
 F1 = mvnrnd(zeros(1,T), FP,1);
-F2 = mvnrnd(zeros(1,T), FP,1);
-Factors = [F1;F2] ;
+% F2 = mvnrnd(zeros(1,T), FP,1);
+Factors = [F1] ;
 nFactors = size(Factors,1);
 beta = ones(Q,1);
 zt = reshape(X*beta,K,T) + Astar*Factors+ normrnd(0,1/sqrt(2),K,T);
 yt = double(zt > 0);
-Sims=100;
-bn = 10;
+Sims=10000;
+bn = 1000;
 
 
 %     T = 100;
@@ -76,7 +76,7 @@ S0 = 6;
 v0 = 6;
 r0 = 6;
 InfoCell{1} = [1,K];
-InfoCell{2} = [2,K];
+% InfoCell{2} = [2,K];
 
 estml = 0;
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
@@ -97,11 +97,4 @@ table( meanst, repmat(gamma,nFactors,1))
 ombar = round(mean(storeOm,3),3);
 table(ombar, Astar)
 
-Fhat = mean(storeFt,3);
-hold on
-plot(F1)
-plot(Fhat(1,:))
-figure
-hold on
-plot(F2)
-plot(Fhat(2,:))
+
