@@ -70,7 +70,7 @@ for q = 1:levels
         
         % Update Factor
         
-        top = ones(length(subset),1);
+
         
         Ft(fcount,:) =  kowUpdateLatent(ty(:), currobsmod(subset,q), StatePrecision, 1./d);
     end

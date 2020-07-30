@@ -8,8 +8,11 @@ for k=1:K
     tempy = yt(k,:);
     tempx = x(tempI,:);
     tempObsPrecision = obsPrecision(k);
-    tempOm = currobsmod(k,:);
     fidx=FtIndexMat(k,:);
+    nz = find(fidx);
+    fidx = fidx(nz);
+    tempOm = currobsmod(k,nz);
+    
     gammas = stateTransitions(fidx,:);
     [L0, ~] = initCovar(gammas, factorVariance(fidx));
     StatePrecision = FactorPrecision(gammas, L0, 1./factorVariance(fidx), T);

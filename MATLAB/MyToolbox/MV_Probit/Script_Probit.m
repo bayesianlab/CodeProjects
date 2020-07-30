@@ -20,14 +20,14 @@ gamma = .3;
 P0= initCovar(gamma, 1);
 FP = FactorPrecision(gamma,P0, 1, T)\eye(T) ;
 F1 = mvnrnd(zeros(1,T), FP,1);
-% F2 = mvnrnd(zeros(1,T), FP,1);
+F2 = mvnrnd(zeros(1,T), FP,1);
 Factors = [F1] ;
 nFactors = size(Factors,1);
 beta = ones(Q,1);
 zt = reshape(X*beta,K,T) + Astar*Factors+ normrnd(0,1/sqrt(2),K,T);
 yt = double(zt > 0);
-Sims=10000;
-bn = 1000;
+Sims=100;
+bn = 10;
 
 
 %     T = 100;
@@ -78,7 +78,7 @@ r0 = 6;
 InfoCell{1} = [1,K];
 % InfoCell{2} = [2,K];
 
-estml = 0;
+estml = 1;
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
     initFt, InfoCell);
 
@@ -91,6 +91,7 @@ mubeta = round(mean(storeBeta,2),3);
 table(mubeta,repmat(beta(:), K,1) )
 
 
+Fhat = mean(storeFt,3);
 meanst = mean(storeSt,3);
 table( meanst, repmat(gamma,nFactors,1))
 
@@ -98,3 +99,9 @@ ombar = round(mean(storeOm,3),3);
 table(ombar, Astar)
 
 
+for f = 1:nFactors
+    figure
+    plot(Factors(f,:))
+    hold on
+    plot(Fhat(f,:))
+end

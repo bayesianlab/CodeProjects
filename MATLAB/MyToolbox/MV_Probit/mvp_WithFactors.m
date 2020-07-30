@@ -45,11 +45,11 @@ g1bar = zeros(1,lags);
 G1bar = zeros(lags);
 ap=zeros(nFactors,1);
 
-    Astate = makeStateObsModel(currobsmod, Identities, 0);
-    Af = Astate*Ft;
+Astate = makeStateObsModel(currobsmod, Identities, 0);
+Af = Astate*Ft;
 for s = 1:Sims
     fprintf('Simulation %i\n', s)
-
+    
     % Sample latent data
     zt = mvp_latentDataDraw(zt,yt, Xbeta + Af, diag(d));
     % Sample beta
@@ -62,9 +62,9 @@ for s = 1:Sims
         mvp_LoadFacUpdate(zt, Xbeta, Ft, currobsmod, stateTransitions,...
         1./d, factorVariance, Identities, InfoCell, a0, A0);
     ap = ap + acc;
-        Astate = makeStateObsModel(currobsmod, Identities, 0);
+    Astate = makeStateObsModel(currobsmod, Identities, 0);
     Af = Astate*Ft;
-    d = diag(Astate*Astate' + eye(K));
+    d = diag(Astate*Astate' + eye(K)).^(-.5);
     % State transitions
     for n=1:nFactors
         [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), 1, g0,G0);
@@ -106,7 +106,7 @@ if estml == 1
     g1bar = g1bar./Runs;
     G1bar = G1bar./Runs;
     
-    [storeMeans, storeVars] = ComputeMeansVars(yt, Xbeta, Ft, Astar, stateTransitions,...
+    [storeMeans, storeVars] = mvp_ComputeMeansVars(yt, Xbeta, Ft, Astar, stateTransitions,...
         obsPrecision, factorVariance, Identities, InfoCell, a0, A0);
     ztj = mean(storeLatentData,3);
     Xbetaj = reshape(surX*mean(storeBeta,2), K,T);
@@ -116,20 +116,23 @@ if estml == 1
     fprintf('Reduced Run for loadings\n')
     for r = 1:Runs
         fprintf('RR = %i\n', r)
+        Ag = storeOm(:,:,r);
         ztg = storeLatentData(:,:,r);
         Ftg = storeFt(:,:,r);
         stg = storeStateTransitionsg(:,:,r);
         betag = storeBeta(:,r);
         Xbetag = reshape(surX*betag, K,T);
-        [~, Ftj, stoAlphag(:,r)] =  mvp_LoadFacGstep(ztg, Xbetag, Ftg, Astar, stg,...
-            obsVariance,factorVariance, Identities, InfoCell, a0, A0, storeMeans, storeVars);
         
-        Afj = Astate*Ftj;
-        stoAlphaj(:,r) = mvp_LoadFacJstep(Astar, Aj, ...
-            ztj, Xbetaj, Ftj, stj, obsPrecision, factorVariance, Identities,...
+        stoAlphag(:,r) = mvp_LoadFac_Gstep(Astar, Ag, ztg, Xbetag, Ftg, stg, 1./d, factorVariance, Identities,...
             InfoCell,  a0, A0, storeMeans, storeVars);
-        ztj = mvp_latentDataDraw(ztj,yt, Xbetaj + Afj, diag(obsVariance));
-        [VAR, ~] = VAR_ParameterUpdate(ztj, Xt, obsVariance,...
+        
+        [Aj, Ftj, stoAlphaj(:,r), ~] =  mvp_LoadFac_Jstep(ztg, Xbetag, Ftg, Astar, stg,...
+            obsVariance,factorVariance, Identities, InfoCell, a0, A0, storeMeans, storeVars);
+        Aj = makeStateObsModel(Aj, Identities, 0);
+        d = diag(Aj*Aj' + eye(K)).^(-.5);
+        Afj = Aj*Ftj;
+        ztj = mvp_latentDataDraw(ztj,yt, Xbetaj + Afj, diag(d));
+        [VAR, ~] = VAR_ParameterUpdate(ztj, Xt, 1./d,...
             Astar, stj, factorVariance, b0, 1/B0, FtIndexMat, subsetIndices);
         % State transitions
         for n=1:nFactors
@@ -152,6 +155,8 @@ if estml == 1
     storeBetag = storeBetaj;
     storeFtg = storeFtj;
     storeLatentDatag= storeLatentDataj;
+             Astar = makeStateObsModel(Astar, Identities, 0);
+        dstar = diag(Astar*Astar' + eye(K)).^(-.5);
     %% Reduced Run 2
     for r = 1:Runs
         fprintf('RR = %i\n', r)
@@ -160,21 +165,23 @@ if estml == 1
         betag = storeBetag(:,r);
         Afg = Astar*Ftg;
         Xbetag = reshape(surX*betag, K,T);
+        
+
         for n = 1:nFactors
             [stoAlphaj(n,r)] = drawAR_Jstep(stStar(n,:), Ftg(n,:), fvj(n), g0, G0, g1bar, G1bar);
         end
         alphag = drawSTAlpha_Gstep(storeStateTransitionsg(:,:,r), stStar,...
             storeFtg(:,:,r), factorVariance, g0, G0);
         stoAlphag(:,r) = alphag;
-
-        ztj= mvp_latentDataDraw(ztg,yt, Xbeta + Afg, diag(obsVariance));
-        [VAR, Xbeta] = VAR_ParameterUpdate(ztg, Xt, obsPrecisionj,...
+        
+        ztj= mvp_latentDataDraw(ztg,yt, Xbeta + Afg, diag(dstar));
+        [VAR, Xbeta] = VAR_ParameterUpdate(ztg, Xt, 1./dstar,...
             Astar, stStar, fvj, b0, 1/B0, FtIndexMat, subsetIndices);
         [iP, ~] =initCovar(stStar, fvj);
         Si = FactorPrecision(stStar, iP, 1./fvj, T);
         veczt = reshape(ztg-Xbetag, K*T,1);
         Ftj = reshape(kowUpdateLatent(veczt, StateObsModelStar,...
-            Si, obsPrecisionj), nFactors, T);
+            Si, 1./dstar), nFactors, T);
         storeLatentDataj(:,:,r) = ztj;
         storeBetaj(:,r) = VAR(:);
         storeFtj(:,:,r) = Ftj;
@@ -193,10 +200,10 @@ if estml == 1
         ztg = storeLatentDatag(:,:,r);
         Ftg = storeFtg(:,:,r);
         Afg = Astar*Ftg;
-        storePiBeta(:,r) = piBetaStar(VARstar, ztg, Xt, obsVariance,...
+        storePiBeta(:,r) = piBetaStar(VARstar, ztg, Xt, 1./dstar,...
             Astar, stStar, fvj, b0, 1/B0, subsetIndices, FtIndexMat);
         
-        ztj = mvp_latentDataDraw(ztg,yt, xbtStar + Afg, diag(obsVariance));
+        ztj = mvp_latentDataDraw(ztg,yt, xbtStar + Afg, diag(dstar));
         ztdemut = ztg - xbtStar;
         Ftj = reshape(kowUpdateLatent(ztdemut(:), StateObsModelStar,...
             Si,  1), nFactors, T);
@@ -211,13 +218,13 @@ if estml == 1
         fprintf('RR = %i\n', r)
         ztg = storeLatentDatag(:,:,r);
         storePiFt(:,r) = piFtStar(FtStar, ztg, xbtStar, Astar, stStar,...
-            obsPrecisionj, fvj, Identities, InfoCell);
+            1./dstar, fvj, Identities, InfoCell);
     end
     piFt = sum(logAvg(storePiFt));
     
     
     muStar = StateObsModelStar*FtStar + xbtStar;
-    LogLikelihood = sum(ghk_integrate(yt, muStar, eye(K), 1000))
+    LogLikelihood = sum(ghk_integrate(yt, muStar, diag(dstar), 1000))
     posteriors = [piFt, piBeta, piA , piST]
     posteriorStar = sum(posteriors)
     
@@ -237,7 +244,7 @@ if estml == 1
     priorStar = sum(priors)
     ml = (LogLikelihood+priorStar)-posteriorStar
     overview = table({'LogLikelihood', 'Fpriorstar', 'priorST', 'priorAstar', 'priorBeta', 'piFt', 'piBeta', 'piA' , 'piST'}', [LogLikelihood, priors, -posteriors]');
-
+    
     
 else
     ml=0;
