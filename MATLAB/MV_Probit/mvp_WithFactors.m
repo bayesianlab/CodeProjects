@@ -16,6 +16,7 @@ nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
 lags = size(g0,2);
 restrictions = restrictedElements(InfoCell);
+restrictions = restrictions > 0;
 zerorestrictions = (restrictions < 0);
 
 zt = yt;
@@ -23,12 +24,13 @@ obsVariance = ones(K,1);
 obsPrecision = 1./obsVariance;
 factorVariance = ones(nFactors,1);
 currobsmod = setObsModel(zeros(K,levels), InfoCell);
-currobsmod = currobsmod + restrictions - (currobsmod.*restrictions);
+currobsmod(restrictions > 0 ) = 1/sqrt(2);
 currobsmod(zerorestrictions) = 0;
-d =diag(currobsmod*currobsmod' + eye(K));
-Astate = diag(d.^(-.5))*currobsmod
 
-stateTransitions = .5.*ones(nFactors, lags)
+d =diag(currobsmod*currobsmod' + eye(K));
+Astate = diag(d.^(-.5))*currobsmod;
+
+stateTransitions = .5.*ones(nFactors, lags);
 Xbeta = reshape(surX*ones(size(surX,2),1), K,T);
 Ft =initFt;
 
@@ -43,26 +45,29 @@ g1bar = zeros(1,lags);
 G1bar = zeros(lags);
 ap=zeros(nFactors,1);
 
-for s = 1:Sims
-    fprintf('Simulation %i\n', s)
     Astate = makeStateObsModel(currobsmod, Identities, 0);
     Af = Astate*Ft;
+for s = 1:Sims
+    fprintf('Simulation %i\n', s)
+
     % Sample latent data
-    zt = mvp_latentDataDraw(zt,yt, Xbeta + Af, diag(obsVariance));
-    
+    zt = mvp_latentDataDraw(zt,yt, Xbeta + Af, diag(d));
     % Sample beta
-    [beta, Xbeta] = VAR_ParameterUpdate(zt, Xt, obsPrecision,...
+    [beta, Xbeta] = VAR_ParameterUpdate(zt, Xt, 1./d,...
         currobsmod, stateTransitions, factorVariance, b0,...
         1/B0, FtIndexMat, subsetIndices);
     
     % Factors loadings
     [currobsmod, Ft,~,  acc]=...
         mvp_LoadFacUpdate(zt, Xbeta, Ft, currobsmod, stateTransitions,...
-        obsPrecision, factorVariance, Identities, InfoCell, a0, A0);
+        1./d, factorVariance, Identities, InfoCell, a0, A0);
     ap = ap + acc;
+        Astate = makeStateObsModel(currobsmod, Identities, 0);
+    Af = Astate*Ft;
+    d = diag(Astate*Astate' + eye(K));
     % State transitions
     for n=1:nFactors
-        [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n), g0,G0);
+        [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), 1, g0,G0);
     end
     
     % Store Posteriors

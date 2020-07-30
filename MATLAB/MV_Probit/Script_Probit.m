@@ -1,21 +1,22 @@
 clear;clc;
 cg = 1;
-rng(11)
+% rng(11)
 
 T = 100;
-K=8;
-Q = 3;
+K=20;
+Q = 1;
 X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
-A = ones(K,2);
-A(1,2) = 0;
-A(2:end,1) = ones(K-1,1).*.1;
-A(3:end, 2) = ones( K-2,1).*.1;
+A = zeros(K,1);
+A(1:end,1) = .3.*ones(K,1);
+A(2:end, 2) = .3.*ones(K-1,1)
 
-C = A*A' + diag(ones(K,1));
+C = A*A' + eye(K);
 D = diag(C).^(-.5);
 Astar = diag(D)*A;
+SigmaStar = diag(D)*eye(K);
+Astar*Astar' + SigmaStar*SigmaStar'
 
-gamma = .5;
+gamma = .3;
 P0= initCovar(gamma, 1);
 FP = FactorPrecision(gamma,P0, 1, T)\eye(T) ;
 F1 = mvnrnd(zeros(1,T), FP,1);
@@ -25,7 +26,7 @@ nFactors = size(Factors,1);
 beta = ones(Q,1);
 zt = reshape(X*beta,K,T) + Astar*Factors+ normrnd(0,1/sqrt(2),K,T);
 yt = double(zt > 0);
-Sims=50;
+Sims=100;
 bn = 10;
 
 
@@ -67,14 +68,16 @@ R0 = ones(K,1);
 g0 = zeros(1,lags);
 G0=diag(fliplr(.5.^(0:lags-1)));
 b0= 0;
-B0 =10;
-a0 = 1;
-A0= 100;
+B0 =1;
+a0 = .5;
+A0= 10;
 s0 = 6;
 S0 = 6;
 v0 = 6;
-r0 = K;
-InfoCell = {[1,K], [2,K]};
+r0 = 6;
+InfoCell{1} = [1,K];
+InfoCell{2} = [2,K];
+
 estml = 0;
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
     initFt, InfoCell);
@@ -86,18 +89,19 @@ storeOm = Output{4};
 summary2 = Output{6};
 mubeta = round(mean(storeBeta,2),3);
 table(mubeta,repmat(beta(:), K,1) )
-% 
-% meanst = round(mean( squeeze(storeSt)),3);
-% table( meanst, gamma)
-% 
-% ombar = round(mean(storeOm,3),3);
-% table(ombar, Astar)
-% 
-% summary1
-% summary2
-% sum(table2array(summary1(:,2)))
-% sum(table2array(summary2(:,2)))
-% Fhat = mean(storeFt,3);
-% hold on
-% plot(Ft)
-% plot(Fhat)
+
+
+meanst = mean(storeSt,3);
+table( meanst, repmat(gamma,nFactors,1))
+
+ombar = round(mean(storeOm,3),3);
+table(ombar, Astar)
+
+Fhat = mean(storeFt,3);
+hold on
+plot(F1)
+plot(Fhat(1,:))
+figure
+hold on
+plot(F2)
+plot(Fhat(2,:))

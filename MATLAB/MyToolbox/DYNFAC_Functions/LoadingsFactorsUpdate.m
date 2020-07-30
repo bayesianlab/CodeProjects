@@ -55,10 +55,7 @@ for q = 1:levels
             Hlower = eye(length(s2));
             H = eye(length(s2));
         end
-%         ty = ydemut(subset,:);
-%         ty = ty(2:end,:);
-%         top = obsPrecision(subset);
-%         top = top(2:end);
+
         proposal = themean + Hlower*normrnd(0,1,length(s2), 1)./w1;
         proposalDist= @(prop) mvstudenttpdf(prop, themean', tau(fcount).*H, df);
 
