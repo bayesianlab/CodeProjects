@@ -77,32 +77,46 @@ v0 = 6;
 r0 = 6;
 InfoCell{1} = [1,K];
 % InfoCell{2} = [2,K];
-RunMvprobit('test', 10)
+% 
+% estml = 0;
+% [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
+%     initFt, InfoCell);
+% 
+% storeBeta = Output{1};
+% storeFt= Output{2};
+% storeSt= Output{3};
+% storeOm = Output{4};
+% summary2 = Output{6};
+% mubeta = round(mean(storeBeta,2),3);
+% table(mubeta,repmat(beta(:), K,1) )
+% 
+% 
+% Fhat = mean(storeFt,3);
+% meanst = mean(storeSt,3);
+% table( meanst, repmat(gamma,nFactors,1))
+% 
+% ombar = round(mean(storeOm,3),3);
+% table(ombar, Astar)
+% 
+% 
+% for f = 1:nFactors
+%     figure
+%     plot(Factors(f,:))
+%     hold on
+%     plot(Fhat(f,:))
+% end
 
-estml = 0;
-[Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
-    initFt, InfoCell);
+rng(11)
 
-storeBeta = Output{1};
-storeFt= Output{2};
-storeSt= Output{3};
-storeOm = Output{4};
-summary2 = Output{6};
-mubeta = round(mean(storeBeta,2),3);
-table(mubeta,repmat(beta(:), K,1) )
+T = 50;
+K=10;
+Q = 1;
+X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
 
 
-Fhat = mean(storeFt,3);
-meanst = mean(storeSt,3);
-table( meanst, repmat(gamma,nFactors,1))
-
-ombar = round(mean(storeOm,3),3);
-table(ombar, Astar)
-
-
-for f = 1:nFactors
-    figure
-    plot(Factors(f,:))
-    hold on
-    plot(Fhat(f,:))
-end
+R = createSigma(.7, K);
+beta = ones(Q,1);
+zt = reshape(X*beta,K,T) + chol(R,'lower')*normrnd(0,1,K,1);
+yt = double(zt > 0);
+Sims=100;
+bn = 10;
