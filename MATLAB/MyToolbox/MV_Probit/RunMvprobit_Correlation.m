@@ -1,4 +1,4 @@
-function [] = RunMvprobit_Correlation(filename, K, nFactors)
+function [] = RunMvprobit_Correlation(filename, K, nFactors, Sims, bn)
 if ischar(K)
     K = str2num(K);
 end
