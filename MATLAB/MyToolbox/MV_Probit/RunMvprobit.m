@@ -1,5 +1,13 @@
-function [] = RunMvprobit(filename, K)
-
+function [] = RunMvprobit(filename, K, Sims, bn)
+if ischar(K)
+    K = str2num(K);
+end
+if ischar(Sims)
+    Sims= str2num(Sims);
+end
+if ischar(bn)
+    bn= str2num(bn);
+end
 
 T = 100;
 Q = 1;
@@ -25,8 +33,7 @@ beta = ones(Q,1);
 zt = reshape(X*beta,K,T) + Astar*Factors+ normrnd(0,1/sqrt(2),K,T);
 yt = double(zt > 0);
 
-Sims=10000;
-bn = 1000;
+
 cg = 0;
 initFt = normrnd(0,1,nFactors,T);
 lags = 1;
