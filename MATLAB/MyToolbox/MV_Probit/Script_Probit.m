@@ -2,8 +2,8 @@ clear;clc;
 cg = 1;
 % rng(11)
 
-T = 100;
-K=20;
+T = 50;
+K=10;
 Q = 1;
 X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
 A = zeros(K,1);

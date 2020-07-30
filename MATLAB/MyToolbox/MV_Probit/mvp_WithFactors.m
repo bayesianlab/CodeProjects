@@ -202,7 +202,6 @@ if estml == 1
         Afg = Astar*Ftg;
         storePiBeta(:,r) = piBetaStar(VARstar, ztg, Xt, 1./dstar,...
             Astar, stStar, fvj, b0, 1/B0, subsetIndices, FtIndexMat);
-        
         ztj = mvp_latentDataDraw(ztg,yt, xbtStar + Afg, diag(dstar));
         ztdemut = ztg - xbtStar;
         Ftj = reshape(kowUpdateLatent(ztdemut(:), StateObsModelStar,...
