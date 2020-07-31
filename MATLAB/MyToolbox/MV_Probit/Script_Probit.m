@@ -106,5 +106,50 @@ InfoCell{1} = [1,K];
 %     plot(Fhat(f,:))
 % end
 
-RunMvprobit_Correlation('test', 10, 2, 10 ,1)
+% RunMvprobit_Correlation('test', 10, 2, 10 ,1)
+% clear; clc;
+% 
+% load('mvcorr130_Jul_2020_19_06_48.mat')
+% storeFt = Output{2};
+% storeOm = Output{4};
+% ombar = mean(storeOm,3);
+% c = ombar*ombar' + eye(K);
+% d = diag(ombar*ombar' + eye(K)).^(-.5);
+% 
+% diag(d) * c * diag(d)
+% 
+% clear; clc;
+% 
+% load('mvcorr130_Jul_2020_17_53_00.mat')
+% storeFt = Output{2};
+% storeOm = Output{4};
+% ombar = mean(storeOm,3);
+% c = ombar*ombar' + eye(K);
+% d = diag(ombar*ombar' + eye(K)).^(-.5);
+% 
+% diag(d) * c * diag(d)
+
+clear;clc;
+load('MvProbit.mat')
+storeFt = Output{2};
+storeBeta = Output{1};
+mean(storeBeta,2)
+figure
+boxplot(mean(storeBeta,1))
+Fhat = mean(storeFt,3);
+
+
+Ft5 = qft(:,:,450);
+Ft95 = qft(:,:,8550);
+x = 1:T;
+figure
+plot(x,F1)
+hold on 
+fill( [x, fliplr(x)], [Ft5 fliplr(Ft95)], 'r', 'LineStyle', 'None')
+alpha .25
+% plot(x,Fhat)
+% 
+% plot(x,Ft5)
+% plot(x,Ft95)
+
 
