@@ -1,4 +1,4 @@
-function [] = RunMvprobit(filename, K, Sims, bn)
+function [] = RunMvprobit(path, name, K, Sims, bn)
 if ischar(K)
     K = str2num(K);
 end
@@ -48,7 +48,8 @@ InfoCell{1} = [1,K];
 [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
     initFt, InfoCell);
 
-name = createDateString(filename)
+name = createDateString(name)
+name = join([path, name])
 save(name)
 
 end
