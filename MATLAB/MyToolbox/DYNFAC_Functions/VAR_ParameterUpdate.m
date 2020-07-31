@@ -15,7 +15,8 @@ for k=1:K
     if w~=0
         L0 = eye(lenght(stateTransitions(fidx,:)));
     end
-    [VAR(:,k), Xbeta(k,:)] = betaDraw(yt(k,:), x(tempI,:),...
+    ytk = yt(k,:);
+    [VAR(:,k), Xbeta(k,:)] = betaDraw(ytk(:), x(tempI,:),...
         obsPrecision(k),currobsmod(k,nz), FactorPrecision(stateTransitions(fidx,:),...
         L0, 1./factorVariance(fidx), T), b0, B0inv, T);
 end

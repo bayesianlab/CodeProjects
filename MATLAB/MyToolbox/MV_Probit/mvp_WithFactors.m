@@ -19,7 +19,7 @@ restrictions = restrictedElements(InfoCell);
 restrictions = restrictions > 0;
 zerorestrictions = (restrictions < 0);
 
-zt = yt;
+zt = yt
 obsVariance = ones(K,1);
 obsPrecision = 1./obsVariance;
 factorVariance = ones(nFactors,1);
@@ -30,7 +30,9 @@ currobsmod(zerorestrictions) = 0;
 d =diag(currobsmod*currobsmod' + eye(K));
 Astate = diag(d.^(-.5))*currobsmod;
 
-stateTransitions = .5.*ones(nFactors, lags);
+
+
+stateTransitions = .1.*ones(nFactors, lags);
 Xbeta = reshape(surX*ones(size(surX,2),1), K,T);
 Ft =initFt;
 
@@ -39,7 +41,6 @@ storeBeta = zeros(KP,Runs);
 storeFt = zeros(nFactors, T, Runs);
 storeSt = zeros(nFactors, lags, Runs);
 storeOm = zeros(K, levels, Runs);
-storeD = zeros(K,Runs);
 storeLatentData = zeros(K,T,Runs);
 g1bar = zeros(1,lags);
 G1bar = zeros(lags);
@@ -47,16 +48,17 @@ ap=zeros(nFactors,1);
 
 Astate = makeStateObsModel(currobsmod, Identities, 0);
 Af = Astate*Ft;
+
+
 for s = 1:Sims
     fprintf('Simulation %i\n', s)
     
     % Sample latent data
-    zt = mvp_latentDataDraw(zt,yt, Xbeta + Af, diag(d));
+    zt = mvp_latentDataDraw(zt,yt, Xbeta +Af, eye(K));
     % Sample beta
-    [beta, Xbeta] = VAR_ParameterUpdate(zt, Xt, 1./d,...
+    [beta, Xbeta] = VAR_ParameterUpdate(zt, Xt, ones(K,1),...
         currobsmod, stateTransitions, factorVariance, b0,...
-        1/B0, FtIndexMat, subsetIndices);
-    
+        1/B0, FtIndexMat, subsetIndices);    
     % Factors loadings
     [currobsmod, Ft,~,  acc]=...
         mvp_LoadFacUpdate(zt, Xbeta, Ft, currobsmod, stateTransitions,...
