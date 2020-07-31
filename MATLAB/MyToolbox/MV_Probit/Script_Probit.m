@@ -78,25 +78,25 @@ r0 = 6;
 InfoCell{1} = [1,K];
 % InfoCell{2} = [2,K];
 
-estml = 0;
-[Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
-    initFt, InfoCell);
-
-storeBeta = Output{1};
-storeFt= Output{2};
-storeSt= Output{3};
-storeOm = Output{4};
-summary2 = Output{6};
-mubeta = round(mean(storeBeta,2),3);
-table(mubeta,repmat(beta(:), K,1) )
-
-
-Fhat = mean(storeFt,3);
-meanst = mean(storeSt,3);
-table( meanst, repmat(gamma,nFactors,1))
-
-ombar = round(mean(storeOm,3),3);
-table(ombar, Astar)
+% estml = 0;
+% [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
+%     initFt, InfoCell);
+% 
+% storeBeta = Output{1};
+% storeFt= Output{2};
+% storeSt= Output{3};
+% storeOm = Output{4};
+% summary2 = Output{6};
+% mubeta = round(mean(storeBeta,2),3);
+% table(mubeta,repmat(beta(:), K,1) )
+% 
+% 
+% Fhat = mean(storeFt,3);
+% meanst = mean(storeSt,3);
+% table( meanst, repmat(gamma,nFactors,1))
+% 
+% ombar = round(mean(storeOm,3),3);
+% table(ombar, Astar)
 % 
 % 
 % for f = 1:nFactors
@@ -105,6 +105,8 @@ table(ombar, Astar)
 %     hold on
 %     plot(Fhat(f,:))
 % end
+
+RunMvprobit( 'test', 10, 10, 1)
 
 % RunMvprobit_Correlation('test', 10, 2, 10 ,1)
 % clear; clc;

@@ -50,7 +50,7 @@ initObsPrecision = 1./var(yt,[],2);
 initFactorVar = ones(nFactors,1);
 initFactor = normrnd(0,1,nFactors,T);
 identification = 2;
-tau = [.01.*ones(1,8), .1.*ones(1,60)] 
+tau = [ones(1,nFactors)];
 
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml, summary] = Hdfvar(yt, Xt,  InfoCell, Sims,...
