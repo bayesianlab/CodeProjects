@@ -9,7 +9,7 @@ Test4 = 1;
 
 T=50;
 lags =1;
-[yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([3 3 2], lags, T);
+[yt,Xt, InfoCell, Factors, gammas, betas, A, fvar] = GenerateSimData([3 3], lags, T);
 [K,T] =size(yt)
 levels= length(InfoCell)
 nFactors=size(gammas,1);
@@ -57,9 +57,9 @@ end
 
 [~, dimX] = size(Xt);
 v0= 6;
-r0 = .01;
+r0 = 4;
 s0 = 6;
-d0 =  .01;
+d0 =  4;
 a0 = .5;
 A0inv = 1;
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0);
@@ -71,7 +71,7 @@ beta0 = 1;
 B0inv = .1;
 
 
-Sims = 100;
+Sims = 50;
 burnin = 10;
 initFactor = normrnd(0,1,nFactors,T);
 initStateTransitions = zeros(nFactors,lags);
@@ -82,7 +82,7 @@ initObsPrecision = ones(K,1);
 initFactorVar = ones(nFactors,1);
 initobsmodel = zeros(K,levels);
 identification=2;
-estML=0;
+estML=1;
 tau = ones(1,nFactors);
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml, summary] = Hdfvar(yt, Xt,  InfoCell, Sims,...
@@ -113,12 +113,12 @@ Som = makeStateObsModel(EstOM, Identities, 0);
 
 yhat1= reshape(surForm(Xt, K) * estVAR', K,T)+Som*Fhat;
 
-for f = 1:nFactors
-    figure
-plot(Factors(f,:))
-hold on 
-plot(Fhat(f,:))
-end
+% for f = 1:nFactors
+%     figure
+% plot(Factors(f,:))
+% hold on 
+% plot(Fhat(f,:))
+% end
 % 
 % 
 % 

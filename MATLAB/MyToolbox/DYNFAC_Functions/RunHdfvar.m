@@ -30,13 +30,13 @@ nFactors =  sum(cellfun(@(x)size(x,1), InfoCell));
 lags=1;
 
 v0= 6
-r0 = .01
+r0 = 6
 s0 = 6
-d0 = .01
+d0 = 6
 [Ey, Vy]=invGammaMoments(.5*v0, .5*r0)
 [Ey, Vy] =invGammaMoments(.5*s0, .5*d0)
 a0=.5
-A0inv = 1
+A0inv = .1
 g0 = zeros(1,lags)
 G0=diag(fliplr(.5.^(0:lags-1)))
 
@@ -53,7 +53,7 @@ identification = 2;
 tau = [.01.*ones(1,8), .1.*ones(1,60)] 
 
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
-    storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, Xt,  InfoCell, Sims,...
+    storeObsPrecision, storeFactorVar,varianceDecomp, ml, summary] = Hdfvar(yt, Xt,  InfoCell, Sims,...
     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...
     beta0, B0inv, v0, r0, s0, d0, a0,A0inv, g0, G0, tau, identification, estML, DotMatFile);
 muvar = mean(storeVAR,3);

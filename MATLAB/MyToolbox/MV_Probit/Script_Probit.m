@@ -106,5 +106,5 @@ InfoCell{1} = [1,K];
 %     plot(Fhat(f,:))
 % end
 
-RunMvprobit_Correlation('test', 10, 2)
+RunMvprobit_Correlation('test', 10, 2, 10 ,1)
 
