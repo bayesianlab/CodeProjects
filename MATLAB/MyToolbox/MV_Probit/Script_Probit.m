@@ -1,8 +1,8 @@
-clear;clc;
-cg = 1;
+% clear;clc;
+% cg = 1;
 % rng(1)
 
-T = 100;
+T = 1200;
 K=10;
 Q = 1;
 X = [ones(T*K,1), normrnd(0,1,T*K, Q-1)];
@@ -26,8 +26,8 @@ beta = .5.*ones(Q,1);
 zt = reshape(X*beta,K,T) + Astar*Factors+ normrnd(0,1,K,T);
 % zt = reshape(X*beta,K,T) +normrnd(0,1/sqrt(2),K,T);
 yt = double(zt > 0);
-Sims=100;
-bn = 10;
+Sims=2000;
+bn = 200;
 
 
 %     T = 100;
@@ -69,8 +69,8 @@ g0 = zeros(1,lags);
 G0=diag(fliplr(.75.^(0:lags-1)));
 b0= 0;
 B0 =100;
-a0 = 0;
-A0= 10;
+a0 = 1;
+A0= 100;
 s0 = 6;
 S0 = 6;
 v0 = 6;
@@ -79,19 +79,19 @@ InfoCell{1} = [1,K];
 % InfoCell{2} = [2,K];
 
 % estml = 0;
-% [Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
-%     initFt, InfoCell);
-% 
-% storeBeta = Output{1};
-% storeFt= Output{2};
+[Output] =GeneralMvProbit(yt, X, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
+    initFt, InfoCell);
+
+storeBeta = Output{1};
+storeFt= Output{2};
 % storeSt= Output{3};
 % storeOm = Output{4};
 % summary2 = Output{6};
-% mubeta = round(mean(storeBeta,2),3);
-% table(mubeta,repmat(beta(:), K,1) )
+mubeta = round(mean(storeBeta,2),3);
+table(mubeta,repmat(beta(:), K,1) )
 % 
-% 
-% Fhat = mean(storeFt,3);
+boxplot(mean(storeBeta,1))
+Fhat = mean(storeFt,3);
 % meanst = mean(storeSt,3);
 % table( meanst, repmat(gamma,nFactors,1))
 % 
@@ -99,27 +99,44 @@ InfoCell{1} = [1,K];
 % table(ombar, Astar)
 % 
 % 
-% for f = 1:nFactors
-%     figure
-%     plot(Factors(f,:))
-%     hold on
-%     plot(Fhat(f,:))
-% end
+qft = sort(storeFt,3);
+% Ft5 = qft(:,:,90);
+% Ft95 = qft(:,:,1710);
+% x = 1:T;
+% figure
+% plot(x,F1)
+% hold on 
+% fill( [x, fliplr(x)], [Ft5 fliplr(Ft95)], 'r', 'LineStyle', 'None')
+% alpha .25
+% plot(x,Fhat)
 
-RunMvprobit( 'test', 10, 10, 1)
+for f = 1:nFactors
+    figure
+    plot(Factors(f,:))
+    hold on
+    plot(Fhat(f,:))
+end
+save('mvprob2000')
+% RunMvprobit( 'test', 10, 10, 1)
 
 % RunMvprobit_Correlation('test', 10, 2, 10 ,1)
 % clear; clc;
-% 
-% load('mvcorr130_Jul_2020_19_06_48.mat')
+
+
+
+
+% load('/home/precision/MvProbit/mvprob101_Aug_2020_11_34_43.mat')
 % storeFt = Output{2};
 % storeOm = Output{4};
 % ombar = mean(storeOm,3);
+% Fhat = mean(storeFt,3);
 % c = ombar*ombar' + eye(K);
 % d = diag(ombar*ombar' + eye(K)).^(-.5);
 % 
 % diag(d) * c * diag(d)
-% 
+% plot(Factors(1,:))
+% hold on
+% plot(Fhat(1,:))
 % clear; clc;
 % 
 % load('mvcorr130_Jul_2020_17_53_00.mat')

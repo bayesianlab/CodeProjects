@@ -11,7 +11,7 @@ IK = eye(K);
 ZeroK = zeros(1,K);
 
 FtIndexMat = CreateFactorIndexMat(InfoCell);
-levels = size(InfoCell,2);
+levels = size(InfoCell,2)
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
 lags = size(g0,2);
@@ -41,8 +41,8 @@ storeFt = zeros(nFactors, T, Runs);
 storeSt = zeros(nFactors, lags, Runs);
 storeOm = zeros(K, levels, Runs);
 storeLatentData = zeros(K,T,Runs);
-g1bar = zeros(1,lags);
-G1bar = zeros(lags);
+g1bar = zeros(lags,nFactors);
+G1bar = zeros(lags,lags, nFactors);
 ap=zeros(nFactors,1);
 
 Astate = makeStateObsModel(currobsmod, Identities, 0);
@@ -54,6 +54,7 @@ for s = 1:Sims
     
     % Sample latent data
     zt = mvp_latentDataDraw(zt,yt, Xbeta +Af, diag(d));
+    
     % Sample beta
     [beta, Xbeta] = VAR_ParameterUpdate(zt, Xt, 1./d,...
         currobsmod, stateTransitions, factorVariance, b0,...
@@ -68,7 +69,7 @@ for s = 1:Sims
     d = diag(Astate*Astate' + eye(K)).^(-.5);
     % State transitions
     for n=1:nFactors
-        [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), 1, g0,G0);
+        [stateTransitions(n,:), ~, g1(:,n), G1(:,:,n)] = drawAR(stateTransitions(n,:), Ft(n,:), 1, g0,G0);
     end
     
     % Store Posteriors
@@ -137,7 +138,7 @@ if estml == 1
             Astar, stj, factorVariance, b0, 1/B0, FtIndexMat, subsetIndices);
         % State transitions
         for n=1:nFactors
-            [storeStateTransitionsj(n,:), ~, ~, ~] = drawAR(stj(n,:), Ftj(n,:), factorVariance(n), g0,G0);
+            [storeStateTransitionsj(n,:, r), ~, ~, ~] = drawAR(stj(n,:), Ftj(n,:), factorVariance(n), g0,G0);
         end
         storeBetaj(:,r) = VAR(:);
         storeFtj(:,:,r) = Ftj;
@@ -169,7 +170,7 @@ if estml == 1
         
 
         for n = 1:nFactors
-            [stoAlphaj(n,r)] = drawAR_Jstep(stStar(n,:), Ftg(n,:), fvj(n), g0, G0, g1bar, G1bar);
+            [stoAlphaj(n,r)] = drawAR_Jstep(stStar(n,:), Ftg(n,:), fvj(n), g0, G0, g1bar(:,n), G1bar(:,:,n));
         end
         alphag = drawSTAlpha_Gstep(storeStateTransitionsg(:,:,r), stStar,...
             storeFtg(:,:,r), factorVariance, g0, G0);

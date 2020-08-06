@@ -10,13 +10,14 @@ Xt = lagMat(yt,lags)';
 P0 = CalcInitCovar(stateSpaceIt(current,lags), sigma2);
 G1barlower= chol(G1bar,'lower');
 
-candidate = g1bar + chol(G1bar,'lower')*normrnd(0,1,lags,1);
 MAXTRIES = 10;
 notvalid=1;
 c=0;
 while notvalid == 1
     c = c + 1;
+    
     candidate = g1bar + G1barlower*normrnd(0,1,lags,1);
+    
     [P1,~,~,notvalid] = CalcInitCovar(stateSpaceIt(candidate',lags), sigma2);
     if c == MAXTRIES
         candidate = current';
