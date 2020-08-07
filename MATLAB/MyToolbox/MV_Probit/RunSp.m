@@ -1,6 +1,11 @@
-function [] = RunSp() 
-
-load('/home/precision/CodeProjects/MATLAB/MyToolbox/MV_Probit/MVPData/sp3.mat')
+function [] = RunSp(fname, Sims, burnin) 
+if ischar(Sims)
+    Sims = str2num(Sims);
+end
+if ischar(burnin)
+    burnin = str2num(burnin);
+end
+load(fname)
 yt = DataCell{1};
 Xt = DataCell{2};
 InfoCell = DataCell{3}; 
@@ -14,8 +19,6 @@ Xttrain = Xt(1:Kt,:);
 
 
 
-Sims=1000;
-bn = 100;
 cg = 0;
 initFt = normrnd(0,1,nFactors,t);
 lags = 5;
