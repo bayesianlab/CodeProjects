@@ -24,3 +24,5 @@ yhat = mub + omhat*Fhat;
 plot(yhat(1,:))
 sum(yhat > 0,2)
 sum(yt > 0,2)
+
+

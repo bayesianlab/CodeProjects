@@ -6,10 +6,11 @@ spx = import_spx();
 Xt = table2array( spx(:,2:end) );
 yt = table2array( probity(:,2:end) )';
 
-yt = yt(:, 1:7:1235);
-Xt = Xt(1:7:1235,:);
+yt = yt(:, 1035:1205);
+Xt = Xt(1035:1205,1:3);
 [K,T] = size(yt) ;
-Xt = [ones(K*T,1)];
+Xt = [ones(T,1), Xt];
+Xt = kron(Xt,ones(K,1));
 
 InfoCell{1} = [1,11];
 
