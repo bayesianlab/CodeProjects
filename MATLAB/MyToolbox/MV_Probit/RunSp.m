@@ -12,10 +12,10 @@ InfoCell = DataCell{3};
 nFactors = length(InfoCell); 
 
 
-
+[K,T] = size(yt);
 
 cg = 0;
-initFt = normrnd(0,1,nFactors,t);
+initFt = normrnd(0,1,nFactors,T);
 lags = 5;
 R0 = ones(K,1);
 g0 = zeros(1,lags);
@@ -31,7 +31,7 @@ v0 = 6;
 r0 = 6;
 
 estml = 1;
-[Output] =GeneralMvProbit(yttrain, Xttrain, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
+[Output] =GeneralMvProbit(yt, Xt, Sims, burnin, cg, estml, b0, B0, g0, G0, a0, A0,...
     initFt, InfoCell);
 
 storeBeta = Output{1};
@@ -45,7 +45,7 @@ mubeta = mean(storeBeta,2);
 Fhat = mean(storeFt,3);
 xbeta = reshape(surForm(Xt,K)*mean(storeBeta,2), K,T);
 Af = mean(storeOm,3)*Fhat;
-yhat = xbeta + Af;);
+yhat = xbeta + Af;
 name = createDateString('sp')
 save(name)
 end

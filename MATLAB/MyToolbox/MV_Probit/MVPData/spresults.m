@@ -26,3 +26,4 @@ sum(yhat > 0,2)
 sum(yt > 0,2)
 
 
+RunSp('MVPData/sp1', 10,1)
