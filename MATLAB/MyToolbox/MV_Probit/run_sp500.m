@@ -5,15 +5,11 @@ InfoCell = DataCell{3};
 nFactors = length(InfoCell); 
 
 [K,T] = size(yt);
-t= 159;
-Kt = K*t;
-yttrain = yt(:,1:t);
-Xttrain = Xt(1:Kt,:);
 
 Sims=100;
 bn = 10;
 cg = 0;
-initFt = normrnd(0,1,nFactors,t);
+initFt = normrnd(0,1,nFactors,T);
 lags = 4;
 R0 = ones(K,1);
 g0 = zeros(1,lags);
@@ -29,7 +25,7 @@ v0 = 6;
 r0 = 6;
 
 estml = 1;
-[Output] =GeneralMvProbit(yttrain, Xttrain, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
+[Output] =GeneralMvProbit(yt, Xt, Sims, bn, cg, estml, b0, B0, g0, G0, a0, A0,...
     initFt, InfoCell);
 
 storeBeta = Output{1};
@@ -40,6 +36,9 @@ storeOm = Output{4};
 
 mubeta = mean(storeBeta,2);
 Fhat = mean(storeFt,3);
+xbeta = reshape(surForm(Xt,K)*mean(storeBeta,2), K,T);
+Af = mean(storeOm,3)*Fhat;
+yhat = xbeta + Af;
 
 
 % load('/home/precision/CodeProjects/MATLAB/MyToolbox/MV_Probit/MVPData/sp2.mat')

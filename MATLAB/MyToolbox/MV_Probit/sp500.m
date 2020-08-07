@@ -6,9 +6,9 @@ spx = import_spx();
 Xt = table2array( spx(:,2:end) );
 yt = table2array( probity(:,2:end) )';
 
-yt = yt(:, 1035:1205);
-Xt = Xt(1035:1205,1:3);
-[K,T] = size(yt) ;
+yt = yt(:, 1035:1214);
+Xt = Xt(1035:1214,1:3);
+[K,T] = size(yt) 
 Xt = [ones(T,1), Xt];
 Xt = kron(Xt,ones(K,1));
 

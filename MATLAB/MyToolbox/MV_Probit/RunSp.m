@@ -11,11 +11,6 @@ Xt = DataCell{2};
 InfoCell = DataCell{3}; 
 nFactors = length(InfoCell); 
 
-[K,T] = size(yt);
-t= 159;
-Kt = K*t;
-yttrain = yt(:,1:t);
-Xttrain = Xt(1:Kt,:);
 
 
 
@@ -40,13 +35,17 @@ estml = 1;
     initFt, InfoCell);
 
 storeBeta = Output{1};
-storeFt= Output{2};
-storeSt= Output{3};
+storeFt = Output{2} ;
+storeSt = Output{3};
 storeOm = Output{4};
-% summary2 = Output{6};
+ml = Output{5};
+overview = Output{6} ;
 
 mubeta = mean(storeBeta,2);
 Fhat = mean(storeFt,3);
+xbeta = reshape(surForm(Xt,K)*mean(storeBeta,2), K,T);
+Af = mean(storeOm,3)*Fhat;
+yhat = xbeta + Af;);
 name = createDateString('sp')
 save(name)
 end
