@@ -20,10 +20,8 @@ for t = 1:T
             meanUpdate = tsi(k)*(mu(k) + (offDiag(k,:)*te))/djj(k);
             te(k) = tsi(k)*NormalTruncatedPositive(meanUpdate, djj(k)^2, 1);
             cij(k,t,s) = normcdf(meanUpdate);
-
         end
-        estProb(t,s) = prod(cij(:,t,s));    
-
+        estProb(t,s) = prod(cij(:,t,s));  
     end
 end
 prob = -log(Sims) + log(sum(estProb,2));

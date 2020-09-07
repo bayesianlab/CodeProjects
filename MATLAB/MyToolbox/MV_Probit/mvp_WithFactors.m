@@ -11,7 +11,7 @@ IK = eye(K);
 ZeroK = zeros(1,K);
 
 FtIndexMat = CreateFactorIndexMat(InfoCell);
-levels = size(InfoCell,2)
+levels = size(InfoCell,2);
 nFactors = sum(cellfun(@(x)size(x,1), InfoCell));
 [Identities, ~, ~] = MakeObsModelIdentity( InfoCell);
 lags = size(g0,2);

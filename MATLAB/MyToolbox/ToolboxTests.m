@@ -139,13 +139,22 @@ if vechtests == 1
 end
 
 if ghktests == 1
-    K = 3;
+%     K = 3;
+%     T = 1;
+%     sims = 10000;
+%     y = ones(K,1);
+%     mua = [0,.5,1]';
+%     S = createSigma(-.7,K);
+%     ghk_integrate(y, mua, S, sims)
+    
+   
     T = 1;
-    sims = 10000;
-    y = ones(K,1);
-    mua = [0,.5,1]';
-    S = createSigma(-.7,K);
+    sims = 2;
+    y = [1;1;1;0;1];
+    mua = [30.807; 31.726; 31.997; 32.414; 6.2582];
+    S = 1000.*eye(5);
     ghk_integrate(y, mua, S, sims)
+    
     
 %     T = 100;
 %     y = (normrnd(0,1, K, T) > 0);

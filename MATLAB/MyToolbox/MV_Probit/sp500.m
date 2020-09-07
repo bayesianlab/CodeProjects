@@ -8,7 +8,7 @@ yt = table2array( probity(:,2:end) )';
 
 yt = yt(:, 1035:1214);
 Xt = Xt(1035:1214,1:3);
-[K,T] = size(yt) 
+[K,T] = size(yt) ;
 Xt = [ones(T,1), Xt];
 Xt = kron(Xt,ones(K,1));
 

@@ -48,8 +48,7 @@ for q = 1:levels
             [themean, Covar] = bfgs(x0, A0invp, LL, MaxIterations);
             H = Covar;
         end
-        
-        
+
         [Hlower, p] = chol(H,'lower');
         if p ~= 0
             Hlower = eye(length(s2));

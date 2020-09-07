@@ -28,6 +28,7 @@ ap = zeros(K-1,1);
 for s = 1:Sims
     fprintf('Simulation %i\n', s)
     % Sample latent data
+    
     zt = mvp_latentDataDraw(zt,yt,mut,Sigma0);
     % Sample beta
     beta = mvp_betadraw(zt,surX, Sigma0, subsetIndices, kronB0inv, kronB0invb0);
@@ -35,9 +36,9 @@ for s = 1:Sims
     demuyt = zt-mut;
 
     % Sample Correlation Mat
-    [Sigma0, accept] = mvp_rwSigmaDraw(Sigma0,demuyt,  s0, S0, unvech,...
-        vechIndex, begIndexOptimize, tau);
-    ap = ap + accept;
+%     [Sigma0, accept] = mvp_rwSigmaDraw(Sigma0,demuyt,  s0, S0, unvech,...
+%         vechIndex, begIndexOptimize, tau);
+%     ap = ap + accept;
     % Store Posteriors
     if s > bn
         m = s-bn;
@@ -56,6 +57,7 @@ betaStar = mean(storeBeta,2);
 mutStar = reshape(surX*betaStar,K,T);
 storePibetastar = zeros(1,Runs);
 storeSigma0j = zeros(B,Runs);
+if estml == 1
 for r = 1 : Runs
     fprintf('Reduced run beta %i \n', r)
     Sigma0g = storeSigma(:,r);
@@ -169,5 +171,7 @@ posterior = [piSigma, piBetaOrdinate]
 LL = LogLikelihood
 ml=LL + sum(priors) - sum(posterior)
 summary = table({'LogLikelihood', 'betaprior', 'sigPriors', 'piSigma', 'piBetaOrdinate'}',[LogLikelihood, priors, -posterior]')
-
+else
+    ml=0;
+    summary=0;
 end
