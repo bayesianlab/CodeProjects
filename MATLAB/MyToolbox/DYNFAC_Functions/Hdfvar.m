@@ -424,7 +424,3 @@ else
 end
 fprintf('New Method Estimation\n')
 end
-
-
-
-
