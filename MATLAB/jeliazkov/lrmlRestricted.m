@@ -1,5 +1,4 @@
 function [ importance  ] = lrmlRestricted( a,b, y, X, a0, d0, mle, hess, draws, burnin )
-format long
 [J, ~] = size(hess);
 variances = diag(hess);
 theta = ghkGibbsSampler(0, Inf, mle, hess, draws);
@@ -13,7 +12,6 @@ for j = 1:J
 end
 
 hTheta = prod(univariateDensities,2);
-lht = log(hTheta)
 likelihoods = lrLikelihood(y,X, theta(:, 2:J)', theta(:,1)')...
     + logmvnpdf(theta(:,2:J), zeros(1,J-1), eye(J-1))...
     + loginvgampdf(theta(:,1), a0, d0)'...

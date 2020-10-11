@@ -11,7 +11,7 @@ y = X*[.25;.45]  + normrnd(0,1, N,1);
 XpX = (X'*X);
 XpXinv = (XpX)^(-1);
 Xpy = X'*y;
-bMLE = XpX\Xpy;
+bMLE = XpX\Xpy
 e = y - X*bMLE;
 sSqd = (e'*e)/N;
 thetaMLE = [sSqd; bMLE];
@@ -19,58 +19,51 @@ thetaMLE = [sSqd; bMLE];
 invFisher = [(2*sSqd^2)/N, [0,0];[0;0], sSqd*XpXinv];
 variances = diag(invFisher);
 Draws = 101;
-Sims = 10;
-bn = 1;
+Sims = 1000;
+bn = 100;
 
 Constraints = [1,1];
-% [betaDraws, sigmaDraws,~, ml] = LRGibbs(y, X, zeros(K,1),...
-%     100*eye(K), 6, 12, Sims, bn, 0, 0);
-
-mltype = 1
-samplerType = 2
+[betaDraws, sigmaDraws,~, ml] = LRGibbs(y, X, zeros(K,1),...
+    100*eye(K), 6, 12, Sims, bn, 0, 0);
+mean(betaDraws,2)
+mean(sigmaDraws)
 [betaDrawsR, sigmaDrawsR,mlR] = RestrictedLR_Gibbs(Constraints, y, X,...
-    zeros(K,1), 100*eye(K), 6, 12, Sims, bn, samplerType, mltype);
-mlR
+    zeros(K,1), 100*eye(K), 6, 12, Sims, bn);
 clear
 
-% rental_import
-% rmpp = rentaldata{:,3}./rentaldata{:,2};
-% x1 = rmpp.*rentaldata{:,4};
-% x2 = rmpp.*(1-rentaldata{:,4});
-% x3 = rentaldata{:,5}.*rentaldata{:,4};
-% x4 = rentaldata{:,5}.*(1-rentaldata{:,4});
-% T= length(x1);
-% X = [ones(T,1),x1,x2,x3,x4];
-% y = rentaldata{:,6};
-% 
-% 
-% 
-% ols = (X'*X)\(X'*y)
-% e = y - X*ols;
-% sig_ols = sqrt((e'*e)/(length(y)-4))
-% [T,K] = size(X);
-% Sims = 10000;
-% bn = 2000;
-% iga = 6;
-% igb = 12;
-% b0 = ones(K,1);
-% B0 = 1000.*eye(K);
-% [betaDraws, sigmaDraws,~, ml] = LRGibbs(y, X, b0,...
-%     B0, iga, igb, Sims, bn, 0, 0);
-% Constraints = [0,1,1,-1,-1];
-% [betaDrawsR, sigmaDrawsR,mlR] = RestrictedLR_Gibbs(Constraints, y, X,...
-%     b0, B0, iga, igb, Sims, bn);
-% mean(betaDraws,2)
-% qbeta = [quantile(betaDraws, .05,2), quantile(betaDraws, .5,2),...
-%     quantile(betaDraws, .95,2)]
-% sqrt(mean(sigmaDraws))
-% mean(betaDrawsR,2)
-% qbetaR= [quantile(betaDrawsR, .05,2), quantile(betaDrawsR, .5,2),...
-%     quantile(betaDrawsR, .95,2)]
-% [qbeta, qbetaR]
-% 
-% ml 
-% mlR
+rental_import
+rmpp = rentaldata{:,3}./rentaldata{:,2};
+x1 = rmpp.*rentaldata{:,4};
+x2 = rmpp.*(1-rentaldata{:,4});
+x3 = rentaldata{:,5}.*rentaldata{:,4};
+x4 = rentaldata{:,5}.*(1-rentaldata{:,4});
+T= length(x1);
+X = [ones(T,1),x1,x2,x3,x4];
+y = rentaldata{:,6};
+
+
+
+ols = (X'*X)\(X'*y)
+e = y - X*ols;
+sig_ols = sqrt((e'*e)/(length(y)-4))
+[T,K] = size(X);
+Sims = 10;
+bn = 2;
+iga = 6;
+igb = 12;
+b0 = ones(K,1);
+B0 = 1000.*eye(K);
+[betaDraws, sigmaDraws,~, ml] = LRGibbs(y, X, b0,...
+    B0, iga, igb, Sims, bn, 0, 0);
+Constraints = [0,1,1,-1,-1];
+[betaDrawsR, sigmaDrawsR,mlR] = RestrictedLR_Gibbs(Constraints, y, X,...
+    b0, B0, iga, igb, Sims, bn);
+mean(betaDraws,2)
+sqrt(mean(sigmaDraws))
+mean(betaDrawsR,2)
+
+ml 
+mlR
 % A = tnormpdf(0,Inf, sSqd, sqrt(variances(1)), sigmaDraws');
 % B = tnormpdf(0,Inf, thetaMLE(2,1), sqrt(variances(2)), betaDraws(1,:)');
 % C = tnormpdf(0,Inf, thetaMLE(3,1), sqrt(variances(3)), betaDraws(2,:)');

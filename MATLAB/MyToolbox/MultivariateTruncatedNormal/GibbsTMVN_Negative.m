@@ -1,5 +1,5 @@
 function [gibbsout] = GibbsTMVN_Negative(mu, Sigma,N, bn)
-% Assumes upperconstraint of 0
+% Assumes upper constraint of 0
 J = size(Sigma,1);
 Precision=Sigma\eye(J);
 Pjj=diag(Precision).^(-1);
