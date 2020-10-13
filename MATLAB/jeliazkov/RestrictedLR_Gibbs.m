@@ -21,9 +21,9 @@ for sim = 1:Sims
     B1 = ( (XpX/sigma2) + B0inv )\IK;
     b1 = B1 * (  (Xpy/sigma2) + B0inv*b0);
     if samplerType == 1
-    b1update=GibbsTMVN(Constraints, b1, B1, 1,0);
+        b1update=GibbsTMVN(Constraints, b1, B1, 1,0);
     elseif samplerType == 2
-        b1update=arkSampler(Constraints, b1, B1)
+        b1update=arkSampler(Constraints, b1, B1);
     end
     % Update sigma2
     e = y - X*b1update;
@@ -125,7 +125,20 @@ elseif mltype == 2
     piBetaStar = logAvg(sum(Kernel,1));
     
     ml = like + priors - (piSigStar + piBetaStar);
+elseif mltype==3
+    XpX = (X'*X);
+    XpXinv = (XpX)\eye(K);
+    Xpy = X'*y;
+    bMLE = XpX\Xpy;
+    e = y - X*bMLE;
+    sSqd = (e'*e)/T;
+    thetaMLE = [sSqd; bMLE];
+    invFisher = [(2*sSqd^2)/T, [0,0];[0;0], sSqd*XpXinv];
+    Constraints = [1, Constraints];
+    ghk_simulate(Constraints, thetaMLE, invFisher, ReducedRuns)
+    
 end
+ml=0
 end
 
 

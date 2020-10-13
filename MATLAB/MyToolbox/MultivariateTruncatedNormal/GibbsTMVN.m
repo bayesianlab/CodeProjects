@@ -12,25 +12,40 @@ for j = 1:J
 end
 gibbsout=zeros(J,N);
 x = mu;
-for n = 1:N
-    for j = 1:J
-        if Constraints(j) == 1
+if J > 1
+    for n = 1:N
+        for j = 1:J
             condmean = mu(j) - Pjj(j)*Pjnotj(j,:)*( x(selectMat(j,:)) - mu(selectMat(j,:)));
-            x(j) = NormalTruncatedPositive(condmean,Pjj(j), 1);
-        elseif Constraints(j) == -1
-            condmean = mu(j) - Pjj(j)*Pjnotj(j,:)*( x(selectMat(j,:)) - mu(selectMat(j,:)));
-            x(j) = -NormalTruncatedPositive(-condmean,Pjj(j), 1);
-        elseif Constraints(j) == 0 
-          condmean = mu(j) - Pjj(j)*Pjnotj(j,:)*( x(selectMat(j,:)) - mu(selectMat(j,:)));
-          x(j) = condmean + sqrt(Pjj(j))*normrnd(0,1);
-        else
-            error('Constraint must be 0, 1 or -1');
+            if Constraints(j) == 1
+                x(j) = NormalTruncatedPositive(condmean,Pjj(j), 1);
+            elseif Constraints(j) == -1
+                x(j) = -NormalTruncatedPositive(-condmean,Pjj(j), 1);
+            elseif Constraints(j) == 0
+                x(j) = condmean + sqrt(Pjj(j))*normrnd(0,1);
+            else
+                error('Constraint must be 0, 1 or -1');
+            end
         end
+        gibbsout(:,n) = x;
     end
-    gibbsout(:,n) = x;
-end
-if bn ~=0
-    gibbsout=gibbsout(:,bn:end);
-end
+elseif J == 1
+    for n = 1:N
+        for j = 1:J
+            condmean = mu(j);
+            if Constraints(j) == 1
+                x(j) = NormalTruncatedPositive(condmean, Pjj(j),  1);
+            elseif Constraints(j) == -1
+                x(j) = -NormalTruncatedPositive(-condmean,Pjj(j),  1);
+            elseif Constraints(j) == 0
+                x(j) = condmean + sqrt(Pjj(j))*normrnd(0,1);
+            else
+                error('Constraint must be 0, 1 or -1');
+            end
+        end
+        gibbsout(:,n) = x;
+    end
+    if bn ~=0
+        gibbsout=gibbsout(:,bn:end);
+    end
 end
 

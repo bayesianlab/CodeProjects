@@ -15,6 +15,7 @@ for sim = 2:(sims)
         eta(sim,j) = norminv(unifrnd(0,1,1)*(Fb-Fa) + Fa);
     end
 end
+
 z = (L*eta' + mu')';
 end
 

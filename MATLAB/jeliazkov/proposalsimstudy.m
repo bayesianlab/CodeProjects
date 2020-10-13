@@ -1,5 +1,5 @@
 clear, clc;
-rng(10)
+% rng(10)
 
 
 N = 100;
@@ -15,7 +15,6 @@ bMLE = XpX\Xpy;
 e = y - X*bMLE;
 sSqd = (e'*e)/N;
 thetaMLE = [sSqd; bMLE];
-
 invFisher = [(2*sSqd^2)/N, [0,0];[0;0], sSqd*XpXinv];
 variances = diag(invFisher);
 Draws = 101;
@@ -26,8 +25,8 @@ Constraints = [1,1];
 % [betaDraws, sigmaDraws,~, ml] = LRGibbs(y, X, zeros(K,1),...
 %     100*eye(K), 6, 12, Sims, bn, 0, 0);
 
-mltype = 1
-samplerType = 2
+mltype = 3;
+samplerType = 2;
 [betaDrawsR, sigmaDrawsR,mlR] = RestrictedLR_Gibbs(Constraints, y, X,...
     zeros(K,1), 100*eye(K), 6, 12, Sims, bn, samplerType, mltype);
 mlR
