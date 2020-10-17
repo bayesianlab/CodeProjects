@@ -22,7 +22,7 @@ for n = 1:N
     for j = 1:J
 
         demean = x(selectMat(j,:)) - mu(selectMat(j,:));
-        condmean = mu(j) - Pjj(j)*Pjnotj(j,:)*demean
+        condmean = mu(j) - Pjj(j)*Pjnotj(j,:)*demean;
         if Constraints(j) == 1
             x(j) = NormalTruncatedTPositive(condmean, Pjj(j), W, 1);
         elseif Constraints(j) == -1

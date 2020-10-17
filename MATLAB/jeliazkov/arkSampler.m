@@ -32,6 +32,8 @@ for j = 1:J
                 error('Tries reached maximum, try increasing max')
             end
         end
+    elseif Constraints(j) == 0
+        z = normrnd(condmean, s);
     end
     x(j) = z;
 end

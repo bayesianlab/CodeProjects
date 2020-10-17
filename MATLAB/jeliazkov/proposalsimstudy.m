@@ -1,5 +1,5 @@
 clear, clc;
-% rng(10)
+% rng(0)
 
 
 N = 100;
@@ -17,8 +17,8 @@ sSqd = (e'*e)/N;
 thetaMLE = [sSqd; bMLE];
 invFisher = [(2*sSqd^2)/N, [0,0];[0;0], sSqd*XpXinv];
 variances = diag(invFisher);
-Draws = 101;
-Sims = 10;
+Draws = 1000;
+Sims = 100;
 bn = 1;
 
 Constraints = [1,1];
