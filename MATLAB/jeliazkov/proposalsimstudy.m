@@ -25,8 +25,8 @@ Constraints = [1,1];
 % [betaDraws, sigmaDraws,~, ml] = LRGibbs(y, X, zeros(K,1),...
 %     100*eye(K), 6, 12, Sims, bn, 0, 0);
 
-mltype = 3;
-samplerType = 2;
+mltype = 2;
+samplerType = 3;
 [betaDrawsR, sigmaDrawsR,mlR] = RestrictedLR_Gibbs(Constraints, y, X,...
     zeros(K,1), 100*eye(K), 6, 12, Sims, bn, samplerType, mltype);
 mlR

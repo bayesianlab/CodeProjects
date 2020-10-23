@@ -13,37 +13,91 @@ XpX = X'*X;
 Xpy = X'*y;
 sigma2 = 1;
 df = 5;
-Runs = Sims - burnin;
-storeBeta = zeros(K, Runs);
-storeSigma2 = zeros(1,Runs);
+storeBeta = zeros(K, Sims);
+storeSigma2 = zeros(1,Sims);
+askUpdates = floor(Sims/4);
+c=-1;
+rz = zeros(K,1);
+reta = zeros(K,1);
+w = ones(K,1).*.5;
+peta = .5;
+eta = 0;
+if unifrnd(0,1) <= peta
+    eta = 1;
+end
+
 for sim = 1:Sims
     % Update beta parameters (mean, variance)
     B1 = ( (XpX/sigma2) + B0inv )\IK;
     b1 = B1 * (  (Xpy/sigma2) + B0inv*b0);
     if samplerType == 1
+        % Normal Sampling 
         b1update=GibbsTMVN(Constraints, b1, B1, 1,0);
+        storeBeta(:, sim) = b1update;
+        
     elseif samplerType == 2
+        % Normal Sampling Ark 
         b1update=arkSampler(Constraints, b1, B1);
+        storeBeta(:, sim) = b1update;
+        
     elseif samplerType == 3
+        if eta == 1
+            % Normal Sampling Ask 
+            b1update= askEta(b1, B1, Constraints);
+            b1update = b1+chol(B1,'lower')*b1update';
+        else
+            b1update = GibbsTMVN(Constraints, b1, B1, 1, 0);
+        end
+        storeBeta(:,sim) = b1update;
+        if mod(sim, askUpdates) == 0
+            c = c+1;
+            indices = askUpdates*c + (1:askUpdates);
+            lagindices= indices(1):indices(end-1);
+            indices = indices(2):indices(end);
+            A= corr([storeBeta(:,indices)',storeBeta(:,lagindices)']);
+            if eta == 1
+                reta = diag(A,-K);
+                if sum(reta < rz) == K
+                    peta = 1;
+                elseif sum(reta > rz) == K
+                    peta =0;
+                else
+                    peta = (w'*rz)/(w'*reta + w'*rz);
+                end
+            else
+                rz = diag(A,-K);
+                if sum(reta < rz) == K
+                    peta = 1;
+                elseif sum(reta > rz) == K
+                    peta =0;
+                else
+                    peta = (w'*rz)/(w'*reta + w'*rz);
+                end
+            end
+            if unifrnd(0,1) <= peta
+                fprintf('Sample from eta\n')
+                eta = 1;
+            else
+                fprintf('Sample from z\n')
+                eta = 0;
+            end
+        end
+    elseif samplerType == 4
+        % T sampling 
         b1update = GibbsTMVT(Constraints, b1, B1, df, 1,0);
+        storeBeta(:, sim) = b1update;
+    elseif samplerType == 5
+        % T sampling Ark 
+        b1update=arkSampler(Constraints, b1, B1);
+        storeBeta(:, sim) = b1update;
     end
     % Update sigma2
     e = y - X*b1update;
     ig_paramb = (ig_paramb0 + (e'*e));
     sigma2 = 1/gamrnd(.5*ig_parama, 1/(.5*ig_paramb));
-    
-    % Store all updates after burnin
-    if sim > burnin
-        postIndex = sim - burnin;
-        storeBeta(:, postIndex) = b1update;
-        storeSigma2(:, postIndex) = sigma2;
-    end
+    storeSigma2(:, sim) = sigma2;
 end
-
-
 ReducedRuns = Sims-burnin;
-
-
 %% ML Chibs method
 if mltype == 1 && (samplerType < 3)
     fprintf('Chibs Method, Truncated Normal Kernel\n')
@@ -90,8 +144,6 @@ if mltype == 1 && (samplerType < 3)
     piSigStar = logigampdf(sigmaStar, .5*ig_parama, (.5*ig_paramb));
     like = logmvnpdf(e'./sigmaStar, zeros(1,T), eye(T));
     priors = tmvnpdf(betaStar, b0', B0, Constraints) + logigampdf(sigmaStar, .5*ig_parama0, (.5*ig_paramb0));
-    
-    
     ml = like + priors - (piSigStar + piBetaStar);
 elseif mltype == 1 && samplerType == 3
     fprintf('Chibs Method, Truncated Student T Kernel\n')
@@ -227,7 +279,7 @@ elseif mltype == 2 && (samplerType == 3)
         error('Constraints must be 0, 1, or -1.')
     end
     ig_paramb = (ig_paramb0 + (e'*e));
-    piSigStar = logigampdf(sigmaStar, .5*ig_parama, (.5*ig_paramb));    
+    piSigStar = logigampdf(sigmaStar, .5*ig_parama, (.5*ig_paramb));
     like = logmvnpdf(e'./sigmaStar, zeros(1,T), eye(T));
     priors = tmvnpdf(betaStar, b0', B0, Constraints) + logigampdf(sigmaStar, .5*ig_parama0, (.5*ig_paramb0));
     piBetaStar = logAvg(sum(Kernel,1));

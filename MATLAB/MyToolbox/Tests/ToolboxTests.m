@@ -1,6 +1,6 @@
 clear;clc;
 vechtests = 0
-ghktests = 1
+ghktests = 0
 if vechtests == 1
     S = createSigma(.5,2);
     H = vechMatrixMaker(S,-1);
@@ -162,5 +162,27 @@ if ghktests == 1
 %     S = createSigma(-.7,K);
 %     sum(ghk_integrate(y, Xbeta, S, 1000))
 end
+
+mu = [1,1];
+Sigma = createSigma(.5, 2);
+Constraints = [1,1];
+N = 5000;
+
+X = zeros(N, length(mu));
+for i = 1:N
+    X(i,:) = askEta(mu, Sigma, Constraints) ;
+end
+figure
+histogram(X(:,1)',50)
+Y = mu' + chol(Sigma,'lower')*X';
+figure
+histogram(Y(1,:), 50)
+figure
+histogram(Y(2,:), 50)
+Y = GibbsTMVN(Constraints, mu, Sigma, N, 100);
+figure 
+histogram(Y(1,:), 50)
+figure
+histogram(Y(2,:), 50)
 
 
