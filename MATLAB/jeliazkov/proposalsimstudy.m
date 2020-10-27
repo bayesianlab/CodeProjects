@@ -3,30 +3,30 @@ clear, clc;
 
 
 N = 100;
-K = 2;
+K = 3;
 X = normrnd(1,1, N,K);
-y = X*[.25;.45]  + normrnd(0,1, N,1);
+y = X*[.25;.45;.1]  + normrnd(0,1, N,1);
 
-[N, p] = size(X);
-XpX = (X'*X);
-XpXinv = (XpX)^(-1);
-Xpy = X'*y;
-bMLE = XpX\Xpy;
-e = y - X*bMLE;
-sSqd = (e'*e)/N;
-thetaMLE = [sSqd; bMLE];
-invFisher = [(2*sSqd^2)/N, [0,0];[0;0], sSqd*XpXinv];
-variances = diag(invFisher);
+% [N, p] = size(X);
+% XpX = (X'*X);
+% XpXinv = (XpX)^(-1);
+% Xpy = X'*y;
+% bMLE = XpX\Xpy;
+% e = y - X*bMLE;
+% sSqd = (e'*e)/N;
+% thetaMLE = [sSqd; bMLE];
+% invFisher = [(2*sSqd^2)/N, [0,0];[0;0], sSqd*XpXinv];
+% variances = diag(invFisher);
 Draws = 1000;
 Sims = 100;
 bn = 1;
 
-Constraints = [1,1];
+Constraints = [1,1,1];
 % [betaDraws, sigmaDraws,~, ml] = LRGibbs(y, X, zeros(K,1),...
 %     100*eye(K), 6, 12, Sims, bn, 0, 0);
 
-mltype = 2;
-samplerType = 3;
+mltype = 3;
+samplerType = 6;
 [betaDrawsR, sigmaDrawsR,mlR] = RestrictedLR_Gibbs(Constraints, y, X,...
     zeros(K,1), 100*eye(K), 6, 12, Sims, bn, samplerType, mltype);
 mlR

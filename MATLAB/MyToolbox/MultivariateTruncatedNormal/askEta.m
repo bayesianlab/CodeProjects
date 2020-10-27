@@ -1,4 +1,4 @@
-function [x] = askEta(mu, Sigma, Constraints)
+function [x,w] = askEta(mu, Sigma, Constraints)
 %% Constraints vector is 1 if sampling from positive region
 %  -1 if sampling from negative region
 J = size(Sigma,1);

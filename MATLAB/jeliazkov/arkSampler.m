@@ -20,7 +20,8 @@ for j = 1:J
             stop = stop + 1;
             z = normrnd(condmean,s);
             if stop == 1000
-                error('Tries reached maximum, try increasing max')
+                z=NormalTruncatedPositive(condmean,s, 1);
+                break
             end
         end        
     elseif Constraints(j) == -1
@@ -29,7 +30,8 @@ for j = 1:J
             stop = stop + 1;
             z = normrnd(condmean,s);
             if stop == 1000
-                error('Tries reached maximum, try increasing max')
+                z=-NormalTruncatedPositive(-condmean,Pjj(j), 1);
+                break
             end
         end
     elseif Constraints(j) == 0

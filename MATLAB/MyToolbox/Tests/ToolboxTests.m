@@ -165,24 +165,37 @@ end
 
 mu = [1,1];
 Sigma = createSigma(.5, 2);
-Constraints = [1,1];
+Constraints = [-1,-1];
 N = 5000;
 
 X = zeros(N, length(mu));
+Z = zeros(N, length(mu));
+w = zeros(N,1);
 for i = 1:N
     X(i,:) = askEta(mu, Sigma, Constraints) ;
+    [Z(i,:),w(i)] = askEtaT(mu, Sigma, 5, Constraints);
 end
-figure
-histogram(X(:,1)',50)
-Y = mu' + chol(Sigma,'lower')*X';
-figure
-histogram(Y(1,:), 50)
-figure
-histogram(Y(2,:), 50)
-Y = GibbsTMVN(Constraints, mu, Sigma, N, 100);
-figure 
-histogram(Y(1,:), 50)
-figure
-histogram(Y(2,:), 50)
+U = GibbsTMVT(Constraints,mu,Sigma,5, N,floor(.1*N));
+% figure
+% histogram(U(1,:))
+% figure
+% histogram(U(2,:))
+% W = mu' + chol(Sigma,'lower')* (w.*Z)';
+% figure
+% histogram(W(1,:))
+% figure
+% histogram(W(2,:))
+% figure
+% histogram(X(:,1)',50)
+% Y = mu' + chol(Sigma,'lower')*X';
+% figure
+% histogram(Y(1,:), 50)
+% figure
+% histogram(Y(2,:), 50)
+% Y = GibbsTMVN(Constraints, mu, Sigma, N, 100);
+% figure 
+% histogram(Y(1,:), 50)
+% figure
+% histogram(Y(2,:), 50)
 
 

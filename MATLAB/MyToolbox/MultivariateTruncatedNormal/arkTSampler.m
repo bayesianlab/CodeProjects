@@ -8,9 +8,9 @@ Pjnotj = zeros(J,J-1);
 for j = 1:J
     Pjnotj(j,:) = Precision(j, selectMat(j,:));
 end
-
+MaxTries = 1000;
 x = zeros(J,1);
-w = sqrt(df/chi2rnd);
+w = sqrt(df/chi2rnd(df));
 for j = 1:J
     stop = 1; 
     condmean = mu(j) - Pjj(j)*Pjnotj(j,:)*( x(selectMat(j,:)) - mu(selectMat(j,:)));  
@@ -20,8 +20,9 @@ for j = 1:J
         while z < 0 
             stop = stop + 1;
             z = w*normrnd(condmean,s);
-            if stop == 1000
-                error('Tries reached maximum, try increasing max')
+            if stop == MaxTries
+                z=NormalTruncatedTPositive(condmean, Pjj(j), df, 1);
+                break
             end
         end        
     elseif Constraints(j) == -1
@@ -29,8 +30,9 @@ for j = 1:J
         while z > 0 
             stop = stop + 1;
             z = w*normrnd(condmean,s);
-            if stop == 1000
-                error('Tries reached maximum, try increasing max')
+            if stop == MaxTries
+                z=-NormalTruncatedTPositive(-condmean,Pjj(j), df, 1);
+                break
             end
         end
     elseif Constraints(j) == 0

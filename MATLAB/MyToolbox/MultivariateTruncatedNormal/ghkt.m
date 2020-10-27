@@ -9,7 +9,7 @@ for s = 1:N
     te = zeros(K,1);
     for k = 1:K
         if Constraints(k) == 0
-            meanUpdate = (centrality(k) + (offDiag(k,:)*te))/(w(s)*djj(k));
+            meanUpdate = (centrality(k) + (w(s).*offDiag(k,:)*te))/(w(s)*djj(k));
             xij(k,s) = normrnd(meanUpdate, djj(k));
         else
             meanUpdate = -Constraints(k)*(centrality(k) + (offDiag(k,:)*te))/(w(s)*djj(k));

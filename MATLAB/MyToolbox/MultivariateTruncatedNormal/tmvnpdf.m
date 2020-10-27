@@ -1,4 +1,10 @@
 function [pval] = tmvnpdf(x, mu, Sigma, Constraints)
+if ~isrow(x)
+    error('x must be row')
+end
+if ~isrow(mu)
+    error('mu must be row')
+end
 J = size(Sigma,1);
 Precision=Sigma\eye(J);
 Pjj=diag(Precision).^(-1);
@@ -11,7 +17,8 @@ end
 pval = zeros(J,1);
 % Conditional 
 for j = 1:J-1
-    condmean = mu(j) - Pjj(j)*Pjnotj(j,:)*( x(selectMat(j,:)) - mu(selectMat(j,:)));
+
+    condmean = mu(j) - Pjj(j)*(Pjnotj(j,:)*( x(selectMat(j,:)) - mu(selectMat(j,:)))');
     s = sqrt(Pjj(j));
     z = (x(j) - condmean)/s ;
     alpha = 1-normcdf((-Constraints(j)*condmean)/s);
