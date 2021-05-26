@@ -8,6 +8,7 @@ Pjnotj = zeros(J,J-1);
 for j = 1:J
     Pjnotj(j,:) = Precision(j, selectMat(j,:));
 end
+
 for j = start:J
     if Constraints(j) == 1
         condmean = mu(j) -Pjj(j)*Pjnotj(j,:)*( x(selectMat(j,:)) - mu(selectMat(j,:)));

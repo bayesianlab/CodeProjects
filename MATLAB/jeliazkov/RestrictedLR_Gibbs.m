@@ -31,7 +31,7 @@ if samplerType == 1
 elseif samplerType == 2
     fprintf('ARK MV Normal Sampling\n')
 elseif samplerType == 3
-    fprintf('MVT Sampling\n')
+    fprintf('ASK MV Normal Sampling\n')
 elseif samplerType == 4
     fprintf('Gibbs MVT Sampling\n')
 elseif samplerType == 5
@@ -110,7 +110,6 @@ for sim = 1:Sims
     elseif samplerType == 6
         if eta == 1
             % T Sampling Ask
-            
             [b1update,w]= askEtaT(b1, B1, df, Constraints);
             b1update = b1+ (w.*chol(B1,'lower')*b1update');
         else
@@ -172,7 +171,6 @@ if mltype == 1 && samplerType < 4
         betag(1:k,:) = ones(length(1:k), ReducedRuns).*betaStar(1:k);
         betag(k+1:K,:) = betaj(k+1:K,:);
         sigma2g = sigma2j;
-        
         for r = 1 : ReducedRuns
             sigma2 = sigma2g(r);
             xtemp = betag(:,r);
@@ -181,7 +179,8 @@ if mltype == 1 && samplerType < 4
             b1 = B1 * ( (Xpy/sigma2) + B0inv*b0 );
             if k < K
                 piBetaStar(k,r) = conditionaltmvnpdf0(xtemp, b1, B1, Constraints, k);
-                betaj = shortGibbsMVN(xtemp, b1, B1, Constraints, k+1);
+                z = shortGibbsMVN(xtemp, b1, B1, Constraints, k+1);
+                betaj(1:k,r) = z(1:k);
                 % Update sigma2
                 e = y - X*xtemp;
                 ig_paramb = (ig_paramb0 + (e'*e));
@@ -196,9 +195,7 @@ if mltype == 1 && samplerType < 4
             end
         end
     end
-    
-    piBetaStar = logAvg(sum(piBetaStar));
-    
+    piBetaStar = logAvg(sum(piBetaStar,1));
     e = y-X*betaStar;
     ig_paramb = (ig_paramb0 + (e'*e));
     sigmaStar = mean(sigma2j);
@@ -234,8 +231,8 @@ elseif (mltype == 1) && (samplerType >= 4)
                 else
                     error('Constraints must be 0, 1, or -1.')
                 end
-                
-                betaj = shortGibbsTMVT(xtemp, b1, B1, df, Constraints, k+1);
+                z= shortGibbsTMVT(xtemp, b1, B1, df, Constraints, k+1);
+                betaj(1:k,r) = z(1:k);
                 % Update sigma2
                 e = y - X*xtemp;
                 ig_paramb = (ig_paramb0 + (e'*e));

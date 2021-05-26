@@ -32,15 +32,15 @@ samplerType = 6;
 mlR
 clear
 
-% rental_import
-% rmpp = rentaldata{:,3}./rentaldata{:,2};
-% x1 = rmpp.*rentaldata{:,4};
-% x2 = rmpp.*(1-rentaldata{:,4});
-% x3 = rentaldata{:,5}.*rentaldata{:,4};
-% x4 = rentaldata{:,5}.*(1-rentaldata{:,4});
-% T= length(x1);
-% X = [ones(T,1),x1,x2,x3,x4];
-% y = rentaldata{:,6};
+rental_import
+rmpp = rentaldata{:,3}./rentaldata{:,2};
+x1 = rmpp.*rentaldata{:,4};
+x2 = rmpp.*(1-rentaldata{:,4});
+x3 = rentaldata{:,5}.*rentaldata{:,4};
+x4 = rentaldata{:,5}.*(1-rentaldata{:,4});
+T= length(x1);
+X = [ones(T,1),x1,x2,x3,x4];
+y = rentaldata{:,6};
 % 
 % 
 % 

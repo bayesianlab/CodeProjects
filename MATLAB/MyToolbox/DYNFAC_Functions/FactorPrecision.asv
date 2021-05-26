@@ -7,11 +7,12 @@ function [P,H] = FactorPrecision(params, P0, precision, T)
 [K,columns] = size(params);
 lags =columns;
 dees = -((0:lags)*K);
-newp = [ones(K,1),-params];
+newp = [-params, ones(K,1)];
 H = spdiags(repmat(newp,T,1), dees, T*K, T*K);
+
+
 Sinv = spdiags(repmat(precision, T,1), 0, K*T, K*T);
 Sinv(1:K*lags, 1:K*lags) = P0\eye(K*lags);
-
 P = H'*Sinv*H;
 end
 

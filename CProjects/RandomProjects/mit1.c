@@ -8,6 +8,7 @@ int main() {
   *xp = *yp; 
   printf( "%p", ( void * ) &xp ); 
   printf( "%p", ( void * ) &yp );
-  return 2;
+  \n
+  return 0;
 }
 
