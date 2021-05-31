@@ -1,8 +1,10 @@
 import numpy as np
 import math
 import pandas as pd
+import GenerateSimulationData as gsd
 from scipy import sparse
 from matplotlib import pyplot as plt
+
 
 def MakeStateSpaceForm(params):
     lags = params.shape[1]
@@ -75,55 +77,48 @@ def SUR_Form(stackedX, K):
     return surX
 
 
-def GenerateSimulationData(InfoDict):
-    I = MakeObsModelIdentity(InfoDict)
-    pass
-
-
-def mldfvar_betaDraw():
-    pass
-
-
-
-
-T = 100
-K = 9
-predictors = 2
-constant = np.ones(T * K)
-InfoDict = {"L1": [(0, 8)], "L2": [(0, 5), (6, 8)]}
-p = np.array([[.2, .1, .02], [.5, .25, .05]])
-v = np.array([1., 1.])
-x = np.random.normal(0, 1, (K * T, predictors))
-Xstacked = np.hstack((np.reshape(constant, (K * T, 1), 'F'), x))
-betas = np.array([1, .5, .5])
-betas = np.tile(betas, (K,))
-surX = SUR_Form(Xstacked, K)
-
-
-I = MakeObsModelIdentity(InfoDict)
-nFactors = I.shape[1]
-gammas = [.2, .2]
-gammas = np.tile(gammas, (nFactors,1))
-v = np.array([1.0,1.0,1.0])
-H = Precision(gammas, v, InitializeArVariance(gammas, v), T)
-L = np.linalg.cholesky(H)
-Linv = np.linalg.solve(L, np.eye(T*nFactors))
-Factors = Linv.T@np.random.normal(0,1,T*nFactors)
-Factors = np.reshape(Factors, (nFactors,T), 'F')
-
-A = np.ones((9,3))*I
-
-AF = A@Factors
-Xbeta = np.reshape(surX@betas, (K,T), 'F')
-
-y = Xbeta + AF + np.random.normal(0, 1, (K,T))
+def mldfvar_betaDraw(vecy, surX, om_precision, A, FactorPrecision, b0, B0, T):
+    K = len(om_precision)
+    nFactors = A.shape[1]
+    KP = surX.shape[1]
+    full_precision = np.diag(om_precision, 0)
+    Pinv = np.linalg.solve(FactorPrecision +
+                           np.kron(np.eye(T), A.T @ full_precision @ A),
+                           np.eye(FactorPrecision.shape[1]))
+    B0inv = np.linalg.solve(B0, np.eye(KP))
+    xpx = np.zeros((KP, KP))
+    xpy = np.zeros((KP, 1))
+    Xzz = np.zeros((T * nFactors, KP))
+    yzz = np.zeros((T * nFactors, 1))
+    k1 = np.arange(K)
+    k2 = np.arange(nFactors)
+    for t in range(0, T):
+        select1 = k1 + t * K
+        select2 = k2 + t * nFactors
+        tx = full_precision @ surX[select1, :]
+        ty = full_precision @ vecy[select1]
+        Xzz[select2, :] = A.T @ tx
+        yzz[select2, :] = A.T @ ty
+        xpx = xpx + (surX[select1, :].T @ tx)
+        xpy = xpy + (surX[select1, :].T @ ty)
+    XzzPinv = Xzz.T @ Pinv
+    B = B0inv + xpx - (XzzPinv @ Xzz)
+    Blowerinv = np.linalg.solve(np.linalg.cholesky(B), np.eye(KP))
+    B = Blowerinv.T@Blowerinv
+    b = B@(B0inv@b0 + xpy - XzzPinv@yzz)
+    bupdate = b + Blowerinv.T@np.random.normal(0,1,(KP,1))
+    xbt = surX@bupdate
+    return (bupdate, xbt, b, B)
 
 
 
 
 
-# plt.plot(surX@betas)
-# plt.show()
+mld = gsd.MultilevelData()
+
+vecy = np.reshape(mld.y, (mld.K*mld.T,1), 'F')
+mldfvar_betaDraw(vecy, mld.surX, 1. / mld.om_variance, mld.A,
+                 mld.FactorPrecision, mld.b0, mld.B0, mld.T)
 
 # print(pd.DataFrame(Xstacked))
 # print(pd.DataFrame(SUR_Form(Xstacked, 3)))
