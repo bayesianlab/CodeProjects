@@ -2,6 +2,7 @@ import numpy as np
 import math
 import pandas as pd
 import GenerateSimulationData as gsd
+from scipy import stats
 from scipy import sparse
 from matplotlib import pyplot as plt
 
@@ -39,7 +40,7 @@ def InitializeArVariance(params, variances):
     return sol
 
 
-def Precision(params, variance, P0, T):
+def MakePrecision(params, variance, P0, T):
     K = params.shape[0]
     lags = params.shape[1]
     stackedParams = np.fliplr((np.tile(-params, (T, 1))))
@@ -104,21 +105,141 @@ def mldfvar_betaDraw(vecy, surX, om_precision, A, FactorPrecision, b0, B0, T):
     XzzPinv = Xzz.T @ Pinv
     B = B0inv + xpx - (XzzPinv @ Xzz)
     Blowerinv = np.linalg.solve(np.linalg.cholesky(B), np.eye(KP))
-    B = Blowerinv.T@Blowerinv
-    b = B@(B0inv@b0 + xpy - XzzPinv@yzz)
-    bupdate = b + Blowerinv.T@np.random.normal(0,1,(KP,1))
-    xbt = surX@bupdate
+    B = Blowerinv.T @ Blowerinv
+    b = B @ (np.reshape(B0inv @ b0, (KP, 1)) + xpy - XzzPinv @ yzz)
+    bupdate = b + Blowerinv.T @ np.random.normal(0, 1, (KP, 1))
+    xbt = np.reshape(surX @ bupdate, (K,T), 'F')
     return (bupdate, xbt, b, B)
 
+def zeroFactorLevel(Identity, level):
+    I = Identity.copy()
+    I[:,level] = 0
+    return I
+
+def InitializeAprior(Identity, A0Priors):
+    ishape = Identity.shape
+    nFactors = ishape[1]
+    K = ishape[0]
+    A0mat = []
+    for c in range(nFactors):
+        t = np.nonzero(A0Priors[:,c])
+        A0mat.append(np.diag(A0Priors[t, c][0],0))
+    return A0mat
+
+def ConditionalLogLikelihood(ytdemeaned, ObsModel, ObsPriorMean, ObsPriorPrecision,
+                             obsPrecision, factors, factorPrecision):
+    dimfactors = factors.shape
+    nFactors = dimfactors[0]
+    T = dimfactors[1]
+    K = len(obsPrecision)
+    nFactorsT = nFactors*T
+    nFactorsK = nFactors*K
+    OmegaInverse = np.diag(obsPrecision,0)
+    FtOF = np.kron(OmegaInverse, factors@factors.T)
+    Avariance = np.linalg.solve(ObsPriorPrecision@ObsPriorMean.T + FtOF, np.eye(nFactorsK))
+    Term = ((factors@ytdemeaned.T)*obsPrecision.T)
+    Amean = np.ravel(Avariance@(ObsPriorPrecision@ObsPriorMean.T + Term).T, 'F')
+    pdfA = stats.multivariate_normal.logpdf(ObsModel.T, Amean, Avariance)
+    AOI = ObsModel.T@OmegaInverse
+    Fvariance = np.linalg.solve(factorPrecision + np.kron(np.eye(T), AOI@ObsModel),
+                                np.eye(nFactorsT))
+    Fmean = Fvariance@(np.kron(np.eye(T), AOI)@np.reshape(ytdemeaned, (T*K, 1), 'F'))
+    pdfF = stats.multivariate_normal.logpdf(factors, np.ravel(Fmean, 'F'), Fvariance)
+    print(pdfA - pdfF)
 
 
+def LoadingFactorUpdate(yt, Xbeta, Ft, A, gammas, om_variances, factorVariances,
+                        Identity, InfoDict, a0, A0):
+    dimyt = yt.shape
+    T = dimyt[1]
+    levels = InfoDict.keys()
+    index = -1
+    factor = -1
+    lags = gammas.shape[1]
+    for i in levels:
+        index += 1
+        AF = (A*zeroFactorLevel(Identity, index))@Ft
+        mut = Xbeta + AF
+        ytdemeaned = yt - mut
+        equationRange = InfoDict[i]
+        r = -1
+        for k in range(len(InfoDict[i])):
+            factor += 1
+            r += 1
+            eqns = np.arange(equationRange[r][0], equationRange[r][1]+1)
+            subY = ytdemeaned[eqns,:]
+            subA = A[eqns, factor]
+            suba0 = a0[eqns, factor]
+            subFt = np.reshape(Ft[factor,:], (1,T))
+            subg = np.reshape(gammas[factor,:], (1, lags))
+            subfv = np.reshape(factorVariances[factor], (1,1))
+            subvar = om_variances[eqns]
+            subFtP = MakePrecision(subg, subvar, InitializeArVariance(subg, subfv), T)
+            subA0 = np.linalg.inv(A0[factor])
+            subpre = 1./subvar
+
+            ConditionalLogLikelihood(subY, subA, suba0, subA0, subpre, subFt, subFtP)
+            # eqns = np.arange(equationRange[factor][0], equationRange[factor][1]+1)
+            # ytdemeaned[eqns,:]
+
+
+def ML_EfficientFactorModel(yt, xt, om_variances, A, Factors, gammas, factorVariances,
+                            b0, B0, InfoDict, sims=1000, burnin=100):
+    dims = yt.shape
+    K = dims[0]
+    T = dims[1]
+    nFactors = A.shape[1]
+    Identity = MakeObsModelIdentity(InfoDict)
+    P0 = InitializeArVariance(gammas, factorVariances)
+    FactorPrecision = MakePrecision(gammas, om_variances, P0, T)
+    vecy = np.reshape(yt, (T * K, 1), 'F')
+    surX = SUR_Form(xt, K)
+    KP = surX.shape[1]
+    betaCols = surX.shape[1]
+    om_precision = 1. / om_variances
+    a0 = np.zeros((K, nFactors))
+    A0 = InitializeAprior(Identity, 10*Identity)
+
+    storeBeta = np.zeros((betaCols, sims - burnin))
+    for s in range(sims):
+        update = mldfvar_betaDraw(vecy, surX, om_precision, A, FactorPrecision,
+                                  b0, B0, T)
+        betas = update[0]
+        Xbeta = update[1]
+
+        LoadingFactorUpdate(yt, Xbeta, Factors, A, gammas, om_variances, factorVariances,
+                            Identity, InfoDict, a0, A0)
+        ytdemeaned = yt - Xbeta
+        if s >= burnin:
+            storeBeta[:, s - burnin] = betas[:, 0].copy()
+
+    print(np.average(storeBeta, axis=1))
 
 
 mld = gsd.MultilevelData()
 
-vecy = np.reshape(mld.y, (mld.K*mld.T,1), 'F')
-mldfvar_betaDraw(vecy, mld.surX, 1. / mld.om_variance, mld.A,
-                 mld.FactorPrecision, mld.b0, mld.B0, mld.T)
+sims = 1
+burnin = 0
+y = mld.y
+x = mld.X
+K = mld.K
+T = mld.T
+om_variances = mld.om_variances
+Factors = mld.Factors
+gammas = mld.gammas
+factorVariances = mld.factorVariances
+A = mld.A
+InfoDict = mld.InfoDict
+
+b0 = mld.b0
+B0 = mld.B0
+
+# pd.DataFrame(y).to_csv('y_data.csv')
+# pd.DataFrame(x).to_csv('x_data.csv')
+
+
+ML_EfficientFactorModel(y, x, om_variances, A, Factors, gammas,
+                        factorVariances, b0, B0, InfoDict, sims, burnin)
 
 # print(pd.DataFrame(Xstacked))
 # print(pd.DataFrame(SUR_Form(Xstacked, 3)))

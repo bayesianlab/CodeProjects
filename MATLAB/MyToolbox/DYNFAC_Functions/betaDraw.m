@@ -1,10 +1,15 @@
-function [bupdate, xbt, b, B] = betaDraw(vecy, SurX, obsModelPrecision,StateObsModel,  StatePrecision, b0,B0inv, T)
+function [bupdate, xbt, b, B] = betaDraw(vecy, SurX, obsModelPrecision,...
+    StateObsModel, StatePrecision, b0,B0inv, T)
 nEqns = length(obsModelPrecision);
 nFactors = size(StateObsModel,2);
 [~,pK]=size(SurX);
 k1 = 1:nEqns;
 k2= 1:nFactors;
 fullpre = diag(obsModelPrecision);
+size(StatePrecision)
+size( kron(eye(T),...
+    StateObsModel'* fullpre *StateObsModel))
+size(StateObsModel)
 Pinv = (StatePrecision + kron(eye(T),...
     StateObsModel'* fullpre *StateObsModel))\eye(size(StatePrecision,1));
 xpx = zeros(pK,pK);
@@ -29,7 +34,9 @@ XzzPinv = Xzz'*Pinv;
 B = (B0inv + xpx - XzzPinv*Xzz);
 Blowerinv = chol(B,'lower')\eye(pK);
 B = Blowerinv'*Blowerinv;
+
 b = B*(B0inv*b0' + xpy - XzzPinv*yzz);
+
 bupdate = b + Blowerinv'*normrnd(0,1,pK,1);
 xbt = SurX*bupdate;
 end
