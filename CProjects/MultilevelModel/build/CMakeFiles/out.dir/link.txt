@@ -1,0 +1,1 @@
+/usr/bin/c++    -rdynamic CMakeFiles/out.dir/src/test.cpp.o  -o out  -lpython3.8 libmylibs.a 

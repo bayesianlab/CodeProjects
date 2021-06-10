@@ -24,10 +24,6 @@ B0inv = (1./100).*eye(KP);
 % betaDraw(ydata(:), surForm(xdata,K), ones(K,1), A, FP, b0', B0inv, T) 
 
 A = ones(9,3);
-A(7:end,2) = 0;
-A(1:6,3) = 0;
-Xbeta= reshape(surX*ones(KP,1), K,T);
-resids = ydata - Xbeta - A*fdata;
-fdata
+A[
 
-sum(resids.*resids,2)
+fdata
