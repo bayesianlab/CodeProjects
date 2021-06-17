@@ -102,3 +102,6 @@ build/*
 bin/
 TbsOutput/
 /.metadata/
+
+*.idea/*
+
