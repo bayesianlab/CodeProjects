@@ -31,3 +31,32 @@ resids = ydata - Xbeta - A*fdata;
 fdata
 
 sum(resids.*resids,2)
+
+
+qd(20002, 19401, -605.7,0,1)
+
+
+
+
+% r = @(x) .5* ( 100*((x(2) - x(1))^2) + ((1 - x(1))^2));
+% 
+% options = optimoptions('fminunc', 'Display', 'off', 'OptimalityTolerance', 1e-6) 
+% tic
+% [x,~,~,~,~,h]= fminunc(r, [-1.9,2], options)
+% toc
+
+logmvnpdf([0,0, 0], [.5,.5, 1], .5*eye(3))
+
+full(stateSpaceIt([.2,.2],2))
+
+A = [2,-1;-1,3]
+b = [1,2;3,1]
+A\b
+
+[P0, ~,~,nv] = initCovar([.2,.2], 1)
+
+full(FactorPrecision([.2,.2, .2, .2], initCovar([.2,.2, .2, .2], 1), [1], 10))
+full(FactorPrecision([.2,.2]', initCovar([.2,.2]', [1,1]), [1,1]', 10))
+full(FactorPrecision([.2,.2;.3,.3], initCovar([.2,.2;.3,.3], [1,1]), [1,1]', 10))
+
+

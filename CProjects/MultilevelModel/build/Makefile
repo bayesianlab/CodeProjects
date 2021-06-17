@@ -111,111 +111,71 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named out
+# Target rules for targets named ml
 
 # Build rule for target.
-out: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 out
-.PHONY : out
+ml: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ml
+.PHONY : ml
 
 # fast build rule for target.
-out/fast:
-	$(MAKE) -f CMakeFiles/out.dir/build.make CMakeFiles/out.dir/build
-.PHONY : out/fast
+ml/fast:
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/build
+.PHONY : ml/fast
 
-#=============================================================================
-# Target rules for targets named mylibs
+src/MultilevelModel.o: src/MultilevelModel.cpp.o
 
-# Build rule for target.
-mylibs: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 mylibs
-.PHONY : mylibs
-
-# fast build rule for target.
-mylibs/fast:
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/build
-.PHONY : mylibs/fast
-
-src/Distributions.o: src/Distributions.cpp.o
-
-.PHONY : src/Distributions.o
+.PHONY : src/MultilevelModel.o
 
 # target to build an object file
-src/Distributions.cpp.o:
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/src/Distributions.cpp.o
-.PHONY : src/Distributions.cpp.o
+src/MultilevelModel.cpp.o:
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/MultilevelModel.cpp.o
+.PHONY : src/MultilevelModel.cpp.o
 
-src/Distributions.i: src/Distributions.cpp.i
+src/MultilevelModel.i: src/MultilevelModel.cpp.i
 
-.PHONY : src/Distributions.i
+.PHONY : src/MultilevelModel.i
 
 # target to preprocess a source file
-src/Distributions.cpp.i:
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/src/Distributions.cpp.i
-.PHONY : src/Distributions.cpp.i
+src/MultilevelModel.cpp.i:
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/MultilevelModel.cpp.i
+.PHONY : src/MultilevelModel.cpp.i
 
-src/Distributions.s: src/Distributions.cpp.s
+src/MultilevelModel.s: src/MultilevelModel.cpp.s
 
-.PHONY : src/Distributions.s
+.PHONY : src/MultilevelModel.s
 
 # target to generate assembly for a file
-src/Distributions.cpp.s:
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/src/Distributions.cpp.s
-.PHONY : src/Distributions.cpp.s
+src/MultilevelModel.cpp.s:
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/MultilevelModel.cpp.s
+.PHONY : src/MultilevelModel.cpp.s
 
-src/Optimization.o: src/Optimization.cpp.o
+src/Test_MultilevelModel.o: src/Test_MultilevelModel.cpp.o
 
-.PHONY : src/Optimization.o
+.PHONY : src/Test_MultilevelModel.o
 
 # target to build an object file
-src/Optimization.cpp.o:
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/src/Optimization.cpp.o
-.PHONY : src/Optimization.cpp.o
+src/Test_MultilevelModel.cpp.o:
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/Test_MultilevelModel.cpp.o
+.PHONY : src/Test_MultilevelModel.cpp.o
 
-src/Optimization.i: src/Optimization.cpp.i
+src/Test_MultilevelModel.i: src/Test_MultilevelModel.cpp.i
 
-.PHONY : src/Optimization.i
-
-# target to preprocess a source file
-src/Optimization.cpp.i:
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/src/Optimization.cpp.i
-.PHONY : src/Optimization.cpp.i
-
-src/Optimization.s: src/Optimization.cpp.s
-
-.PHONY : src/Optimization.s
-
-# target to generate assembly for a file
-src/Optimization.cpp.s:
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/src/Optimization.cpp.s
-.PHONY : src/Optimization.cpp.s
-
-src/test.o: src/test.cpp.o
-
-.PHONY : src/test.o
-
-# target to build an object file
-src/test.cpp.o:
-	$(MAKE) -f CMakeFiles/out.dir/build.make CMakeFiles/out.dir/src/test.cpp.o
-.PHONY : src/test.cpp.o
-
-src/test.i: src/test.cpp.i
-
-.PHONY : src/test.i
+.PHONY : src/Test_MultilevelModel.i
 
 # target to preprocess a source file
-src/test.cpp.i:
-	$(MAKE) -f CMakeFiles/out.dir/build.make CMakeFiles/out.dir/src/test.cpp.i
-.PHONY : src/test.cpp.i
+src/Test_MultilevelModel.cpp.i:
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/Test_MultilevelModel.cpp.i
+.PHONY : src/Test_MultilevelModel.cpp.i
 
-src/test.s: src/test.cpp.s
+src/Test_MultilevelModel.s: src/Test_MultilevelModel.cpp.s
 
-.PHONY : src/test.s
+.PHONY : src/Test_MultilevelModel.s
 
 # target to generate assembly for a file
-src/test.cpp.s:
-	$(MAKE) -f CMakeFiles/out.dir/build.make CMakeFiles/out.dir/src/test.cpp.s
-.PHONY : src/test.cpp.s
+src/Test_MultilevelModel.cpp.s:
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/Test_MultilevelModel.cpp.s
+.PHONY : src/Test_MultilevelModel.cpp.s
 
 # Help Target
 help:
@@ -225,17 +185,13 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... out"
-	@echo "... mylibs"
-	@echo "... src/Distributions.o"
-	@echo "... src/Distributions.i"
-	@echo "... src/Distributions.s"
-	@echo "... src/Optimization.o"
-	@echo "... src/Optimization.i"
-	@echo "... src/Optimization.s"
-	@echo "... src/test.o"
-	@echo "... src/test.i"
-	@echo "... src/test.s"
+	@echo "... ml"
+	@echo "... src/MultilevelModel.o"
+	@echo "... src/MultilevelModel.i"
+	@echo "... src/MultilevelModel.s"
+	@echo "... src/Test_MultilevelModel.o"
+	@echo "... src/Test_MultilevelModel.i"
+	@echo "... src/Test_MultilevelModel.s"
 .PHONY : help
 
 

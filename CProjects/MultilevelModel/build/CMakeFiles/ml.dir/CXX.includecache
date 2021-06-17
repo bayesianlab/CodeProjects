@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/MultilevelModel.hpp
+eigen3/Eigen/Dense
+-
+eigen3/unsupported/Eigen/KroneckerProduct
+-
+iostream
+-
+stdexcept
+-
+
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp
+MultilevelModel.hpp
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.hpp
+
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_MultilevelModel.cpp
+iostream
+-
+eigen3/Eigen/Dense
+-
+boost/random/mersenne_twister.hpp
+-
+MultilevelModel.hpp
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.hpp
+

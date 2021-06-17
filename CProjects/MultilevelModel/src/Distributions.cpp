@@ -1,20 +1,4 @@
 #include "Distributions.hpp"
-#include <Eigen/Dense>
-#include <boost/math/distributions/exponential.hpp>
-#include <boost/math/distributions/normal.hpp>
-#include <boost/random/gamma_distribution.hpp>
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/normal_distribution.hpp>
-#include <boost/random/uniform_01.hpp>
-#include <boost/random/variate_generator.hpp>
-#include <ctime>
-#include <limits>
-#include <math.h>
-#include <random>
-#include <unsupported/Eigen/KroneckerProduct>
-
-using namespace Eigen;
-using namespace std;
 
 time_t now = time(0);
 boost::random::mt19937 GLOBAL_SEED(now);
@@ -193,6 +177,7 @@ MatrixXd CreateSigma(double rho, int Size)
   }
   return CorrMat;
 }
+
 
 /* VectorXd generateChiSquaredVec(double df, int rows) {
   std::mt19937 gen(rd());

@@ -1,1 +1,0 @@
-/usr/bin/cc     CMakeFiles/frntend.dir/frntend.c.o  -o frntend -rdynamic 

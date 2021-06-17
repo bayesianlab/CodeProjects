@@ -53,8 +53,7 @@ CMAKE_BINARY_DIR = /home/dillon/CodeProjects/CProjects/MultilevelModel/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/out.dir/all
-all: CMakeFiles/mylibs.dir/all
+all: CMakeFiles/ml.dir/all
 
 .PHONY : all
 
@@ -64,64 +63,36 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/out.dir/clean
-clean: CMakeFiles/mylibs.dir/clean
+clean: CMakeFiles/ml.dir/clean
 
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/out.dir
+# Target rules for target CMakeFiles/ml.dir
 
 # All Build rule for target.
-CMakeFiles/out.dir/all: CMakeFiles/mylibs.dir/all
-	$(MAKE) -f CMakeFiles/out.dir/build.make CMakeFiles/out.dir/depend
-	$(MAKE) -f CMakeFiles/out.dir/build.make CMakeFiles/out.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=4,5 "Built target out"
-.PHONY : CMakeFiles/out.dir/all
+CMakeFiles/ml.dir/all:
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/depend
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=1,2,3 "Built target ml"
+.PHONY : CMakeFiles/ml.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/out.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 5
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/out.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 0
-.PHONY : CMakeFiles/out.dir/rule
-
-# Convenience name for target.
-out: CMakeFiles/out.dir/rule
-
-.PHONY : out
-
-# clean rule for target.
-CMakeFiles/out.dir/clean:
-	$(MAKE) -f CMakeFiles/out.dir/build.make CMakeFiles/out.dir/clean
-.PHONY : CMakeFiles/out.dir/clean
-
-#=============================================================================
-# Target rules for target CMakeFiles/mylibs.dir
-
-# All Build rule for target.
-CMakeFiles/mylibs.dir/all:
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/depend
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=1,2,3 "Built target mylibs"
-.PHONY : CMakeFiles/mylibs.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/mylibs.dir/rule: cmake_check_build_system
+CMakeFiles/ml.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/mylibs.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ml.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 0
-.PHONY : CMakeFiles/mylibs.dir/rule
+.PHONY : CMakeFiles/ml.dir/rule
 
 # Convenience name for target.
-mylibs: CMakeFiles/mylibs.dir/rule
+ml: CMakeFiles/ml.dir/rule
 
-.PHONY : mylibs
+.PHONY : ml
 
 # clean rule for target.
-CMakeFiles/mylibs.dir/clean:
-	$(MAKE) -f CMakeFiles/mylibs.dir/build.make CMakeFiles/mylibs.dir/clean
-.PHONY : CMakeFiles/mylibs.dir/clean
+CMakeFiles/ml.dir/clean:
+	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/clean
+.PHONY : CMakeFiles/ml.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

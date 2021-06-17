@@ -6,20 +6,18 @@
 
 #IncludeRegexTransform: 
 
-../include/Optimization.hpp
+../include/MultilevelModel.hpp
 Eigen/Dense
 -
-
-/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Optimization.cpp
-Eigen/Dense
+Eigen/unsupported/Eigen/src/KroneckerProduct/KroneckerTensorProduct.h
 -
-Optimization.hpp
-/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Optimization.hpp
 iostream
 -
-limits
+stdexcept
 -
-math.h
+
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp
+MultilevelModel.hpp
 -
 
 /usr/include/eigen3/Eigen/Cholesky

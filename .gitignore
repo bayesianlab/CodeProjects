@@ -101,3 +101,4 @@ build/*
 *.e*
 bin/
 TbsOutput/
+/.metadata/

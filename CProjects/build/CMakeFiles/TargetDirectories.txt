@@ -1,7 +1,0 @@
-/home/precision/CodeProjects/CProjects/build/CMakeFiles/install.dir
-/home/precision/CodeProjects/CProjects/build/CMakeFiles/list_install_components.dir
-/home/precision/CodeProjects/CProjects/build/CMakeFiles/rebuild_cache.dir
-/home/precision/CodeProjects/CProjects/build/CMakeFiles/frntend.dir
-/home/precision/CodeProjects/CProjects/build/CMakeFiles/install/strip.dir
-/home/precision/CodeProjects/CProjects/build/CMakeFiles/install/local.dir
-/home/precision/CodeProjects/CProjects/build/CMakeFiles/edit_cache.dir

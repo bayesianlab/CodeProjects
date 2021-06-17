@@ -331,7 +331,7 @@ def updateAR(cur, yt, sigma2, g0, G0):
     Den = logmvnpdf((yt - cur @ Xss), np.zeros((1, T)), Scur) + \
           logmvnpdf(cur, g0, G0) + logmvnpdf(proposal, g1.T, G1)
     lalpha = min(0, Num-Den)
-    if np.log(np.random.uniform(0,1)) < Num - Den:
+    if np.log(np.random.uniform(0,1)) < lalpha:
         return proposal
     else:
         return cur
@@ -444,6 +444,8 @@ T = mld.T
 om_variances = mld.om_variances
 Factors = mld.Factors
 gammas = .1*mld.gammas
+print(MakeStateSpaceForm(gammas[1,:]))
+print(MakePrecision([.2,.2]))
 factorVariances = mld.factorVariances
 A =  np.ones((mld.K, mld.nFactors)) * mld.Identity
 InfoDict = mld.InfoDict

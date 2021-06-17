@@ -1,1 +1,1 @@
-/usr/bin/c++    -rdynamic CMakeFiles/out.dir/src/test.cpp.o  -o out  -lpython3.8 libmylibs.a 
+/usr/bin/c++    -rdynamic CMakeFiles/out.dir/src/Test_Optimization.cpp.o  -o out  libmylibs.a 

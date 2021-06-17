@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Project Name="CodeProjects" Version="10.0.0" InternalType="">
+  <VirtualDirectory Name="Python">
+    <VirtualDirectory Name="Economics">
+      <VirtualDirectory Name="VAR_Swanson">
+        <File Name="Python/Economics/VAR_Swanson/blank.c"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="mypythonprojects">
+      <File Name="Python/mypythonprojects/ctest.c"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="CProjects">
+    <File Name="CProjects/c_challenge_tests.c"/>
+    <File Name="CProjects/c_challenge.c"/>
+    <File Name="CProjects/c_challenge.h"/>
+    <File Name="CProjects/frntend.h"/>
+    <File Name="CProjects/student_file.c"/>
+    <File Name="CProjects/frntend.c"/>
+    <VirtualDirectory Name="CreateSampleData">
+      <VirtualDirectory Name="include">
+        <File Name="CProjects/CreateSampleData/include/CreateSampleData.hpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="build">
+        <VirtualDirectory Name="CMakeFiles">
+          <File Name="CProjects/CreateSampleData/build/CMakeFiles/feature_tests.cxx"/>
+          <File Name="CProjects/CreateSampleData/build/CMakeFiles/feature_tests.c"/>
+          <VirtualDirectory Name="3.9.1">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/CreateSampleData/build/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/CreateSampleData/build/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="src">
+        <File Name="CProjects/CreateSampleData/src/main.cpp"/>
+        <File Name="CProjects/CreateSampleData/src/CreateSampleData.cpp"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="Simulation">
+      <VirtualDirectory Name="bpp">
+        <VirtualDirectory Name="src">
+          <File Name="CProjects/Simulation/bpp/src/pylrg.cpp"/>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="include">
+        <File Name="CProjects/Simulation/include/crb.hpp"/>
+        <File Name="CProjects/Simulation/include/timeseries.hpp"/>
+        <File Name="CProjects/Simulation/include/ark.hpp"/>
+        <File Name="CProjects/Simulation/include/CreateSampleData.hpp"/>
+        <File Name="CProjects/Simulation/include/eigenshorts.hpp"/>
+        <File Name="CProjects/Simulation/include/LinRegGibbs.hpp"/>
+        <File Name="CProjects/Simulation/include/read_csv_to_eigen.hpp"/>
+        <File Name="CProjects/Simulation/include/ask.hpp"/>
+        <File Name="CProjects/Simulation/include/ThreeD.hpp"/>
+        <File Name="CProjects/Simulation/include/crt.hpp"/>
+        <File Name="CProjects/Simulation/include/Dist.hpp"/>
+        <File Name="CProjects/Simulation/include/Importance.hpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="build">
+        <VirtualDirectory Name="CMakeFiles">
+          <File Name="CProjects/Simulation/build/CMakeFiles/feature_tests.cxx"/>
+          <File Name="CProjects/Simulation/build/CMakeFiles/feature_tests.c"/>
+          <VirtualDirectory Name="3.9.1">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/Simulation/build/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/Simulation/build/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+          <VirtualDirectory Name="3.5.1">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/Simulation/build/CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/Simulation/build/CMakeFiles/3.5.1/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+        <VirtualDirectory Name="src">
+          <VirtualDirectory Name="AskLib">
+            <VirtualDirectory Name="CMakeFiles">
+              <File Name="CProjects/Simulation/build/src/AskLib/CMakeFiles/feature_tests.cxx"/>
+              <File Name="CProjects/Simulation/build/src/AskLib/CMakeFiles/feature_tests.c"/>
+              <VirtualDirectory Name="3.9.1">
+                <VirtualDirectory Name="CompilerIdCXX">
+                  <File Name="CProjects/Simulation/build/src/AskLib/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+                </VirtualDirectory>
+                <VirtualDirectory Name="CompilerIdC">
+                  <File Name="CProjects/Simulation/build/src/AskLib/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+                </VirtualDirectory>
+              </VirtualDirectory>
+            </VirtualDirectory>
+          </VirtualDirectory>
+          <VirtualDirectory Name="DistLib">
+            <VirtualDirectory Name="CMakeFiles">
+              <File Name="CProjects/Simulation/build/src/DistLib/CMakeFiles/feature_tests.cxx"/>
+              <File Name="CProjects/Simulation/build/src/DistLib/CMakeFiles/feature_tests.c"/>
+              <VirtualDirectory Name="3.9.1">
+                <VirtualDirectory Name="CompilerIdCXX">
+                  <File Name="CProjects/Simulation/build/src/DistLib/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+                </VirtualDirectory>
+                <VirtualDirectory Name="CompilerIdC">
+                  <File Name="CProjects/Simulation/build/src/DistLib/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+                </VirtualDirectory>
+              </VirtualDirectory>
+            </VirtualDirectory>
+          </VirtualDirectory>
+          <VirtualDirectory Name="CreateSampleDataLib">
+            <VirtualDirectory Name="CMakeFiles">
+              <File Name="CProjects/Simulation/build/src/CreateSampleDataLib/CMakeFiles/feature_tests.cxx"/>
+              <File Name="CProjects/Simulation/build/src/CreateSampleDataLib/CMakeFiles/feature_tests.c"/>
+              <VirtualDirectory Name="3.9.1">
+                <VirtualDirectory Name="CompilerIdCXX">
+                  <File Name="CProjects/Simulation/build/src/CreateSampleDataLib/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+                </VirtualDirectory>
+                <VirtualDirectory Name="CompilerIdC">
+                  <File Name="CProjects/Simulation/build/src/CreateSampleDataLib/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+                </VirtualDirectory>
+              </VirtualDirectory>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="src">
+        <File Name="CProjects/Simulation/src/fixdist.cpp"/>
+        <File Name="CProjects/Simulation/src/eigenshorts.cpp"/>
+        <File Name="CProjects/Simulation/src/crt.cpp"/>
+        <File Name="CProjects/Simulation/src/ark.cpp"/>
+        <File Name="CProjects/Simulation/src/testmroz.cpp"/>
+        <File Name="CProjects/Simulation/src/mvtmain.cpp"/>
+        <File Name="CProjects/Simulation/src/CreateSampleData.cpp"/>
+        <File Name="CProjects/Simulation/src/runsim.cpp"/>
+        <File Name="CProjects/Simulation/src/read_csv_to_eigen.cpp"/>
+        <File Name="CProjects/Simulation/src/Dist.cpp"/>
+        <File Name="CProjects/Simulation/src/ask.cpp"/>
+        <File Name="CProjects/Simulation/src/varmain.cpp"/>
+        <File Name="CProjects/Simulation/src/MyAssertions.cpp"/>
+        <File Name="CProjects/Simulation/src/timeseries.cpp"/>
+        <File Name="CProjects/Simulation/src/rentalmain.cpp"/>
+        <File Name="CProjects/Simulation/src/LinRegGibbs.cpp"/>
+        <File Name="CProjects/Simulation/src/Importance.cpp"/>
+        <File Name="CProjects/Simulation/src/crb.cpp"/>
+        <VirtualDirectory Name="CMakeFiles">
+          <File Name="CProjects/Simulation/src/CMakeFiles/feature_tests.cxx"/>
+          <File Name="CProjects/Simulation/src/CMakeFiles/feature_tests.c"/>
+          <VirtualDirectory Name="3.9.1">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/Simulation/src/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/Simulation/src/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="NumericalAnalysis">
+      <File Name="CProjects/NumericalAnalysis/lin_reg.c"/>
+      <File Name="CProjects/NumericalAnalysis/mmult.c"/>
+      <File Name="CProjects/NumericalAnalysis/interpolation.cpp"/>
+      <File Name="CProjects/NumericalAnalysis/normal.c"/>
+      <File Name="CProjects/NumericalAnalysis/binomialCoef.c"/>
+      <File Name="CProjects/NumericalAnalysis/bisectionMethod.c"/>
+      <File Name="CProjects/NumericalAnalysis/mmult.h"/>
+      <File Name="CProjects/NumericalAnalysis/truncation_rounding_error.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="matplotlib-cpp">
+      <File Name="CProjects/matplotlib-cpp/matplotlibcpp.h"/>
+      <VirtualDirectory Name="examples">
+        <File Name="CProjects/matplotlib-cpp/examples/surface.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/contour.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/xkcd.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/loglog.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/scatter.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/errorbar.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/fill.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/eigen.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/semilogx.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/bar.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/spy.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/update.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/modern.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/fill_inbetween.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/nonblock.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/imshow.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/animation.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/basic.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/subplot.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/axlines.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/semilogy.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/quiver.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/small.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/minimal.cpp"/>
+        <File Name="CProjects/matplotlib-cpp/examples/legend.cpp"/>
+        <VirtualDirectory Name="CMakeFiles">
+          <VirtualDirectory Name="3.16.3">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/matplotlib-cpp/examples/CMakeFiles/3.16.3/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/matplotlib-cpp/examples/CMakeFiles/3.16.3/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="CMakeFiles">
+        <VirtualDirectory Name="3.16.3">
+          <VirtualDirectory Name="CompilerIdCXX">
+            <File Name="CProjects/matplotlib-cpp/CMakeFiles/3.16.3/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+          </VirtualDirectory>
+          <VirtualDirectory Name="CompilerIdC">
+            <File Name="CProjects/matplotlib-cpp/CMakeFiles/3.16.3/CompilerIdC/CMakeCCompilerId.c"/>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="GelfandDey">
+      <VirtualDirectory Name="include">
+        <File Name="CProjects/GelfandDey/include/LinRegGibbs.hpp"/>
+        <File Name="CProjects/GelfandDey/include/GelfandDey.hpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="build">
+        <VirtualDirectory Name="CMakeFiles">
+          <File Name="CProjects/GelfandDey/build/CMakeFiles/feature_tests.cxx"/>
+          <File Name="CProjects/GelfandDey/build/CMakeFiles/feature_tests.c"/>
+          <VirtualDirectory Name="3.9.1">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/GelfandDey/build/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/GelfandDey/build/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="src">
+        <File Name="CProjects/GelfandDey/src/tnormMain.cpp"/>
+        <File Name="CProjects/GelfandDey/src/gdmain.cpp"/>
+        <File Name="CProjects/GelfandDey/src/GelfandDey.cpp"/>
+        <File Name="CProjects/GelfandDey/src/gibbsRBmain.cpp"/>
+        <File Name="CProjects/GelfandDey/src/LinRegGibbs.cpp"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="MetropolisHastings">
+      <VirtualDirectory Name="include">
+        <File Name="CProjects/MetropolisHastings/include/mh.hpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="build">
+        <File Name="CProjects/MetropolisHastings/build/Dist2.hpp"/>
+        <VirtualDirectory Name="CMakeFiles">
+          <File Name="CProjects/MetropolisHastings/build/CMakeFiles/feature_tests.cxx"/>
+          <File Name="CProjects/MetropolisHastings/build/CMakeFiles/feature_tests.c"/>
+          <VirtualDirectory Name="3.9.1">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/MetropolisHastings/build/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/MetropolisHastings/build/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="src">
+        <File Name="CProjects/MetropolisHastings/src/mhmain.cpp"/>
+        <File Name="CProjects/MetropolisHastings/src/mh.cpp"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="DiscreteChoice">
+      <VirtualDirectory Name="include">
+        <File Name="CProjects/DiscreteChoice/include/Probit.hpp"/>
+        <File Name="CProjects/DiscreteChoice/include/Logit.hpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="build">
+        <VirtualDirectory Name="CMakeFiles">
+          <File Name="CProjects/DiscreteChoice/build/CMakeFiles/feature_tests.cxx"/>
+          <File Name="CProjects/DiscreteChoice/build/CMakeFiles/feature_tests.c"/>
+          <VirtualDirectory Name="3.9.1">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/DiscreteChoice/build/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/DiscreteChoice/build/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="src">
+        <File Name="CProjects/DiscreteChoice/src/Probit.cpp"/>
+        <File Name="CProjects/DiscreteChoice/src/probitmain.cpp"/>
+        <File Name="CProjects/DiscreteChoice/src/Probit.hpp"/>
+        <File Name="CProjects/DiscreteChoice/src/logitmain.cpp"/>
+        <File Name="CProjects/DiscreteChoice/src/Logit.hpp"/>
+        <File Name="CProjects/DiscreteChoice/src/Logit.cpp"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="MultilevelModel">
+      <VirtualDirectory Name="include">
+        <File Name="CProjects/MultilevelModel/include/MultilevelModel.hpp"/>
+        <File Name="CProjects/MultilevelModel/include/Distributions.hpp"/>
+        <File Name="CProjects/MultilevelModel/include/Optimization.hpp"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="build">
+        <VirtualDirectory Name="CMakeFiles">
+          <VirtualDirectory Name="3.16.3">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/MultilevelModel/build/CMakeFiles/3.16.3/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/MultilevelModel/build/CMakeFiles/3.16.3/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="src">
+        <File Name="CProjects/MultilevelModel/src/Test_Optimization.cpp"/>
+        <File Name="CProjects/MultilevelModel/src/MultilevelModel.cpp"/>
+        <File Name="CProjects/MultilevelModel/src/Optimization.cpp"/>
+        <File Name="CProjects/MultilevelModel/src/Test_MultilevelModel.cpp"/>
+        <File Name="CProjects/MultilevelModel/src/Test_Distributions.cpp"/>
+        <File Name="CProjects/MultilevelModel/src/Distributions.cpp"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="gnuplot-iostream">
+      <File Name="CProjects/gnuplot-iostream/test-empty.cc"/>
+      <File Name="CProjects/gnuplot-iostream/example-interactive.cc"/>
+      <File Name="CProjects/gnuplot-iostream/test-assert-depth.cc"/>
+      <File Name="CProjects/gnuplot-iostream/test-noncopyable.cc"/>
+      <File Name="CProjects/gnuplot-iostream/test-assert-depth-colmajor.cc"/>
+      <File Name="CProjects/gnuplot-iostream/example-data-1d.cc"/>
+      <File Name="CProjects/gnuplot-iostream/example-data-2d.cc"/>
+      <File Name="CProjects/gnuplot-iostream/example-misc.cc"/>
+      <File Name="CProjects/gnuplot-iostream/test-outputs.cc"/>
+      <File Name="CProjects/gnuplot-iostream/gnuplot-iostream.h"/>
+      <VirtualDirectory Name="legacy">
+        <File Name="CProjects/gnuplot-iostream/legacy/examples-interactive.cc"/>
+        <File Name="CProjects/gnuplot-iostream/legacy/examples-framework.cc"/>
+        <File Name="CProjects/gnuplot-iostream/legacy/examples-blitz.cc"/>
+        <File Name="CProjects/gnuplot-iostream/legacy/examples.cc"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="CMakeFiles">
+      <File Name="CProjects/CMakeFiles/feature_tests.cxx"/>
+      <File Name="CProjects/CMakeFiles/feature_tests.c"/>
+      <VirtualDirectory Name="3.5.1">
+        <VirtualDirectory Name="CompilerIdCXX">
+          <File Name="CProjects/CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+        </VirtualDirectory>
+        <VirtualDirectory Name="CompilerIdC">
+          <File Name="CProjects/CMakeFiles/3.5.1/CompilerIdC/CMakeCCompilerId.c"/>
+        </VirtualDirectory>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="RandomProjects">
+      <File Name="CProjects/RandomProjects/square_root.h"/>
+      <File Name="CProjects/RandomProjects/square_root.c"/>
+      <File Name="CProjects/RandomProjects/mit1.c"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="testboost">
+      <VirtualDirectory Name="build">
+        <VirtualDirectory Name="CMakeFiles">
+          <File Name="CProjects/testboost/build/CMakeFiles/feature_tests.cxx"/>
+          <File Name="CProjects/testboost/build/CMakeFiles/feature_tests.c"/>
+          <VirtualDirectory Name="3.9.1">
+            <VirtualDirectory Name="CompilerIdCXX">
+              <File Name="CProjects/testboost/build/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+            </VirtualDirectory>
+            <VirtualDirectory Name="CompilerIdC">
+              <File Name="CProjects/testboost/build/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+            </VirtualDirectory>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+      <VirtualDirectory Name="src">
+        <File Name="CProjects/testboost/src/example_ext.cpp"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="MATLAB">
+    <VirtualDirectory Name="scottclowe-matlab-schemer-2156bb9">
+      <VirtualDirectory Name="develop">
+        <File Name="MATLAB/scottclowe-matlab-schemer-2156bb9/develop/sample.cpp"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="Experiments">
+      <File Name="MATLAB/Experiments/stat225main.hpp"/>
+      <File Name="MATLAB/Experiments/statsource.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="factor_models">
+      <VirtualDirectory Name="KOW">
+        <File Name="MATLAB/factor_models/KOW/mexLinSysSolve.c"/>
+        <File Name="MATLAB/factor_models/KOW/mexMatrixLinSysSolve.c"/>
+        <File Name="MATLAB/factor_models/KOW/test.c"/>
+        <File Name="MATLAB/factor_models/KOW/testfile.c"/>
+        <VirtualDirectory Name="mlcode">
+          <VirtualDirectory Name="include">
+            <File Name="MATLAB/factor_models/KOW/mlcode/include/crb.hpp"/>
+            <File Name="MATLAB/factor_models/KOW/mlcode/include/read_csv_to_eigen.hpp"/>
+            <File Name="MATLAB/factor_models/KOW/mlcode/include/Dist.hpp"/>
+          </VirtualDirectory>
+          <VirtualDirectory Name="build">
+            <VirtualDirectory Name="CMakeFiles">
+              <File Name="MATLAB/factor_models/KOW/mlcode/build/CMakeFiles/feature_tests.cxx"/>
+              <File Name="MATLAB/factor_models/KOW/mlcode/build/CMakeFiles/feature_tests.c"/>
+              <VirtualDirectory Name="3.9.1">
+                <VirtualDirectory Name="CompilerIdCXX">
+                  <File Name="MATLAB/factor_models/KOW/mlcode/build/CMakeFiles/3.9.1/CompilerIdCXX/CMakeCXXCompilerId.cpp"/>
+                </VirtualDirectory>
+                <VirtualDirectory Name="CompilerIdC">
+                  <File Name="MATLAB/factor_models/KOW/mlcode/build/CMakeFiles/3.9.1/CompilerIdC/CMakeCCompilerId.c"/>
+                </VirtualDirectory>
+              </VirtualDirectory>
+            </VirtualDirectory>
+          </VirtualDirectory>
+          <VirtualDirectory Name="src">
+            <File Name="MATLAB/factor_models/KOW/mlcode/src/kowModelSelectMain.cpp"/>
+            <File Name="MATLAB/factor_models/KOW/mlcode/src/read_csv_to_eigen.cpp"/>
+            <File Name="MATLAB/factor_models/KOW/mlcode/src/Dist.cpp"/>
+            <File Name="MATLAB/factor_models/KOW/mlcode/src/crb.cpp"/>
+          </VirtualDirectory>
+        </VirtualDirectory>
+      </VirtualDirectory>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <VirtualDirectory Name="R">
+    <VirtualDirectory Name="Old">
+      <File Name="R/Old/mycfile.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="BayesLogit">
+      <VirtualDirectory Name="src">
+        <File Name="R/BayesLogit/src/RNG.cpp"/>
+        <File Name="R/BayesLogit/src/Matrix.cpp"/>
+        <File Name="R/BayesLogit/src/FSF_nmix.cpp"/>
+        <File Name="R/BayesLogit/src/RRNG.cpp"/>
+        <File Name="R/BayesLogit/src/PolyaGamma.h"/>
+        <File Name="R/BayesLogit/src/FSF_nmix.h"/>
+        <File Name="R/BayesLogit/src/Logit.h"/>
+        <File Name="R/BayesLogit/src/CUBS.h"/>
+        <File Name="R/BayesLogit/src/CUBS_update.h"/>
+        <File Name="R/BayesLogit/src/AR1.h"/>
+        <File Name="R/BayesLogit/src/Matrix.h"/>
+        <File Name="R/BayesLogit/src/CUBS_update.cpp"/>
+        <File Name="R/BayesLogit/src/RRNG.h"/>
+        <File Name="R/BayesLogit/src/MatrixFrame.cpp"/>
+        <File Name="R/BayesLogit/src/MultLogit.h"/>
+        <File Name="R/BayesLogit/src/CUBS.cpp"/>
+        <File Name="R/BayesLogit/src/LogitWrapper.h"/>
+        <File Name="R/BayesLogit/src/LogitWrapper.cpp"/>
+        <File Name="R/BayesLogit/src/RNG.h"/>
+        <File Name="R/BayesLogit/src/Normal.h"/>
+        <File Name="R/BayesLogit/src/AR1.cpp"/>
+        <File Name="R/BayesLogit/src/MatrixFrame.h"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <Description/>
+  <Dependencies/>
+  <Settings Type="Executable">
+    <GlobalSettings>
+      <Compiler Options="" C_Options="" Assembler="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+    <Configuration Name="Debug" CompilerType="Cross GCC ( x86_64-linux-gnu )" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -Wall" C_Options="" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="-O0" Required="yes">
+        <LibraryPath Value="."/>
+        <LibraryPath Value="Debug"/>
+      </Linker>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="./Debug" PauseExecWhenProcTerminates="no" IsGUIProgram="no" IsEnabled="yes"/>
+      <BuildSystem Name="Default"/>
+      <Environment EnvVarSetName="&lt;Use Workspace Settings&gt;" DbgSetName="&lt;Use Global Settings&gt;">
+        <![CDATA[]]>
+      </Environment>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
+        <DebuggerSearchPaths/>
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName/>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+      <Completion EnableCpp11="no" EnableCpp14="no">
+        <ClangCmpFlagsC/>
+        <ClangCmpFlags/>
+        <ClangPP/>
+        <SearchPaths/>
+      </Completion>
+    </Configuration>
+  </Settings>
+</CodeLite_Project>

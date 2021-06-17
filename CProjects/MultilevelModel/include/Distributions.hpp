@@ -1,18 +1,24 @@
 #ifndef DIST_H
 #define DIST_H
+#include "Distributions.hpp"
 #include <Eigen/Dense>
-#include <iostream>
-
-// #include <boost/math/distributions/normal.hpp>
-// #include <boost/random/mersenne_twister.hpp>
-// #include <boost/random/normal_distribution.hpp>
-// #include <boost/random/uniform_01.hpp>
-// #include <limits>
-// #include <math.h>
-// #include <random>
+#include <boost/math/distributions/exponential.hpp>
+#include <boost/math/distributions/normal.hpp>
+#include <boost/random/gamma_distribution.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/normal_distribution.hpp>
+#include <boost/random/uniform_01.hpp>
+#include <boost/random/variate_generator.hpp>
+#include <ctime>
+#include <limits>
+#include <math.h>
+#include <random>
+#include <unsupported/Eigen/KroneckerProduct>
 
 using namespace Eigen;
 using namespace std;
+
+
 
 VectorXd gammarnd(double shape, double scale, int N);
 
@@ -27,16 +33,39 @@ VectorXd normrnd(double mu, double sig, int N);
 MatrixXd normrnd(double, double, int, int);
 
 template <typename A, typename B>
-MatrixXd  mvnrnd(const MatrixBase<A> &mu, const MatrixBase<B> &sig, int N)
+MatrixXd mvnrnd(const MatrixBase<A> &mu, const MatrixBase<B> &sig, int N)
 {
   int J = sig.cols();
+  if (J != mu.cols())
+  {
+    invalid_argument("Columns and rows must be equal in mvnrnd");
+  }
   MatrixXd Z = normrnd(0., 1., N, J);
-  LLT<MatrixXd> lltOfA(sig);
-  MatrixXd L = lltOfA.matrixL();
+  LLT<MatrixXd> lltofSig(sig);
+  MatrixXd L = lltofSig.matrixLLT();
   Z = (L * Z.transpose()).transpose();
-  Z.rowwise() += mu.transpose();
+  Z.rowwise() += mu;
   return Z;
 }
+
+template <typename Derived1>
+double logdet(const MatrixBase<Derived1> &sig)
+{
+  LLT<MatrixXd> L(sig);
+  MatrixXd X = L.matrixLLT();
+  return 2 * X.diagonal().array().log().sum();
+}
+
+template <typename Derived1, typename Derived2, typename Derived3>
+VectorXd logmvnpdf(const MatrixBase<Derived1> &x, const MatrixBase<Derived2> &mu, const MatrixBase<Derived3> &sig)
+{
+  int p = sig.cols();
+  double c = -.5 * p * log(2 * M_PI);
+  MatrixXd temp = x - mu;
+  return -.5*((temp * sig.llt().solve(MatrixXd::Identity(p, p))).array()*temp.array()).rowwise().sum() +
+   (c - .5*logdet(sig));
+}
+
 double unifrnd(double, double);
 
 VectorXd unifrnd(double, double, int);
@@ -47,7 +76,7 @@ VectorXd loginvgammapdf(const Ref<const VectorXd> &, double, double);
 
 double loginvgammapdf(double y, double alpha, double beta);
 
-MatrixXd wishrnd(const Ref<const MatrixXd>&Sigma, const int df);
+MatrixXd wishrnd(const Ref<const MatrixXd> &Sigma, const int df);
 
 double chi2rnd(int df);
 

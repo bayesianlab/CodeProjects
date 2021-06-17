@@ -83,19 +83,34 @@ CMakeFiles/mylibs.dir/src/Optimization.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mylibs.dir/src/Optimization.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Optimization.cpp -o CMakeFiles/mylibs.dir/src/Optimization.cpp.s
 
+CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.o: CMakeFiles/mylibs.dir/flags.make
+CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.o: ../src/MultilevelModel.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp
+
+CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp > CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.i
+
+CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp -o CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.s
+
 # Object files for target mylibs
 mylibs_OBJECTS = \
 "CMakeFiles/mylibs.dir/src/Distributions.cpp.o" \
-"CMakeFiles/mylibs.dir/src/Optimization.cpp.o"
+"CMakeFiles/mylibs.dir/src/Optimization.cpp.o" \
+"CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.o"
 
 # External object files for target mylibs
 mylibs_EXTERNAL_OBJECTS =
 
 libmylibs.a: CMakeFiles/mylibs.dir/src/Distributions.cpp.o
 libmylibs.a: CMakeFiles/mylibs.dir/src/Optimization.cpp.o
+libmylibs.a: CMakeFiles/mylibs.dir/src/MultilevelModel.cpp.o
 libmylibs.a: CMakeFiles/mylibs.dir/build.make
 libmylibs.a: CMakeFiles/mylibs.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX static library libmylibs.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX static library libmylibs.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/mylibs.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mylibs.dir/link.txt --verbose=$(VERBOSE)
 
