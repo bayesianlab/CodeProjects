@@ -15,7 +15,7 @@ pdfA = logmvnpdf(ObsModel', Amean', Avariance);
 AOI = ObsModel'*OmegaI;
 Fvariance = (factorPrecision + kron(eye(T),AOI*ObsModel))\eye(nFactorsT);
 Fmean = Fvariance*(kron(eye(T), AOI)*ydemut(:));
-pdfF = logmvnpdf(factor(:)', Fmean', Fvariance);
+pdfF = logmvnpdf(factor(:)', Fmean', Fvariance)
 pdfval = pdfA- pdfF;
 end
 

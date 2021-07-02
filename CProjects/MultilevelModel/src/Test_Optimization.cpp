@@ -1,6 +1,6 @@
 #include <chrono>
 #include <iostream>
-#include <Eigen/Dense>
+#include <eigen-3.3.9/Eigen/Dense>
 #include "Optimization.hpp"
 
 using namespace std;
@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     cout << rosen(x) << endl;
     auto f2 = [](const Ref<const VectorXd> &x0)
     { return rosen(x0); };
-    Optimize f(x, sig, f2);
+    Optimize f;
     cout << endl;
     cout << "BFGS" << endl;
     f.BFGS(x, f2, 1);

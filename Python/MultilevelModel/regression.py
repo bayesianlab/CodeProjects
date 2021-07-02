@@ -198,7 +198,7 @@ def ConditionalLogLikelihood(ObsModelGuess, ytdemeaned, ObsPriorMean, ObsPriorPr
     nFactorsK = nFactors * K
     OmegaInverse = np.diag(obsPrecision, 0)
     FtOF = np.kron(OmegaInverse, factors @ factors.T)
-    Avariance = np.linalg.solve(ObsPriorPrecision @ ObsPriorMean.T + FtOF, np.eye(nFactorsK))
+    Avariance = np.linalg.solve(ObsPriorPrecision + FtOF, np.eye(nFactorsK))
     Term = ((factors @ ytdemeaned.T) * obsPrecision.T)
     Amean = np.ravel(Avariance @ (ObsPriorPrecision @ ObsPriorMean.T + Term).T, 'F')
     pdfA = logmvnpdf(np.reshape(ObsModelGuess.T, (1, nFactorsK)), np.reshape(Amean, (1, nFactorsK)),

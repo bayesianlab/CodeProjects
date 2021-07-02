@@ -14,129 +14,203 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L 74xx:74HCT4051 U?
-U 1 1 608AFB59
-P 5500 3400
-F 0 "U?" V 5596 3944 50  0000 L CNN
-F 1 "74HCT4051" V 5505 3944 50  0000 L CNN
-F 2 "" H 5500 3000 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/cd74hct4051.pdf" H 5500 3000 50  0001 C CNN
-	1    5500 3400
-	0    -1   -1   0   
-$EndComp
-$Comp
-L 74xx:74HCT4051 U?
-U 1 1 608B37CA
-P 3250 3400
-F 0 "U?" V 3346 3944 50  0000 L CNN
-F 1 "74HCT4051" V 3255 3944 50  0000 L CNN
-F 2 "" H 3250 3000 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/cd74hct4051.pdf" H 3250 3000 50  0001 C CNN
-	1    3250 3400
-	0    -1   -1   0   
-$EndComp
-$Comp
-L Device:R_Variable R?
+L Device:R_Variable Unknown
 U 1 1 608B5481
-P 2950 2250
-F 0 "R?" H 3078 2296 50  0000 L CNN
-F 1 "R" H 3078 2205 50  0000 L CNN
-F 2 "" V 2880 2250 50  0001 C CNN
-F 3 "~" H 2950 2250 50  0001 C CNN
-	1    2950 2250
-	1    0    0    -1  
+P 4050 2900
+F 0 "Unknown" V 4178 2946 50  0000 L CNN
+F 1 "R" V 4178 2855 50  0000 L CNN
+F 2 "" V 3980 2900 50  0001 C CNN
+F 3 "~" H 4050 2900 50  0001 C CNN
+	1    4050 2900
+	0    1    1    0   
 $EndComp
 $Comp
 L Device:R 10K
 U 1 1 608B5D06
-P 2950 1600
-F 0 "10K" H 3020 1646 50  0000 L CNN
-F 1 "R" H 3020 1555 50  0000 L CNN
-F 2 "" V 2880 1600 50  0001 C CNN
-F 3 "~" H 2950 1600 50  0001 C CNN
-	1    2950 1600
-	1    0    0    -1  
+P 4750 2900
+F 0 "10K" V 4820 2946 50  0000 L CNN
+F 1 "R" V 4820 2855 50  0000 L CNN
+F 2 "" V 4680 2900 50  0001 C CNN
+F 3 "~" H 4750 2900 50  0001 C CNN
+	1    4750 2900
+	0    1    1    0   
 $EndComp
-Wire Wire Line
-	2950 3000 2950 2750
-Wire Wire Line
-	2950 2100 2950 2000
-Wire Wire Line
-	2950 1450 5900 1450
-Wire Wire Line
-	5900 1450 5900 3000
-Wire Wire Line
-	5200 3000 5200 2750
-Wire Wire Line
-	5200 2750 2950 2750
-Connection ~ 2950 2750
-$Comp
-L MCU_Module:Arduino_UNO_R2 A?
-U 1 1 608BD114
-P 4300 5250
-F 0 "A?" H 4300 3969 50  0000 C CNN
-F 1 "Arduino_UNO_R2" H 4300 4060 50  0000 C CNN
-F 2 "Module:Arduino_UNO_R2" H 4300 5250 50  0001 C CIN
-F 3 "https://www.arduino.cc/en/Main/arduinoBoardUno" H 4300 5250 50  0001 C CNN
-	1    4300 5250
-	-1   0    0    1   
-$EndComp
-Wire Wire Line
-	1850 5250 3800 5250
-Wire Wire Line
-	2950 2000 2550 2000
-Wire Wire Line
-	1600 5150 3800 5150
-Connection ~ 2950 2000
-Wire Wire Line
-	2950 2000 2950 1750
 $Comp
 L Device:C 10nF
 U 1 1 608C2E1E
-P 2550 2500
-F 0 "10nF" H 2665 2546 50  0000 L CNN
-F 1 "C" H 2665 2455 50  0000 L CNN
-F 2 "" H 2588 2350 50  0001 C CNN
-F 3 "~" H 2550 2500 50  0001 C CNN
-	1    2550 2500
-	1    0    0    -1  
+P 2550 3950
+F 0 "10nF" V 2665 3996 50  0000 L CNN
+F 1 "C" V 2665 3905 50  0000 L CNN
+F 2 "" H 2588 3800 50  0001 C CNN
+F 3 "~" H 2550 3950 50  0001 C CNN
+	1    2550 3950
+	0    1    1    0   
 $EndComp
-Wire Wire Line
-	2950 2400 2950 2650
-Wire Wire Line
-	2950 2650 2550 2650
-Connection ~ 2950 2650
-Wire Wire Line
-	2950 2650 2950 2750
-Wire Wire Line
-	2550 2350 1850 2350
-Wire Wire Line
-	1850 2350 1850 5250
 $Comp
 L Device:C 10nF
 U 1 1 608C5621
-P 2550 1850
-F 0 "10nF" H 2665 1896 50  0000 L CNN
-F 1 "C" H 2665 1805 50  0000 L CNN
-F 2 "" H 2588 1700 50  0001 C CNN
-F 3 "~" H 2550 1850 50  0001 C CNN
-	1    2550 1850
-	1    0    0    -1  
+P 2550 3300
+F 0 "10nF" V 2665 3346 50  0000 L CNN
+F 1 "C" V 2665 3255 50  0000 L CNN
+F 2 "" H 2588 3150 50  0001 C CNN
+F 3 "~" H 2550 3300 50  0001 C CNN
+	1    2550 3300
+	0    1    1    0   
 $EndComp
 Wire Wire Line
-	2550 1700 1600 1700
+	3100 5300 3100 5000
 Wire Wire Line
-	1600 1700 1600 5150
+	3300 5250 3300 5000
 Wire Wire Line
-	5050 3900 2950 3900
+	3400 5150 3400 5000
 Wire Wire Line
-	2950 3900 2950 3700
+	5200 5150 3400 5150
 Wire Wire Line
-	4800 4850 5050 4850
+	4050 4700 4000 4700
 Wire Wire Line
-	5050 4850 5050 3900
+	5400 5300 3100 5300
 Wire Wire Line
-	4800 4750 5200 4750
+	5800 5050 5950 5050
+$Comp
+L MCU_Module:Arduino_UNO_R2 A?
+U 1 1 608BD114
+P 4400 6550
+F 0 "A?" H 4400 5269 50  0001 C CNN
+F 1 "Arduino_UNO_R2" H 4400 5361 50  0000 C CNN
+F 2 "Module:Arduino_UNO_R2" H 4400 6550 50  0001 C CIN
+F 3 "https://www.arduino.cc/en/Main/arduinoBoardUno" H 4400 6550 50  0001 C CNN
+	1    4400 6550
+	-1   0    0    1   
+$EndComp
 Wire Wire Line
-	5200 4750 5200 3700
+	4900 6150 5400 6150
+Wire Wire Line
+	5400 6150 5400 5300
+Wire Wire Line
+	4900 6050 5350 6050
+Wire Wire Line
+	5800 5050 5800 6250
+Wire Wire Line
+	4900 6450 5750 6450
+Wire Wire Line
+	4900 6550 5650 6550
+Wire Wire Line
+	4900 6750 5250 6750
+Wire Wire Line
+	4900 6850 5200 6850
+Wire Wire Line
+	5800 6250 4900 6250
+Wire Wire Line
+	5200 6850 5200 5150
+Wire Wire Line
+	5150 5250 3300 5250
+Wire Wire Line
+	4900 6950 5150 6950
+Wire Wire Line
+	5150 6950 5150 5250
+Wire Wire Line
+	5750 6450 5750 5000
+Wire Wire Line
+	5950 5050 5950 5000
+Wire Wire Line
+	5350 6050 5350 5000
+Wire Wire Line
+	5650 6550 5650 5000
+$Comp
+L 74xx:74HCT4051 U?
+U 1 1 608AFB59
+P 5650 4700
+F 0 "U?" V 5746 5244 50  0000 L CNN
+F 1 "74HCT4051" V 5655 5244 50  0000 L CNN
+F 2 "" H 5650 4300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/cd74hct4051.pdf" H 5650 4300 50  0001 C CNN
+	1    5650 4700
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5550 5000 5550 6650
+Wire Wire Line
+	5550 6650 4900 6650
+$Comp
+L 74xx:74HCT4051 U?
+U 1 1 608B37CA
+P 3400 4700
+F 0 "U?" V 3496 5244 50  0000 L CNN
+F 1 "74HCT4051" V 3405 5244 50  0000 L CNN
+F 2 "" H 3400 4300 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/cd74hct4051.pdf" H 3400 4300 50  0001 C CNN
+	1    3400 4700
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5250 6750 5250 5100
+Wire Wire Line
+	5250 5100 3500 5100
+Wire Wire Line
+	3500 5100 3500 5000
+Wire Wire Line
+	3700 5000 3700 5050
+Wire Wire Line
+	3700 5050 5800 5050
+Connection ~ 5800 5050
+Wire Wire Line
+	2400 3950 2400 6550
+Wire Wire Line
+	2400 6550 3900 6550
+Wire Wire Line
+	2400 3300 2300 3300
+Wire Wire Line
+	2300 3300 2300 6450
+Wire Wire Line
+	2300 6450 3900 6450
+Wire Wire Line
+	3100 2900 3900 2900
+Wire Wire Line
+	4200 2900 4600 2900
+Wire Wire Line
+	3100 3300 2700 3300
+Connection ~ 3100 3300
+Wire Wire Line
+	3100 3300 3100 2900
+Connection ~ 3100 3950
+Wire Wire Line
+	3100 3950 3100 3300
+Wire Wire Line
+	5350 4300 5350 4200
+Wire Wire Line
+	6050 3800 3800 3800
+Wire Wire Line
+	3800 3800 3800 4100
+Wire Wire Line
+	6050 3800 6050 4200
+Wire Wire Line
+	5350 4200 3100 4200
+Wire Wire Line
+	3100 3950 3100 4200
+Connection ~ 3100 4200
+Wire Wire Line
+	3100 4200 3100 4300
+Wire Wire Line
+	2700 3950 3100 3950
+Wire Wire Line
+	4900 2900 6050 2900
+Wire Wire Line
+	6050 2900 6050 3800
+Connection ~ 6050 3800
+Wire Wire Line
+	3800 4100 4050 4100
+Wire Wire Line
+	4050 4100 4050 4700
+Connection ~ 3800 4100
+Wire Wire Line
+	3800 4100 3800 4300
+Wire Wire Line
+	6250 4700 6300 4700
+Wire Wire Line
+	6300 4700 6300 4200
+Wire Wire Line
+	6300 4200 6050 4200
+Connection ~ 6050 4200
+Wire Wire Line
+	6050 4200 6050 4300
 $EndSCHEMATC

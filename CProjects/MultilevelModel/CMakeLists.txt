@@ -2,7 +2,9 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE DEBUG)
+set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops")
+# message(STATUS ${CMAKE_CXX_FLAGS_REALEASE})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 find_package(Eigen3)
@@ -21,17 +23,10 @@ endif()
 # include_directories(/usr/local/lib/python3.8/dist-packages/numpy/core/include)
 
 
-# add_library(mylibs "src/Distributions.cpp" "src/Optimization.cpp" "src/MultilevelModel.cpp"
-#  "include/Distributions.hpp" "include/Optimization.hpp" "include/MultilevelModel" )
-# target_include_directories(mylibs PUBLIC src/ include/)
-
-# add_executable(out src/Test_Optimization.cpp)
-# target_link_libraries(out mylibs)
-
-# add_executable(dist src/Test_Distributions.cpp)
-# target_link_libraries(dist PRIVATE ${Python3_LIBRARIES} mylibs)
+include_directories(include)
+add_library(mylib src/Distributions.cpp src/MultilevelModel.cpp src/seed_settings.cpp src/Optimization.cpp)
 
 
 
-add_executable(ml src/Test_MultilevelModel.cpp src/MultilevelModel.cpp)
-target_include_directories(ml PUBLIC include ) 
+add_executable(ml src/Test_MultilevelModel.cpp )
+target_link_libraries(ml PUBLIC mylib) 

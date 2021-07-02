@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/dillon/CodeProjects/CProjects/MultilevelModel/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
-
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
@@ -77,6 +66,17 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
+
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -123,13 +123,53 @@ ml/fast:
 	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/build
 .PHONY : ml/fast
 
+#=============================================================================
+# Target rules for targets named mylib
+
+# Build rule for target.
+mylib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mylib
+.PHONY : mylib
+
+# fast build rule for target.
+mylib/fast:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/build
+.PHONY : mylib/fast
+
+src/Distributions.o: src/Distributions.cpp.o
+
+.PHONY : src/Distributions.o
+
+# target to build an object file
+src/Distributions.cpp.o:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/Distributions.cpp.o
+.PHONY : src/Distributions.cpp.o
+
+src/Distributions.i: src/Distributions.cpp.i
+
+.PHONY : src/Distributions.i
+
+# target to preprocess a source file
+src/Distributions.cpp.i:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/Distributions.cpp.i
+.PHONY : src/Distributions.cpp.i
+
+src/Distributions.s: src/Distributions.cpp.s
+
+.PHONY : src/Distributions.s
+
+# target to generate assembly for a file
+src/Distributions.cpp.s:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/Distributions.cpp.s
+.PHONY : src/Distributions.cpp.s
+
 src/MultilevelModel.o: src/MultilevelModel.cpp.o
 
 .PHONY : src/MultilevelModel.o
 
 # target to build an object file
 src/MultilevelModel.cpp.o:
-	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/MultilevelModel.cpp.o
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o
 .PHONY : src/MultilevelModel.cpp.o
 
 src/MultilevelModel.i: src/MultilevelModel.cpp.i
@@ -138,7 +178,7 @@ src/MultilevelModel.i: src/MultilevelModel.cpp.i
 
 # target to preprocess a source file
 src/MultilevelModel.cpp.i:
-	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/MultilevelModel.cpp.i
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/MultilevelModel.cpp.i
 .PHONY : src/MultilevelModel.cpp.i
 
 src/MultilevelModel.s: src/MultilevelModel.cpp.s
@@ -147,8 +187,35 @@ src/MultilevelModel.s: src/MultilevelModel.cpp.s
 
 # target to generate assembly for a file
 src/MultilevelModel.cpp.s:
-	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/MultilevelModel.cpp.s
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/MultilevelModel.cpp.s
 .PHONY : src/MultilevelModel.cpp.s
+
+src/Optimization.o: src/Optimization.cpp.o
+
+.PHONY : src/Optimization.o
+
+# target to build an object file
+src/Optimization.cpp.o:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/Optimization.cpp.o
+.PHONY : src/Optimization.cpp.o
+
+src/Optimization.i: src/Optimization.cpp.i
+
+.PHONY : src/Optimization.i
+
+# target to preprocess a source file
+src/Optimization.cpp.i:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/Optimization.cpp.i
+.PHONY : src/Optimization.cpp.i
+
+src/Optimization.s: src/Optimization.cpp.s
+
+.PHONY : src/Optimization.s
+
+# target to generate assembly for a file
+src/Optimization.cpp.s:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/Optimization.cpp.s
+.PHONY : src/Optimization.cpp.s
 
 src/Test_MultilevelModel.o: src/Test_MultilevelModel.cpp.o
 
@@ -177,21 +244,58 @@ src/Test_MultilevelModel.cpp.s:
 	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/Test_MultilevelModel.cpp.s
 .PHONY : src/Test_MultilevelModel.cpp.s
 
+src/seed_settings.o: src/seed_settings.cpp.o
+
+.PHONY : src/seed_settings.o
+
+# target to build an object file
+src/seed_settings.cpp.o:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/seed_settings.cpp.o
+.PHONY : src/seed_settings.cpp.o
+
+src/seed_settings.i: src/seed_settings.cpp.i
+
+.PHONY : src/seed_settings.i
+
+# target to preprocess a source file
+src/seed_settings.cpp.i:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/seed_settings.cpp.i
+.PHONY : src/seed_settings.cpp.i
+
+src/seed_settings.s: src/seed_settings.cpp.s
+
+.PHONY : src/seed_settings.s
+
+# target to generate assembly for a file
+src/seed_settings.cpp.s:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/seed_settings.cpp.s
+.PHONY : src/seed_settings.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... ml"
+	@echo "... rebuild_cache"
+	@echo "... mylib"
+	@echo "... src/Distributions.o"
+	@echo "... src/Distributions.i"
+	@echo "... src/Distributions.s"
 	@echo "... src/MultilevelModel.o"
 	@echo "... src/MultilevelModel.i"
 	@echo "... src/MultilevelModel.s"
+	@echo "... src/Optimization.o"
+	@echo "... src/Optimization.i"
+	@echo "... src/Optimization.s"
 	@echo "... src/Test_MultilevelModel.o"
 	@echo "... src/Test_MultilevelModel.i"
 	@echo "... src/Test_MultilevelModel.s"
+	@echo "... src/seed_settings.o"
+	@echo "... src/seed_settings.i"
+	@echo "... src/seed_settings.s"
 .PHONY : help
 
 

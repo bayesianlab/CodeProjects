@@ -1,7 +1,6 @@
 #ifndef DIST_H
 #define DIST_H
-#include "Distributions.hpp"
-#include <Eigen/Dense>
+#include <eigen-3.3.9/Eigen/Dense>
 #include <boost/math/distributions/exponential.hpp>
 #include <boost/math/distributions/normal.hpp>
 #include <boost/random/gamma_distribution.hpp>
@@ -13,18 +12,18 @@
 #include <limits>
 #include <math.h>
 #include <random>
-#include <unsupported/Eigen/KroneckerProduct>
+#include <eigen3/unsupported/Eigen/KroneckerProduct>
 
 using namespace Eigen;
 using namespace std;
-
-
 
 VectorXd gammarnd(double shape, double scale, int N);
 
 double igammarnd(double shape, double scale);
 
 VectorXd igammarnd(double shape, double scale, int N);
+
+VectorXd igammarnd(const double shape, const VectorXd &scale);
 
 double normrnd(double mu, double sig);
 
@@ -51,20 +50,13 @@ MatrixXd mvnrnd(const MatrixBase<A> &mu, const MatrixBase<B> &sig, int N)
 template <typename Derived1>
 double logdet(const MatrixBase<Derived1> &sig)
 {
-  LLT<MatrixXd> L(sig);
-  MatrixXd X = L.matrixLLT();
-  return 2 * X.diagonal().array().log().sum();
+  MatrixXd x = sig.llt().matrixL();
+  return 2 * x.diagonal().array().log().sum();
 }
 
-template <typename Derived1, typename Derived2, typename Derived3>
-VectorXd logmvnpdf(const MatrixBase<Derived1> &x, const MatrixBase<Derived2> &mu, const MatrixBase<Derived3> &sig)
-{
-  int p = sig.cols();
-  double c = -.5 * p * log(2 * M_PI);
-  MatrixXd temp = x - mu;
-  return -.5*((temp * sig.llt().solve(MatrixXd::Identity(p, p))).array()*temp.array()).rowwise().sum() +
-   (c - .5*logdet(sig));
-}
+double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
+                   const MatrixXd &Sig);
+             
 
 double unifrnd(double, double);
 

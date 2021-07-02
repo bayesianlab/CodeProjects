@@ -1,8 +1,7 @@
 #ifndef OPTIM_H
 #define OPTIM_H
 
-#include <Eigen/Dense>
-#include <Eigen/Dense>
+#include <eigen-3.3.9/Eigen/Dense>
 #include "Optimization.hpp"
 #include <iostream>
 #include <math.h>
@@ -17,27 +16,21 @@ using namespace boost;
 #define SEPS sqrt(EPS)
 #define GR (0.5 * (sqrt(5) + 1))
 
+void PressEnterToContinue();
 
 class Optimize
 {
 public:
-    double F_tol, grad_tol, x_tol, ls_tol; 
+    double F_tol, grad_tol, x_tol, line_search_tol;
     VectorXd x1;
-    VectorXd xlast;
     MatrixXd B1;
     double fval1;
-    int MaxIterations = 100;
+    int MaxIterations;
     MatrixXd Hess;
 
-    Optimize(const Ref<const VectorXd> &x0, const Ref<const MatrixXd> &HessianGuess,
-             std::function<double(const Ref<const VectorXd> &xstar)> F);
+    Optimize();
 
-    Optimize(const Ref<const VectorXd> &x0, const Ref<const MatrixXd> &HessianGuess,
-             std::function<double(const Ref<const VectorXd> &xstar)> F, double options[4]);
-
-    Optimize(const Ref<const VectorXd> &point_guess, const Ref<const MatrixXd> &HessianGuess,
-             std::function<double(const Ref<const VectorXd> &xstar)> _F,
-             int _MaxIterations, double _opt_tol);
+    Optimize(double options[5]);
 
     void BFGS(VectorXd &guess, std::function<double(const Ref<const VectorXd> &xstar)> F, int disp_on = 0);
 
@@ -48,6 +41,9 @@ public:
     VectorXd ForwardDifferences(const Ref<const VectorXd> &x0, std::function<double(const Ref<const VectorXd> &xstar)> F);
 
     void AprroximateHessian(const Ref<const VectorXd> &point, std::function<double(const Ref<const VectorXd> &xstar)> F);
+
+    void AprroximateDiagHessian(const Ref<const VectorXd> &point,
+                                  std::function<double(const Ref<const VectorXd> &xstar)> F);
 
     double BTLineSearch(const Ref<const VectorXd> &point, const Ref<const VectorXd> &pk, const Ref<const VectorXd> &del0,
                         std::function<double(const Ref<const VectorXd> &xstar)> F);

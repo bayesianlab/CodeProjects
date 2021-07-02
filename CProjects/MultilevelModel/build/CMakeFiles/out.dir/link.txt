@@ -1,1 +1,0 @@
-/usr/bin/c++    -rdynamic CMakeFiles/out.dir/src/Test_Optimization.cpp.o  -o out  libmylibs.a 

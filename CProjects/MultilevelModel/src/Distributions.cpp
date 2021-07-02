@@ -1,7 +1,16 @@
 #include "Distributions.hpp"
 
-time_t now = time(0);
+time_t now = 1;
 boost::random::mt19937 GLOBAL_SEED(now);
+
+double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
+                 const MatrixXd &Sig)
+{
+  int p = Sig.cols();
+  double c = -.5 * p * log(2 * M_PI) - .5 * logdet(Sig);
+  double v = -.5 * ( (x - mu)* Sig.llt().solve((x - mu).transpose())).value() + c;
+  return v;
+}
 
 VectorXd gammarnd(double shape, double scale, int N)
 {
@@ -30,6 +39,22 @@ VectorXd igammarnd(double shape, double scale, int N)
 {
   VectorXd g = gammarnd(shape, scale, N);
   return 1. / g.array();
+}
+
+VectorXd igammarnd(double shape, const VectorXd &scale)
+{
+  /*
+(1/theta^k gamma(k)) x^(k-1) e^(-x/theta) is the gamma
+   parameterization
+*/
+  VectorXd variates(scale.size());
+  double s;
+  for (int i = 0; i < scale.size(); ++i)
+  {
+    s = scale(i);
+    variates(i) = igammarnd(shape, s);
+  }
+  return variates;
 }
 
 double normrnd(double mu, double sig)
@@ -177,7 +202,6 @@ MatrixXd CreateSigma(double rho, int Size)
   }
   return CorrMat;
 }
-
 
 /* VectorXd generateChiSquaredVec(double df, int rows) {
   std::mt19937 gen(rd());

@@ -10,8 +10,6 @@ PhiKronPhi = kron(G,G);
 Im = eye(size(PhiKronPhi,1));
 R = spdiags(sigmau', 0, K*lags,K);
 RRT = R*R';
-Im - PhiKronPhi
-full(RRT(:))
 P0 = ((Im - PhiKronPhi)\RRT(:));
 P0 = reshape(P0, K*lags,K*lags);
 [~,p] = chol(P0);

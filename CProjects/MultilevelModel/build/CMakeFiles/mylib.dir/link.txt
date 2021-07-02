@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmylib.a  CMakeFiles/mylib.dir/src/Distributions.cpp.o CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o CMakeFiles/mylib.dir/src/seed_settings.cpp.o CMakeFiles/mylib.dir/src/Optimization.cpp.o
+/usr/bin/ranlib libmylib.a

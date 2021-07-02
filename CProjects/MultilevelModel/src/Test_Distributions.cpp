@@ -1,7 +1,7 @@
 #include <chrono>
 #include <iostream>
 
-#include <Eigen/Dense>
+#include <eigen-3.3.9/Eigen/Dense>
 #include <boost/random/mersenne_twister.hpp>
 
 #include "Distributions.hpp"
@@ -11,11 +11,18 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     int n = 3;
-    MatrixXd sig = MatrixXd::Identity(n,n);
+    // cout << logdet(sig) << endl;
+    // VectorXd y = x.transpose();
+    // VectorXd m = mu.transpose();
+    MatrixXd sig = MatrixXd::Identity(n, n);
+    sig = .5*sig;
     VectorXd x(n);
-    x << 0, 0,0;
+    x << 0, 0, 0;
     VectorXd mu(n);
     mu << .5, .5, 1;
+    cout << logmvnpdf(x.transpose(), mu.transpose(), sig) << endl;
+    cout << "Correct solution "
+         << "-3.21709" << endl;
     int on = 0;
     if (on)
     {
@@ -33,12 +40,6 @@ int main(int argc, char *argv[])
         cout << "Wishart" << endl;
         cout << wishrnd(MatrixXd::Identity(10, 10), 10) << endl;
     }
-    sig = .5*sig; 
-    // cout << logdet(sig) << endl;
-    // VectorXd y = x.transpose();
-    // VectorXd m = mu.transpose();
-    cout << logmvnpdf(x.transpose(),mu.transpose(),sig) << endl; 
-    cout << "Correct solution " << "-3.21709" << endl; 
-    
+
     return 0;
 }
