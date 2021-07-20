@@ -8,7 +8,6 @@
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/uniform_01.hpp>
 #include <boost/random/variate_generator.hpp>
-#include <ctime>
 #include <limits>
 #include <math.h>
 #include <random>
@@ -55,8 +54,7 @@ double logdet(const MatrixBase<Derived1> &sig)
 }
 
 double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
-                   const MatrixXd &Sig);
-             
+                 const MatrixXd &Sig);
 
 double unifrnd(double, double);
 
@@ -78,6 +76,8 @@ MatrixXd chi2rnd(int df, int N, int J);
 
 MatrixXd CreateSigma(double rho, int size);
 
+double logmvtpdf(const RowVectorXd &x, const RowVectorXd &mu, const MatrixXd &Variance,
+              double df);
 /*
 class Dist {
 private:

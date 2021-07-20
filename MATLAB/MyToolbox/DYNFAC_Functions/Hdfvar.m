@@ -7,6 +7,8 @@ function [storeFt, storeVAR, storeOM, storeStateTransitions,...
 
 arerrors = 0;
 
+nargin
+
 [checkfr, checkfc] = size(initFactor);
 [checkomr, checkomc] = size(initobsmodel);
 [checkstr, checkstc] = size(initStateTransitions);
@@ -26,9 +28,9 @@ if checkstr ~= checkfr
     error('Not enough state transitions.')
 end
 
-periodloc = strfind(DotMatFile, '.') ;
-checkpointdir = join( [ '~/CodeProjects/MATLAB/MyToolbox/Checkpoints/',...
-    DotMatFile(1:periodloc-1),'_Checkpoints/'] )
+% periodloc = strfind(DotMatFile, '.') ;
+% checkpointdir = join( [ '~/CodeProjects/MATLAB/MyToolbox/Checkpoints/',...
+%     DotMatFile(1:periodloc-1),'_Checkpoints/'] )
 fprintf('Hdfvar Estimation\n')
 checkpointfilename = 'ckpt';
 start = 1;
@@ -44,6 +46,9 @@ SurX = surForm(Xt,K);
 [~, dimX] = size(Xt);
 dimSurX = dimX*K;
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
+
+Identities{1} = [1,1,1,1,0,0,0,0]'; 
+
 levels = length(sectorInfo);
 [~,dimx]=size(Xt);
 FtIndexMat = CreateFactorIndexMat(InfoCell);
@@ -76,27 +81,27 @@ runningAvgOmMeans = zeros(K,levels);
 runningAvgOmVars = ones(K,levels);
 g1bar = zeros(lagState,1)
 G1bar = zeros(lagState);
-if exist(checkpointdir, 'dir')
-    ckptfilename = join([checkpointdir, checkpointfilename, '.mat']);
-    if exist(ckptfilename, 'file')
-        fprintf('Found a checkpoint file\n')
-        load(ckptfilename)
-        fprintf('Loaded checkpoint file\n')
-    end
-else
-    fprintf('Created a checkpoint dir in %s\n', checkpointdir')
-    mkdir(checkpointdir)
-end
+% if exist(checkpointdir, 'dir')
+%     ckptfilename = join([checkpointdir, checkpointfilename, '.mat']);
+%     if exist(ckptfilename, 'file')
+%         fprintf('Found a checkpoint file\n')
+%         load(ckptfilename)
+%         fprintf('Loaded checkpoint file\n')
+%     end
+% else
+%     fprintf('Created a checkpoint dir in %s\n', checkpointdir')
+%     mkdir(checkpointdir)
+% end
 
 Xbeta = zeros(K,T);
 VAR = 0;
 if finishedMainRun == 0
     for iterator = start : Sims
-        if mod(iterator, saveFrequency) == 0
-            fprintf('File saved at iteration count %i\n', iterator)
-            start = iterator;
-            save(join( [checkpointdir, 'ckpt'] ) )
-        end
+%         if mod(iterator, saveFrequency) == 0
+%             fprintf('File saved at iteration count %i\n', iterator)
+%             start = iterator;
+%             save(join( [checkpointdir, 'ckpt'] ) )
+%         end
         fprintf('Simulation %i\n',iterator)
         %% Draw VAR params
         
@@ -105,12 +110,14 @@ if finishedMainRun == 0
             B0inv, FtIndexMat, subsetIndices);
         
         
-        %% Draw loadings
-        [currobsmod, Ft, ~, accept]=...
-            LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-            obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau);
-        currobsmod = currobsmod + restrictions - (currobsmod.*restrictions);
-        currobsmod(zerorestrictions) = 0;
+        
+        
+%         %% Draw loadings
+%         [currobsmod, Ft, ~, accept]=...
+%             LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
+%             obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau);
+%         currobsmod = currobsmod + restrictions - (currobsmod.*restrictions);
+%         currobsmod(zerorestrictions) = 0;
         
 
         %% Variance
@@ -119,29 +126,31 @@ if finishedMainRun == 0
         obsVariance = kowUpdateObsVariances(resids, v0,r0,T);
         obsPrecision = 1./obsVariance;
         
-        %% Factor AR Parameters
-        for n=1:nFactors
-            [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n),...
-                g0, G0);
-        end
+        obsPrecision
         
-        if identification == 2
-            factorVariance = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
-        end
+%         %% Factor AR Parameters
+%         for n=1:nFactors
+%             [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n),...
+%                 g0, G0);
+%         end
         
+%         if identification == 2
+%             factorVariance = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
+%         end
+%         
         %% Storage
         if iterator > burnin
-            v = iterator - burnin;
-            storeVAR(:,:,v)=VAR;
-            storeOM(:,:,v) = currobsmod;
-            storeStateTransitions(:,:,v) = stateTransitions;
-            storeFt(:,:,v) = Ft;
-            storeObsPrecision(:,v) = obsPrecision;
-            storeFactorVar(:,v) = factorVariance;
-            g1bar = g1bar + g1;
-            G1bar = G1bar + G1;
+%             v = iterator - burnin;
+%             storeVAR(:,:,v)=VAR;
+%             storeOM(:,:,v) = currobsmod;
+%             storeStateTransitions(:,:,v) = stateTransitions;
+%             storeFt(:,:,v) = Ft;
+%             storeObsPrecision(:,v) = obsPrecision;
+%             storeFactorVar(:,v) = factorVariance;
+%             g1bar = g1bar + g1;
+%             G1bar = G1bar + G1;
         end
-        ap = ap + accept;
+%         ap = ap + accept;
     end
     
     Runs = Sims- burnin;
@@ -176,7 +185,7 @@ if finishedMainRun == 0
     [K,T] = size(yt);
     finishedMainRun = 1;
     startRR = 1;
-    save(join( [checkpointdir, 'ckpt'] ) )
+%     save(join( [checkpointdir, 'ckpt'] ) )
 end
 
 
@@ -420,7 +429,7 @@ if estML == 1
 else
     ml = 'nothing';
     summary =0;
-    rmdir(checkpointdir, 's')
+%     rmdir(checkpointdir, 's')
 end
 fprintf('New Method Estimation\n')
 end

@@ -1,7 +1,10 @@
 file(REMOVE_RECURSE
   "CMakeFiles/mylib.dir/src/Distributions.cpp.o"
+  "CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.o"
   "CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o"
+  "CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.o"
   "CMakeFiles/mylib.dir/src/Optimization.cpp.o"
+  "CMakeFiles/mylib.dir/src/Plotter.cpp.o"
   "CMakeFiles/mylib.dir/src/seed_settings.cpp.o"
   "libmylib.a"
   "libmylib.pdb"

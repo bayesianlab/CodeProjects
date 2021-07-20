@@ -6,55 +6,21 @@
 
 #IncludeRegexTransform: 
 
-../include/Distributions.hpp
+../include/LineSearchRoutines.hpp
 eigen-3.3.9/Eigen/Dense
 -
-boost/math/distributions/exponential.hpp
+iostream
 -
-boost/math/distributions/normal.hpp
--
-boost/random/gamma_distribution.hpp
--
-boost/random/mersenne_twister.hpp
--
-boost/random/normal_distribution.hpp
--
-boost/random/uniform_01.hpp
--
-boost/random/variate_generator.hpp
--
-ctime
+math.h
 -
 limits
 -
-math.h
--
-random
--
-eigen3/unsupported/Eigen/KroneckerProduct
--
+NumericalDifferentiation.hpp
+../include/NumericalDifferentiation.hpp
 
-../include/MultilevelModel.hpp
-iostream
--
-stdexcept
--
-map
--
-string
--
-math.h
--
-chrono
--
+../include/NumericalDifferentiation.hpp
 eigen-3.3.9/Eigen/Dense
 -
-eigen-3.3.9/unsupported/Eigen/KroneckerProduct
--
-Distributions.hpp
-../include/Distributions.hpp
-Optimization.hpp
-../include/Optimization.hpp
 
 ../include/Optimization.hpp
 eigen-3.3.9/Eigen/Dense
@@ -69,8 +35,16 @@ limits
 -
 boost/format.hpp
 -
+algorithm
+-
+vector
+-
+LineSearchRoutines.hpp
+../include/LineSearchRoutines.hpp
+NumericalDifferentiation.hpp
+../include/NumericalDifferentiation.hpp
 
-/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp
-MultilevelModel.hpp
-/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.hpp
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Optimization.cpp
+Optimization.hpp
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Optimization.hpp
 

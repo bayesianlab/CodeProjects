@@ -6,10 +6,6 @@ nFactors = size(StateObsModel,2);
 k1 = 1:nEqns;
 k2= 1:nFactors;
 fullpre = diag(obsModelPrecision);
-size(StatePrecision)
-size( kron(eye(T),...
-    StateObsModel'* fullpre *StateObsModel))
-size(StateObsModel)
 Pinv = (StatePrecision + kron(eye(T),...
     StateObsModel'* fullpre *StateObsModel))\eye(size(StatePrecision,1));
 xpx = zeros(pK,pK);

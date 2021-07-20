@@ -23,8 +23,6 @@ boost/random/uniform_01.hpp
 -
 boost/random/variate_generator.hpp
 -
-ctime
--
 limits
 -
 math.h
@@ -33,6 +31,18 @@ random
 -
 eigen3/unsupported/Eigen/KroneckerProduct
 -
+
+../include/LineSearchRoutines.hpp
+eigen-3.3.9/Eigen/Dense
+-
+iostream
+-
+math.h
+-
+limits
+-
+NumericalDifferentiation.hpp
+../include/NumericalDifferentiation.hpp
 
 ../include/MultilevelModel.hpp
 iostream
@@ -47,6 +57,8 @@ math.h
 -
 chrono
 -
+fstream
+-
 eigen-3.3.9/Eigen/Dense
 -
 eigen-3.3.9/unsupported/Eigen/KroneckerProduct
@@ -55,6 +67,10 @@ Distributions.hpp
 ../include/Distributions.hpp
 Optimization.hpp
 ../include/Optimization.hpp
+
+../include/NumericalDifferentiation.hpp
+eigen-3.3.9/Eigen/Dense
+-
 
 ../include/Optimization.hpp
 eigen-3.3.9/Eigen/Dense
@@ -69,13 +85,31 @@ limits
 -
 boost/format.hpp
 -
+algorithm
+-
+vector
+-
+LineSearchRoutines.hpp
+../include/LineSearchRoutines.hpp
+NumericalDifferentiation.hpp
+../include/NumericalDifferentiation.hpp
+
+../include/Plotter.hpp
+iostream
+-
+fstream
+-
+string
+-
+boost/format.hpp
+-
+eigen-3.3.9/Eigen/Dense
+-
 
 /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_MultilevelModel.cpp
 iostream
 -
 stdlib.h
--
-fstream
 -
 map
 -
@@ -91,4 +125,10 @@ MultilevelModel.hpp
 /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.hpp
 Distributions.hpp
 /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Distributions.hpp
+Plotter.hpp
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Plotter.hpp
+LineSearchRoutines.hpp
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/LineSearchRoutines.hpp
+NumericalDifferentiation.hpp
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/NumericalDifferentiation.hpp
 

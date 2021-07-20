@@ -1,6 +1,7 @@
 #include "Distributions.hpp"
 
-time_t now = 1;
+// time_t now = time(0);
+time_t now = 7;
 boost::random::mt19937 GLOBAL_SEED(now);
 
 double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
@@ -8,8 +9,18 @@ double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
 {
   int p = Sig.cols();
   double c = -.5 * p * log(2 * M_PI) - .5 * logdet(Sig);
-  double v = -.5 * ( (x - mu)* Sig.llt().solve((x - mu).transpose())).value() + c;
+  double v = -.5 * ((x - mu) * Sig.llt().solve((x - mu).transpose())).value() + c;
   return v;
+}
+
+double logmvtpdf(const RowVectorXd &x, const RowVectorXd &mu,
+                 const MatrixXd &Variance, double df)
+{
+  int J = Variance.cols();
+  double dfJhalf = .5 * (df + J);
+  double ld = logdet(Variance);
+  double C = lgamma(dfJhalf) - lgamma(.5 * df) - .5 * J * log(df * M_PI) - .5 * ld;
+  return C - dfJhalf * log(1. + (((x - mu) * (Variance.llt().solve((x - mu).transpose()))).value() / df));
 }
 
 VectorXd gammarnd(double shape, double scale, int N)
@@ -31,8 +42,10 @@ double igammarnd(double shape, double scale)
 (1/theta^k gamma(k)) x^(k-1) e^(-x/theta) is the gamma
    parameterization
 */
-  boost::random::gamma_distribution<> gammavars(shape, scale);
-  return 1.0 / gammavars(GLOBAL_SEED);
+  boost::random::gamma_distribution<> g(shape, scale);
+  boost::variate_generator<boost::mt19937 &, boost::gamma_distribution<>>
+      genvars(GLOBAL_SEED, g);
+  return 1.0 / genvars();
 }
 
 VectorXd igammarnd(double shape, double scale, int N)
@@ -46,13 +59,13 @@ VectorXd igammarnd(double shape, const VectorXd &scale)
   /*
 (1/theta^k gamma(k)) x^(k-1) e^(-x/theta) is the gamma
    parameterization
+   Mean = 1/(theta*(k-1))
+   Variance = 1/(theta^2 (k-1)^2(k-2))
 */
   VectorXd variates(scale.size());
-  double s;
   for (int i = 0; i < scale.size(); ++i)
   {
-    s = scale(i);
-    variates(i) = igammarnd(shape, s);
+    variates(i) = igammarnd(shape, scale(i));
   }
   return variates;
 }
@@ -65,6 +78,7 @@ double normrnd(double mu, double sig)
 
 VectorXd normrnd(double mu, double sig, int N)
 {
+  /* Normal is standard deviation parameterization */
   boost::random::normal_distribution<> normalDist(mu, sig);
   VectorXd Z(N);
   boost::variate_generator<boost::mt19937 &, boost::normal_distribution<>>
@@ -192,15 +206,28 @@ MatrixXd CreateSigma(double rho, int Size)
     {
       if (i > j)
       {
-        CorrMat(i, j) = pow(rho, i);
+        CorrMat(i, j) = pow(rho, i-j);
       }
       else if (j > i)
       {
-        CorrMat(i, j) = pow(rho, j);
+        CorrMat(i, j) = pow(rho, j-i);
       }
     }
   }
   return CorrMat;
+}
+
+double mvtpdf(const VectorXd &x, const VectorXd &mu,
+              const MatrixXd &Variance, int df)
+{
+  int J = Variance.cols();
+  double numconst = tgamma((df + J) * .5);
+  double denconst = pow(M_PI * df, J * .5) * tgamma(df * .5) *
+                    pow(Variance.determinant(), .5);
+  VectorXd xMmu = x - mu;
+  double Mahalnobis = ((xMmu.transpose() * Variance.inverse()) * xMmu).value();
+  double kernel = pow(1 + (pow(df, -1) * Mahalnobis), -.5 * (df + J));
+  return numconst * pow(denconst, -1) * kernel;
 }
 
 /* VectorXd generateChiSquaredVec(double df, int rows) {

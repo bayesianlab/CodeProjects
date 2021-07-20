@@ -57,12 +57,7 @@ A = .5*A;
 A(1,1) = 1; 
 A(5,2) = 1;
 
-f= kowUpdateLatent(resids(:), A, FP, ones(8,1))
-f=reshape(f, 2,100);
-% hold on 
-% plot(factors(:,1))
-% plot(f(1,:))
-mean(f,2)
+kowUpdateLatent(resids, A, 
 
 
 

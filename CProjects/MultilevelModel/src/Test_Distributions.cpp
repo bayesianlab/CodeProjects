@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     // VectorXd y = x.transpose();
     // VectorXd m = mu.transpose();
     MatrixXd sig = MatrixXd::Identity(n, n);
-    sig = .5*sig;
+    sig = .5 * sig;
     VectorXd x(n);
     x << 0, 0, 0;
     VectorXd mu(n);
@@ -39,6 +39,13 @@ int main(int argc, char *argv[])
         cout << chi2rnd(1, 5, 5) << endl;
         cout << "Wishart" << endl;
         cout << wishrnd(MatrixXd::Identity(10, 10), 10) << endl;
+        RowVectorXd mu = RowVectorXd::Zero(3);
+        RowVectorXd x = RowVectorXd::Ones(3);
+        sig = CreateSigma(.5, 3);
+        cout << logmvtpdf(x, mu, sig, 15) << endl;
+        cout << "Correct answer"
+             << " -3.3695" << endl;
+ 
     }
 
     return 0;

@@ -4,14 +4,28 @@
 CMakeFiles/mylib.dir/src/Distributions.cpp.o
  ../include/Distributions.hpp
  /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Distributions.cpp
+CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.o
+ ../include/LineSearchRoutines.hpp
+ ../include/NumericalDifferentiation.hpp
+ /home/dillon/CodeProjects/CProjects/MultilevelModel/src/LineSearchRoutines.cpp
 CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o
  ../include/Distributions.hpp
+ ../include/LineSearchRoutines.hpp
  ../include/MultilevelModel.hpp
+ ../include/NumericalDifferentiation.hpp
  ../include/Optimization.hpp
  /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp
+CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.o
+ ../include/NumericalDifferentiation.hpp
+ /home/dillon/CodeProjects/CProjects/MultilevelModel/src/NumericalDifferentiation.cpp
 CMakeFiles/mylib.dir/src/Optimization.cpp.o
+ ../include/LineSearchRoutines.hpp
+ ../include/NumericalDifferentiation.hpp
  ../include/Optimization.hpp
  /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Optimization.cpp
+CMakeFiles/mylib.dir/src/Plotter.cpp.o
+ ../include/Plotter.hpp
+ /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Plotter.cpp
 CMakeFiles/mylib.dir/src/seed_settings.cpp.o
  ../include/seed_settings.hpp
  /home/dillon/CodeProjects/CProjects/MultilevelModel/src/seed_settings.cpp

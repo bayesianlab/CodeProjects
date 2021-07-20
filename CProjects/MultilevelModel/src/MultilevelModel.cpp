@@ -60,34 +60,32 @@ VectorXi sequence(int b, int e, int skip)
     return c;
 }
 
-MatrixXd updateFactor(MatrixXd vectorizedResiduals, const MatrixXd &Loadings, const MatrixXd &FactorPrecision,
+MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings, const MatrixXd &FactorPrecision,
                       const VectorXd &precision, int T)
 {
     int K = precision.size();
     int nFactors = Loadings.cols();
-    int nFactorsT = nFactors*T;
-    MatrixXd IT = MatrixXd::Identity(T, T);
-    MatrixXd FullPrecision = precision.asDiagonal();
-    MatrixXd ApO = Loadings.transpose() * FullPrecision;
-    MatrixXd P = FactorPrecision + kroneckerProduct(IT, ApO * Loadings);
-    MatrixXd Plower = P.llt().matrixL();
-    MatrixXd Plowerinv = Plower.householderQr().solve(MatrixXd::Identity(nFactorsT, nFactorsT));
-    vectorizedResiduals.resize(K, T);
-    MatrixXd musum = ApO * vectorizedResiduals;
-    musum.resize(musum.rows() * musum.cols(), 1);
-    VectorXd mu = (Plowerinv.transpose() * Plowerinv) * musum;
-    MatrixXd f = mu + Plowerinv.transpose()*normrnd(0,1,nFactorsT,1);
-    f.resize(nFactors, T);
-    return f;
+    int nFactorsT = nFactors * T;
+    MatrixXd factorNew = Loadings.transpose() * precision.asDiagonal();
+    MatrixXd F = FactorPrecision + kroneckerProduct(MatrixXd::Identity(T, T), factorNew * Loadings);
+    F = F.householderQr().solve(MatrixXd::Identity(F.rows(), F.rows()));
+    MatrixXd lower = F.llt().matrixL();
+    factorNew = factorNew * residuals;
+    factorNew.resize(factorNew.rows() * factorNew.cols(), 1);
+    factorNew = F * factorNew;
+    factorNew = factorNew + lower * normrnd(factorNew.rows(), 1);
+    factorNew.resize(nFactors, T);
+    return factorNew;
 }
 
 GenerateMLFactorData::GenerateMLFactorData(int _nObs, int _nEqns, const VectorXd &coeffValues,
                                            const map<string, Matrix<int, 1, 2>> &InfoMap,
-                                           const VectorXd &factorCoeff, const VectorXd &_factorVariances,
-                                           const MatrixXd &_Loadings)
+                                           const VectorXd &factorCoeff,
+                                           const MatrixXd &_Loadings, const double &omVar)
 {
     T = _nObs;
     K = _nEqns;
+    double facVar = .25*omVar;
     betas = coeffValues;
     if (betas.size() == 1)
     {
@@ -107,24 +105,26 @@ GenerateMLFactorData::GenerateMLFactorData(int _nObs, int _nEqns, const VectorXd
     Identity = MakeObsModelIdentity(InfoMap, K);
     nFactors = InfoMap.size();
     gammas = factorCoeff.transpose().replicate(nFactors, 1);
-    factorVariances = _factorVariances;
-    Loadings = _Loadings;
+    factorVariances = facVar * VectorXd::Ones(nFactors, 1) * facVar;
+
+    setLoadings(_Loadings, InfoMap, Identity, 1);
+
     Loadings = Identity.array() * Loadings.array();
-    P0 = setCovar(gammas, factorVariances);
     FactorPrecision = MakePrecision(gammas, factorVariances, T);
-    MatrixXd I = MatrixXd::Identity(FactorPrecision.rows(), FactorPrecision.rows());
-    VectorXd epsilon = normrnd(0, 1, T * nFactors, 1);
+    VectorXd epsilon = normrnd(0, sqrt(facVar), T * nFactors, 1);
     H = ReturnH(gammas, T);
     Factors = H.householderQr().solve(epsilon);
     Factors.resize(nFactors, T);
     AF = Loadings * Factors;
     mu = AF + Xbeta;
-    MatrixXd nu = normrnd(0, 1, K, T);
+
+    MatrixXd nu = normrnd(0, sqrt(omVar), K, T);
     yt = mu + nu;
-    om_variance = VectorXd::Ones(K);
-    om_precision = om_variance;
-    b0 = VectorXd::Ones(nEqnsP, 1);
-    B0 = 10 * MatrixXd::Identity(nEqnsP, nEqnsP);
+    resids = yt - mu - nu;
+    om_variance = omVar * VectorXd::Ones(K);
+    om_precision = 1. / om_variance.array();
+    b0 = RowVectorXd::Zero(1, nEqnsP);
+    B0 = 100 * MatrixXd::Identity(nEqnsP, nEqnsP);
 }
 
 GenerateAutoRegressiveData::GenerateAutoRegressiveData(int time, const MatrixXd &params)
