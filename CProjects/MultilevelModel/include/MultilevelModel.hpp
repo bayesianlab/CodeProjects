@@ -359,58 +359,6 @@ VectorXd updateVariance(const MatrixBase<D> &residuals, int v0, int D0)
     return igammarnd(parama, paramb);
 }
 
-// template <typename D1, typename D2, typename D3, typename D4, typename D5,
-//           typename D6, typename D7>
-// VectorXd betaupdate(const MatrixBase<D1> &yt, const MatrixBase<D2> &surX,
-//                     const MatrixBase<D3> &om_precision, const MatrixBase<D4> &A,
-//                     const MatrixBase<D5> &FactorPrecision, const MatrixBase<D6> &b0,
-//                     const MatrixBase<D7> &B0)
-// {
-//     /* b0 is a column */
-//     int T = yt.cols();
-//     int K = yt.rows();
-//     int nFactors = A.cols();
-//     int nFactorsT = nFactors * T;
-//     int KP = surX.cols();
-//     MatrixXd It = MatrixXd::Identity(T, T);
-//     MatrixXd InFactorsT = MatrixXd::Identity(nFactorsT, nFactorsT);
-//     MatrixXd Ikp = MatrixXd::Identity(KP, KP);
-//     MatrixXd FullPrecision = om_precision.asDiagonal();
-//     MatrixXd B0inv = (B0.diagonal().array().pow(-1)).matrix().asDiagonal();
-//     MatrixXd xpx = MatrixXd::Zero(KP, KP);
-//     MatrixXd xpy = MatrixXd::Zero(KP, 1);
-//     MatrixXd xzz = MatrixXd::Zero(nFactorsT, KP);
-//     MatrixXd yzz = MatrixXd::Zero(nFactorsT, 1);
-//     MatrixXd tx;
-//     MatrixXd ty;
-//     MatrixXd AtO = A.transpose() * FullPrecision;
-
-//     MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).ldlt().solve(InFactorsT);
-
-//     int c1 = 0;
-//     int c2 = 0;
-//     for (int t = 0; t < T; ++t)
-//     {
-//         tx = FullPrecision * surX.middleRows(c1, K);
-//         ty = FullPrecision * yt.col(t);
-//         xzz.middleRows(c2, nFactors) = A.transpose() * tx;
-//         yzz.middleRows(c2, nFactors) = A.transpose() * ty;
-//         xpx += surX.middleRows(c1, K).transpose() * tx;
-//         xpy += surX.middleRows(c1, K).transpose() * ty;
-
-//         c1 += K;
-//         c2 += nFactors;
-//     }
-
-//     XzzPinv = xzz.transpose() * XzzPinv;
-//     MatrixXd Covar = B0inv + xpx - (XzzPinv * xzz);
-
-//     Covar = Covar.ldlt().solve(MatrixXd::Identity(KP, KP));
-//     VectorXd bhat = Covar * (B0inv * b0.transpose() + xpy - (XzzPinv * yzz));
-
-//     return bhat + (Covar.llt().matrixL() * normrnd(0, 1, KP, 1));
-// }
-
 class UpdateBeta
 {
 public:
