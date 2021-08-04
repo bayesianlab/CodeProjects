@@ -1,6 +1,7 @@
 #include "Distributions.hpp"
 
 // time_t now = time(0);
+// time_t now = 76;
 time_t now = 7;
 boost::random::mt19937 GLOBAL_SEED(now);
 
@@ -23,7 +24,7 @@ double logmvtpdf(const RowVectorXd &x, const RowVectorXd &mu,
   return C - dfJhalf * log(1. + (((x - mu) * (Variance.llt().solve((x - mu).transpose()))).value() / df));
 }
 
-VectorXd gammarnd(double shape, double scale, int N)
+VectorXd gammarnd(const double &shape, const double &scale, const int &N)
 {
   VectorXd ig(N);
   boost::random::gamma_distribution<> g(shape, scale);
@@ -31,9 +32,17 @@ VectorXd gammarnd(double shape, double scale, int N)
       genvars(GLOBAL_SEED, g);
   for (int i = 0; i < N; i++)
   {
-    ig(i) = genvars();
+    ig(i) = gammarnd(shape, scale);
   }
   return ig;
+}
+
+double gammarnd(const double &shape, const double &scale)
+{
+  boost::random::gamma_distribution<> g(shape, scale);
+  boost::variate_generator<boost::mt19937 &, boost::gamma_distribution<>>
+      genvars(GLOBAL_SEED, g);
+  return genvars();
 }
 
 double igammarnd(double shape, double scale)
@@ -206,11 +215,11 @@ MatrixXd CreateSigma(double rho, int Size)
     {
       if (i > j)
       {
-        CorrMat(i, j) = pow(rho, i-j);
+        CorrMat(i, j) = pow(rho, i - j);
       }
       else if (j > i)
       {
-        CorrMat(i, j) = pow(rho, j-i);
+        CorrMat(i, j) = pow(rho, j - i);
       }
     }
   }

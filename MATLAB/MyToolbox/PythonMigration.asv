@@ -51,13 +51,27 @@
 % factors = table2array(factors(:,1:2));
 % resids = table2array(resids);
 
-FP = FactorPrecision([.05,.35;.05,.35], eye(2), ones(2,1), 100);
-A = ones(8,2);
-A = .5*A;
-A(1,1) = 1; 
-A(5,2) = 1;
+% FP = FactorPrecision([.05,.35;.05,.35], eye(2), ones(2,1), 100);
+% A = ones(8,2);
+% A = .5*A;
+% A(1,1) = 1; 
+% A(5,2) = 1;
+% 
+% f= kowUpdateLatent(resids(:), A, FP, ones(8,1))
+% f=reshape(f, 2,100);
+% hold on 
+% plot(factors(:,1))
+% plot(f(1,:))
 
-kowUpdateLatent(resids, A, 
+% yt = table2array(yt);
 
-
-
+% xt(isnan(xt)) = 0; 
+% xt = xt(:, 4:end);
+% xt(:,2) = sum(xt(:,2:3),2)
+% xt = xt(:,1:2)
+clc;
+surX = surForm(xt, 10);
+A = ones(10,1).*.5;
+A(1) = 1; 
+fp = FactorPrecision(.35, eye(1), 1, 100); 
+betaDraw(yt(:), surX, ones(10,1), A, fp, 0, .01, 100);

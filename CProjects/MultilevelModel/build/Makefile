@@ -325,33 +325,6 @@ src/Test_MultilevelModel.cpp.s:
 	$(MAKE) -f CMakeFiles/ml.dir/build.make CMakeFiles/ml.dir/src/Test_MultilevelModel.cpp.s
 .PHONY : src/Test_MultilevelModel.cpp.s
 
-src/seed_settings.o: src/seed_settings.cpp.o
-
-.PHONY : src/seed_settings.o
-
-# target to build an object file
-src/seed_settings.cpp.o:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/seed_settings.cpp.o
-.PHONY : src/seed_settings.cpp.o
-
-src/seed_settings.i: src/seed_settings.cpp.i
-
-.PHONY : src/seed_settings.i
-
-# target to preprocess a source file
-src/seed_settings.cpp.i:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/seed_settings.cpp.i
-.PHONY : src/seed_settings.cpp.i
-
-src/seed_settings.s: src/seed_settings.cpp.s
-
-.PHONY : src/seed_settings.s
-
-# target to generate assembly for a file
-src/seed_settings.cpp.s:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/seed_settings.cpp.s
-.PHONY : src/seed_settings.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -383,9 +356,6 @@ help:
 	@echo "... src/Test_MultilevelModel.o"
 	@echo "... src/Test_MultilevelModel.i"
 	@echo "... src/Test_MultilevelModel.s"
-	@echo "... src/seed_settings.o"
-	@echo "... src/seed_settings.i"
-	@echo "... src/seed_settings.s"
 .PHONY : help
 
 

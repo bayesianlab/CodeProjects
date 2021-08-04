@@ -1,1 +1,1 @@
-/usr/bin/c++  -O3 -DNDEBUG  -rdynamic CMakeFiles/ml.dir/src/Test_MultilevelModel.cpp.o  -o ml  libmylib.a 
+/usr/bin/c++  -g  -rdynamic CMakeFiles/ml.dir/src/Test_MultilevelModel.cpp.o  -o ml  libmylib.a 

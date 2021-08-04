@@ -95,6 +95,10 @@ G1bar = zeros(lagState);
 
 Xbeta = zeros(K,T);
 VAR = 0;
+currobsmod = currobsmod.*.5;
+fp = FactorPrecision(.35, eye(1), 1, 100); 
+obsPrecision = obsPrecision.*.5;
+currobsmod(1) = 1 ;
 if finishedMainRun == 0
     for iterator = start : Sims
 %         if mod(iterator, saveFrequency) == 0
@@ -105,13 +109,16 @@ if finishedMainRun == 0
         fprintf('Simulation %i\n',iterator)
         %% Draw VAR params
         
-        [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecision,...
-            currobsmod, stateTransitions, factorVariance, beta0,...
-            B0inv, FtIndexMat, subsetIndices);
-        
-        
-        
-        
+%         [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecision,...
+%             currobsmod, stateTransitions, factorVariance, beta0,...
+%             B0inv, FtIndexMat, subsetIndices);
+
+obsPrecision
+
+[VAR, Xbeta ] = betaDraw(yt(:), surForm(Xt,K), obsPrecision, currobsmod, fp, 0 , B0inv, 100);
+VAR = reshape(VAR, 2, K); 
+
+Xbeta = reshape(Xbeta, K,T);
 %         %% Draw loadings
 %         [currobsmod, Ft, ~, accept]=...
 %             LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
@@ -121,13 +128,14 @@ if finishedMainRun == 0
         
 
         %% Variance
-        StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
-        resids = yt - (StateObsModel*Ft) - Xbeta;
+%         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
+        resids = yt - (currobsmod*Ft) - Xbeta;
+
         obsVariance = kowUpdateObsVariances(resids, v0,r0,T);
         obsPrecision = 1./obsVariance;
         
-        obsPrecision
-        
+   obsVariance        
+     
 %         %% Factor AR Parameters
 %         for n=1:nFactors
 %             [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n),...

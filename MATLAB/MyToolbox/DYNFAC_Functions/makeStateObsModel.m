@@ -17,6 +17,7 @@ for k = 1:levels
         expanded(:, beg:colnum) = repmat(obsModel(:,k), 1, sectorInfo(k));
     end
 end
+
 StateObsModel = expanded.*Iden;
 
 end

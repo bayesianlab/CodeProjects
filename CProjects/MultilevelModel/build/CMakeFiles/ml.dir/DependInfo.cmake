@@ -13,6 +13,8 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/usr/local/include/eigen3"
   "/usr/include/python3.8"
   "../include"
+  "/usr/local/include/stat-master/include"
+  "/usr/local/include/gcem/include"
   )
 
 # Targets to which this target links.

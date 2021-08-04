@@ -6,7 +6,7 @@ nFactors = size(StateObsModel,2);
 k1 = 1:nEqns;
 k2= 1:nFactors;
 fullpre = diag(obsModelPrecision);
-fullpre
+
 Pinv = (StatePrecision + kron(eye(T),...
     StateObsModel'* fullpre *StateObsModel))\eye(size(StatePrecision,1));
 xpx = zeros(pK,pK);
@@ -27,18 +27,15 @@ for t=1:T
     xpy = xpy + SurX(select1,:)'*ty;
 end
 XzzPinv = Xzz'*Pinv;
-yzz
+
 B = (B0inv + xpx - XzzPinv*Xzz);
 
 
 Bigo = kron(eye(T), fullpre);
 Ato = StateObsModel'*fullpre; 
-Bigato = kron(eye(T), Ato); 
-
-
-Sinv = Bigo - Bigato'*Pinv*Bigato;
+Sinv = Bigo - kron(eye(T),Ato'*Pinv*Ato;
 Bee = (B0inv + SurX'*Sinv*SurX)\eye(pK);
-bhat = Bee*(B0inv*b0' + SurX'*Sinv*vecy);
+bhat = Bee*(B0inv*b0' + SurX'*Sinv*yt(:))
 
 
 
@@ -50,7 +47,7 @@ B = Blowerinv'*Blowerinv;
 
 b = B*(B0inv*b0' + xpy - XzzPinv*yzz);
 
-[b, bhat] 
+b
 
 bupdate = b + Blowerinv'*normrnd(0,1,pK,1);
 

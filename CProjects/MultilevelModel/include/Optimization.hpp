@@ -26,7 +26,7 @@ void PressEnterToContinue();
 class Optimize : public LineSearchRoutines
 {
 public:
-    double F_tol, grad_tol, x_tol, line_search_tol;
+    double F_tol, grad_tol, x_tol;
     VectorXd x1;
     MatrixXd B1;
     double fval1;

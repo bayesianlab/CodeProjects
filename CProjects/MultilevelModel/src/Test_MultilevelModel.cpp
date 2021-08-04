@@ -13,6 +13,7 @@
 #include "LineSearchRoutines.hpp"
 #include "NumericalDifferentiation.hpp"
 
+
 using namespace std;
 using namespace Eigen;
 
@@ -201,8 +202,8 @@ int main(int argc, char *argv[])
         //         mld.Factors.row(0).transpose(), "fest", "ftrue");
 
         int T = 100;
-        int neqns = 3;
-        int sims = 1;
+        int neqns = 10;
+        int sims = 10;
         int burnin = 0;
         VectorXd betas = .5 * VectorXd::Ones(2, 1);
         Matrix<int, 1, 2> region1;
@@ -216,10 +217,11 @@ int main(int argc, char *argv[])
         VectorXd phi(1);
         phi << .35;
         A = Identity.array() * A.array();
-        cout << A << endl;
         GenerateMLFactorData mld(T, neqns, betas, InfoMap, phi, A, 1);
 
+
         MultilevelModel ml;
+        
 
         ml.runMultilevelModel(mld.yt, mld.Xt, mld.Loadings, mld.Factors, mld.gammas, InfoMap,
                               mld.b0, mld.B0, sims, burnin);
@@ -240,8 +242,10 @@ int main(int argc, char *argv[])
         cout << "Loadings" << endl;
         cout << ml.Loadings1stMomentContainer << endl;
         cout << endl;
-        plotter("plot.p", ml.Factor1stMomentContainer.row(0).transpose(),
-                mld.Factors.row(0).transpose(), "fest", "ftrue");
+        // writeToCSVfile("yt.csv", mld.yt);
+        // writeToCSVfile("xt.csv", mld.Xt);
+        // plotter("plot.p", ml.Factor1stMomentContainer.row(0).transpose(),
+        //         mld.Factors.row(0).transpose(), "fest", "ftrue");
 
         // VectorXd B(10);
         // B = normrnd(0,1,10,1);
