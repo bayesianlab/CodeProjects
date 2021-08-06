@@ -525,40 +525,44 @@ public:
             subPriorMean = loadingsPriorMeanMap[m->first].transpose();
             subPriorPrecision = loadingsPriorPrecisionMap[m->first];
 
-            // auto CLL = [&subytdemeaned, &subPriorMean, &subPriorPrecision,
-            //             &subomPrecision, &subFt, &subFp](const VectorXd &x0)
-            // {
-            //     return -ConditionalLogLikelihood(x0, subytdemeaned, subPriorMean, subPriorPrecision,
-            //                                      subomPrecision, subFt, subFp);
-            // };
+            auto CLL = [&subytdemeaned, &subPriorMean, &subPriorPrecision,
+                        &subomPrecision, &subFt, &subFp](const VectorXd &x0)
+            {
+                return -ConditionalLogLikelihood(x0, subytdemeaned, subPriorMean, subPriorPrecision,
+                                                 subomPrecision, subFt, subFp);
+            };
 
-            // optim.BFGS(subA, CLL, 1);
-            // optim.AprroximateDiagHessian(optim.x1, CLL, optim.fval1);
+            optim.BFGS(subA, CLL, 1);
+            optim.AprroximateDiagHessian(optim.x1, CLL, optim.fval1);
 
-            // proposalMean = optim.x1;
+            proposalMean = optim.x1;
             // proposalCovariance = optim.Hess;
-            // covDiag = proposalCovariance.diagonal();
-            // covDiag = covDiag.array().pow(-1);
-            // for (int j = 0; j < covDiag.size(); ++j)
-            // {
-            //     if (covDiag(j) < 0)
-            //     {
-            //         covDiag(j) = covDiag(j) * (-1);
-            //     }
-            // }
-            // covDiag.array().sqrt();
-            // lower = covDiag.asDiagonal();
-            // proposal = proposalMean + lower * normrnd(0, 1, covDiag.size(), 1);
-            // lalpha = -CLL(proposal) + logmvtpdf(subA.transpose(), proposalMean.transpose(), proposalCovariance, df) +
-            //          CLL(subA) - logmvtpdf(proposal.transpose(), proposalMean.transpose(), proposalCovariance, df);
-            // if (log(unifrnd(0, 1)) < lalpha)
-            // {
-            //     cout << "ACCEPT" << endl;
-            //     subA = proposal;
-            //     subA(0) = 1;
-            //     Loadings.col(c).segment(m->second(0), nrows) = subA;
-            // }
+            covDiag = proposalCovariance.diagonal();
+            covDiag = covDiag.array().pow(-1);
+            proposalCovariance = covDiag.asDiagonal(); 
+            for (int j = 0; j < covDiag.size(); ++j)
+            {
+                if (covDiag(j) < 0)
+                {
+                    covDiag(j) = covDiag(j) * (-1);
+                }
+            }
+            covDiag.array().sqrt();
+            double tau = 1;
+            lower = tau*covDiag.asDiagonal();
+ 
 
+            proposal = proposalMean + lower * normrnd(0, 1, lower.rows(), 1);
+            cout << proposal << endl; 
+            lalpha = -CLL(proposal) + logmvtpdf(subA.transpose(), proposalMean.transpose(), proposalCovariance, df) +
+                     CLL(subA) - logmvtpdf(proposal.transpose(), proposalMean.transpose(), proposalCovariance, df);
+            if (log(unifrnd(0, 1)) < lalpha)
+            {
+                cout << "ACCEPT" << endl;
+                subA = proposal;
+                subA(0) = 1;
+                Loadings.col(c).segment(m->second(0), nrows) = subA;
+            }
             Ft.row(c) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
             ++c;
         }
@@ -678,12 +682,12 @@ public:
         MatrixXd H;
         VectorXd Hf;
         RowVectorXd g0 = RowVectorXd::Zero(gammas.cols());
-        MatrixXd G0 = MatrixXd::Identity(gammas.cols(), gammas.cols());
+        MatrixXd G0 = .5*MatrixXd::Identity(gammas.cols(), gammas.cols());
 
         lfu.setFactors(Ft);
         lfu.setLoadings(A, InfoMap, Identity, 1.);
 
-        double optim_options[5] = {SEPS, SEPS, EPS, 1e-6, 25};
+        double optim_options[5] = {1e-4, 1e-5, 1e-5, 1e-4, 25};
         double parama = .5 * (r0 + T);
         double paramb;
         Optimize optim(optim_options);
@@ -697,7 +701,6 @@ public:
         factorVarianceContainer = MatrixXd::Zero(nFactors, Sims - (burnin + 1));
         Loadings1stMomentContainer = MatrixXd::Zero(A.rows(), A.cols());
 
-        std::mt19937_64 twist;
 
         for (int i = 0; i < Sims; ++i)
         {
@@ -706,18 +709,20 @@ public:
 
             ub.betaupdate(yt, surX, omPrecision, lfu.Loadings, FactorPrecision, b0, B0);
 
-            // lfu.updateLoadingsFactors(yt, ub.xbt, lfu.Factors, lfu.Loadings, gammas, omPrecision,
-            //                           factorVariance, Identity, InfoMap, lps.loadingsPriorMeans,
-            //                           lps.loadingsPriorPrecision, optim);
+            lfu.updateLoadingsFactors(yt, ub.xbt, lfu.Factors, lfu.Loadings, gammas, omPrecision,
+                                      factorVariance, Identity, InfoMap, lps.loadingsPriorMeans,
+                                      lps.loadingsPriorPrecision, optim);
 
-            // for (int j = 0; j < nFactors; ++j)
-            // {
-            // gammas.row(j) = updateAR(gammas.row(j), lfu.Factors.row(j), factorVariance(j), g0, G0);
-            // H = ReturnH(gammas.row(j), T);
-            // Hf = H * lfu.Factors.row(j).transpose();
-            // paramb = 1. / (.5 * (R0 + Hf.transpose() * Hf));
-            // factorVariance(j) = igammarnd(parama, paramb);
-            // }
+            cout << lfu.Loadings << endl; 
+
+            for (int j = 0; j < nFactors; ++j)
+            {
+                gammas.row(j) = updateAR(gammas.row(j), lfu.Factors.row(j), factorVariance(j), g0, G0);
+                H = ReturnH(gammas.row(j), T);
+                Hf = H * lfu.Factors.row(j).transpose();
+                paramb = (.5 * (R0 + Hf.transpose() * Hf));
+                factorVariance(j) = igammarnd(parama, 1.0 / paramb);
+            }
 
             resids = yt - (lfu.Loadings * lfu.Factors) - ub.xbt;
             for (int j = 0; j < K; ++j)
@@ -727,8 +732,7 @@ public:
             }
             omPrecision = omVariance.array().pow(-1.0);
 
-            // xbeta.resize(K*T,1);
-            // FactorPrecision = MakePrecision(gammas, factorVariance, T);
+            FactorPrecision = MakePrecision(gammas, factorVariance, T);
 
             if (i > burnin)
             {

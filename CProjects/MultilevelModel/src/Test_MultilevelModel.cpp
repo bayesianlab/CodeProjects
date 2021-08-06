@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
 
         int T = 100;
         int neqns = 10;
-        int sims = 10;
+        int sims = 5;
         int burnin = 0;
         VectorXd betas = .5 * VectorXd::Ones(2, 1);
         Matrix<int, 1, 2> region1;
@@ -212,7 +212,7 @@ int main(int argc, char *argv[])
         map<string, Matrix<int, 1, 2>> InfoMap{{"L1", region1}};
         int nFactors = InfoMap.size();
         MatrixXd Identity = MakeObsModelIdentity(InfoMap, neqns);
-        MatrixXd A = .5 * Identity;
+        MatrixXd A = .5*Identity;
         VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
         VectorXd phi(1);
         phi << .35;
@@ -223,7 +223,7 @@ int main(int argc, char *argv[])
         MultilevelModel ml;
         
 
-        ml.runMultilevelModel(mld.yt, mld.Xt, mld.Loadings, mld.Factors, mld.gammas, InfoMap,
+        ml.runMultilevelModel(mld.yt, mld.Xt, Identity, mld.Factors, mld.gammas, InfoMap,
                               mld.b0, mld.B0, sims, burnin);
 
         cout << endl;
@@ -242,10 +242,9 @@ int main(int argc, char *argv[])
         cout << "Loadings" << endl;
         cout << ml.Loadings1stMomentContainer << endl;
         cout << endl;
-        // writeToCSVfile("yt.csv", mld.yt);
-        // writeToCSVfile("xt.csv", mld.Xt);
-        // plotter("plot.p", ml.Factor1stMomentContainer.row(0).transpose(),
-        //         mld.Factors.row(0).transpose(), "fest", "ftrue");
+ 
+        plotter("plot.p", ml.Factor1stMomentContainer.row(0).transpose(),
+                mld.Factors.row(0).transpose(), "fest", "ftrue");
 
         // VectorXd B(10);
         // B = normrnd(0,1,10,1);

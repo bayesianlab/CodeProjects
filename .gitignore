@@ -105,3 +105,4 @@ TbsOutput/
 
 *.idea/*
 
+*/build/*

@@ -66,7 +66,6 @@ VectorXi sequence(int b, int e, int skip)
     return c;
 }
 
-
 // VectorXd betaupdate(const MatrixBase<D1> &yt, const MatrixBase<D2> &surX,
 //                         const MatrixBase<D3> &om_precision, const MatrixBase<D4> &A,
 //                         const MatrixBase<D5> &FactorPrecision, const MatrixBase<D6> &b0,
@@ -107,13 +106,13 @@ VectorXi sequence(int b, int e, int skip)
 //         MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, (A.transpose() * FullPrecision) * A)).householderQr().solve(InFactorsT);
 //         XzzPinv = xzz.transpose() * XzzPinv;
 //         MatrixXd Covar = B0inv + xpx - (XzzPinv * xzz);
-//         MatrixXd Blowerinv = Covar.llt().matrixL(); 
+//         MatrixXd Blowerinv = Covar.llt().matrixL();
 //         Blowerinv = Blowerinv.householderQr().solve(MatrixXd::Identity(Blowerinv.rows(), Blowerinv.rows()));
-//         Covar = Blowerinv.transpose()*Blowerinv; 
+//         Covar = Blowerinv.transpose()*Blowerinv;
 //         MatrixXd mu  = Covar * ((B0inv * b0.transpose()) + xpy - (XzzPinv * yzz));
 //         VectorXd bs = mu + (Blowerinv.transpose()* normrnd(0, 1, KP, 1));
 //         return bs;
-//     } 
+//     }
 
 MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings, const MatrixXd &FactorPrecision,
                       const VectorXd &precision, int T)
@@ -122,18 +121,15 @@ MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings, const
     int nFactors = Loadings.cols();
     int nFactorsT = nFactors * T;
     MatrixXd AtO = Loadings.transpose() * precision.asDiagonal();
-    MatrixXd F = FactorPrecision + kroneckerProduct(MatrixXd::Identity(T, T), AtO * Loadings);
-    MatrixXd Q = F.householderQr().solve(MatrixXd::Identity(F.rows(), F.rows()));
-    MatrixXd lower = Q.llt().matrixL();
+    MatrixXd FplusAtOinv = FactorPrecision + kroneckerProduct(MatrixXd::Identity(T, T), AtO * Loadings);
+    FplusAtOinv = FplusAtOinv.ldlt().solve(MatrixXd::Identity(FplusAtOinv.rows(), FplusAtOinv.rows()));
+    MatrixXd lower = FplusAtOinv.llt().matrixL();
     MatrixXd musum = AtO * residuals;
-    MatrixXd mu = Q * musum;
-    return mu + lower * normrnd(0, 1, nFactorsT);
-    // factorNew = factorNew * residuals;
-    // factorNew.resize(factorNew.rows() * factorNew.cols(), 1);
-    // factorNew = F * factorNew;
-    // factorNew = factorNew + lower * normrnd(factorNew.rows(), 1);
-    // factorNew.resize(nFactors, T);
-    // return factorNew;
+    Map<VectorXd> vecmu(musum.data(), musum.size());
+    VectorXd mu = FplusAtOinv * vecmu;
+    FplusAtOinv = mu + lower * normrnd(0, 1, nFactorsT, 1);
+    FplusAtOinv.resize(nFactors, T);
+    return FplusAtOinv;
 }
 
 GenerateMLFactorData::GenerateMLFactorData(int _nObs, int _nEqns, const VectorXd &coeffValues,
@@ -170,11 +166,7 @@ GenerateMLFactorData::GenerateMLFactorData(int _nObs, int _nEqns, const VectorXd
 
     FactorPrecision = MakePrecision(gammas, factorVariances, T);
 
-
-
     MatrixXd FactorCovar = FactorPrecision.householderQr().solve(MatrixXd::Identity(FactorPrecision.rows(), FactorPrecision.rows()));
-
-    
 
     Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
     Factors.resize(nFactors, T);
@@ -190,7 +182,7 @@ GenerateMLFactorData::GenerateMLFactorData(int _nObs, int _nEqns, const VectorXd
 
     // VectorXd V = var(yt, 0);
 
-    // V = V.array().sqrt(); 
+    // V = V.array().sqrt();
     // cout << V << endl ;
     // yt = yt.array().colwise()/V.array();
 
@@ -198,7 +190,7 @@ GenerateMLFactorData::GenerateMLFactorData(int _nObs, int _nEqns, const VectorXd
     om_variance = omVar * VectorXd::Ones(K);
     om_precision = 1. / om_variance.array();
     b0 = RowVectorXd::Zero(1, nEqnsP);
-    B0 = 1000*MatrixXd::Identity(nEqnsP, nEqnsP);
+    B0 = 1000 * MatrixXd::Identity(nEqnsP, nEqnsP);
 }
 
 GenerateAutoRegressiveData::GenerateAutoRegressiveData(int time, const MatrixXd &params)

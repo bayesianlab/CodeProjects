@@ -11,7 +11,7 @@ double LineSearchRoutines::LineSearch(const Ref<const VectorXd> &point, const Re
     double F0 = F(point);
     double alphalast = 0.;
     double Flast = F0;
-    double alphamax = 3.;
+    double alphamax = 10.;
     double Fhi = F(point + alphamax * pk);
     double Fprimehi = ForwardDifferences(point + alphamax * pk, F).transpose() * pk;
     double alphacurrent = 1;
@@ -71,6 +71,67 @@ double LineSearchRoutines::LineSearch(const Ref<const VectorXd> &point, const Re
     // cout << alphacurrent << endl;
     return GoldenSection(point, pk, alphacurrent, alphamax, F, gs_max_it);
 }
+
+double LineSearchRoutines::Zoom(double alo, double ahi, const Ref<const VectorXd> &point, const Ref<const VectorXd> &pk,
+                                std::function<double(const Ref<const VectorXd> &xstar)> F, double F0, double Fprime0)
+{
+    double c1 = 1e-4;
+    double Flo, Fhi, Fprimelo, Fprimehi, aj, Fprimej, Faj;
+    int max_iterations = 10; 
+    for(int j = 0; j < max_iterations; ++j)
+    {
+        sort_swap(alo, ahi);
+        Flo = F(point + alo * pk);
+        Fhi = F(point + ahi * pk);
+        Fprimelo = ForwardDifferences(point + alo * pk, F).transpose() * pk;
+        Fprimehi = ForwardDifferences(point + ahi * pk, F).transpose() * pk;
+        try
+        {
+            aj = CubicInterpolation(Flo, Fhi, Fprimelo, Fprimehi, alo, ahi);
+        }
+        catch (domain_error)
+        {
+
+            aj = GoldenSection(point, pk, alo, ahi, F, 10);
+        }
+        if (abs(alo - aj) < line_search_tol || abs(ahi - aj) < line_search_tol)
+        {
+            return aj;
+        }
+        Faj = F(point + aj * pk);
+
+        // cout << "aj " << aj << " Faj " << Faj << endl;
+        // Prevents taking steps that increase function value
+        // and sufficiently decreases function
+        if ((Faj > F0 + c1 * aj * Fprime0) || (Faj > Flo))
+        {
+            // cout << "Did not satisfy sufficient decrease" << endl;
+            ahi = aj;
+        }
+        else
+        {
+            // cout << "Sufficiently decreased function" << endl;
+            Fprimej = ForwardDifferences(point + aj * pk, F).transpose() * pk;
+            if (abs(Fprimej) < -.9 * Fprime0)
+            {
+                // cout << "Satisfied Wolfe in zoom" << endl;
+                return aj;
+            }
+            if (Fprimej * (ahi - alo) >= 0)
+            {
+                // cout << " unclear if" << endl;
+                ahi = alo;
+            }
+            alo = aj;
+            if(j == max_iterations-1)
+            {
+                return aj; 
+            }
+        }
+    }
+    return GoldenSection(point, pk, alo, ahi, F, gs_max_it);
+}
+
 
 double LineSearchRoutines::GoldenSection(const Ref<const VectorXd> &point, const Ref<const VectorXd> &pk, double alo, double ahi,
                                          std::function<double(const Ref<const VectorXd> &xstar)> F, int max_it)
@@ -138,65 +199,4 @@ void sort_swap(double &a, double &b)
     }
 }
 
-double LineSearchRoutines::Zoom(double alo, double ahi, const Ref<const VectorXd> &point, const Ref<const VectorXd> &pk,
-                                std::function<double(const Ref<const VectorXd> &xstar)> F, double F0, double Fprime0)
-{
-    double c1 = 1e-4;
-    double Flo, Fhi, Fprimelo, Fprimehi, aj, Fprimej, Faj;
-    int max_iterations = 10; 
-    for(int j = 0; j < max_iterations; ++j)
-    {
-        sort_swap(alo, ahi);
-        Flo = F(point + alo * pk);
-        Fhi = F(point + ahi * pk);
-        Fprimelo = ForwardDifferences(point + alo * pk, F).transpose() * pk;
-        Fprimehi = ForwardDifferences(point + ahi * pk, F).transpose() * pk;
-        try
-        {
-            aj = CubicInterpolation(Flo, Fhi, Fprimelo, Fprimehi, alo, ahi);
-        }
-        catch (domain_error)
-        {
 
-            aj = GoldenSection(point, pk, alo, ahi, F, 10);
-        }
-        if (abs(alo - aj) < line_search_tol || abs(ahi - aj) < line_search_tol)
-        {
-            return aj;
-        }
-        Faj = F(point + aj * pk);
-
-        // cout << "aj " << aj << " Faj " << Faj << endl;
-        // Prevents taking steps that increase function value
-        // and sufficiently decreases function
-        if ((Faj > F0 + c1 * aj * Fprime0) || (Faj > Flo))
-        {
-
-            // cout << "Did not satisfy sufficient decrease" << endl;
-
-            ahi = aj;
-        }
-        else
-        {
-            // cout << "Sufficiently decreased function" << endl;
-            Fprimej = ForwardDifferences(point + aj * pk, F).transpose() * pk;
-            if (abs(Fprimej) < -.9 * Fprime0)
-            {
-                // cout << "Satisfied Wolfe in zoom" << endl;
-                return aj;
-            }
-            if (Fprimej * (ahi - alo) >= 0)
-            {
-                // cout << " unclear if" << endl;
-                // cout << alo << endl;
-                ahi = alo;
-            }
-            alo = aj;
-            if(j == max_iterations-1)
-            {
-                return aj; 
-            }
-        }
-    }
-    return GoldenSection(point, pk, alo, ahi, F, gs_max_it);
-}

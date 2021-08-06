@@ -1,8 +1,8 @@
 #include "Distributions.hpp"
 
-// time_t now = time(0);
+time_t now = time(0);
 // time_t now = 76;
-time_t now = 7;
+// time_t now = 7;
 boost::random::mt19937 GLOBAL_SEED(now);
 
 double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,

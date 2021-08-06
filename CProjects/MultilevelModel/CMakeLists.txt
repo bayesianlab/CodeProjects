@@ -2,8 +2,8 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
 
-set(CMAKE_BUILD_TYPE DEBUG)
-# set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops")
+set(CMAKE_BUILD_TYPE RELEASE)
+set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops")
 # message(STATUS ${CMAKE_CXX_FLAGS_REALEASE})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 

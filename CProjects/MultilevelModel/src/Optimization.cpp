@@ -44,7 +44,8 @@ void Optimize::BFGS_Display(VectorXd &x0, std::function<double(const Ref<const V
     VectorXd del1(n);
     VectorXd del0(n);
     VectorXd pk(n);
-    del0 = ForwardDifferences(x0, F);
+    // del0 = ForwardDifferences(x0, F);
+    // del0 = CentralDifferences(x0, F);
     MatrixXd B0 = MatrixXd::Identity(n, n);
     double Flast = F(x0);
     double F1;
@@ -81,6 +82,7 @@ void Optimize::BFGS_Display(VectorXd &x0, std::function<double(const Ref<const V
 
         dist_x = (x0 - xlast).squaredNorm();
         del1 = ForwardDifferences(x0, F);
+        // del1 = CentralDifferences(x0, F);
         infnorm = del1.lpNorm<Infinity>();
         if (infnorm < grad_tol)
         {

@@ -16,7 +16,7 @@ public:
     MatrixXd Hess;
 
     VectorXd ForwardDifferences(const Ref<const VectorXd> &x0, std::function<double(const Ref<const VectorXd> &xstar)> F);
-
+    VectorXd CentralDifferences(const Ref<const VectorXd> &x0, std::function<double(const Ref<const VectorXd> &xstar)> F);
     void AprroximateHessian(const Ref<const VectorXd> &point, std::function<double(const Ref<const VectorXd> &xstar)> F, double fval1);
 
     void AprroximateDiagHessian(const Ref<const VectorXd> &point,
