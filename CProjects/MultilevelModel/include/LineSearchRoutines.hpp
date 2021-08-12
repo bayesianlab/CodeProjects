@@ -26,6 +26,7 @@ public:
     int gs_max_it = 15;
 
     double Zoom(double alo, double ahi, const Ref<const VectorXd> &point, const Ref<const VectorXd> &pk, std::function<double(const Ref<const VectorXd> &xstar)> F, double F0, double Fprime0);
+    
     double LineSearch(const Ref<const VectorXd> &point, const Ref<const VectorXd> &pk,
                       const Ref<const VectorXd> &del0,
                       std::function<double(const Ref<const VectorXd> &xstar)> F);

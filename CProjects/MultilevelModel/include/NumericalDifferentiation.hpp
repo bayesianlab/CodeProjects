@@ -13,13 +13,12 @@ using namespace std;
 class NumericalDifferentiation
 {
 public:
-    MatrixXd Hess;
-
+    
     VectorXd ForwardDifferences(const Ref<const VectorXd> &x0, std::function<double(const Ref<const VectorXd> &xstar)> F);
     VectorXd CentralDifferences(const Ref<const VectorXd> &x0, std::function<double(const Ref<const VectorXd> &xstar)> F);
-    void AprroximateHessian(const Ref<const VectorXd> &point, std::function<double(const Ref<const VectorXd> &xstar)> F, double fval1);
+    MatrixXd AprroximateHessian(const Ref<const VectorXd> &point, std::function<double(const Ref<const VectorXd> &xstar)> F, double fval1);
 
-    void AprroximateDiagHessian(const Ref<const VectorXd> &point,
+    MatrixXd AprroximateDiagHessian(const Ref<const VectorXd> &point,
                                 std::function<double(const Ref<const VectorXd> &xstar)> F, double fval1);
 };
 

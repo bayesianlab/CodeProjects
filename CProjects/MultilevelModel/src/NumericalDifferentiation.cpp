@@ -35,7 +35,7 @@ VectorXd NumericalDifferentiation::CentralDifferences(const Ref<const VectorXd> 
     return grad;
 }
 
-void NumericalDifferentiation::AprroximateHessian(const Ref<const VectorXd> &point,
+MatrixXd NumericalDifferentiation::AprroximateHessian(const Ref<const VectorXd> &point,
                                                   std::function<double(const Ref<const VectorXd> &xstar)> F, double fval1)
 {
     int n = point.size();
@@ -45,7 +45,7 @@ void NumericalDifferentiation::AprroximateHessian(const Ref<const VectorXd> &poi
     VectorXd p3(n);
     double h = sqrt(1e-4);
     double h2 = h * h;
-    Hess = MatrixXd::Zero(n, n);
+    MatrixXd Hess = MatrixXd::Zero(n, n);
     for (int i = 0; i < n; i++)
     {
         p1 = point;
@@ -59,9 +59,10 @@ void NumericalDifferentiation::AprroximateHessian(const Ref<const VectorXd> &poi
             Hess(i, j) = (F(p1) - F(p2) - F(p3) + fval1) / h2;
         }
     }
+    return Hess;
 }
 
-void NumericalDifferentiation::AprroximateDiagHessian(const Ref<const VectorXd> &point,
+MatrixXd NumericalDifferentiation::AprroximateDiagHessian(const Ref<const VectorXd> &point,
                                                       std::function<double(const Ref<const VectorXd> &xstar)> F, double fval1)
 {
     int n = point.size();
@@ -71,7 +72,7 @@ void NumericalDifferentiation::AprroximateDiagHessian(const Ref<const VectorXd> 
     VectorXd p3(n);
     double h = sqrt(1e-4);
     double h2 = h * h;
-    Hess = MatrixXd::Zero(n, n);
+    MatrixXd Hess = MatrixXd::Zero(n, n);
     for (int i = 0; i < n; i++)
     {
         p1 = point;
@@ -83,6 +84,7 @@ void NumericalDifferentiation::AprroximateDiagHessian(const Ref<const VectorXd> 
         p3 += h * ei.col(i);
         Hess(i, i) = (F(p1) - F(p2) - F(p3) + fval1) / h2;
     }
+    return Hess;
 }
 
 
