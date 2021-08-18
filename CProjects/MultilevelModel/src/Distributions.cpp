@@ -239,6 +239,13 @@ double mvtpdf(const VectorXd &x, const VectorXd &mu,
   return numconst * pow(denconst, -1) * kernel;
 }
 
+
+double logavg(const Ref<const VectorXd> &X) {
+  // Values are already logged 
+  double maxval = X.maxCoeff();
+  return log((X.array() - maxval).exp().sum()) + maxval - log(X.size());
+}
+
 /* VectorXd generateChiSquaredVec(double df, int rows) {
   std::mt19937 gen(rd());
   std::chi_squared_distribution<double> csd(df);

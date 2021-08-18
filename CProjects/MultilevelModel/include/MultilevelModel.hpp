@@ -6,9 +6,6 @@
 #include <map>
 #include <string>
 #include <math.h>
-#include <chrono>
-#include <fstream>
-#include <random>
 
 #include <eigen-3.3.9/Eigen/Dense>
 #include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
@@ -243,7 +240,7 @@ MatrixXd updateAR(const MatrixBase<D1> &current, const MatrixBase<D2> &yt, const
     int T = yt.cols();
     if (rows > lags)
     {
-        invalid_argument("Invalid input in updateAR, rows greater than cols.");
+        throw invalid_argument("Invalid input in updateAR, rows greater than cols.");
     }
     MatrixXd Xt = lag(yt, lags);
     MatrixXd ytstar = yt.rightCols(T - lags);
@@ -315,6 +312,90 @@ MatrixXd updateAR(const MatrixBase<D1> &current, const MatrixBase<D2> &yt, const
     }
 }
 
+template <typename D1, typename D2, typename D3>
+VectorXd gamma_G(const MatrixBase<D1> &gammastar, const std::vector<MatrixXd> &gammagPosterior, const std::vector<MatrixXd> &ytPosterior,
+                 const std::vector<VectorXd> &sigma2Posterior, const MatrixXd &priorMean, const MatrixXd &priorVar)
+{
+    /* current comes in as a row, priorMean comes in as a row */
+    int nFactors = gammastar.rows();
+    int lags = gammastar.cols();
+    int T = ytPosterior[0].cols();
+    MatrixXd yt; 
+    MatrixXd Xt;
+    MatrixXd ytstar;
+    MatrixXd Ip;
+    MatrixXd XX;
+
+    MatrixXd gammag;
+    VectorXd numerator(nFactors * rr);
+    int d = 0;
+    for (int i = 0; i < rr; ++i)
+    {
+        yt = ytPosterior[i]; 
+        Xt = lag(yt, lags);
+        ytstar = yt.rightCols(T - lags);
+        Ip = MatrixXd::Identity(lags, lags);
+        XX = Xt * Xt.transpose();
+        sigma2 = sigma2Posterior[i];
+        for (int k = 0; k < nFactors; ++k)
+        {
+            sigma2 = sigma2[k];
+            XX = XX.array() / sigma2[k];
+            MatrixXd G1 = priorVar.householderQr().solve(Ip);
+            G1 = (G1 + XX).householderQr().solve(Ip);
+            MatrixXd g1 = priorVar.householderQr().solve(priorMean.transpose());
+            MatrixXd Xy = (Xt * ytstar.transpose()).array() / sigma2[k];
+            g1 = (G1 * (g1 + Xy)).transpose();
+            Matrix<double, 1, 1> s2;
+            s2 << sigma2[k];
+            MatrixXd Pstar = setCovar(gammastar, s2);
+            MatrixXd G1L = G1.llt().matrixL();
+            MatrixXd Pg(lags, lags);
+            Pg = setCovar(gammag.row(k));
+            MatrixXd Xp = MatrixXd::Zero(lags, lags);
+            MatrixXd empty;
+            for (int i = 1; i < lags; ++i)
+            {
+                empty = yt.leftCols(i);
+                empty.resize(i, 1);
+                Xp.col(i).segment(lags - i, i) = empty;
+                empty.resize(0, 0);
+            }
+            MatrixXd Sstar = s2.replicate(T, 1).asDiagonal();
+            MatrixXd Sg = Sstar;
+            Sstar.topLeftCorner(lags, lags) = Pstar;
+            Sg.topLeftCorner(lags, lags) = Pg;
+            MatrixXd Xss(lags, T);
+            Xss << Xp, Xt;
+            MatrixXd ZeroMean = MatrixXd::Zero(1, T);
+            double qg = logmvnpdf(gammastar, g1, G1);
+            double val = (logmvnpdf(yt - gammastar * Xss, ZeroMean, Sstar) +
+                          logmvnpdf(gammastar, priorMean, priorVar) +
+                          logmvnpdf(gammag.row(k), g1, G1)) -
+                         (logmvnpdf(yt - gammag.row(k) * Xss, ZeroMean, Sg) +
+                          logmvnpdf(gammag.row(k), priorMean, priorVar) +
+                          qg);
+            double lalphaqg = min(0., val);
+            lalphaqg = lalphaqg + qg;
+            numerator(d);
+            ++d;
+        }
+    }
+    return numerator;
+}
+
+template <typename T>
+MatrixXd mean(const std::vector<T> &X)
+{
+    MatrixXd avg;
+    avg.setZero(X[0].rows(), X[0].cols());
+    for (T i : X)
+    {
+        avg += i;
+    }
+    return avg.array() / X.size();
+}
+
 template <typename D1, typename D3, typename D4, typename D5,
           typename D6, typename D7>
 double ConditionalLogLikelihood(const MatrixBase<D1> &guess, MatrixXd &resids,
@@ -362,7 +443,7 @@ VectorXd updateVariance(const MatrixBase<D> &residuals, int v0, int D0)
 class UpdateBeta
 {
 public:
-    MatrixXd betamean; // Mean update
+    VectorXd betamean; // Mean update
     MatrixXd B;        // Covariance Matrix update
     MatrixXd betanew;  // beta update
     MatrixXd xbt;      // X*beta update
@@ -420,6 +501,74 @@ public:
         xbt = surX * betanew;
         xbt.resize(K, T);
     }
+
+    template <typename D1, typename D2, typename D3, typename D4, typename D5,
+              typename D6, typename D7>
+    void computeParameters(const MatrixBase<D1> &yt, const MatrixBase<D2> &surX,
+                           const MatrixBase<D3> &om_precision, const MatrixBase<D4> &A,
+                           const MatrixBase<D5> &FactorPrecision, const MatrixBase<D6> &b0,
+                           const MatrixBase<D7> &B0)
+    {
+        /* b0 is a column */
+        int T = yt.cols();
+        int K = yt.rows();
+        int nFactors = A.cols();
+        int nFactorsT = nFactors * T;
+        int KP = surX.cols();
+        MatrixXd It = MatrixXd::Identity(T, T);
+        MatrixXd InFactorsT = MatrixXd::Identity(nFactorsT, nFactorsT);
+        MatrixXd Ikp = MatrixXd::Identity(KP, KP);
+        MatrixXd FullPrecision = om_precision.asDiagonal();
+        MatrixXd B0inv = (B0.diagonal().array().pow(-1)).matrix().asDiagonal();
+        MatrixXd xpx = MatrixXd::Zero(KP, KP);
+        MatrixXd xpy = MatrixXd::Zero(KP, 1);
+        MatrixXd xzz = MatrixXd::Zero(nFactorsT, KP);
+        MatrixXd yzz = MatrixXd::Zero(nFactorsT, 1);
+        MatrixXd tx;
+        MatrixXd ty;
+        MatrixXd AtO = A.transpose() * FullPrecision;
+
+        MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).ldlt().solve(InFactorsT);
+
+        int c1 = 0;
+        int c2 = 0;
+        for (int t = 0; t < T; ++t)
+        {
+            tx = FullPrecision * surX.middleRows(c1, K);
+            ty = FullPrecision * yt.col(t);
+            xzz.middleRows(c2, nFactors) = A.transpose() * tx;
+            yzz.middleRows(c2, nFactors) = A.transpose() * ty;
+            xpx += surX.middleRows(c1, K).transpose() * tx;
+            xpy += surX.middleRows(c1, K).transpose() * ty;
+
+            c1 += K;
+            c2 += nFactors;
+        }
+
+        XzzPinv = xzz.transpose() * XzzPinv;
+        B = B0inv + xpx - (XzzPinv * xzz);
+
+        B = B.ldlt().solve(MatrixXd::Identity(KP, KP));
+        betamean = B * (B0inv * b0.transpose() + xpy - (XzzPinv * yzz));
+    }
+
+    template <typename D0, typename D1, typename D2, typename D3, typename D4, typename D5,
+              typename D6, typename D7>
+    double betapdf(const MatrixBase<D0> &betastar, const MatrixBase<D1> &yt, const MatrixBase<D2> &surX,
+                   const MatrixBase<D3> &om_precision, const MatrixBase<D4> &A,
+                   const MatrixBase<D5> &FactorPrecision, const MatrixBase<D6> &b0,
+                   const MatrixBase<D7> &B0)
+    {
+        computeParameters(yt, surX, om_precision, A, FactorPrecision, b0, B0);
+        return logmvnpdf(betastar, betamean.transpose(), B);
+    }
+
+    template <typename T1, typename T2>
+    void setXbeta(const MatrixBase<T1> &betastar, const MatrixBase<T2> &surX, const int &K, const int &T)
+    {
+        xbt = surX * betastar;
+        xbt.resize(K, T);
+    }
 };
 
 class LoadingsPriorsSetup
@@ -427,14 +576,8 @@ class LoadingsPriorsSetup
 public:
     map<string, VectorXd> loadingsPriorMeans;
     map<string, MatrixXd> loadingsPriorPrecision;
-    double a0;
-    double A0;
-    LoadingsPriorsSetup(double _a0, double _A0, map<string, Matrix<int, 1, 2>> InfoMap)
-    {
-        setPriors(_a0, _A0, InfoMap);
-    }
 
-    void setPriors(double priorMean, double priorPrecision, map<string, Matrix<int, 1, 2>> InfoMap)
+    void setPriors(const double &priorMean, const double &priorPrecision, const map<string, Matrix<int, 1, 2>> &InfoMap)
     {
         for (auto it = InfoMap.begin(); it != InfoMap.end(); ++it)
         {
@@ -453,6 +596,17 @@ class LoadingsFactorUpdate
 public:
     MatrixXd Factors;
     MatrixXd Loadings;
+    double acceptance_rate;
+
+    LoadingsFactorUpdate()
+    {
+        acceptance_rate = 0;
+    }
+
+    void getAcceptanceRate(double nRuns)
+    {
+        acceptance_rate = acceptance_rate / nRuns;
+    }
 
     void setFactors(const Ref<const MatrixXd> &F)
     {
@@ -462,21 +616,18 @@ public:
     void setLoadings(const Ref<const MatrixXd> &A, const map<string, Matrix<int, 1, 2>> &InfoMap,
                      MatrixXd &Identity, double restriction)
     {
-
         Loadings = A;
         int c = 0;
         for (auto m = InfoMap.begin(); m != InfoMap.end(); ++m)
         {
-
             Loadings(m->second(0), c) = restriction;
             ++c;
         }
     }
 
-    void updateLoadingsFactors(const Ref<const MatrixXd> &yt, const Ref<const MatrixXd> &Xbeta, MatrixXd &Ft,
-                               const Ref<const MatrixXd> &A, const Ref<const MatrixXd> &gammas,
-                               const Ref<const VectorXd> &obsPrecision, const Ref<const VectorXd> &factorVariance,
-                               const Ref<const MatrixXd> &Identity, const map<string, Matrix<int, 1, 2>> &InfoMap,
+    void updateLoadingsFactors(const Ref<const MatrixXd> &yt, const Ref<const MatrixXd> &Xbeta,
+                               const Ref<const MatrixXd> &gammas, const Ref<const VectorXd> &obsPrecision,
+                               const Ref<const VectorXd> &factorVariance, const map<string, Matrix<int, 1, 2>> &InfoMap,
                                map<string, VectorXd> &loadingsPriorMeanMap, map<string, MatrixXd> &loadingsPriorPrecisionMap,
                                Optimize &optim)
     {
@@ -486,7 +637,9 @@ public:
         int nrows;
         int c = 0;
         int df = 15;
+        int disp_on = 0;
         double lalpha;
+        double tau = 100;
         MatrixXd ytdemeaned;
         MatrixXd subytdemeaned;
         MatrixXd subgammas;
@@ -496,32 +649,31 @@ public:
         MatrixXd mut;
         MatrixXd subPriorMean;
         MatrixXd subPriorPrecision;
-        MatrixXd Itemp;
         MatrixXd proposalCovariance;
         MatrixXd lower;
+        MatrixXd covDiag;
+        MatrixXd Diag;
 
         VectorXd subA;
         VectorXd subfv;
         VectorXd subomPrecision;
         VectorXd proposalMean;
-        VectorXd covDiag;
         VectorXd proposal;
 
         for (auto m = InfoMap.begin(); m != InfoMap.end(); ++m)
         {
             cout << "Factor level " << c + 1 << endl;
-            COM = zeroOutFactorLevel(Identity, c);
-            mut = Xbeta + COM * Ft;
+            COM = zeroOutFactorLevel(Loadings, c);
+            mut = Xbeta + COM * Factors;
             ytdemeaned = yt - mut;
             nrows = m->second(1) - m->second(0) + 1;
-            Itemp = MatrixXd::Identity(nrows, nrows);
             subytdemeaned = ytdemeaned.middleRows(m->second(0), nrows);
             subomPrecision = obsPrecision.segment(m->second(0), nrows);
-            subA = A.col(c).segment(m->second(0), nrows);
+            subA = Loadings.col(c).segment(m->second(0), nrows);
             subgammas = gammas.row(c);
             subfv = factorVariance.row(c);
             subFp = MakePrecision(subgammas, subfv, T);
-            subFt = Ft.row(c);
+            subFt = Factors.row(c);
             subPriorMean = loadingsPriorMeanMap[m->first].transpose();
             subPriorPrecision = loadingsPriorPrecisionMap[m->first];
 
@@ -532,199 +684,203 @@ public:
                                                  subomPrecision, subFt, subFp);
             };
 
-            optim.BFGS(subA, CLL, 1);
-            optim.AprroximateDiagHessian(optim.x1, CLL, optim.fval1);
-
+            optim.BFGS(subA, CLL, disp_on);
             proposalMean = optim.x1;
-            // proposalCovariance = optim.Hess;
-            covDiag = proposalCovariance.diagonal();
-            covDiag = covDiag.array().pow(-1);
-            proposalCovariance = covDiag.asDiagonal(); 
-            for (int j = 0; j < covDiag.size(); ++j)
-            {
-                if (covDiag(j) < 0)
-                {
-                    covDiag(j) = covDiag(j) * (-1);
-                }
-            }
-            covDiag.array().sqrt();
-            double tau = 1;
-            lower = tau*covDiag.asDiagonal();
- 
+            covDiag = optim.AprroximateDiagHessian(optim.x1, CLL, optim.fval1);
+            Diag = covDiag.diagonal();
+            Diag = Diag.array().pow(-1);
+            proposalCovariance = Diag.asDiagonal();
+
+            lower = proposalCovariance.llt().matrixL();
 
             proposal = proposalMean + lower * normrnd(0, 1, lower.rows(), 1);
-            cout << proposal << endl; 
-            lalpha = -CLL(proposal) + logmvtpdf(subA.transpose(), proposalMean.transpose(), proposalCovariance, df) +
-                     CLL(subA) - logmvtpdf(proposal.transpose(), proposalMean.transpose(), proposalCovariance, df);
+            lalpha = -CLL(proposal) + logmvtpdf(subA.transpose(), tau * proposalMean.transpose(), proposalCovariance, df) +
+                     CLL(subA) - logmvtpdf(proposal.transpose(), tau * proposalMean.transpose(), proposalCovariance, df);
+            lalpha = min(0., lalpha);
+            // cout << proposal << endl;
+            // cout <<    CLL(proposal) << endl;
+            // cout <<    logmvtpdf(subA.transpose(), proposalMean.transpose(), proposalCovariance, df) << endl;
+            // cout << CLL(subA) << endl;
+            // cout << logmvtpdf(proposal.transpose(), proposalMean.transpose(), proposalCovariance, df) << endl;
+            if (isnan(lalpha))
+            {
+                throw std::domain_error("Error in update factor MH step.");
+            }
             if (log(unifrnd(0, 1)) < lalpha)
             {
-                cout << "ACCEPT" << endl;
+                acceptance_rate += 1;
                 subA = proposal;
                 subA(0) = 1;
                 Loadings.col(c).segment(m->second(0), nrows) = subA;
             }
-            Ft.row(c) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
+            Factors.row(c) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
             ++c;
         }
     }
 };
 
-class GenerateMLFactorData
+class MultilevelModel : public UpdateBeta, public LoadingsFactorUpdate, public LoadingsPriorsSetup
 {
-    /* betas will be same for every equation, 
-    X should be stacked over T
-    gammas should include greatest lag in 0th column, stacked over equations
-    loadings should be a matrix equaling the number of equaitons in the row dimension
-    factors will be nFactors = rows time = cols */
 public:
-    int T;
-    int K;
-    int nFactors;
-    int nEqnsP;
-    VectorXd betas;
-    MatrixXd Xt;
-    MatrixXd surX;
-    VectorXd allBetas;
-    MatrixXd Xbeta;
-    MatrixXd Identity;
-    MatrixXd gammas;
-    VectorXd factorVariances;
-    MatrixXd Loadings;
-    MatrixXd P0;
-    MatrixXd FactorPrecision;
-    MatrixXd Factors;
-    MatrixXd AF;
-    MatrixXd mu;
-    MatrixXd epsilon;
+    std::vector<MatrixXd> LoadingsPosteriorDraws;
+    std::vector<VectorXd> BetaPosteriorDraws;
+    std::vector<MatrixXd> FactorPosteriorDraws;
+    std::vector<MatrixXd> GammasPosteriorDraws;
+    std::vector<VectorXd> ObsPrecisionPosteriorDraws;
+    std::vector<VectorXd> FactorVariancePosteriorDraws;
+    std::vector<VectorXd> PosteriorMeans;
+    std::vector<MatrixXd> PosteriorCovariances;
+
     MatrixXd yt;
-    VectorXd om_variance;
-    VectorXd om_precision;
-    MatrixXd b0;
+    MatrixXd Xt;
+    MatrixXd gammas;
+    RowVectorXd b0;
     MatrixXd B0;
-    MatrixXd H;
-    MatrixXd resids;
-    GenerateMLFactorData(int nObs, int nEqns, const VectorXd &coeffValues,
-                         const map<string, Matrix<int, 1, 2>> &InfoMap,
-                         const VectorXd &factorCoeff,
-                         const MatrixXd &_Loadings, const double &omVar);
+    double r0;
+    double R0;
+    RowVectorXd g0;
+    MatrixXd G0;
+    map<string, Matrix<int, 1, 2>> InfoMap;
+    MatrixXd Identity;
+    int Sims;
+    int burnin;
 
-    void setLoadings(const Ref<const MatrixXd> &A, const map<string, Matrix<int, 1, 2>> &InfoMap,
-                     MatrixXd &Identity, double restriction)
+    void setModel(const Ref<const MatrixXd> &yt, const Ref<const MatrixXd> &Xt, const Ref<const MatrixXd> &A,
+                  const Ref<const MatrixXd> &Ft, const Ref<const MatrixXd> &gammas, const map<string, Matrix<int, 1, 2>> &InfoMap,
+                  const RowVectorXd &b0, const MatrixXd &B0, const double &a0, const double &A0, const double &r0,
+                  const double &R0, const Ref<const RowVectorXd> &g0, const Ref<const MatrixXd> &G0)
     {
+        this->yt = yt;
+        this->Xt = Xt;
+        this->gammas = gammas;
+        this->InfoMap = InfoMap;
+        this->b0 = b0;
+        this->B0 = B0;
+        this->r0 = r0;
+        this->R0 = R0;
+        this->g0 = g0;
+        this->G0 = G0;
+        this->Identity = MakeObsModelIdentity(InfoMap, yt.rows());
+        setFactors(Ft);
+        setLoadings(A, InfoMap, Identity, 1.);
+        setPriors(a0, A0, InfoMap);
+    }
 
-        Loadings = A;
+    void setPostMeansAndCovars(const Ref<const MatrixXd> &A, const Ref<const MatrixXd> &Xbeta, MatrixXd &Ft,
+                               const Ref<const MatrixXd> &gammas, const Ref<const VectorXd> &obsPrecision,
+                               const Ref<const VectorXd> &factorVariance, Optimize &optim)
+    {
+        int T = yt.cols();
+        int nFactors = InfoMap.size();
+        PosteriorMeans.resize(nFactors);
+        PosteriorCovariances.resize(nFactors);
+        MatrixXd ytdemeaned;
+        MatrixXd subytdemeaned;
+        MatrixXd subgammas;
+        MatrixXd subFp;
+        MatrixXd subFt;
+        MatrixXd COM;
+        MatrixXd mut;
+        MatrixXd subPriorMean;
+        MatrixXd subPriorPrecision;
+        MatrixXd lower;
+        MatrixXd postCovar;
+
+        VectorXd subA;
+        VectorXd subfv;
+        VectorXd subomPrecision;
+
+        int disp_on = 0;
+        int N = LoadingsPosteriorDraws.size();
+
+        int nrows;
         int c = 0;
         for (auto m = InfoMap.begin(); m != InfoMap.end(); ++m)
         {
+            nrows = m->second(1) - m->second(0) + 1;
+            COM = zeroOutFactorLevel(A, c);
+            mut = Xbeta + COM * Ft;
+            ytdemeaned = yt - mut;
+            subytdemeaned = ytdemeaned.middleRows(m->second(0), nrows);
+            subomPrecision = obsPrecision.segment(m->second(0), nrows);
+            subA = A.col(c).segment(m->second(0), nrows);
+            subgammas = gammas.row(c);
+            subfv = factorVariance.row(c);
+            subFp = MakePrecision(subgammas, subfv, T);
+            subFt = Ft.row(c);
+            subPriorMean = loadingsPriorMeans[m->first].transpose();
+            subPriorPrecision = loadingsPriorPrecision[m->first];
 
-            Loadings(m->second(0), c) = restriction;
+            auto CLL = [&subytdemeaned, &subPriorMean, &subPriorPrecision,
+                        &subomPrecision, &subFt, &subFp](const VectorXd &x0)
+            {
+                return -ConditionalLogLikelihood(x0, subytdemeaned, subPriorMean, subPriorPrecision,
+                                                 subomPrecision, subFt, subFp);
+            };
+            optim.BFGS(subA, CLL, disp_on);
+            postCovar = optim.AprroximateDiagHessian(optim.x1, CLL, optim.fval1);
+            postCovar = postCovar.ldlt().solve(MatrixXd::Identity(nrows, nrows));
+            PosteriorMeans[c] = subA.transpose();
+            PosteriorCovariances[c] = postCovar;
             ++c;
         }
-        Loadings = Identity.array() * Loadings.array();
     }
-};
 
-class GenerateAutoRegressiveData
-{
-public:
-    int lags;
-    MatrixXd H;
-    MatrixXd epsilon;
-    MatrixXd yt;
-    MatrixXd G0;
-    MatrixXd g0;
-    MatrixXd ythat;
-    MatrixXd Xthat;
-    double sigma2;
-    GenerateAutoRegressiveData(int time, const MatrixXd &params);
-};
-
-class MultilevelModel
-{
-public:
-    VectorXd beta1stMomentContainer;
-    VectorXd beta2ndMomentContainer;
-    MatrixXd Factor1stMomentContainer;
-    MatrixXd Factor2ndMomentContainer;
-    MatrixXd gammas1stMomentContainer;
-    MatrixXd gammas2ndMomentContainer;
-    MatrixXd obsPrecisionContainer;
-    MatrixXd factorVarianceContainer;
-    MatrixXd Loadings1stMomentContainer;
-    MatrixXd Loadings2ndMomentContainer;
-
-    void
-    runMultilevelModel(MatrixXd yt, MatrixXd Xt, MatrixXd A, MatrixXd Ft, MatrixXd gammas, const map<string, Matrix<int, 1, 2>> &InfoMap,
-                       const RowVectorXd &b0, const MatrixXd &B0, int Sims, int burnin)
+    void runMultilevelModel(int Sims, int burnin)
     {
+        this->Sims = Sims;
+        this->burnin = burnin;
         int T = yt.cols();
         int K = yt.rows();
         int nFactors = InfoMap.size();
-        double r0 = 6;
-        double R0 = 6;
-
-        UpdateBeta ub;
-        LoadingsPriorsSetup lps(0, 1, InfoMap);
-        LoadingsFactorUpdate lfu;
-        MatrixXd surX = surForm(Xt, K);
-
-        // ub.betastar = VectorXd::Ones(surX.cols()) * .5;
-        // ub.xbt = surX * ub.betastar;
-        // ub.xbt.resize(K, T);
 
         VectorXd omVariance = VectorXd::Ones(K);
         VectorXd omPrecision = 0.5 * omVariance.array().pow(-1);
         VectorXd factorVariance = VectorXd::Ones(nFactors);
 
+        MatrixXd surX = surForm(Xt, K);
         MatrixXd FactorPrecision = MakePrecision(gammas, factorVariance, T);
-        MatrixXd Identity = MakeObsModelIdentity(InfoMap, K);
         MatrixXd resids;
         MatrixXd H;
         VectorXd Hf;
-        RowVectorXd g0 = RowVectorXd::Zero(gammas.cols());
-        MatrixXd G0 = .5*MatrixXd::Identity(gammas.cols(), gammas.cols());
-
-        lfu.setFactors(Ft);
-        lfu.setLoadings(A, InfoMap, Identity, 1.);
 
         double optim_options[5] = {1e-4, 1e-5, 1e-5, 1e-4, 25};
         double parama = .5 * (r0 + T);
         double paramb;
         Optimize optim(optim_options);
-        beta1stMomentContainer = VectorXd::Zero(surX.cols(), 1);
-        beta2ndMomentContainer = beta1stMomentContainer;
-        Factor1stMomentContainer = MatrixXd::Zero(nFactors, T);
-        Factor2ndMomentContainer = MatrixXd::Zero(nFactors, T);
-        gammas1stMomentContainer = MatrixXd::Zero(nFactors, gammas.cols());
-        gammas2ndMomentContainer = MatrixXd::Zero(nFactors, gammas.cols());
-        obsPrecisionContainer = MatrixXd::Zero(K, Sims - (burnin + 1));
-        factorVarianceContainer = MatrixXd::Zero(nFactors, Sims - (burnin + 1));
-        Loadings1stMomentContainer = MatrixXd::Zero(A.rows(), A.cols());
+        int stationarySims = Sims - (burnin);
 
+        // obsPrecisionContainer = MatrixXd::Zero(K, stationarySims);
+        // factorVarianceContainer = MatrixXd::Zero(nFactors, stationarySims);
+
+        LoadingsPosteriorDraws.resize(stationarySims);
+        BetaPosteriorDraws.resize(stationarySims);
+        FactorPosteriorDraws.resize(stationarySims);
+        GammasPosteriorDraws.resize(stationarySims);
+        ObsPrecisionPosteriorDraws.resize(stationarySims);
+        FactorVariancePosteriorDraws.resize(stationarySims);
 
         for (int i = 0; i < Sims; ++i)
         {
 
             cout << "Sim " << i + 1 << endl;
 
-            ub.betaupdate(yt, surX, omPrecision, lfu.Loadings, FactorPrecision, b0, B0);
+            betaupdate(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
 
-            lfu.updateLoadingsFactors(yt, ub.xbt, lfu.Factors, lfu.Loadings, gammas, omPrecision,
-                                      factorVariance, Identity, InfoMap, lps.loadingsPriorMeans,
-                                      lps.loadingsPriorPrecision, optim);
-
-            cout << lfu.Loadings << endl; 
+            updateLoadingsFactors(yt, xbt, gammas, omPrecision,
+                                  factorVariance, InfoMap, loadingsPriorMeans,
+                                  loadingsPriorPrecision, optim);
 
             for (int j = 0; j < nFactors; ++j)
             {
-                gammas.row(j) = updateAR(gammas.row(j), lfu.Factors.row(j), factorVariance(j), g0, G0);
+                gammas.row(j) = updateAR(gammas.row(j), Factors.row(j), factorVariance(j), g0, G0);
                 H = ReturnH(gammas.row(j), T);
-                Hf = H * lfu.Factors.row(j).transpose();
+                Hf = H * Factors.row(j).transpose();
                 paramb = (.5 * (R0 + Hf.transpose() * Hf));
                 factorVariance(j) = igammarnd(parama, 1.0 / paramb);
             }
 
-            resids = yt - (lfu.Loadings * lfu.Factors) - ub.xbt;
+            resids = yt - (Loadings * Factors) - xbt;
             for (int j = 0; j < K; ++j)
             {
                 paramb = 0.5 * ((R0 + (resids.row(j) * resids.row(j).transpose())));
@@ -734,36 +890,386 @@ public:
 
             FactorPrecision = MakePrecision(gammas, factorVariance, T);
 
-            if (i > burnin)
+            if (i >= burnin)
             {
-                beta1stMomentContainer += ub.betanew;
-                // beta2ndMomentContainer += (ub.betastar.array() * ub.betastar.array()).matrix();
-                Factor1stMomentContainer += lfu.Factors;
-                // Factor2ndMomentContainer += (lfu.Factors.array() * lfu.Factors.array()).matrix();
-                gammas1stMomentContainer += gammas;
-                // gammas2ndMomentContainer += (gammas.array() * gammas.array()).matrix();
-                obsPrecisionContainer.col(i - (burnin + 1)) = omPrecision;
-                factorVarianceContainer.col(i - (burnin + 1)) = factorVariance;
-                Loadings1stMomentContainer += lfu.Loadings;
+                BetaPosteriorDraws[i - (burnin)] = betanew;
+                FactorPosteriorDraws[i - (burnin)] = Factors;
+                LoadingsPosteriorDraws[i - (burnin)] = Loadings;
+                GammasPosteriorDraws[i - (burnin)] = gammas;
+                ObsPrecisionPosteriorDraws[i - (burnin)] = omPrecision;
+                FactorVariancePosteriorDraws[i - (burnin)] = factorVariance;
+            }
+        }
+        getAcceptanceRate(nFactors * Sims);
+        cout << "Acceptance Rate " << acceptance_rate << endl;
+    }
+
+    VectorXd AStarReducedRun_G(int rr, Optimize optim)
+    {
+
+        if (rr > (Sims - burnin))
+        {
+            throw std::invalid_argument("Error in AStarReducedRun_G. N reduced runs cannot be greater than Sims - burnin - 1.");
+        }
+        int T = yt.cols();
+        int K = yt.rows();
+        int nFactors = InfoMap.size();
+        int nrows;
+        int c;
+        int d = 0;
+        int df = 15;
+        int disp_on = 0;
+        double lalpha;
+        double qg;
+        MatrixXd ytdemeaned;
+        MatrixXd subytdemeanedstar;
+        MatrixXd subytdemeanedg;
+        MatrixXd subgammas;
+        MatrixXd subFp;
+        MatrixXd subFt;
+        MatrixXd COM;
+        MatrixXd mut;
+        MatrixXd subPriorMean;
+        MatrixXd subPriorPrecision;
+        MatrixXd CovarianceStar;
+        MatrixXd Diag;
+        MatrixXd Ag;
+        MatrixXd Factorg;
+        MatrixXd gammag;
+        MatrixXd surX = surForm(Xt, K);
+        MatrixXd Xbetag;
+        MatrixXd Astar = mean(LoadingsPosteriorDraws);
+        MatrixXd postCovar;
+
+        VectorXd betag;
+        VectorXd obsPrecisiong;
+        VectorXd factorVarianceg;
+        VectorXd subA;
+        VectorXd subfv;
+        VectorXd subomPrecision;
+        VectorXd MeanStar;
+        VectorXd covDiag;
+        VectorXd subAstar;
+        VectorXd numerator(rr * nFactors);
+        VectorXd postMean;
+        for (int i = 0; i < rr; ++i)
+        {
+            betag = BetaPosteriorDraws[i];
+            Ag = LoadingsPosteriorDraws[i];
+            gammag = GammasPosteriorDraws[i];
+            obsPrecisiong = ObsPrecisionPosteriorDraws[i];
+            factorVarianceg = FactorVariancePosteriorDraws[i];
+            Factorg = FactorPosteriorDraws[i];
+            Xbetag = surX * betag;
+            Xbetag.resize(K, T);
+            c = 0;
+
+            for (auto m = InfoMap.begin(); m != InfoMap.end(); ++m)
+            {
+                cout << "Factor level " << c + 1 << endl;
+                nrows = m->second(1) - m->second(0) + 1;
+                COM = zeroOutFactorLevel(Astar, c);
+                mut = Xbetag + COM * Factorg;
+                ytdemeaned = yt - mut;
+                subytdemeanedstar = ytdemeaned.middleRows(m->second(0), nrows);
+
+                COM = zeroOutFactorLevel(Ag, c);
+                mut = Xbetag + COM * Factorg;
+                ytdemeaned = yt - mut;
+                subytdemeanedg = ytdemeaned.middleRows(m->second(0), nrows);
+
+                subomPrecision = obsPrecisiong.segment(m->second(0), nrows);
+                subA = Ag.col(c).segment(m->second(0), nrows);
+                subAstar = Astar.col(c).segment(m->second(0), nrows);
+                subgammas = gammag.row(c);
+                subfv = factorVarianceg.row(c);
+                subFp = MakePrecision(subgammas, subfv, T);
+                subFt = Factorg.row(c);
+                subPriorMean = loadingsPriorMeans[m->first].transpose();
+                subPriorPrecision = loadingsPriorPrecision[m->first];
+
+                MeanStar = PosteriorMeans[c];
+                CovarianceStar = PosteriorCovariances[c];
+
+                auto CLLstar = [&subytdemeanedstar, &subPriorMean, &subPriorPrecision,
+                                &subomPrecision, &subFt, &subFp](const VectorXd &x0)
+                {
+                    return -ConditionalLogLikelihood(x0, subytdemeanedstar, subPriorMean, subPriorPrecision,
+                                                     subomPrecision, subFt, subFp);
+                };
+                auto CLLg = [&subytdemeanedg, &subPriorMean, &subPriorPrecision,
+                             &subomPrecision, &subFt, &subFp](const VectorXd &x0)
+                {
+                    return -ConditionalLogLikelihood(x0, subytdemeanedg, subPriorMean, subPriorPrecision,
+                                                     subomPrecision, subFt, subFp);
+                };
+                optim.BFGS(subA, CLLg, disp_on);
+                postMean = optim.x1;
+                postCovar = optim.AprroximateDiagHessian(optim.x1, CLLg, optim.fval1);
+                postCovar = postCovar.ldlt().solve(MatrixXd::Identity(nrows, nrows));
+                qg = logmvtpdf(subAstar.transpose(), postMean.transpose(), postCovar, df);
+                lalpha = -CLLstar(subAstar) + logmvtpdf(subA.transpose(), MeanStar.transpose(), CovarianceStar, df) +
+                         CLLg(subA) - qg;
+                lalpha = min(0., lalpha);
+                numerator(d) = lalpha + qg;
+                ++c;
+                ++d;
+            }
+        }
+        return numerator;
+    }
+
+    VectorXd AStarReducedRun_J(const Ref<const MatrixXd> &Xbetaj,
+                               const Ref<const MatrixXd> &gammasj, const Ref<const VectorXd> &obsPrecisionj,
+                               const Ref<const VectorXd> &factorVariancej, Optimize &optim)
+    {
+
+        int T = yt.cols();
+        int K = yt.rows();
+        int nFactors = InfoMap.size();
+        int nrows;
+        int c = 0;
+        int d = 0;
+        int df = 15;
+        int disp_on = 0;
+        double lalpha;
+        double qg;
+        MatrixXd ytdemeaned;
+        MatrixXd subytdemeanedstar;
+        MatrixXd subytdemeanedj;
+        MatrixXd subgammas;
+        MatrixXd subFp;
+        MatrixXd subFt;
+        MatrixXd COM;
+        MatrixXd mut;
+        MatrixXd subPriorMean;
+        MatrixXd subPriorPrecision;
+        MatrixXd CovarianceStar;
+        MatrixXd Diag;
+        MatrixXd Astar = mean(LoadingsPosteriorDraws);
+        MatrixXd postCovar;
+        MatrixXd lower;
+        MatrixXd jCovar;
+
+        VectorXd subA;
+        VectorXd subfv;
+        VectorXd subomPrecision;
+        VectorXd MeanStar;
+        VectorXd covDiag;
+        VectorXd subAstar;
+        VectorXd denominator;
+        VectorXd jmean;
+        VectorXd proposalj;
+
+        denominator.setZero(nFactors);
+
+        for (auto m = InfoMap.begin(); m != InfoMap.end(); ++m)
+        {
+            cout << "Factor level " << c + 1 << endl;
+            nrows = m->second(1) - m->second(0) + 1;
+            MeanStar = PosteriorMeans[c].transpose();
+            CovarianceStar = PosteriorCovariances[c];
+            lower = CovarianceStar.llt().matrixL();
+            proposalj = MeanStar + lower * normrnd(0, 1, lower.rows(), 1);
+            proposalj(1) = 1;
+            Loadings.col(c).segment(m->second(0), nrows) = proposalj;
+
+            COM = zeroOutFactorLevel(Astar, c);
+            mut = Xbetaj + COM * Factors;
+            ytdemeaned = yt - mut;
+            subytdemeanedstar = ytdemeaned.middleRows(m->second(0), nrows);
+
+            COM = zeroOutFactorLevel(Loadings, c);
+
+            mut = Xbetaj + COM * Factors;
+            ytdemeaned = yt - mut;
+            subytdemeanedj = ytdemeaned.middleRows(m->second(0), nrows);
+            subomPrecision = obsPrecisionj.segment(m->second(0), nrows);
+            subA = Loadings.col(c).segment(m->second(0), nrows);
+            subAstar = Astar.col(c).segment(m->second(0), nrows);
+            subgammas = gammasj.row(c);
+            subfv = factorVariancej.row(c);
+            subFp = MakePrecision(subgammas, subfv, T);
+            subFt = Factors.row(c);
+            subPriorMean = loadingsPriorMeans[m->first].transpose();
+            subPriorPrecision = loadingsPriorPrecision[m->first];
+
+            auto CLLstar = [&subytdemeanedstar, &subPriorMean, &subPriorPrecision,
+                            &subomPrecision, &subFt, &subFp](const VectorXd &x0)
+            {
+                return -ConditionalLogLikelihood(x0, subytdemeanedstar, subPriorMean, subPriorPrecision,
+                                                 subomPrecision, subFt, subFp);
+            };
+            auto CLLj = [&subytdemeanedj, &subPriorMean, &subPriorPrecision,
+                         &subomPrecision, &subFt, &subFp](const VectorXd &x0)
+            {
+                return -ConditionalLogLikelihood(x0, subytdemeanedj, subPriorMean, subPriorPrecision,
+                                                 subomPrecision, subFt, subFp);
+            };
+            optim.BFGS(subA, CLLj, disp_on);
+            jmean = optim.x1;
+            jCovar = optim.AprroximateDiagHessian(optim.x1, CLLj, optim.fval1);
+            jCovar = jCovar.ldlt().solve(MatrixXd::Identity(nrows, nrows));
+            lalpha = -CLLj(subA) + logmvtpdf(subAstar.transpose(), MeanStar.transpose(), CovarianceStar, df) +
+                     CLLstar(subAstar) - logmvtpdf(subA.transpose(), jmean.transpose(), jCovar, df);
+            lalpha = min(0., lalpha);
+            denominator(c) = lalpha;
+
+            Factors.row(c) = updateFactor(subytdemeanedstar, subAstar, subFp, subomPrecision, T);
+            ++c;
+        }
+        return denominator;
+    }
+
+    void ml(int rr)
+    {
+        std::vector<VectorXd> BetaRRj;
+        std::vector<MatrixXd> FactorRRj;
+        std::vector<MatrixXd> gammasRRj;
+        std::vector<VectorXd> omPrecisionRRj;
+        std::vector<VectorXd> factorVarianceRRj;
+        BetaRRj.resize(rr);
+        FactorRRj.resize(rr);
+        gammasRRj.resize(rr);
+        omPrecisionRRj.resize(rr);
+        factorVarianceRRj.resize(rr);
+        int K = yt.rows();
+        int T = yt.cols();
+        int nFactors = InfoMap.size();
+        double optim_options[5] = {1e-4, 1e-5, 1e-5, 1e-4, 25};
+        double parama = .5 * (T + r0);
+        double paramb;
+        Optimize optim(optim_options);
+        MatrixXd Ftstar = mean(FactorPosteriorDraws);
+        MatrixXd Astar = mean(LoadingsPosteriorDraws);
+        MatrixXd betabar = mean(BetaPosteriorDraws);
+        MatrixXd gammastar = mean(GammasPosteriorDraws);
+        MatrixXd gammas = gammastar;
+        MatrixXd surX = surForm(Xt, K);
+        MatrixXd Xbeta = surX * betabar;
+        MatrixXd H;
+        MatrixXd resids;
+
+        VectorXd Hf;
+        VectorXd factorVariancestar = mean(FactorVariancePosteriorDraws);
+        MatrixXd FactorPrecision = MakePrecision(gammastar, factorVariancestar, T);
+
+        VectorXd omPrecisionbar = mean(ObsPrecisionPosteriorDraws);
+        VectorXd omPrecision = omPrecisionbar;
+        VectorXd omVariance = 1. / omPrecision.array();
+        VectorXd factorVariance = factorVariancestar;
+        VectorXd Numerator;
+        MatrixXd Denominator;
+        Denominator.setZero(nFactors, rr);
+        Xbeta.resize(K, T);
+        setPostMeansAndCovars(Astar, Xbeta, Ftstar, gammastar, omPrecisionbar,
+                              factorVariancestar, optim);
+        /* Loadings Reduced Run */
+        Numerator = AStarReducedRun_G(rr, optim);
+        for (int j = 0; j < rr; ++j)
+        {
+            cout << "Sim " << j + 1 << endl;
+            betaupdate(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
+            Denominator.col(j) = AStarReducedRun_J(xbt, gammas, omPrecision, factorVariance, optim);
+
+            for (int i = 0; i < nFactors; ++i)
+            {
+                gammas.row(i) = updateAR(gammas.row(i), Factors.row(i), factorVariance(i), g0, G0);
+                H = ReturnH(gammas.row(i), T);
+                Hf = H * Factors.row(i).transpose();
+
+                paramb = (.5 * (R0 + Hf.transpose() * Hf));
+
+                factorVariance(i) = igammarnd(parama, 1.0 / paramb);
             }
 
-            cout << endl;
+            resids = yt - (Astar * Factors) - xbt;
+            for (int i = 0; i < K; ++i)
+            {
+                paramb = 0.5 * (R0 + (resids.row(i) * resids.row(i).transpose()));
+                omVariance(i) = igammarnd(parama, 1.0 / paramb);
+            }
+            omPrecision = omVariance.array().pow(-1.0);
+
+            FactorPrecision = MakePrecision(gammas, factorVariance, T);
+
+            BetaRRj[j] = betanew;
+            FactorRRj[j] = Factors;
+            gammasRRj[j] = gammas;
+            omPrecisionRRj[j] = omPrecision;
+            factorVarianceRRj[j] = factorVariance;
         }
-        int stationarySims = Sims - (burnin + 1);
-        if (stationarySims > 0)
+        Denominator.resize(nFactors * rr, 1);
+        cout << logavg(Numerator) - logavg(Denominator) << endl;
+
+        /* Beta Reduced Run */
+        VectorXd betaStar = mean(BetaRRj);
+        setXbeta(betaStar, surX, K, T);
+        VectorXd pibeta;
+        pibeta.setZero(rr);
+        gammastar = mean(gammasRRj);
+        factorVariancestar = mean(factorVarianceRRj);
+        FactorPrecision = MakePrecision(gammastar, factorVariancestar, T);
+        MatrixXd ytdemeaned;
+        MatrixXd subytdemeaned;
+        MatrixXd subgammas;
+        MatrixXd subFp;
+        MatrixXd COM;
+        MatrixXd mut;
+        VectorXd subA;
+        VectorXd subfv;
+        VectorXd subomPrecision;
+
+        int nrows;
+        int i;
+        for (int j = 0; j < rr; ++j)
         {
-            beta1stMomentContainer = beta1stMomentContainer.array() / stationarySims;
-            beta2ndMomentContainer = beta2ndMomentContainer.array() / stationarySims;
-            Factor1stMomentContainer = Factor1stMomentContainer.array() / stationarySims;
-            Factor2ndMomentContainer = Factor2ndMomentContainer.array() / stationarySims;
-            gammas1stMomentContainer = gammas1stMomentContainer.array() / stationarySims;
-            gammas2ndMomentContainer = gammas2ndMomentContainer.array() / stationarySims;
-            Loadings1stMomentContainer = Loadings1stMomentContainer.array() / stationarySims;
+            cout << "Sim " << j + 1 << endl;
+            omPrecision = omPrecisionRRj[j];
+            pibeta(j) = betapdf(betaStar.transpose(), yt, surX, omPrecision, Astar, FactorPrecision, b0, B0);
+            factorVariance = factorVarianceRRj[j];
+            gammas = gammasRRj[j];
+            i = 0;
+            for (auto m = InfoMap.begin(); m != InfoMap.end(); ++m)
+            {
+                nrows = m->second(1) - m->second(0) + 1;
+                COM = zeroOutFactorLevel(Astar, i);
+                mut = xbt + COM * Factors;
+                ytdemeaned = yt - mut;
+                subA = Astar.col(i).segment(m->second(0), nrows);
+                subgammas = gammas.row(i);
+                subfv = factorVariance.row(i);
+                subFp = MakePrecision(subgammas, subfv, T);
+                subytdemeaned = ytdemeaned.middleRows(m->second(0), nrows);
+                subomPrecision = omPrecision.segment(m->second(0), nrows);
+                Factors.row(i) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
+                gammas.row(i) = updateAR(gammas.row(i), Factors.row(i), factorVariance(i), g0, G0);
+                H = ReturnH(gammas.row(i), T);
+                Hf = H * Factors.row(i).transpose();
+                paramb = (.5 * (R0 + Hf.transpose() * Hf));
+                factorVariance(i) = igammarnd(parama, 1.0 / paramb);
+                ++i;
+            }
+
+            resids = yt - (Astar * Factors) - xbt;
+            for (int i = 0; i < K; ++i)
+            {
+                paramb = 0.5 * (R0 + (resids.row(i) * resids.row(i).transpose()));
+                omVariance(i) = igammarnd(parama, 1.0 / paramb);
+            }
+            omPrecision = omVariance.array().pow(-1.0);
+
+            FactorPrecision = MakePrecision(gammasRRj[j], factorVarianceRRj[j], T);
+
+            FactorRRj[j] = Factors;
+            gammasRRj[j] = gammas;
+            omPrecisionRRj[j] = omPrecision;
+            factorVarianceRRj[j] = factorVariance;
         }
-        else
-        {
-            throw invalid_argument("Sims less than burnin. Invalid argument in runMultilevelModel");
-        }
+        cout << logavg(pibeta) << endl;
+        /* Gamma Reduced Run */
+        gammastar = mean(gammasRRj);
+        gamma_G(gammastar, gammasRRj, )
     }
 };
 

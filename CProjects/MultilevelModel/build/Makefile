@@ -163,6 +163,60 @@ src/Distributions.cpp.s:
 	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/Distributions.cpp.s
 .PHONY : src/Distributions.cpp.s
 
+src/GenerateAutoRegressiveData.o: src/GenerateAutoRegressiveData.cpp.o
+
+.PHONY : src/GenerateAutoRegressiveData.o
+
+# target to build an object file
+src/GenerateAutoRegressiveData.cpp.o:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.o
+.PHONY : src/GenerateAutoRegressiveData.cpp.o
+
+src/GenerateAutoRegressiveData.i: src/GenerateAutoRegressiveData.cpp.i
+
+.PHONY : src/GenerateAutoRegressiveData.i
+
+# target to preprocess a source file
+src/GenerateAutoRegressiveData.cpp.i:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.i
+.PHONY : src/GenerateAutoRegressiveData.cpp.i
+
+src/GenerateAutoRegressiveData.s: src/GenerateAutoRegressiveData.cpp.s
+
+.PHONY : src/GenerateAutoRegressiveData.s
+
+# target to generate assembly for a file
+src/GenerateAutoRegressiveData.cpp.s:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.s
+.PHONY : src/GenerateAutoRegressiveData.cpp.s
+
+src/GenerateMLFactorData.o: src/GenerateMLFactorData.cpp.o
+
+.PHONY : src/GenerateMLFactorData.o
+
+# target to build an object file
+src/GenerateMLFactorData.cpp.o:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.o
+.PHONY : src/GenerateMLFactorData.cpp.o
+
+src/GenerateMLFactorData.i: src/GenerateMLFactorData.cpp.i
+
+.PHONY : src/GenerateMLFactorData.i
+
+# target to preprocess a source file
+src/GenerateMLFactorData.cpp.i:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.i
+.PHONY : src/GenerateMLFactorData.cpp.i
+
+src/GenerateMLFactorData.s: src/GenerateMLFactorData.cpp.s
+
+.PHONY : src/GenerateMLFactorData.s
+
+# target to generate assembly for a file
+src/GenerateMLFactorData.cpp.s:
+	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.s
+.PHONY : src/GenerateMLFactorData.cpp.s
+
 src/LineSearchRoutines.o: src/LineSearchRoutines.cpp.o
 
 .PHONY : src/LineSearchRoutines.o
@@ -338,6 +392,12 @@ help:
 	@echo "... src/Distributions.o"
 	@echo "... src/Distributions.i"
 	@echo "... src/Distributions.s"
+	@echo "... src/GenerateAutoRegressiveData.o"
+	@echo "... src/GenerateAutoRegressiveData.i"
+	@echo "... src/GenerateAutoRegressiveData.s"
+	@echo "... src/GenerateMLFactorData.o"
+	@echo "... src/GenerateMLFactorData.i"
+	@echo "... src/GenerateMLFactorData.s"
 	@echo "... src/LineSearchRoutines.o"
 	@echo "... src/LineSearchRoutines.i"
 	@echo "... src/LineSearchRoutines.s"

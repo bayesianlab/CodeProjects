@@ -12,7 +12,7 @@
 #include "Plotter.hpp"
 #include "LineSearchRoutines.hpp"
 #include "NumericalDifferentiation.hpp"
-
+#include "GenerateMLFactorData.hpp"
 
 using namespace std;
 using namespace Eigen;
@@ -157,29 +157,66 @@ int main(int argc, char *argv[])
         // cout << endl;
         // cout << storeg.colwise().mean() << endl;
 
-        // int T = 50;
-        // int neqns = 8;
-        // int sims = 25;
+        int T = 50;
+        int neqns = 8;
+        int sims = 3;
+        int burnin = 1;
+        VectorXd betas = .5 * VectorXd::Ones(2, 1);
+        Matrix<int, 1, 2> region1;
+        region1 << 0, 3;
+        Matrix<int, 1, 2> region2;
+        region2 << 4, 7;
+        map<string, Matrix<int, 1, 2>> InfoMap{{"L1", region1}, {"L2", region2}};
+        int nFactors = InfoMap.size();
+        MatrixXd Identity = MakeObsModelIdentity(InfoMap, neqns);
+        MatrixXd A = .5 * Identity;
+        VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
+        VectorXd phi(2);
+        phi << .05, .35;
+        A = Identity.array() * A.array();
+        GenerateMLFactorData mld(T, neqns, betas, InfoMap, phi, A, 1);
+        double a0 = 1.0;
+        double A0 = 1.0;
+        double r0 = 6;
+        double R0 = 6;
+        RowVectorXd g0;
+        MatrixXd G0;
+        g0.setZero(nFactors);
+        G0 = MatrixXd::Identity(nFactors, nFactors);
+        MultilevelModel ml;
+        ml.setModel(mld.yt, mld.Xt, mld.Loadings, mld.Factors, mld.gammas, InfoMap, mld.b0,
+                    mld.B0, a0, A0, r0, R0, g0, G0);
+
+        ml.runMultilevelModel(sims, burnin);
+        ml.ml(2);
+
+        // MatrixXd Ftbar = mean(ml.FactorPosteriorDraws);
+        // plotter("plot.p", Ftbar.row(0).transpose(),
+        //         mld.Factors.row(0).transpose(), "fest", "ftrue");
+
+        // int T = 100;
+        // int neqns = 10;
+        // int sims = 5;
         // int burnin = 0;
         // VectorXd betas = .5 * VectorXd::Ones(2, 1);
         // Matrix<int, 1, 2> region1;
-        // region1 << 0, 3;
-        // Matrix<int, 1, 2> region2;
-        // region2 << 4, 7;
-        // map<string, Matrix<int, 1, 2>> InfoMap{{"L1", region1}, {"L2", region2}};
+        // region1 << 0, neqns - 1;
+
+        // map<string, Matrix<int, 1, 2>> InfoMap{{"L1", region1}};
         // int nFactors = InfoMap.size();
         // MatrixXd Identity = MakeObsModelIdentity(InfoMap, neqns);
-        // MatrixXd A = .5 * Identity;
+        // MatrixXd A = .5*Identity;
         // VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
-        // VectorXd phi(2);
-        // phi << .05, .35;
+        // VectorXd phi(1);
+        // phi << .35;
         // A = Identity.array() * A.array();
         // GenerateMLFactorData mld(T, neqns, betas, InfoMap, phi, A, 1);
 
         // MultilevelModel ml;
 
-        // ml.runMultilevelModel(mld.yt, mld.Xt, mld.Loadings, mld.Factors, mld.gammas, InfoMap,
+        // ml.runMultilevelModel(mld.yt, mld.Xt, Identity, mld.Factors, mld.gammas, InfoMap,
         //                       mld.b0, mld.B0, sims, burnin);
+
         // cout << endl;
         // cout << "Beta Mean" << endl;
         // cout << ml.beta1stMomentContainer.transpose() << endl;
@@ -193,58 +230,12 @@ int main(int argc, char *argv[])
         // cout << "Obs. Model Precision Mean" << endl;
         // cout << ml.obsPrecisionContainer.rowwise().mean().mean() << endl;
         // cout << endl;
-
         // cout << "Loadings" << endl;
         // cout << ml.Loadings1stMomentContainer << endl;
         // cout << endl;
 
         // plotter("plot.p", ml.Factor1stMomentContainer.row(0).transpose(),
         //         mld.Factors.row(0).transpose(), "fest", "ftrue");
-
-        int T = 100;
-        int neqns = 10;
-        int sims = 5;
-        int burnin = 0;
-        VectorXd betas = .5 * VectorXd::Ones(2, 1);
-        Matrix<int, 1, 2> region1;
-        region1 << 0, neqns - 1;
-
-        map<string, Matrix<int, 1, 2>> InfoMap{{"L1", region1}};
-        int nFactors = InfoMap.size();
-        MatrixXd Identity = MakeObsModelIdentity(InfoMap, neqns);
-        MatrixXd A = .5*Identity;
-        VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
-        VectorXd phi(1);
-        phi << .35;
-        A = Identity.array() * A.array();
-        GenerateMLFactorData mld(T, neqns, betas, InfoMap, phi, A, 1);
-
-
-        MultilevelModel ml;
-        
-
-        ml.runMultilevelModel(mld.yt, mld.Xt, Identity, mld.Factors, mld.gammas, InfoMap,
-                              mld.b0, mld.B0, sims, burnin);
-
-        cout << endl;
-        cout << "Beta Mean" << endl;
-        cout << ml.beta1stMomentContainer.transpose() << endl;
-        cout << ml.beta1stMomentContainer.transpose().mean() << endl;
-        cout << "Gammas mean" << endl;
-        cout << ml.gammas1stMomentContainer.colwise().mean() << endl;
-        cout << endl;
-        cout << "factor variance mean" << endl;
-        cout << ml.factorVarianceContainer.rowwise().mean().mean() << endl;
-        cout << endl;
-        cout << "Obs. Model Precision Mean" << endl;
-        cout << ml.obsPrecisionContainer.rowwise().mean().mean() << endl;
-        cout << endl;
-        cout << "Loadings" << endl;
-        cout << ml.Loadings1stMomentContainer << endl;
-        cout << endl;
- 
-        plotter("plot.p", ml.Factor1stMomentContainer.row(0).transpose(),
-                mld.Factors.row(0).transpose(), "fest", "ftrue");
 
         // VectorXd B(10);
         // B = normrnd(0,1,10,1);
@@ -286,4 +277,6 @@ int main(int argc, char *argv[])
     // data.col(1) = mld.yt.row(0).transpose();
     // cout << data << endl;
     // writeToCSVfile("foo.csv", data);
+
+    return 0;
 }

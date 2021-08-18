@@ -72,7 +72,8 @@ MatrixXd NumericalDifferentiation::AprroximateDiagHessian(const Ref<const Vector
     VectorXd p3(n);
     double h = sqrt(1e-4);
     double h2 = h * h;
-    MatrixXd Hess = MatrixXd::Zero(n, n);
+    MatrixXd Hess(n,n);
+    Hess.setZero(n,n); 
     for (int i = 0; i < n; i++)
     {
         p1 = point;

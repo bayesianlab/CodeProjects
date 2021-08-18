@@ -2,8 +2,9 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
 
-set(CMAKE_BUILD_TYPE RELEASE)
-set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops")
+set(CMAKE_BUILD_TYPE DEBUG)
+# set(CMAKE_BUILD_TYPE RELEASE)
+# set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops")
 # message(STATUS ${CMAKE_CXX_FLAGS_REALEASE})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
@@ -26,7 +27,8 @@ endif()
 include_directories(include)
 include_directories(/usr/local/include/stat-master/include)
 include_directories(/usr/local/include/gcem/include)
-add_library(mylib src/Distributions.cpp src/MultilevelModel.cpp  src/Optimization.cpp src/Plotter.cpp src/LineSearchRoutines.cpp src/NumericalDifferentiation.cpp)
+add_library(mylib src/Distributions.cpp src/MultilevelModel.cpp  src/Optimization.cpp src/Plotter.cpp
+ src/LineSearchRoutines.cpp src/NumericalDifferentiation.cpp src/GenerateMLFactorData.cpp src/GenerateAutoRegressiveData.cpp)
 
 
 add_executable(ml src/Test_MultilevelModel.cpp )

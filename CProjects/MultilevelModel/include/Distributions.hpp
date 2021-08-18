@@ -80,6 +80,9 @@ MatrixXd CreateSigma(double rho, int size);
 
 double logmvtpdf(const RowVectorXd &x, const RowVectorXd &mu, const MatrixXd &Variance,
               double df);
+
+
+double logavg(const Ref<const VectorXd> &logpdf);
 /*
 class Dist {
 private:

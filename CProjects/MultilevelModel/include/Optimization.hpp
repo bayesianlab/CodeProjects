@@ -28,7 +28,6 @@ class Optimize : public LineSearchRoutines
 public:
     double F_tol, grad_tol, x_tol;
     VectorXd x1;
-    MatrixXd B1;
     double fval1;
     int MaxIterations;
     MatrixXd Hess;
