@@ -21,15 +21,15 @@ else()
   message(FATAL_ERROR "Python3 not found, please install it.")
 endif()
 
-# include_directories(/usr/local/lib/python3.8/dist-packages/numpy/core/include)
+
+add_library(optim STATIC  /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp /home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp /home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp)
+add_library(dist STATIC /home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp)
+add_library(plot STATIC /home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp)
+add_library(mlfunc STATIC src/MultilevelModelFunctions.cpp)
+add_library(mylib src/GenerateMLFactorData.cpp src/GenerateAutoRegressiveData.cpp)
+target_link_libraries(mylib mlfunc)
+include_directories(/home/dillon/CodeProjects/CProjects/Distributions/include /home/dillon/CodeProjects/CProjects/OptimizationTools/include /home/dillon/CodeProjects/CProjects/GnuPlotting/include include)
 
 
-include_directories(include)
-include_directories(/usr/local/include/stat-master/include)
-include_directories(/usr/local/include/gcem/include)
-add_library(mylib src/Distributions.cpp src/MultilevelModel.cpp  src/Optimization.cpp src/Plotter.cpp
- src/LineSearchRoutines.cpp src/NumericalDifferentiation.cpp src/GenerateMLFactorData.cpp src/GenerateAutoRegressiveData.cpp)
-
-
-add_executable(ml src/Test_MultilevelModel.cpp )
-target_link_libraries(ml PUBLIC mylib) 
+add_executable(test2 src/Test_MultilevelModel.cpp )
+target_link_libraries(test2 PUBLIC mylib optim dist plot) 

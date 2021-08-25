@@ -1,10 +1,11 @@
+#pragma once
 #ifndef DGPML_H
 #define DGPML_H
 #include <map>
 #include <eigen-3.3.9/Eigen/Dense>
 #include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
 #include "Distributions.hpp"
-#include "MultilevelModel.hpp"
+#include "MultilevelModelFunctions.hpp"
 
 using namespace Eigen;
 using namespace std;
@@ -42,24 +43,28 @@ public:
     MatrixXd B0;
     MatrixXd H;
     MatrixXd resids;
-    GenerateMLFactorData(int nObs, int nEqns, const VectorXd &coeffValues,
-                         const map<string, Matrix<int, 1, 2>> &InfoMap,
-                         const VectorXd &factorCoeff,
-                         const MatrixXd &_Loadings, const double &omVar);
+    MatrixXd deltas;
+    void genData(int nObs, int nEqns, const VectorXd &coeffValues,
+                 const Matrix<int, Dynamic, 2> &InfoMap,
+                 const VectorXd &factorCoeff,
+                 const MatrixXd &_Loadings, const double &omVar);
 
-    void setLoadings(const Ref<const MatrixXd> &A, const map<string, Matrix<int, 1, 2>> &InfoMap,
+    void genOtrokData(const int &nObs, const int &nEqns, const int &nXs, const double &coeffValues,
+                      const Matrix<int, Dynamic, 2> &InfoMap, const RowVectorXd &gammas, const double &omVar,
+                      const RowVectorXd &omArTerms);
+
+    void setLoadings(const Ref<const MatrixXd> &A, const Matrix<int, Dynamic, 2> &InfoMat,
                      MatrixXd &Identity, double restriction)
     {
-
+        int nFactors = InfoMat.rows();
         Loadings = A;
         int c = 0;
-        for (auto m = InfoMap.begin(); m != InfoMap.end(); ++m)
+        for (int i = 0; i < nFactors; ++i)
         {
-
-            Loadings(m->second(0), c) = restriction;
+            Loadings(InfoMat.row(i).head(1).value(), i) = restriction;
             ++c;
         }
         Loadings = Identity.array() * Loadings.array();
     }
 };
-#endif 
+#endif

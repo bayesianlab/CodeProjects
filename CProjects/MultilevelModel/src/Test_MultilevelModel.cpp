@@ -1,24 +1,43 @@
-
-
 #include <iostream>
-#include <stdlib.h>
 #include <map>
 #include <string>
 #include <eigen-3.3.9/Eigen/Dense>
-#include <boost/random/mersenne_twister.hpp>
-#include <chrono>
 #include "MultilevelModel.hpp"
 #include "Distributions.hpp"
 #include "Plotter.hpp"
-#include "LineSearchRoutines.hpp"
-#include "NumericalDifferentiation.hpp"
 #include "GenerateMLFactorData.hpp"
+#include "MultilevelModelFunctions.hpp"
 
 using namespace std;
 using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
+
+    GenerateMLFactorData mld;
+    int T = 20;
+    int K = 5;
+    int nXs = 2;
+    double beta = .5;
+    RowVectorXd gam(2);
+    gam << .1, .3;
+    Matrix<int, Dynamic, 2> InfoMat(2, 2);
+    InfoMat << 0, K - 1, 0, 3;
+    mld.genOtrokData(T, K, nXs, beta, InfoMat, gam, 1, gam);
+    MultilevelModel mlotrok;
+    double r0 = 6;
+    double R0 = 8;
+    RowVectorXd g0 = RowVectorXd::Zero(gam.size());
+    MatrixXd G0 = MatrixXd::Identity(gam.size(), gam.size());
+    MatrixXd Xt = mld.Xt.leftCols(nXs); 
+    VectorXi tt = sequence(0,K*T, K); 
+    cout << tt << endl; 
+    
+    // mlotrok.setFullCondModel(mld.yt, Xt, mld.Factors,
+    //                                 mld.gammas, mld.deltas, InfoMat,
+    //                                 mld.b0, mld.B0, r0, R0, g0, G0);
+
+    // mlotrok.fullConditionals(3);
 
     int on = 1;
     if (on)
@@ -157,38 +176,43 @@ int main(int argc, char *argv[])
         // cout << endl;
         // cout << storeg.colwise().mean() << endl;
 
-        int T = 50;
-        int neqns = 8;
-        int sims = 3;
-        int burnin = 1;
-        VectorXd betas = .5 * VectorXd::Ones(2, 1);
-        Matrix<int, 1, 2> region1;
-        region1 << 0, 3;
-        Matrix<int, 1, 2> region2;
-        region2 << 4, 7;
-        map<string, Matrix<int, 1, 2>> InfoMap{{"L1", region1}, {"L2", region2}};
-        int nFactors = InfoMap.size();
-        MatrixXd Identity = MakeObsModelIdentity(InfoMap, neqns);
-        MatrixXd A = .5 * Identity;
-        VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
-        VectorXd phi(2);
-        phi << .05, .35;
-        A = Identity.array() * A.array();
-        GenerateMLFactorData mld(T, neqns, betas, InfoMap, phi, A, 1);
-        double a0 = 1.0;
-        double A0 = 1.0;
-        double r0 = 6;
-        double R0 = 6;
-        RowVectorXd g0;
-        MatrixXd G0;
-        g0.setZero(nFactors);
-        G0 = MatrixXd::Identity(nFactors, nFactors);
-        MultilevelModel ml;
-        ml.setModel(mld.yt, mld.Xt, mld.Loadings, mld.Factors, mld.gammas, InfoMap, mld.b0,
-                    mld.B0, a0, A0, r0, R0, g0, G0);
+        // int T = 50;
+        // int neqns = 10;
+        // int sims = 20;
+        // int burnin = 1;
+        // VectorXd betas = .5 * VectorXd::Ones(2, 1);
+        // int nfac = 2;
+        // Matrix<int, Dynamic, 2> InfoMat(2, 2);
+        // InfoMat << 0, neqns - 1, 3, 5;
+        // cout << InfoMat << endl;
+        // int nFactors = InfoMat.rows();
+        // MatrixXd Identity = MakeObsModelIdentity(InfoMat, neqns);
+        // MatrixXd A = .5 * Identity;
+        // VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
+        // VectorXd phi(2);
+        // phi << .1, .25;
+        // A = Identity.array() * A.array();
+        // GenerateMLFactorData mld;
+        // mld.genData(T, neqns, betas, InfoMat, phi, A, 1);
+        // double a0 = 1.0;
+        // double A0 = 1.0;
+        // double r0 = 6;
+        // double R0 = 8;
+        // RowVectorXd g0;
+        // MatrixXd G0;
+        // g0.setZero(nFactors);
+        // G0 = MatrixXd::Identity(nFactors, nFactors);
+        // MultilevelModel ml;
+        // ml.setModel(mld.yt, mld.Xt, mld.Loadings, mld.Factors, mld.gammas, InfoMat, mld.b0,
+        //             mld.B0, a0, A0, r0, R0, g0, G0);
 
-        ml.runMultilevelModel(sims, burnin);
-        ml.ml(2);
+        // ml.integratedLikelihood(sims, burnin);
+        // cout << "Beta avg" << endl;
+        // cout << mean(ml.BetaPosteriorDraws).mean() << endl;
+        // cout << "Loading avg" << endl;
+        // cout << mean(ml.LoadingsPosteriorDraws) << endl;
+        // cout << "Gamma avg" << endl;
+        // cout << mean(ml.GammasPosteriorDraws) << endl;
 
         // MatrixXd Ftbar = mean(ml.FactorPosteriorDraws);
         // plotter("plot.p", Ftbar.row(0).transpose(),
@@ -269,14 +293,6 @@ int main(int argc, char *argv[])
         // VectorXd subA = .5 * A.col(0).head(4);
         // optim.BFGS(subA, CLL, 1);
     }
-
-    // VectorXd index = sequence(0, nObs-1).cast<double>();
-    // MatrixXd data(nObs,2);
-    // data << index, mld.yt.row(0).transpose();
-    // data.col(0) = index;
-    // data.col(1) = mld.yt.row(0).transpose();
-    // cout << data << endl;
-    // writeToCSVfile("foo.csv", data);
 
     return 0;
 }

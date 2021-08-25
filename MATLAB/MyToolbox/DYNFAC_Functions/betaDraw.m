@@ -30,26 +30,12 @@ XzzPinv = Xzz'*Pinv;
 B = (B0inv + xpx - XzzPinv*Xzz);
 
 
-Bigo = kron(eye(T), fullpre);
-Ato = StateObsModel'*fullpre; 
-Bigato = kron(eye(T), Ato); 
-
-
-Sinv = Bigo - Bigato'*Pinv*Bigato;
-Bee = (B0inv + SurX'*Sinv*SurX)\eye(pK);
-bhat = Bee*(B0inv*b0' + SurX'*Sinv*vecy);
-
-
-
-
 Blowerinv = chol(B,'lower')\eye(pK);
 
 
 B = Blowerinv'*Blowerinv;
 
 b = B*(B0inv*b0' + xpy - XzzPinv*yzz);
-
-[b, bhat] 
 
 bupdate = b + Blowerinv'*normrnd(0,1,pK,1);
 

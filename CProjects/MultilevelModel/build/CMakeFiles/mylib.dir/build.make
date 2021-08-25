@@ -57,87 +57,9 @@ include CMakeFiles/mylib.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/mylib.dir/flags.make
 
-CMakeFiles/mylib.dir/src/Distributions.cpp.o: CMakeFiles/mylib.dir/flags.make
-CMakeFiles/mylib.dir/src/Distributions.cpp.o: ../src/Distributions.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mylib.dir/src/Distributions.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mylib.dir/src/Distributions.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Distributions.cpp
-
-CMakeFiles/mylib.dir/src/Distributions.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mylib.dir/src/Distributions.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Distributions.cpp > CMakeFiles/mylib.dir/src/Distributions.cpp.i
-
-CMakeFiles/mylib.dir/src/Distributions.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mylib.dir/src/Distributions.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Distributions.cpp -o CMakeFiles/mylib.dir/src/Distributions.cpp.s
-
-CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o: CMakeFiles/mylib.dir/flags.make
-CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o: ../src/MultilevelModel.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp
-
-CMakeFiles/mylib.dir/src/MultilevelModel.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mylib.dir/src/MultilevelModel.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp > CMakeFiles/mylib.dir/src/MultilevelModel.cpp.i
-
-CMakeFiles/mylib.dir/src/MultilevelModel.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mylib.dir/src/MultilevelModel.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.cpp -o CMakeFiles/mylib.dir/src/MultilevelModel.cpp.s
-
-CMakeFiles/mylib.dir/src/Optimization.cpp.o: CMakeFiles/mylib.dir/flags.make
-CMakeFiles/mylib.dir/src/Optimization.cpp.o: ../src/Optimization.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mylib.dir/src/Optimization.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mylib.dir/src/Optimization.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Optimization.cpp
-
-CMakeFiles/mylib.dir/src/Optimization.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mylib.dir/src/Optimization.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Optimization.cpp > CMakeFiles/mylib.dir/src/Optimization.cpp.i
-
-CMakeFiles/mylib.dir/src/Optimization.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mylib.dir/src/Optimization.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Optimization.cpp -o CMakeFiles/mylib.dir/src/Optimization.cpp.s
-
-CMakeFiles/mylib.dir/src/Plotter.cpp.o: CMakeFiles/mylib.dir/flags.make
-CMakeFiles/mylib.dir/src/Plotter.cpp.o: ../src/Plotter.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/mylib.dir/src/Plotter.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mylib.dir/src/Plotter.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Plotter.cpp
-
-CMakeFiles/mylib.dir/src/Plotter.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mylib.dir/src/Plotter.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Plotter.cpp > CMakeFiles/mylib.dir/src/Plotter.cpp.i
-
-CMakeFiles/mylib.dir/src/Plotter.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mylib.dir/src/Plotter.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Plotter.cpp -o CMakeFiles/mylib.dir/src/Plotter.cpp.s
-
-CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.o: CMakeFiles/mylib.dir/flags.make
-CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.o: ../src/LineSearchRoutines.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/LineSearchRoutines.cpp
-
-CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dillon/CodeProjects/CProjects/MultilevelModel/src/LineSearchRoutines.cpp > CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.i
-
-CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dillon/CodeProjects/CProjects/MultilevelModel/src/LineSearchRoutines.cpp -o CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.s
-
-CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.o: CMakeFiles/mylib.dir/flags.make
-CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.o: ../src/NumericalDifferentiation.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/NumericalDifferentiation.cpp
-
-CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dillon/CodeProjects/CProjects/MultilevelModel/src/NumericalDifferentiation.cpp > CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.i
-
-CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dillon/CodeProjects/CProjects/MultilevelModel/src/NumericalDifferentiation.cpp -o CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.s
-
 CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.o: CMakeFiles/mylib.dir/flags.make
 CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.o: ../src/GenerateMLFactorData.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateMLFactorData.cpp
 
 CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.i: cmake_force
@@ -150,7 +72,7 @@ CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.s: cmake_force
 
 CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.o: CMakeFiles/mylib.dir/flags.make
 CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.o: ../src/GenerateAutoRegressiveData.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateAutoRegressiveData.cpp
 
 CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.i: cmake_force
@@ -163,29 +85,17 @@ CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.s: cmake_force
 
 # Object files for target mylib
 mylib_OBJECTS = \
-"CMakeFiles/mylib.dir/src/Distributions.cpp.o" \
-"CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o" \
-"CMakeFiles/mylib.dir/src/Optimization.cpp.o" \
-"CMakeFiles/mylib.dir/src/Plotter.cpp.o" \
-"CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.o" \
-"CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.o" \
 "CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.o" \
 "CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.o"
 
 # External object files for target mylib
 mylib_EXTERNAL_OBJECTS =
 
-libmylib.a: CMakeFiles/mylib.dir/src/Distributions.cpp.o
-libmylib.a: CMakeFiles/mylib.dir/src/MultilevelModel.cpp.o
-libmylib.a: CMakeFiles/mylib.dir/src/Optimization.cpp.o
-libmylib.a: CMakeFiles/mylib.dir/src/Plotter.cpp.o
-libmylib.a: CMakeFiles/mylib.dir/src/LineSearchRoutines.cpp.o
-libmylib.a: CMakeFiles/mylib.dir/src/NumericalDifferentiation.cpp.o
 libmylib.a: CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.o
 libmylib.a: CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.o
 libmylib.a: CMakeFiles/mylib.dir/build.make
 libmylib.a: CMakeFiles/mylib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX static library libmylib.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX static library libmylib.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/mylib.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/mylib.dir/link.txt --verbose=$(VERBOSE)
 

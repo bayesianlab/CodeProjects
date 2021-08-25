@@ -1,0 +1,2 @@
+/usr/bin/ar qc libplot.a  CMakeFiles/plot.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o
+/usr/bin/ranlib libplot.a

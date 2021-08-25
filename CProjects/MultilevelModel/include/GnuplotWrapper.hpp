@@ -1,3 +1,4 @@
+#pragma once
 #ifndef GP_H
 #define GP_H
 #include <iostream>

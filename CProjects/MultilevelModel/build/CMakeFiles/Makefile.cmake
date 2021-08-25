@@ -53,6 +53,10 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/ml.dir/DependInfo.cmake"
+  "CMakeFiles/test2.dir/DependInfo.cmake"
   "CMakeFiles/mylib.dir/DependInfo.cmake"
+  "CMakeFiles/mlfunc.dir/DependInfo.cmake"
+  "CMakeFiles/dist.dir/DependInfo.cmake"
+  "CMakeFiles/plot.dir/DependInfo.cmake"
+  "CMakeFiles/optim.dir/DependInfo.cmake"
   )

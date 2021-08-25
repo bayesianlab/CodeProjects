@@ -47,7 +47,6 @@ SurX = surForm(Xt,K);
 dimSurX = dimX*K;
 [Identities, sectorInfo, factorInfo] = MakeObsModelIdentity( InfoCell);
 
-Identities{1} = [1,1,1,1,0,0,0,0]'; 
 
 levels = length(sectorInfo);
 [~,dimx]=size(Xt);
@@ -109,63 +108,58 @@ if finishedMainRun == 0
         fprintf('Simulation %i\n',iterator)
         %% Draw VAR params
         
-%         [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecision,...
-%             currobsmod, stateTransitions, factorVariance, beta0,...
-%             B0inv, FtIndexMat, subsetIndices);
+        [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecision,...
+            currobsmod, stateTransitions, factorVariance, beta0,...
+            B0inv, FtIndexMat, subsetIndices);
 
-obsPrecision
 
-[VAR, Xbeta ] = betaDraw(yt(:), surForm(Xt,K), obsPrecision, currobsmod, fp, 0 , B0inv, 100);
-VAR = reshape(VAR, 2, K); 
 
-Xbeta = reshape(Xbeta, K,T);
-%         %% Draw loadings
-%         [currobsmod, Ft, ~, accept]=...
-%             LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
-%             obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau);
-%         currobsmod = currobsmod + restrictions - (currobsmod.*restrictions);
-%         currobsmod(zerorestrictions) = 0;
+        %% Draw loadings
+        [currobsmod, Ft, ~, accept]=...
+            LoadingsFactorsUpdate(yt, Xbeta, Ft, currobsmod, stateTransitions,...
+            obsPrecision, factorVariance, Identities, InfoCell,  a0, A0inv, tau);
+        currobsmod = currobsmod + restrictions - (currobsmod.*restrictions);
+        currobsmod(zerorestrictions) = 0;
         
 
         %% Variance
-%         StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
+        StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
         resids = yt - (currobsmod*Ft) - Xbeta;
 
         obsVariance = kowUpdateObsVariances(resids, v0,r0,T);
         obsPrecision = 1./obsVariance;
         
-   obsVariance        
      
-%         %% Factor AR Parameters
-%         for n=1:nFactors
-%             [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n),...
-%                 g0, G0);
-%         end
+        %% Factor AR Parameters
+        for n=1:nFactors
+            [stateTransitions(n,:), ~, g1, G1] = drawAR(stateTransitions(n,:), Ft(n,:), factorVariance(n),...
+                g0, G0);
+        end
         
-%         if identification == 2
-%             factorVariance = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
-%         end
-%         
+        if identification == 2
+            factorVariance = drawFactorVariance(Ft, stateTransitions, factorVariance, s0, d0);
+      end
+          
         %% Storage
         if iterator > burnin
-%             v = iterator - burnin;
-%             storeVAR(:,:,v)=VAR;
-%             storeOM(:,:,v) = currobsmod;
-%             storeStateTransitions(:,:,v) = stateTransitions;
-%             storeFt(:,:,v) = Ft;
-%             storeObsPrecision(:,v) = obsPrecision;
-%             storeFactorVar(:,v) = factorVariance;
-%             g1bar = g1bar + g1;
-%             G1bar = G1bar + G1;
+            v = iterator - burnin;
+            storeVAR(:,:,v)=VAR;
+            storeOM(:,:,v) = currobsmod;
+            storeStateTransitions(:,:,v) = stateTransitions;
+            storeFt(:,:,v) = Ft;
+            storeObsPrecision(:,v) = obsPrecision;
+            storeFactorVar(:,v) = factorVariance;
+            g1bar = g1bar + g1;
+            G1bar = G1bar + G1;
         end
 %         ap = ap + accept;
     end
     
     Runs = Sims- burnin;
-    accept_probability = ap./Sims
+    accept_probability = ap./Sims;
     betaBar = reshape(mean(storeVAR,3), dimx*K,1);
     Ftbar = mean(storeFt,3);
-    omBar = mean(storeOM,3)
+    omBar = mean(storeOM,3);
     g1bar = g1bar./Runs;
     G1bar = G1bar./Runs;
     %% Variance Decompositions

@@ -11,10 +11,7 @@ diag(chol(Scale))
 nuphalf = .5*(nu + p);
 phalf = .5*p;
 demean = X-mu;
-C = gammaln(nuphalf) - gammaln(nu*.5) - phalf*log(nu*pi)-...
-    logdetscale
-gammaln(nuphalf)
-logdetscale
+C = gammaln(nuphalf) - gammaln(nu*.5) - phalf*log(nu*pi)-logdetscale;
 inner= ((demean/Scale)*demean')/nu;
 pdfval = C - nuphalf*log(1 +inner );
 end

@@ -233,6 +233,9 @@ multilevel_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/MultilevelModel
 //Value Computed by CMake
 multilevel_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/MultilevelModel
 
+//Dependencies for the target
+mylib_LIB_DEPENDS:STATIC=general;mlfunc;
+
 
 ########################
 # INTERNAL cache entries

@@ -16,6 +16,7 @@ xb = reshape(Xbeta, K,T);
 accept = zeros(nFactors,1);
 for q = 1:levels
     fprintf('\tLevel %i\n', q)
+    
     COM = makeStateObsModel(currobsmod, Identities, q);
     mut =  xb + COM*Ft;
     ydemut = yt - mut;

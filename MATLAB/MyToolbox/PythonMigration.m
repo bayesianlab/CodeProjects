@@ -72,18 +72,11 @@
 
 % ft0=table2array(ft0);
 % ft1=table2array(ft1);
-Factors = [ft0];
-clc;
-surX = surForm(xt, 10);
-A = ones(10,1).*.5;
-A(1) = 1; 
-gammas=[.35];
-fp = FactorPrecision(.35, eye(1), 1, 100); 
+% Factors = [ft0];
 
+lags =1;
 
-InfoCell = { [1,10] };
-lags = 1;
-
+[yt, xt, InfoCell, Factors, gammas, betas, A, factorvar, omvar] = GenerateSimData(30, lags, 200);
 [K,T] =size(yt);
 levels= length(InfoCell);
 nFactors=size(gammas,1);
@@ -102,8 +95,8 @@ G0 = eye(lags) ;
 
 beta0 = 0;
 B0inv = .001;
-Sims = 1;
-burnin = 10;
+Sims = 10;
+burnin = 1;
 initFactor = Factors;
 initStateTransitions = gammas;
 initObsPrecision = ones(K,1);
@@ -114,11 +107,12 @@ initobsmodel = A;
 identification=2;
 estML=1;
 
-
-
+plot(Factors)
 [storeFt, storeVAR, storeOM, storeStateTransitions,...
     storeObsPrecision, storeFactorVar,varianceDecomp, ml] = Hdfvar(yt, xt,  InfoCell, Sims,...
     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...
     beta0, B0inv, v0, r0, s0, d0, a0, A0inv, g0, G0, identification, estML, 'Tests');
 
-var(1./gamrnd(3,1/4,10000,1), [], 1)  
+ftbar = mean(storeFt,3);
+hold on
+plot(ftbar)
