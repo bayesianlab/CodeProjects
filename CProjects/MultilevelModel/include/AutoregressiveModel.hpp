@@ -99,6 +99,7 @@ public:
     RowVectorXd b0;
     MatrixXd B0;
     MatrixXd arparams;
+    VectorXd sigma2;
     double r0;
     double R0;
     void setModel(const MatrixXd &yt, const MatrixXd &Xt, const MatrixXd &arparams,
@@ -111,12 +112,13 @@ public:
         this->r0 = r0;
         this->R0 = R0;
         this->arparams = arparams;
+        this->sigma2 = VectorXd::Identity(yt.rows());
     }
     void runAr(int Sims)
     {
         int T = yt.cols();
         int K = yt.rows();
-        MatrixXd Xtemp; 
+        MatrixXd Xtemp;
         std::vector<MatrixXd> XtbyT = groupByTime(Xt, T, K);
         UnivariateBeta ub;
         for (int i = 0; i < Sims; ++i)
