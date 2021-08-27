@@ -6,6 +6,22 @@
 
 #IncludeRegexTransform: 
 
+../include/AutoregressiveModel.hpp
+MultilevelModel.hpp
+../include/MultilevelModel.hpp
+BayesianUpdates.hpp
+../include/BayesianUpdates.hpp
+
+../include/BayesianUpdates.hpp
+iostream
+-
+stdexcept
+-
+Eigen/Dense
+-
+Distributions.hpp
+../include/Distributions.hpp
+
 ../include/GenerateAutoRegressiveData.hpp
 eigen-3.3.9/Eigen/Dense
 -
@@ -39,6 +55,8 @@ Optimization.hpp
 ../include/Optimization.hpp
 MultilevelModelFunctions.hpp
 ../include/MultilevelModelFunctions.hpp
+AutoregressiveModel.hpp
+../include/AutoregressiveModel.hpp
 
 ../include/MultilevelModelFunctions.hpp
 iostream

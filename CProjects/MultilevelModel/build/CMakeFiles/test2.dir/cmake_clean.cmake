@@ -1,5 +1,5 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.o"
+  "CMakeFiles/test2.dir/src/Test_ArModel.cpp.o"
   "test2"
   "test2.pdb"
 )

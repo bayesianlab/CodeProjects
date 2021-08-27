@@ -26,10 +26,11 @@ add_library(optim STATIC  /home/dillon/CodeProjects/CProjects/OptimizationTools/
 add_library(dist STATIC /home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp)
 add_library(plot STATIC /home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp)
 add_library(mlfunc STATIC src/MultilevelModelFunctions.cpp)
-add_library(mylib src/GenerateMLFactorData.cpp src/GenerateAutoRegressiveData.cpp)
-target_link_libraries(mylib mlfunc)
+
+add_library(datagen STATIC src/GenerateMLFactorData.cpp src/GenerateAutoRegressiveData.cpp)
+target_link_libraries(datagen mlfunc)
 include_directories(/home/dillon/CodeProjects/CProjects/Distributions/include /home/dillon/CodeProjects/CProjects/OptimizationTools/include /home/dillon/CodeProjects/CProjects/GnuPlotting/include include)
 
 
-add_executable(test2 src/Test_MultilevelModel.cpp )
-target_link_libraries(test2 PUBLIC mylib optim dist plot) 
+add_executable(test2 src/Test_ArModel.cpp )
+target_link_libraries(test2 PUBLIC datagen optim dist plot) 

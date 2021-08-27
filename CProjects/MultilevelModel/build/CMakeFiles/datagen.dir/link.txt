@@ -1,0 +1,2 @@
+/usr/bin/ar qc libdatagen.a  CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o CMakeFiles/datagen.dir/src/GenerateAutoRegressiveData.cpp.o
+/usr/bin/ranlib libdatagen.a

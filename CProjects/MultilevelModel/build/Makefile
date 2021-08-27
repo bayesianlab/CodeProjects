@@ -56,17 +56,6 @@ CMAKE_BINARY_DIR = /home/dillon/CodeProjects/CProjects/MultilevelModel/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -77,6 +66,17 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -124,17 +124,17 @@ test2/fast:
 .PHONY : test2/fast
 
 #=============================================================================
-# Target rules for targets named mylib
+# Target rules for targets named datagen
 
 # Build rule for target.
-mylib: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 mylib
-.PHONY : mylib
+datagen: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 datagen
+.PHONY : datagen
 
 # fast build rule for target.
-mylib/fast:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/build
-.PHONY : mylib/fast
+datagen/fast:
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/build
+.PHONY : datagen/fast
 
 #=============================================================================
 # Target rules for targets named mlfunc
@@ -329,7 +329,7 @@ src/GenerateAutoRegressiveData.o: src/GenerateAutoRegressiveData.cpp.o
 
 # target to build an object file
 src/GenerateAutoRegressiveData.cpp.o:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.o
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/src/GenerateAutoRegressiveData.cpp.o
 .PHONY : src/GenerateAutoRegressiveData.cpp.o
 
 src/GenerateAutoRegressiveData.i: src/GenerateAutoRegressiveData.cpp.i
@@ -338,7 +338,7 @@ src/GenerateAutoRegressiveData.i: src/GenerateAutoRegressiveData.cpp.i
 
 # target to preprocess a source file
 src/GenerateAutoRegressiveData.cpp.i:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.i
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/src/GenerateAutoRegressiveData.cpp.i
 .PHONY : src/GenerateAutoRegressiveData.cpp.i
 
 src/GenerateAutoRegressiveData.s: src/GenerateAutoRegressiveData.cpp.s
@@ -347,7 +347,7 @@ src/GenerateAutoRegressiveData.s: src/GenerateAutoRegressiveData.cpp.s
 
 # target to generate assembly for a file
 src/GenerateAutoRegressiveData.cpp.s:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateAutoRegressiveData.cpp.s
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/src/GenerateAutoRegressiveData.cpp.s
 .PHONY : src/GenerateAutoRegressiveData.cpp.s
 
 src/GenerateMLFactorData.o: src/GenerateMLFactorData.cpp.o
@@ -356,7 +356,7 @@ src/GenerateMLFactorData.o: src/GenerateMLFactorData.cpp.o
 
 # target to build an object file
 src/GenerateMLFactorData.cpp.o:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.o
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o
 .PHONY : src/GenerateMLFactorData.cpp.o
 
 src/GenerateMLFactorData.i: src/GenerateMLFactorData.cpp.i
@@ -365,7 +365,7 @@ src/GenerateMLFactorData.i: src/GenerateMLFactorData.cpp.i
 
 # target to preprocess a source file
 src/GenerateMLFactorData.cpp.i:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.i
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.i
 .PHONY : src/GenerateMLFactorData.cpp.i
 
 src/GenerateMLFactorData.s: src/GenerateMLFactorData.cpp.s
@@ -374,7 +374,7 @@ src/GenerateMLFactorData.s: src/GenerateMLFactorData.cpp.s
 
 # target to generate assembly for a file
 src/GenerateMLFactorData.cpp.s:
-	$(MAKE) -f CMakeFiles/mylib.dir/build.make CMakeFiles/mylib.dir/src/GenerateMLFactorData.cpp.s
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.s
 .PHONY : src/GenerateMLFactorData.cpp.s
 
 src/MultilevelModelFunctions.o: src/MultilevelModelFunctions.cpp.o
@@ -404,32 +404,32 @@ src/MultilevelModelFunctions.cpp.s:
 	$(MAKE) -f CMakeFiles/mlfunc.dir/build.make CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.s
 .PHONY : src/MultilevelModelFunctions.cpp.s
 
-src/Test_MultilevelModel.o: src/Test_MultilevelModel.cpp.o
+src/Test_ArModel.o: src/Test_ArModel.cpp.o
 
-.PHONY : src/Test_MultilevelModel.o
+.PHONY : src/Test_ArModel.o
 
 # target to build an object file
-src/Test_MultilevelModel.cpp.o:
-	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.o
-.PHONY : src/Test_MultilevelModel.cpp.o
+src/Test_ArModel.cpp.o:
+	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/src/Test_ArModel.cpp.o
+.PHONY : src/Test_ArModel.cpp.o
 
-src/Test_MultilevelModel.i: src/Test_MultilevelModel.cpp.i
+src/Test_ArModel.i: src/Test_ArModel.cpp.i
 
-.PHONY : src/Test_MultilevelModel.i
+.PHONY : src/Test_ArModel.i
 
 # target to preprocess a source file
-src/Test_MultilevelModel.cpp.i:
-	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.i
-.PHONY : src/Test_MultilevelModel.cpp.i
+src/Test_ArModel.cpp.i:
+	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/src/Test_ArModel.cpp.i
+.PHONY : src/Test_ArModel.cpp.i
 
-src/Test_MultilevelModel.s: src/Test_MultilevelModel.cpp.s
+src/Test_ArModel.s: src/Test_ArModel.cpp.s
 
-.PHONY : src/Test_MultilevelModel.s
+.PHONY : src/Test_ArModel.s
 
 # target to generate assembly for a file
-src/Test_MultilevelModel.cpp.s:
-	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.s
-.PHONY : src/Test_MultilevelModel.cpp.s
+src/Test_ArModel.cpp.s:
+	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/src/Test_ArModel.cpp.s
+.PHONY : src/Test_ArModel.cpp.s
 
 # Help Target
 help:
@@ -437,10 +437,10 @@ help:
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
+	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... test2"
-	@echo "... rebuild_cache"
-	@echo "... mylib"
+	@echo "... datagen"
 	@echo "... mlfunc"
 	@echo "... dist"
 	@echo "... plot"
@@ -469,9 +469,9 @@ help:
 	@echo "... src/MultilevelModelFunctions.o"
 	@echo "... src/MultilevelModelFunctions.i"
 	@echo "... src/MultilevelModelFunctions.s"
-	@echo "... src/Test_MultilevelModel.o"
-	@echo "... src/Test_MultilevelModel.i"
-	@echo "... src/Test_MultilevelModel.s"
+	@echo "... src/Test_ArModel.o"
+	@echo "... src/Test_ArModel.i"
+	@echo "... src/Test_ArModel.s"
 .PHONY : help
 
 

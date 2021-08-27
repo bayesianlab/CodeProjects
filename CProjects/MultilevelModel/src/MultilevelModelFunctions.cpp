@@ -1,4 +1,4 @@
-#include "MultilevelModel.hpp"
+#include "MultilevelModelFunctions.hpp"
 
 MatrixXd makeOtrokXt(const Matrix<int, Dynamic, 2> &InfoMat,  const Ref<MatrixXd> &Factors,
                      const int &nXs, const int &K)

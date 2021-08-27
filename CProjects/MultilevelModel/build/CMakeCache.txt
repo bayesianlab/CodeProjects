@@ -227,6 +227,9 @@ _Python3_INCLUDE_DIR:PATH=/usr/include/python3.8
 //Path to a library.
 _Python3_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libpython3.8.so
 
+//Dependencies for the target
+datagen_LIB_DEPENDS:STATIC=general;mlfunc;
+
 //Value Computed by CMake
 multilevel_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/MultilevelModel/build
 

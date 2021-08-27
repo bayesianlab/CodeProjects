@@ -6,28 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../include/MultilevelModel.hpp
-iostream
--
-stdexcept
--
-map
--
-string
--
-math.h
--
-eigen-3.3.9/Eigen/Dense
--
-eigen-3.3.9/unsupported/Eigen/KroneckerProduct
--
-Distributions.hpp
-../include/Distributions.hpp
-Optimization.hpp
-../include/Optimization.hpp
-MultilevelModelFunctions.hpp
-../include/MultilevelModelFunctions.hpp
-
 ../include/MultilevelModelFunctions.hpp
 iostream
 -
@@ -75,8 +53,8 @@ eigen3/unsupported/Eigen/KroneckerProduct
 -
 
 /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp
-MultilevelModel.hpp
-/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModel.hpp
+MultilevelModelFunctions.hpp
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.hpp
 
 /home/dillon/CodeProjects/CProjects/OptimizationTools/include/LineSearchRoutines.hpp
 eigen-3.3.9/Eigen/Dense

@@ -1,6 +1,6 @@
 #pragma once
-#ifndef MLFUNC
-#define MLFUNC
+#ifndef MLFUNC_H
+#define MLFUNC_H
 #include <iostream>
 #include <stdexcept>
 #include <map>
@@ -14,6 +14,8 @@
 #include "Optimization.hpp"
 using namespace Eigen;
 using namespace std;
+
+
 
 template <typename D>
 VectorXi elemPos(const MatrixBase<D> &V)
@@ -45,6 +47,28 @@ MatrixXd makeOtrokXt(const Matrix<int, Dynamic, 2> &InfoMat, const Ref<MatrixXd>
                      const int &nXs, const int &K);
 
 VectorXi sequence(int b, int e, int skip);
+
+
+template <typename D>
+std::vector<MatrixXd> groupByTime(const MatrixBase<D> &Xtfull, const int &T, const int &K)
+{
+    ArrayXi indices = sequence(0, K * T, K);
+    ArrayXi indexshift;
+    std::vector<MatrixXd> Xtk;
+    Xtk.resize(K);
+    MatrixXd Xtemp;
+    Xtemp.setZero(T, Xtfull.cols());
+    for (int k = 0; k < K; ++k)
+    {
+        indexshift = indices + k;
+        for (int t = 0; t < T; ++t)
+        {
+            Xtemp.row(t) = Xtfull.row(indexshift(t));
+        }
+        Xtk[k] = Xtemp;
+    }
+    return Xtk;
+}
 
 MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings,
                       const MatrixXd &FactorPrecision, const VectorXd &precision, int T);
@@ -261,88 +285,88 @@ MatrixXd lag(const MatrixBase<D> &xt, int lags)
     return X;
 }
 
-template <typename D1, typename D2>
-MatrixXd updateAR(const MatrixBase<D1> &current, const MatrixBase<D2> &yt, const double &sigma2,
-                  const MatrixXd &priorMean, const MatrixXd &priorVar)
-{
-    /* current comes in as a row, priorMean comes in as a row */
-    int rows = current.rows();
-    int lags = current.cols();
-    int T = yt.cols();
-    if (rows > lags)
-    {
-        throw invalid_argument("Invalid input in updateAR, rows greater than cols.");
-    }
-    MatrixXd Xt = lag(yt, lags);
-    MatrixXd ytstar = yt.rightCols(T - lags);
-    MatrixXd Ip = MatrixXd::Identity(lags, lags);
-    MatrixXd XX = Xt * Xt.transpose();
-    XX = XX.array() / sigma2;
+// template <typename D1, typename D2>
+// MatrixXd updateAR(const MatrixBase<D1> &current, const MatrixBase<D2> &yt, const double &sigma2,
+//                   const MatrixXd &priorMean, const MatrixXd &priorVar)
+// {
+//     /* current comes in as a row, priorMean comes in as a row */
+//     int rows = current.rows();
+//     int lags = current.cols();
+//     int T = yt.cols();
+//     if (rows > lags)
+//     {
+//         throw invalid_argument("Invalid input in updateAR, rows greater than cols.");
+//     }
+//     MatrixXd Xt = lag(yt, lags);
+//     MatrixXd ytstar = yt.rightCols(T - lags);
+//     MatrixXd Ip = MatrixXd::Identity(lags, lags);
+//     MatrixXd XX = Xt * Xt.transpose();
+//     XX = XX.array() / sigma2;
 
-    MatrixXd G1 = priorVar.ldlt().solve(Ip);
-    MatrixXd g1 = G1 * priorMean.transpose();
-    G1 = (G1 + XX).ldlt().solve(Ip);
+//     MatrixXd G1 = priorVar.ldlt().solve(Ip);
+//     MatrixXd g1 = G1 * priorMean.transpose();
+//     G1 = (G1 + XX).ldlt().solve(Ip);
 
-    MatrixXd Xy = (Xt * ytstar.transpose()).array() / sigma2;
-    g1 = (G1 * (g1 + Xy)).transpose();
+//     MatrixXd Xy = (Xt * ytstar.transpose()).array() / sigma2;
+//     g1 = (G1 * (g1 + Xy)).transpose();
 
-    Matrix<double, 1, 1> s2;
-    s2 << sigma2;
-    MatrixXd P0 = setCovar(current, s2);
-    MatrixXd G1L = G1.llt().matrixL();
-    MatrixXd P1(lags, lags);
-    int MAX_TRIES = 10;
-    int count = 0;
-    int notvalid = 1;
-    MatrixXd proposal = g1;
-    while ((notvalid == 1))
-    {
-        proposal = (g1.transpose() + G1L * normrnd(0, 1, lags, 1)).transpose();
-        P1 = setCovar(proposal, s2);
-        if (isPD(P1))
-        {
-            notvalid = 0;
-        }
-        if (count == MAX_TRIES)
-        {
-            P1 = MatrixXd::Identity(lags, lags);
-            break;
-        }
-        ++count;
-    }
+//     Matrix<double, 1, 1> s2;
+//     s2 << sigma2;
+//     MatrixXd P0 = setCovar(current, s2);
+//     MatrixXd G1L = G1.llt().matrixL();
+//     MatrixXd P1(lags, lags);
+//     int MAX_TRIES = 10;
+//     int count = 0;
+//     int notvalid = 1;
+//     MatrixXd proposal = g1;
+//     while ((notvalid == 1))
+//     {
+//         proposal = (g1.transpose() + G1L * normrnd(0, 1, lags, 1)).transpose();
+//         P1 = setCovar(proposal, s2);
+//         if (isPD(P1))
+//         {
+//             notvalid = 0;
+//         }
+//         if (count == MAX_TRIES)
+//         {
+//             P1 = MatrixXd::Identity(lags, lags);
+//             break;
+//         }
+//         ++count;
+//     }
 
-    MatrixXd Xp = MatrixXd::Zero(lags, lags);
-    MatrixXd empty;
-    for (int i = 1; i < lags; ++i)
-    {
-        empty = yt.leftCols(i);
-        empty.resize(i, 1);
-        Xp.col(i).segment(lags - i, i) = empty;
-        empty.resize(0, 0);
-    }
-    MatrixXd Scur = s2.replicate(T, 1).asDiagonal();
-    MatrixXd Snew = Scur;
-    Scur.topLeftCorner(lags, lags) = P0;
-    Snew.topLeftCorner(lags, lags) = P1;
-    MatrixXd Xss(lags, T);
-    Xss << Xp, Xt;
-    MatrixXd ZeroMean = MatrixXd::Zero(1, T);
-    double val = (logmvnpdf(yt - proposal * Xss, ZeroMean, Snew) +
-                  logmvnpdf(proposal, priorMean, priorVar) +
-                  logmvnpdf(current, g1, G1)) -
-                 (logmvnpdf(yt - current * Xss, ZeroMean, Scur) +
-                  logmvnpdf(current, priorMean, priorVar) +
-                  logmvnpdf(proposal, g1, G1));
-    double lalpha = min(0., val);
-    if (log(unifrnd(0, 1)) < lalpha)
-    {
-        return proposal;
-    }
-    else
-    {
-        return current;
-    }
-}
+//     MatrixXd Xp = MatrixXd::Zero(lags, lags);
+//     MatrixXd empty;
+//     for (int i = 1; i < lags; ++i)
+//     {
+//         empty = yt.leftCols(i);
+//         empty.resize(i, 1);
+//         Xp.col(i).segment(lags - i, i) = empty;
+//         empty.resize(0, 0);
+//     }
+//     MatrixXd Scur = s2.replicate(T, 1).asDiagonal();
+//     MatrixXd Snew = Scur;
+//     Scur.topLeftCorner(lags, lags) = P0;
+//     Snew.topLeftCorner(lags, lags) = P1;
+//     MatrixXd Xss(lags, T);
+//     Xss << Xp, Xt;
+//     MatrixXd ZeroMean = MatrixXd::Zero(1, T);
+//     double val = (logmvnpdf(yt - proposal * Xss, ZeroMean, Snew) +
+//                   logmvnpdf(proposal, priorMean, priorVar) +
+//                   logmvnpdf(current, g1, G1)) -
+//                  (logmvnpdf(yt - current * Xss, ZeroMean, Scur) +
+//                   logmvnpdf(current, priorMean, priorVar) +
+//                   logmvnpdf(proposal, g1, G1));
+//     double lalpha = min(0., val);
+//     if (log(unifrnd(0, 1)) < lalpha)
+//     {
+//         return proposal;
+//     }
+//     else
+//     {
+//         return current;
+//     }
+// }
 
 template <typename D1>
 VectorXd gamma_G(const int &rr, const MatrixBase<D1> &gammastar, const std::vector<MatrixXd> &gammagPosterior, const std::vector<MatrixXd> &ytPosterior,

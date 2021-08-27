@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 {
 
     GenerateMLFactorData mld;
-    int T = 20;
+    int T = 4;
     int K = 5;
     int nXs = 2;
     double beta = .5;
@@ -30,14 +30,13 @@ int main(int argc, char *argv[])
     RowVectorXd g0 = RowVectorXd::Zero(gam.size());
     MatrixXd G0 = MatrixXd::Identity(gam.size(), gam.size());
     MatrixXd Xt = mld.Xt.leftCols(nXs); 
-    VectorXi tt = sequence(0,K*T, K); 
-    cout << tt << endl; 
-    
-    // mlotrok.setFullCondModel(mld.yt, Xt, mld.Factors,
-    //                                 mld.gammas, mld.deltas, InfoMat,
-    //                                 mld.b0, mld.B0, r0, R0, g0, G0);
+     
 
-    // mlotrok.fullConditionals(3);
+    mlotrok.setFullCondModel(mld.yt, Xt, mld.Factors,
+                                    mld.gammas, mld.deltas, InfoMat,
+                                    mld.b0, mld.B0, r0, R0, g0, G0);
+
+    mlotrok.fullConditionals(1);
 
     int on = 1;
     if (on)

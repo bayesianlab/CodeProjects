@@ -8,12 +8,13 @@
 #include <string>
 #include <math.h>
 
-#include <eigen-3.3.9/Eigen/Dense>
+#include <Eigen/Dense>
 #include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
 
 #include "Distributions.hpp"
 #include "Optimization.hpp"
 #include "MultilevelModelFunctions.hpp"
+#include "AutoregressiveModel.hpp"
 
 template <typename D>
 VectorXd updateVariance(const MatrixBase<D> &residuals, int v0, int D0)
@@ -333,6 +334,7 @@ public:
     MatrixXd Identity;
     int Sims;
     int burnin;
+    int arOrderOm; 
 
     void setIntLikeModel(const Ref<const MatrixXd> &yt, const Ref<const MatrixXd> &Xt, const Ref<const MatrixXd> &A,
                          const Ref<const MatrixXd> &Ft, const Ref<const MatrixXd> &gammas, const Matrix<int, Dynamic, 2> &InfoMat,
@@ -386,12 +388,18 @@ public:
         this->G0 = G0;
         this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
         setFactors(Ft);
+        this->arOrderOm = deltas.cols();
     }
 
     void fullConditionals(int Sims)
     {
         // Assumes there are Xs in the estimation
-        int arOrderOm = deltas.cols();
+        if (arOrderOm + 1 >= yt.cols())
+
+        {
+            throw invalid_argument("T must be greater than lags of Om model.");
+        }
+        cout << arOrderOm << endl;
         int arOrderFac = 3;
         int K = yt.rows();
         int T = yt.cols();
@@ -403,30 +411,52 @@ public:
         Xtfull.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, Xt.cols(), K);
 
         betanew = MatrixXd::Ones(Xtfull.cols(), K);
-        MatrixXd Xbeta = Xtfull * betanew;
-        Xbeta.resize(K, T);
-        VectorXd omPrecision = VectorXd::Ones(K); 
-        VectorXd omVariance = 1./omPrecision.array(); 
-        MatrixXd P0; 
-        MatrixXd P0lower; 
-        MatrixXd P0lowerinv; 
-        double s2; 
+        // MatrixXd Xbeta = Xtfull * betanew;
+        // Xbeta.resize(K, T);
+        VectorXd omPrecision = VectorXd::Ones(K);
+        VectorXd omVariance = 1. / omPrecision.array();
+        MatrixXd P0;
+        MatrixXd P0lower;
+        MatrixXd P0lowerinv;
+        double s2;
         MatrixXd y1;
-        MatrixXd y1star; 
-        MatrixXd x1star; 
-        MatrixXd x1; 
+        MatrixXd ytemp(1, T - arOrderOm);
+        MatrixXd y1star;
+        MatrixXd x1star;
+        MatrixXd x1;
+        ArrayXi indices = sequence(0, K * T, K);
+        ArrayXi all = sequence(0, K * T);
+        ArrayXi indexshift;
+        std::vector<MatrixXd> Xtk;
+        Xtk.resize(K);
+        MatrixXd Xtemp;
+        Xtemp.setZero(T, Xtfull.cols());
+        for (int k = 0; k < K; ++k)
+        {
+            indexshift = indices + k;
+            for (int t = 0; t < T; ++t)
+            {
+                Xtemp.row(t) = Xtfull.row(indexshift(t));
+            }
+            Xtk[k] = Xtemp;
+        }
+        cout << yt << endl;
+        cout << endl;
         for (int i = 0; i < Sims; ++i)
         {
-
             for (int k = 0; k < K; ++k)
             {
+                cout << deltas.row(k) * lag(yt.row(k), arOrderOm) << endl;
+                cout << endl;
                 s2 = omVariance(k);
-                P0 = setCovar(deltas.row(k), s2); 
-                P0 = omPrecision(k)*P0.array(); 
-                P0lower = P0.llt().matrixL(); 
+                P0 = setCovar(deltas.row(k), s2);
+                P0 = omPrecision(k) * P0.array();
+                P0lower = P0.llt().matrixL();
                 y1 = yt.row(k).leftCols(arOrderOm);
-                y1star = P0lower.ldlt().solve(y1.transpose()); 
 
+                x1 = Xtk[k].topRows(arOrderOm);
+                y1star = P0lower.ldlt().solve(y1.transpose());
+                x1star = P0lower.ldlt().solve(x1);
             }
         }
     }
