@@ -18,7 +18,7 @@ public:
     MatrixXd G0;
     MatrixXd g0;
     VectorXd sigma2;
-    std::vector<MatrixXd> Xtcontainer; 
+    MatrixXd Xt; 
     GenerateAutoRegressiveData(int time, const MatrixXd &params);
     GenerateAutoRegressiveData(int time, const MatrixXd &arparams, const double &betaparams);
 };

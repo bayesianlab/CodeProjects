@@ -21,16 +21,18 @@ else()
   message(FATAL_ERROR "Python3 not found, please install it.")
 endif()
 
-
-add_library(optim STATIC  /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp /home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp /home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp)
+add_library(eigentools STATIC /home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp)
 add_library(dist STATIC /home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp)
+add_library(optim STATIC  /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp /home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp /home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp)
 add_library(plot STATIC /home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp)
 add_library(mlfunc STATIC src/MultilevelModelFunctions.cpp)
+add_library(ardatagen STATIC /home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp)
+add_library(mldatagen STATIC src/GenerateMLFactorData.cpp )
+target_link_libraries(mlfunc PUBLIC dist eigentools)
+target_link_libraries(mldatagen PUBLIC mlfunc)
+target_link_libraries(ardatagen PUBLIC mlfunc)
+include_directories(/home/dillon/CodeProjects/CProjects/TimeSeries/TimeSeriesFunctions.hpp /home/dillon/CodeProjects/CProjects/EigenTools/include /home/dillon/CodeProjects/CProjects/Distributions/include /home/dillon/CodeProjects/CProjects/OptimizationTools/include /home/dillon/CodeProjects/CProjects/GnuPlotting/include /home/dillon/CodeProjects/CProjects/TimeSeries/include include )
 
-add_library(datagen STATIC src/GenerateMLFactorData.cpp src/GenerateAutoRegressiveData.cpp)
-target_link_libraries(datagen mlfunc)
-include_directories(/home/dillon/CodeProjects/CProjects/Distributions/include /home/dillon/CodeProjects/CProjects/OptimizationTools/include /home/dillon/CodeProjects/CProjects/GnuPlotting/include include)
 
-
-add_executable(test2 src/Test_ArModel.cpp )
-target_link_libraries(test2 PUBLIC datagen optim dist plot) 
+add_executable(test2 ../../TimeSeries/src/Test_ArModel.cpp )
+target_link_libraries(test2 PUBLIC ardatagen mldatagen mlfunc optim dist plot eigentools) 

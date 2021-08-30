@@ -6,19 +6,3 @@
 
 #IncludeRegexTransform: 
 
-/home/dillon/CodeProjects/CProjects/GnuPlotting/include/Plotter.hpp
-iostream
--
-fstream
--
-string
--
-boost/format.hpp
--
-eigen-3.3.9/Eigen/Dense
--
-
-/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp
-Plotter.hpp
-/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.hpp
-

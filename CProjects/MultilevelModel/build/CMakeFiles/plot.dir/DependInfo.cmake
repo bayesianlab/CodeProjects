@@ -12,9 +12,12 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/usr/local/include/eigen3"
   "/usr/include/python3.8"
+  "/home/dillon/CodeProjects/CProjects/TimeSeries/TimeSeriesFunctions.hpp"
+  "/home/dillon/CodeProjects/CProjects/EigenTools/include"
   "/home/dillon/CodeProjects/CProjects/Distributions/include"
   "/home/dillon/CodeProjects/CProjects/OptimizationTools/include"
   "/home/dillon/CodeProjects/CProjects/GnuPlotting/include"
+  "/home/dillon/CodeProjects/CProjects/TimeSeries/include"
   "../include"
   )
 

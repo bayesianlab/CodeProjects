@@ -15,15 +15,9 @@
 #include "Optimization.hpp"
 #include "MultilevelModelFunctions.hpp"
 #include "AutoregressiveModel.hpp"
+#include "EigenTools.hpp"
+#include "BayesianUpdates.hpp"
 
-template <typename D>
-VectorXd updateVariance(const MatrixBase<D> &residuals, int v0, int D0)
-{
-    double parama = .5 * (residuals.cols() + v0);
-    VectorXd paramb = .5 * (D0 + residuals.array().pow(2).rowwise().sum());
-    paramb = 1. / paramb.array();
-    return igammarnd(parama, paramb);
-}
 
 class UpdateBeta
 {
@@ -446,10 +440,10 @@ public:
         {
             for (int k = 0; k < K; ++k)
             {
-                cout << deltas.row(k) * lag(yt.row(k), arOrderOm) << endl;
+                cout << deltas.row(k) * lag(yt.row(k), arOrderOm, 0) << endl;
                 cout << endl;
                 s2 = omVariance(k);
-                P0 = setCovar(deltas.row(k), s2);
+                P0 = setInitialCovar(deltas.row(k), s2);
                 P0 = omPrecision(k) * P0.array();
                 P0lower = P0.llt().matrixL();
                 y1 = yt.row(k).leftCols(arOrderOm);

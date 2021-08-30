@@ -21,9 +21,9 @@ GenerateAutoRegressiveData::GenerateAutoRegressiveData(int time, const MatrixXd 
     int K = arparams.rows();
     cout << K << endl; 
     yt.setZero(K, time);
-    MatrixXd Xt(K*time, 2);
+    Xt.setZero(K*time, 2);
     Xt << MatrixXd::Ones(K*time, 1), normrnd(0, 1, K*time, 1);
-    Xtcontainer = groupByTime(Xt, time, K); 
+    std::vector<MatrixXd> Xtcontainer = groupByTime(Xt, time, K); 
     VectorXd beta = VectorXd::Ones(Xt.cols());
     MatrixXd Xbeta;
     MatrixXd D0;
@@ -34,7 +34,7 @@ GenerateAutoRegressiveData::GenerateAutoRegressiveData(int time, const MatrixXd 
     {
         Xt = Xtcontainer[k]; 
         Xbeta = Xt * beta;
-        D0 = setCovar(arparams.row(k), 1);
+        D0 = setInitialCovar(arparams.row(k), 1);
         D0.llt().matrixL() * normrnd(0, 1, lags, 1);
         yt.row(k).leftCols(lags) = (Xbeta.topRows(lags) + D0.llt().matrixL() * normrnd(0, 1, lags, 1)).transpose();
         epsilon = yt.row(k).leftCols(lags).transpose() - Xbeta.topRows(lags); 

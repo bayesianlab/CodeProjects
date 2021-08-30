@@ -11,10 +11,6 @@ iostream
 -
 stdexcept
 -
-map
--
-string
--
 math.h
 -
 eigen-3.3.9/Eigen/Dense
@@ -25,6 +21,10 @@ Distributions.hpp
 ../include/Distributions.hpp
 Optimization.hpp
 ../include/Optimization.hpp
+EigenTools.hpp
+../include/EigenTools.hpp
+TimeSeriesFunctions.hpp
+../include/TimeSeriesFunctions.hpp
 
 /home/dillon/CodeProjects/CProjects/Distributions/include/Distributions.hpp
 eigen-3.3.9/Eigen/Dense
@@ -50,6 +50,18 @@ math.h
 random
 -
 eigen3/unsupported/Eigen/KroneckerProduct
+-
+
+/home/dillon/CodeProjects/CProjects/EigenTools/include/EigenTools.hpp
+iostream
+-
+stdexcept
+-
+math.h
+-
+eigen-3.3.9/Eigen/Dense
+-
+eigen-3.3.9/unsupported/Eigen/KroneckerProduct
 -
 
 /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp
@@ -97,4 +109,16 @@ LineSearchRoutines.hpp
 /home/dillon/CodeProjects/CProjects/OptimizationTools/include/LineSearchRoutines.hpp
 NumericalDifferentiation.hpp
 /home/dillon/CodeProjects/CProjects/OptimizationTools/include/NumericalDifferentiation.hpp
+
+/home/dillon/CodeProjects/CProjects/TimeSeries/include/TimeSeriesFunctions.hpp
+iostream
+-
+stdexcept
+-
+math.h
+-
+eigen-3.3.9/Eigen/Dense
+-
+eigen-3.3.9/unsupported/Eigen/KroneckerProduct
+-
 

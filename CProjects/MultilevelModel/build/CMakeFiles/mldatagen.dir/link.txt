@@ -1,0 +1,2 @@
+/usr/bin/ar qc libmldatagen.a  CMakeFiles/mldatagen.dir/src/GenerateMLFactorData.cpp.o
+/usr/bin/ranlib libmldatagen.a

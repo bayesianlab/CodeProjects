@@ -6,5 +6,5 @@ CXX_FLAGS = -g
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include 
+CXX_INCLUDES = -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/TimeSeriesFunctions.hpp -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include 
 

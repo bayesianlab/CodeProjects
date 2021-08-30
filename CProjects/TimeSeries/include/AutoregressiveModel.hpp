@@ -20,7 +20,7 @@ MatrixXd updateAR(const MatrixBase<D1> &current, const MatrixBase<D2> &yt, const
     {
         throw invalid_argument("Invalid input in updateAR, rows greater than cols.");
     }
-    MatrixXd Xt = lag(yt, lags);
+    MatrixXd Xt = lag(yt, lags, 0);
     MatrixXd ytstar = yt.rightCols(T - lags);
     MatrixXd Ip = MatrixXd::Identity(lags, lags);
     MatrixXd XX = Xt * Xt.transpose();
@@ -35,7 +35,7 @@ MatrixXd updateAR(const MatrixBase<D1> &current, const MatrixBase<D2> &yt, const
 
     Matrix<double, 1, 1> s2;
     s2 << sigma2;
-    MatrixXd P0 = setCovar(current, s2);
+    MatrixXd P0 = setInitialCovar(current, s2);
     MatrixXd G1L = G1.llt().matrixL();
     MatrixXd P1(lags, lags);
     int MAX_TRIES = 10;
@@ -45,7 +45,7 @@ MatrixXd updateAR(const MatrixBase<D1> &current, const MatrixBase<D2> &yt, const
     while ((notvalid == 1))
     {
         proposal = (g1.transpose() + G1L * normrnd(0, 1, lags, 1)).transpose();
-        P1 = setCovar(proposal, s2);
+        P1 = setInitialCovar(proposal, s2);
         if (isPD(P1))
         {
             notvalid = 0;
@@ -103,7 +103,8 @@ public:
     double r0;
     double R0;
     void setModel(const MatrixXd &yt, const MatrixXd &Xt, const MatrixXd &arparams,
-                  const double &r0, const double &R0, const RowVectorXd &b0, const MatirxXd &B0)
+                  const double &r0, const double &R0, const RowVectorXd &b0,
+                  const MatrixXd &B0)
     {
         this->yt = yt;
         this->Xt = Xt;
@@ -112,13 +113,16 @@ public:
         this->r0 = r0;
         this->R0 = R0;
         this->arparams = arparams;
-        this->sigma2 = VectorXd::Identity(yt.rows());
+        this->sigma2 = VectorXd::Ones(this->yt.rows());
     }
     void runAr(int Sims)
     {
         int T = yt.cols();
         int K = yt.rows();
+        int lags = arparams.cols(); 
+        double s2;
         MatrixXd Xtemp;
+
         std::vector<MatrixXd> XtbyT = groupByTime(Xt, T, K);
         UnivariateBeta ub;
         for (int i = 0; i < Sims; ++i)
@@ -126,7 +130,10 @@ public:
             for (int k = 0; k < K; ++k)
             {
                 Xtemp = XtbyT[k];
-                ub.updateBetaUnivariate(yt.row(k), Xtemp, )
+                s2 = sigma2(k);
+                // cout << lag(yt.row(k), lags) << endl; 
+                // ub.updateBetaUnivariate(yt.row(k), Xtemp, s2, b0, B0);
+                // cout << ub.bnew << endl; 
             }
         }
     }

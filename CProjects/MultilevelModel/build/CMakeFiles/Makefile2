@@ -54,11 +54,13 @@ CMAKE_BINARY_DIR = /home/dillon/CodeProjects/CProjects/MultilevelModel/build
 
 # The main recursive "all" target.
 all: CMakeFiles/test2.dir/all
-all: CMakeFiles/datagen.dir/all
 all: CMakeFiles/mlfunc.dir/all
-all: CMakeFiles/dist.dir/all
+all: CMakeFiles/ardatagen.dir/all
 all: CMakeFiles/plot.dir/all
 all: CMakeFiles/optim.dir/all
+all: CMakeFiles/dist.dir/all
+all: CMakeFiles/mldatagen.dir/all
+all: CMakeFiles/eigentools.dir/all
 
 .PHONY : all
 
@@ -69,11 +71,13 @@ preinstall:
 
 # The main recursive "clean" target.
 clean: CMakeFiles/test2.dir/clean
-clean: CMakeFiles/datagen.dir/clean
 clean: CMakeFiles/mlfunc.dir/clean
-clean: CMakeFiles/dist.dir/clean
+clean: CMakeFiles/ardatagen.dir/clean
 clean: CMakeFiles/plot.dir/clean
 clean: CMakeFiles/optim.dir/clean
+clean: CMakeFiles/dist.dir/clean
+clean: CMakeFiles/mldatagen.dir/clean
+clean: CMakeFiles/eigentools.dir/clean
 
 .PHONY : clean
 
@@ -81,19 +85,21 @@ clean: CMakeFiles/optim.dir/clean
 # Target rules for target CMakeFiles/test2.dir
 
 # All Build rule for target.
-CMakeFiles/test2.dir/all: CMakeFiles/datagen.dir/all
 CMakeFiles/test2.dir/all: CMakeFiles/mlfunc.dir/all
-CMakeFiles/test2.dir/all: CMakeFiles/dist.dir/all
+CMakeFiles/test2.dir/all: CMakeFiles/ardatagen.dir/all
 CMakeFiles/test2.dir/all: CMakeFiles/plot.dir/all
 CMakeFiles/test2.dir/all: CMakeFiles/optim.dir/all
+CMakeFiles/test2.dir/all: CMakeFiles/dist.dir/all
+CMakeFiles/test2.dir/all: CMakeFiles/mldatagen.dir/all
+CMakeFiles/test2.dir/all: CMakeFiles/eigentools.dir/all
 	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/depend
 	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=14,15 "Built target test2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=17,18 "Built target test2"
 .PHONY : CMakeFiles/test2.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/test2.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 15
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 18
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/test2.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 0
 .PHONY : CMakeFiles/test2.dir/rule
@@ -109,45 +115,19 @@ CMakeFiles/test2.dir/clean:
 .PHONY : CMakeFiles/test2.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/datagen.dir
-
-# All Build rule for target.
-CMakeFiles/datagen.dir/all: CMakeFiles/mlfunc.dir/all
-	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/depend
-	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=1,2,3 "Built target datagen"
-.PHONY : CMakeFiles/datagen.dir/all
-
-# Build rule for subdir invocation for target.
-CMakeFiles/datagen.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 5
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/datagen.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 0
-.PHONY : CMakeFiles/datagen.dir/rule
-
-# Convenience name for target.
-datagen: CMakeFiles/datagen.dir/rule
-
-.PHONY : datagen
-
-# clean rule for target.
-CMakeFiles/datagen.dir/clean:
-	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/clean
-.PHONY : CMakeFiles/datagen.dir/clean
-
-#=============================================================================
 # Target rules for target CMakeFiles/mlfunc.dir
 
 # All Build rule for target.
-CMakeFiles/mlfunc.dir/all:
+CMakeFiles/mlfunc.dir/all: CMakeFiles/dist.dir/all
+CMakeFiles/mlfunc.dir/all: CMakeFiles/eigentools.dir/all
 	$(MAKE) -f CMakeFiles/mlfunc.dir/build.make CMakeFiles/mlfunc.dir/depend
 	$(MAKE) -f CMakeFiles/mlfunc.dir/build.make CMakeFiles/mlfunc.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=6,7 "Built target mlfunc"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=9,10 "Built target mlfunc"
 .PHONY : CMakeFiles/mlfunc.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/mlfunc.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 6
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/mlfunc.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 0
 .PHONY : CMakeFiles/mlfunc.dir/rule
@@ -163,31 +143,33 @@ CMakeFiles/mlfunc.dir/clean:
 .PHONY : CMakeFiles/mlfunc.dir/clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/dist.dir
+# Target rules for target CMakeFiles/ardatagen.dir
 
 # All Build rule for target.
-CMakeFiles/dist.dir/all:
-	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/depend
-	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=4,5 "Built target dist"
-.PHONY : CMakeFiles/dist.dir/all
+CMakeFiles/ardatagen.dir/all: CMakeFiles/mlfunc.dir/all
+CMakeFiles/ardatagen.dir/all: CMakeFiles/dist.dir/all
+CMakeFiles/ardatagen.dir/all: CMakeFiles/eigentools.dir/all
+	$(MAKE) -f CMakeFiles/ardatagen.dir/build.make CMakeFiles/ardatagen.dir/depend
+	$(MAKE) -f CMakeFiles/ardatagen.dir/build.make CMakeFiles/ardatagen.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=1,2 "Built target ardatagen"
+.PHONY : CMakeFiles/ardatagen.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/dist.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/dist.dir/all
+CMakeFiles/ardatagen.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 8
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/ardatagen.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 0
-.PHONY : CMakeFiles/dist.dir/rule
+.PHONY : CMakeFiles/ardatagen.dir/rule
 
 # Convenience name for target.
-dist: CMakeFiles/dist.dir/rule
+ardatagen: CMakeFiles/ardatagen.dir/rule
 
-.PHONY : dist
+.PHONY : ardatagen
 
 # clean rule for target.
-CMakeFiles/dist.dir/clean:
-	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/clean
-.PHONY : CMakeFiles/dist.dir/clean
+CMakeFiles/ardatagen.dir/clean:
+	$(MAKE) -f CMakeFiles/ardatagen.dir/build.make CMakeFiles/ardatagen.dir/clean
+.PHONY : CMakeFiles/ardatagen.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/plot.dir
@@ -196,7 +178,7 @@ CMakeFiles/dist.dir/clean:
 CMakeFiles/plot.dir/all:
 	$(MAKE) -f CMakeFiles/plot.dir/build.make CMakeFiles/plot.dir/depend
 	$(MAKE) -f CMakeFiles/plot.dir/build.make CMakeFiles/plot.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=12,13 "Built target plot"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=15,16 "Built target plot"
 .PHONY : CMakeFiles/plot.dir/all
 
 # Build rule for subdir invocation for target.
@@ -223,7 +205,7 @@ CMakeFiles/plot.dir/clean:
 CMakeFiles/optim.dir/all:
 	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/depend
 	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=8,9,10,11 "Built target optim"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=11,12,13,14 "Built target optim"
 .PHONY : CMakeFiles/optim.dir/all
 
 # Build rule for subdir invocation for target.
@@ -242,6 +224,89 @@ optim: CMakeFiles/optim.dir/rule
 CMakeFiles/optim.dir/clean:
 	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/clean
 .PHONY : CMakeFiles/optim.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/dist.dir
+
+# All Build rule for target.
+CMakeFiles/dist.dir/all:
+	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/depend
+	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=3,4 "Built target dist"
+.PHONY : CMakeFiles/dist.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/dist.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/dist.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 0
+.PHONY : CMakeFiles/dist.dir/rule
+
+# Convenience name for target.
+dist: CMakeFiles/dist.dir/rule
+
+.PHONY : dist
+
+# clean rule for target.
+CMakeFiles/dist.dir/clean:
+	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/clean
+.PHONY : CMakeFiles/dist.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/mldatagen.dir
+
+# All Build rule for target.
+CMakeFiles/mldatagen.dir/all: CMakeFiles/mlfunc.dir/all
+CMakeFiles/mldatagen.dir/all: CMakeFiles/dist.dir/all
+CMakeFiles/mldatagen.dir/all: CMakeFiles/eigentools.dir/all
+	$(MAKE) -f CMakeFiles/mldatagen.dir/build.make CMakeFiles/mldatagen.dir/depend
+	$(MAKE) -f CMakeFiles/mldatagen.dir/build.make CMakeFiles/mldatagen.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=7,8 "Built target mldatagen"
+.PHONY : CMakeFiles/mldatagen.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/mldatagen.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 8
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/mldatagen.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 0
+.PHONY : CMakeFiles/mldatagen.dir/rule
+
+# Convenience name for target.
+mldatagen: CMakeFiles/mldatagen.dir/rule
+
+.PHONY : mldatagen
+
+# clean rule for target.
+CMakeFiles/mldatagen.dir/clean:
+	$(MAKE) -f CMakeFiles/mldatagen.dir/build.make CMakeFiles/mldatagen.dir/clean
+.PHONY : CMakeFiles/mldatagen.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/eigentools.dir
+
+# All Build rule for target.
+CMakeFiles/eigentools.dir/all:
+	$(MAKE) -f CMakeFiles/eigentools.dir/build.make CMakeFiles/eigentools.dir/depend
+	$(MAKE) -f CMakeFiles/eigentools.dir/build.make CMakeFiles/eigentools.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=5,6 "Built target eigentools"
+.PHONY : CMakeFiles/eigentools.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/eigentools.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/eigentools.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles 0
+.PHONY : CMakeFiles/eigentools.dir/rule
+
+# Convenience name for target.
+eigentools: CMakeFiles/eigentools.dir/rule
+
+.PHONY : eigentools
+
+# clean rule for target.
+CMakeFiles/eigentools.dir/clean:
+	$(MAKE) -f CMakeFiles/eigentools.dir/build.make CMakeFiles/eigentools.dir/clean
+.PHONY : CMakeFiles/eigentools.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

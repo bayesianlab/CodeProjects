@@ -6,33 +6,3 @@
 
 #IncludeRegexTransform: 
 
-/home/dillon/CodeProjects/CProjects/Distributions/include/Distributions.hpp
-eigen-3.3.9/Eigen/Dense
--
-boost/math/distributions/exponential.hpp
--
-boost/math/distributions/normal.hpp
--
-boost/random/gamma_distribution.hpp
--
-boost/random/mersenne_twister.hpp
--
-boost/random/normal_distribution.hpp
--
-boost/random/uniform_01.hpp
--
-boost/random/variate_generator.hpp
--
-limits
--
-math.h
--
-random
--
-eigen3/unsupported/Eigen/KroneckerProduct
--
-
-/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp
-Distributions.hpp
-/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.hpp
-

@@ -6,12 +6,6 @@
 
 #IncludeRegexTransform: 
 
-../include/AutoregressiveModel.hpp
-MultilevelModel.hpp
-../include/MultilevelModel.hpp
-BayesianUpdates.hpp
-../include/BayesianUpdates.hpp
-
 ../include/BayesianUpdates.hpp
 iostream
 -
@@ -21,18 +15,6 @@ Eigen/Dense
 -
 Distributions.hpp
 ../include/Distributions.hpp
-
-../include/GenerateAutoRegressiveData.hpp
-eigen-3.3.9/Eigen/Dense
--
-eigen-3.3.9/unsupported/Eigen/KroneckerProduct
--
-Distributions.hpp
-../include/Distributions.hpp
-MultilevelModel.hpp
-../include/MultilevelModel.hpp
-MultilevelModelFunctions.hpp
-../include/MultilevelModelFunctions.hpp
 
 ../include/MultilevelModel.hpp
 iostream
@@ -78,6 +60,36 @@ Distributions.hpp
 Optimization.hpp
 ../include/Optimization.hpp
 
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/include/AutoregressiveModel.hpp
+MultilevelModel.hpp
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/include/MultilevelModel.hpp
+BayesianUpdates.hpp
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/include/BayesianUpdates.hpp
+MultilevelModelFunctions.hpp
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/include/MultilevelModelFunctions.hpp
+
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/include/GenerateAutoRegressiveData.hpp
+eigen-3.3.9/Eigen/Dense
+-
+eigen-3.3.9/unsupported/Eigen/KroneckerProduct
+-
+Distributions.hpp
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/include/Distributions.hpp
+MultilevelModel.hpp
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/include/MultilevelModel.hpp
+MultilevelModelFunctions.hpp
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/include/MultilevelModelFunctions.hpp
+
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/src/Test_ArModel.cpp
+stdio.h
+-
+GenerateAutoRegressiveData.hpp
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/src/GenerateAutoRegressiveData.hpp
+AutoregressiveModel.hpp
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/src/AutoregressiveModel.hpp
+MultilevelModelFunctions.hpp
+/home/dillon/CodeProjects/CProjects/AutoregressiveModel/src/MultilevelModelFunctions.hpp
+
 /home/dillon/CodeProjects/CProjects/Distributions/include/Distributions.hpp
 eigen-3.3.9/Eigen/Dense
 -
@@ -103,12 +115,6 @@ random
 -
 eigen3/unsupported/Eigen/KroneckerProduct
 -
-
-/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_ArModel.cpp
-stdio.h
--
-GenerateAutoRegressiveData.hpp
-/home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateAutoRegressiveData.hpp
 
 /home/dillon/CodeProjects/CProjects/OptimizationTools/include/LineSearchRoutines.hpp
 eigen-3.3.9/Eigen/Dense

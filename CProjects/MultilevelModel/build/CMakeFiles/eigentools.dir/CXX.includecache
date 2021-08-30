@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/dillon/CodeProjects/CProjects/EigenTools/include/EigenTools.hpp
+iostream
+-
+stdexcept
+-
+math.h
+-
+eigen-3.3.9/Eigen/Dense
+-
+eigen-3.3.9/unsupported/Eigen/KroneckerProduct
+-
+
+/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp
+EigenTools.hpp
+/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.hpp
+
