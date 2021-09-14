@@ -1,0 +1,103 @@
+\hypertarget{EigenTools_8hpp}{}\doxysection{Eigen\+Tools/include/\+Eigen\+Tools.hpp File Reference}
+\label{EigenTools_8hpp}\index{EigenTools/include/EigenTools.hpp@{EigenTools/include/EigenTools.hpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$eigen-\/3.\+3.\+9/\+Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$eigen-\/3.\+3.\+9/unsupported/\+Eigen/\+Kronecker\+Product$>$}\newline
+Include dependency graph for Eigen\+Tools.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{EigenTools_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{EigenTools_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{EigenTools_8hpp_a8fdb0012a6ab172c2be119157deba801}{E\+I\+G\+E\+N\+T\+O\+O\+L\+S\+\_\+H}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename D $>$ }\\void \mbox{\hyperlink{EigenTools_8hpp_a4b01cf39115ebdea22b1de604d12f604}{dim}} (const Matrix\+Base$<$ D $>$ \&M)
+\item 
+Vector\+Xd \mbox{\hyperlink{EigenTools_8hpp_afb9e7d8212b9b8201c491d675d702666}{var}} (const Ref$<$ const Matrix\+Xd $>$ \&A, int row\+\_\+col)
+\item 
+Vector\+Xi \mbox{\hyperlink{EigenTools_8hpp_a5d92fbcc1277fda7c271750b8199bc44}{sequence}} (int b, int e)
+\item 
+Vector\+Xi \mbox{\hyperlink{EigenTools_8hpp_a82323683ef57274ad216f9bf051236e3}{sequence}} (int b, int e, int skip)
+\item 
+{\footnotesize template$<$typename Derived1 $>$ }\\Matrix\+Xd \mbox{\hyperlink{EigenTools_8hpp_a89a3c805cc0dc3d4353ffb27e668c575}{Create\+Diag}} (const Matrix\+Base$<$ Derived1 $>$ \&diagonal\+Mat, const Array\+Xi \&diagonal\+Vector, int k, int c)
+\item 
+{\footnotesize template$<$typename D $>$ }\\Matrix\+Xd \mbox{\hyperlink{EigenTools_8hpp_aba18f67b117a5f3bf85111169d4fcd04}{sur\+Form}} (const Matrix\+Base$<$ D $>$ \&stackedx, int K)
+\item 
+{\footnotesize template$<$typename D $>$ }\\bool \mbox{\hyperlink{EigenTools_8hpp_a2a878f77a2a2857e8cb1adc32aca2f85}{is\+PD}} (const Matrix\+Base$<$ D $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{EigenTools_8hpp_a8fdb0012a6ab172c2be119157deba801}\label{EigenTools_8hpp_a8fdb0012a6ab172c2be119157deba801}} 
+\index{EigenTools.hpp@{EigenTools.hpp}!EIGENTOOLS\_H@{EIGENTOOLS\_H}}
+\index{EIGENTOOLS\_H@{EIGENTOOLS\_H}!EigenTools.hpp@{EigenTools.hpp}}
+\doxysubsubsection{\texorpdfstring{EIGENTOOLS\_H}{EIGENTOOLS\_H}}
+{\footnotesize\ttfamily \#define E\+I\+G\+E\+N\+T\+O\+O\+L\+S\+\_\+H}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{EigenTools_8hpp_a89a3c805cc0dc3d4353ffb27e668c575}\label{EigenTools_8hpp_a89a3c805cc0dc3d4353ffb27e668c575}} 
+\index{EigenTools.hpp@{EigenTools.hpp}!CreateDiag@{CreateDiag}}
+\index{CreateDiag@{CreateDiag}!EigenTools.hpp@{EigenTools.hpp}}
+\doxysubsubsection{\texorpdfstring{CreateDiag()}{CreateDiag()}}
+{\footnotesize\ttfamily template$<$typename Derived1 $>$ \\
+Matrix\+Xd Create\+Diag (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ Derived1 $>$ \&}]{diagonal\+Mat,  }\item[{const Array\+Xi \&}]{diagonal\+Vector,  }\item[{int}]{k,  }\item[{int}]{c }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{EigenTools_8hpp_a4b01cf39115ebdea22b1de604d12f604}\label{EigenTools_8hpp_a4b01cf39115ebdea22b1de604d12f604}} 
+\index{EigenTools.hpp@{EigenTools.hpp}!dim@{dim}}
+\index{dim@{dim}!EigenTools.hpp@{EigenTools.hpp}}
+\doxysubsubsection{\texorpdfstring{dim()}{dim()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+void dim (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D $>$ \&}]{M }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{EigenTools_8hpp_a2a878f77a2a2857e8cb1adc32aca2f85}\label{EigenTools_8hpp_a2a878f77a2a2857e8cb1adc32aca2f85}} 
+\index{EigenTools.hpp@{EigenTools.hpp}!isPD@{isPD}}
+\index{isPD@{isPD}!EigenTools.hpp@{EigenTools.hpp}}
+\doxysubsubsection{\texorpdfstring{isPD()}{isPD()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+bool is\+PD (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{EigenTools_8hpp_a5d92fbcc1277fda7c271750b8199bc44}\label{EigenTools_8hpp_a5d92fbcc1277fda7c271750b8199bc44}} 
+\index{EigenTools.hpp@{EigenTools.hpp}!sequence@{sequence}}
+\index{sequence@{sequence}!EigenTools.hpp@{EigenTools.hpp}}
+\doxysubsubsection{\texorpdfstring{sequence()}{sequence()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Vector\+Xi sequence (\begin{DoxyParamCaption}\item[{int}]{b,  }\item[{int}]{e }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{EigenTools_8hpp_a82323683ef57274ad216f9bf051236e3}\label{EigenTools_8hpp_a82323683ef57274ad216f9bf051236e3}} 
+\index{EigenTools.hpp@{EigenTools.hpp}!sequence@{sequence}}
+\index{sequence@{sequence}!EigenTools.hpp@{EigenTools.hpp}}
+\doxysubsubsection{\texorpdfstring{sequence()}{sequence()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Vector\+Xi sequence (\begin{DoxyParamCaption}\item[{int}]{b,  }\item[{int}]{e,  }\item[{int}]{skip }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{EigenTools_8hpp_aba18f67b117a5f3bf85111169d4fcd04}\label{EigenTools_8hpp_aba18f67b117a5f3bf85111169d4fcd04}} 
+\index{EigenTools.hpp@{EigenTools.hpp}!surForm@{surForm}}
+\index{surForm@{surForm}!EigenTools.hpp@{EigenTools.hpp}}
+\doxysubsubsection{\texorpdfstring{surForm()}{surForm()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+Matrix\+Xd sur\+Form (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D $>$ \&}]{stackedx,  }\item[{int}]{K }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{EigenTools_8hpp_afb9e7d8212b9b8201c491d675d702666}\label{EigenTools_8hpp_afb9e7d8212b9b8201c491d675d702666}} 
+\index{EigenTools.hpp@{EigenTools.hpp}!var@{var}}
+\index{var@{var}!EigenTools.hpp@{EigenTools.hpp}}
+\doxysubsubsection{\texorpdfstring{var()}{var()}}
+{\footnotesize\ttfamily Vector\+Xd var (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{A,  }\item[{int}]{row\+\_\+col }\end{DoxyParamCaption})}
+

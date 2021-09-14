@@ -1,0 +1,74 @@
+\hypertarget{classUnivariateBeta}{}\doxysection{Univariate\+Beta Class Reference}
+\label{classUnivariateBeta}\index{UnivariateBeta@{UnivariateBeta}}
+
+
+{\ttfamily \#include $<$Bayesian\+Updates.\+hpp$>$}
+
+
+
+Collaboration diagram for Univariate\+Beta\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=170pt]{classUnivariateBeta__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename T1 , typename T2 , typename T3 , typename T4 $>$ }\\void \mbox{\hyperlink{classUnivariateBeta_a80aa2dfef0c2bc2e9231a3d52650fcb3}{update\+Beta\+Univariate}} (const Matrix\+Base$<$ T1 $>$ \&yt, const Matrix\+Base$<$ T2 $>$ \&Xt, const double \&s2, const Matrix\+Base$<$ T3 $>$ \&b0, const Matrix\+Base$<$ T4 $>$ \&B0)
+\item 
+{\footnotesize template$<$typename T $>$ }\\void \mbox{\hyperlink{classUnivariateBeta_a7f2b42510eb36794cec36ddf51a353d6}{initialize\+Beta}} (const Matrix\+Base$<$ T $>$ \&beta\+Init)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classUnivariateBeta_aa9f4ceb8f473443acac124acb8f37768}{B}}
+\item 
+Row\+Vector\+Xd \mbox{\hyperlink{classUnivariateBeta_ad3e953e6b24c85588c8ffb4583312fde}{bmean}}
+\item 
+Row\+Vector\+Xd \mbox{\hyperlink{classUnivariateBeta_a012298df80199447f17468721dfa5da2}{bnew}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classUnivariateBeta_a7f2b42510eb36794cec36ddf51a353d6}\label{classUnivariateBeta_a7f2b42510eb36794cec36ddf51a353d6}} 
+\index{UnivariateBeta@{UnivariateBeta}!initializeBeta@{initializeBeta}}
+\index{initializeBeta@{initializeBeta}!UnivariateBeta@{UnivariateBeta}}
+\doxysubsubsection{\texorpdfstring{initializeBeta()}{initializeBeta()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+void Univariate\+Beta\+::initialize\+Beta (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ T $>$ \&}]{beta\+Init }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classUnivariateBeta_a80aa2dfef0c2bc2e9231a3d52650fcb3}\label{classUnivariateBeta_a80aa2dfef0c2bc2e9231a3d52650fcb3}} 
+\index{UnivariateBeta@{UnivariateBeta}!updateBetaUnivariate@{updateBetaUnivariate}}
+\index{updateBetaUnivariate@{updateBetaUnivariate}!UnivariateBeta@{UnivariateBeta}}
+\doxysubsubsection{\texorpdfstring{updateBetaUnivariate()}{updateBetaUnivariate()}}
+{\footnotesize\ttfamily template$<$typename T1 , typename T2 , typename T3 , typename T4 $>$ \\
+void Univariate\+Beta\+::update\+Beta\+Univariate (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ T1 $>$ \&}]{yt,  }\item[{const Matrix\+Base$<$ T2 $>$ \&}]{Xt,  }\item[{const double \&}]{s2,  }\item[{const Matrix\+Base$<$ T3 $>$ \&}]{b0,  }\item[{const Matrix\+Base$<$ T4 $>$ \&}]{B0 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classUnivariateBeta_aa9f4ceb8f473443acac124acb8f37768}\label{classUnivariateBeta_aa9f4ceb8f473443acac124acb8f37768}} 
+\index{UnivariateBeta@{UnivariateBeta}!B@{B}}
+\index{B@{B}!UnivariateBeta@{UnivariateBeta}}
+\doxysubsubsection{\texorpdfstring{B}{B}}
+{\footnotesize\ttfamily Matrix\+Xd Univariate\+Beta\+::B}
+
+\mbox{\Hypertarget{classUnivariateBeta_ad3e953e6b24c85588c8ffb4583312fde}\label{classUnivariateBeta_ad3e953e6b24c85588c8ffb4583312fde}} 
+\index{UnivariateBeta@{UnivariateBeta}!bmean@{bmean}}
+\index{bmean@{bmean}!UnivariateBeta@{UnivariateBeta}}
+\doxysubsubsection{\texorpdfstring{bmean}{bmean}}
+{\footnotesize\ttfamily Row\+Vector\+Xd Univariate\+Beta\+::bmean}
+
+\mbox{\Hypertarget{classUnivariateBeta_a012298df80199447f17468721dfa5da2}\label{classUnivariateBeta_a012298df80199447f17468721dfa5da2}} 
+\index{UnivariateBeta@{UnivariateBeta}!bnew@{bnew}}
+\index{bnew@{bnew}!UnivariateBeta@{UnivariateBeta}}
+\doxysubsubsection{\texorpdfstring{bnew}{bnew}}
+{\footnotesize\ttfamily Row\+Vector\+Xd Univariate\+Beta\+::bnew}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Multilevel\+Model/include/\mbox{\hyperlink{BayesianUpdates_8hpp}{Bayesian\+Updates.\+hpp}}\end{DoxyCompactItemize}

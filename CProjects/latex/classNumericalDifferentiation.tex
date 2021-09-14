@@ -1,0 +1,59 @@
+\hypertarget{classNumericalDifferentiation}{}\doxysection{Numerical\+Differentiation Class Reference}
+\label{classNumericalDifferentiation}\index{NumericalDifferentiation@{NumericalDifferentiation}}
+
+
+{\ttfamily \#include $<$Numerical\+Differentiation.\+hpp$>$}
+
+
+
+Inheritance diagram for Numerical\+Differentiation\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=217pt]{classNumericalDifferentiation__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Vector\+Xd \mbox{\hyperlink{classNumericalDifferentiation_a5f0ea5629dc20c56dbeb0e4176cd0f63}{Forward\+Differences}} (const Ref$<$ const Vector\+Xd $>$ \&x0, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F)
+\item 
+Vector\+Xd \mbox{\hyperlink{classNumericalDifferentiation_a7e61b33404585e22c779ab4115d28348}{Central\+Differences}} (const Ref$<$ const Vector\+Xd $>$ \&x0, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classNumericalDifferentiation_af1649d82f85821a8fb3ddbb5b3f29d66}{Aprroximate\+Hessian}} (const Ref$<$ const Vector\+Xd $>$ \&point, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F, double fval1)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classNumericalDifferentiation_adc372b68a5bf1eaefbe094a83d33fa10}{Aprroximate\+Diag\+Hessian}} (const Ref$<$ const Vector\+Xd $>$ \&point, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F, double fval1)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNumericalDifferentiation_adc372b68a5bf1eaefbe094a83d33fa10}\label{classNumericalDifferentiation_adc372b68a5bf1eaefbe094a83d33fa10}} 
+\index{NumericalDifferentiation@{NumericalDifferentiation}!AprroximateDiagHessian@{AprroximateDiagHessian}}
+\index{AprroximateDiagHessian@{AprroximateDiagHessian}!NumericalDifferentiation@{NumericalDifferentiation}}
+\doxysubsubsection{\texorpdfstring{AprroximateDiagHessian()}{AprroximateDiagHessian()}}
+{\footnotesize\ttfamily Matrix\+Xd Numerical\+Differentiation\+::\+Aprroximate\+Diag\+Hessian (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{point,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F,  }\item[{double}]{fval1 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNumericalDifferentiation_af1649d82f85821a8fb3ddbb5b3f29d66}\label{classNumericalDifferentiation_af1649d82f85821a8fb3ddbb5b3f29d66}} 
+\index{NumericalDifferentiation@{NumericalDifferentiation}!AprroximateHessian@{AprroximateHessian}}
+\index{AprroximateHessian@{AprroximateHessian}!NumericalDifferentiation@{NumericalDifferentiation}}
+\doxysubsubsection{\texorpdfstring{AprroximateHessian()}{AprroximateHessian()}}
+{\footnotesize\ttfamily Matrix\+Xd Numerical\+Differentiation\+::\+Aprroximate\+Hessian (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{point,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F,  }\item[{double}]{fval1 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNumericalDifferentiation_a7e61b33404585e22c779ab4115d28348}\label{classNumericalDifferentiation_a7e61b33404585e22c779ab4115d28348}} 
+\index{NumericalDifferentiation@{NumericalDifferentiation}!CentralDifferences@{CentralDifferences}}
+\index{CentralDifferences@{CentralDifferences}!NumericalDifferentiation@{NumericalDifferentiation}}
+\doxysubsubsection{\texorpdfstring{CentralDifferences()}{CentralDifferences()}}
+{\footnotesize\ttfamily Vector\+Xd Numerical\+Differentiation\+::\+Central\+Differences (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{x0,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNumericalDifferentiation_a5f0ea5629dc20c56dbeb0e4176cd0f63}\label{classNumericalDifferentiation_a5f0ea5629dc20c56dbeb0e4176cd0f63}} 
+\index{NumericalDifferentiation@{NumericalDifferentiation}!ForwardDifferences@{ForwardDifferences}}
+\index{ForwardDifferences@{ForwardDifferences}!NumericalDifferentiation@{NumericalDifferentiation}}
+\doxysubsubsection{\texorpdfstring{ForwardDifferences()}{ForwardDifferences()}}
+{\footnotesize\ttfamily Vector\+Xd Numerical\+Differentiation\+::\+Forward\+Differences (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{x0,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Optimization\+Tools/include/\mbox{\hyperlink{NumericalDifferentiation_8hpp}{Numerical\+Differentiation.\+hpp}}\item 
+Optimization\+Tools/src/\mbox{\hyperlink{NumericalDifferentiation_8cpp}{Numerical\+Differentiation.\+cpp}}\end{DoxyCompactItemize}

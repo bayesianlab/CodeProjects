@@ -1,0 +1,157 @@
+\hypertarget{classAsk}{}\doxysection{Ask Class Reference}
+\label{classAsk}\index{Ask@{Ask}}
+
+
+{\ttfamily \#include $<$ask.\+hpp$>$}
+
+
+
+Inheritance diagram for Ask\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=116pt]{classAsk__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Ask\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=116pt]{classAsk__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classAsk_a22157f9cf0856cf727a093f633db8ab1}{gibbs\+KernelT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, double df, const Vector\+Xd \&theta, const Matrix\+Xd \&Sigma, const Matrix\+Xd \&draws, Matrix\+Xd \&xnot, Vector\+Xd \&zstar)
+\item 
+void \mbox{\hyperlink{classAsk_ab1bb8ced074e7f7cc0aac1067499ac75}{conditional\+Mean}} (double, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, double, Vector\+Xd \&)
+\item 
+void \mbox{\hyperlink{classAsk_a44945b9b20d536fe37d68f4c97328d0a}{tnormpdf}} (double, double, Vector\+Xd \&, double, double, Vector\+Xd \&)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classAsk_aeb0390d4ffd15251249f3d56d9424cdc}{adaptive\+Sampler}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, double init\+Peta, int sample\+Size, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, int sample\+Block\+Rows)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classAsk_a36b512d144047e0aba0eff48b6a2efb1}{adaptive\+SamplerT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&theta, const Matrix\+Xd \&Sigma, double df, double init\+Peta, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, int sample\+Block\+Rows, const Vector\+Xd \&weight)
+\item 
+int \mbox{\hyperlink{classAsk_a577adfc9d71e8285bfa1c396b4dfafab}{is\+Vect\+Vgreater}} (Vector\+Xd \&, Vector\+Xd \&)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classAsk_a063c3ad6062650fd9dad32932c061970}{burnin\+Adaptive}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const Vector\+Xd \&sigma\+Vectorint, int sims, int J, double init\+Peta)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classAsk_a17f981691ae12cbe3cd321e87a09b9f6}{burnin\+AdaptiveT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, double df, int sims, double init\+Peta)
+\item 
+double \mbox{\hyperlink{classAsk_a370fd6578c253adbef940246c38afb7b}{calc\+Peta}} (Vector\+Xd \&rz, Vector\+Xd \&reta, const Vector\+Xd \&weight)
+\item 
+double \mbox{\hyperlink{classAsk_a86f96f32d43161ecd70068f598de0f4b}{calc\+PetaT}} (Vector\+Xd \&, Vector\+Xd \&, const Vector\+Xd \&weight)
+\item 
+double \mbox{\hyperlink{classAsk_ab0236bd68d8378007322b8f6cbcdca72}{ask\+KernelT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, double df, const Vector\+Xd \&theta, const Matrix\+Xd \&Sigma, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, int sample\+Block\+Rows, double init\+Peta, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd b0, const Matrix\+Xd \&B0, double a0, double d0, const Vector\+Xd \&weight)
+\item 
+double \mbox{\hyperlink{classAsk_a8cae59f1a016223dee1163d070ab7d84}{ml}} (const Vector\+Xd \&betas, double sigmas, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Matrix\+Xd \&kernel, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+double \mbox{\hyperlink{classAsk_a37313660752b98d38eb64d3e03f63c12}{mlT}} (Vector\+Xd \&betas, double sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Matrix\+Xd \&kernel, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+void \mbox{\hyperlink{classAsk_a52ff1cf6a0b58acbb4bf9f160d1a4d6f}{run\+Sim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, Vector\+Xd \&a, Vector\+Xd \&b, Vector\+Xd \&theta, Matrix\+Xd \&sig, Vector\+Xd \&y, Matrix\+Xd \&X, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, int sample\+Block\+Rowsa, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+void \mbox{\hyperlink{classAsk_a5ae10a9a821095c64d6a795e64b6b69c}{run\+Tsim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&lower\+Constraint, const Vector\+Xd \&upper\+Constraint, const Matrix\+Xd \&Linear\+Constraints, double df, const Vector\+Xd \&theta, const Matrix\+Xd \&Sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, int sample\+Block\+Rows, double init\+Peta, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0, const Vector\+Xd \&weight)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classAsk_aeb0390d4ffd15251249f3d56d9424cdc}\label{classAsk_aeb0390d4ffd15251249f3d56d9424cdc}} 
+\index{Ask@{Ask}!adaptiveSampler@{adaptiveSampler}}
+\index{adaptiveSampler@{adaptiveSampler}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{adaptiveSampler()}{adaptiveSampler()}}
+{\footnotesize\ttfamily Matrix\+Xd Ask\+::adaptive\+Sampler (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{init\+Peta,  }\item[{int}]{sample\+Size,  }\item[{int}]{burnin,  }\item[{int}]{sample\+Block\+Rows }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a36b512d144047e0aba0eff48b6a2efb1}\label{classAsk_a36b512d144047e0aba0eff48b6a2efb1}} 
+\index{Ask@{Ask}!adaptiveSamplerT@{adaptiveSamplerT}}
+\index{adaptiveSamplerT@{adaptiveSamplerT}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{adaptiveSamplerT()}{adaptiveSamplerT()}}
+{\footnotesize\ttfamily Matrix\+Xd Ask\+::adaptive\+SamplerT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{df,  }\item[{double}]{init\+Peta,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{int}]{sample\+Block\+Rows,  }\item[{const Vector\+Xd \&}]{weight }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_ab0236bd68d8378007322b8f6cbcdca72}\label{classAsk_ab0236bd68d8378007322b8f6cbcdca72}} 
+\index{Ask@{Ask}!askKernelT@{askKernelT}}
+\index{askKernelT@{askKernelT}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{askKernelT()}{askKernelT()}}
+{\footnotesize\ttfamily double Ask\+::ask\+KernelT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{int}]{sample\+Block\+Rows,  }\item[{double}]{init\+Peta,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0,  }\item[{const Vector\+Xd \&}]{weight }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a063c3ad6062650fd9dad32932c061970}\label{classAsk_a063c3ad6062650fd9dad32932c061970}} 
+\index{Ask@{Ask}!burninAdaptive@{burninAdaptive}}
+\index{burninAdaptive@{burninAdaptive}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{burninAdaptive()}{burninAdaptive()}}
+{\footnotesize\ttfamily Matrix\+Xd Ask\+::burnin\+Adaptive (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Vector\+Xd \&}]{sigma\+Vectorint,  }\item[{int}]{sims,  }\item[{int}]{J,  }\item[{double}]{init\+Peta }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a17f981691ae12cbe3cd321e87a09b9f6}\label{classAsk_a17f981691ae12cbe3cd321e87a09b9f6}} 
+\index{Ask@{Ask}!burninAdaptiveT@{burninAdaptiveT}}
+\index{burninAdaptiveT@{burninAdaptiveT}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{burninAdaptiveT()}{burninAdaptiveT()}}
+{\footnotesize\ttfamily Matrix\+Xd Ask\+::burnin\+AdaptiveT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{df,  }\item[{int}]{sims,  }\item[{double}]{init\+Peta }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a370fd6578c253adbef940246c38afb7b}\label{classAsk_a370fd6578c253adbef940246c38afb7b}} 
+\index{Ask@{Ask}!calcPeta@{calcPeta}}
+\index{calcPeta@{calcPeta}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{calcPeta()}{calcPeta()}}
+{\footnotesize\ttfamily double Ask\+::calc\+Peta (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{rz,  }\item[{Vector\+Xd \&}]{reta,  }\item[{const Vector\+Xd \&}]{weight }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a86f96f32d43161ecd70068f598de0f4b}\label{classAsk_a86f96f32d43161ecd70068f598de0f4b}} 
+\index{Ask@{Ask}!calcPetaT@{calcPetaT}}
+\index{calcPetaT@{calcPetaT}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{calcPetaT()}{calcPetaT()}}
+{\footnotesize\ttfamily double Ask\+::calc\+PetaT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{rz,  }\item[{Vector\+Xd \&}]{reta,  }\item[{const Vector\+Xd \&}]{weight }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_ab1bb8ced074e7f7cc0aac1067499ac75}\label{classAsk_ab1bb8ced074e7f7cc0aac1067499ac75}} 
+\index{Ask@{Ask}!conditionalMean@{conditionalMean}}
+\index{conditionalMean@{conditionalMean}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{conditionalMean()}{conditionalMean()}}
+{\footnotesize\ttfamily void Ask\+::conditional\+Mean (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{double}]{,  }\item[{Vector\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a22157f9cf0856cf727a093f633db8ab1}\label{classAsk_a22157f9cf0856cf727a093f633db8ab1}} 
+\index{Ask@{Ask}!gibbsKernelT@{gibbsKernelT}}
+\index{gibbsKernelT@{gibbsKernelT}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{gibbsKernelT()}{gibbsKernelT()}}
+{\footnotesize\ttfamily Matrix\+Xd Ask\+::gibbs\+KernelT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Matrix\+Xd \&}]{draws,  }\item[{Matrix\+Xd \&}]{xnot,  }\item[{Vector\+Xd \&}]{zstar }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a577adfc9d71e8285bfa1c396b4dfafab}\label{classAsk_a577adfc9d71e8285bfa1c396b4dfafab}} 
+\index{Ask@{Ask}!isVectVgreater@{isVectVgreater}}
+\index{isVectVgreater@{isVectVgreater}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{isVectVgreater()}{isVectVgreater()}}
+{\footnotesize\ttfamily int Ask\+::is\+Vect\+Vgreater (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{v,  }\item[{Vector\+Xd \&}]{u }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a8cae59f1a016223dee1163d070ab7d84}\label{classAsk_a8cae59f1a016223dee1163d070ab7d84}} 
+\index{Ask@{Ask}!ml@{ml}}
+\index{ml@{ml}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{ml()}{ml()}}
+{\footnotesize\ttfamily double Ask\+::ml (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{betas,  }\item[{double}]{sigmas,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Matrix\+Xd \&}]{kernel,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a37313660752b98d38eb64d3e03f63c12}\label{classAsk_a37313660752b98d38eb64d3e03f63c12}} 
+\index{Ask@{Ask}!mlT@{mlT}}
+\index{mlT@{mlT}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{mlT()}{mlT()}}
+{\footnotesize\ttfamily double Ask\+::mlT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{double}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Matrix\+Xd \&}]{kernel,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a52ff1cf6a0b58acbb4bf9f160d1a4d6f}\label{classAsk_a52ff1cf6a0b58acbb4bf9f160d1a4d6f}} 
+\index{Ask@{Ask}!runSim@{runSim}}
+\index{runSim@{runSim}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{runSim()}{runSim()}}
+{\footnotesize\ttfamily void Ask\+::run\+Sim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{Vector\+Xd \&}]{a,  }\item[{Vector\+Xd \&}]{b,  }\item[{Vector\+Xd \&}]{theta,  }\item[{Matrix\+Xd \&}]{sig,  }\item[{Vector\+Xd \&}]{y,  }\item[{Matrix\+Xd \&}]{X,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{int}]{sample\+Block\+Rowsa,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a5ae10a9a821095c64d6a795e64b6b69c}\label{classAsk_a5ae10a9a821095c64d6a795e64b6b69c}} 
+\index{Ask@{Ask}!runTsim@{runTsim}}
+\index{runTsim@{runTsim}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{runTsim()}{runTsim()}}
+{\footnotesize\ttfamily void Ask\+::run\+Tsim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{lower\+Constraint,  }\item[{const Vector\+Xd \&}]{upper\+Constraint,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{int}]{sample\+Block\+Rows,  }\item[{double}]{init\+Peta,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0,  }\item[{const Vector\+Xd \&}]{weight }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classAsk_a44945b9b20d536fe37d68f4c97328d0a}\label{classAsk_a44945b9b20d536fe37d68f4c97328d0a}} 
+\index{Ask@{Ask}!tnormpdf@{tnormpdf}}
+\index{tnormpdf@{tnormpdf}!Ask@{Ask}}
+\doxysubsubsection{\texorpdfstring{tnormpdf()}{tnormpdf()}}
+{\footnotesize\ttfamily void Ask\+::tnormpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{Vector\+Xd \&}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x,  }\item[{Vector\+Xd \&}]{k }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Old/\+Simulation/include/\mbox{\hyperlink{ask_8hpp}{ask.\+hpp}}\item 
+Old/\+Simulation/src/\mbox{\hyperlink{ask_8cpp}{ask.\+cpp}}\end{DoxyCompactItemize}

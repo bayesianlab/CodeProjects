@@ -1,0 +1,41 @@
+\hypertarget{MultilevelModelFunctions_8cpp}{}\doxysection{Multilevel\+Model/src/\+Multilevel\+Model\+Functions.cpp File Reference}
+\label{MultilevelModelFunctions_8cpp}\index{MultilevelModel/src/MultilevelModelFunctions.cpp@{MultilevelModel/src/MultilevelModelFunctions.cpp}}
+{\ttfamily \#include \char`\"{}Multilevel\+Model\+Functions.\+hpp\char`\"{}}\newline
+Include dependency graph for Multilevel\+Model\+Functions.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{MultilevelModelFunctions_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Matrix\+Xd \mbox{\hyperlink{MultilevelModelFunctions_8cpp_a12c8095402fefd49dddb3c9ee1235f19}{make\+Otrok\+Xt}} (const Matrix$<$ int, Dynamic, 2 $>$ \&Info\+Mat, const Ref$<$ Matrix\+Xd $>$ \&Factors, const int \&n\+Xs, const int \&K)
+\item 
+Matrix\+Xd \mbox{\hyperlink{MultilevelModelFunctions_8cpp_a53c2817eae5f3af02dc034a7cc0bd571}{Make\+Obs\+Model\+Identity}} (const Matrix$<$ int, Dynamic, 2 $>$ \&m, int eqns)
+\item 
+Matrix\+Xd \mbox{\hyperlink{MultilevelModelFunctions_8cpp_a3ef5e01d538ce2bf890e02cb58ab25ca}{update\+Factor}} (const Matrix\+Xd \&residuals, const Matrix\+Xd \&Loadings, const Matrix\+Xd \&Factor\+Precision, const Vector\+Xd \&precision, int T)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{MultilevelModelFunctions_8cpp_a53c2817eae5f3af02dc034a7cc0bd571}\label{MultilevelModelFunctions_8cpp_a53c2817eae5f3af02dc034a7cc0bd571}} 
+\index{MultilevelModelFunctions.cpp@{MultilevelModelFunctions.cpp}!MakeObsModelIdentity@{MakeObsModelIdentity}}
+\index{MakeObsModelIdentity@{MakeObsModelIdentity}!MultilevelModelFunctions.cpp@{MultilevelModelFunctions.cpp}}
+\doxysubsubsection{\texorpdfstring{MakeObsModelIdentity()}{MakeObsModelIdentity()}}
+{\footnotesize\ttfamily Matrix\+Xd Make\+Obs\+Model\+Identity (\begin{DoxyParamCaption}\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{m,  }\item[{int}]{eqns }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{MultilevelModelFunctions_8cpp_a12c8095402fefd49dddb3c9ee1235f19}\label{MultilevelModelFunctions_8cpp_a12c8095402fefd49dddb3c9ee1235f19}} 
+\index{MultilevelModelFunctions.cpp@{MultilevelModelFunctions.cpp}!makeOtrokXt@{makeOtrokXt}}
+\index{makeOtrokXt@{makeOtrokXt}!MultilevelModelFunctions.cpp@{MultilevelModelFunctions.cpp}}
+\doxysubsubsection{\texorpdfstring{makeOtrokXt()}{makeOtrokXt()}}
+{\footnotesize\ttfamily Matrix\+Xd make\+Otrok\+Xt (\begin{DoxyParamCaption}\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{Info\+Mat,  }\item[{const Ref$<$ Matrix\+Xd $>$ \&}]{Factors,  }\item[{const int \&}]{n\+Xs,  }\item[{const int \&}]{K }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{MultilevelModelFunctions_8cpp_a3ef5e01d538ce2bf890e02cb58ab25ca}\label{MultilevelModelFunctions_8cpp_a3ef5e01d538ce2bf890e02cb58ab25ca}} 
+\index{MultilevelModelFunctions.cpp@{MultilevelModelFunctions.cpp}!updateFactor@{updateFactor}}
+\index{updateFactor@{updateFactor}!MultilevelModelFunctions.cpp@{MultilevelModelFunctions.cpp}}
+\doxysubsubsection{\texorpdfstring{updateFactor()}{updateFactor()}}
+{\footnotesize\ttfamily Matrix\+Xd update\+Factor (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{residuals,  }\item[{const Matrix\+Xd \&}]{Loadings,  }\item[{const Matrix\+Xd \&}]{Factor\+Precision,  }\item[{const Vector\+Xd \&}]{precision,  }\item[{int}]{T }\end{DoxyParamCaption})}
+

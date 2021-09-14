@@ -1,0 +1,21 @@
+var searchData=
+[
+  ['ibin_1008',['ibin',['../binomialCoef_8c.html#a26e84b1daa709f0e8d1e15e1917d2c65',1,'ibin():&#160;binomialCoef.c'],['../binomialCoef_8c.html#a7d4d3b5d3d7692bf337e3111057a687e',1,'ibin(int n, int m):&#160;binomialCoef.c']]],
+  ['igammapdf_1009',['igammapdf',['../classDist.html#aa177aee1942265f48684f8dbe1f9f5f0',1,'Dist::igammapdf(double, double, double)'],['../classDist.html#aa177aee1942265f48684f8dbe1f9f5f0',1,'Dist::igammapdf(double, double, double)']]],
+  ['igammarnd_1010',['igammarnd',['../classDist.html#a031df42d06a4f77e981d96a2180794a7',1,'Dist::igammarnd(double shape, double scale, VectorXd &amp;igamma)'],['../classDist.html#a9e4ebf4aff0844f0c586bd9774813bd2',1,'Dist::igammarnd(double shape, double scale)'],['../classDist.html#a031df42d06a4f77e981d96a2180794a7',1,'Dist::igammarnd(double shape, double scale, VectorXd &amp;igamma)'],['../classDist.html#a9e4ebf4aff0844f0c586bd9774813bd2',1,'Dist::igammarnd(double shape, double scale)'],['../classDist.html#aabcc08ae49c5bc6b267975b06093d5f9',1,'Dist::igammarnd(double shape, double scale, int N)'],['../Distributions_8hpp.html#a3d60e69e63a84b81bd23c2095fd38a1e',1,'igammarnd(double shape, double scale):&#160;Distributions.cpp'],['../Distributions_8hpp.html#ac3e012e3917755edc206ff8b4e489b27',1,'igammarnd(double shape, double scale, int N):&#160;Distributions.cpp'],['../Distributions_8hpp.html#a922514614bfe4b707d50cc2732bb7e10',1,'igammarnd(const double shape, const VectorXd &amp;scale):&#160;Distributions.cpp'],['../Distributions_8cpp.html#a3d60e69e63a84b81bd23c2095fd38a1e',1,'igammarnd(double shape, double scale):&#160;Distributions.cpp'],['../Distributions_8cpp.html#ac3e012e3917755edc206ff8b4e489b27',1,'igammarnd(double shape, double scale, int N):&#160;Distributions.cpp'],['../Distributions_8cpp.html#abfceee03b010e51d203b7dce7a4f7adf',1,'igammarnd(double shape, const VectorXd &amp;scale):&#160;Distributions.cpp']]],
+  ['importancesampling_1011',['importanceSampling',['../classImportance.html#a51fbe6ddbbf65f541f107a1feada864a',1,'Importance']]],
+  ['imptest2_1012',['impTest2',['../runsim_8cpp.html#a89f970b4cab781c826ae670aead2b25c',1,'runsim.cpp']]],
+  ['imptestt_1013',['impTestT',['../runsim_8cpp.html#ad7aadda4769b2d9d091526104465403e',1,'runsim.cpp']]],
+  ['imshow_1014',['imshow',['../namespacematplotlibcpp.html#afe20a57d7e37d5eaca3651b39b985b87',1,'matplotlibcpp']]],
+  ['indicatorfunction_1015',['indicatorFunction',['../rentalmain_8cpp.html#aaa3451c3c1c592d733c4ecc3172b7814',1,'rentalmain.cpp']]],
+  ['initializearparameters_1016',['initializeArParameters',['../classArParameterTools.html#aa4df1d0991586163ca4236e424a32508',1,'ArParameterTools']]],
+  ['initializebeta_1017',['initializeBeta',['../classUnivariateBeta.html#a7f2b42510eb36794cec36ddf51a353d6',1,'UnivariateBeta']]],
+  ['initpascal_1018',['initPascal',['../binomialCoef_8c.html#ac6a10423ed90d29b2255c892874c83e8',1,'initPascal():&#160;binomialCoef.c'],['../binomialCoef_8c.html#a422b9dd8537f0a46c54569a6866964da',1,'initPascal(int nrow, int triangle[nrow][nrow]):&#160;binomialCoef.c']]],
+  ['integratedlikelihood_1019',['integratedLikelihood',['../classMultilevelModel.html#a7a8e95ca70de377069ec3c70bc598e1a',1,'MultilevelModel']]],
+  ['interpolate_1020',['interpolate',['../classInterpolation.html#a108da6bebe226f1faa95b01168e51e4e',1,'Interpolation']]],
+  ['interpolation_1021',['Interpolation',['../classInterpolation.html#aba3b6c8a02192eaf6822785f14f9fcd1',1,'Interpolation']]],
+  ['intheta_1022',['inTheta',['../classLinRegGibbs.html#aede9c94491c4cf00455b7d6a07cbb4b7',1,'LinRegGibbs::inTheta(const Ref&lt; const MatrixXd &gt; &amp;, const Ref&lt; const MatrixXd &gt; &amp;, const MatrixXd &amp;)'],['../classLinRegGibbs.html#aede9c94491c4cf00455b7d6a07cbb4b7',1,'LinRegGibbs::inTheta(const Ref&lt; const MatrixXd &gt; &amp;, const Ref&lt; const MatrixXd &gt; &amp;, const MatrixXd &amp;)']]],
+  ['ion_1023',['ion',['../namespacematplotlibcpp.html#a9bddb5276ddc48f4ff9c2b36b98db71a',1,'matplotlibcpp']]],
+  ['ispd_1024',['isPD',['../EigenTools_8hpp.html#a2a878f77a2a2857e8cb1adc32aca2f85',1,'EigenTools.hpp']]],
+  ['isvectvgreater_1025',['isVectVgreater',['../classArk.html#abdcdce8e2c2eb3f9accaad856c11fcfc',1,'Ark::isVectVgreater()'],['../classAsk.html#a577adfc9d71e8285bfa1c396b4dfafab',1,'Ask::isVectVgreater()']]]
+];

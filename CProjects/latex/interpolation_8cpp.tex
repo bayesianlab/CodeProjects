@@ -1,0 +1,56 @@
+\hypertarget{interpolation_8cpp}{}\doxysection{Old/\+Numerical\+Analysis/interpolation.cpp File Reference}
+\label{interpolation_8cpp}\index{Old/NumericalAnalysis/interpolation.cpp@{Old/NumericalAnalysis/interpolation.cpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+Include dependency graph for interpolation.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=305pt]{interpolation_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classInterpolation}{Interpolation}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{interpolation_8cpp_a933e858c4dca54da37a3a0fd006cc106}{poly\+Int}} (Matrix\+Xd grid, int n\+Points)
+\item 
+void \mbox{\hyperlink{interpolation_8cpp_aa9c390b0925537053317665baa00b55e}{set\+Interpolation\+Points}} (double x\+Start, double h, int n\+Points, double interpolation\+Points\mbox{[}n\+Points\mbox{]})
+\item 
+Matrix\+Xd \mbox{\hyperlink{interpolation_8cpp_a30c765a58514442de0470ff42ea1213b}{set\+Neville\+Array}} (const Matrix\+Xd neville, Matrix\+Xd grid)
+\item 
+int \mbox{\hyperlink{interpolation_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{interpolation_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{interpolation_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{interpolation.cpp@{interpolation.cpp}!main@{main}}
+\index{main@{main}!interpolation.cpp@{interpolation.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{interpolation_8cpp_a933e858c4dca54da37a3a0fd006cc106}\label{interpolation_8cpp_a933e858c4dca54da37a3a0fd006cc106}} 
+\index{interpolation.cpp@{interpolation.cpp}!polyInt@{polyInt}}
+\index{polyInt@{polyInt}!interpolation.cpp@{interpolation.cpp}}
+\doxysubsubsection{\texorpdfstring{polyInt()}{polyInt()}}
+{\footnotesize\ttfamily void poly\+Int (\begin{DoxyParamCaption}\item[{Matrix\+Xd}]{grid,  }\item[{int}]{n\+Points }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{interpolation_8cpp_aa9c390b0925537053317665baa00b55e}\label{interpolation_8cpp_aa9c390b0925537053317665baa00b55e}} 
+\index{interpolation.cpp@{interpolation.cpp}!setInterpolationPoints@{setInterpolationPoints}}
+\index{setInterpolationPoints@{setInterpolationPoints}!interpolation.cpp@{interpolation.cpp}}
+\doxysubsubsection{\texorpdfstring{setInterpolationPoints()}{setInterpolationPoints()}}
+{\footnotesize\ttfamily void set\+Interpolation\+Points (\begin{DoxyParamCaption}\item[{double}]{x\+Start,  }\item[{double}]{h,  }\item[{int}]{n\+Points,  }\item[{double}]{interpolation\+Points\mbox{[}n\+Points\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{interpolation_8cpp_a30c765a58514442de0470ff42ea1213b}\label{interpolation_8cpp_a30c765a58514442de0470ff42ea1213b}} 
+\index{interpolation.cpp@{interpolation.cpp}!setNevilleArray@{setNevilleArray}}
+\index{setNevilleArray@{setNevilleArray}!interpolation.cpp@{interpolation.cpp}}
+\doxysubsubsection{\texorpdfstring{setNevilleArray()}{setNevilleArray()}}
+{\footnotesize\ttfamily Matrix\+Xd set\+Neville\+Array (\begin{DoxyParamCaption}\item[{const Matrix\+Xd}]{neville,  }\item[{Matrix\+Xd}]{grid }\end{DoxyParamCaption})}
+

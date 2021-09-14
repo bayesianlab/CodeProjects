@@ -1,0 +1,81 @@
+\hypertarget{LineSearchRoutines_8hpp}{}\doxysection{Optimization\+Tools/include/\+Line\+Search\+Routines.hpp File Reference}
+\label{LineSearchRoutines_8hpp}\index{OptimizationTools/include/LineSearchRoutines.hpp@{OptimizationTools/include/LineSearchRoutines.hpp}}
+{\ttfamily \#include $<$eigen-\/3.\+3.\+9/\+Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}Numerical\+Differentiation.\+hpp\char`\"{}}\newline
+Include dependency graph for Line\+Search\+Routines.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{LineSearchRoutines_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{LineSearchRoutines_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classLineSearchRoutines}{Line\+Search\+Routines}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{LineSearchRoutines_8hpp_ac019ad4ec2a45a119368fe348b732a06}{L\+I\+N\+E\+S\+E\+A\+R\+C\+H\+\_\+H}}
+\item 
+\#define \mbox{\hyperlink{LineSearchRoutines_8hpp_a6ebf6899d6c1c8b7b9d09be872c05aae}{E\+PS}}~numeric\+\_\+limits$<$long double$>$\+::epsilon()
+\item 
+\#define \mbox{\hyperlink{LineSearchRoutines_8hpp_afca8a3f047ca823ae87930b12fd1dc3f}{S\+E\+PS}}~sqrt(\mbox{\hyperlink{Optimization_8hpp_a6ebf6899d6c1c8b7b9d09be872c05aae}{E\+PS}})
+\item 
+\#define \mbox{\hyperlink{LineSearchRoutines_8hpp_a656da95f9680f14093be09a52ab6752f}{GR}}~(0.\+5 $\ast$ (sqrt(5) + 1))
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{LineSearchRoutines_8hpp_aa7b14d5986996e9ddd3026ebaffb44e3}{sort\+\_\+swap}} (double \&low, double \&high)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{LineSearchRoutines_8hpp_a6ebf6899d6c1c8b7b9d09be872c05aae}\label{LineSearchRoutines_8hpp_a6ebf6899d6c1c8b7b9d09be872c05aae}} 
+\index{LineSearchRoutines.hpp@{LineSearchRoutines.hpp}!EPS@{EPS}}
+\index{EPS@{EPS}!LineSearchRoutines.hpp@{LineSearchRoutines.hpp}}
+\doxysubsubsection{\texorpdfstring{EPS}{EPS}}
+{\footnotesize\ttfamily \#define E\+PS~numeric\+\_\+limits$<$long double$>$\+::epsilon()}
+
+\mbox{\Hypertarget{LineSearchRoutines_8hpp_a656da95f9680f14093be09a52ab6752f}\label{LineSearchRoutines_8hpp_a656da95f9680f14093be09a52ab6752f}} 
+\index{LineSearchRoutines.hpp@{LineSearchRoutines.hpp}!GR@{GR}}
+\index{GR@{GR}!LineSearchRoutines.hpp@{LineSearchRoutines.hpp}}
+\doxysubsubsection{\texorpdfstring{GR}{GR}}
+{\footnotesize\ttfamily \#define GR~(0.\+5 $\ast$ (sqrt(5) + 1))}
+
+\mbox{\Hypertarget{LineSearchRoutines_8hpp_ac019ad4ec2a45a119368fe348b732a06}\label{LineSearchRoutines_8hpp_ac019ad4ec2a45a119368fe348b732a06}} 
+\index{LineSearchRoutines.hpp@{LineSearchRoutines.hpp}!LINESEARCH\_H@{LINESEARCH\_H}}
+\index{LINESEARCH\_H@{LINESEARCH\_H}!LineSearchRoutines.hpp@{LineSearchRoutines.hpp}}
+\doxysubsubsection{\texorpdfstring{LINESEARCH\_H}{LINESEARCH\_H}}
+{\footnotesize\ttfamily \#define L\+I\+N\+E\+S\+E\+A\+R\+C\+H\+\_\+H}
+
+\mbox{\Hypertarget{LineSearchRoutines_8hpp_afca8a3f047ca823ae87930b12fd1dc3f}\label{LineSearchRoutines_8hpp_afca8a3f047ca823ae87930b12fd1dc3f}} 
+\index{LineSearchRoutines.hpp@{LineSearchRoutines.hpp}!SEPS@{SEPS}}
+\index{SEPS@{SEPS}!LineSearchRoutines.hpp@{LineSearchRoutines.hpp}}
+\doxysubsubsection{\texorpdfstring{SEPS}{SEPS}}
+{\footnotesize\ttfamily \#define S\+E\+PS~sqrt(\mbox{\hyperlink{Optimization_8hpp_a6ebf6899d6c1c8b7b9d09be872c05aae}{E\+PS}})}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{LineSearchRoutines_8hpp_aa7b14d5986996e9ddd3026ebaffb44e3}\label{LineSearchRoutines_8hpp_aa7b14d5986996e9ddd3026ebaffb44e3}} 
+\index{LineSearchRoutines.hpp@{LineSearchRoutines.hpp}!sort\_swap@{sort\_swap}}
+\index{sort\_swap@{sort\_swap}!LineSearchRoutines.hpp@{LineSearchRoutines.hpp}}
+\doxysubsubsection{\texorpdfstring{sort\_swap()}{sort\_swap()}}
+{\footnotesize\ttfamily void sort\+\_\+swap (\begin{DoxyParamCaption}\item[{double \&}]{low,  }\item[{double \&}]{high }\end{DoxyParamCaption})}
+

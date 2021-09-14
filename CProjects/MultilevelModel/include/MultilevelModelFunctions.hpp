@@ -5,31 +5,23 @@
 #include <stdexcept>
 #include <math.h>
 
-#include <eigen-3.3.9/Eigen/Dense>
-#include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
+#include <Eigen/Dense>
+#include <unsupported/Eigen/KroneckerProduct>
 
 #include "Distributions.hpp"
 #include "EigenTools.hpp"
-#include "TimeSeries.hpp"
+#include "TimeSeriesTools.hpp"
 
 using namespace Eigen;
 using namespace std;
 
-
 MatrixXd makeOtrokXt(const Matrix<int, Dynamic, 2> &InfoMat, const Ref<MatrixXd> &Factors,
-                     const int &nXs, const int &K);
-
-
-
+                     const int &K);
 
 MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings,
                       const MatrixXd &FactorPrecision, const VectorXd &precision, int T);
 
-
-
 MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &m, int eqns);
-
-
 
 template <typename D>
 MatrixXd zeroOutFactorLevel(const MatrixBase<D> &Id, int level)
@@ -37,173 +29,6 @@ MatrixXd zeroOutFactorLevel(const MatrixBase<D> &Id, int level)
     MatrixXd I = Id;
     I.col(level) = MatrixXd::Zero(I.rows(), 1);
     return I;
-}
-
-
-
-
-template <typename D1>
-VectorXd gamma_G(const int &rr, const MatrixBase<D1> &gammastar, const std::vector<MatrixXd> &gammagPosterior, const std::vector<MatrixXd> &ytPosterior,
-                 const std::vector<VectorXd> &sigma2Posterior, const MatrixXd &priorMean, const MatrixXd &priorVar)
-{
-    /* current comes in as a row, priorMean comes in as a row */
-    int nFactors = gammastar.rows();
-    int lags = gammastar.cols();
-    int T = ytPosterior[0].cols();
-    MatrixXd yt;
-    MatrixXd Xt;
-    MatrixXd ytstar;
-    MatrixXd Ip;
-    MatrixXd XX;
-    MatrixXd g1;
-    MatrixXd Xy;
-    MatrixXd G1;
-    MatrixXd Pstar;
-    MatrixXd G1L;
-    MatrixXd Pg(lags, lags);
-    MatrixXd Xp;
-    MatrixXd empty;
-    MatrixXd Sstar;
-    MatrixXd Sg;
-    MatrixXd Xss(lags, T);
-    MatrixXd ZeroMean;
-    double qg;
-    double val;
-    double lalphaqg;
-
-    MatrixXd gammag;
-    VectorXd sigma2;
-    VectorXd numerator(nFactors * rr);
-    int d = 0;
-    for (int i = 0; i < rr; ++i)
-    {
-        yt = ytPosterior[i];
-        gammag = gammagPosterior[i];
-        sigma2 = sigma2Posterior[i];
-        for (int k = 0; k < nFactors; ++k)
-        {
-            Xt = lag(yt.row(k), lags, 0);
-            ytstar = yt.row(k).rightCols(T - lags);
-            Ip = MatrixXd::Identity(lags, lags);
-            XX = Xt * Xt.transpose();
-            XX = XX.array() / sigma2[k];
-            G1 = priorVar.householderQr().solve(Ip);
-            g1 = G1 * priorMean.transpose();
-            G1 = (G1 + XX).householderQr().solve(Ip);
-            Xy = (Xt * ytstar.transpose()).array() / sigma2[k];
-            g1 = (G1 * (g1 + Xy)).transpose();
-            Matrix<double, 1, 1> s2;
-            s2 << sigma2[k];
-            Pstar = setInitialCovar(gammastar.row(k), s2);
-            G1L = G1.llt().matrixL();
-
-            Pg = setInitialCovar(gammag.row(k), s2);
-            Xp = MatrixXd::Zero(lags, lags);
-            empty;
-            for (int i = 1; i < lags; ++i)
-            {
-                empty = yt.row(k).leftCols(i);
-                empty.resize(i, 1);
-                Xp.col(i).segment(lags - i, i) = empty;
-                empty.resize(0, 0);
-            }
-            Sstar = s2.replicate(T, 1).asDiagonal();
-            Sg = Sstar;
-            Sstar.topLeftCorner(lags, lags) = Pstar;
-            Sg.topLeftCorner(lags, lags) = Pg;
-            Xss << Xp, Xt;
-            ZeroMean = MatrixXd::Zero(1, T);
-            qg = logmvnpdf(gammastar.row(k), g1, G1);
-            val = (logmvnpdf(yt.row(k) - gammastar.row(k) * Xss, ZeroMean, Sstar) +
-                   logmvnpdf(gammastar.row(k), priorMean, priorVar) +
-                   logmvnpdf(gammag.row(k), g1, G1)) -
-                  (logmvnpdf(yt.row(k) - gammag.row(k) * Xss, ZeroMean, Sg) +
-                   logmvnpdf(gammag.row(k), priorMean, priorVar) +
-                   qg);
-            lalphaqg = min(0., val);
-            lalphaqg = lalphaqg + qg;
-            numerator(d);
-            ++d;
-        }
-        return numerator;
-    }
-    return numerator;
-}
-
-template <typename D1, typename D2>
-double gamma_J(const MatrixBase<D1> &gammastar, const MatrixBase<D2> &yt, const double &sigma2,
-               const MatrixXd &priorMean, const MatrixXd &priorVar)
-{
-
-    /* current comes in as a row, priorMean comes in as a row */
-    int rows = gammastar.rows();
-    int lags = gammastar.cols();
-    int T = yt.cols();
-    if (rows > lags)
-    {
-        throw invalid_argument("Invalid input in updateAR, rows greater than cols.");
-    }
-    MatrixXd Xt = lag(yt, lags, 0);
-    MatrixXd ytstar = yt.rightCols(T - lags);
-    MatrixXd Ip = MatrixXd::Identity(lags, lags);
-    MatrixXd XX = Xt * Xt.transpose();
-    XX = XX.array() / sigma2;
-    MatrixXd G1 = priorVar.householderQr().solve(Ip);
-    MatrixXd g1 = G1 * priorMean.transpose();
-    G1 = (G1 + XX).householderQr().solve(Ip);
-
-    MatrixXd Xy = (Xt * ytstar.transpose()).array() / sigma2;
-    g1 = (G1 * (g1 + Xy)).transpose();
-
-    Matrix<double, 1, 1> s2;
-    s2 << sigma2;
-    MatrixXd P0 = setInitialCovar(gammastar, s2);
-    MatrixXd G1L = G1.llt().matrixL();
-    MatrixXd P1(lags, lags);
-    int MAX_TRIES = 10;
-    int count = 0;
-    int notvalid = 1;
-    MatrixXd proposal = g1;
-    while ((notvalid == 1))
-    {
-        proposal = (g1.transpose() + G1L * normrnd(0, 1, lags, 1)).transpose();
-        P1 = setInitialCovar(proposal, s2);
-        if (isPD(P1))
-        {
-            notvalid = 0;
-        }
-        if (count == MAX_TRIES)
-        {
-            P1 = MatrixXd::Identity(lags, lags);
-            break;
-        }
-        ++count;
-    }
-
-    MatrixXd Xp = MatrixXd::Zero(lags, lags);
-    MatrixXd empty;
-    for (int i = 1; i < lags; ++i)
-    {
-        empty = yt.leftCols(i);
-        empty.resize(i, 1);
-        Xp.col(i).segment(lags - i, i) = empty;
-        empty.resize(0, 0);
-    }
-    MatrixXd Scur = s2.replicate(T, 1).asDiagonal();
-    MatrixXd Snew = Scur;
-    Scur.topLeftCorner(lags, lags) = P0;
-    Snew.topLeftCorner(lags, lags) = P1;
-    MatrixXd Xss(lags, T);
-    Xss << Xp, Xt;
-    MatrixXd ZeroMean = MatrixXd::Zero(1, T);
-    double val = (logmvnpdf(yt - proposal * Xss, ZeroMean, Snew) +
-                  logmvnpdf(proposal, priorMean, priorVar) +
-                  logmvnpdf(gammastar, g1, G1)) -
-                 (logmvnpdf(yt - gammastar * Xss, ZeroMean, Scur) +
-                  logmvnpdf(gammastar, priorMean, priorVar) +
-                  logmvnpdf(proposal, g1, G1));
-    double lalpha = min(0., val);
-    return lalpha;
 }
 
 template <typename T>
@@ -247,5 +72,54 @@ double ConditionalLogLikelihood(const MatrixBase<D1> &guess, const MatrixBase<D2
     return pdfA - logmvnpdf(factor, Fmean.transpose(), Fvariance);
 }
 
-
+template <typename T0, typename T1, typename T2, typename T3, typename T4>
+MatrixXd otrokFactorUpdate(const MatrixBase<T0> &Factors, const MatrixXd &yt, std::vector<MatrixXd> &Xtk, const MatrixBase<T1> &betaParams,
+                       const double &loading, const MatrixBase<T2> &gammas, const MatrixBase<T3> &deltas,
+                       const VectorXd &omVariance, const VectorXd &factorVariance, const MatrixBase<T4> &Identity,
+                       const Matrix<int, 1, 2> &InfoMatRow)
+{
+    int nFactors = Factors.rows();
+    int T = Factors.cols();
+    int K = deltas.rows();
+    int nXs = Xtk[0].cols();
+    double  s2;
+    MatrixXd CovarSum;
+    MatrixXd MeanSum;
+    MatrixXd Xtemp;
+    MatrixXd btemp;
+    MatrixXd D0;
+    MatrixXd H1;
+    MatrixXd Ilagfac = MatrixXd::Identity(gammas.cols(), gammas.cols());
+    MatrixXd Ilagom = MatrixXd::Identity(deltas.cols(), deltas.cols());
+    MatrixXd factorMean;
+    MatrixXd epsilons(1, T);
+    CovarSum.setZero(T, T);
+    MeanSum.setZero(T, 1);
+    for (int k = InfoMatRow.head(1).value(); k <= InfoMatRow.tail(1).value(); ++k)
+    {
+        Xtemp = Xtk[k];
+        btemp = betaParams.row(k);
+        btemp.rightCols(nFactors) = btemp.rightCols(nFactors).array() * Identity.row(k).array();
+        epsilons = yt.row(k) - btemp * Xtemp.transpose();
+        if (k == InfoMatRow.head(1).value())
+        {
+            H1 = MakePrecision(gammas, factorVariance, T);
+            D0 = setInitialCovar(gammas, factorVariance).ldlt().solve(Ilagfac);
+            H1.topLeftCorner(gammas.cols(), gammas.cols()) = D0;
+            CovarSum += H1;
+        }
+        else
+        {
+            s2 = omVariance(k);
+            H1 = MakePrecision(deltas.row(k), s2, T);
+            D0 = setInitialCovar(deltas.row(k), s2).ldlt().solve(Ilagom);
+            H1.topLeftCorner(deltas.cols(), deltas.cols()) = D0;
+            CovarSum += (loading * loading) * H1;
+            MeanSum += loading * (H1 * epsilons.transpose());
+        }
+    }
+    CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
+    factorMean = CovarSum * MeanSum;
+    return (factorMean + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows(), 1)).transpose();
+}
 #endif

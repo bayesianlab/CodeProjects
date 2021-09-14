@@ -1,0 +1,1399 @@
+\hypertarget{classDist}{}\doxysection{Dist Class Reference}
+\label{classDist}\index{Dist@{Dist}}
+
+
+{\ttfamily \#include $<$Dist2.\+hpp$>$}
+
+
+
+Inheritance diagram for Dist\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classDist__inherit__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classDist_a7f9c026783e85c65c2630d74ab791fd1}{Dist}} ()
+\item 
+void \mbox{\hyperlink{classDist_a031df42d06a4f77e981d96a2180794a7}{igammarnd}} (double shape, double scale, Vector\+Xd \&igamma)
+\item 
+double \mbox{\hyperlink{classDist_a9e4ebf4aff0844f0c586bd9774813bd2}{igammarnd}} (double shape, double scale)
+\item 
+double \mbox{\hyperlink{classDist_aa177aee1942265f48684f8dbe1f9f5f0}{igammapdf}} (double, double, double)
+\item 
+double \mbox{\hyperlink{classDist_a8851c54c5934095c96336f40ba3dcabb}{linear\+Reg\+Likelihood}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, const Ref$<$ const Matrix\+Xd $>$ \&beta, double)
+\item 
+double \mbox{\hyperlink{classDist_aaf3836b2128eaf6752226d502785c84c}{normrnd}} (double mu, double sig)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a1a15ca5247eb1fd72cd4e4ca7aa28529}{normrnd}} (double, double, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a66915305e4a6481cae26aff1a69f3add}{normrnd}} (double, double, int, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_abee9b672c9731b09649ee8f5f99b46e1}{mvnrnd}} (Vector\+Xd mu, Matrix\+Xd \&sig, int, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a6ac8dd659345a4e0cd2300a8ec554051}{mvnrnd2}} (Vector\+Xd mu, const Ref$<$ const Matrix\+Xd $>$ \&sig, int, int)
+\item 
+double \mbox{\hyperlink{classDist_a2f827ef3a41cab422e268940b069d3f9}{tnormrnd}} (double, double, double, double)
+\item 
+double \mbox{\hyperlink{classDist_a6eb1ca805832006a662eccb20a1adcab}{shiftexprnd}} (double, double)
+\item 
+double \mbox{\hyperlink{classDist_a9cf51aaf2a4108165ef59c1b72e9f741}{shiftexppdf}} (double, double, double)
+\item 
+double \mbox{\hyperlink{classDist_ac931aac86e30fa2bbce0545b729b2a77}{left\+Truncation}} (double, double)
+\item 
+double \mbox{\hyperlink{classDist_af6804432f6901a94f2dd72f3eae50b08}{right\+Truncation}} (double, double)
+\item 
+double \mbox{\hyperlink{classDist_af69f0ae1f8730fc0ccb87b897d763889}{two\+Sided}} (double, double)
+\item 
+double \mbox{\hyperlink{classDist_a48317fa6f9070f87bb78339f76b92c85}{trunc\+Normal\+Rnd}} (double, double, double, double)
+\item 
+double \mbox{\hyperlink{classDist_a21089866e6ad7ed3283dc01dd1d3feeb}{ghk\+Trunc\+Norm\+Rnd}} (double, double, double, double)
+\item 
+void \mbox{\hyperlink{classDist_a80ab68cfc39833f0f923d6548b1c78ee}{tmvnrand}} (Vector\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, Matrix\+Xd \&, Vector\+Xd \&)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aa436b0b413ad5a50cb5f6128dc12e95b}{tmultnorm}} (Vector\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aba7277539b8396d9c6229625fc7900e4}{tmultnorm}} (const Vector\+Xd \&, const Vector\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a9fd1e4955c4480b7c4da35121a12668b}{tmultnorm}} (const Vector\+Xd \&, const Vector\+Xd \&, const Ref$<$ const Matrix\+Xd $>$ \&, const Vector\+Xd \&, const Matrix\+Xd \&, const int)
+\item 
+double \mbox{\hyperlink{classDist_a3016d3a39965c807b8b9ce109f67cdf6}{conditional\+Mean}} (double Hxx, Vector\+Xd \&Hxy, Vector\+Xd \&mu\+NotJ, Vector\+Xd \&x\+NotJ, double muxx)
+\item 
+double \mbox{\hyperlink{classDist_a2d036e4ce76d8381e56ef10406466562}{conditional\+Mean}} (double Hxx, const Ref$<$ const Vector\+Xd $>$ \&Hxy, Vector\+Xd \&mu\+NotJ, Vector\+Xd \&x\+NotJ, double muxx)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a71a5e110a510f06e6057e46ba5c9d4c0}{conditional\+Mean}} (double, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd, double)
+\item 
+double \mbox{\hyperlink{classDist_a3bcd72d388af0224945ac2383489a1fc}{tnormpdf}} (double a, double b, double mu, double sigma, double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_ac2413e8634452f3946796e69d409a937}{ttpdf}} (double a, double b, double df, double mu, double sigma, double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a8b44e22be9b0c971f6e4456c233d27a5}{ttpdf}} (double a, double b, double df, double mu, double sigma, const Ref$<$ const Vector\+Xd $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a0f8be5269df29c08b8ab363cd472ff8d}{ttpdf}} (const Vector\+Xd \&a, const Vector\+Xd \&b, double df, const Vector\+Xd \&mu, const Vector\+Xd \&sigma, const Matrix\+Xd \&X)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a037c186386d3190e1d81082181aa04ff}{ttpdf}} (double a, double b, double df, const Ref$<$ const Vector\+Xd $>$ \&mu, double sigma, double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a2a4f9c5f73f7ca95508dcfec23fc42e1}{tnormpdf\+Vect}} (double a, double b, double mu, double sigma, Vector\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_adc6f7c72b1da03cff6b6b9f21cb21f66}{tnormpdf\+Mat}} (Vector\+Xd \&a, Vector\+Xd \&b, Vector\+Xd \&mu, Vector\+Xd \&sigma, Matrix\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_ac1c7e6b0b5c6281714a9d9ee70dfd945}{tnormpdf\+Mat}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Vector\+Xd \&sigma, const Matrix\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+{\footnotesize template$<$typename D $>$ }\\Vector\+Xd \mbox{\hyperlink{classDist_a2c122d136585c65a9426fded64c0ea5c}{tnormpdf\+Mean\+Vect}} (double a, double b, const Matrix\+Base$<$ D $>$ \&mu, double sigma, double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_a2dade907130112b5848ab6c226e082c2}{mvnpdf\+Precision}} (const Ref$<$ const Matrix\+Xd $>$ \&, const Matrix\+Xd \&, const Ref$<$ const Matrix\+Xd $>$ \&)
+\item 
+double \mbox{\hyperlink{classDist_aa7abef050b71aef1ba6eb882bcfc1e98}{mvnpdf}} (const Ref$<$ const Matrix\+Xd $>$ \&, const Matrix\+Xd \&, const Ref$<$ const Matrix\+Xd $>$ \&)
+\item 
+double \mbox{\hyperlink{classDist_a61a6fb85e0c2995c558275949e0a625d}{standard\+Dev}} (Vector\+Xd \&)
+\item 
+void \mbox{\hyperlink{classDist_a05112e3b17eaa2a10696b78e400a2dcb}{ghk\+Linear\+Constraints}} (Vector\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, Matrix\+Xd \&)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a07c9381cc9b7a7db5bdc7e33b38e49c3}{ghkT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, double df, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a42b6eaa92fb8fbf86d77d211766507be}{ghk\+Linear\+Constraints}} (Vector\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, int, int)
+\item 
+void \mbox{\hyperlink{classDist_a42e7705080e2f556f4807525d8e81724}{unifrnd}} (double, double, Vector\+Xd \&)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a7a2a5e8bc6df22e637405e38eea1241c}{lr\+Likelihood}} (Matrix\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a5a9bbf7c18b530ef4b26d288969d201f}{lr\+Likelihood}} (const Ref$<$ const Matrix\+Xd $>$ \&betas, const Ref$<$ const Vector\+Xd $>$ \&sigmasqds, const Vector\+Xd \&y, const Matrix\+Xd \&X)
+\item 
+double \mbox{\hyperlink{classDist_a209d3ada0e521534747c041f101ef78e}{lr\+Likelihood}} (Vector\+Xd \&betas, double sig\+Sqd, Vector\+Xd \&y, Matrix\+Xd \&X)
+\item 
+double \mbox{\hyperlink{classDist_aa9d11b8e89c4428f97ce13d42730d3ae}{lr\+Likelihood}} (const Vector\+Xd \&betas, double sig\+Sqd, const Vector\+Xd \&y, const Matrix\+Xd \&X)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a3ba37d30e5c2c0432b70651c5ab16621}{loginvgammapdf}} (Vector\+Xd \&, double, double)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a0f5c92908fc38f06c17ad32f309673e6}{loginvgammapdf}} (const Ref$<$ const Vector\+Xd $>$ \&, double, double)
+\item 
+double \mbox{\hyperlink{classDist_a00b4efa5d93a437257e2423bc2ac167a}{loginvgammapdf}} (double y, double alpha, double beta)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a33e0ca59daf32d17cbdb2f59bd41eefa}{asktmvnrand}} (Vector\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, int)
+\item 
+int \mbox{\hyperlink{classDist_a507bb4a95b1954243d13a7b71e188469}{bernoulli}} (double p)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_ab96416a8ecc1e876dc3d25630586a806}{ask\+Ghk\+Linear\+Constraints}} (Vector\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, int)
+\item 
+double \mbox{\hyperlink{classDist_a633022adeb18084ccf920addad6ed805}{auto\+Corr}} (Vector\+Xd \&)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a952fe39a06fe69e168cf88e630b6ed94}{logmvnpdf}} (Vector\+Xd \&, Matrix\+Xd \&, Matrix\+Xd \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_adcb7957c6d118845d44498cf2ee0cd3f}{logmvnpdf}} (const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, Matrix\+Xd \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_af647b7ce80dd55aeb188c26b60642d6f}{logmvnpdf\+Vect}} (const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const Vector\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_a5db10d1a77735b50fa8117257076ae62}{logmvnpdf\+Precision}} (const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_a2116e17b44fade13f460adadf2ad8f8b}{logmvnpdf}} (Vector\+Xd \&, Matrix\+Xd \&, Vector\+Xd \&)
+\item 
+double \mbox{\hyperlink{classDist_a557b9c3266784e3817ddc888b80b6c6e}{trunc\+Trnd}} (double a, double b, double mu, double sigma, double nu)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a9278fd7d7fe62383088eb5d1541aa6ce}{mvtruncT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const int df, const int sims)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aed15685c36ddcbe2c203b936988b6e16}{M\+V\+TruncT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const int df, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a0933899e9766f9cd9ef470bfd3416a4b}{Sigmayy\+Inverse}} (const Matrix\+Xd \&)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a668ad98bfda5c7c595e57741f08d9a42}{mvttgeweke91}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const double df, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_ab05b007c0ab814ec772c4bf19dc85508}{ask\+Mvttgeweke91}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const double df, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, Vector\+Xd \&init\+Vector)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a7ff1aac0d0095bd008dcbdd87cb98148}{selector\+Mat}} (int J)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aa6193b64ff9fa1ea18df54a01a322ef9}{Hnotj}} (const Matrix\+Xd \&precision)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aa5c6433aff7be12caf3e20326ea642c3}{geweke91}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Ref$<$ const Vector\+Xd $>$ \&mu, const Ref$<$ const Matrix\+Xd $>$ \&Covariance\+Matrix, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a7c51bdf9c6d1617370c6ed538a1ae1b2}{precision\+Notj\+Matrix}} (int J, const Matrix\+Xd \&precision, const Vector\+Xd \&Hii)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a96fcdc136f805d41c3f3d3dd04cae457}{generate\+Chi\+Squared\+Vec}} (double df, int rows)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a088875e6329d124f2d0184d7ac706891}{generate\+Chi\+Squared\+Mat}} (double df, int rows, int cols)
+\item 
+\mbox{\hyperlink{classDist_a7f9c026783e85c65c2630d74ab791fd1}{Dist}} ()
+\item 
+\mbox{\hyperlink{classDist_adb4e70d25bc3844740496256f08cebeb}{Dist}} (int \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+void \mbox{\hyperlink{classDist_a031df42d06a4f77e981d96a2180794a7}{igammarnd}} (double shape, double scale, Vector\+Xd \&igamma)
+\item 
+double \mbox{\hyperlink{classDist_a9e4ebf4aff0844f0c586bd9774813bd2}{igammarnd}} (double shape, double scale)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a35393d55026416bff2cd152ba67ba8e0}{gammarnd}} (double shape, double scale, int N)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_aabcc08ae49c5bc6b267975b06093d5f9}{igammarnd}} (double shape, double scale, int N)
+\item 
+double \mbox{\hyperlink{classDist_aa177aee1942265f48684f8dbe1f9f5f0}{igammapdf}} (double, double, double)
+\item 
+double \mbox{\hyperlink{classDist_a8851c54c5934095c96336f40ba3dcabb}{linear\+Reg\+Likelihood}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, const Ref$<$ const Matrix\+Xd $>$ \&beta, double)
+\item 
+double \mbox{\hyperlink{classDist_aaf3836b2128eaf6752226d502785c84c}{normrnd}} (double mu, double sig)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a6e6b97ac41572f1698cb614f049c2a45}{normrnd}} (double mu, double sig, int N)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a66915305e4a6481cae26aff1a69f3add}{normrnd}} (double, double, int, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a862762d15f493efeba9c1289b3cbf3ef}{mvnrnd2}} (Vector\+Xd \&mu, const Ref$<$ const Matrix\+Xd $>$ \&sig, int, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aad3270207bade8764448f6b689355dce}{mvnrnd}} (const Vector\+Xd \&mu, const Matrix\+Xd \&sig, int N)
+\item 
+double \mbox{\hyperlink{classDist_a2f827ef3a41cab422e268940b069d3f9}{tnormrnd}} (double, double, double, double)
+\item 
+double \mbox{\hyperlink{classDist_a6eb1ca805832006a662eccb20a1adcab}{shiftexprnd}} (double, double)
+\item 
+double \mbox{\hyperlink{classDist_a9cf51aaf2a4108165ef59c1b72e9f741}{shiftexppdf}} (double, double, double)
+\item 
+double \mbox{\hyperlink{classDist_ac0142dd7e64d0a2410a75dda3fb0c6c4}{left\+Truncation}} (double)
+\item 
+double \mbox{\hyperlink{classDist_ac21f1673bf4d24a07045ee6c9d97bf52}{right\+Truncation}} (double)
+\item 
+double \mbox{\hyperlink{classDist_af69f0ae1f8730fc0ccb87b897d763889}{two\+Sided}} (double, double)
+\item 
+double \mbox{\hyperlink{classDist_a1f4083794a9200c517e5d2ad2c1500f9}{trunc\+Normal\+Rnd}} (double a, double b, double mu, double sigma)
+\item 
+void \mbox{\hyperlink{classDist_a80ab68cfc39833f0f923d6548b1c78ee}{tmvnrand}} (Vector\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, Matrix\+Xd \&, Vector\+Xd \&)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a3e1f264bb0f0f5bddf43ab816fec0479}{tmultnorm}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, const int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_af2c05a72b2bc9815152a4b598f64f7fd}{tmultnorm}} (const Vector\+Xd \&, const Vector\+Xd \&, const Ref$<$ const Matrix\+Xd $>$ \&, const Vector\+Xd \&, const Matrix\+Xd \&, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aa4c657b822724a34595105a8291b9acc}{ghk\+Linear\+Constraints}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, int sims)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a929055ada6ec7388e25529798321bf3b}{ghk\+Linear\+Constraints}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, int sims, Vector\+Xd \&logpdf)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a5d1278915428766da7d0cc8c85975815}{return\+Normalizing\+Constants}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, int sims, Matrix\+Xd \&normC)
+\item 
+void \mbox{\hyperlink{classDist_ad3776b88187613107bb2c4ba7597e169}{run\+Sim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, int sims)
+\item 
+double \mbox{\hyperlink{classDist_a3016d3a39965c807b8b9ce109f67cdf6}{conditional\+Mean}} (double Hxx, Vector\+Xd \&Hxy, Vector\+Xd \&mu\+NotJ, Vector\+Xd \&x\+NotJ, double muxx)
+\item 
+double \mbox{\hyperlink{classDist_add1989d02e1969c1d5592a414749e426}{conditional\+Mean}} (double Hxx, const Ref$<$ const Vector\+Xd $>$ \&Hxy, const Ref$<$ const Vector\+Xd $>$ \&mu\+NotJ, const Ref$<$ const Vector\+Xd $>$ \&x\+NotJ, double muxx)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a71a5e110a510f06e6057e46ba5c9d4c0}{conditional\+Mean}} (double, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd, double)
+\item 
+double \mbox{\hyperlink{classDist_a3bcd72d388af0224945ac2383489a1fc}{tnormpdf}} (double a, double b, double mu, double sigma, double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_ac2413e8634452f3946796e69d409a937}{ttpdf}} (double a, double b, double df, double mu, double sigma, double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a8b44e22be9b0c971f6e4456c233d27a5}{ttpdf}} (double a, double b, double df, double mu, double sigma, const Ref$<$ const Vector\+Xd $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a0f8be5269df29c08b8ab363cd472ff8d}{ttpdf}} (const Vector\+Xd \&a, const Vector\+Xd \&b, double df, const Vector\+Xd \&mu, const Vector\+Xd \&sigma, const Matrix\+Xd \&X)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a037c186386d3190e1d81082181aa04ff}{ttpdf}} (double a, double b, double df, const Ref$<$ const Vector\+Xd $>$ \&mu, double sigma, double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_aba08aebf0b7ba4d115a5df51a5b564ad}{mvtpdf}} (const Vector\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}}, const Vector\+Xd \&mu, const Matrix\+Xd \&Variance, int df)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_af053ee9bb1547caac45eabcd4b33258f}{logmvtpdf}} (double df, const Ref$<$ const Vector\+Xd $>$ \&mu, const Matrix\+Xd \&Sigma, Matrix\+Xd X)
+\item 
+double \mbox{\hyperlink{classDist_a29cd463e35459a9e9889a78b2ecd5ae1}{mvtpdf\+Help}} (const Ref$<$ const Vector\+Xd $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}}, const Vector\+Xd \&mu, const Matrix\+Xd \&Variance, int df)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a910525f12e295817284f749d0d1ac189}{mvtpdf}} (const Matrix\+Xd \&X, const Vector\+Xd \&mu, const Matrix\+Xd \&Variance, int df)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a2a4f9c5f73f7ca95508dcfec23fc42e1}{tnormpdf\+Vect}} (double a, double b, double mu, double sigma, Vector\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_adc6f7c72b1da03cff6b6b9f21cb21f66}{tnormpdf\+Mat}} (Vector\+Xd \&a, Vector\+Xd \&b, Vector\+Xd \&mu, Vector\+Xd \&sigma, Matrix\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_ac1c7e6b0b5c6281714a9d9ee70dfd945}{tnormpdf\+Mat}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Vector\+Xd \&sigma, const Matrix\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+{\footnotesize template$<$typename D $>$ }\\Vector\+Xd \mbox{\hyperlink{classDist_a2c122d136585c65a9426fded64c0ea5c}{tnormpdf\+Mean\+Vect}} (double a, double b, const Matrix\+Base$<$ D $>$ \&mu, double sigma, double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_a2dade907130112b5848ab6c226e082c2}{mvnpdf\+Precision}} (const Ref$<$ const Matrix\+Xd $>$ \&, const Matrix\+Xd \&, const Ref$<$ const Matrix\+Xd $>$ \&)
+\item 
+double \mbox{\hyperlink{classDist_aa7abef050b71aef1ba6eb882bcfc1e98}{mvnpdf}} (const Ref$<$ const Matrix\+Xd $>$ \&, const Matrix\+Xd \&, const Ref$<$ const Matrix\+Xd $>$ \&)
+\item 
+double \mbox{\hyperlink{classDist_a61a6fb85e0c2995c558275949e0a625d}{standard\+Dev}} (Vector\+Xd \&)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a1fa6bdba254305bc8ba400ea4febeb79}{ghkT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, double df, int sims)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a4e92e209caa46749296540bc23cb7fb3}{ghkT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, double df, int sims, Vector\+Xd \&logpdf)
+\item 
+void \mbox{\hyperlink{classDist_a42e7705080e2f556f4807525d8e81724}{unifrnd}} (double, double, Vector\+Xd \&)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a7a2a5e8bc6df22e637405e38eea1241c}{lr\+Likelihood}} (Matrix\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a5a9bbf7c18b530ef4b26d288969d201f}{lr\+Likelihood}} (const Ref$<$ const Matrix\+Xd $>$ \&betas, const Ref$<$ const Vector\+Xd $>$ \&sigmasqds, const Vector\+Xd \&y, const Matrix\+Xd \&X)
+\item 
+double \mbox{\hyperlink{classDist_a209d3ada0e521534747c041f101ef78e}{lr\+Likelihood}} (Vector\+Xd \&betas, double sig\+Sqd, Vector\+Xd \&y, Matrix\+Xd \&X)
+\item 
+double \mbox{\hyperlink{classDist_aa9d11b8e89c4428f97ce13d42730d3ae}{lr\+Likelihood}} (const Vector\+Xd \&betas, double sig\+Sqd, const Vector\+Xd \&y, const Matrix\+Xd \&X)
+\item 
+double \mbox{\hyperlink{classDist_a81eb1b5aa8a02ad52403d2891706f566}{lr\+Likelihood\+A\+SK}} (const Vector\+Xd \&betas, double sig\+Sqd, const Vector\+Xd \&y, const Matrix\+Xd \&X)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a0f5c92908fc38f06c17ad32f309673e6}{loginvgammapdf}} (const Ref$<$ const Vector\+Xd $>$ \&, double, double)
+\item 
+double \mbox{\hyperlink{classDist_a00b4efa5d93a437257e2423bc2ac167a}{loginvgammapdf}} (double y, double alpha, double beta)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_ad00ce1e950ee6048f943918ca999a684}{asktmvnrand}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const Vector\+Xd \&sigmavector, const Vector\+Xd \&initvector, int)
+\item 
+int \mbox{\hyperlink{classDist_a507bb4a95b1954243d13a7b71e188469}{bernoulli}} (double p)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a3575d7ce66bbef372ebd2009849f4250}{ask\+Ghk\+Linear\+Constraints}} (const Vector\+Xd \&, const Vector\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, int)
+\item 
+double \mbox{\hyperlink{classDist_a633022adeb18084ccf920addad6ed805}{auto\+Corr}} (Vector\+Xd \&)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a97eda19629c654d891e0312b3a942629}{logmvnpdfV}} (const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, Matrix\+Xd \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_af647b7ce80dd55aeb188c26b60642d6f}{logmvnpdf\+Vect}} (const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const Vector\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_a5db10d1a77735b50fa8117257076ae62}{logmvnpdf\+Precision}} (const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classDist_af820a80e1e9ad58c8c5b7a3a531cc788}{logmvnpdf}} (const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&)
+\item 
+double \mbox{\hyperlink{classDist_a557b9c3266784e3817ddc888b80b6c6e}{trunc\+Trnd}} (double a, double b, double mu, double sigma, double nu)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a9278fd7d7fe62383088eb5d1541aa6ce}{mvtruncT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const int df, const int sims)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aed15685c36ddcbe2c203b936988b6e16}{M\+V\+TruncT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const int df, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a0933899e9766f9cd9ef470bfd3416a4b}{Sigmayy\+Inverse}} (const Matrix\+Xd \&)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a668ad98bfda5c7c595e57741f08d9a42}{mvttgeweke91}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const double df, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_ab05b007c0ab814ec772c4bf19dc85508}{ask\+Mvttgeweke91}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const double df, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, Vector\+Xd \&init\+Vector)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a7ff1aac0d0095bd008dcbdd87cb98148}{selector\+Mat}} (int J)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aa6193b64ff9fa1ea18df54a01a322ef9}{Hnotj}} (const Matrix\+Xd \&precision)
+\item 
+void \mbox{\hyperlink{classDist_a23ea2b27900060659fb4ee144dcf3067}{cleanP}} (Matrix\+Xd \&P)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aa5c6433aff7be12caf3e20326ea642c3}{geweke91}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Ref$<$ const Vector\+Xd $>$ \&mu, const Ref$<$ const Matrix\+Xd $>$ \&Covariance\+Matrix, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a7c51bdf9c6d1617370c6ed538a1ae1b2}{precision\+Notj\+Matrix}} (int J, const Matrix\+Xd \&precision, const Vector\+Xd \&Hii)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a96fcdc136f805d41c3f3d3dd04cae457}{generate\+Chi\+Squared\+Vec}} (double df, int rows)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a088875e6329d124f2d0184d7ac706891}{generate\+Chi\+Squared\+Mat}} (double df, int rows, int cols)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_afd35e7195604a92491f47264f2a936e5}{mvtrunctrnd}} (const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const double nu, const int N)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a04afe00b41246164f2e4c188c40a9b3f}{studenttrnd}} (const double mu, const double sigma, const double nu, const int N, const int J)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_ac3755a338d000b0c4fd0393830429931}{mvtstudtrnd}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const double df, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_ac4cfb96a1b67917ebf6b7c3188d59fce}{mvtstudtrnd}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const double df, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, Vector\+Xd \&init)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a15115f360f863f9b06d593512df48acd}{gibbs\+Kernel}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const Matrix\+Xd \&Sample, const Vector\+Xd \&z\+Star)
+\item 
+double \mbox{\hyperlink{classDist_a837c26b6cc8f543bd5a15aec8a52a81d}{pdfavg}} (const Ref$<$ const Vector\+Xd $>$ \&logpdf)
+\item 
+double \mbox{\hyperlink{classDist_a28a788e09cf1147def5cfd9836f4ef9f}{pdfmean}} (const Ref$<$ const Vector\+Xd $>$ \&logpdf)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_ab3b92d6a31d8e3639478c54c304adde7}{gibbs\+T\+Kernel}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Matrix\+Xd \&sample, Vector\+Xd \&zstar, const double df, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a256472247ec1c110391dc1c1791abf13}{wishartrnd}} (const Matrix\+Xd \&Sigma, const int df)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a34796ad00d9fbfc0516f36f79d3dd77d}{Matric\+Variate\+Rnd}} (const Matrix\+Xd \&Mu, const Matrix\+Xd \&Sigma, const Matrix\+Xd \&V)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aaaa20642e99feb4993a6b125b77c43b9}{Cov\+To\+Corr}} (const Matrix\+Xd \&\mbox{\hyperlink{classDist_aff2e7a7fe8e49388f9152197a55e21cd}{Cov}})
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a33bb3309bbbc4a92528326c66818e221}{logisticrnd}} (int N)
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a3f0fde71292c665f95de97d715b4ee6f}{logisticcdf}} (const Vector\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_afc222c7a66ff9b673a30c5cc09d18a87}{mvtrnd}} (const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, int nu, int N)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a57ef7258c8380c9ad13d2b145fc5cb27}{Credible\+Intervals}} (Matrix\+Xd \&X)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_a681ae9d9ed4999ecd51b603c97706d39}{Create\+Sigma}} (double rho, int size)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classDist_aff2e7a7fe8e49388f9152197a55e21cd}{Cov}} (const Matrix\+Xd \&X, int \mbox{\hyperlink{EigenTools_8hpp_a4b01cf39115ebdea22b1de604d12f604}{dim}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classDist_a60c98b5d5186ae7522f6d9f5e4a1388c}{inf}}
+\item 
+boost\+::mt19937 \mbox{\hyperlink{classDist_a20e9867f88d41ca7a419664120f5b5c0}{rseed}}
+\item 
+boost\+::math\+::normal \mbox{\hyperlink{classDist_a77315b5beeaef8985f66749cf5705837}{normal\+Distribution}}
+\item 
+boost\+::random\+::uniform\+\_\+01 \mbox{\hyperlink{classDist_a5e25732f89c69924f16443d01b7efeec}{u}}
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_aaa05d4f19c7e102766f44adb674bf3c8}{linreglike}}
+\item 
+Vector\+Xd \mbox{\hyperlink{classDist_a8ffb49deab6aa72d971c35f121e110c6}{lmvnpdf}}
+\item 
+std\+::random\+\_\+device \mbox{\hyperlink{classDist_a30eba8a239bdb523d0b95f9213bdcd30}{rd}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classDist_a7f9c026783e85c65c2630d74ab791fd1}\label{classDist_a7f9c026783e85c65c2630d74ab791fd1}} 
+\index{Dist@{Dist}!Dist@{Dist}}
+\index{Dist@{Dist}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{Dist()}{Dist()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Dist\+::\+Dist (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a7f9c026783e85c65c2630d74ab791fd1}\label{classDist_a7f9c026783e85c65c2630d74ab791fd1}} 
+\index{Dist@{Dist}!Dist@{Dist}}
+\index{Dist@{Dist}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{Dist()}{Dist()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Dist\+::\+Dist (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_adb4e70d25bc3844740496256f08cebeb}\label{classDist_adb4e70d25bc3844740496256f08cebeb}} 
+\index{Dist@{Dist}!Dist@{Dist}}
+\index{Dist@{Dist}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{Dist()}{Dist()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Dist\+::\+Dist (\begin{DoxyParamCaption}\item[{int}]{x }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classDist_a3575d7ce66bbef372ebd2009849f4250}\label{classDist_a3575d7ce66bbef372ebd2009849f4250}} 
+\index{Dist@{Dist}!askGhkLinearConstraints@{askGhkLinearConstraints}}
+\index{askGhkLinearConstraints@{askGhkLinearConstraints}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{askGhkLinearConstraints()}{askGhkLinearConstraints()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ask\+Ghk\+Linear\+Constraints (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{int}]{rows }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ab96416a8ecc1e876dc3d25630586a806}\label{classDist_ab96416a8ecc1e876dc3d25630586a806}} 
+\index{Dist@{Dist}!askGhkLinearConstraints@{askGhkLinearConstraints}}
+\index{askGhkLinearConstraints@{askGhkLinearConstraints}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{askGhkLinearConstraints()}{askGhkLinearConstraints()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ask\+Ghk\+Linear\+Constraints (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ab05b007c0ab814ec772c4bf19dc85508}\label{classDist_ab05b007c0ab814ec772c4bf19dc85508}} 
+\index{Dist@{Dist}!askMvttgeweke91@{askMvttgeweke91}}
+\index{askMvttgeweke91@{askMvttgeweke91}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{askMvttgeweke91()}{askMvttgeweke91()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ask\+Mvttgeweke91 (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const double}]{df,  }\item[{const int}]{sims,  }\item[{const int}]{burnin,  }\item[{Vector\+Xd \&}]{init\+Vector }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ab05b007c0ab814ec772c4bf19dc85508}\label{classDist_ab05b007c0ab814ec772c4bf19dc85508}} 
+\index{Dist@{Dist}!askMvttgeweke91@{askMvttgeweke91}}
+\index{askMvttgeweke91@{askMvttgeweke91}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{askMvttgeweke91()}{askMvttgeweke91()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ask\+Mvttgeweke91 (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const double}]{df,  }\item[{const int}]{sims,  }\item[{const int}]{burnin,  }\item[{Vector\+Xd \&}]{init\+Vector }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ad00ce1e950ee6048f943918ca999a684}\label{classDist_ad00ce1e950ee6048f943918ca999a684}} 
+\index{Dist@{Dist}!asktmvnrand@{asktmvnrand}}
+\index{asktmvnrand@{asktmvnrand}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{asktmvnrand()}{asktmvnrand()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::asktmvnrand (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Vector\+Xd \&}]{sigmavector,  }\item[{const Vector\+Xd \&}]{initvector,  }\item[{int}]{sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a33e0ca59daf32d17cbdb2f59bd41eefa}\label{classDist_a33e0ca59daf32d17cbdb2f59bd41eefa}} 
+\index{Dist@{Dist}!asktmvnrand@{asktmvnrand}}
+\index{asktmvnrand@{asktmvnrand}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{asktmvnrand()}{asktmvnrand()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::asktmvnrand (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a633022adeb18084ccf920addad6ed805}\label{classDist_a633022adeb18084ccf920addad6ed805}} 
+\index{Dist@{Dist}!autoCorr@{autoCorr}}
+\index{autoCorr@{autoCorr}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{autoCorr()}{autoCorr()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::auto\+Corr (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a633022adeb18084ccf920addad6ed805}\label{classDist_a633022adeb18084ccf920addad6ed805}} 
+\index{Dist@{Dist}!autoCorr@{autoCorr}}
+\index{autoCorr@{autoCorr}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{autoCorr()}{autoCorr()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::auto\+Corr (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a507bb4a95b1954243d13a7b71e188469}\label{classDist_a507bb4a95b1954243d13a7b71e188469}} 
+\index{Dist@{Dist}!bernoulli@{bernoulli}}
+\index{bernoulli@{bernoulli}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{bernoulli()}{bernoulli()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int Dist\+::bernoulli (\begin{DoxyParamCaption}\item[{double}]{p }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a507bb4a95b1954243d13a7b71e188469}\label{classDist_a507bb4a95b1954243d13a7b71e188469}} 
+\index{Dist@{Dist}!bernoulli@{bernoulli}}
+\index{bernoulli@{bernoulli}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{bernoulli()}{bernoulli()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int Dist\+::bernoulli (\begin{DoxyParamCaption}\item[{double}]{p }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a23ea2b27900060659fb4ee144dcf3067}\label{classDist_a23ea2b27900060659fb4ee144dcf3067}} 
+\index{Dist@{Dist}!cleanP@{cleanP}}
+\index{cleanP@{cleanP}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{cleanP()}{cleanP()}}
+{\footnotesize\ttfamily void Dist\+::cleanP (\begin{DoxyParamCaption}\item[{Matrix\+Xd \&}]{P }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_add1989d02e1969c1d5592a414749e426}\label{classDist_add1989d02e1969c1d5592a414749e426}} 
+\index{Dist@{Dist}!conditionalMean@{conditionalMean}}
+\index{conditionalMean@{conditionalMean}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{conditionalMean()}{conditionalMean()}\hspace{0.1cm}{\footnotesize\ttfamily [1/6]}}
+{\footnotesize\ttfamily double Dist\+::conditional\+Mean (\begin{DoxyParamCaption}\item[{double}]{Hxx,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{Hxy,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{mu\+NotJ,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{x\+NotJ,  }\item[{double}]{muxx }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2d036e4ce76d8381e56ef10406466562}\label{classDist_a2d036e4ce76d8381e56ef10406466562}} 
+\index{Dist@{Dist}!conditionalMean@{conditionalMean}}
+\index{conditionalMean@{conditionalMean}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{conditionalMean()}{conditionalMean()}\hspace{0.1cm}{\footnotesize\ttfamily [2/6]}}
+{\footnotesize\ttfamily double Dist\+::conditional\+Mean (\begin{DoxyParamCaption}\item[{double}]{Hxx,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{Hxy,  }\item[{Vector\+Xd \&}]{mu\+NotJ,  }\item[{Vector\+Xd \&}]{x\+NotJ,  }\item[{double}]{muxx }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a3016d3a39965c807b8b9ce109f67cdf6}\label{classDist_a3016d3a39965c807b8b9ce109f67cdf6}} 
+\index{Dist@{Dist}!conditionalMean@{conditionalMean}}
+\index{conditionalMean@{conditionalMean}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{conditionalMean()}{conditionalMean()}\hspace{0.1cm}{\footnotesize\ttfamily [3/6]}}
+{\footnotesize\ttfamily double Dist\+::conditional\+Mean (\begin{DoxyParamCaption}\item[{double}]{Hxx,  }\item[{Vector\+Xd \&}]{Hxy,  }\item[{Vector\+Xd \&}]{mu\+NotJ,  }\item[{Vector\+Xd \&}]{x\+NotJ,  }\item[{double}]{muxx }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a3016d3a39965c807b8b9ce109f67cdf6}\label{classDist_a3016d3a39965c807b8b9ce109f67cdf6}} 
+\index{Dist@{Dist}!conditionalMean@{conditionalMean}}
+\index{conditionalMean@{conditionalMean}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{conditionalMean()}{conditionalMean()}\hspace{0.1cm}{\footnotesize\ttfamily [4/6]}}
+{\footnotesize\ttfamily double Dist\+::conditional\+Mean (\begin{DoxyParamCaption}\item[{double}]{Hxx,  }\item[{Vector\+Xd \&}]{Hxy,  }\item[{Vector\+Xd \&}]{mu\+NotJ,  }\item[{Vector\+Xd \&}]{x\+NotJ,  }\item[{double}]{muxx }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a71a5e110a510f06e6057e46ba5c9d4c0}\label{classDist_a71a5e110a510f06e6057e46ba5c9d4c0}} 
+\index{Dist@{Dist}!conditionalMean@{conditionalMean}}
+\index{conditionalMean@{conditionalMean}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{conditionalMean()}{conditionalMean()}\hspace{0.1cm}{\footnotesize\ttfamily [5/6]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::conditional\+Mean (\begin{DoxyParamCaption}\item[{double}]{Hxx,  }\item[{Vector\+Xd \&}]{Hxy,  }\item[{Vector\+Xd \&}]{mu\+Notj,  }\item[{Matrix\+Xd}]{x\+Notj,  }\item[{double}]{muxx }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a71a5e110a510f06e6057e46ba5c9d4c0}\label{classDist_a71a5e110a510f06e6057e46ba5c9d4c0}} 
+\index{Dist@{Dist}!conditionalMean@{conditionalMean}}
+\index{conditionalMean@{conditionalMean}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{conditionalMean()}{conditionalMean()}\hspace{0.1cm}{\footnotesize\ttfamily [6/6]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::conditional\+Mean (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aff2e7a7fe8e49388f9152197a55e21cd}\label{classDist_aff2e7a7fe8e49388f9152197a55e21cd}} 
+\index{Dist@{Dist}!Cov@{Cov}}
+\index{Cov@{Cov}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{Cov()}{Cov()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+Cov (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{X,  }\item[{int}]{dim }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aaaa20642e99feb4993a6b125b77c43b9}\label{classDist_aaaa20642e99feb4993a6b125b77c43b9}} 
+\index{Dist@{Dist}!CovToCorr@{CovToCorr}}
+\index{CovToCorr@{CovToCorr}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{CovToCorr()}{CovToCorr()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+Cov\+To\+Corr (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{Cov }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a681ae9d9ed4999ecd51b603c97706d39}\label{classDist_a681ae9d9ed4999ecd51b603c97706d39}} 
+\index{Dist@{Dist}!CreateSigma@{CreateSigma}}
+\index{CreateSigma@{CreateSigma}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{CreateSigma()}{CreateSigma()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+Create\+Sigma (\begin{DoxyParamCaption}\item[{double}]{rho,  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a57ef7258c8380c9ad13d2b145fc5cb27}\label{classDist_a57ef7258c8380c9ad13d2b145fc5cb27}} 
+\index{Dist@{Dist}!CredibleIntervals@{CredibleIntervals}}
+\index{CredibleIntervals@{CredibleIntervals}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{CredibleIntervals()}{CredibleIntervals()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+Credible\+Intervals (\begin{DoxyParamCaption}\item[{Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a35393d55026416bff2cd152ba67ba8e0}\label{classDist_a35393d55026416bff2cd152ba67ba8e0}} 
+\index{Dist@{Dist}!gammarnd@{gammarnd}}
+\index{gammarnd@{gammarnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{gammarnd()}{gammarnd()}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::gammarnd (\begin{DoxyParamCaption}\item[{double}]{shape,  }\item[{double}]{scale,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a088875e6329d124f2d0184d7ac706891}\label{classDist_a088875e6329d124f2d0184d7ac706891}} 
+\index{Dist@{Dist}!generateChiSquaredMat@{generateChiSquaredMat}}
+\index{generateChiSquaredMat@{generateChiSquaredMat}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{generateChiSquaredMat()}{generateChiSquaredMat()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::generate\+Chi\+Squared\+Mat (\begin{DoxyParamCaption}\item[{double}]{df,  }\item[{int}]{rows,  }\item[{int}]{cols }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a088875e6329d124f2d0184d7ac706891}\label{classDist_a088875e6329d124f2d0184d7ac706891}} 
+\index{Dist@{Dist}!generateChiSquaredMat@{generateChiSquaredMat}}
+\index{generateChiSquaredMat@{generateChiSquaredMat}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{generateChiSquaredMat()}{generateChiSquaredMat()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::generate\+Chi\+Squared\+Mat (\begin{DoxyParamCaption}\item[{double}]{df,  }\item[{int}]{rows,  }\item[{int}]{cols }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a96fcdc136f805d41c3f3d3dd04cae457}\label{classDist_a96fcdc136f805d41c3f3d3dd04cae457}} 
+\index{Dist@{Dist}!generateChiSquaredVec@{generateChiSquaredVec}}
+\index{generateChiSquaredVec@{generateChiSquaredVec}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{generateChiSquaredVec()}{generateChiSquaredVec()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::generate\+Chi\+Squared\+Vec (\begin{DoxyParamCaption}\item[{double}]{df,  }\item[{int}]{rows }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a96fcdc136f805d41c3f3d3dd04cae457}\label{classDist_a96fcdc136f805d41c3f3d3dd04cae457}} 
+\index{Dist@{Dist}!generateChiSquaredVec@{generateChiSquaredVec}}
+\index{generateChiSquaredVec@{generateChiSquaredVec}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{generateChiSquaredVec()}{generateChiSquaredVec()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::generate\+Chi\+Squared\+Vec (\begin{DoxyParamCaption}\item[{double}]{df,  }\item[{int}]{rows }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa5c6433aff7be12caf3e20326ea642c3}\label{classDist_aa5c6433aff7be12caf3e20326ea642c3}} 
+\index{Dist@{Dist}!geweke91@{geweke91}}
+\index{geweke91@{geweke91}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{geweke91()}{geweke91()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::geweke91 (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{mu,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Covariance\+Matrix,  }\item[{int}]{sims,  }\item[{int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa5c6433aff7be12caf3e20326ea642c3}\label{classDist_aa5c6433aff7be12caf3e20326ea642c3}} 
+\index{Dist@{Dist}!geweke91@{geweke91}}
+\index{geweke91@{geweke91}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{geweke91()}{geweke91()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::geweke91 (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{mu,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Covariance\+Matrix,  }\item[{int}]{sims,  }\item[{int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa4c657b822724a34595105a8291b9acc}\label{classDist_aa4c657b822724a34595105a8291b9acc}} 
+\index{Dist@{Dist}!ghkLinearConstraints@{ghkLinearConstraints}}
+\index{ghkLinearConstraints@{ghkLinearConstraints}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ghkLinearConstraints()}{ghkLinearConstraints()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ghk\+Linear\+Constraints (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{int}]{sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a929055ada6ec7388e25529798321bf3b}\label{classDist_a929055ada6ec7388e25529798321bf3b}} 
+\index{Dist@{Dist}!ghkLinearConstraints@{ghkLinearConstraints}}
+\index{ghkLinearConstraints@{ghkLinearConstraints}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ghkLinearConstraints()}{ghkLinearConstraints()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ghk\+Linear\+Constraints (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{int}]{sims,  }\item[{Vector\+Xd \&}]{logpdf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a42b6eaa92fb8fbf86d77d211766507be}\label{classDist_a42b6eaa92fb8fbf86d77d211766507be}} 
+\index{Dist@{Dist}!ghkLinearConstraints@{ghkLinearConstraints}}
+\index{ghkLinearConstraints@{ghkLinearConstraints}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ghkLinearConstraints()}{ghkLinearConstraints()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ghk\+Linear\+Constraints (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{int}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a05112e3b17eaa2a10696b78e400a2dcb}\label{classDist_a05112e3b17eaa2a10696b78e400a2dcb}} 
+\index{Dist@{Dist}!ghkLinearConstraints@{ghkLinearConstraints}}
+\index{ghkLinearConstraints@{ghkLinearConstraints}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ghkLinearConstraints()}{ghkLinearConstraints()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily void Dist\+::ghk\+Linear\+Constraints (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a1fa6bdba254305bc8ba400ea4febeb79}\label{classDist_a1fa6bdba254305bc8ba400ea4febeb79}} 
+\index{Dist@{Dist}!ghkT@{ghkT}}
+\index{ghkT@{ghkT}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ghkT()}{ghkT()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ghkT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{df,  }\item[{int}]{sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a07c9381cc9b7a7db5bdc7e33b38e49c3}\label{classDist_a07c9381cc9b7a7db5bdc7e33b38e49c3}} 
+\index{Dist@{Dist}!ghkT@{ghkT}}
+\index{ghkT@{ghkT}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ghkT()}{ghkT()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ghkT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{df,  }\item[{int}]{sims,  }\item[{int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a4e92e209caa46749296540bc23cb7fb3}\label{classDist_a4e92e209caa46749296540bc23cb7fb3}} 
+\index{Dist@{Dist}!ghkT@{ghkT}}
+\index{ghkT@{ghkT}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ghkT()}{ghkT()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ghkT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{df,  }\item[{int}]{sims,  }\item[{Vector\+Xd \&}]{logpdf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a21089866e6ad7ed3283dc01dd1d3feeb}\label{classDist_a21089866e6ad7ed3283dc01dd1d3feeb}} 
+\index{Dist@{Dist}!ghkTruncNormRnd@{ghkTruncNormRnd}}
+\index{ghkTruncNormRnd@{ghkTruncNormRnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ghkTruncNormRnd()}{ghkTruncNormRnd()}}
+{\footnotesize\ttfamily double Dist\+::ghk\+Trunc\+Norm\+Rnd (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{,  }\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a15115f360f863f9b06d593512df48acd}\label{classDist_a15115f360f863f9b06d593512df48acd}} 
+\index{Dist@{Dist}!gibbsKernel@{gibbsKernel}}
+\index{gibbsKernel@{gibbsKernel}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{gibbsKernel()}{gibbsKernel()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::gibbs\+Kernel (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Matrix\+Xd \&}]{Sample,  }\item[{const Vector\+Xd \&}]{z\+Star }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ab3b92d6a31d8e3639478c54c304adde7}\label{classDist_ab3b92d6a31d8e3639478c54c304adde7}} 
+\index{Dist@{Dist}!gibbsTKernel@{gibbsTKernel}}
+\index{gibbsTKernel@{gibbsTKernel}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{gibbsTKernel()}{gibbsTKernel()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::gibbs\+T\+Kernel (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Matrix\+Xd \&}]{sample,  }\item[{Vector\+Xd \&}]{zstar,  }\item[{const double}]{df,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa6193b64ff9fa1ea18df54a01a322ef9}\label{classDist_aa6193b64ff9fa1ea18df54a01a322ef9}} 
+\index{Dist@{Dist}!Hnotj@{Hnotj}}
+\index{Hnotj@{Hnotj}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{Hnotj()}{Hnotj()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+Hnotj (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{precision }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa6193b64ff9fa1ea18df54a01a322ef9}\label{classDist_aa6193b64ff9fa1ea18df54a01a322ef9}} 
+\index{Dist@{Dist}!Hnotj@{Hnotj}}
+\index{Hnotj@{Hnotj}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{Hnotj()}{Hnotj()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+Hnotj (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{precision }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa177aee1942265f48684f8dbe1f9f5f0}\label{classDist_aa177aee1942265f48684f8dbe1f9f5f0}} 
+\index{Dist@{Dist}!igammapdf@{igammapdf}}
+\index{igammapdf@{igammapdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{igammapdf()}{igammapdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::igammapdf (\begin{DoxyParamCaption}\item[{double}]{shape,  }\item[{double}]{scale,  }\item[{double}]{y }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa177aee1942265f48684f8dbe1f9f5f0}\label{classDist_aa177aee1942265f48684f8dbe1f9f5f0}} 
+\index{Dist@{Dist}!igammapdf@{igammapdf}}
+\index{igammapdf@{igammapdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{igammapdf()}{igammapdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::igammapdf (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a9e4ebf4aff0844f0c586bd9774813bd2}\label{classDist_a9e4ebf4aff0844f0c586bd9774813bd2}} 
+\index{Dist@{Dist}!igammarnd@{igammarnd}}
+\index{igammarnd@{igammarnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{igammarnd()}{igammarnd()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily double Dist\+::igammarnd (\begin{DoxyParamCaption}\item[{double}]{shape,  }\item[{double}]{scale }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a9e4ebf4aff0844f0c586bd9774813bd2}\label{classDist_a9e4ebf4aff0844f0c586bd9774813bd2}} 
+\index{Dist@{Dist}!igammarnd@{igammarnd}}
+\index{igammarnd@{igammarnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{igammarnd()}{igammarnd()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily double Dist\+::igammarnd (\begin{DoxyParamCaption}\item[{double}]{shape,  }\item[{double}]{scale }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aabcc08ae49c5bc6b267975b06093d5f9}\label{classDist_aabcc08ae49c5bc6b267975b06093d5f9}} 
+\index{Dist@{Dist}!igammarnd@{igammarnd}}
+\index{igammarnd@{igammarnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{igammarnd()}{igammarnd()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::igammarnd (\begin{DoxyParamCaption}\item[{double}]{shape,  }\item[{double}]{scale,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a031df42d06a4f77e981d96a2180794a7}\label{classDist_a031df42d06a4f77e981d96a2180794a7}} 
+\index{Dist@{Dist}!igammarnd@{igammarnd}}
+\index{igammarnd@{igammarnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{igammarnd()}{igammarnd()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily void Dist\+::igammarnd (\begin{DoxyParamCaption}\item[{double}]{shape,  }\item[{double}]{scale,  }\item[{Vector\+Xd \&}]{igamma }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a031df42d06a4f77e981d96a2180794a7}\label{classDist_a031df42d06a4f77e981d96a2180794a7}} 
+\index{Dist@{Dist}!igammarnd@{igammarnd}}
+\index{igammarnd@{igammarnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{igammarnd()}{igammarnd()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily void Dist\+::igammarnd (\begin{DoxyParamCaption}\item[{double}]{shape,  }\item[{double}]{scale,  }\item[{Vector\+Xd \&}]{igamma }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ac0142dd7e64d0a2410a75dda3fb0c6c4}\label{classDist_ac0142dd7e64d0a2410a75dda3fb0c6c4}} 
+\index{Dist@{Dist}!leftTruncation@{leftTruncation}}
+\index{leftTruncation@{leftTruncation}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{leftTruncation()}{leftTruncation()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::left\+Truncation (\begin{DoxyParamCaption}\item[{double}]{a }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ac931aac86e30fa2bbce0545b729b2a77}\label{classDist_ac931aac86e30fa2bbce0545b729b2a77}} 
+\index{Dist@{Dist}!leftTruncation@{leftTruncation}}
+\index{leftTruncation@{leftTruncation}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{leftTruncation()}{leftTruncation()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::left\+Truncation (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a8851c54c5934095c96336f40ba3dcabb}\label{classDist_a8851c54c5934095c96336f40ba3dcabb}} 
+\index{Dist@{Dist}!linearRegLikelihood@{linearRegLikelihood}}
+\index{linearRegLikelihood@{linearRegLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{linearRegLikelihood()}{linearRegLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::linear\+Reg\+Likelihood (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{beta,  }\item[{double}]{sigma2 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a8851c54c5934095c96336f40ba3dcabb}\label{classDist_a8851c54c5934095c96336f40ba3dcabb}} 
+\index{Dist@{Dist}!linearRegLikelihood@{linearRegLikelihood}}
+\index{linearRegLikelihood@{linearRegLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{linearRegLikelihood()}{linearRegLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::linear\+Reg\+Likelihood (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{beta,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a0f5c92908fc38f06c17ad32f309673e6}\label{classDist_a0f5c92908fc38f06c17ad32f309673e6}} 
+\index{Dist@{Dist}!loginvgammapdf@{loginvgammapdf}}
+\index{loginvgammapdf@{loginvgammapdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{loginvgammapdf()}{loginvgammapdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::loginvgammapdf (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{y,  }\item[{double}]{alpha,  }\item[{double}]{beta }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a0f5c92908fc38f06c17ad32f309673e6}\label{classDist_a0f5c92908fc38f06c17ad32f309673e6}} 
+\index{Dist@{Dist}!loginvgammapdf@{loginvgammapdf}}
+\index{loginvgammapdf@{loginvgammapdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{loginvgammapdf()}{loginvgammapdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::loginvgammapdf (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{,  }\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a00b4efa5d93a437257e2423bc2ac167a}\label{classDist_a00b4efa5d93a437257e2423bc2ac167a}} 
+\index{Dist@{Dist}!loginvgammapdf@{loginvgammapdf}}
+\index{loginvgammapdf@{loginvgammapdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{loginvgammapdf()}{loginvgammapdf()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily double Dist\+::loginvgammapdf (\begin{DoxyParamCaption}\item[{double}]{y,  }\item[{double}]{alpha,  }\item[{double}]{beta }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a00b4efa5d93a437257e2423bc2ac167a}\label{classDist_a00b4efa5d93a437257e2423bc2ac167a}} 
+\index{Dist@{Dist}!loginvgammapdf@{loginvgammapdf}}
+\index{loginvgammapdf@{loginvgammapdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{loginvgammapdf()}{loginvgammapdf()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily double Dist\+::loginvgammapdf (\begin{DoxyParamCaption}\item[{double}]{y,  }\item[{double}]{alpha,  }\item[{double}]{beta }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a3ba37d30e5c2c0432b70651c5ab16621}\label{classDist_a3ba37d30e5c2c0432b70651c5ab16621}} 
+\index{Dist@{Dist}!loginvgammapdf@{loginvgammapdf}}
+\index{loginvgammapdf@{loginvgammapdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{loginvgammapdf()}{loginvgammapdf()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::loginvgammapdf (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a3f0fde71292c665f95de97d715b4ee6f}\label{classDist_a3f0fde71292c665f95de97d715b4ee6f}} 
+\index{Dist@{Dist}!logisticcdf@{logisticcdf}}
+\index{logisticcdf@{logisticcdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logisticcdf()}{logisticcdf()}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::logisticcdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a33bb3309bbbc4a92528326c66818e221}\label{classDist_a33bb3309bbbc4a92528326c66818e221}} 
+\index{Dist@{Dist}!logisticrnd@{logisticrnd}}
+\index{logisticrnd@{logisticrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logisticrnd()}{logisticrnd()}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::logisticrnd (\begin{DoxyParamCaption}\item[{int}]{N }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_af820a80e1e9ad58c8c5b7a3a531cc788}\label{classDist_af820a80e1e9ad58c8c5b7a3a531cc788}} 
+\index{Dist@{Dist}!logmvnpdf@{logmvnpdf}}
+\index{logmvnpdf@{logmvnpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvnpdf()}{logmvnpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily double Dist\+::logmvnpdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_adcb7957c6d118845d44498cf2ee0cd3f}\label{classDist_adcb7957c6d118845d44498cf2ee0cd3f}} 
+\index{Dist@{Dist}!logmvnpdf@{logmvnpdf}}
+\index{logmvnpdf@{logmvnpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvnpdf()}{logmvnpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::logmvnpdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{Matrix\+Xd}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a952fe39a06fe69e168cf88e630b6ed94}\label{classDist_a952fe39a06fe69e168cf88e630b6ed94}} 
+\index{Dist@{Dist}!logmvnpdf@{logmvnpdf}}
+\index{logmvnpdf@{logmvnpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvnpdf()}{logmvnpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::logmvnpdf (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{Matrix\+Xd}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2116e17b44fade13f460adadf2ad8f8b}\label{classDist_a2116e17b44fade13f460adadf2ad8f8b}} 
+\index{Dist@{Dist}!logmvnpdf@{logmvnpdf}}
+\index{logmvnpdf@{logmvnpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvnpdf()}{logmvnpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily double Dist\+::logmvnpdf (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a5db10d1a77735b50fa8117257076ae62}\label{classDist_a5db10d1a77735b50fa8117257076ae62}} 
+\index{Dist@{Dist}!logmvnpdfPrecision@{logmvnpdfPrecision}}
+\index{logmvnpdfPrecision@{logmvnpdfPrecision}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvnpdfPrecision()}{logmvnpdfPrecision()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::logmvnpdf\+Precision (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a5db10d1a77735b50fa8117257076ae62}\label{classDist_a5db10d1a77735b50fa8117257076ae62}} 
+\index{Dist@{Dist}!logmvnpdfPrecision@{logmvnpdfPrecision}}
+\index{logmvnpdfPrecision@{logmvnpdfPrecision}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvnpdfPrecision()}{logmvnpdfPrecision()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::logmvnpdf\+Precision (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a97eda19629c654d891e0312b3a942629}\label{classDist_a97eda19629c654d891e0312b3a942629}} 
+\index{Dist@{Dist}!logmvnpdfV@{logmvnpdfV}}
+\index{logmvnpdfV@{logmvnpdfV}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvnpdfV()}{logmvnpdfV()}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::logmvnpdfV (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{Matrix\+Xd}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_af647b7ce80dd55aeb188c26b60642d6f}\label{classDist_af647b7ce80dd55aeb188c26b60642d6f}} 
+\index{Dist@{Dist}!logmvnpdfVect@{logmvnpdfVect}}
+\index{logmvnpdfVect@{logmvnpdfVect}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvnpdfVect()}{logmvnpdfVect()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::logmvnpdf\+Vect (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Vector\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_af647b7ce80dd55aeb188c26b60642d6f}\label{classDist_af647b7ce80dd55aeb188c26b60642d6f}} 
+\index{Dist@{Dist}!logmvnpdfVect@{logmvnpdfVect}}
+\index{logmvnpdfVect@{logmvnpdfVect}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvnpdfVect()}{logmvnpdfVect()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::logmvnpdf\+Vect (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Vector\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_af053ee9bb1547caac45eabcd4b33258f}\label{classDist_af053ee9bb1547caac45eabcd4b33258f}} 
+\index{Dist@{Dist}!logmvtpdf@{logmvtpdf}}
+\index{logmvtpdf@{logmvtpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{logmvtpdf()}{logmvtpdf()}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::logmvtpdf (\begin{DoxyParamCaption}\item[{double}]{df,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{Matrix\+Xd}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a5a9bbf7c18b530ef4b26d288969d201f}\label{classDist_a5a9bbf7c18b530ef4b26d288969d201f}} 
+\index{Dist@{Dist}!lrLikelihood@{lrLikelihood}}
+\index{lrLikelihood@{lrLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lrLikelihood()}{lrLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [1/8]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::lr\+Likelihood (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{betas,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{sigmasqds,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a5a9bbf7c18b530ef4b26d288969d201f}\label{classDist_a5a9bbf7c18b530ef4b26d288969d201f}} 
+\index{Dist@{Dist}!lrLikelihood@{lrLikelihood}}
+\index{lrLikelihood@{lrLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lrLikelihood()}{lrLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [2/8]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::lr\+Likelihood (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{betas,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{sigmasqds,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa9d11b8e89c4428f97ce13d42730d3ae}\label{classDist_aa9d11b8e89c4428f97ce13d42730d3ae}} 
+\index{Dist@{Dist}!lrLikelihood@{lrLikelihood}}
+\index{lrLikelihood@{lrLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lrLikelihood()}{lrLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [3/8]}}
+{\footnotesize\ttfamily double Dist\+::lr\+Likelihood (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{betas,  }\item[{double}]{sig\+Sqd,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa9d11b8e89c4428f97ce13d42730d3ae}\label{classDist_aa9d11b8e89c4428f97ce13d42730d3ae}} 
+\index{Dist@{Dist}!lrLikelihood@{lrLikelihood}}
+\index{lrLikelihood@{lrLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lrLikelihood()}{lrLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [4/8]}}
+{\footnotesize\ttfamily double Dist\+::lr\+Likelihood (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{betas,  }\item[{double}]{sig\+Sqd,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a7a2a5e8bc6df22e637405e38eea1241c}\label{classDist_a7a2a5e8bc6df22e637405e38eea1241c}} 
+\index{Dist@{Dist}!lrLikelihood@{lrLikelihood}}
+\index{lrLikelihood@{lrLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lrLikelihood()}{lrLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [5/8]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::lr\+Likelihood (\begin{DoxyParamCaption}\item[{Matrix\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{sigmasqds,  }\item[{Vector\+Xd \&}]{y,  }\item[{Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a7a2a5e8bc6df22e637405e38eea1241c}\label{classDist_a7a2a5e8bc6df22e637405e38eea1241c}} 
+\index{Dist@{Dist}!lrLikelihood@{lrLikelihood}}
+\index{lrLikelihood@{lrLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lrLikelihood()}{lrLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [6/8]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::lr\+Likelihood (\begin{DoxyParamCaption}\item[{Matrix\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a209d3ada0e521534747c041f101ef78e}\label{classDist_a209d3ada0e521534747c041f101ef78e}} 
+\index{Dist@{Dist}!lrLikelihood@{lrLikelihood}}
+\index{lrLikelihood@{lrLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lrLikelihood()}{lrLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [7/8]}}
+{\footnotesize\ttfamily double Dist\+::lr\+Likelihood (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{double}]{sig\+Sqd,  }\item[{Vector\+Xd \&}]{y,  }\item[{Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a209d3ada0e521534747c041f101ef78e}\label{classDist_a209d3ada0e521534747c041f101ef78e}} 
+\index{Dist@{Dist}!lrLikelihood@{lrLikelihood}}
+\index{lrLikelihood@{lrLikelihood}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lrLikelihood()}{lrLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [8/8]}}
+{\footnotesize\ttfamily double Dist\+::lr\+Likelihood (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{double}]{sig\+Sqd,  }\item[{Vector\+Xd \&}]{y,  }\item[{Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a81eb1b5aa8a02ad52403d2891706f566}\label{classDist_a81eb1b5aa8a02ad52403d2891706f566}} 
+\index{Dist@{Dist}!lrLikelihoodASK@{lrLikelihoodASK}}
+\index{lrLikelihoodASK@{lrLikelihoodASK}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lrLikelihoodASK()}{lrLikelihoodASK()}}
+{\footnotesize\ttfamily double Dist\+::lr\+Likelihood\+A\+SK (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{betas,  }\item[{double}]{sig\+Sqd,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a34796ad00d9fbfc0516f36f79d3dd77d}\label{classDist_a34796ad00d9fbfc0516f36f79d3dd77d}} 
+\index{Dist@{Dist}!MatricVariateRnd@{MatricVariateRnd}}
+\index{MatricVariateRnd@{MatricVariateRnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{MatricVariateRnd()}{MatricVariateRnd()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+Matric\+Variate\+Rnd (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{Mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Matrix\+Xd \&}]{V }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa7abef050b71aef1ba6eb882bcfc1e98}\label{classDist_aa7abef050b71aef1ba6eb882bcfc1e98}} 
+\index{Dist@{Dist}!mvnpdf@{mvnpdf}}
+\index{mvnpdf@{mvnpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvnpdf()}{mvnpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::mvnpdf (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa7abef050b71aef1ba6eb882bcfc1e98}\label{classDist_aa7abef050b71aef1ba6eb882bcfc1e98}} 
+\index{Dist@{Dist}!mvnpdf@{mvnpdf}}
+\index{mvnpdf@{mvnpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvnpdf()}{mvnpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::mvnpdf (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2dade907130112b5848ab6c226e082c2}\label{classDist_a2dade907130112b5848ab6c226e082c2}} 
+\index{Dist@{Dist}!mvnpdfPrecision@{mvnpdfPrecision}}
+\index{mvnpdfPrecision@{mvnpdfPrecision}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvnpdfPrecision()}{mvnpdfPrecision()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::mvnpdf\+Precision (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{mu,  }\item[{const Matrix\+Xd \&}]{precision,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2dade907130112b5848ab6c226e082c2}\label{classDist_a2dade907130112b5848ab6c226e082c2}} 
+\index{Dist@{Dist}!mvnpdfPrecision@{mvnpdfPrecision}}
+\index{mvnpdfPrecision@{mvnpdfPrecision}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvnpdfPrecision()}{mvnpdfPrecision()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::mvnpdf\+Precision (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aad3270207bade8764448f6b689355dce}\label{classDist_aad3270207bade8764448f6b689355dce}} 
+\index{Dist@{Dist}!mvnrnd@{mvnrnd}}
+\index{mvnrnd@{mvnrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvnrnd()}{mvnrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvnrnd (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sig,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_abee9b672c9731b09649ee8f5f99b46e1}\label{classDist_abee9b672c9731b09649ee8f5f99b46e1}} 
+\index{Dist@{Dist}!mvnrnd@{mvnrnd}}
+\index{mvnrnd@{mvnrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvnrnd()}{mvnrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvnrnd (\begin{DoxyParamCaption}\item[{Vector\+Xd}]{mu,  }\item[{Matrix\+Xd \&}]{sig,  }\item[{int}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a862762d15f493efeba9c1289b3cbf3ef}\label{classDist_a862762d15f493efeba9c1289b3cbf3ef}} 
+\index{Dist@{Dist}!mvnrnd2@{mvnrnd2}}
+\index{mvnrnd2@{mvnrnd2}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvnrnd2()}{mvnrnd2()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvnrnd2 (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{mu,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{sig,  }\item[{int}]{N,  }\item[{int}]{J }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a6ac8dd659345a4e0cd2300a8ec554051}\label{classDist_a6ac8dd659345a4e0cd2300a8ec554051}} 
+\index{Dist@{Dist}!mvnrnd2@{mvnrnd2}}
+\index{mvnrnd2@{mvnrnd2}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvnrnd2()}{mvnrnd2()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvnrnd2 (\begin{DoxyParamCaption}\item[{Vector\+Xd}]{mu,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{sig,  }\item[{int}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a910525f12e295817284f749d0d1ac189}\label{classDist_a910525f12e295817284f749d0d1ac189}} 
+\index{Dist@{Dist}!mvtpdf@{mvtpdf}}
+\index{mvtpdf@{mvtpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvtpdf()}{mvtpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::mvtpdf (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Variance,  }\item[{int}]{df }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aba08aebf0b7ba4d115a5df51a5b564ad}\label{classDist_aba08aebf0b7ba4d115a5df51a5b564ad}} 
+\index{Dist@{Dist}!mvtpdf@{mvtpdf}}
+\index{mvtpdf@{mvtpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvtpdf()}{mvtpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::mvtpdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{x,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Variance,  }\item[{int}]{df }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a29cd463e35459a9e9889a78b2ecd5ae1}\label{classDist_a29cd463e35459a9e9889a78b2ecd5ae1}} 
+\index{Dist@{Dist}!mvtpdfHelp@{mvtpdfHelp}}
+\index{mvtpdfHelp@{mvtpdfHelp}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvtpdfHelp()}{mvtpdfHelp()}}
+{\footnotesize\ttfamily double Dist\+::mvtpdf\+Help (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{x,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Variance,  }\item[{int}]{df }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_afc222c7a66ff9b673a30c5cc09d18a87}\label{classDist_afc222c7a66ff9b673a30c5cc09d18a87}} 
+\index{Dist@{Dist}!mvtrnd@{mvtrnd}}
+\index{mvtrnd@{mvtrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvtrnd()}{mvtrnd()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvtrnd (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{int}]{nu,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a9278fd7d7fe62383088eb5d1541aa6ce}\label{classDist_a9278fd7d7fe62383088eb5d1541aa6ce}} 
+\index{Dist@{Dist}!mvtruncT@{mvtruncT}}
+\index{mvtruncT@{mvtruncT}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvtruncT()}{mvtruncT()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvtruncT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const int}]{df,  }\item[{const int}]{sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a9278fd7d7fe62383088eb5d1541aa6ce}\label{classDist_a9278fd7d7fe62383088eb5d1541aa6ce}} 
+\index{Dist@{Dist}!mvtruncT@{mvtruncT}}
+\index{mvtruncT@{mvtruncT}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvtruncT()}{mvtruncT()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvtruncT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const int}]{df,  }\item[{const int}]{sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aed15685c36ddcbe2c203b936988b6e16}\label{classDist_aed15685c36ddcbe2c203b936988b6e16}} 
+\index{Dist@{Dist}!MVTruncT@{MVTruncT}}
+\index{MVTruncT@{MVTruncT}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{MVTruncT()}{MVTruncT()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+M\+V\+TruncT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const int}]{df,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aed15685c36ddcbe2c203b936988b6e16}\label{classDist_aed15685c36ddcbe2c203b936988b6e16}} 
+\index{Dist@{Dist}!MVTruncT@{MVTruncT}}
+\index{MVTruncT@{MVTruncT}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{MVTruncT()}{MVTruncT()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+M\+V\+TruncT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const int}]{df,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_afd35e7195604a92491f47264f2a936e5}\label{classDist_afd35e7195604a92491f47264f2a936e5}} 
+\index{Dist@{Dist}!mvtrunctrnd@{mvtrunctrnd}}
+\index{mvtrunctrnd@{mvtrunctrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvtrunctrnd()}{mvtrunctrnd()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvtrunctrnd (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const double}]{nu,  }\item[{const int}]{N }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ac3755a338d000b0c4fd0393830429931}\label{classDist_ac3755a338d000b0c4fd0393830429931}} 
+\index{Dist@{Dist}!mvtstudtrnd@{mvtstudtrnd}}
+\index{mvtstudtrnd@{mvtstudtrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvtstudtrnd()}{mvtstudtrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvtstudtrnd (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const double}]{df,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ac4cfb96a1b67917ebf6b7c3188d59fce}\label{classDist_ac4cfb96a1b67917ebf6b7c3188d59fce}} 
+\index{Dist@{Dist}!mvtstudtrnd@{mvtstudtrnd}}
+\index{mvtstudtrnd@{mvtstudtrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvtstudtrnd()}{mvtstudtrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvtstudtrnd (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const double}]{df,  }\item[{const int}]{sims,  }\item[{const int}]{burnin,  }\item[{Vector\+Xd \&}]{init }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a668ad98bfda5c7c595e57741f08d9a42}\label{classDist_a668ad98bfda5c7c595e57741f08d9a42}} 
+\index{Dist@{Dist}!mvttgeweke91@{mvttgeweke91}}
+\index{mvttgeweke91@{mvttgeweke91}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvttgeweke91()}{mvttgeweke91()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvttgeweke91 (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const double}]{df,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a668ad98bfda5c7c595e57741f08d9a42}\label{classDist_a668ad98bfda5c7c595e57741f08d9a42}} 
+\index{Dist@{Dist}!mvttgeweke91@{mvttgeweke91}}
+\index{mvttgeweke91@{mvttgeweke91}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{mvttgeweke91()}{mvttgeweke91()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::mvttgeweke91 (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const double}]{df,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aaf3836b2128eaf6752226d502785c84c}\label{classDist_aaf3836b2128eaf6752226d502785c84c}} 
+\index{Dist@{Dist}!normrnd@{normrnd}}
+\index{normrnd@{normrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{normrnd()}{normrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [1/6]}}
+{\footnotesize\ttfamily double Dist\+::normrnd (\begin{DoxyParamCaption}\item[{double}]{mu,  }\item[{double}]{sig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aaf3836b2128eaf6752226d502785c84c}\label{classDist_aaf3836b2128eaf6752226d502785c84c}} 
+\index{Dist@{Dist}!normrnd@{normrnd}}
+\index{normrnd@{normrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{normrnd()}{normrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [2/6]}}
+{\footnotesize\ttfamily double Dist\+::normrnd (\begin{DoxyParamCaption}\item[{double}]{mu,  }\item[{double}]{sig }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a6e6b97ac41572f1698cb614f049c2a45}\label{classDist_a6e6b97ac41572f1698cb614f049c2a45}} 
+\index{Dist@{Dist}!normrnd@{normrnd}}
+\index{normrnd@{normrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{normrnd()}{normrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [3/6]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::normrnd (\begin{DoxyParamCaption}\item[{double}]{mu,  }\item[{double}]{sig,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a1a15ca5247eb1fd72cd4e4ca7aa28529}\label{classDist_a1a15ca5247eb1fd72cd4e4ca7aa28529}} 
+\index{Dist@{Dist}!normrnd@{normrnd}}
+\index{normrnd@{normrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{normrnd()}{normrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [4/6]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::normrnd (\begin{DoxyParamCaption}\item[{double}]{mu,  }\item[{double}]{sig,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a66915305e4a6481cae26aff1a69f3add}\label{classDist_a66915305e4a6481cae26aff1a69f3add}} 
+\index{Dist@{Dist}!normrnd@{normrnd}}
+\index{normrnd@{normrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{normrnd()}{normrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [5/6]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::normrnd (\begin{DoxyParamCaption}\item[{double}]{mu,  }\item[{double}]{sig,  }\item[{int}]{N,  }\item[{int}]{J }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a66915305e4a6481cae26aff1a69f3add}\label{classDist_a66915305e4a6481cae26aff1a69f3add}} 
+\index{Dist@{Dist}!normrnd@{normrnd}}
+\index{normrnd@{normrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{normrnd()}{normrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [6/6]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::normrnd (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{,  }\item[{int}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a837c26b6cc8f543bd5a15aec8a52a81d}\label{classDist_a837c26b6cc8f543bd5a15aec8a52a81d}} 
+\index{Dist@{Dist}!pdfavg@{pdfavg}}
+\index{pdfavg@{pdfavg}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{pdfavg()}{pdfavg()}}
+{\footnotesize\ttfamily double Dist\+::pdfavg (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{logpdf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a28a788e09cf1147def5cfd9836f4ef9f}\label{classDist_a28a788e09cf1147def5cfd9836f4ef9f}} 
+\index{Dist@{Dist}!pdfmean@{pdfmean}}
+\index{pdfmean@{pdfmean}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{pdfmean()}{pdfmean()}}
+{\footnotesize\ttfamily double Dist\+::pdfmean (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{logpdf }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a7c51bdf9c6d1617370c6ed538a1ae1b2}\label{classDist_a7c51bdf9c6d1617370c6ed538a1ae1b2}} 
+\index{Dist@{Dist}!precisionNotjMatrix@{precisionNotjMatrix}}
+\index{precisionNotjMatrix@{precisionNotjMatrix}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{precisionNotjMatrix()}{precisionNotjMatrix()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::precision\+Notj\+Matrix (\begin{DoxyParamCaption}\item[{int}]{J,  }\item[{const Matrix\+Xd \&}]{precision,  }\item[{const Vector\+Xd \&}]{Hii }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a7c51bdf9c6d1617370c6ed538a1ae1b2}\label{classDist_a7c51bdf9c6d1617370c6ed538a1ae1b2}} 
+\index{Dist@{Dist}!precisionNotjMatrix@{precisionNotjMatrix}}
+\index{precisionNotjMatrix@{precisionNotjMatrix}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{precisionNotjMatrix()}{precisionNotjMatrix()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::precision\+Notj\+Matrix (\begin{DoxyParamCaption}\item[{int}]{J,  }\item[{const Matrix\+Xd \&}]{precision,  }\item[{const Vector\+Xd \&}]{Hii }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a5d1278915428766da7d0cc8c85975815}\label{classDist_a5d1278915428766da7d0cc8c85975815}} 
+\index{Dist@{Dist}!returnNormalizingConstants@{returnNormalizingConstants}}
+\index{returnNormalizingConstants@{returnNormalizingConstants}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{returnNormalizingConstants()}{returnNormalizingConstants()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::return\+Normalizing\+Constants (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{int}]{sims,  }\item[{Matrix\+Xd \&}]{normC }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ac21f1673bf4d24a07045ee6c9d97bf52}\label{classDist_ac21f1673bf4d24a07045ee6c9d97bf52}} 
+\index{Dist@{Dist}!rightTruncation@{rightTruncation}}
+\index{rightTruncation@{rightTruncation}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{rightTruncation()}{rightTruncation()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::right\+Truncation (\begin{DoxyParamCaption}\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_af6804432f6901a94f2dd72f3eae50b08}\label{classDist_af6804432f6901a94f2dd72f3eae50b08}} 
+\index{Dist@{Dist}!rightTruncation@{rightTruncation}}
+\index{rightTruncation@{rightTruncation}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{rightTruncation()}{rightTruncation()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::right\+Truncation (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ad3776b88187613107bb2c4ba7597e169}\label{classDist_ad3776b88187613107bb2c4ba7597e169}} 
+\index{Dist@{Dist}!runSim@{runSim}}
+\index{runSim@{runSim}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{runSim()}{runSim()}}
+{\footnotesize\ttfamily void Dist\+::run\+Sim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{int}]{sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a7ff1aac0d0095bd008dcbdd87cb98148}\label{classDist_a7ff1aac0d0095bd008dcbdd87cb98148}} 
+\index{Dist@{Dist}!selectorMat@{selectorMat}}
+\index{selectorMat@{selectorMat}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{selectorMat()}{selectorMat()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::selector\+Mat (\begin{DoxyParamCaption}\item[{int}]{J }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a7ff1aac0d0095bd008dcbdd87cb98148}\label{classDist_a7ff1aac0d0095bd008dcbdd87cb98148}} 
+\index{Dist@{Dist}!selectorMat@{selectorMat}}
+\index{selectorMat@{selectorMat}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{selectorMat()}{selectorMat()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::selector\+Mat (\begin{DoxyParamCaption}\item[{int}]{J }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a9cf51aaf2a4108165ef59c1b72e9f741}\label{classDist_a9cf51aaf2a4108165ef59c1b72e9f741}} 
+\index{Dist@{Dist}!shiftexppdf@{shiftexppdf}}
+\index{shiftexppdf@{shiftexppdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{shiftexppdf()}{shiftexppdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::shiftexppdf (\begin{DoxyParamCaption}\item[{double}]{alpha,  }\item[{double}]{shift,  }\item[{double}]{z }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a9cf51aaf2a4108165ef59c1b72e9f741}\label{classDist_a9cf51aaf2a4108165ef59c1b72e9f741}} 
+\index{Dist@{Dist}!shiftexppdf@{shiftexppdf}}
+\index{shiftexppdf@{shiftexppdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{shiftexppdf()}{shiftexppdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::shiftexppdf (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a6eb1ca805832006a662eccb20a1adcab}\label{classDist_a6eb1ca805832006a662eccb20a1adcab}} 
+\index{Dist@{Dist}!shiftexprnd@{shiftexprnd}}
+\index{shiftexprnd@{shiftexprnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{shiftexprnd()}{shiftexprnd()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::shiftexprnd (\begin{DoxyParamCaption}\item[{double}]{alpha,  }\item[{double}]{shift }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a6eb1ca805832006a662eccb20a1adcab}\label{classDist_a6eb1ca805832006a662eccb20a1adcab}} 
+\index{Dist@{Dist}!shiftexprnd@{shiftexprnd}}
+\index{shiftexprnd@{shiftexprnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{shiftexprnd()}{shiftexprnd()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::shiftexprnd (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a0933899e9766f9cd9ef470bfd3416a4b}\label{classDist_a0933899e9766f9cd9ef470bfd3416a4b}} 
+\index{Dist@{Dist}!SigmayyInverse@{SigmayyInverse}}
+\index{SigmayyInverse@{SigmayyInverse}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{SigmayyInverse()}{SigmayyInverse()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+Sigmayy\+Inverse (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{Sigma }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a0933899e9766f9cd9ef470bfd3416a4b}\label{classDist_a0933899e9766f9cd9ef470bfd3416a4b}} 
+\index{Dist@{Dist}!SigmayyInverse@{SigmayyInverse}}
+\index{SigmayyInverse@{SigmayyInverse}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{SigmayyInverse()}{SigmayyInverse()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::\+Sigmayy\+Inverse (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a61a6fb85e0c2995c558275949e0a625d}\label{classDist_a61a6fb85e0c2995c558275949e0a625d}} 
+\index{Dist@{Dist}!standardDev@{standardDev}}
+\index{standardDev@{standardDev}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{standardDev()}{standardDev()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::standard\+Dev (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{v }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a61a6fb85e0c2995c558275949e0a625d}\label{classDist_a61a6fb85e0c2995c558275949e0a625d}} 
+\index{Dist@{Dist}!standardDev@{standardDev}}
+\index{standardDev@{standardDev}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{standardDev()}{standardDev()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::standard\+Dev (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a04afe00b41246164f2e4c188c40a9b3f}\label{classDist_a04afe00b41246164f2e4c188c40a9b3f}} 
+\index{Dist@{Dist}!studenttrnd@{studenttrnd}}
+\index{studenttrnd@{studenttrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{studenttrnd()}{studenttrnd()}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::studenttrnd (\begin{DoxyParamCaption}\item[{const double}]{mu,  }\item[{const double}]{sigma,  }\item[{const double}]{nu,  }\item[{const int}]{N,  }\item[{const int}]{J }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a9fd1e4955c4480b7c4da35121a12668b}\label{classDist_a9fd1e4955c4480b7c4da35121a12668b}} 
+\index{Dist@{Dist}!tmultnorm@{tmultnorm}}
+\index{tmultnorm@{tmultnorm}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tmultnorm()}{tmultnorm()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::tmultnorm (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{last\+Beta,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const int}]{n\+Sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_af2c05a72b2bc9815152a4b598f64f7fd}\label{classDist_af2c05a72b2bc9815152a4b598f64f7fd}} 
+\index{Dist@{Dist}!tmultnorm@{tmultnorm}}
+\index{tmultnorm@{tmultnorm}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tmultnorm()}{tmultnorm()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::tmultnorm (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aba7277539b8396d9c6229625fc7900e4}\label{classDist_aba7277539b8396d9c6229625fc7900e4}} 
+\index{Dist@{Dist}!tmultnorm@{tmultnorm}}
+\index{tmultnorm@{tmultnorm}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tmultnorm()}{tmultnorm()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::tmultnorm (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const int}]{n\+Sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a3e1f264bb0f0f5bddf43ab816fec0479}\label{classDist_a3e1f264bb0f0f5bddf43ab816fec0479}} 
+\index{Dist@{Dist}!tmultnorm@{tmultnorm}}
+\index{tmultnorm@{tmultnorm}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tmultnorm()}{tmultnorm()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::tmultnorm (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const int}]{n\+Sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_aa436b0b413ad5a50cb5f6128dc12e95b}\label{classDist_aa436b0b413ad5a50cb5f6128dc12e95b}} 
+\index{Dist@{Dist}!tmultnorm@{tmultnorm}}
+\index{tmultnorm@{tmultnorm}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tmultnorm()}{tmultnorm()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::tmultnorm (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a80ab68cfc39833f0f923d6548b1c78ee}\label{classDist_a80ab68cfc39833f0f923d6548b1c78ee}} 
+\index{Dist@{Dist}!tmvnrand@{tmvnrand}}
+\index{tmvnrand@{tmvnrand}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tmvnrand()}{tmvnrand()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Dist\+::tmvnrand (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{a,  }\item[{Vector\+Xd \&}]{b,  }\item[{Vector\+Xd \&}]{mu,  }\item[{Matrix\+Xd \&}]{sigma,  }\item[{Matrix\+Xd \&}]{sample,  }\item[{Vector\+Xd \&}]{sigma\+Vect }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a80ab68cfc39833f0f923d6548b1c78ee}\label{classDist_a80ab68cfc39833f0f923d6548b1c78ee}} 
+\index{Dist@{Dist}!tmvnrand@{tmvnrand}}
+\index{tmvnrand@{tmvnrand}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tmvnrand()}{tmvnrand()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Dist\+::tmvnrand (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a3bcd72d388af0224945ac2383489a1fc}\label{classDist_a3bcd72d388af0224945ac2383489a1fc}} 
+\index{Dist@{Dist}!tnormpdf@{tnormpdf}}
+\index{tnormpdf@{tnormpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdf()}{tnormpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::tnormpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a3bcd72d388af0224945ac2383489a1fc}\label{classDist_a3bcd72d388af0224945ac2383489a1fc}} 
+\index{Dist@{Dist}!tnormpdf@{tnormpdf}}
+\index{tnormpdf@{tnormpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdf()}{tnormpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::tnormpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ac1c7e6b0b5c6281714a9d9ee70dfd945}\label{classDist_ac1c7e6b0b5c6281714a9d9ee70dfd945}} 
+\index{Dist@{Dist}!tnormpdfMat@{tnormpdfMat}}
+\index{tnormpdfMat@{tnormpdfMat}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdfMat()}{tnormpdfMat()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::tnormpdf\+Mat (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Vector\+Xd \&}]{sigma,  }\item[{const Matrix\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ac1c7e6b0b5c6281714a9d9ee70dfd945}\label{classDist_ac1c7e6b0b5c6281714a9d9ee70dfd945}} 
+\index{Dist@{Dist}!tnormpdfMat@{tnormpdfMat}}
+\index{tnormpdfMat@{tnormpdfMat}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdfMat()}{tnormpdfMat()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::tnormpdf\+Mat (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Vector\+Xd \&}]{sigma,  }\item[{const Matrix\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_adc6f7c72b1da03cff6b6b9f21cb21f66}\label{classDist_adc6f7c72b1da03cff6b6b9f21cb21f66}} 
+\index{Dist@{Dist}!tnormpdfMat@{tnormpdfMat}}
+\index{tnormpdfMat@{tnormpdfMat}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdfMat()}{tnormpdfMat()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::tnormpdf\+Mat (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{a,  }\item[{Vector\+Xd \&}]{b,  }\item[{Vector\+Xd \&}]{mu,  }\item[{Vector\+Xd \&}]{sigma,  }\item[{Matrix\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_adc6f7c72b1da03cff6b6b9f21cb21f66}\label{classDist_adc6f7c72b1da03cff6b6b9f21cb21f66}} 
+\index{Dist@{Dist}!tnormpdfMat@{tnormpdfMat}}
+\index{tnormpdfMat@{tnormpdfMat}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdfMat()}{tnormpdfMat()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::tnormpdf\+Mat (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{a,  }\item[{Vector\+Xd \&}]{b,  }\item[{Vector\+Xd \&}]{mu,  }\item[{Vector\+Xd \&}]{sigma,  }\item[{Matrix\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2c122d136585c65a9426fded64c0ea5c}\label{classDist_a2c122d136585c65a9426fded64c0ea5c}} 
+\index{Dist@{Dist}!tnormpdfMeanVect@{tnormpdfMeanVect}}
+\index{tnormpdfMeanVect@{tnormpdfMeanVect}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdfMeanVect()}{tnormpdfMeanVect()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+Vector\+Xd Dist\+::tnormpdf\+Mean\+Vect (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{const Matrix\+Base$<$ D $>$ \&}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2c122d136585c65a9426fded64c0ea5c}\label{classDist_a2c122d136585c65a9426fded64c0ea5c}} 
+\index{Dist@{Dist}!tnormpdfMeanVect@{tnormpdfMeanVect}}
+\index{tnormpdfMeanVect@{tnormpdfMeanVect}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdfMeanVect()}{tnormpdfMeanVect()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+Vector\+Xd Dist\+::tnormpdf\+Mean\+Vect (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{const Matrix\+Base$<$ D $>$ \&}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2a4f9c5f73f7ca95508dcfec23fc42e1}\label{classDist_a2a4f9c5f73f7ca95508dcfec23fc42e1}} 
+\index{Dist@{Dist}!tnormpdfVect@{tnormpdfVect}}
+\index{tnormpdfVect@{tnormpdfVect}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdfVect()}{tnormpdfVect()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::tnormpdf\+Vect (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{Vector\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2a4f9c5f73f7ca95508dcfec23fc42e1}\label{classDist_a2a4f9c5f73f7ca95508dcfec23fc42e1}} 
+\index{Dist@{Dist}!tnormpdfVect@{tnormpdfVect}}
+\index{tnormpdfVect@{tnormpdfVect}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormpdfVect()}{tnormpdfVect()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::tnormpdf\+Vect (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{Vector\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2f827ef3a41cab422e268940b069d3f9}\label{classDist_a2f827ef3a41cab422e268940b069d3f9}} 
+\index{Dist@{Dist}!tnormrnd@{tnormrnd}}
+\index{tnormrnd@{tnormrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormrnd()}{tnormrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::tnormrnd (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a2f827ef3a41cab422e268940b069d3f9}\label{classDist_a2f827ef3a41cab422e268940b069d3f9}} 
+\index{Dist@{Dist}!tnormrnd@{tnormrnd}}
+\index{tnormrnd@{tnormrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{tnormrnd()}{tnormrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::tnormrnd (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{,  }\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a1f4083794a9200c517e5d2ad2c1500f9}\label{classDist_a1f4083794a9200c517e5d2ad2c1500f9}} 
+\index{Dist@{Dist}!truncNormalRnd@{truncNormalRnd}}
+\index{truncNormalRnd@{truncNormalRnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{truncNormalRnd()}{truncNormalRnd()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::trunc\+Normal\+Rnd (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a48317fa6f9070f87bb78339f76b92c85}\label{classDist_a48317fa6f9070f87bb78339f76b92c85}} 
+\index{Dist@{Dist}!truncNormalRnd@{truncNormalRnd}}
+\index{truncNormalRnd@{truncNormalRnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{truncNormalRnd()}{truncNormalRnd()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::trunc\+Normal\+Rnd (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a557b9c3266784e3817ddc888b80b6c6e}\label{classDist_a557b9c3266784e3817ddc888b80b6c6e}} 
+\index{Dist@{Dist}!truncTrnd@{truncTrnd}}
+\index{truncTrnd@{truncTrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{truncTrnd()}{truncTrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::trunc\+Trnd (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{nu }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a557b9c3266784e3817ddc888b80b6c6e}\label{classDist_a557b9c3266784e3817ddc888b80b6c6e}} 
+\index{Dist@{Dist}!truncTrnd@{truncTrnd}}
+\index{truncTrnd@{truncTrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{truncTrnd()}{truncTrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::trunc\+Trnd (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{nu }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a0f8be5269df29c08b8ab363cd472ff8d}\label{classDist_a0f8be5269df29c08b8ab363cd472ff8d}} 
+\index{Dist@{Dist}!ttpdf@{ttpdf}}
+\index{ttpdf@{ttpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ttpdf()}{ttpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/8]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ttpdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Vector\+Xd \&}]{sigma,  }\item[{const Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a0f8be5269df29c08b8ab363cd472ff8d}\label{classDist_a0f8be5269df29c08b8ab363cd472ff8d}} 
+\index{Dist@{Dist}!ttpdf@{ttpdf}}
+\index{ttpdf@{ttpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ttpdf()}{ttpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/8]}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::ttpdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Vector\+Xd \&}]{sigma,  }\item[{const Matrix\+Xd \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a037c186386d3190e1d81082181aa04ff}\label{classDist_a037c186386d3190e1d81082181aa04ff}} 
+\index{Dist@{Dist}!ttpdf@{ttpdf}}
+\index{ttpdf@{ttpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ttpdf()}{ttpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [3/8]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::ttpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{df,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a037c186386d3190e1d81082181aa04ff}\label{classDist_a037c186386d3190e1d81082181aa04ff}} 
+\index{Dist@{Dist}!ttpdf@{ttpdf}}
+\index{ttpdf@{ttpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ttpdf()}{ttpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [4/8]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::ttpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{df,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a8b44e22be9b0c971f6e4456c233d27a5}\label{classDist_a8b44e22be9b0c971f6e4456c233d27a5}} 
+\index{Dist@{Dist}!ttpdf@{ttpdf}}
+\index{ttpdf@{ttpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ttpdf()}{ttpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [5/8]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::ttpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{df,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a8b44e22be9b0c971f6e4456c233d27a5}\label{classDist_a8b44e22be9b0c971f6e4456c233d27a5}} 
+\index{Dist@{Dist}!ttpdf@{ttpdf}}
+\index{ttpdf@{ttpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ttpdf()}{ttpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [6/8]}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::ttpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{df,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ac2413e8634452f3946796e69d409a937}\label{classDist_ac2413e8634452f3946796e69d409a937}} 
+\index{Dist@{Dist}!ttpdf@{ttpdf}}
+\index{ttpdf@{ttpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ttpdf()}{ttpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [7/8]}}
+{\footnotesize\ttfamily double Dist\+::ttpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{df,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_ac2413e8634452f3946796e69d409a937}\label{classDist_ac2413e8634452f3946796e69d409a937}} 
+\index{Dist@{Dist}!ttpdf@{ttpdf}}
+\index{ttpdf@{ttpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{ttpdf()}{ttpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [8/8]}}
+{\footnotesize\ttfamily double Dist\+::ttpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{df,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_af69f0ae1f8730fc0ccb87b897d763889}\label{classDist_af69f0ae1f8730fc0ccb87b897d763889}} 
+\index{Dist@{Dist}!twoSided@{twoSided}}
+\index{twoSided@{twoSided}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{twoSided()}{twoSided()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Dist\+::two\+Sided (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_af69f0ae1f8730fc0ccb87b897d763889}\label{classDist_af69f0ae1f8730fc0ccb87b897d763889}} 
+\index{Dist@{Dist}!twoSided@{twoSided}}
+\index{twoSided@{twoSided}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{twoSided()}{twoSided()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Dist\+::two\+Sided (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a42e7705080e2f556f4807525d8e81724}\label{classDist_a42e7705080e2f556f4807525d8e81724}} 
+\index{Dist@{Dist}!unifrnd@{unifrnd}}
+\index{unifrnd@{unifrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{unifrnd()}{unifrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Dist\+::unifrnd (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{Vector\+Xd \&}]{unif\+Vector }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a42e7705080e2f556f4807525d8e81724}\label{classDist_a42e7705080e2f556f4807525d8e81724}} 
+\index{Dist@{Dist}!unifrnd@{unifrnd}}
+\index{unifrnd@{unifrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{unifrnd()}{unifrnd()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Dist\+::unifrnd (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{,  }\item[{Vector\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classDist_a256472247ec1c110391dc1c1791abf13}\label{classDist_a256472247ec1c110391dc1c1791abf13}} 
+\index{Dist@{Dist}!wishartrnd@{wishartrnd}}
+\index{wishartrnd@{wishartrnd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{wishartrnd()}{wishartrnd()}}
+{\footnotesize\ttfamily Matrix\+Xd Dist\+::wishartrnd (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const int}]{df }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classDist_a60c98b5d5186ae7522f6d9f5e4a1388c}\label{classDist_a60c98b5d5186ae7522f6d9f5e4a1388c}} 
+\index{Dist@{Dist}!inf@{inf}}
+\index{inf@{inf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{inf}{inf}}
+{\footnotesize\ttfamily double Dist\+::inf}
+
+\mbox{\Hypertarget{classDist_aaa05d4f19c7e102766f44adb674bf3c8}\label{classDist_aaa05d4f19c7e102766f44adb674bf3c8}} 
+\index{Dist@{Dist}!linreglike@{linreglike}}
+\index{linreglike@{linreglike}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{linreglike}{linreglike}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::linreglike}
+
+\mbox{\Hypertarget{classDist_a8ffb49deab6aa72d971c35f121e110c6}\label{classDist_a8ffb49deab6aa72d971c35f121e110c6}} 
+\index{Dist@{Dist}!lmvnpdf@{lmvnpdf}}
+\index{lmvnpdf@{lmvnpdf}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{lmvnpdf}{lmvnpdf}}
+{\footnotesize\ttfamily Vector\+Xd Dist\+::lmvnpdf}
+
+\mbox{\Hypertarget{classDist_a77315b5beeaef8985f66749cf5705837}\label{classDist_a77315b5beeaef8985f66749cf5705837}} 
+\index{Dist@{Dist}!normalDistribution@{normalDistribution}}
+\index{normalDistribution@{normalDistribution}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{normalDistribution}{normalDistribution}}
+{\footnotesize\ttfamily boost\+::math\+::normal Dist\+::normal\+Distribution}
+
+\mbox{\Hypertarget{classDist_a30eba8a239bdb523d0b95f9213bdcd30}\label{classDist_a30eba8a239bdb523d0b95f9213bdcd30}} 
+\index{Dist@{Dist}!rd@{rd}}
+\index{rd@{rd}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{rd}{rd}}
+{\footnotesize\ttfamily std\+::random\+\_\+device Dist\+::rd}
+
+\mbox{\Hypertarget{classDist_a20e9867f88d41ca7a419664120f5b5c0}\label{classDist_a20e9867f88d41ca7a419664120f5b5c0}} 
+\index{Dist@{Dist}!rseed@{rseed}}
+\index{rseed@{rseed}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{rseed}{rseed}}
+{\footnotesize\ttfamily boost\+::mt19937 Dist\+::rseed}
+
+\mbox{\Hypertarget{classDist_a5e25732f89c69924f16443d01b7efeec}\label{classDist_a5e25732f89c69924f16443d01b7efeec}} 
+\index{Dist@{Dist}!u@{u}}
+\index{u@{u}!Dist@{Dist}}
+\doxysubsubsection{\texorpdfstring{u}{u}}
+{\footnotesize\ttfamily boost\+::random\+::uniform\+\_\+01 Dist\+::u}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Old/\+Metropolis\+Hastings/build/\mbox{\hyperlink{Dist2_8hpp}{Dist2.\+hpp}}\item 
+Old/\+Simulation/include/\mbox{\hyperlink{Dist_8hpp}{Dist.\+hpp}}\item 
+Old/\+Simulation/src/\mbox{\hyperlink{Dist_8cpp}{Dist.\+cpp}}\end{DoxyCompactItemize}

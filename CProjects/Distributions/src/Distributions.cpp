@@ -9,6 +9,7 @@ double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
                  const MatrixXd &Sig)
 {
   int p = Sig.cols();
+
   double c = -.5 * p * log(2 * M_PI) - .5 * logdet(Sig);
   double v = -.5 * ((x - mu) * Sig.llt().solve((x - mu).transpose())).value() + c;
   return v;
@@ -239,11 +240,42 @@ double mvtpdf(const VectorXd &x, const VectorXd &mu,
   return numconst * pow(denconst, -1) * kernel;
 }
 
-
-double logavg(const Ref<const VectorXd> &X) {
-  // Values are already logged 
+double logavg(const Ref<const VectorXd> &X)
+{
+  // Values are already logged
   double maxval = X.maxCoeff();
   return log((X.array() - maxval).exp().sum()) + maxval - log(X.size());
+}
+
+MatrixXd logavg(const Ref<const MatrixXd> &X, const int &dim)
+{
+  // Values are already logged
+  if (dim == 0)
+  {
+    VectorXd maxval = X.rowwise().maxCoeff();
+    MatrixXd sumresult = (X.colwise() - maxval);
+    sumresult = sumresult.array().exp();
+    VectorXd s = sumresult.rowwise().sum();
+    s = s.array().log();
+    s = s + maxval;
+    s = s.array() - log(X.cols());
+    return s;
+  }
+  else if (dim == 1)
+  {
+    RowVectorXd maxval = X.colwise().maxCoeff();
+    MatrixXd sumresult = (X.rowwise() - maxval);
+    sumresult = sumresult.array().exp();
+    RowVectorXd s = sumresult.colwise().sum();
+    s = s.array().log();
+    s = s + maxval;
+    s = s.array() - log(X.rows());
+    return s;
+  }
+  else
+  {
+    throw invalid_argument("Invalid input in logavg(), dim must be 0 or 1.");
+  }
 }
 
 /* VectorXd generateChiSquaredVec(double df, int rows) {

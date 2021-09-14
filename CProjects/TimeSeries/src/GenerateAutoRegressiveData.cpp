@@ -17,14 +17,13 @@ GenerateAutoRegressiveData::GenerateAutoRegressiveData(int time, const MatrixXd 
 GenerateAutoRegressiveData::GenerateAutoRegressiveData(int time, const MatrixXd &arparams,
                                                        const double &betaparams)
 {
-    int lags = arparams.cols();
+    lags = arparams.cols();
     int K = arparams.rows();
-    cout << K << endl; 
     yt.setZero(K, time);
     Xt.setZero(K*time, 2);
     Xt << MatrixXd::Ones(K*time, 1), normrnd(0, 1, K*time, 1);
     std::vector<MatrixXd> Xtcontainer = groupByTime(Xt, time, K); 
-    VectorXd beta = VectorXd::Ones(Xt.cols());
+    VectorXd beta = betaparams*VectorXd::Ones(Xt.cols());
     MatrixXd Xbeta;
     MatrixXd D0;
     MatrixXd g(lags, 1);

@@ -1,0 +1,273 @@
+\hypertarget{classGenerateMLFactorData}{}\doxysection{Generate\+M\+L\+Factor\+Data Class Reference}
+\label{classGenerateMLFactorData}\index{GenerateMLFactorData@{GenerateMLFactorData}}
+
+
+{\ttfamily \#include $<$Generate\+M\+L\+Factor\+Data.\+hpp$>$}
+
+
+
+Collaboration diagram for Generate\+M\+L\+Factor\+Data\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=218pt]{classGenerateMLFactorData__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classGenerateMLFactorData_a9168804c3fd90045704825b414b5016e}{gen\+Data}} (int n\+Obs, int n\+Eqns, const Vector\+Xd \&coeff\+Values, const Matrix$<$ int, Dynamic, 2 $>$ \&Info\+Map, const Vector\+Xd \&factor\+Coeff, const Matrix\+Xd \&\+\_\+\+Loadings, const double \&om\+Var)
+\item 
+void \mbox{\hyperlink{classGenerateMLFactorData_ac4c12e3a94386c0f2c0fc8b17333c6ae}{gen\+Otrok\+Data}} (const int \&n\+Obs, const int \&n\+Eqns, const int \&n\+Xs, const double \&coeff\+Values, const Matrix$<$ int, Dynamic, 2 $>$ \&Info\+Map, const Row\+Vector\+Xd \&\mbox{\hyperlink{classGenerateMLFactorData_a192e4ebe3a352f51529c35f658d318f6}{gammas}}, const double \&om\+Var, const Row\+Vector\+Xd \&om\+Ar\+Terms)
+\item 
+void \mbox{\hyperlink{classGenerateMLFactorData_a00e9363b7be3348c0d0176026149df54}{set\+Loadings}} (const Ref$<$ const Matrix\+Xd $>$ \&A, const Matrix$<$ int, Dynamic, 2 $>$ \&Info\+Mat, Matrix\+Xd \&\mbox{\hyperlink{classGenerateMLFactorData_a801fef930edd46d36ac7e89bb47a6924}{Identity}}, double restriction)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{classGenerateMLFactorData_aeb1db5c2569d13708b5581f2596df38f}{T}}
+\item 
+int \mbox{\hyperlink{classGenerateMLFactorData_ae39b1771538406dda0dc2691629d4bc1}{K}}
+\item 
+int \mbox{\hyperlink{classGenerateMLFactorData_af4bf5a98628dbefc8dc390982c0dec4a}{n\+Factors}}
+\item 
+int \mbox{\hyperlink{classGenerateMLFactorData_a0340e7b6aca1fecd51b542b7e76b3ff9}{n\+EqnsP}}
+\item 
+Vector\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a0c6f9579d7f08283f0464000c9940b76}{betas}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_af959ba957fc66c30cef88b95c93bae2c}{Xt}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a80a53ddbbcc1587d0abd57cd7b5fc62f}{surX}}
+\item 
+Vector\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a7e0afdbee7bdc682add90d97690e8150}{all\+Betas}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_aa25a856a9975f8adbbdadad3dde67462}{Xbeta}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a801fef930edd46d36ac7e89bb47a6924}{Identity}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a192e4ebe3a352f51529c35f658d318f6}{gammas}}
+\item 
+Vector\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a650bd2322825d8c86b12197bfa700307}{factor\+Variances}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a057d487ef4c6e6597f2f801d38ab9672}{Loadings}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_ae1685e03642d302484500771e94e564d}{P0}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a1ba94ffad7179227187e0555d960a9ce}{Factor\+Precision}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_af3db1695bbfdcf741ccc8466c121ef4d}{Factors}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a2dcba260e1db8dad1b77d3dfe6949e64}{AF}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a37fccaeaa0d4644dae5c63e2ddfcaa57}{mu}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_ab99c8885f26b2110d5fbee0e43880ca9}{epsilon}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a1933b036ead62864de46a7bcea003c7e}{yt}}
+\item 
+Vector\+Xd \mbox{\hyperlink{classGenerateMLFactorData_ab96ce64cf53af4ea9c43b0c16b779b28}{om\+\_\+variance}}
+\item 
+Vector\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a6868a25ddadeaa0f84066e69efe3941a}{om\+\_\+precision}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a68ee03c2001b052a579859218268c132}{b0}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a4714343eb60857aad4ceb01fd16029bd}{B0}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a7b722a305e7d587837b947e22aa047c6}{H}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_aae68c84d77c6418560ecb8a26c9baeb9}{resids}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classGenerateMLFactorData_a0875dd7553fa574a4a9a0d714fe5f743}{deltas}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classGenerateMLFactorData_a9168804c3fd90045704825b414b5016e}\label{classGenerateMLFactorData_a9168804c3fd90045704825b414b5016e}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!genData@{genData}}
+\index{genData@{genData}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{genData()}{genData()}}
+{\footnotesize\ttfamily void Generate\+M\+L\+Factor\+Data\+::gen\+Data (\begin{DoxyParamCaption}\item[{int}]{n\+Obs,  }\item[{int}]{n\+Eqns,  }\item[{const Vector\+Xd \&}]{coeff\+Values,  }\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{Info\+Map,  }\item[{const Vector\+Xd \&}]{factor\+Coeff,  }\item[{const Matrix\+Xd \&}]{\+\_\+\+Loadings,  }\item[{const double \&}]{om\+Var }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_ac4c12e3a94386c0f2c0fc8b17333c6ae}\label{classGenerateMLFactorData_ac4c12e3a94386c0f2c0fc8b17333c6ae}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!genOtrokData@{genOtrokData}}
+\index{genOtrokData@{genOtrokData}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{genOtrokData()}{genOtrokData()}}
+{\footnotesize\ttfamily void Generate\+M\+L\+Factor\+Data\+::gen\+Otrok\+Data (\begin{DoxyParamCaption}\item[{const int \&}]{n\+Obs,  }\item[{const int \&}]{n\+Eqns,  }\item[{const int \&}]{n\+Xs,  }\item[{const double \&}]{coeff\+Values,  }\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{Info\+Map,  }\item[{const Row\+Vector\+Xd \&}]{gammas,  }\item[{const double \&}]{om\+Var,  }\item[{const Row\+Vector\+Xd \&}]{om\+Ar\+Terms }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a00e9363b7be3348c0d0176026149df54}\label{classGenerateMLFactorData_a00e9363b7be3348c0d0176026149df54}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!setLoadings@{setLoadings}}
+\index{setLoadings@{setLoadings}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{setLoadings()}{setLoadings()}}
+{\footnotesize\ttfamily void Generate\+M\+L\+Factor\+Data\+::set\+Loadings (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{A,  }\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{Info\+Mat,  }\item[{Matrix\+Xd \&}]{Identity,  }\item[{double}]{restriction }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classGenerateMLFactorData_a2dcba260e1db8dad1b77d3dfe6949e64}\label{classGenerateMLFactorData_a2dcba260e1db8dad1b77d3dfe6949e64}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!AF@{AF}}
+\index{AF@{AF}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{AF}{AF}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::\+AF}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a7e0afdbee7bdc682add90d97690e8150}\label{classGenerateMLFactorData_a7e0afdbee7bdc682add90d97690e8150}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!allBetas@{allBetas}}
+\index{allBetas@{allBetas}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{allBetas}{allBetas}}
+{\footnotesize\ttfamily Vector\+Xd Generate\+M\+L\+Factor\+Data\+::all\+Betas}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a68ee03c2001b052a579859218268c132}\label{classGenerateMLFactorData_a68ee03c2001b052a579859218268c132}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!b0@{b0}}
+\index{b0@{b0}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{b0}{b0}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::b0}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a4714343eb60857aad4ceb01fd16029bd}\label{classGenerateMLFactorData_a4714343eb60857aad4ceb01fd16029bd}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!B0@{B0}}
+\index{B0@{B0}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{B0}{B0}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::\+B0}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a0c6f9579d7f08283f0464000c9940b76}\label{classGenerateMLFactorData_a0c6f9579d7f08283f0464000c9940b76}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!betas@{betas}}
+\index{betas@{betas}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{betas}{betas}}
+{\footnotesize\ttfamily Vector\+Xd Generate\+M\+L\+Factor\+Data\+::betas}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a0875dd7553fa574a4a9a0d714fe5f743}\label{classGenerateMLFactorData_a0875dd7553fa574a4a9a0d714fe5f743}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!deltas@{deltas}}
+\index{deltas@{deltas}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{deltas}{deltas}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::deltas}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_ab99c8885f26b2110d5fbee0e43880ca9}\label{classGenerateMLFactorData_ab99c8885f26b2110d5fbee0e43880ca9}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!epsilon@{epsilon}}
+\index{epsilon@{epsilon}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{epsilon}{epsilon}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::epsilon}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a1ba94ffad7179227187e0555d960a9ce}\label{classGenerateMLFactorData_a1ba94ffad7179227187e0555d960a9ce}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!FactorPrecision@{FactorPrecision}}
+\index{FactorPrecision@{FactorPrecision}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{FactorPrecision}{FactorPrecision}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::\+Factor\+Precision}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_af3db1695bbfdcf741ccc8466c121ef4d}\label{classGenerateMLFactorData_af3db1695bbfdcf741ccc8466c121ef4d}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!Factors@{Factors}}
+\index{Factors@{Factors}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{Factors}{Factors}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::\+Factors}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a650bd2322825d8c86b12197bfa700307}\label{classGenerateMLFactorData_a650bd2322825d8c86b12197bfa700307}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!factorVariances@{factorVariances}}
+\index{factorVariances@{factorVariances}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{factorVariances}{factorVariances}}
+{\footnotesize\ttfamily Vector\+Xd Generate\+M\+L\+Factor\+Data\+::factor\+Variances}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a192e4ebe3a352f51529c35f658d318f6}\label{classGenerateMLFactorData_a192e4ebe3a352f51529c35f658d318f6}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!gammas@{gammas}}
+\index{gammas@{gammas}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{gammas}{gammas}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::gammas}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a7b722a305e7d587837b947e22aa047c6}\label{classGenerateMLFactorData_a7b722a305e7d587837b947e22aa047c6}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!H@{H}}
+\index{H@{H}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{H}{H}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::H}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a801fef930edd46d36ac7e89bb47a6924}\label{classGenerateMLFactorData_a801fef930edd46d36ac7e89bb47a6924}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!Identity@{Identity}}
+\index{Identity@{Identity}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{Identity}{Identity}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::\+Identity}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_ae39b1771538406dda0dc2691629d4bc1}\label{classGenerateMLFactorData_ae39b1771538406dda0dc2691629d4bc1}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!K@{K}}
+\index{K@{K}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{K}{K}}
+{\footnotesize\ttfamily int Generate\+M\+L\+Factor\+Data\+::K}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a057d487ef4c6e6597f2f801d38ab9672}\label{classGenerateMLFactorData_a057d487ef4c6e6597f2f801d38ab9672}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!Loadings@{Loadings}}
+\index{Loadings@{Loadings}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{Loadings}{Loadings}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::\+Loadings}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a37fccaeaa0d4644dae5c63e2ddfcaa57}\label{classGenerateMLFactorData_a37fccaeaa0d4644dae5c63e2ddfcaa57}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!mu@{mu}}
+\index{mu@{mu}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{mu}{mu}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::mu}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a0340e7b6aca1fecd51b542b7e76b3ff9}\label{classGenerateMLFactorData_a0340e7b6aca1fecd51b542b7e76b3ff9}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!nEqnsP@{nEqnsP}}
+\index{nEqnsP@{nEqnsP}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{nEqnsP}{nEqnsP}}
+{\footnotesize\ttfamily int Generate\+M\+L\+Factor\+Data\+::n\+EqnsP}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_af4bf5a98628dbefc8dc390982c0dec4a}\label{classGenerateMLFactorData_af4bf5a98628dbefc8dc390982c0dec4a}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!nFactors@{nFactors}}
+\index{nFactors@{nFactors}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{nFactors}{nFactors}}
+{\footnotesize\ttfamily int Generate\+M\+L\+Factor\+Data\+::n\+Factors}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a6868a25ddadeaa0f84066e69efe3941a}\label{classGenerateMLFactorData_a6868a25ddadeaa0f84066e69efe3941a}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!om\_precision@{om\_precision}}
+\index{om\_precision@{om\_precision}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{om\_precision}{om\_precision}}
+{\footnotesize\ttfamily Vector\+Xd Generate\+M\+L\+Factor\+Data\+::om\+\_\+precision}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_ab96ce64cf53af4ea9c43b0c16b779b28}\label{classGenerateMLFactorData_ab96ce64cf53af4ea9c43b0c16b779b28}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!om\_variance@{om\_variance}}
+\index{om\_variance@{om\_variance}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{om\_variance}{om\_variance}}
+{\footnotesize\ttfamily Vector\+Xd Generate\+M\+L\+Factor\+Data\+::om\+\_\+variance}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_ae1685e03642d302484500771e94e564d}\label{classGenerateMLFactorData_ae1685e03642d302484500771e94e564d}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!P0@{P0}}
+\index{P0@{P0}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{P0}{P0}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::\+P0}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_aae68c84d77c6418560ecb8a26c9baeb9}\label{classGenerateMLFactorData_aae68c84d77c6418560ecb8a26c9baeb9}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!resids@{resids}}
+\index{resids@{resids}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{resids}{resids}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::resids}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a80a53ddbbcc1587d0abd57cd7b5fc62f}\label{classGenerateMLFactorData_a80a53ddbbcc1587d0abd57cd7b5fc62f}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!surX@{surX}}
+\index{surX@{surX}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{surX}{surX}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::surX}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_aeb1db5c2569d13708b5581f2596df38f}\label{classGenerateMLFactorData_aeb1db5c2569d13708b5581f2596df38f}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!T@{T}}
+\index{T@{T}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{T}{T}}
+{\footnotesize\ttfamily int Generate\+M\+L\+Factor\+Data\+::T}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_aa25a856a9975f8adbbdadad3dde67462}\label{classGenerateMLFactorData_aa25a856a9975f8adbbdadad3dde67462}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!Xbeta@{Xbeta}}
+\index{Xbeta@{Xbeta}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{Xbeta}{Xbeta}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::\+Xbeta}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_af959ba957fc66c30cef88b95c93bae2c}\label{classGenerateMLFactorData_af959ba957fc66c30cef88b95c93bae2c}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!Xt@{Xt}}
+\index{Xt@{Xt}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{Xt}{Xt}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::\+Xt}
+
+\mbox{\Hypertarget{classGenerateMLFactorData_a1933b036ead62864de46a7bcea003c7e}\label{classGenerateMLFactorData_a1933b036ead62864de46a7bcea003c7e}} 
+\index{GenerateMLFactorData@{GenerateMLFactorData}!yt@{yt}}
+\index{yt@{yt}!GenerateMLFactorData@{GenerateMLFactorData}}
+\doxysubsubsection{\texorpdfstring{yt}{yt}}
+{\footnotesize\ttfamily Matrix\+Xd Generate\+M\+L\+Factor\+Data\+::yt}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Multilevel\+Model/include/\mbox{\hyperlink{GenerateMLFactorData_8hpp}{Generate\+M\+L\+Factor\+Data.\+hpp}}\item 
+Multilevel\+Model/src/\mbox{\hyperlink{GenerateMLFactorData_8cpp}{Generate\+M\+L\+Factor\+Data.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,154 @@
+\hypertarget{classImportance}{}\doxysection{Importance Class Reference}
+\label{classImportance}\index{Importance@{Importance}}
+
+
+{\ttfamily \#include $<$Importance.\+hpp$>$}
+
+
+
+Inheritance diagram for Importance\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=152pt]{classImportance__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Importance\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=196pt]{classImportance__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classImportance_a51fbe6ddbbf65f541f107a1feada864a}{importance\+Sampling}} (const Vector\+Xd \&ll, const Vector\+Xd \&ul, const Vector\+Xd \&betas, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, int sample\+Size, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, int a0, int d0)
+\item 
+double \mbox{\hyperlink{classImportance_a72d57e4c70449d7bdb48a9af2ad4722a}{trunctprop}} (const Vector\+Xd \&ll, const Vector\+Xd \&ul, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const int nu, const Vector\+Xd \&y, const Matrix\+Xd \&X, int sample\+Size, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, int a0, int d0)
+\item 
+double \mbox{\hyperlink{classImportance_aab36da9e95526f3deb0388edc82c6b2b}{mlT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const Matrix\+Xd \&y, const Matrix\+Xd \&X, double df, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+double \mbox{\hyperlink{classImportance_a2c9646b3ee691893f1f22d9244df3517}{ml\+Geweke91}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const Matrix\+Xd \&y, const Matrix\+Xd \&X, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+double \mbox{\hyperlink{classImportance_ab5eacc6f50aafeb5f031984a63139054}{ml\+Geweke91T}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, double df, const Matrix\+Xd \&y, const Matrix\+Xd \&X, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+Vector\+Xd \mbox{\hyperlink{classImportance_a74ae18cc89f0571ca79e8ba9620fac64}{tnormpdf}} (double, double, double, double, Vector\+Xd \&)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classImportance_aca83aae1c59139a2a9b2284e84702a0c}{tnormpdf}} (Vector\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&)
+\item 
+Vector\+Xd \mbox{\hyperlink{classImportance_a09c54100c94de8e98e43275a6f6d30ff}{logt\+Like}} (double df, const Ref$<$ const Vector\+Xd $>$ \&mu, const Vector\+Xd \&sigma\+Sqd, Matrix\+Xd X)
+\item 
+Vector\+Xd \mbox{\hyperlink{classImportance_ae7d0a9eb81cbc0729a0c62c2ecea6a84}{logmvtpdf}} (double df, const Ref$<$ const Vector\+Xd $>$ \&mu, const Matrix\+Xd \&Sigma, Matrix\+Xd X)
+\item 
+void \mbox{\hyperlink{classImportance_a23dd8796b37450ef92ce2bce71258df7}{run\+Sim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, Vector\+Xd \&theta, Matrix\+Xd \&sigma, Vector\+Xd \&y, Matrix\+Xd \&X, Vector\+Xd \&ll, Vector\+Xd \&ul, int sample\+Size, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, Vector\+Xd \&b0, Matrix\+Xd \&S0, double a0, double d0)
+\item 
+void \mbox{\hyperlink{classImportance_af8a1c11aaa28a85a8db48204f6a3efe8}{run\+Tsim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&theta, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, double df, int sample\+Size, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+void \mbox{\hyperlink{classImportance_ad0ce697d685d6698f723a6379da8a892}{run\+Sim\+New}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&theta, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&ll, const Vector\+Xd \&ul, const Matrix\+Xd \&Linear\+Constraints, int sample\+Size, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, const Vector\+Xd \&b0, const Matrix\+Xd \&S0, double a0, double d0)
+\item 
+void \mbox{\hyperlink{classImportance_a65d3fb34371547e3a70f529ce6555b48}{run\+Tsim\+New}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&theta, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&ll, const Vector\+Xd \&ul, const Matrix\+Xd \&Linear\+Constraints, double df, int sample\+Size, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, const Vector\+Xd \&b0, const Matrix\+Xd \&S0, double a0, double d0)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classImportance_ad99be39fb24ea8d670fe71d9dc7293ed}{sample}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classImportance_a51fbe6ddbbf65f541f107a1feada864a}\label{classImportance_a51fbe6ddbbf65f541f107a1feada864a}} 
+\index{Importance@{Importance}!importanceSampling@{importanceSampling}}
+\index{importanceSampling@{importanceSampling}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{importanceSampling()}{importanceSampling()}}
+{\footnotesize\ttfamily double Importance\+::importance\+Sampling (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{ll,  }\item[{const Vector\+Xd \&}]{ul,  }\item[{const Vector\+Xd \&}]{betas,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{int}]{sample\+Size,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{int}]{a0,  }\item[{int}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_ae7d0a9eb81cbc0729a0c62c2ecea6a84}\label{classImportance_ae7d0a9eb81cbc0729a0c62c2ecea6a84}} 
+\index{Importance@{Importance}!logmvtpdf@{logmvtpdf}}
+\index{logmvtpdf@{logmvtpdf}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{logmvtpdf()}{logmvtpdf()}}
+{\footnotesize\ttfamily Vector\+Xd Importance\+::logmvtpdf (\begin{DoxyParamCaption}\item[{double}]{df,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{Matrix\+Xd}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_a09c54100c94de8e98e43275a6f6d30ff}\label{classImportance_a09c54100c94de8e98e43275a6f6d30ff}} 
+\index{Importance@{Importance}!logtLike@{logtLike}}
+\index{logtLike@{logtLike}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{logtLike()}{logtLike()}}
+{\footnotesize\ttfamily Vector\+Xd Importance\+::logt\+Like (\begin{DoxyParamCaption}\item[{double}]{df,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{mu,  }\item[{const Vector\+Xd \&}]{sigma\+Sqd,  }\item[{Matrix\+Xd}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_a2c9646b3ee691893f1f22d9244df3517}\label{classImportance_a2c9646b3ee691893f1f22d9244df3517}} 
+\index{Importance@{Importance}!mlGeweke91@{mlGeweke91}}
+\index{mlGeweke91@{mlGeweke91}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{mlGeweke91()}{mlGeweke91()}}
+{\footnotesize\ttfamily double Importance\+::ml\+Geweke91 (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Matrix\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_ab5eacc6f50aafeb5f031984a63139054}\label{classImportance_ab5eacc6f50aafeb5f031984a63139054}} 
+\index{Importance@{Importance}!mlGeweke91T@{mlGeweke91T}}
+\index{mlGeweke91T@{mlGeweke91T}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{mlGeweke91T()}{mlGeweke91T()}}
+{\footnotesize\ttfamily double Importance\+::ml\+Geweke91T (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{df,  }\item[{const Matrix\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_aab36da9e95526f3deb0388edc82c6b2b}\label{classImportance_aab36da9e95526f3deb0388edc82c6b2b}} 
+\index{Importance@{Importance}!mlT@{mlT}}
+\index{mlT@{mlT}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{mlT()}{mlT()}}
+{\footnotesize\ttfamily double Importance\+::mlT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Matrix\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{double}]{df,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_a23dd8796b37450ef92ce2bce71258df7}\label{classImportance_a23dd8796b37450ef92ce2bce71258df7}} 
+\index{Importance@{Importance}!runSim@{runSim}}
+\index{runSim@{runSim}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{runSim()}{runSim()}}
+{\footnotesize\ttfamily void Importance\+::run\+Sim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{Vector\+Xd \&}]{theta,  }\item[{Matrix\+Xd \&}]{sigma,  }\item[{Vector\+Xd \&}]{y,  }\item[{Matrix\+Xd \&}]{X,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul,  }\item[{int}]{sample\+Size,  }\item[{int}]{burnin,  }\item[{Vector\+Xd \&}]{b0,  }\item[{Matrix\+Xd \&}]{S0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_ad0ce697d685d6698f723a6379da8a892}\label{classImportance_ad0ce697d685d6698f723a6379da8a892}} 
+\index{Importance@{Importance}!runSimNew@{runSimNew}}
+\index{runSimNew@{runSimNew}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{runSimNew()}{runSimNew()}}
+{\footnotesize\ttfamily void Importance\+::run\+Sim\+New (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{ll,  }\item[{const Vector\+Xd \&}]{ul,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{int}]{sample\+Size,  }\item[{int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{S0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_af8a1c11aaa28a85a8db48204f6a3efe8}\label{classImportance_af8a1c11aaa28a85a8db48204f6a3efe8}} 
+\index{Importance@{Importance}!runTsim@{runTsim}}
+\index{runTsim@{runTsim}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{runTsim()}{runTsim()}}
+{\footnotesize\ttfamily void Importance\+::run\+Tsim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{int}]{sample\+Size,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_a65d3fb34371547e3a70f529ce6555b48}\label{classImportance_a65d3fb34371547e3a70f529ce6555b48}} 
+\index{Importance@{Importance}!runTsimNew@{runTsimNew}}
+\index{runTsimNew@{runTsimNew}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{runTsimNew()}{runTsimNew()}}
+{\footnotesize\ttfamily void Importance\+::run\+Tsim\+New (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{ll,  }\item[{const Vector\+Xd \&}]{ul,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{int}]{sample\+Size,  }\item[{int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{S0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_a74ae18cc89f0571ca79e8ba9620fac64}\label{classImportance_a74ae18cc89f0571ca79e8ba9620fac64}} 
+\index{Importance@{Importance}!tnormpdf@{tnormpdf}}
+\index{tnormpdf@{tnormpdf}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{tnormpdf()}{tnormpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Vector\+Xd Importance\+::tnormpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{double}]{mu,  }\item[{double}]{sigma,  }\item[{Vector\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_aca83aae1c59139a2a9b2284e84702a0c}\label{classImportance_aca83aae1c59139a2a9b2284e84702a0c}} 
+\index{Importance@{Importance}!tnormpdf@{tnormpdf}}
+\index{tnormpdf@{tnormpdf}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{tnormpdf()}{tnormpdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Importance\+::tnormpdf (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul,  }\item[{Vector\+Xd \&}]{mu,  }\item[{Vector\+Xd \&}]{st\+Devs,  }\item[{Matrix\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classImportance_a72d57e4c70449d7bdb48a9af2ad4722a}\label{classImportance_a72d57e4c70449d7bdb48a9af2ad4722a}} 
+\index{Importance@{Importance}!trunctprop@{trunctprop}}
+\index{trunctprop@{trunctprop}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{trunctprop()}{trunctprop()}}
+{\footnotesize\ttfamily double Importance\+::trunctprop (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{ll,  }\item[{const Vector\+Xd \&}]{ul,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const int}]{nu,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{int}]{sample\+Size,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{int}]{a0,  }\item[{int}]{d0 }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classImportance_ad99be39fb24ea8d670fe71d9dc7293ed}\label{classImportance_ad99be39fb24ea8d670fe71d9dc7293ed}} 
+\index{Importance@{Importance}!sample@{sample}}
+\index{sample@{sample}!Importance@{Importance}}
+\doxysubsubsection{\texorpdfstring{sample}{sample}}
+{\footnotesize\ttfamily Matrix\+Xd Importance\+::sample}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Old/\+Simulation/include/\mbox{\hyperlink{Importance_8hpp}{Importance.\+hpp}}\item 
+Old/\+Simulation/src/\mbox{\hyperlink{Importance_8cpp}{Importance.\+cpp}}\end{DoxyCompactItemize}

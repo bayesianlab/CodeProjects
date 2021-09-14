@@ -1,14 +1,30 @@
 #pragma once
 #ifndef DGPML_H
 #define DGPML_H
-#include <map>
-#include <eigen-3.3.9/Eigen/Dense>
-#include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
+#include <Eigen/Dense>
+#include <unsupported/Eigen/KroneckerProduct>
 #include "Distributions.hpp"
 #include "MultilevelModelFunctions.hpp"
 
 using namespace Eigen;
 using namespace std;
+
+class DynamicFactorsArErrors
+{
+public:
+    MatrixXd deltas;
+    MatrixXd gammas;
+    MatrixXd Factors;
+    MatrixXd Xt;
+    MatrixXd yt; 
+    Matrix<double, Dynamic, Dynamic, RowMajor> betas;
+    RowVectorXd b0;
+    MatrixXd B0; 
+    void genData(const int &nObs, const int &nEqns, const int &nXs, const double &coeffValues,
+                 const Matrix<int, Dynamic, 2> &InfoMap, const RowVectorXd &gammas,
+                 const RowVectorXd &omArTerms, const double &omVar);
+};
+
 class GenerateMLFactorData
 {
     /* betas will be same for every equation, 
@@ -41,17 +57,15 @@ public:
     VectorXd om_precision;
     MatrixXd b0;
     MatrixXd B0;
+    RowVectorXd g0;
+    MatrixXd G0; 
     MatrixXd H;
     MatrixXd resids;
     MatrixXd deltas;
     void genData(int nObs, int nEqns, const VectorXd &coeffValues,
                  const Matrix<int, Dynamic, 2> &InfoMap,
-                 const VectorXd &factorCoeff,
+                 const RowVectorXd &factorCoeff,
                  const MatrixXd &_Loadings, const double &omVar);
-
-    void genOtrokData(const int &nObs, const int &nEqns, const int &nXs, const double &coeffValues,
-                      const Matrix<int, Dynamic, 2> &InfoMap, const RowVectorXd &gammas, const double &omVar,
-                      const RowVectorXd &omArTerms);
 
     void setLoadings(const Ref<const MatrixXd> &A, const Matrix<int, Dynamic, 2> &InfoMat,
                      MatrixXd &Identity, double restriction)

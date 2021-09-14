@@ -1,0 +1,148 @@
+\hypertarget{TimeSeriesTools_8hpp}{}\doxysection{Time\+Series/include/\+Time\+Series\+Tools.hpp File Reference}
+\label{TimeSeriesTools_8hpp}\index{TimeSeries/include/TimeSeriesTools.hpp@{TimeSeries/include/TimeSeriesTools.hpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$eigen-\/3.\+3.\+9/\+Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$eigen-\/3.\+3.\+9/unsupported/\+Eigen/\+Kronecker\+Product$>$}\newline
+{\ttfamily \#include \char`\"{}Distributions.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Time\+Series\+Tools.\+hpp\char`\"{}}\newline
+Include dependency graph for Time\+Series\+Tools.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{TimeSeriesTools_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{TimeSeriesTools_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classArParameterTools}{Ar\+Parameter\+Tools}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{TimeSeriesTools_8hpp_a2b4079cb770a4b5089191829fcd617ff}{T\+S\+T\+O\+O\+L\+\_\+H}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename D $>$ }\\std\+::vector$<$ Matrix\+Xd $>$ \mbox{\hyperlink{TimeSeriesTools_8hpp_a4f88896b33d178ba2073c128c9b8f4aa}{group\+By\+Time}} (const Matrix\+Base$<$ D $>$ \&Xtfull, const int \&T, const int \&K)
+\item 
+{\footnotesize template$<$typename Derived $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_aae2b7dfdc4fb8e1e86ac33f7bd8a03a7}{make\+State\+Space}} (const Matrix\+Base$<$ Derived $>$ \&params)
+\item 
+{\footnotesize template$<$typename Derived1 , typename Derived2 $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_afb7c1161475ccb2113e0a493602b1d39}{set\+Initial\+Covar}} (const Matrix\+Base$<$ Derived1 $>$ \&params, const Matrix\+Base$<$ Derived2 $>$ \&vars)
+\item 
+{\footnotesize template$<$typename Derived1 $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_a417af8729a3fc5216ca9888aeb36275e}{set\+Initial\+Covar}} (const Matrix\+Base$<$ Derived1 $>$ \&params, const double \&\mbox{\hyperlink{EigenTools_8cpp_afb9e7d8212b9b8201c491d675d702666}{var}})
+\item 
+{\footnotesize template$<$typename D $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_ac96e07c70ea50653c8316cd83b46a0d6}{ReturnH}} (const Matrix\+Base$<$ D $>$ \&params, int T)
+\item 
+{\footnotesize template$<$typename D1 , typename D2 $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_a209029eb5d08d926437014c761bda132}{Make\+Precision}} (const Matrix\+Base$<$ D1 $>$ \&params, const Matrix\+Base$<$ D2 $>$ \&\mbox{\hyperlink{EigenTools_8cpp_afb9e7d8212b9b8201c491d675d702666}{var}}, int T)
+\item 
+{\footnotesize template$<$typename D $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_a9f3ed86dc36aa43828f85c0948325c54}{lag}} (const Matrix\+Base$<$ D $>$ \&xt, const int \&lags, const int \&dimension)
+\item 
+{\footnotesize template$<$typename T1 , typename T2 $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_a00c9455efda042c49aa705cca25410cf}{lag\+Operator}} (const Matrix\+Base$<$ T1 $>$ \&X, const Matrix\+Base$<$ T2 $>$ \&params, const int operating\+Dimension)
+\item 
+{\footnotesize template$<$typename T1 , typename T2 $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_a664ba376a043be8a034532ccb202a8a0}{make\+Stationary}} (const Matrix\+Base$<$ T1 $>$ \&M, const Matrix\+Base$<$ T2 $>$ \&params, const Vector\+Xd \&sigma2, const int \&operating\+Dimension)
+\item 
+{\footnotesize template$<$typename T1 , typename T2 $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_a034c447414b620af122af54cf3029dcc}{make\+Stationary}} (const Matrix\+Base$<$ T1 $>$ \&M, const Matrix\+Base$<$ T2 $>$ \&params, const double \&sigma2, const int \&operating\+Dimension)
+\item 
+{\footnotesize template$<$typename D1 , typename D2 $>$ }\\Matrix\+Xd \mbox{\hyperlink{TimeSeriesTools_8hpp_a29bb7a136d13ff6f33a3e5457f92c070}{update\+AR}} (const Matrix\+Base$<$ D1 $>$ \&current, const Matrix\+Base$<$ D2 $>$ \&yt, const double \&sigma2, const Matrix\+Xd \&prior\+Mean, const Matrix\+Xd \&prior\+Var)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_a2b4079cb770a4b5089191829fcd617ff}\label{TimeSeriesTools_8hpp_a2b4079cb770a4b5089191829fcd617ff}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!TSTOOL\_H@{TSTOOL\_H}}
+\index{TSTOOL\_H@{TSTOOL\_H}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{TSTOOL\_H}{TSTOOL\_H}}
+{\footnotesize\ttfamily \#define T\+S\+T\+O\+O\+L\+\_\+H}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_a4f88896b33d178ba2073c128c9b8f4aa}\label{TimeSeriesTools_8hpp_a4f88896b33d178ba2073c128c9b8f4aa}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!groupByTime@{groupByTime}}
+\index{groupByTime@{groupByTime}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{groupByTime()}{groupByTime()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+std\+::vector$<$Matrix\+Xd$>$ group\+By\+Time (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D $>$ \&}]{Xtfull,  }\item[{const int \&}]{T,  }\item[{const int \&}]{K }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_a9f3ed86dc36aa43828f85c0948325c54}\label{TimeSeriesTools_8hpp_a9f3ed86dc36aa43828f85c0948325c54}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!lag@{lag}}
+\index{lag@{lag}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{lag()}{lag()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+Matrix\+Xd lag (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D $>$ \&}]{xt,  }\item[{const int \&}]{lags,  }\item[{const int \&}]{dimension }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_a00c9455efda042c49aa705cca25410cf}\label{TimeSeriesTools_8hpp_a00c9455efda042c49aa705cca25410cf}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!lagOperator@{lagOperator}}
+\index{lagOperator@{lagOperator}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{lagOperator()}{lagOperator()}}
+{\footnotesize\ttfamily template$<$typename T1 , typename T2 $>$ \\
+Matrix\+Xd lag\+Operator (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ T1 $>$ \&}]{X,  }\item[{const Matrix\+Base$<$ T2 $>$ \&}]{params,  }\item[{const int}]{operating\+Dimension }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_a209029eb5d08d926437014c761bda132}\label{TimeSeriesTools_8hpp_a209029eb5d08d926437014c761bda132}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!MakePrecision@{MakePrecision}}
+\index{MakePrecision@{MakePrecision}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{MakePrecision()}{MakePrecision()}}
+{\footnotesize\ttfamily template$<$typename D1 , typename D2 $>$ \\
+Matrix\+Xd Make\+Precision (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D1 $>$ \&}]{params,  }\item[{const Matrix\+Base$<$ D2 $>$ \&}]{var,  }\item[{int}]{T }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_aae2b7dfdc4fb8e1e86ac33f7bd8a03a7}\label{TimeSeriesTools_8hpp_aae2b7dfdc4fb8e1e86ac33f7bd8a03a7}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!makeStateSpace@{makeStateSpace}}
+\index{makeStateSpace@{makeStateSpace}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{makeStateSpace()}{makeStateSpace()}}
+{\footnotesize\ttfamily template$<$typename Derived $>$ \\
+Matrix\+Xd make\+State\+Space (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ Derived $>$ \&}]{params }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_a034c447414b620af122af54cf3029dcc}\label{TimeSeriesTools_8hpp_a034c447414b620af122af54cf3029dcc}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!makeStationary@{makeStationary}}
+\index{makeStationary@{makeStationary}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{makeStationary()}{makeStationary()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename T1 , typename T2 $>$ \\
+Matrix\+Xd make\+Stationary (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ T1 $>$ \&}]{M,  }\item[{const Matrix\+Base$<$ T2 $>$ \&}]{params,  }\item[{const double \&}]{sigma2,  }\item[{const int \&}]{operating\+Dimension }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_a664ba376a043be8a034532ccb202a8a0}\label{TimeSeriesTools_8hpp_a664ba376a043be8a034532ccb202a8a0}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!makeStationary@{makeStationary}}
+\index{makeStationary@{makeStationary}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{makeStationary()}{makeStationary()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename T1 , typename T2 $>$ \\
+Matrix\+Xd make\+Stationary (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ T1 $>$ \&}]{M,  }\item[{const Matrix\+Base$<$ T2 $>$ \&}]{params,  }\item[{const Vector\+Xd \&}]{sigma2,  }\item[{const int \&}]{operating\+Dimension }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_ac96e07c70ea50653c8316cd83b46a0d6}\label{TimeSeriesTools_8hpp_ac96e07c70ea50653c8316cd83b46a0d6}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!ReturnH@{ReturnH}}
+\index{ReturnH@{ReturnH}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{ReturnH()}{ReturnH()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+Matrix\+Xd ReturnH (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D $>$ \&}]{params,  }\item[{int}]{T }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_a417af8729a3fc5216ca9888aeb36275e}\label{TimeSeriesTools_8hpp_a417af8729a3fc5216ca9888aeb36275e}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!setInitialCovar@{setInitialCovar}}
+\index{setInitialCovar@{setInitialCovar}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{setInitialCovar()}{setInitialCovar()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily template$<$typename Derived1 $>$ \\
+Matrix\+Xd set\+Initial\+Covar (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ Derived1 $>$ \&}]{params,  }\item[{const double \&}]{var }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_afb7c1161475ccb2113e0a493602b1d39}\label{TimeSeriesTools_8hpp_afb7c1161475ccb2113e0a493602b1d39}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!setInitialCovar@{setInitialCovar}}
+\index{setInitialCovar@{setInitialCovar}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{setInitialCovar()}{setInitialCovar()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily template$<$typename Derived1 , typename Derived2 $>$ \\
+Matrix\+Xd set\+Initial\+Covar (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ Derived1 $>$ \&}]{params,  }\item[{const Matrix\+Base$<$ Derived2 $>$ \&}]{vars }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{TimeSeriesTools_8hpp_a29bb7a136d13ff6f33a3e5457f92c070}\label{TimeSeriesTools_8hpp_a29bb7a136d13ff6f33a3e5457f92c070}} 
+\index{TimeSeriesTools.hpp@{TimeSeriesTools.hpp}!updateAR@{updateAR}}
+\index{updateAR@{updateAR}!TimeSeriesTools.hpp@{TimeSeriesTools.hpp}}
+\doxysubsubsection{\texorpdfstring{updateAR()}{updateAR()}}
+{\footnotesize\ttfamily template$<$typename D1 , typename D2 $>$ \\
+Matrix\+Xd update\+AR (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D1 $>$ \&}]{current,  }\item[{const Matrix\+Base$<$ D2 $>$ \&}]{yt,  }\item[{const double \&}]{sigma2,  }\item[{const Matrix\+Xd \&}]{prior\+Mean,  }\item[{const Matrix\+Xd \&}]{prior\+Var }\end{DoxyParamCaption})}
+

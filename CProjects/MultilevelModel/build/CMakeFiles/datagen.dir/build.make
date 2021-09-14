@@ -57,9 +57,22 @@ include CMakeFiles/datagen.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/datagen.dir/flags.make
 
+CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o: CMakeFiles/datagen.dir/flags.make
+CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o: /home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o -c /home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp
+
+CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp > CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.i
+
+CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp -o CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.s
+
 CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o: CMakeFiles/datagen.dir/flags.make
 CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o: ../src/GenerateMLFactorData.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateMLFactorData.cpp
 
 CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.i: cmake_force
@@ -72,15 +85,17 @@ CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.s: cmake_force
 
 # Object files for target datagen
 datagen_OBJECTS = \
+"CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o" \
 "CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o"
 
 # External object files for target datagen
 datagen_EXTERNAL_OBJECTS =
 
+libdatagen.a: CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o
 libdatagen.a: CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o
 libdatagen.a: CMakeFiles/datagen.dir/build.make
 libdatagen.a: CMakeFiles/datagen.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libdatagen.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX static library libdatagen.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/datagen.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/datagen.dir/link.txt --verbose=$(VERBOSE)
 

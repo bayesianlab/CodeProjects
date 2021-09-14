@@ -1,0 +1,191 @@
+\hypertarget{binomialCoef_8c}{}\doxysection{Old/\+Numerical\+Analysis/binomial\+Coef.c File Reference}
+\label{binomialCoef_8c}\index{Old/NumericalAnalysis/binomialCoef.c@{Old/NumericalAnalysis/binomialCoef.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+Include dependency graph for binomial\+Coef.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=208pt]{binomialCoef_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{binomialCoef_8c_a0f141ee0a2e93ca964bb471fac0f8902}{N\+R\+OW}}~3
+\item 
+\#define \mbox{\hyperlink{binomialCoef_8c_a1133f0acccd213ff23c60599bfa1a0b2}{N\+C\+OL}}~\mbox{\hyperlink{binomialCoef_8c_a0f141ee0a2e93ca964bb471fac0f8902}{N\+R\+OW}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{binomialCoef_8c_ac6a10423ed90d29b2255c892874c83e8}{init\+Pascal}} ()
+\item 
+void \mbox{\hyperlink{binomialCoef_8c_a75141fad8b0d1d55f520b679539df928}{printf2D}} ()
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_a519eadabf5626e53162ce52b03f45c1f}{sum\+Array}} ()
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_a99dfa0643a360934a10afba236da8638}{factorial}} ()
+\item 
+void \mbox{\hyperlink{binomialCoef_8c_a50699cb9f3d56758519fb49081f86c50}{c\+Unit\+Int}} ()
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_a26e84b1daa709f0e8d1e15e1917d2c65}{ibin}} ()
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_aab61881a83f4b01e42e3e279dba7adf8}{jbin}} ()
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_af3faed61aeacff16f11e7d85cf10ef31}{kbin}} ()
+\item 
+void \mbox{\hyperlink{binomialCoef_8c_add5bc78f397a81139bde6c15413f31d2}{pascal}} ()
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_a20614b0260f5c699044c6514b6479e34}{factorial}} (int \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+void \mbox{\hyperlink{binomialCoef_8c_a031bd373487f6aa05b6aaa3e6c7122df}{c\+Unit\+Int}} (int \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}}, int test\+Val)
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_a7d4d3b5d3d7692bf337e3111057a687e}{ibin}} (int n, int m)
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_a79aa32162dcf182dce4fd7512ea19861}{jbin}} (int n, int m)
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_a628554fbe8200d670b645e3db577ba9e}{kbin}} (int n, int m)
+\item 
+void \mbox{\hyperlink{binomialCoef_8c_a422b9dd8537f0a46c54569a6866964da}{init\+Pascal}} (int nrow, int triangle\mbox{[}nrow\mbox{]}\mbox{[}nrow\mbox{]})
+\item 
+void \mbox{\hyperlink{binomialCoef_8c_a56f9a193f399271612758b49d8f7a3fb}{pascal}} (int nrow, int triangle\mbox{[}nrow\mbox{]}\mbox{[}nrow\mbox{]})
+\item 
+void \mbox{\hyperlink{binomialCoef_8c_a3b0c7d2cecd40864026953367f085d82}{printf2D}} (int nrow, int ncol, int two\+Darr\mbox{[}nrow\mbox{]}\mbox{[}ncol\mbox{]})
+\item 
+int \mbox{\hyperlink{binomialCoef_8c_a133b7095a55750f21448aca8fd6dedef}{sum\+Array}} (int array\+Name\mbox{[}$\,$\mbox{]}, int array\+Len)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{binomialCoef_8c_a1133f0acccd213ff23c60599bfa1a0b2}\label{binomialCoef_8c_a1133f0acccd213ff23c60599bfa1a0b2}} 
+\index{binomialCoef.c@{binomialCoef.c}!NCOL@{NCOL}}
+\index{NCOL@{NCOL}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{NCOL}{NCOL}}
+{\footnotesize\ttfamily \#define N\+C\+OL~\mbox{\hyperlink{binomialCoef_8c_a0f141ee0a2e93ca964bb471fac0f8902}{N\+R\+OW}}}
+
+\mbox{\Hypertarget{binomialCoef_8c_a0f141ee0a2e93ca964bb471fac0f8902}\label{binomialCoef_8c_a0f141ee0a2e93ca964bb471fac0f8902}} 
+\index{binomialCoef.c@{binomialCoef.c}!NROW@{NROW}}
+\index{NROW@{NROW}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{NROW}{NROW}}
+{\footnotesize\ttfamily \#define N\+R\+OW~3}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{binomialCoef_8c_a50699cb9f3d56758519fb49081f86c50}\label{binomialCoef_8c_a50699cb9f3d56758519fb49081f86c50}} 
+\index{binomialCoef.c@{binomialCoef.c}!cUnitInt@{cUnitInt}}
+\index{cUnitInt@{cUnitInt}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{cUnitInt()}{cUnitInt()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void c\+Unit\+Int (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a031bd373487f6aa05b6aaa3e6c7122df}\label{binomialCoef_8c_a031bd373487f6aa05b6aaa3e6c7122df}} 
+\index{binomialCoef.c@{binomialCoef.c}!cUnitInt@{cUnitInt}}
+\index{cUnitInt@{cUnitInt}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{cUnitInt()}{cUnitInt()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void c\+Unit\+Int (\begin{DoxyParamCaption}\item[{int}]{x,  }\item[{int}]{test\+Val }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a99dfa0643a360934a10afba236da8638}\label{binomialCoef_8c_a99dfa0643a360934a10afba236da8638}} 
+\index{binomialCoef.c@{binomialCoef.c}!factorial@{factorial}}
+\index{factorial@{factorial}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{factorial()}{factorial()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int factorial (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a20614b0260f5c699044c6514b6479e34}\label{binomialCoef_8c_a20614b0260f5c699044c6514b6479e34}} 
+\index{binomialCoef.c@{binomialCoef.c}!factorial@{factorial}}
+\index{factorial@{factorial}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{factorial()}{factorial()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int factorial (\begin{DoxyParamCaption}\item[{int}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a26e84b1daa709f0e8d1e15e1917d2c65}\label{binomialCoef_8c_a26e84b1daa709f0e8d1e15e1917d2c65}} 
+\index{binomialCoef.c@{binomialCoef.c}!ibin@{ibin}}
+\index{ibin@{ibin}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{ibin()}{ibin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int ibin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a7d4d3b5d3d7692bf337e3111057a687e}\label{binomialCoef_8c_a7d4d3b5d3d7692bf337e3111057a687e}} 
+\index{binomialCoef.c@{binomialCoef.c}!ibin@{ibin}}
+\index{ibin@{ibin}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{ibin()}{ibin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int ibin (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{int}]{m }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_ac6a10423ed90d29b2255c892874c83e8}\label{binomialCoef_8c_ac6a10423ed90d29b2255c892874c83e8}} 
+\index{binomialCoef.c@{binomialCoef.c}!initPascal@{initPascal}}
+\index{initPascal@{initPascal}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{initPascal()}{initPascal()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void init\+Pascal (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a422b9dd8537f0a46c54569a6866964da}\label{binomialCoef_8c_a422b9dd8537f0a46c54569a6866964da}} 
+\index{binomialCoef.c@{binomialCoef.c}!initPascal@{initPascal}}
+\index{initPascal@{initPascal}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{initPascal()}{initPascal()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void init\+Pascal (\begin{DoxyParamCaption}\item[{int}]{nrow,  }\item[{int}]{triangle\mbox{[}nrow\mbox{]}\mbox{[}nrow\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_aab61881a83f4b01e42e3e279dba7adf8}\label{binomialCoef_8c_aab61881a83f4b01e42e3e279dba7adf8}} 
+\index{binomialCoef.c@{binomialCoef.c}!jbin@{jbin}}
+\index{jbin@{jbin}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{jbin()}{jbin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int jbin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a79aa32162dcf182dce4fd7512ea19861}\label{binomialCoef_8c_a79aa32162dcf182dce4fd7512ea19861}} 
+\index{binomialCoef.c@{binomialCoef.c}!jbin@{jbin}}
+\index{jbin@{jbin}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{jbin()}{jbin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int jbin (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{int}]{m }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_af3faed61aeacff16f11e7d85cf10ef31}\label{binomialCoef_8c_af3faed61aeacff16f11e7d85cf10ef31}} 
+\index{binomialCoef.c@{binomialCoef.c}!kbin@{kbin}}
+\index{kbin@{kbin}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{kbin()}{kbin()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int kbin (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a628554fbe8200d670b645e3db577ba9e}\label{binomialCoef_8c_a628554fbe8200d670b645e3db577ba9e}} 
+\index{binomialCoef.c@{binomialCoef.c}!kbin@{kbin}}
+\index{kbin@{kbin}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{kbin()}{kbin()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int kbin (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{int}]{m }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{binomialCoef_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{binomialCoef.c@{binomialCoef.c}!main@{main}}
+\index{main@{main}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_add5bc78f397a81139bde6c15413f31d2}\label{binomialCoef_8c_add5bc78f397a81139bde6c15413f31d2}} 
+\index{binomialCoef.c@{binomialCoef.c}!pascal@{pascal}}
+\index{pascal@{pascal}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{pascal()}{pascal()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void pascal (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a56f9a193f399271612758b49d8f7a3fb}\label{binomialCoef_8c_a56f9a193f399271612758b49d8f7a3fb}} 
+\index{binomialCoef.c@{binomialCoef.c}!pascal@{pascal}}
+\index{pascal@{pascal}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{pascal()}{pascal()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void pascal (\begin{DoxyParamCaption}\item[{int}]{nrow,  }\item[{int}]{triangle\mbox{[}nrow\mbox{]}\mbox{[}nrow\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a75141fad8b0d1d55f520b679539df928}\label{binomialCoef_8c_a75141fad8b0d1d55f520b679539df928}} 
+\index{binomialCoef.c@{binomialCoef.c}!printf2D@{printf2D}}
+\index{printf2D@{printf2D}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{printf2D()}{printf2D()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void printf2D (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a3b0c7d2cecd40864026953367f085d82}\label{binomialCoef_8c_a3b0c7d2cecd40864026953367f085d82}} 
+\index{binomialCoef.c@{binomialCoef.c}!printf2D@{printf2D}}
+\index{printf2D@{printf2D}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{printf2D()}{printf2D()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void printf2D (\begin{DoxyParamCaption}\item[{int}]{nrow,  }\item[{int}]{ncol,  }\item[{int}]{two\+Darr\mbox{[}nrow\mbox{]}\mbox{[}ncol\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a519eadabf5626e53162ce52b03f45c1f}\label{binomialCoef_8c_a519eadabf5626e53162ce52b03f45c1f}} 
+\index{binomialCoef.c@{binomialCoef.c}!sumArray@{sumArray}}
+\index{sumArray@{sumArray}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{sumArray()}{sumArray()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int sum\+Array (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{binomialCoef_8c_a133b7095a55750f21448aca8fd6dedef}\label{binomialCoef_8c_a133b7095a55750f21448aca8fd6dedef}} 
+\index{binomialCoef.c@{binomialCoef.c}!sumArray@{sumArray}}
+\index{sumArray@{sumArray}!binomialCoef.c@{binomialCoef.c}}
+\doxysubsubsection{\texorpdfstring{sumArray()}{sumArray()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int sum\+Array (\begin{DoxyParamCaption}\item[{int}]{array\+Name\mbox{[}$\,$\mbox{]},  }\item[{int}]{array\+Len }\end{DoxyParamCaption})}
+

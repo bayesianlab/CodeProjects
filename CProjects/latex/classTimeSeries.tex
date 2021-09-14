@@ -1,0 +1,85 @@
+\hypertarget{classTimeSeries}{}\doxysection{Time\+Series Class Reference}
+\label{classTimeSeries}\index{TimeSeries@{TimeSeries}}
+
+
+{\ttfamily \#include $<$timeseries.\+hpp$>$}
+
+
+
+Inheritance diagram for Time\+Series\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=151pt]{classTimeSeries__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Time\+Series\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=151pt]{classTimeSeries__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classTimeSeries_a3fd270cb552ff79fbe37444a513e3f46}{lagvars}} (Matrix\+Xd \&Xt, const Ref$<$ const Matrix\+Xd $>$ \&Yt, int N)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classTimeSeries_a639d4006ab5e93bd4de2dbdefa29a28e}{V\+AR}} (const Matrix\+Xd \&Yt, int \mbox{\hyperlink{TimeSeriesTools_8hpp_a9f3ed86dc36aa43828f85c0948325c54}{lag}})
+\item 
+Vector\+Xd \mbox{\hyperlink{classTimeSeries_a37005074713f7d909aebdfbe15637e18}{calc\+Sigma\+Hat\+Sqd}} (const Matrix\+Xd \&Yt, int \mbox{\hyperlink{TimeSeriesTools_8hpp_a9f3ed86dc36aa43828f85c0948325c54}{lag}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classTimeSeries_a4e0f60bfa3c4944a478b8ba108cd2ce9}{Create\+Minnesota\+Prior}} (const Matrix\+Xd \&Yt, int \mbox{\hyperlink{TimeSeriesTools_8hpp_a9f3ed86dc36aa43828f85c0948325c54}{lag}}, double lambda0, double lambda1, double theta)
+\item 
+void \mbox{\hyperlink{classTimeSeries_a3f86468d31c3fbdce59bf06045ba381d}{Bvar\+Minnesota}} (const Matrix\+Xd \&Yt, int \mbox{\hyperlink{TimeSeriesTools_8hpp_a9f3ed86dc36aa43828f85c0948325c54}{lag}}, double constant\+Shrinkage, double total\+Shrink, double other\+Shrinkage, int Sims, int burn)
+\item 
+void \mbox{\hyperlink{classTimeSeries_add696c51dcc989115294f4c0be5069d3}{Bvar\+Conjugate}} (const Matrix\+Xd \&Yt, int \mbox{\hyperlink{TimeSeriesTools_8hpp_a9f3ed86dc36aa43828f85c0948325c54}{lag}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classTimeSeries_add696c51dcc989115294f4c0be5069d3}\label{classTimeSeries_add696c51dcc989115294f4c0be5069d3}} 
+\index{TimeSeries@{TimeSeries}!BvarConjugate@{BvarConjugate}}
+\index{BvarConjugate@{BvarConjugate}!TimeSeries@{TimeSeries}}
+\doxysubsubsection{\texorpdfstring{BvarConjugate()}{BvarConjugate()}}
+{\footnotesize\ttfamily void Time\+Series\+::\+Bvar\+Conjugate (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{Yt,  }\item[{int}]{lag }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classTimeSeries_a3f86468d31c3fbdce59bf06045ba381d}\label{classTimeSeries_a3f86468d31c3fbdce59bf06045ba381d}} 
+\index{TimeSeries@{TimeSeries}!BvarMinnesota@{BvarMinnesota}}
+\index{BvarMinnesota@{BvarMinnesota}!TimeSeries@{TimeSeries}}
+\doxysubsubsection{\texorpdfstring{BvarMinnesota()}{BvarMinnesota()}}
+{\footnotesize\ttfamily void Time\+Series\+::\+Bvar\+Minnesota (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{Yt,  }\item[{int}]{lag,  }\item[{double}]{constant\+Shrinkage,  }\item[{double}]{total\+Shrink,  }\item[{double}]{other\+Shrinkage,  }\item[{int}]{Sims,  }\item[{int}]{burn }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classTimeSeries_a37005074713f7d909aebdfbe15637e18}\label{classTimeSeries_a37005074713f7d909aebdfbe15637e18}} 
+\index{TimeSeries@{TimeSeries}!calcSigmaHatSqd@{calcSigmaHatSqd}}
+\index{calcSigmaHatSqd@{calcSigmaHatSqd}!TimeSeries@{TimeSeries}}
+\doxysubsubsection{\texorpdfstring{calcSigmaHatSqd()}{calcSigmaHatSqd()}}
+{\footnotesize\ttfamily Vector\+Xd Time\+Series\+::calc\+Sigma\+Hat\+Sqd (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{Yt,  }\item[{int}]{lag }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classTimeSeries_a4e0f60bfa3c4944a478b8ba108cd2ce9}\label{classTimeSeries_a4e0f60bfa3c4944a478b8ba108cd2ce9}} 
+\index{TimeSeries@{TimeSeries}!CreateMinnesotaPrior@{CreateMinnesotaPrior}}
+\index{CreateMinnesotaPrior@{CreateMinnesotaPrior}!TimeSeries@{TimeSeries}}
+\doxysubsubsection{\texorpdfstring{CreateMinnesotaPrior()}{CreateMinnesotaPrior()}}
+{\footnotesize\ttfamily Matrix\+Xd Time\+Series\+::\+Create\+Minnesota\+Prior (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{Yt,  }\item[{int}]{lag,  }\item[{double}]{lambda0,  }\item[{double}]{lambda1,  }\item[{double}]{theta }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classTimeSeries_a3fd270cb552ff79fbe37444a513e3f46}\label{classTimeSeries_a3fd270cb552ff79fbe37444a513e3f46}} 
+\index{TimeSeries@{TimeSeries}!lagvars@{lagvars}}
+\index{lagvars@{lagvars}!TimeSeries@{TimeSeries}}
+\doxysubsubsection{\texorpdfstring{lagvars()}{lagvars()}}
+{\footnotesize\ttfamily void Time\+Series\+::lagvars (\begin{DoxyParamCaption}\item[{Matrix\+Xd \&}]{Xt,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Yt,  }\item[{int}]{N }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classTimeSeries_a639d4006ab5e93bd4de2dbdefa29a28e}\label{classTimeSeries_a639d4006ab5e93bd4de2dbdefa29a28e}} 
+\index{TimeSeries@{TimeSeries}!VAR@{VAR}}
+\index{VAR@{VAR}!TimeSeries@{TimeSeries}}
+\doxysubsubsection{\texorpdfstring{VAR()}{VAR()}}
+{\footnotesize\ttfamily Matrix\+Xd Time\+Series\+::\+V\+AR (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{Yt,  }\item[{int}]{lag }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Old/\+Simulation/include/\mbox{\hyperlink{timeseries_8hpp}{timeseries.\+hpp}}\item 
+Old/\+Simulation/src/\mbox{\hyperlink{timeseries_8cpp}{timeseries.\+cpp}}\end{DoxyCompactItemize}

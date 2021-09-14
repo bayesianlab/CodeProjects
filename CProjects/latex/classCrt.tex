@@ -1,0 +1,117 @@
+\hypertarget{classCrt}{}\doxysection{Crt Class Reference}
+\label{classCrt}\index{Crt@{Crt}}
+
+
+{\ttfamily \#include $<$crt.\+hpp$>$}
+
+
+
+Inheritance diagram for Crt\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=116pt]{classCrt__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Crt\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=116pt]{classCrt__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classCrt_a33ca18c5b2a77cbf8ef0e35fdd43dc20}{crt\+T\+ML}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, double df, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+double \mbox{\hyperlink{classCrt_aa58dfc3f4a7b8205716e23f04e33c76a}{get\+Kernel\+Column}} (double a, double b, Matrix\+Xd \&sample, int col, double sigma, double z\+Star)
+\item 
+Vector\+Xd \mbox{\hyperlink{classCrt_a239dab480380aa91211f73be49838673}{conditional\+Mean}} (double, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd, double)
+\item 
+void \mbox{\hyperlink{classCrt_a0f25f3472db85255e7c4d202f159943a}{tnormpdf}} (double, double, Vector\+Xd \&, double, double, Vector\+Xd \&)
+\item 
+double \mbox{\hyperlink{classCrt_ae3d7b8dc4d9114b4218d2659f95414cf}{ml}} (const Vector\+Xd \&z\+Star\+Tail, double z\+Star\+Head, const Matrix\+Xd \&Kernel, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+double \mbox{\hyperlink{classCrt_a9df4b04d739ee2028febebe0141c6620}{mlT}} (const Vector\+Xd \&, double, const Vector\+Xd \&, const Matrix\+Xd \&, Matrix\+Xd \&Kernel, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+double \mbox{\hyperlink{classCrt_a7a098a38361be7b593c0e471307d59d7}{simp}} (const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, Vector\+Xd \&z\+Star, const Matrix\+Xd \&Kernel)
+\item 
+void \mbox{\hyperlink{classCrt_a627bc7725d5e21cdf46000d8eee29030}{run\+Sim}} (int nsims, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&a, const Vector\+Xd \&b, Vector\+Xd \&mu, Matrix\+Xd \&Sigma, Vector\+Xd \&y, Matrix\+Xd \&X, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+void \mbox{\hyperlink{classCrt_aeb8e75955cedb0dbb7f1a4d8f5d56c45}{run\+Sim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+void \mbox{\hyperlink{classCrt_a722458b82dc70c5849c29be5b6037fc9}{run\+Tsim}} (int nsims, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, double df, const Vector\+Xd \&theta, const Matrix\+Xd \&Sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCrt_a239dab480380aa91211f73be49838673}\label{classCrt_a239dab480380aa91211f73be49838673}} 
+\index{Crt@{Crt}!conditionalMean@{conditionalMean}}
+\index{conditionalMean@{conditionalMean}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{conditionalMean()}{conditionalMean()}}
+{\footnotesize\ttfamily Vector\+Xd Crt\+::conditional\+Mean (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrt_a33ca18c5b2a77cbf8ef0e35fdd43dc20}\label{classCrt_a33ca18c5b2a77cbf8ef0e35fdd43dc20}} 
+\index{Crt@{Crt}!crtTML@{crtTML}}
+\index{crtTML@{crtTML}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{crtTML()}{crtTML()}}
+{\footnotesize\ttfamily double Crt\+::crt\+T\+ML (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{double}]{df,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrt_aa58dfc3f4a7b8205716e23f04e33c76a}\label{classCrt_aa58dfc3f4a7b8205716e23f04e33c76a}} 
+\index{Crt@{Crt}!getKernelColumn@{getKernelColumn}}
+\index{getKernelColumn@{getKernelColumn}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{getKernelColumn()}{getKernelColumn()}}
+{\footnotesize\ttfamily double Crt\+::get\+Kernel\+Column (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{Matrix\+Xd \&}]{sample,  }\item[{int}]{col,  }\item[{double}]{sigma,  }\item[{double}]{z\+Star }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrt_ae3d7b8dc4d9114b4218d2659f95414cf}\label{classCrt_ae3d7b8dc4d9114b4218d2659f95414cf}} 
+\index{Crt@{Crt}!ml@{ml}}
+\index{ml@{ml}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{ml()}{ml()}}
+{\footnotesize\ttfamily double Crt\+::ml (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{z\+Star\+Tail,  }\item[{double}]{z\+Star\+Head,  }\item[{const Matrix\+Xd \&}]{Kernel,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrt_a9df4b04d739ee2028febebe0141c6620}\label{classCrt_a9df4b04d739ee2028febebe0141c6620}} 
+\index{Crt@{Crt}!mlT@{mlT}}
+\index{mlT@{mlT}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{mlT()}{mlT()}}
+{\footnotesize\ttfamily double Crt\+::mlT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{z\+Star\+Tail,  }\item[{double}]{z\+Star\+Head,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{Matrix\+Xd \&}]{Kernel,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrt_aeb8e75955cedb0dbb7f1a4d8f5d56c45}\label{classCrt_aeb8e75955cedb0dbb7f1a4d8f5d56c45}} 
+\index{Crt@{Crt}!runSim@{runSim}}
+\index{runSim@{runSim}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{runSim()}{runSim()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Crt\+::run\+Sim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{int}]{sims,  }\item[{int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrt_a627bc7725d5e21cdf46000d8eee29030}\label{classCrt_a627bc7725d5e21cdf46000d8eee29030}} 
+\index{Crt@{Crt}!runSim@{runSim}}
+\index{runSim@{runSim}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{runSim()}{runSim()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Crt\+::run\+Sim (\begin{DoxyParamCaption}\item[{int}]{nsims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{Vector\+Xd \&}]{mu,  }\item[{Matrix\+Xd \&}]{Sigma,  }\item[{Vector\+Xd \&}]{y,  }\item[{Matrix\+Xd \&}]{X,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrt_a722458b82dc70c5849c29be5b6037fc9}\label{classCrt_a722458b82dc70c5849c29be5b6037fc9}} 
+\index{Crt@{Crt}!runTsim@{runTsim}}
+\index{runTsim@{runTsim}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{runTsim()}{runTsim()}}
+{\footnotesize\ttfamily void Crt\+::run\+Tsim (\begin{DoxyParamCaption}\item[{int}]{nsims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrt_a7a098a38361be7b593c0e471307d59d7}\label{classCrt_a7a098a38361be7b593c0e471307d59d7}} 
+\index{Crt@{Crt}!simp@{simp}}
+\index{simp@{simp}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{simp()}{simp()}}
+{\footnotesize\ttfamily double Crt\+::simp (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{Vector\+Xd \&}]{z\+Star,  }\item[{const Matrix\+Xd \&}]{Kernel }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrt_a0f25f3472db85255e7c4d202f159943a}\label{classCrt_a0f25f3472db85255e7c4d202f159943a}} 
+\index{Crt@{Crt}!tnormpdf@{tnormpdf}}
+\index{tnormpdf@{tnormpdf}!Crt@{Crt}}
+\doxysubsubsection{\texorpdfstring{tnormpdf()}{tnormpdf()}}
+{\footnotesize\ttfamily void Crt\+::tnormpdf (\begin{DoxyParamCaption}\item[{double}]{,  }\item[{double}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{double}]{,  }\item[{double}]{,  }\item[{Vector\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Old/\+Simulation/include/\mbox{\hyperlink{crt_8hpp}{crt.\+hpp}}\item 
+Old/\+Simulation/src/\mbox{\hyperlink{crt_8cpp}{crt.\+cpp}}\end{DoxyCompactItemize}

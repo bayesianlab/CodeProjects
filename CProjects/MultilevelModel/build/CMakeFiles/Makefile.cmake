@@ -54,11 +54,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/test2.dir/DependInfo.cmake"
+  "CMakeFiles/datagen.dir/DependInfo.cmake"
   "CMakeFiles/mlfunc.dir/DependInfo.cmake"
-  "CMakeFiles/ardatagen.dir/DependInfo.cmake"
-  "CMakeFiles/plot.dir/DependInfo.cmake"
-  "CMakeFiles/optim.dir/DependInfo.cmake"
-  "CMakeFiles/dist.dir/DependInfo.cmake"
-  "CMakeFiles/mldatagen.dir/DependInfo.cmake"
-  "CMakeFiles/eigentools.dir/DependInfo.cmake"
+  "CMakeFiles/basetools.dir/DependInfo.cmake"
   )

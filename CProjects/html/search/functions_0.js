@@ -1,0 +1,26 @@
+var searchData=
+[
+  ['adaptivesampler_868',['adaptiveSampler',['../classAsk.html#aeb0390d4ffd15251249f3d56d9424cdc',1,'Ask']]],
+  ['adaptivesamplert_869',['adaptiveSamplerT',['../classAsk.html#a36b512d144047e0aba0eff48b6a2efb1',1,'Ask']]],
+  ['analyticalll_870',['analyticalLL',['../classLinRegGibbs.html#a991d850cd427445bfa7bfd1a10194c84',1,'LinRegGibbs::analyticalLL(const VectorXd &amp;y, const MatrixXd &amp;x)'],['../classLinRegGibbs.html#a991d850cd427445bfa7bfd1a10194c84',1,'LinRegGibbs::analyticalLL(const VectorXd &amp;y, const MatrixXd &amp;x)']]],
+  ['annotate_871',['annotate',['../namespacematplotlibcpp.html#a4854fc237468144bd46809ea7ce8f2a0',1,'matplotlibcpp']]],
+  ['aprroximatediaghessian_872',['AprroximateDiagHessian',['../classNumericalDifferentiation.html#adc372b68a5bf1eaefbe094a83d33fa10',1,'NumericalDifferentiation']]],
+  ['aprroximatehessian_873',['AprroximateHessian',['../classNumericalDifferentiation.html#af1649d82f85821a8fb3ddbb5b3f29d66',1,'NumericalDifferentiation']]],
+  ['arkkernelt_874',['arkKernelT',['../classArk.html#a17fa19638071ba612d4cd23a3a0bc676',1,'Ark']]],
+  ['arktest2_875',['arkTest2',['../runsim_8cpp.html#ab0355cde34620678d90e1e8c609afc67',1,'runsim.cpp']]],
+  ['arktestt_876',['arkTestT',['../runsim_8cpp.html#a956b33b281d5176ee8804294162e96cc',1,'runsim.cpp']]],
+  ['arsample_877',['arSample',['../classArk.html#a43b17df8df660c816a94e5c11d882e73',1,'Ark']]],
+  ['arsamplet_878',['arSampleT',['../classArk.html#af41ace607213f7b43ca82b9880b03720',1,'Ark']]],
+  ['askghklinearconstraints_879',['askGhkLinearConstraints',['../classDist.html#ab96416a8ecc1e876dc3d25630586a806',1,'Dist::askGhkLinearConstraints(VectorXd &amp;, VectorXd &amp;, VectorXd &amp;, MatrixXd &amp;, int)'],['../classDist.html#a3575d7ce66bbef372ebd2009849f4250',1,'Dist::askGhkLinearConstraints(const VectorXd &amp;, const VectorXd &amp;, const VectorXd &amp;, const MatrixXd &amp;, int)']]],
+  ['askkernelt_880',['askKernelT',['../classAsk.html#ab0236bd68d8378007322b8f6cbcdca72',1,'Ask']]],
+  ['askmvttgeweke91_881',['askMvttgeweke91',['../classDist.html#ab05b007c0ab814ec772c4bf19dc85508',1,'Dist::askMvttgeweke91(const VectorXd &amp;a, const VectorXd &amp;b, const MatrixXd &amp;LinearConstraints, const VectorXd &amp;mu, const MatrixXd &amp;Sigma, const double df, const int sims, const int burnin, VectorXd &amp;initVector)'],['../classDist.html#ab05b007c0ab814ec772c4bf19dc85508',1,'Dist::askMvttgeweke91(const VectorXd &amp;a, const VectorXd &amp;b, const MatrixXd &amp;LinearConstraints, const VectorXd &amp;mu, const MatrixXd &amp;Sigma, const double df, const int sims, const int burnin, VectorXd &amp;initVector)']]],
+  ['asktest2_882',['askTest2',['../runsim_8cpp.html#a5fa4d8e93c9c661b782f418ff15a2f3c',1,'runsim.cpp']]],
+  ['asktestt_883',['askTestT',['../runsim_8cpp.html#adef376363a3e6a44e168455b9889d6e1',1,'runsim.cpp']]],
+  ['asktmvnrand_884',['asktmvnrand',['../classDist.html#a33e0ca59daf32d17cbdb2f59bd41eefa',1,'Dist::asktmvnrand(VectorXd &amp;, VectorXd &amp;, VectorXd &amp;, MatrixXd &amp;, VectorXd &amp;, VectorXd &amp;, int)'],['../classDist.html#ad00ce1e950ee6048f943918ca999a684',1,'Dist::asktmvnrand(const VectorXd &amp;a, const VectorXd &amp;b, const VectorXd &amp;mu, const MatrixXd &amp;Sigma, const VectorXd &amp;sigmavector, const VectorXd &amp;initvector, int)']]],
+  ['astarreducedrun_5fg_885',['AStarReducedRun_G',['../classMultilevelModel.html#a58c719bf404165fbacefd1868d04fb2c',1,'MultilevelModel']]],
+  ['astarreducedrun_5fj_886',['AStarReducedRun_J',['../classMultilevelModel.html#ae0a223b50e820959e02ad351060b199f',1,'MultilevelModel']]],
+  ['autocorr_887',['autoCorr',['../classDist.html#a633022adeb18084ccf920addad6ed805',1,'Dist::autoCorr(VectorXd &amp;)'],['../classDist.html#a633022adeb18084ccf920addad6ed805',1,'Dist::autoCorr(VectorXd &amp;)']]],
+  ['axhline_888',['axhline',['../namespacematplotlibcpp.html#a2adc886ea359ddcf0925cfdcea76c7d3',1,'matplotlibcpp']]],
+  ['axis_889',['axis',['../namespacematplotlibcpp.html#ae896dbaee2e79022b6184ac3c58b1a85',1,'matplotlibcpp']]],
+  ['axvline_890',['axvline',['../namespacematplotlibcpp.html#ac9d55f9a7b79d74eb32380a45d76bbf7',1,'matplotlibcpp']]]
+];

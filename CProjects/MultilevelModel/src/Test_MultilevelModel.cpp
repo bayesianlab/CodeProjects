@@ -1,12 +1,11 @@
 #include <iostream>
-#include <map>
-#include <string>
-#include <eigen-3.3.9/Eigen/Dense>
-#include "MultilevelModel.hpp"
-#include "Distributions.hpp"
+#include <Eigen/Dense>
+
+#include "IntegratedLikelihood.hpp"
 #include "Plotter.hpp"
 #include "GenerateMLFactorData.hpp"
 #include "MultilevelModelFunctions.hpp"
+#include "FullConditionals.hpp"
 
 using namespace std;
 using namespace Eigen;
@@ -14,29 +13,36 @@ using namespace Eigen;
 int main(int argc, char *argv[])
 {
 
-    GenerateMLFactorData mld;
-    int T = 4;
-    int K = 5;
+    DynamicFactorsArErrors dfae;
+    int T = 50;
+    int K = 10;
     int nXs = 2;
     double beta = .5;
     RowVectorXd gam(2);
-    gam << .1, .3;
-    Matrix<int, Dynamic, 2> InfoMat(2, 2);
-    InfoMat << 0, K - 1, 0, 3;
-    mld.genOtrokData(T, K, nXs, beta, InfoMat, gam, 1, gam);
-    MultilevelModel mlotrok;
+    gam << .05, .25;
+    Matrix<int, Dynamic, 2> InfoMat(1, 2);
+    InfoMat << 0, K - 1;
+
+    dfae.genData(T, K, nXs, beta, InfoMat, gam, gam, 1);
+    FullConditionals mlotrok;
     double r0 = 6;
-    double R0 = 8;
+    double R0 = 12;
     RowVectorXd g0 = RowVectorXd::Zero(gam.size());
     MatrixXd G0 = MatrixXd::Identity(gam.size(), gam.size());
-    MatrixXd Xt = mld.Xt.leftCols(nXs); 
-     
+    MatrixXd Xt = dfae.Xt.leftCols(nXs);
 
-    mlotrok.setFullCondModel(mld.yt, Xt, mld.Factors,
-                                    mld.gammas, mld.deltas, InfoMat,
-                                    mld.b0, mld.B0, r0, R0, g0, G0);
+    mlotrok.setModel(dfae.yt, Xt, dfae.Factors, dfae.gammas, dfae.deltas, InfoMat,
+                     dfae.b0, dfae.B0, r0, R0, g0, G0, g0, G0);
 
-    mlotrok.fullConditionals(1);
+    mlotrok.fullConditionals(10, 1);
+    mlotrok.ml();
+    MatrixXd Factorbar = mean(mlotrok.FactorPosteriorDraws);
+    cout << mean(mlotrok.BetaPosteriorDraws) << endl;
+    cout << mean(mlotrok.DeltasPosteriorDraws).colwise().mean() << endl;
+    cout << mean(mlotrok.GammasPosteriorDraws).colwise().mean() << endl;
+
+    plotter("plot.p", Factorbar.row(0).transpose(),
+            dfae.Factors.row(0).transpose(), "fest", "ftrue");
 
     int on = 1;
     if (on)
@@ -176,121 +182,49 @@ int main(int argc, char *argv[])
         // cout << storeg.colwise().mean() << endl;
 
         // int T = 50;
-        // int neqns = 10;
-        // int sims = 20;
+        // int K = 10;
+        // int sims = 10;
         // int burnin = 1;
         // VectorXd betas = .5 * VectorXd::Ones(2, 1);
-        // int nfac = 2;
-        // Matrix<int, Dynamic, 2> InfoMat(2, 2);
-        // InfoMat << 0, neqns - 1, 3, 5;
+        // Matrix<int, Dynamic, 2> InfoMat(1, 2);
+        // InfoMat << 0, K - 1;
         // cout << InfoMat << endl;
         // int nFactors = InfoMat.rows();
-        // MatrixXd Identity = MakeObsModelIdentity(InfoMat, neqns);
+        // MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
         // MatrixXd A = .5 * Identity;
         // VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
-        // VectorXd phi(2);
-        // phi << .1, .25;
-        // A = Identity.array() * A.array();
-        // GenerateMLFactorData mld;
-        // mld.genData(T, neqns, betas, InfoMat, phi, A, 1);
+        // RowVectorXd phi(2);
+        // phi << .05, .25;
+        // GenerateMLFactorData dfae;
+        // dfae.genData(T, K, betas, InfoMat, phi, A, 1);
         // double a0 = 1.0;
         // double A0 = 1.0;
         // double r0 = 6;
-        // double R0 = 8;
+        // double R0 = 12;
         // RowVectorXd g0;
         // MatrixXd G0;
-        // g0.setZero(nFactors);
-        // G0 = MatrixXd::Identity(nFactors, nFactors);
+        // g0.setZero(phi.cols());
+        // G0 = MatrixXd::Identity(phi.cols(), phi.cols());
         // MultilevelModel ml;
-        // ml.setModel(mld.yt, mld.Xt, mld.Loadings, mld.Factors, mld.gammas, InfoMat, mld.b0,
-        //             mld.B0, a0, A0, r0, R0, g0, G0);
+        // ml.setModel(dfae.yt, dfae.Xt, dfae.Loadings, dfae.Factors, dfae.gammas, InfoMat, dfae.b0,
+        //             dfae.B0, a0, A0, r0, R0, dfae.g0, dfae.G0);
 
-        // ml.integratedLikelihood(sims, burnin);
+        // ml.runModel(sims, burnin);
+        // ml.ml();
         // cout << "Beta avg" << endl;
-        // cout << mean(ml.BetaPosteriorDraws).mean() << endl;
+        // cout << mean(ml.BetaPosteriorDraws) << endl;
         // cout << "Loading avg" << endl;
         // cout << mean(ml.LoadingsPosteriorDraws) << endl;
         // cout << "Gamma avg" << endl;
         // cout << mean(ml.GammasPosteriorDraws) << endl;
+        // cout << "Factor Variance" << endl;
+        // cout << mean(ml.FactorVariancePosteriorDraws) << endl;
+        // cout << "OM Variance" << endl;
+        // cout << 1. / mean(ml.ObsPrecisionPosteriorDraws).array() << endl;
 
         // MatrixXd Ftbar = mean(ml.FactorPosteriorDraws);
         // plotter("plot.p", Ftbar.row(0).transpose(),
-        //         mld.Factors.row(0).transpose(), "fest", "ftrue");
-
-        // int T = 100;
-        // int neqns = 10;
-        // int sims = 5;
-        // int burnin = 0;
-        // VectorXd betas = .5 * VectorXd::Ones(2, 1);
-        // Matrix<int, 1, 2> region1;
-        // region1 << 0, neqns - 1;
-
-        // map<string, Matrix<int, 1, 2>> InfoMap{{"L1", region1}};
-        // int nFactors = InfoMap.size();
-        // MatrixXd Identity = MakeObsModelIdentity(InfoMap, neqns);
-        // MatrixXd A = .5*Identity;
-        // VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
-        // VectorXd phi(1);
-        // phi << .35;
-        // A = Identity.array() * A.array();
-        // GenerateMLFactorData mld(T, neqns, betas, InfoMap, phi, A, 1);
-
-        // MultilevelModel ml;
-
-        // ml.runMultilevelModel(mld.yt, mld.Xt, Identity, mld.Factors, mld.gammas, InfoMap,
-        //                       mld.b0, mld.B0, sims, burnin);
-
-        // cout << endl;
-        // cout << "Beta Mean" << endl;
-        // cout << ml.beta1stMomentContainer.transpose() << endl;
-        // cout << ml.beta1stMomentContainer.transpose().mean() << endl;
-        // cout << "Gammas mean" << endl;
-        // cout << ml.gammas1stMomentContainer.colwise().mean() << endl;
-        // cout << endl;
-        // cout << "factor variance mean" << endl;
-        // cout << ml.factorVarianceContainer.rowwise().mean().mean() << endl;
-        // cout << endl;
-        // cout << "Obs. Model Precision Mean" << endl;
-        // cout << ml.obsPrecisionContainer.rowwise().mean().mean() << endl;
-        // cout << endl;
-        // cout << "Loadings" << endl;
-        // cout << ml.Loadings1stMomentContainer << endl;
-        // cout << endl;
-
-        // plotter("plot.p", ml.Factor1stMomentContainer.row(0).transpose(),
-        //         mld.Factors.row(0).transpose(), "fest", "ftrue");
-
-        // VectorXd B(10);
-        // B = normrnd(0,1,10,1);
-        // cout << B << endl;
-        // B = normrnd(0,1,5,1);
-        // cout << endl;
-        //  cout << B << endl;
-        // UpdateBeta ub;
-        // LoadingsPriorsSetup lps(1, .1, InfoMap);
-        // MatrixXd COM = zeroOutFactorLevel(Identity, 0);
-        // MatrixXd mut = mld.Xbeta + COM * mld.Factors;
-        // MatrixXd ytdemeaned = mld.yt - mut;
-
-        // MatrixXd subyt = ytdemeaned.topRows(4);
-        // MatrixXd a0priormean = lps.loadingsPriorMeans["L1"].transpose();
-        // MatrixXd a0priorprecision = lps.loadingsPriorPrecision["L1"];
-        // VectorXd subomPrecision = mld.om_precision.head(4);
-        // MatrixXd subFt = mld.Factors.row(0);
-        // MatrixXd subgammas = mld.gammas.row(0);
-        // VectorXd subfv = mld.factorVariances.row(0);
-        // MatrixXd subFp = MakePrecision(subgammas, subfv, T);
-        // double optim_options[5] = {SEPS, EPS, EPS, 1e-5, 25};
-        // Optimize optim(optim_options);
-
-        // auto CLL = [&subyt, &a0priormean, &a0priorprecision,
-        //             &subomPrecision, &subFt, &subFp](const VectorXd &x0)
-        // {
-        //     return -ConditionalLogLikelihood(x0, subyt, a0priormean, a0priorprecision,
-        //                                      subomPrecision, subFt, subFp);
-        // };
-        // VectorXd subA = .5 * A.col(0).head(4);
-        // optim.BFGS(subA, CLL, 1);
+        //         dfae.Factors.row(0).transpose(), "fest", "ftrue");
     }
 
     return 0;

@@ -1,0 +1,107 @@
+\hypertarget{truncation__rounding__error_8c}{}\doxysection{Old/\+Numerical\+Analysis/truncation\+\_\+rounding\+\_\+error.c File Reference}
+\label{truncation__rounding__error_8c}\index{Old/NumericalAnalysis/truncation\_rounding\_error.c@{Old/NumericalAnalysis/truncation\_rounding\_error.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+Include dependency graph for truncation\+\_\+rounding\+\_\+error.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=271pt]{truncation__rounding__error_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{truncation__rounding__error_8c_a264622876b7ae08f74242504d0a6040d}{differentiation\+Error}} ()
+\item 
+void \mbox{\hyperlink{truncation__rounding__error_8c_aa85b538c6b430f28a30a213baf5087d9}{display\+Array}} ()
+\item 
+double \mbox{\hyperlink{truncation__rounding__error_8c_ae40885a1bfa9c398df7bdd0033a05567}{round\+Double}} ()
+\item 
+double \mbox{\hyperlink{truncation__rounding__error_8c_a4abc6909a552b9c138fd11201c0bf8b0}{trunc\+Double}} ()
+\item 
+void \mbox{\hyperlink{truncation__rounding__error_8c_a8fcf4c3d15a6cec6f529c4540479ac60}{write\+Double\+To\+File}} ()
+\item 
+int \mbox{\hyperlink{truncation__rounding__error_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\item 
+int \mbox{\hyperlink{truncation__rounding__error_8c_a3d0d908d77b655d87d0919c3d1e9e2c2}{differentiation\+Error}} (double point, int some\+Array\mbox{[}$\,$\mbox{]}, double h, int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}})
+\item 
+double \mbox{\hyperlink{truncation__rounding__error_8c_a9df0f527c6ccbc145511ac0e57b17a9c}{round\+Double}} (double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}}, long decimal\+Places)
+\item 
+double \mbox{\hyperlink{truncation__rounding__error_8c_a3f0f88aa15fc64a6183a57853f470d19}{trunc\+Double}} (double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}}, long decimal\+Places)
+\item 
+void \mbox{\hyperlink{truncation__rounding__error_8c_afe675a2af86161260e811e604c53d3b0}{display\+Array}} (double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}}\mbox{[}$\,$\mbox{]}, int size)
+\item 
+void \mbox{\hyperlink{truncation__rounding__error_8c_a6318e4f5a64425db9ad7cca851abe156}{write\+Double\+To\+File}} (int rows, int cols, double some\+Array\mbox{[}$\,$\mbox{]}\mbox{[}cols\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{truncation__rounding__error_8c_a264622876b7ae08f74242504d0a6040d}\label{truncation__rounding__error_8c_a264622876b7ae08f74242504d0a6040d}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!differentiationError@{differentiationError}}
+\index{differentiationError@{differentiationError}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{differentiationError()}{differentiationError()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int differentiation\+Error (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_a3d0d908d77b655d87d0919c3d1e9e2c2}\label{truncation__rounding__error_8c_a3d0d908d77b655d87d0919c3d1e9e2c2}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!differentiationError@{differentiationError}}
+\index{differentiationError@{differentiationError}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{differentiationError()}{differentiationError()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int differentiation\+Error (\begin{DoxyParamCaption}\item[{double}]{point,  }\item[{int}]{some\+Array\mbox{[}$\,$\mbox{]},  }\item[{double}]{h,  }\item[{int}]{n\+Sims }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_aa85b538c6b430f28a30a213baf5087d9}\label{truncation__rounding__error_8c_aa85b538c6b430f28a30a213baf5087d9}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!displayArray@{displayArray}}
+\index{displayArray@{displayArray}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{displayArray()}{displayArray()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void display\+Array (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_afe675a2af86161260e811e604c53d3b0}\label{truncation__rounding__error_8c_afe675a2af86161260e811e604c53d3b0}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!displayArray@{displayArray}}
+\index{displayArray@{displayArray}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{displayArray()}{displayArray()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void display\+Array (\begin{DoxyParamCaption}\item[{double}]{x\mbox{[}$\,$\mbox{]},  }\item[{int}]{size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{truncation__rounding__error_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!main@{main}}
+\index{main@{main}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_ae40885a1bfa9c398df7bdd0033a05567}\label{truncation__rounding__error_8c_ae40885a1bfa9c398df7bdd0033a05567}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!roundDouble@{roundDouble}}
+\index{roundDouble@{roundDouble}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{roundDouble()}{roundDouble()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double round\+Double (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_a9df0f527c6ccbc145511ac0e57b17a9c}\label{truncation__rounding__error_8c_a9df0f527c6ccbc145511ac0e57b17a9c}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!roundDouble@{roundDouble}}
+\index{roundDouble@{roundDouble}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{roundDouble()}{roundDouble()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double round\+Double (\begin{DoxyParamCaption}\item[{double}]{x,  }\item[{long}]{decimal\+Places }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_a4abc6909a552b9c138fd11201c0bf8b0}\label{truncation__rounding__error_8c_a4abc6909a552b9c138fd11201c0bf8b0}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!truncDouble@{truncDouble}}
+\index{truncDouble@{truncDouble}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{truncDouble()}{truncDouble()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double trunc\+Double (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_a3f0f88aa15fc64a6183a57853f470d19}\label{truncation__rounding__error_8c_a3f0f88aa15fc64a6183a57853f470d19}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!truncDouble@{truncDouble}}
+\index{truncDouble@{truncDouble}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{truncDouble()}{truncDouble()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double trunc\+Double (\begin{DoxyParamCaption}\item[{double}]{x,  }\item[{long}]{decimal\+Places }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_a8fcf4c3d15a6cec6f529c4540479ac60}\label{truncation__rounding__error_8c_a8fcf4c3d15a6cec6f529c4540479ac60}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!writeDoubleToFile@{writeDoubleToFile}}
+\index{writeDoubleToFile@{writeDoubleToFile}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{writeDoubleToFile()}{writeDoubleToFile()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void write\+Double\+To\+File (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{truncation__rounding__error_8c_a6318e4f5a64425db9ad7cca851abe156}\label{truncation__rounding__error_8c_a6318e4f5a64425db9ad7cca851abe156}} 
+\index{truncation\_rounding\_error.c@{truncation\_rounding\_error.c}!writeDoubleToFile@{writeDoubleToFile}}
+\index{writeDoubleToFile@{writeDoubleToFile}!truncation\_rounding\_error.c@{truncation\_rounding\_error.c}}
+\doxysubsubsection{\texorpdfstring{writeDoubleToFile()}{writeDoubleToFile()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void write\+Double\+To\+File (\begin{DoxyParamCaption}\item[{int}]{rows,  }\item[{int}]{cols,  }\item[{double}]{some\+Array\mbox{[}$\,$\mbox{]}\mbox{[}cols\mbox{]} }\end{DoxyParamCaption})}
+

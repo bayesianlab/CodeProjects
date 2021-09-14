@@ -231,13 +231,13 @@ _Python3_LIBRARY_RELEASE:FILEPATH=/usr/lib/x86_64-linux-gnu/libpython3.8.so
 ardatagen_LIB_DEPENDS:STATIC=general;mlfunc;
 
 //Dependencies for the target
-datagen_LIB_DEPENDS:STATIC=general;mlfunc;general;dist;
+datagen_LIB_DEPENDS:STATIC=general;basetools;general;mlfunc;
 
 //Dependencies for the target
 mldatagen_LIB_DEPENDS:STATIC=general;mlfunc;
 
 //Dependencies for the target
-mlfunc_LIB_DEPENDS:STATIC=general;dist;general;eigentools;
+mlfunc_LIB_DEPENDS:STATIC=general;basetools;
 
 //Value Computed by CMake
 multilevel_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/MultilevelModel/build

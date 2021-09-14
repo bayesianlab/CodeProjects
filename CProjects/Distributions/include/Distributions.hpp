@@ -1,6 +1,6 @@
 #ifndef DIST_H
 #define DIST_H
-#include <eigen-3.3.9/Eigen/Dense>
+#include <Eigen/Dense>
 #include <boost/math/distributions/exponential.hpp>
 #include <boost/math/distributions/normal.hpp>
 #include <boost/random/gamma_distribution.hpp>
@@ -12,6 +12,7 @@
 #include <math.h>
 #include <random>
 #include <eigen3/unsupported/Eigen/KroneckerProduct>
+#include <stdexcept>
 
 using namespace Eigen;
 using namespace std;
@@ -58,6 +59,18 @@ double logdet(const MatrixBase<Derived1> &sig)
 double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
                  const MatrixXd &Sig);
 
+template <typename D> 
+double logmvnpdfCentered(const RowVectorXd &x, 
+                         const MatrixBase<D> &SigLowerInvDiag)
+{
+  // Takes the centered and scaled data and also the 
+  // diagonal of the cholesky of the precision
+  int p = SigLowerInvDiag.size();
+  double c = -.5 * p * log(2 * M_PI) + SigLowerInvDiag.array().log().sum();
+  double v = -.5 * (x * x.transpose()).value() + c;
+  return v;
+}
+
 double unifrnd(double, double);
 
 VectorXd unifrnd(double, double, int);
@@ -83,6 +96,9 @@ double logmvtpdf(const RowVectorXd &x, const RowVectorXd &mu, const MatrixXd &Va
 
 
 double logavg(const Ref<const VectorXd> &logpdf);
+
+MatrixXd logavg(const Ref<const MatrixXd> &logpdf, const int &dim);
+
 /*
 class Dist {
 private:

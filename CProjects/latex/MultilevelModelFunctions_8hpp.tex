@@ -1,0 +1,115 @@
+\hypertarget{MultilevelModelFunctions_8hpp}{}\doxysection{Multilevel\+Model/include/\+Multilevel\+Model\+Functions.hpp File Reference}
+\label{MultilevelModelFunctions_8hpp}\index{MultilevelModel/include/MultilevelModelFunctions.hpp@{MultilevelModel/include/MultilevelModelFunctions.hpp}}
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$stdexcept$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$eigen-\/3.\+3.\+9/\+Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$eigen-\/3.\+3.\+9/unsupported/\+Eigen/\+Kronecker\+Product$>$}\newline
+{\ttfamily \#include \char`\"{}Distributions.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Eigen\+Tools.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Time\+Series\+Tools.\+hpp\char`\"{}}\newline
+Include dependency graph for Multilevel\+Model\+Functions.\+hpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{MultilevelModelFunctions_8hpp__incl}
+\end{center}
+\end{figure}
+This graph shows which files directly or indirectly include this file\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{MultilevelModelFunctions_8hpp__dep__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{MultilevelModelFunctions_8hpp_acdc93a338790123d6a6bb6029b912434}{M\+L\+F\+U\+N\+C\+\_\+H}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+Matrix\+Xd \mbox{\hyperlink{MultilevelModelFunctions_8hpp_a12c8095402fefd49dddb3c9ee1235f19}{make\+Otrok\+Xt}} (const Matrix$<$ int, Dynamic, 2 $>$ \&Info\+Mat, const Ref$<$ Matrix\+Xd $>$ \&Factors, const int \&n\+Xs, const int \&K)
+\item 
+Matrix\+Xd \mbox{\hyperlink{MultilevelModelFunctions_8hpp_a3ef5e01d538ce2bf890e02cb58ab25ca}{update\+Factor}} (const Matrix\+Xd \&residuals, const Matrix\+Xd \&Loadings, const Matrix\+Xd \&Factor\+Precision, const Vector\+Xd \&precision, int T)
+\item 
+Matrix\+Xd \mbox{\hyperlink{MultilevelModelFunctions_8hpp_a53c2817eae5f3af02dc034a7cc0bd571}{Make\+Obs\+Model\+Identity}} (const Matrix$<$ int, Dynamic, 2 $>$ \&m, int eqns)
+\item 
+{\footnotesize template$<$typename D $>$ }\\Matrix\+Xd \mbox{\hyperlink{MultilevelModelFunctions_8hpp_a48fda8e14c5e7a92b086479f61cb579f}{zero\+Out\+Factor\+Level}} (const Matrix\+Base$<$ D $>$ \&Id, int level)
+\item 
+{\footnotesize template$<$typename D1 $>$ }\\Vector\+Xd \mbox{\hyperlink{MultilevelModelFunctions_8hpp_a539d24692a72802d35176a9c92c9feaa}{gamma\+\_\+G}} (const int \&rr, const Matrix\+Base$<$ D1 $>$ \&gammastar, const std\+::vector$<$ Matrix\+Xd $>$ \&gammag\+Posterior, const std\+::vector$<$ Matrix\+Xd $>$ \&yt\+Posterior, const std\+::vector$<$ Vector\+Xd $>$ \&sigma2\+Posterior, const Matrix\+Xd \&prior\+Mean, const Matrix\+Xd \&prior\+Var)
+\item 
+{\footnotesize template$<$typename D1 , typename D2 $>$ }\\double \mbox{\hyperlink{MultilevelModelFunctions_8hpp_a5dfe400031ed3ff8de6c9db500f61ad1}{gamma\+\_\+J}} (const Matrix\+Base$<$ D1 $>$ \&gammastar, const Matrix\+Base$<$ D2 $>$ \&yt, const double \&sigma2, const Matrix\+Xd \&prior\+Mean, const Matrix\+Xd \&prior\+Var)
+\item 
+{\footnotesize template$<$typename T $>$ }\\Matrix\+Xd \mbox{\hyperlink{MultilevelModelFunctions_8hpp_ac368c63eb18329e21d08847cb26183dd}{mean}} (const std\+::vector$<$ T $>$ \&X)
+\item 
+{\footnotesize template$<$typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 $>$ }\\double \mbox{\hyperlink{MultilevelModelFunctions_8hpp_a35d3d3cd6961388a8c561645a9f3e11a}{Conditional\+Log\+Likelihood}} (const Matrix\+Base$<$ D1 $>$ \&guess, const Matrix\+Base$<$ D2 $>$ \&resids, const Matrix\+Base$<$ D3 $>$ \&prior\+Mean\+A0, const Matrix\+Base$<$ D4 $>$ \&prior\+Precision\+A0, const Matrix\+Base$<$ D5 $>$ \&obs\+Precision, const Matrix\+Base$<$ D6 $>$ \&factor, const Matrix\+Base$<$ D7 $>$ \&Factor\+Precision)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{MultilevelModelFunctions_8hpp_acdc93a338790123d6a6bb6029b912434}\label{MultilevelModelFunctions_8hpp_acdc93a338790123d6a6bb6029b912434}} 
+\index{MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}!MLFUNC\_H@{MLFUNC\_H}}
+\index{MLFUNC\_H@{MLFUNC\_H}!MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}}
+\doxysubsubsection{\texorpdfstring{MLFUNC\_H}{MLFUNC\_H}}
+{\footnotesize\ttfamily \#define M\+L\+F\+U\+N\+C\+\_\+H}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{MultilevelModelFunctions_8hpp_a35d3d3cd6961388a8c561645a9f3e11a}\label{MultilevelModelFunctions_8hpp_a35d3d3cd6961388a8c561645a9f3e11a}} 
+\index{MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}!ConditionalLogLikelihood@{ConditionalLogLikelihood}}
+\index{ConditionalLogLikelihood@{ConditionalLogLikelihood}!MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}}
+\doxysubsubsection{\texorpdfstring{ConditionalLogLikelihood()}{ConditionalLogLikelihood()}}
+{\footnotesize\ttfamily template$<$typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 $>$ \\
+double Conditional\+Log\+Likelihood (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D1 $>$ \&}]{guess,  }\item[{const Matrix\+Base$<$ D2 $>$ \&}]{resids,  }\item[{const Matrix\+Base$<$ D3 $>$ \&}]{prior\+Mean\+A0,  }\item[{const Matrix\+Base$<$ D4 $>$ \&}]{prior\+Precision\+A0,  }\item[{const Matrix\+Base$<$ D5 $>$ \&}]{obs\+Precision,  }\item[{const Matrix\+Base$<$ D6 $>$ \&}]{factor,  }\item[{const Matrix\+Base$<$ D7 $>$ \&}]{Factor\+Precision }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{MultilevelModelFunctions_8hpp_a539d24692a72802d35176a9c92c9feaa}\label{MultilevelModelFunctions_8hpp_a539d24692a72802d35176a9c92c9feaa}} 
+\index{MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}!gamma\_G@{gamma\_G}}
+\index{gamma\_G@{gamma\_G}!MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}}
+\doxysubsubsection{\texorpdfstring{gamma\_G()}{gamma\_G()}}
+{\footnotesize\ttfamily template$<$typename D1 $>$ \\
+Vector\+Xd gamma\+\_\+G (\begin{DoxyParamCaption}\item[{const int \&}]{rr,  }\item[{const Matrix\+Base$<$ D1 $>$ \&}]{gammastar,  }\item[{const std\+::vector$<$ Matrix\+Xd $>$ \&}]{gammag\+Posterior,  }\item[{const std\+::vector$<$ Matrix\+Xd $>$ \&}]{yt\+Posterior,  }\item[{const std\+::vector$<$ Vector\+Xd $>$ \&}]{sigma2\+Posterior,  }\item[{const Matrix\+Xd \&}]{prior\+Mean,  }\item[{const Matrix\+Xd \&}]{prior\+Var }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{MultilevelModelFunctions_8hpp_a5dfe400031ed3ff8de6c9db500f61ad1}\label{MultilevelModelFunctions_8hpp_a5dfe400031ed3ff8de6c9db500f61ad1}} 
+\index{MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}!gamma\_J@{gamma\_J}}
+\index{gamma\_J@{gamma\_J}!MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}}
+\doxysubsubsection{\texorpdfstring{gamma\_J()}{gamma\_J()}}
+{\footnotesize\ttfamily template$<$typename D1 , typename D2 $>$ \\
+double gamma\+\_\+J (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D1 $>$ \&}]{gammastar,  }\item[{const Matrix\+Base$<$ D2 $>$ \&}]{yt,  }\item[{const double \&}]{sigma2,  }\item[{const Matrix\+Xd \&}]{prior\+Mean,  }\item[{const Matrix\+Xd \&}]{prior\+Var }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{MultilevelModelFunctions_8hpp_a53c2817eae5f3af02dc034a7cc0bd571}\label{MultilevelModelFunctions_8hpp_a53c2817eae5f3af02dc034a7cc0bd571}} 
+\index{MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}!MakeObsModelIdentity@{MakeObsModelIdentity}}
+\index{MakeObsModelIdentity@{MakeObsModelIdentity}!MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}}
+\doxysubsubsection{\texorpdfstring{MakeObsModelIdentity()}{MakeObsModelIdentity()}}
+{\footnotesize\ttfamily Matrix\+Xd Make\+Obs\+Model\+Identity (\begin{DoxyParamCaption}\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{m,  }\item[{int}]{eqns }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{MultilevelModelFunctions_8hpp_a12c8095402fefd49dddb3c9ee1235f19}\label{MultilevelModelFunctions_8hpp_a12c8095402fefd49dddb3c9ee1235f19}} 
+\index{MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}!makeOtrokXt@{makeOtrokXt}}
+\index{makeOtrokXt@{makeOtrokXt}!MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}}
+\doxysubsubsection{\texorpdfstring{makeOtrokXt()}{makeOtrokXt()}}
+{\footnotesize\ttfamily Matrix\+Xd make\+Otrok\+Xt (\begin{DoxyParamCaption}\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{Info\+Mat,  }\item[{const Ref$<$ Matrix\+Xd $>$ \&}]{Factors,  }\item[{const int \&}]{n\+Xs,  }\item[{const int \&}]{K }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{MultilevelModelFunctions_8hpp_ac368c63eb18329e21d08847cb26183dd}\label{MultilevelModelFunctions_8hpp_ac368c63eb18329e21d08847cb26183dd}} 
+\index{MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}!mean@{mean}}
+\index{mean@{mean}!MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}}
+\doxysubsubsection{\texorpdfstring{mean()}{mean()}}
+{\footnotesize\ttfamily template$<$typename T $>$ \\
+Matrix\+Xd mean (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ T $>$ \&}]{X }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{MultilevelModelFunctions_8hpp_a3ef5e01d538ce2bf890e02cb58ab25ca}\label{MultilevelModelFunctions_8hpp_a3ef5e01d538ce2bf890e02cb58ab25ca}} 
+\index{MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}!updateFactor@{updateFactor}}
+\index{updateFactor@{updateFactor}!MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}}
+\doxysubsubsection{\texorpdfstring{updateFactor()}{updateFactor()}}
+{\footnotesize\ttfamily Matrix\+Xd update\+Factor (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{residuals,  }\item[{const Matrix\+Xd \&}]{Loadings,  }\item[{const Matrix\+Xd \&}]{Factor\+Precision,  }\item[{const Vector\+Xd \&}]{precision,  }\item[{int}]{T }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{MultilevelModelFunctions_8hpp_a48fda8e14c5e7a92b086479f61cb579f}\label{MultilevelModelFunctions_8hpp_a48fda8e14c5e7a92b086479f61cb579f}} 
+\index{MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}!zeroOutFactorLevel@{zeroOutFactorLevel}}
+\index{zeroOutFactorLevel@{zeroOutFactorLevel}!MultilevelModelFunctions.hpp@{MultilevelModelFunctions.hpp}}
+\doxysubsubsection{\texorpdfstring{zeroOutFactorLevel()}{zeroOutFactorLevel()}}
+{\footnotesize\ttfamily template$<$typename D $>$ \\
+Matrix\+Xd zero\+Out\+Factor\+Level (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D $>$ \&}]{Id,  }\item[{int}]{level }\end{DoxyParamCaption})}
+

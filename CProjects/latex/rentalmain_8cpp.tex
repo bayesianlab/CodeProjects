@@ -1,0 +1,84 @@
+\hypertarget{rentalmain_8cpp}{}\doxysection{Old/\+Simulation/src/rentalmain.cpp File Reference}
+\label{rentalmain_8cpp}\index{Old/Simulation/src/rentalmain.cpp@{Old/Simulation/src/rentalmain.cpp}}
+{\ttfamily \#include \char`\"{}Dist.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Importance.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Lin\+Reg\+Gibbs.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Three\+D.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ark.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ask.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}crb.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}crt.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}eigenshorts.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}read\+\_\+csv\+\_\+to\+\_\+eigen.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string$>$}\newline
+Include dependency graph for rentalmain.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{rentalmain_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{rentalmain_8cpp_aaa3451c3c1c592d733c4ecc3172b7814}{indicator\+Function}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+void \mbox{\hyperlink{rentalmain_8cpp_a70c25ab15549d25b834b90946a71a982}{Robert\+Method\+Tests}} ()
+\item 
+void \mbox{\hyperlink{rentalmain_8cpp_a2ef99a8cd3ea8ca3c31a47105b0b4749}{Mvt\+Pdf\+Tests}} ()
+\item 
+void \mbox{\hyperlink{rentalmain_8cpp_a131300dfc8a9dc0a377836ac72d0f111}{Trunct\+Tests}} ()
+\item 
+void \mbox{\hyperlink{rentalmain_8cpp_a05951c8c0853703407dc8e261275539f}{replicate\+Tests}} ()
+\item 
+int \mbox{\hyperlink{rentalmain_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{rentalmain_8cpp_aaa3451c3c1c592d733c4ecc3172b7814}\label{rentalmain_8cpp_aaa3451c3c1c592d733c4ecc3172b7814}} 
+\index{rentalmain.cpp@{rentalmain.cpp}!indicatorFunction@{indicatorFunction}}
+\index{indicatorFunction@{indicatorFunction}!rentalmain.cpp@{rentalmain.cpp}}
+\doxysubsubsection{\texorpdfstring{indicatorFunction()}{indicatorFunction()}}
+{\footnotesize\ttfamily int indicator\+Function (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rentalmain_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{rentalmain_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{rentalmain.cpp@{rentalmain.cpp}!main@{main}}
+\index{main@{main}!rentalmain.cpp@{rentalmain.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rentalmain_8cpp_a2ef99a8cd3ea8ca3c31a47105b0b4749}\label{rentalmain_8cpp_a2ef99a8cd3ea8ca3c31a47105b0b4749}} 
+\index{rentalmain.cpp@{rentalmain.cpp}!MvtPdfTests@{MvtPdfTests}}
+\index{MvtPdfTests@{MvtPdfTests}!rentalmain.cpp@{rentalmain.cpp}}
+\doxysubsubsection{\texorpdfstring{MvtPdfTests()}{MvtPdfTests()}}
+{\footnotesize\ttfamily void Mvt\+Pdf\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rentalmain_8cpp_a05951c8c0853703407dc8e261275539f}\label{rentalmain_8cpp_a05951c8c0853703407dc8e261275539f}} 
+\index{rentalmain.cpp@{rentalmain.cpp}!replicateTests@{replicateTests}}
+\index{replicateTests@{replicateTests}!rentalmain.cpp@{rentalmain.cpp}}
+\doxysubsubsection{\texorpdfstring{replicateTests()}{replicateTests()}}
+{\footnotesize\ttfamily void replicate\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rentalmain_8cpp_a70c25ab15549d25b834b90946a71a982}\label{rentalmain_8cpp_a70c25ab15549d25b834b90946a71a982}} 
+\index{rentalmain.cpp@{rentalmain.cpp}!RobertMethodTests@{RobertMethodTests}}
+\index{RobertMethodTests@{RobertMethodTests}!rentalmain.cpp@{rentalmain.cpp}}
+\doxysubsubsection{\texorpdfstring{RobertMethodTests()}{RobertMethodTests()}}
+{\footnotesize\ttfamily void Robert\+Method\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{rentalmain_8cpp_a131300dfc8a9dc0a377836ac72d0f111}\label{rentalmain_8cpp_a131300dfc8a9dc0a377836ac72d0f111}} 
+\index{rentalmain.cpp@{rentalmain.cpp}!TrunctTests@{TrunctTests}}
+\index{TrunctTests@{TrunctTests}!rentalmain.cpp@{rentalmain.cpp}}
+\doxysubsubsection{\texorpdfstring{TrunctTests()}{TrunctTests()}}
+{\footnotesize\ttfamily void Trunct\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+

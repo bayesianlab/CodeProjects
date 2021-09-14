@@ -1,14 +1,126 @@
 #include "GenerateMLFactorData.hpp"
 
+void DynamicFactorsArErrors::genData(const int &nObs, const int &nEqns, const int &nXs, const double &coeffValues,
+                                     const Matrix<int, Dynamic, 2> &InfoMat, const RowVectorXd &factorArTerms,
+                                     const RowVectorXd &omArTerms, const double &omVar)
+{
+    int T = nObs;
+    int K = nEqns;
+    int nFactors = InfoMat.rows();
+
+    double facVar = omVar;
+    VectorXd omVariance = VectorXd::Ones(K);
+
+    gammas = factorArTerms.replicate(nFactors, 1);
+    VectorXd factorVariance = facVar * VectorXd::Ones(nFactors, 1);
+    MatrixXd FactorPrecision = MakePrecision(gammas, factorVariance, T);
+    MatrixXd FactorCovar = FactorPrecision.ldlt().solve(MatrixXd::Identity(FactorPrecision.rows(),
+                                                                           FactorPrecision.rows()));
+    Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
+    Factors.resize(nFactors, T);
+    if (omArTerms.size() > 0)
+    {
+        deltas = omArTerms.replicate(K, 1);
+        int lagsOm = deltas.cols();
+
+        if (nXs == 0)
+        {
+            Xt.setZero(K * T, nFactors);
+            Xt = makeOtrokXt(InfoMat, Factors, K);
+        }
+        else if (nXs == 1)
+        {
+            Xt.setZero(K * T, nFactors + 1);
+            Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1);
+            Xt.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+        }
+        else if (nXs > 1)
+        {
+            Xt.setZero(K * T, nXs + nFactors);
+            Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1), normrnd(0, 1, K * T, nXs - 1);
+            Xt.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+        }
+        else
+        {
+            throw invalid_argument("Invalid number of x's included in genOtrokData. nXs > 0.");
+        }
+        MatrixXd D0(lagsOm, lagsOm);
+        VectorXd epsilonp(lagsOm);
+        betas = coeffValues * MatrixXd::Ones(K, Xt.cols());
+        b0 = RowVectorXd::Zero(betas.cols());
+        B0 = 100*MatrixXd::Identity(betas.cols(), betas.cols());
+        for (int k = 0; k < K; ++k)
+        {
+            for (int n = 0; n < nFactors; ++n)
+            {
+                if (k == InfoMat.row(n).head(1).value())
+                {
+                    betas(k, nXs + n) = 1;
+                }
+            }
+        }
+        betas.resize(1, K * Xt.cols());
+        MatrixXd Xbeta = surForm(Xt, K) * betas.transpose();
+        Xbeta.resize(K, T);
+        yt.setZero(K, T);
+        for (int k = 0; k < K; ++k)
+        {
+            D0 = setInitialCovar(deltas.row(k), omVariance(k));
+            yt.row(k).leftCols(lagsOm) = (Xbeta.row(k).leftCols(lagsOm).transpose() + D0.llt().matrixL() * normrnd(0, 1, lagsOm, 1)).transpose();
+            for (int t = lagsOm; t < T; ++t)
+            {
+                yt(k, t) = Xbeta(k, t) + deltas.row(k) * (yt.row(k).segment(t - lagsOm, lagsOm).transpose() - Xbeta.row(k).segment(t - lagsOm, lagsOm).transpose()) + normrnd(0, 1);
+            }
+        }
+    }
+    else
+    {
+        if (nXs == 0)
+        {
+            Xt.setZero(K * T, nFactors);
+            Xt = makeOtrokXt(InfoMat, Factors, K);
+        }
+        else if (nXs == 1)
+        {
+            Xt.setZero(K * T, nFactors + 1);
+            Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1);
+            Xt.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+        }
+        else if (nXs > 1)
+        {
+            Xt.setZero(K * T, nFactors + nXs);
+            Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1), normrnd(0, 1, K * T, nXs - 1);
+            Xt.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+        }
+        else
+        {
+            throw invalid_argument("Invalid number of x's included in genOtrokData. nXs > 0.");
+        }
+        betas = coeffValues * MatrixXd::Ones(K, Xt.cols());
+        for (int k = 0; k < K; ++k)
+        {
+            for (int n = 0; n < nFactors; ++n)
+            {
+                if (k == InfoMat.row(n).head(1).value())
+                {
+                    betas(k, nXs + n) = 1;
+                }
+            }
+        }
+
+        betas.resize(1, K * Xt.cols());
+        MatrixXd Xbeta = surForm(Xt, K) * betas.transpose();
+        Xbeta.resize(K, T);
+        yt = Xbeta + normrnd(0, 1, K, T);
+    }
+}
+
 void GenerateMLFactorData::genData(int _nObs, int _nEqns, const VectorXd &coeffValues,
                                    const Matrix<int, Dynamic, 2> &InfoMat,
-                                   const VectorXd &factorCoeff,
+                                   const RowVectorXd &factorCoeff,
                                    const MatrixXd &_Loadings, const double &omVar)
 {
-    if (factorCoeff.rows() != InfoMat.rows())
-    {
-        throw invalid_argument("Factor lags not set correctly in genData().");
-    }
+
     T = _nObs;
     K = _nEqns;
     double facVar = omVar;
@@ -31,7 +143,8 @@ void GenerateMLFactorData::genData(int _nObs, int _nEqns, const VectorXd &coeffV
     Xbeta.resize(K, T);
     Identity = MakeObsModelIdentity(InfoMat, K);
     nFactors = InfoMat.rows();
-    gammas = factorCoeff.transpose().replicate(nFactors, 1);
+    gammas = factorCoeff.replicate(nFactors, 1);
+    int factorLags = gammas.cols(); 
 
     factorVariances = facVar * VectorXd::Ones(nFactors, 1);
 
@@ -54,74 +167,6 @@ void GenerateMLFactorData::genData(int _nObs, int _nEqns, const VectorXd &coeffV
     om_precision = 1. / om_variance.array();
     b0 = RowVectorXd::Zero(1, nEqnsP);
     B0 = 1000 * MatrixXd::Identity(nEqnsP, nEqnsP);
-}
-
-void GenerateMLFactorData::genOtrokData(const int &nObs, const int &nEqns, const int &nXs,
-                                        const double &coeffValues, const Matrix<int, Dynamic, 2> &InfoMat,
-                                        const RowVectorXd &gammas, const double &omVar, const RowVectorXd &omArTerms)
-{
-    if (omArTerms.size() == 0)
-    {
-        this->T = nObs;
-        this->K = nEqns;
-        this->nFactors = InfoMat.rows();
-        double facVar = omVar;
-        this->gammas = gammas.replicate(this->nFactors, 1);
-        this->factorVariances = facVar * VectorXd::Ones(this->nFactors, 1);
-
-        this->FactorPrecision = MakePrecision(this->gammas, this->factorVariances, this->T);
-        MatrixXd FactorCovar = this->FactorPrecision.ldlt().solve(MatrixXd::Identity(this->FactorPrecision.rows(),
-                                                                                     this->FactorPrecision.rows()));
-        this->Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
-        this->Factors.resize(this->nFactors, this->T);
-
-        this->Xt.setZero(this->K * this->T, this->nFactors + nXs + 1);
-        this->Xt.leftCols(nXs + 1) << MatrixXd::Ones(this->K * this->T, 1), normrnd(0, 1, this->K * this->T, nXs);
-        this->Xt.rightCols(this->nFactors) = makeOtrokXt(InfoMat, this->Factors, nXs, this->K);
-        this->betas = VectorXd::Ones(this->Xt.cols());
-        this->betas = this->betas.array() * coeffValues;
-        this->Xbeta = this->Xt * this->betas;
-        this->Xbeta.resize(this->K, this->T);
-        this->yt = this->Xbeta + normrnd(0, 1, this->K, this->T);
-        this->om_variance = omVar * VectorXd::Ones(this->K);
-        this->om_precision = 1. / this->om_variance.array();
-        this->b0 = RowVectorXd::Zero(1, this->Xt.cols());
-        this->B0 = 100 * MatrixXd::Identity(this->Xt.cols(), this->Xt.cols());
-    }
-    else
-    {
-        this->T = nObs;
-        this->K = nEqns;
-        this->nFactors = InfoMat.rows();
-        double facVar = omVar;
-        this->deltas = omArTerms.replicate(this->K, 1);
-        this->gammas = gammas.replicate(this->nFactors, 1);
-        this->factorVariances = facVar * VectorXd::Ones(this->nFactors, 1);
-        this->FactorPrecision = MakePrecision(this->gammas, this->factorVariances, this->T);
-        MatrixXd FactorCovar = this->FactorPrecision.ldlt().solve(MatrixXd::Identity(this->FactorPrecision.rows(),
-                                                                                     this->FactorPrecision.rows()));
-        this->Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
-        this->Factors.resize(this->nFactors, this->T);
-        this->Xt.setZero(this->K * this->T, this->nFactors + nXs + 1);
-        this->Xt.leftCols(nXs + 1) << MatrixXd::Ones(this->K * this->T, 1), normrnd(0, 1, this->K * this->T, nXs);
-        this->Xt.rightCols(this->nFactors) = makeOtrokXt(InfoMat, this->Factors, nXs, this->K);
-        this->betas = VectorXd::Ones(this->Xt.cols());
-        this->betas = this->betas.array() * coeffValues;
-        this->Xbeta = this->Xt * this->betas;
-        this->H = ReturnH(this->deltas, this->T);
-        MatrixXd Hinv = this->H.householderQr().solve(MatrixXd::Identity(this->H.rows(), this->H.rows()));
-        this->Xbeta.resize(this->K*this->T,1); 
-        MatrixXd mu = Hinv*this->Xbeta;
-        mu.resize(this->K,this->T);  
-        VectorXd epsilon = normrnd(0, 1, this->K * this->T, 1);
-        MatrixXd HinvEpsilon = Hinv * epsilon;
-        HinvEpsilon.resize(this->K, this->T);
-        HinvEpsilon.resize(this->K, this->T); 
-        this->yt = mu + HinvEpsilon;
-        this->yt.resize(this->K,this->T); 
-        this->om_variance = omVar * VectorXd::Ones(this->K);
-        this->om_precision = 1. / this->om_variance.array();
-        this->b0 = RowVectorXd::Zero(1, this->Xt.cols());
-        this->B0 = 100 * MatrixXd::Identity(this->Xt.cols(), this->Xt.cols());
-    }
+    g0 = RowVectorXd::Zero(factorLags);
+    G0 = MatrixXd::Identity(factorLags, factorLags); 
 }

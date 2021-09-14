@@ -1,0 +1,168 @@
+\hypertarget{classCrb}{}\doxysection{Crb Class Reference}
+\label{classCrb}\index{Crb@{Crb}}
+
+
+{\ttfamily \#include $<$crb.\+hpp$>$}
+
+
+
+Inheritance diagram for Crb\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=116pt]{classCrb__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Crb\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=116pt]{classCrb__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classCrb_a5d484ec902ecc6539a8940602f7ae278}{Crb}} ()
+\item 
+\mbox{\hyperlink{classCrb_a9b9fdc839ee820611a1eaa53c83a96f5}{Crb}} (int \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+Matrix\+Xd \mbox{\hyperlink{classCrb_a26e2eb73876b4a28c9b18084b1e229ae}{chib\+Rao}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, int rr\+Sims, int rrburnin)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classCrb_ae5cfd0903147b1307f156a7706dab536}{chib\+Rao\+StuT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Lin\+Constraint, const Vector\+Xd \&mu, const Matrix\+Xd \&Sigma, double nu, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, int rr\+Sims, int rrburnin)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classCrb_a6b0d02c6bf5e62a1a44d4c2ea65c3a87}{chib\+RaoT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, double df, int, int, int, int)
+\item 
+int \mbox{\hyperlink{classCrb_a088ac4cc04de65f79e398731d5f52441}{get\+Reduced\+Run\+Sample\+Column\+Dimension}} (int)
+\item 
+void \mbox{\hyperlink{classCrb_ab7baa4ff28f330eef604689fd84a928c}{fill\+Sigma\+Vect}} (Vector\+Xd \&, Vector\+Xd \&)
+\item 
+double \mbox{\hyperlink{classCrb_ae6180216b7a2366f4556bef808a23f30}{getfz\+Star\+Mean\+At\+Col}} (double, double, Matrix\+Xd \&, int, double, double)
+\item 
+double \mbox{\hyperlink{classCrb_a92cc2b18a4b32f7d88d0d73ecae702f8}{getfz\+Star\+Mean\+At\+ColT}} (double, double, Matrix\+Xd \&, int, double, double, double df)
+\item 
+void \mbox{\hyperlink{classCrb_a944b67450b4e53f69be6b37490e666f2}{fillfz\+Star}} (Vector\+Xd \&, int, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, Vector\+Xd \&, Vector\+Xd \&)
+\item 
+double \mbox{\hyperlink{classCrb_a2dd562c8b41d1f075e2b1d4dc1a53685}{ml}} (const Vector\+Xd \&fz, const Vector\+Xd \&z\+Star\+Tail, double z\+Star\+Head, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double igamA, const double igamB)
+\item 
+double \mbox{\hyperlink{classCrb_a10b9237453dcf2da59b8062c1ce49b7e}{ml\+C\+RB}} (const Vector\+Xd \&fz\+Star, const Vector\+Xd \&, double, Vector\+Xd \&, Matrix\+Xd \&, Vector\+Xd \&b0, Matrix\+Xd \&B0, double a0, double d0)
+\item 
+void \mbox{\hyperlink{classCrb_ac69b91e02062dfa0ec656350b2d7d6c0}{run\+Sim}} (Vector\+Xd \&mu, Matrix\+Xd \&sigma, Vector\+Xd \&y, Matrix\+Xd \&X, Vector\+Xd \&ll, Vector\+Xd \&ul, int sims, int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}, int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0)
+\item 
+void \mbox{\hyperlink{classCrb_a19e22481e21accafa314bd5e58552913}{run\+Tsim}} (Vector\+Xd \&betas, Matrix\+Xd \&sigma, double df, Vector\+Xd \&y, Matrix\+Xd \&X, Vector\+Xd \&ll, Vector\+Xd \&ul, const Matrix\+Xd \&Linear\+Constraints, Vector\+Xd \&b0, Matrix\+Xd \&B0, double a0, double d0, int, int, int, int)
+\item 
+void \mbox{\hyperlink{classCrb_a16a06a263b38eaaee2ca418f825ded15}{calcfz\+Star}} (Vector\+Xd \&, const Vector\+Xd \&, const Vector\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&)
+\item 
+void \mbox{\hyperlink{classCrb_a3c0ef2f2b7cec7bb8b86d563e31d1ab7}{calcfz\+StarT}} (Vector\+Xd \&fzstar, Vector\+Xd \&zstar, const Vector\+Xd \&a, const Vector\+Xd \&b, double df, Matrix\+Xd \&c\+Means, Vector\+Xd \&sigmavect)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classCrb_a5d484ec902ecc6539a8940602f7ae278}\label{classCrb_a5d484ec902ecc6539a8940602f7ae278}} 
+\index{Crb@{Crb}!Crb@{Crb}}
+\index{Crb@{Crb}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{Crb()}{Crb()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Crb\+::\+Crb (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a9b9fdc839ee820611a1eaa53c83a96f5}\label{classCrb_a9b9fdc839ee820611a1eaa53c83a96f5}} 
+\index{Crb@{Crb}!Crb@{Crb}}
+\index{Crb@{Crb}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{Crb()}{Crb()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Crb\+::\+Crb (\begin{DoxyParamCaption}\item[{int}]{x }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCrb_a16a06a263b38eaaee2ca418f825ded15}\label{classCrb_a16a06a263b38eaaee2ca418f825ded15}} 
+\index{Crb@{Crb}!calcfzStar@{calcfzStar}}
+\index{calcfzStar@{calcfzStar}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{calcfzStar()}{calcfzStar()}}
+{\footnotesize\ttfamily void Crb\+::calcfz\+Star (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{fz\+Star,  }\item[{const Vector\+Xd \&}]{z\+Star,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{c\+Means,  }\item[{const Vector\+Xd \&}]{sigma\+Vect }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a3c0ef2f2b7cec7bb8b86d563e31d1ab7}\label{classCrb_a3c0ef2f2b7cec7bb8b86d563e31d1ab7}} 
+\index{Crb@{Crb}!calcfzStarT@{calcfzStarT}}
+\index{calcfzStarT@{calcfzStarT}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{calcfzStarT()}{calcfzStarT()}}
+{\footnotesize\ttfamily void Crb\+::calcfz\+StarT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{fzstar,  }\item[{Vector\+Xd \&}]{zstar,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{double}]{df,  }\item[{Matrix\+Xd \&}]{c\+Means,  }\item[{Vector\+Xd \&}]{sigmavect }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a26e2eb73876b4a28c9b18084b1e229ae}\label{classCrb_a26e2eb73876b4a28c9b18084b1e229ae}} 
+\index{Crb@{Crb}!chibRao@{chibRao}}
+\index{chibRao@{chibRao}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{chibRao()}{chibRao()}}
+{\footnotesize\ttfamily Matrix\+Xd Crb\+::chib\+Rao (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{int}]{rr\+Sims,  }\item[{int}]{rrburnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_ae5cfd0903147b1307f156a7706dab536}\label{classCrb_ae5cfd0903147b1307f156a7706dab536}} 
+\index{Crb@{Crb}!chibRaoStuT@{chibRaoStuT}}
+\index{chibRaoStuT@{chibRaoStuT}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{chibRaoStuT()}{chibRaoStuT()}}
+{\footnotesize\ttfamily Matrix\+Xd Crb\+::chib\+Rao\+StuT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Lin\+Constraint,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{nu,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{int}]{rr\+Sims,  }\item[{int}]{rrburnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a6b0d02c6bf5e62a1a44d4c2ea65c3a87}\label{classCrb_a6b0d02c6bf5e62a1a44d4c2ea65c3a87}} 
+\index{Crb@{Crb}!chibRaoT@{chibRaoT}}
+\index{chibRaoT@{chibRaoT}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{chibRaoT()}{chibRaoT()}}
+{\footnotesize\ttfamily Matrix\+Xd Crb\+::chib\+RaoT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{double}]{df,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{int}]{rr\+Sims,  }\item[{int}]{rrburnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a944b67450b4e53f69be6b37490e666f2}\label{classCrb_a944b67450b4e53f69be6b37490e666f2}} 
+\index{Crb@{Crb}!fillfzStar@{fillfzStar}}
+\index{fillfzStar@{fillfzStar}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{fillfzStar()}{fillfzStar()}}
+{\footnotesize\ttfamily void Crb\+::fillfz\+Star (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{int}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Matrix\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_ab7baa4ff28f330eef604689fd84a928c}\label{classCrb_ab7baa4ff28f330eef604689fd84a928c}} 
+\index{Crb@{Crb}!fillSigmaVect@{fillSigmaVect}}
+\index{fillSigmaVect@{fillSigmaVect}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{fillSigmaVect()}{fillSigmaVect()}}
+{\footnotesize\ttfamily void Crb\+::fill\+Sigma\+Vect (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_ae6180216b7a2366f4556bef808a23f30}\label{classCrb_ae6180216b7a2366f4556bef808a23f30}} 
+\index{Crb@{Crb}!getfzStarMeanAtCol@{getfzStarMeanAtCol}}
+\index{getfzStarMeanAtCol@{getfzStarMeanAtCol}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{getfzStarMeanAtCol()}{getfzStarMeanAtCol()}}
+{\footnotesize\ttfamily double Crb\+::getfz\+Star\+Mean\+At\+Col (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{Matrix\+Xd \&}]{sample,  }\item[{int}]{col,  }\item[{double}]{sigma,  }\item[{double}]{z\+Star }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a92cc2b18a4b32f7d88d0d73ecae702f8}\label{classCrb_a92cc2b18a4b32f7d88d0d73ecae702f8}} 
+\index{Crb@{Crb}!getfzStarMeanAtColT@{getfzStarMeanAtColT}}
+\index{getfzStarMeanAtColT@{getfzStarMeanAtColT}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{getfzStarMeanAtColT()}{getfzStarMeanAtColT()}}
+{\footnotesize\ttfamily double Crb\+::getfz\+Star\+Mean\+At\+ColT (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{Matrix\+Xd \&}]{sample,  }\item[{int}]{colm,  }\item[{double}]{sigma,  }\item[{double}]{z\+Star,  }\item[{double}]{df }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a088ac4cc04de65f79e398731d5f52441}\label{classCrb_a088ac4cc04de65f79e398731d5f52441}} 
+\index{Crb@{Crb}!getReducedRunSampleColumnDimension@{getReducedRunSampleColumnDimension}}
+\index{getReducedRunSampleColumnDimension@{getReducedRunSampleColumnDimension}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{getReducedRunSampleColumnDimension()}{getReducedRunSampleColumnDimension()}}
+{\footnotesize\ttfamily int Crb\+::get\+Reduced\+Run\+Sample\+Column\+Dimension (\begin{DoxyParamCaption}\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a2dd562c8b41d1f075e2b1d4dc1a53685}\label{classCrb_a2dd562c8b41d1f075e2b1d4dc1a53685}} 
+\index{Crb@{Crb}!ml@{ml}}
+\index{ml@{ml}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{ml()}{ml()}}
+{\footnotesize\ttfamily double Crb\+::ml (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{fz,  }\item[{const Vector\+Xd \&}]{z\+Star\+Tail,  }\item[{double}]{z\+Star\+Head,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{igamA,  }\item[{const double}]{igamB }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a10b9237453dcf2da59b8062c1ce49b7e}\label{classCrb_a10b9237453dcf2da59b8062c1ce49b7e}} 
+\index{Crb@{Crb}!mlCRB@{mlCRB}}
+\index{mlCRB@{mlCRB}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{mlCRB()}{mlCRB()}}
+{\footnotesize\ttfamily double Crb\+::ml\+C\+RB (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{fz\+Star,  }\item[{const Vector\+Xd \&}]{z\+Star\+Tail,  }\item[{double}]{z\+Star\+Head,  }\item[{Vector\+Xd \&}]{y,  }\item[{Matrix\+Xd \&}]{X,  }\item[{Vector\+Xd \&}]{b0,  }\item[{Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_ac69b91e02062dfa0ec656350b2d7d6c0}\label{classCrb_ac69b91e02062dfa0ec656350b2d7d6c0}} 
+\index{Crb@{Crb}!runSim@{runSim}}
+\index{runSim@{runSim}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{runSim()}{runSim()}}
+{\footnotesize\ttfamily void Crb\+::run\+Sim (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{mu,  }\item[{Matrix\+Xd \&}]{sigma,  }\item[{Vector\+Xd \&}]{y,  }\item[{Matrix\+Xd \&}]{X,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classCrb_a19e22481e21accafa314bd5e58552913}\label{classCrb_a19e22481e21accafa314bd5e58552913}} 
+\index{Crb@{Crb}!runTsim@{runTsim}}
+\index{runTsim@{runTsim}!Crb@{Crb}}
+\doxysubsubsection{\texorpdfstring{runTsim()}{runTsim()}}
+{\footnotesize\ttfamily void Crb\+::run\+Tsim (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Matrix\+Xd \&}]{sigma,  }\item[{double}]{df,  }\item[{Vector\+Xd \&}]{y,  }\item[{Matrix\+Xd \&}]{X,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{Vector\+Xd \&}]{b0,  }\item[{Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0,  }\item[{int}]{sims,  }\item[{int}]{burnin,  }\item[{int}]{n\+Sims,  }\item[{int}]{batches }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Old/\+Simulation/include/\mbox{\hyperlink{crb_8hpp}{crb.\+hpp}}\item 
+Old/\+Simulation/src/\mbox{\hyperlink{crb_8cpp}{crb.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,90 @@
+\hypertarget{classLineSearchRoutines}{}\doxysection{Line\+Search\+Routines Class Reference}
+\label{classLineSearchRoutines}\index{LineSearchRoutines@{LineSearchRoutines}}
+
+
+{\ttfamily \#include $<$Line\+Search\+Routines.\+hpp$>$}
+
+
+
+Inheritance diagram for Line\+Search\+Routines\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=217pt]{classLineSearchRoutines__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Line\+Search\+Routines\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=217pt]{classLineSearchRoutines__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classLineSearchRoutines_aedfbfa72dbef86c35dacc8988962a981}{Zoom}} (double alo, double ahi, const Ref$<$ const Vector\+Xd $>$ \&point, const Ref$<$ const Vector\+Xd $>$ \&pk, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F, double F0, double Fprime0)
+\item 
+double \mbox{\hyperlink{classLineSearchRoutines_a56a92963c2e901aed5aebb5cf44a4859}{Line\+Search}} (const Ref$<$ const Vector\+Xd $>$ \&point, const Ref$<$ const Vector\+Xd $>$ \&pk, const Ref$<$ const Vector\+Xd $>$ \&del0, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F)
+\item 
+double \mbox{\hyperlink{classLineSearchRoutines_a071eb55593fbd2298b942029036f2c32}{Cubic\+Interpolation}} (double f1, double f2, double fprime1, double fprime2, double x1, double x2)
+\item 
+double \mbox{\hyperlink{classLineSearchRoutines_a6037468a0eabe6dd4a8067c2b55600d2}{Golden\+Section}} (const Ref$<$ const Vector\+Xd $>$ \&point, const Ref$<$ const Vector\+Xd $>$ \&pk, double alast, double acurrent, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F, int max\+\_\+it)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classLineSearchRoutines_afc5053fc3a76a36fb0c2ab4656d565cb}{line\+\_\+search\+\_\+tol}}
+\item 
+int \mbox{\hyperlink{classLineSearchRoutines_ae214248f6785c725f94da150f904393d}{gs\+\_\+max\+\_\+it}} = 15
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classLineSearchRoutines_a071eb55593fbd2298b942029036f2c32}\label{classLineSearchRoutines_a071eb55593fbd2298b942029036f2c32}} 
+\index{LineSearchRoutines@{LineSearchRoutines}!CubicInterpolation@{CubicInterpolation}}
+\index{CubicInterpolation@{CubicInterpolation}!LineSearchRoutines@{LineSearchRoutines}}
+\doxysubsubsection{\texorpdfstring{CubicInterpolation()}{CubicInterpolation()}}
+{\footnotesize\ttfamily double Line\+Search\+Routines\+::\+Cubic\+Interpolation (\begin{DoxyParamCaption}\item[{double}]{f1,  }\item[{double}]{f2,  }\item[{double}]{fprime1,  }\item[{double}]{fprime2,  }\item[{double}]{x1,  }\item[{double}]{x2 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLineSearchRoutines_a6037468a0eabe6dd4a8067c2b55600d2}\label{classLineSearchRoutines_a6037468a0eabe6dd4a8067c2b55600d2}} 
+\index{LineSearchRoutines@{LineSearchRoutines}!GoldenSection@{GoldenSection}}
+\index{GoldenSection@{GoldenSection}!LineSearchRoutines@{LineSearchRoutines}}
+\doxysubsubsection{\texorpdfstring{GoldenSection()}{GoldenSection()}}
+{\footnotesize\ttfamily double Line\+Search\+Routines\+::\+Golden\+Section (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{point,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{pk,  }\item[{double}]{alast,  }\item[{double}]{acurrent,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F,  }\item[{int}]{max\+\_\+it }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLineSearchRoutines_a56a92963c2e901aed5aebb5cf44a4859}\label{classLineSearchRoutines_a56a92963c2e901aed5aebb5cf44a4859}} 
+\index{LineSearchRoutines@{LineSearchRoutines}!LineSearch@{LineSearch}}
+\index{LineSearch@{LineSearch}!LineSearchRoutines@{LineSearchRoutines}}
+\doxysubsubsection{\texorpdfstring{LineSearch()}{LineSearch()}}
+{\footnotesize\ttfamily double Line\+Search\+Routines\+::\+Line\+Search (\begin{DoxyParamCaption}\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{point,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{pk,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{del0,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLineSearchRoutines_aedfbfa72dbef86c35dacc8988962a981}\label{classLineSearchRoutines_aedfbfa72dbef86c35dacc8988962a981}} 
+\index{LineSearchRoutines@{LineSearchRoutines}!Zoom@{Zoom}}
+\index{Zoom@{Zoom}!LineSearchRoutines@{LineSearchRoutines}}
+\doxysubsubsection{\texorpdfstring{Zoom()}{Zoom()}}
+{\footnotesize\ttfamily double Line\+Search\+Routines\+::\+Zoom (\begin{DoxyParamCaption}\item[{double}]{alo,  }\item[{double}]{ahi,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{point,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{pk,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F,  }\item[{double}]{F0,  }\item[{double}]{Fprime0 }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classLineSearchRoutines_ae214248f6785c725f94da150f904393d}\label{classLineSearchRoutines_ae214248f6785c725f94da150f904393d}} 
+\index{LineSearchRoutines@{LineSearchRoutines}!gs\_max\_it@{gs\_max\_it}}
+\index{gs\_max\_it@{gs\_max\_it}!LineSearchRoutines@{LineSearchRoutines}}
+\doxysubsubsection{\texorpdfstring{gs\_max\_it}{gs\_max\_it}}
+{\footnotesize\ttfamily int Line\+Search\+Routines\+::gs\+\_\+max\+\_\+it = 15}
+
+\mbox{\Hypertarget{classLineSearchRoutines_afc5053fc3a76a36fb0c2ab4656d565cb}\label{classLineSearchRoutines_afc5053fc3a76a36fb0c2ab4656d565cb}} 
+\index{LineSearchRoutines@{LineSearchRoutines}!line\_search\_tol@{line\_search\_tol}}
+\index{line\_search\_tol@{line\_search\_tol}!LineSearchRoutines@{LineSearchRoutines}}
+\doxysubsubsection{\texorpdfstring{line\_search\_tol}{line\_search\_tol}}
+{\footnotesize\ttfamily double Line\+Search\+Routines\+::line\+\_\+search\+\_\+tol}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Optimization\+Tools/include/\mbox{\hyperlink{LineSearchRoutines_8hpp}{Line\+Search\+Routines.\+hpp}}\item 
+Optimization\+Tools/src/\mbox{\hyperlink{LineSearchRoutines_8cpp}{Line\+Search\+Routines.\+cpp}}\end{DoxyCompactItemize}

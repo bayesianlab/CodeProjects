@@ -1,0 +1,141 @@
+\hypertarget{classOptimize}{}\doxysection{Optimize Class Reference}
+\label{classOptimize}\index{Optimize@{Optimize}}
+
+
+{\ttfamily \#include $<$Optimization.\+hpp$>$}
+
+
+
+Inheritance diagram for Optimize\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=217pt]{classOptimize__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Optimize\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=284pt]{classOptimize__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classOptimize_a4db7b99d26f22c4b7c584874e822e9b8}{Optimize}} ()
+\item 
+\mbox{\hyperlink{classOptimize_a9bcdb17074fe5b4edd53c82a2b670569}{Optimize}} (double options\mbox{[}5\mbox{]})
+\item 
+void \mbox{\hyperlink{classOptimize_a5e4566b4b2224b755f8205f773465303}{B\+F\+GS}} (Vector\+Xd \&guess, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F, int disp\+\_\+on=0)
+\item 
+void \mbox{\hyperlink{classOptimize_a7f591dba452e97b8bbcf11955ace2128}{B\+F\+G\+S\+\_\+\+Display}} (Vector\+Xd \&guess, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F)
+\item 
+void \mbox{\hyperlink{classOptimize_a58b1d2a35ad7ec31849a57265d00243d}{B\+F\+G\+S\+\_\+\+Display\+\_\+\+Off}} (Vector\+Xd \&guess, std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$ F)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{classOptimize_afa62dd22fd4bd04e46a02bb466282d65}{F\+\_\+tol}}
+\item 
+double \mbox{\hyperlink{classOptimize_a1b10fcde24577fe98d63a5073a766d46}{grad\+\_\+tol}}
+\item 
+double \mbox{\hyperlink{classOptimize_a9ffc3301e9f8d736952c6534d4a46c92}{x\+\_\+tol}}
+\item 
+Vector\+Xd \mbox{\hyperlink{classOptimize_a2a038cd01d29016de041ad2931ac65cf}{x1}}
+\item 
+double \mbox{\hyperlink{classOptimize_aaea94c0f7fb255b414eeaeb72e31fe1f}{fval1}}
+\item 
+int \mbox{\hyperlink{classOptimize_a0ee59fe7f4a264fba54e4f5c17590af1}{Max\+Iterations}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classOptimize_af11770d0fca3f9bca9b167126ee5d0b6}{Hess}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classOptimize_a4db7b99d26f22c4b7c584874e822e9b8}\label{classOptimize_a4db7b99d26f22c4b7c584874e822e9b8}} 
+\index{Optimize@{Optimize}!Optimize@{Optimize}}
+\index{Optimize@{Optimize}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{Optimize()}{Optimize()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Optimize\+::\+Optimize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classOptimize_a9bcdb17074fe5b4edd53c82a2b670569}\label{classOptimize_a9bcdb17074fe5b4edd53c82a2b670569}} 
+\index{Optimize@{Optimize}!Optimize@{Optimize}}
+\index{Optimize@{Optimize}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{Optimize()}{Optimize()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Optimize\+::\+Optimize (\begin{DoxyParamCaption}\item[{double}]{options\mbox{[}5\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classOptimize_a5e4566b4b2224b755f8205f773465303}\label{classOptimize_a5e4566b4b2224b755f8205f773465303}} 
+\index{Optimize@{Optimize}!BFGS@{BFGS}}
+\index{BFGS@{BFGS}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{BFGS()}{BFGS()}}
+{\footnotesize\ttfamily void Optimize\+::\+B\+F\+GS (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{guess,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F,  }\item[{int}]{disp\+\_\+on = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classOptimize_a7f591dba452e97b8bbcf11955ace2128}\label{classOptimize_a7f591dba452e97b8bbcf11955ace2128}} 
+\index{Optimize@{Optimize}!BFGS\_Display@{BFGS\_Display}}
+\index{BFGS\_Display@{BFGS\_Display}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{BFGS\_Display()}{BFGS\_Display()}}
+{\footnotesize\ttfamily void Optimize\+::\+B\+F\+G\+S\+\_\+\+Display (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{guess,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classOptimize_a58b1d2a35ad7ec31849a57265d00243d}\label{classOptimize_a58b1d2a35ad7ec31849a57265d00243d}} 
+\index{Optimize@{Optimize}!BFGS\_Display\_Off@{BFGS\_Display\_Off}}
+\index{BFGS\_Display\_Off@{BFGS\_Display\_Off}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{BFGS\_Display\_Off()}{BFGS\_Display\_Off()}}
+{\footnotesize\ttfamily void Optimize\+::\+B\+F\+G\+S\+\_\+\+Display\+\_\+\+Off (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{guess,  }\item[{std\+::function$<$ double(const Ref$<$ const Vector\+Xd $>$ \&xstar)$>$}]{F }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classOptimize_afa62dd22fd4bd04e46a02bb466282d65}\label{classOptimize_afa62dd22fd4bd04e46a02bb466282d65}} 
+\index{Optimize@{Optimize}!F\_tol@{F\_tol}}
+\index{F\_tol@{F\_tol}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{F\_tol}{F\_tol}}
+{\footnotesize\ttfamily double Optimize\+::\+F\+\_\+tol}
+
+\mbox{\Hypertarget{classOptimize_aaea94c0f7fb255b414eeaeb72e31fe1f}\label{classOptimize_aaea94c0f7fb255b414eeaeb72e31fe1f}} 
+\index{Optimize@{Optimize}!fval1@{fval1}}
+\index{fval1@{fval1}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{fval1}{fval1}}
+{\footnotesize\ttfamily double Optimize\+::fval1}
+
+\mbox{\Hypertarget{classOptimize_a1b10fcde24577fe98d63a5073a766d46}\label{classOptimize_a1b10fcde24577fe98d63a5073a766d46}} 
+\index{Optimize@{Optimize}!grad\_tol@{grad\_tol}}
+\index{grad\_tol@{grad\_tol}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{grad\_tol}{grad\_tol}}
+{\footnotesize\ttfamily double Optimize\+::grad\+\_\+tol}
+
+\mbox{\Hypertarget{classOptimize_af11770d0fca3f9bca9b167126ee5d0b6}\label{classOptimize_af11770d0fca3f9bca9b167126ee5d0b6}} 
+\index{Optimize@{Optimize}!Hess@{Hess}}
+\index{Hess@{Hess}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{Hess}{Hess}}
+{\footnotesize\ttfamily Matrix\+Xd Optimize\+::\+Hess}
+
+\mbox{\Hypertarget{classOptimize_a0ee59fe7f4a264fba54e4f5c17590af1}\label{classOptimize_a0ee59fe7f4a264fba54e4f5c17590af1}} 
+\index{Optimize@{Optimize}!MaxIterations@{MaxIterations}}
+\index{MaxIterations@{MaxIterations}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{MaxIterations}{MaxIterations}}
+{\footnotesize\ttfamily int Optimize\+::\+Max\+Iterations}
+
+\mbox{\Hypertarget{classOptimize_a2a038cd01d29016de041ad2931ac65cf}\label{classOptimize_a2a038cd01d29016de041ad2931ac65cf}} 
+\index{Optimize@{Optimize}!x1@{x1}}
+\index{x1@{x1}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{x1}{x1}}
+{\footnotesize\ttfamily Vector\+Xd Optimize\+::x1}
+
+\mbox{\Hypertarget{classOptimize_a9ffc3301e9f8d736952c6534d4a46c92}\label{classOptimize_a9ffc3301e9f8d736952c6534d4a46c92}} 
+\index{Optimize@{Optimize}!x\_tol@{x\_tol}}
+\index{x\_tol@{x\_tol}!Optimize@{Optimize}}
+\doxysubsubsection{\texorpdfstring{x\_tol}{x\_tol}}
+{\footnotesize\ttfamily double Optimize\+::x\+\_\+tol}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Optimization\+Tools/include/\mbox{\hyperlink{Optimization_8hpp}{Optimization.\+hpp}}\item 
+Optimization\+Tools/src/\mbox{\hyperlink{Optimization_8cpp}{Optimization.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,109 @@
+\hypertarget{classBetaParameterTools}{}\doxysection{Beta\+Parameter\+Tools Class Reference}
+\label{classBetaParameterTools}\index{BetaParameterTools@{BetaParameterTools}}
+
+
+{\ttfamily \#include $<$Multilevel\+Model.\+hpp$>$}
+
+
+
+Inheritance diagram for Beta\+Parameter\+Tools\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=194pt]{classBetaParameterTools__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Beta\+Parameter\+Tools\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=194pt]{classBetaParameterTools__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 $>$ }\\void \mbox{\hyperlink{classBetaParameterTools_a061551ed07e109feed3d3f82b8acc359}{betaupdate}} (const Matrix\+Base$<$ D1 $>$ \&yt, const Matrix\+Base$<$ D2 $>$ \&surX, const Matrix\+Base$<$ D3 $>$ \&om\+\_\+precision, const Matrix\+Base$<$ D4 $>$ \&A, const Matrix\+Base$<$ D5 $>$ \&Factor\+Precision, const Matrix\+Base$<$ D6 $>$ \&b0, const Matrix\+Base$<$ D7 $>$ \&B0)
+\item 
+{\footnotesize template$<$typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 $>$ }\\void \mbox{\hyperlink{classBetaParameterTools_a190f295739417376819bf59b481fae95}{compute\+Parameters}} (const Matrix\+Base$<$ D1 $>$ \&yt, const Matrix\+Base$<$ D2 $>$ \&surX, const Matrix\+Base$<$ D3 $>$ \&om\+\_\+precision, const Matrix\+Base$<$ D4 $>$ \&A, const Matrix\+Base$<$ D5 $>$ \&Factor\+Precision, const Matrix\+Base$<$ D6 $>$ \&b0, const Matrix\+Base$<$ D7 $>$ \&B0)
+\item 
+{\footnotesize template$<$typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 $>$ }\\double \mbox{\hyperlink{classBetaParameterTools_a07cdf2e4e87dd08254bf6d16b660edd8}{betapdf}} (const Matrix\+Base$<$ D0 $>$ \&betastar, const Matrix\+Base$<$ D1 $>$ \&yt, const Matrix\+Base$<$ D2 $>$ \&surX, const Matrix\+Base$<$ D3 $>$ \&om\+\_\+precision, const Matrix\+Base$<$ D4 $>$ \&A, const Matrix\+Base$<$ D5 $>$ \&Factor\+Precision, const Matrix\+Base$<$ D6 $>$ \&b0, const Matrix\+Base$<$ D7 $>$ \&B0)
+\item 
+{\footnotesize template$<$typename T1 , typename T2 $>$ }\\void \mbox{\hyperlink{classBetaParameterTools_a4bda457548078d1438ee72229bd853cb}{set\+Xbeta}} (const Matrix\+Base$<$ T1 $>$ \&betastar, const Matrix\+Base$<$ T2 $>$ \&surX, const int \&K, const int \&T)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Vector\+Xd \mbox{\hyperlink{classBetaParameterTools_a6f659941dac68f553839b4db042bcfd3}{betamean}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classBetaParameterTools_ac9d06d5469cf26653f8631d85728a88b}{B}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classBetaParameterTools_aaf37af04821223cdccb649fe12108814}{betanew}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classBetaParameterTools_af792d3e10177b9820be0c7b024650fc2}{xbt}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classBetaParameterTools_a07cdf2e4e87dd08254bf6d16b660edd8}\label{classBetaParameterTools_a07cdf2e4e87dd08254bf6d16b660edd8}} 
+\index{BetaParameterTools@{BetaParameterTools}!betapdf@{betapdf}}
+\index{betapdf@{betapdf}!BetaParameterTools@{BetaParameterTools}}
+\doxysubsubsection{\texorpdfstring{betapdf()}{betapdf()}}
+{\footnotesize\ttfamily template$<$typename D0 , typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 $>$ \\
+double Beta\+Parameter\+Tools\+::betapdf (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D0 $>$ \&}]{betastar,  }\item[{const Matrix\+Base$<$ D1 $>$ \&}]{yt,  }\item[{const Matrix\+Base$<$ D2 $>$ \&}]{surX,  }\item[{const Matrix\+Base$<$ D3 $>$ \&}]{om\+\_\+precision,  }\item[{const Matrix\+Base$<$ D4 $>$ \&}]{A,  }\item[{const Matrix\+Base$<$ D5 $>$ \&}]{Factor\+Precision,  }\item[{const Matrix\+Base$<$ D6 $>$ \&}]{b0,  }\item[{const Matrix\+Base$<$ D7 $>$ \&}]{B0 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classBetaParameterTools_a061551ed07e109feed3d3f82b8acc359}\label{classBetaParameterTools_a061551ed07e109feed3d3f82b8acc359}} 
+\index{BetaParameterTools@{BetaParameterTools}!betaupdate@{betaupdate}}
+\index{betaupdate@{betaupdate}!BetaParameterTools@{BetaParameterTools}}
+\doxysubsubsection{\texorpdfstring{betaupdate()}{betaupdate()}}
+{\footnotesize\ttfamily template$<$typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 $>$ \\
+void Beta\+Parameter\+Tools\+::betaupdate (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D1 $>$ \&}]{yt,  }\item[{const Matrix\+Base$<$ D2 $>$ \&}]{surX,  }\item[{const Matrix\+Base$<$ D3 $>$ \&}]{om\+\_\+precision,  }\item[{const Matrix\+Base$<$ D4 $>$ \&}]{A,  }\item[{const Matrix\+Base$<$ D5 $>$ \&}]{Factor\+Precision,  }\item[{const Matrix\+Base$<$ D6 $>$ \&}]{b0,  }\item[{const Matrix\+Base$<$ D7 $>$ \&}]{B0 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classBetaParameterTools_a190f295739417376819bf59b481fae95}\label{classBetaParameterTools_a190f295739417376819bf59b481fae95}} 
+\index{BetaParameterTools@{BetaParameterTools}!computeParameters@{computeParameters}}
+\index{computeParameters@{computeParameters}!BetaParameterTools@{BetaParameterTools}}
+\doxysubsubsection{\texorpdfstring{computeParameters()}{computeParameters()}}
+{\footnotesize\ttfamily template$<$typename D1 , typename D2 , typename D3 , typename D4 , typename D5 , typename D6 , typename D7 $>$ \\
+void Beta\+Parameter\+Tools\+::compute\+Parameters (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ D1 $>$ \&}]{yt,  }\item[{const Matrix\+Base$<$ D2 $>$ \&}]{surX,  }\item[{const Matrix\+Base$<$ D3 $>$ \&}]{om\+\_\+precision,  }\item[{const Matrix\+Base$<$ D4 $>$ \&}]{A,  }\item[{const Matrix\+Base$<$ D5 $>$ \&}]{Factor\+Precision,  }\item[{const Matrix\+Base$<$ D6 $>$ \&}]{b0,  }\item[{const Matrix\+Base$<$ D7 $>$ \&}]{B0 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classBetaParameterTools_a4bda457548078d1438ee72229bd853cb}\label{classBetaParameterTools_a4bda457548078d1438ee72229bd853cb}} 
+\index{BetaParameterTools@{BetaParameterTools}!setXbeta@{setXbeta}}
+\index{setXbeta@{setXbeta}!BetaParameterTools@{BetaParameterTools}}
+\doxysubsubsection{\texorpdfstring{setXbeta()}{setXbeta()}}
+{\footnotesize\ttfamily template$<$typename T1 , typename T2 $>$ \\
+void Beta\+Parameter\+Tools\+::set\+Xbeta (\begin{DoxyParamCaption}\item[{const Matrix\+Base$<$ T1 $>$ \&}]{betastar,  }\item[{const Matrix\+Base$<$ T2 $>$ \&}]{surX,  }\item[{const int \&}]{K,  }\item[{const int \&}]{T }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classBetaParameterTools_ac9d06d5469cf26653f8631d85728a88b}\label{classBetaParameterTools_ac9d06d5469cf26653f8631d85728a88b}} 
+\index{BetaParameterTools@{BetaParameterTools}!B@{B}}
+\index{B@{B}!BetaParameterTools@{BetaParameterTools}}
+\doxysubsubsection{\texorpdfstring{B}{B}}
+{\footnotesize\ttfamily Matrix\+Xd Beta\+Parameter\+Tools\+::B}
+
+\mbox{\Hypertarget{classBetaParameterTools_a6f659941dac68f553839b4db042bcfd3}\label{classBetaParameterTools_a6f659941dac68f553839b4db042bcfd3}} 
+\index{BetaParameterTools@{BetaParameterTools}!betamean@{betamean}}
+\index{betamean@{betamean}!BetaParameterTools@{BetaParameterTools}}
+\doxysubsubsection{\texorpdfstring{betamean}{betamean}}
+{\footnotesize\ttfamily Vector\+Xd Beta\+Parameter\+Tools\+::betamean}
+
+\mbox{\Hypertarget{classBetaParameterTools_aaf37af04821223cdccb649fe12108814}\label{classBetaParameterTools_aaf37af04821223cdccb649fe12108814}} 
+\index{BetaParameterTools@{BetaParameterTools}!betanew@{betanew}}
+\index{betanew@{betanew}!BetaParameterTools@{BetaParameterTools}}
+\doxysubsubsection{\texorpdfstring{betanew}{betanew}}
+{\footnotesize\ttfamily Matrix\+Xd Beta\+Parameter\+Tools\+::betanew}
+
+\mbox{\Hypertarget{classBetaParameterTools_af792d3e10177b9820be0c7b024650fc2}\label{classBetaParameterTools_af792d3e10177b9820be0c7b024650fc2}} 
+\index{BetaParameterTools@{BetaParameterTools}!xbt@{xbt}}
+\index{xbt@{xbt}!BetaParameterTools@{BetaParameterTools}}
+\doxysubsubsection{\texorpdfstring{xbt}{xbt}}
+{\footnotesize\ttfamily Matrix\+Xd Beta\+Parameter\+Tools\+::xbt}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Multilevel\+Model/include/\mbox{\hyperlink{MultilevelModel_8hpp}{Multilevel\+Model.\+hpp}}\end{DoxyCompactItemize}

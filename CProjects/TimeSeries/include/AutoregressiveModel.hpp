@@ -1,95 +1,13 @@
 #pragma once
 #ifndef AR_H
 
-#include "MultilevelModel.hpp"
+// #include "MultilevelModel.hpp"
 #include "BayesianUpdates.hpp"
 #include "MultilevelModelFunctions.hpp"
+#include "TimeSeriesTools.hpp"
 
 using namespace Eigen;
 using namespace std;
-
-template <typename D1, typename D2>
-MatrixXd updateAR(const MatrixBase<D1> &current, const MatrixBase<D2> &yt, const double &sigma2,
-                  const MatrixXd &priorMean, const MatrixXd &priorVar)
-{
-    /* current comes in as a row, priorMean comes in as a row */
-    int rows = current.rows();
-    int lags = current.cols();
-    int T = yt.cols();
-    if (rows > lags)
-    {
-        throw invalid_argument("Invalid input in updateAR, rows greater than cols.");
-    }
-    MatrixXd Xt = lag(yt, lags, 0);
-    MatrixXd ytstar = yt.rightCols(T - lags);
-    MatrixXd Ip = MatrixXd::Identity(lags, lags);
-    MatrixXd XX = Xt * Xt.transpose();
-    XX = XX.array() / sigma2;
-
-    MatrixXd G1 = priorVar.ldlt().solve(Ip);
-    MatrixXd g1 = G1 * priorMean.transpose();
-    G1 = (G1 + XX).ldlt().solve(Ip);
-
-    MatrixXd Xy = (Xt * ytstar.transpose()).array() / sigma2;
-    g1 = (G1 * (g1 + Xy)).transpose();
-
-    Matrix<double, 1, 1> s2;
-    s2 << sigma2;
-    MatrixXd P0 = setInitialCovar(current, s2);
-    MatrixXd G1L = G1.llt().matrixL();
-    MatrixXd P1(lags, lags);
-    int MAX_TRIES = 10;
-    int count = 0;
-    int notvalid = 1;
-    MatrixXd proposal = g1;
-    while ((notvalid == 1))
-    {
-        proposal = (g1.transpose() + G1L * normrnd(0, 1, lags, 1)).transpose();
-        P1 = setInitialCovar(proposal, s2);
-        if (isPD(P1))
-        {
-            notvalid = 0;
-        }
-        if (count == MAX_TRIES)
-        {
-            P1 = MatrixXd::Identity(lags, lags);
-            break;
-        }
-        ++count;
-    }
-
-    MatrixXd Xp = MatrixXd::Zero(lags, lags);
-    MatrixXd empty;
-    for (int i = 1; i < lags; ++i)
-    {
-        empty = yt.leftCols(i);
-        empty.resize(i, 1);
-        Xp.col(i).segment(lags - i, i) = empty;
-        empty.resize(0, 0);
-    }
-    MatrixXd Scur = s2.replicate(T, 1).asDiagonal();
-    MatrixXd Snew = Scur;
-    Scur.topLeftCorner(lags, lags) = P0;
-    Snew.topLeftCorner(lags, lags) = P1;
-    MatrixXd Xss(lags, T);
-    Xss << Xp, Xt;
-    MatrixXd ZeroMean = MatrixXd::Zero(1, T);
-    double val = (logmvnpdf(yt - proposal * Xss, ZeroMean, Snew) +
-                  logmvnpdf(proposal, priorMean, priorVar) +
-                  logmvnpdf(current, g1, G1)) -
-                 (logmvnpdf(yt - current * Xss, ZeroMean, Scur) +
-                  logmvnpdf(current, priorMean, priorVar) +
-                  logmvnpdf(proposal, g1, G1));
-    double lalpha = min(0., val);
-    if (log(unifrnd(0, 1)) < lalpha)
-    {
-        return proposal;
-    }
-    else
-    {
-        return current;
-    }
-}
 
 class AutoregressiveModel
 {
@@ -98,11 +16,17 @@ public:
     MatrixXd Xt;
     RowVectorXd b0;
     MatrixXd B0;
+    RowVectorXd g0;
+    MatrixXd G0;
     MatrixXd arparams;
     VectorXd sigma2;
     double r0;
     double R0;
-    void setModel(const MatrixXd &yt, const MatrixXd &Xt, const MatrixXd &arparams,
+    std::vector<MatrixXd> storeBeta;
+    std::vector<MatrixXd> storeArParams;
+    std::vector<VectorXd> storeSigma2;
+
+    void setModel(const MatrixXd &yt, const MatrixXd &Xt, const MatrixXd &g0, const MatrixXd &G0,
                   const double &r0, const double &R0, const RowVectorXd &b0,
                   const MatrixXd &B0)
     {
@@ -112,28 +36,68 @@ public:
         this->B0 = B0;
         this->r0 = r0;
         this->R0 = R0;
-        this->arparams = arparams;
+        this->g0 = g0;
+        this->G0 = G0;
         this->sigma2 = VectorXd::Ones(this->yt.rows());
     }
-    void runAr(int Sims)
+    void runAr(const int &Sims, const int burnin)
     {
         int T = yt.cols();
         int K = yt.rows();
-        int lags = arparams.cols(); 
+        int lags = g0.cols();
         double s2;
+
+        MatrixXd Xthat;
+        MatrixXd ythat;
         MatrixXd Xtemp;
+        MatrixXd epsilons;
+        MatrixXd epsilonstar;
+        MatrixXd mut;
+        MatrixXd arparams(K, lags);
+        MatrixXd betaParams(K, Xt.cols());
+        MatrixXd residuals(1, T);
+        MatrixXd D0(lags, lags);
+        MatrixXd Ilags = MatrixXd::Identity(lags, lags);
+        VectorXd sig;
 
         std::vector<MatrixXd> XtbyT = groupByTime(Xt, T, K);
         UnivariateBeta ub;
+        ArParameterTools ar;
+        ub.initializeBeta(b0);
+
+        storeBeta.resize(Sims - burnin);
+        storeArParams.resize(Sims - burnin);
+        storeSigma2.resize(Sims - burnin);
+        arparams = g0.replicate(K,1);
+
         for (int i = 0; i < Sims; ++i)
         {
+            cout << "Sim " << i << endl; 
+            ythat = makeStationary(yt, arparams, sigma2, 0);
             for (int k = 0; k < K; ++k)
             {
                 Xtemp = XtbyT[k];
+                Xthat = makeStationary(Xtemp, arparams.row(k), s2, 1);
                 s2 = sigma2(k);
-                // cout << lag(yt.row(k), lags) << endl; 
-                // ub.updateBetaUnivariate(yt.row(k), Xtemp, s2, b0, B0);
-                // cout << ub.bnew << endl; 
+                ub.updateBetaUnivariate(ythat.row(k), Xtemp, s2, b0, B0);
+                mut = ub.bnew * Xtemp.transpose();
+                epsilons = yt.row(k) - ub.bnew * Xtemp.transpose();
+                ar.updateArParameters(epsilons, arparams.row(k), s2, g0, G0);
+                D0 = setInitialCovar(ar.phinew, 1);
+                D0 = D0.ldlt().solve(Ilags);
+                D0 = D0.llt().matrixL();
+                residuals.rightCols(T - lags) = ythat.row(k).rightCols(T - lags) - ub.bnew * Xthat.transpose().rightCols(T - lags);
+                residuals.leftCols(lags) = epsilons.leftCols(lags)*D0;
+                sigma2(k) = updateVariance(residuals, r0, R0).value();
+                arparams.row(k) = ar.phinew;
+                betaParams.row(k) = ub.bnew;
+            }
+
+            if (i >= burnin)
+            {
+                storeBeta[i - burnin] = betaParams;
+                storeArParams[i - burnin] = arparams;
+                storeSigma2[i - burnin] = sigma2;
             }
         }
     }

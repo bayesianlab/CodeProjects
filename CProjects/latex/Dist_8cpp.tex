@@ -1,0 +1,59 @@
+\hypertarget{Dist_8cpp}{}\doxysection{Old/\+Simulation/src/\+Dist.cpp File Reference}
+\label{Dist_8cpp}\index{Old/Simulation/src/Dist.cpp@{Old/Simulation/src/Dist.cpp}}
+{\ttfamily \#include \char`\"{}Dist.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$assert.\+h$>$}\newline
+{\ttfamily \#include $<$boost/math/distributions/chi\+\_\+squared.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/math/distributions/exponential.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/math/distributions/logistic.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/math/distributions/normal.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/math/distributions/students\+\_\+t.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/random/gamma\+\_\+distribution.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/random/mersenne\+\_\+twister.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/random/normal\+\_\+distribution.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/random/uniform\+\_\+01.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/random/variate\+\_\+generator.\+hpp$>$}\newline
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include $<$random$>$}\newline
+{\ttfamily \#include $<$unsupported/\+Eigen/\+Kronecker\+Product$>$}\newline
+Include dependency graph for Dist.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{Dist_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{Dist_8cpp_a7cddf182b4b0952e7564e80c5a1e4577}{L\+O\+G\+\_\+\+E\+\_\+2}}~0.\+693147180559945309417232121458
+\item 
+\#define \mbox{\hyperlink{Dist_8cpp_a0e57fb4cac7f15574ecdbb801363160c}{L\+O\+G\+\_\+\+PI}}~1.\+14472988584940017414342735135305871165
+\item 
+\#define \mbox{\hyperlink{Dist_8cpp_a0e98b993441355292991daf953e2c2de}{L\+O\+G\+\_\+\+E\+\_\+2\+\_\+\+PI}}~0.\+693147180559945309417232121458 + 1.\+14472988584940017414342735135305871165
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{Dist_8cpp_a7cddf182b4b0952e7564e80c5a1e4577}\label{Dist_8cpp_a7cddf182b4b0952e7564e80c5a1e4577}} 
+\index{Dist.cpp@{Dist.cpp}!LOG\_E\_2@{LOG\_E\_2}}
+\index{LOG\_E\_2@{LOG\_E\_2}!Dist.cpp@{Dist.cpp}}
+\doxysubsubsection{\texorpdfstring{LOG\_E\_2}{LOG\_E\_2}}
+{\footnotesize\ttfamily \#define L\+O\+G\+\_\+\+E\+\_\+2~0.\+693147180559945309417232121458}
+
+\mbox{\Hypertarget{Dist_8cpp_a0e98b993441355292991daf953e2c2de}\label{Dist_8cpp_a0e98b993441355292991daf953e2c2de}} 
+\index{Dist.cpp@{Dist.cpp}!LOG\_E\_2\_PI@{LOG\_E\_2\_PI}}
+\index{LOG\_E\_2\_PI@{LOG\_E\_2\_PI}!Dist.cpp@{Dist.cpp}}
+\doxysubsubsection{\texorpdfstring{LOG\_E\_2\_PI}{LOG\_E\_2\_PI}}
+{\footnotesize\ttfamily \#define L\+O\+G\+\_\+\+E\+\_\+2\+\_\+\+PI~0.\+693147180559945309417232121458 + 1.\+14472988584940017414342735135305871165}
+
+\mbox{\Hypertarget{Dist_8cpp_a0e57fb4cac7f15574ecdbb801363160c}\label{Dist_8cpp_a0e57fb4cac7f15574ecdbb801363160c}} 
+\index{Dist.cpp@{Dist.cpp}!LOG\_PI@{LOG\_PI}}
+\index{LOG\_PI@{LOG\_PI}!Dist.cpp@{Dist.cpp}}
+\doxysubsubsection{\texorpdfstring{LOG\_PI}{LOG\_PI}}
+{\footnotesize\ttfamily \#define L\+O\+G\+\_\+\+PI~1.\+14472988584940017414342735135305871165}
+

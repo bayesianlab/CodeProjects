@@ -1,0 +1,117 @@
+\hypertarget{classLogit}{}\doxysection{Logit Class Reference}
+\label{classLogit}\index{Logit@{Logit}}
+
+
+{\ttfamily \#include $<$Logit.\+hpp$>$}
+
+
+
+Inheritance diagram for Logit\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=121pt]{classLogit__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Logit\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=121pt]{classLogit__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Vector\+Xd \mbox{\hyperlink{classLogit_aac6a5df09079d8a28b2e97768bdfcd2a}{logit\+Prime}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&Params)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLogit_a7ca29b007ece49df8e8be4e94e2d21a7}{logit\+Prime\+Prime}} (const Matrix\+Xd \&X, const Vector\+Xd \&Params)
+\item 
+void \mbox{\hyperlink{classLogit_afe78f50f8c6f864944da1d87c00b9b5e}{compute\+Beta\+Mle}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, Vector\+Xd \&beta0, Matrix\+Xd \&H0, int steps, double tol)
+\item 
+double \mbox{\hyperlink{classLogit_a29188433478eba20362d31f0bac2ca9b}{Logit\+Log\+Likelihood}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&beta)
+\item 
+void \mbox{\hyperlink{classLogit_ab9e28f3f58475a7b0248bff7c99674dd}{Logit\+Metropolis\+Hastings}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&prior\+Mean, const Matrix\+Xd \&prior\+Variance, int nu, int iter, int burn)
+\item 
+Vector\+Xd \mbox{\hyperlink{classLogit_aac6a5df09079d8a28b2e97768bdfcd2a}{logit\+Prime}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&Params)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLogit_a7ca29b007ece49df8e8be4e94e2d21a7}{logit\+Prime\+Prime}} (const Matrix\+Xd \&X, const Vector\+Xd \&Params)
+\item 
+void \mbox{\hyperlink{classLogit_afe78f50f8c6f864944da1d87c00b9b5e}{compute\+Beta\+Mle}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, Vector\+Xd \&beta0, Matrix\+Xd \&H0, int steps, double tol)
+\item 
+double \mbox{\hyperlink{classLogit_a29188433478eba20362d31f0bac2ca9b}{Logit\+Log\+Likelihood}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&beta)
+\item 
+void \mbox{\hyperlink{classLogit_ab9e28f3f58475a7b0248bff7c99674dd}{Logit\+Metropolis\+Hastings}} (const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&prior\+Mean, const Matrix\+Xd \&prior\+Variance, int nu, int iter, int burn)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classLogit_afe78f50f8c6f864944da1d87c00b9b5e}\label{classLogit_afe78f50f8c6f864944da1d87c00b9b5e}} 
+\index{Logit@{Logit}!computeBetaMle@{computeBetaMle}}
+\index{computeBetaMle@{computeBetaMle}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{computeBetaMle()}{computeBetaMle()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Logit\+::compute\+Beta\+Mle (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{Vector\+Xd \&}]{beta0,  }\item[{Matrix\+Xd \&}]{H0,  }\item[{int}]{steps,  }\item[{double}]{tol }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLogit_afe78f50f8c6f864944da1d87c00b9b5e}\label{classLogit_afe78f50f8c6f864944da1d87c00b9b5e}} 
+\index{Logit@{Logit}!computeBetaMle@{computeBetaMle}}
+\index{computeBetaMle@{computeBetaMle}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{computeBetaMle()}{computeBetaMle()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Logit\+::compute\+Beta\+Mle (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{Vector\+Xd \&}]{beta0,  }\item[{Matrix\+Xd \&}]{H0,  }\item[{int}]{steps,  }\item[{double}]{tol }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLogit_a29188433478eba20362d31f0bac2ca9b}\label{classLogit_a29188433478eba20362d31f0bac2ca9b}} 
+\index{Logit@{Logit}!LogitLogLikelihood@{LogitLogLikelihood}}
+\index{LogitLogLikelihood@{LogitLogLikelihood}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{LogitLogLikelihood()}{LogitLogLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Logit\+::\+Logit\+Log\+Likelihood (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{beta }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLogit_a29188433478eba20362d31f0bac2ca9b}\label{classLogit_a29188433478eba20362d31f0bac2ca9b}} 
+\index{Logit@{Logit}!LogitLogLikelihood@{LogitLogLikelihood}}
+\index{LogitLogLikelihood@{LogitLogLikelihood}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{LogitLogLikelihood()}{LogitLogLikelihood()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Logit\+::\+Logit\+Log\+Likelihood (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{beta }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLogit_ab9e28f3f58475a7b0248bff7c99674dd}\label{classLogit_ab9e28f3f58475a7b0248bff7c99674dd}} 
+\index{Logit@{Logit}!LogitMetropolisHastings@{LogitMetropolisHastings}}
+\index{LogitMetropolisHastings@{LogitMetropolisHastings}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{LogitMetropolisHastings()}{LogitMetropolisHastings()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Logit\+::\+Logit\+Metropolis\+Hastings (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{prior\+Mean,  }\item[{const Matrix\+Xd \&}]{prior\+Variance,  }\item[{int}]{nu,  }\item[{int}]{iter,  }\item[{int}]{burn }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLogit_ab9e28f3f58475a7b0248bff7c99674dd}\label{classLogit_ab9e28f3f58475a7b0248bff7c99674dd}} 
+\index{Logit@{Logit}!LogitMetropolisHastings@{LogitMetropolisHastings}}
+\index{LogitMetropolisHastings@{LogitMetropolisHastings}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{LogitMetropolisHastings()}{LogitMetropolisHastings()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Logit\+::\+Logit\+Metropolis\+Hastings (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{prior\+Mean,  }\item[{const Matrix\+Xd \&}]{prior\+Variance,  }\item[{int}]{nu,  }\item[{int}]{iter,  }\item[{int}]{burn }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLogit_aac6a5df09079d8a28b2e97768bdfcd2a}\label{classLogit_aac6a5df09079d8a28b2e97768bdfcd2a}} 
+\index{Logit@{Logit}!logitPrime@{logitPrime}}
+\index{logitPrime@{logitPrime}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{logitPrime()}{logitPrime()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Vector\+Xd Logit\+::logit\+Prime (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{Params }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLogit_aac6a5df09079d8a28b2e97768bdfcd2a}\label{classLogit_aac6a5df09079d8a28b2e97768bdfcd2a}} 
+\index{Logit@{Logit}!logitPrime@{logitPrime}}
+\index{logitPrime@{logitPrime}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{logitPrime()}{logitPrime()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Vector\+Xd Logit\+::logit\+Prime (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{Params }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLogit_a7ca29b007ece49df8e8be4e94e2d21a7}\label{classLogit_a7ca29b007ece49df8e8be4e94e2d21a7}} 
+\index{Logit@{Logit}!logitPrimePrime@{logitPrimePrime}}
+\index{logitPrimePrime@{logitPrimePrime}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{logitPrimePrime()}{logitPrimePrime()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Logit\+::logit\+Prime\+Prime (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{Params }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLogit_a7ca29b007ece49df8e8be4e94e2d21a7}\label{classLogit_a7ca29b007ece49df8e8be4e94e2d21a7}} 
+\index{Logit@{Logit}!logitPrimePrime@{logitPrimePrime}}
+\index{logitPrimePrime@{logitPrimePrime}!Logit@{Logit}}
+\doxysubsubsection{\texorpdfstring{logitPrimePrime()}{logitPrimePrime()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Logit\+::logit\+Prime\+Prime (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{Params }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Old/\+Discrete\+Choice/include/\mbox{\hyperlink{include_2Logit_8hpp}{Logit.\+hpp}}\item 
+Old/\+Discrete\+Choice/src/\mbox{\hyperlink{Logit_8cpp}{Logit.\+cpp}}\end{DoxyCompactItemize}

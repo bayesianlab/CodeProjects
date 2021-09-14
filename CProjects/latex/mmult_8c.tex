@@ -1,0 +1,116 @@
+\hypertarget{mmult_8c}{}\doxysection{Old/\+Numerical\+Analysis/mmult.c File Reference}
+\label{mmult_8c}\index{Old/NumericalAnalysis/mmult.c@{Old/NumericalAnalysis/mmult.c}}
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}mmult.\+h\char`\"{}}\newline
+Include dependency graph for mmult.\+c\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=342pt]{mmult_8c__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{mmult_8c_a6c4e5dec13242db515cf4299e5b20745}{mmult}} (int row1, int col1, double m1\mbox{[}$\,$\mbox{]}\mbox{[}col1\mbox{]}, int row2, int col2, double m2\mbox{[}$\,$\mbox{]}\mbox{[}col2\mbox{]}, double result\mbox{[}row1\mbox{]}\mbox{[}col2\mbox{]})
+\item 
+double \mbox{\hyperlink{mmult_8c_aa6a7b138d497f3029b814f8b65ae740f}{determinant2x2}} (int row, double matrix\mbox{[}row\mbox{]}\mbox{[}row\mbox{]})
+\item 
+void \mbox{\hyperlink{mmult_8c_af7b25cc0f19dfbf272086921840c6c4c}{fill\+Cofactor}} (int row, double matrix\mbox{[}row\mbox{]}\mbox{[}row\mbox{]}, double tmp\+Matrix\mbox{[}row-\/1\mbox{]}\mbox{[}row-\/1\mbox{]}, int strikeout)
+\item 
+double \mbox{\hyperlink{mmult_8c_ab4d758ae07980010332e0d0e0d64fecb}{determinant}} (int row, double matrix\mbox{[}row\mbox{]}\mbox{[}row\mbox{]})
+\item 
+void \mbox{\hyperlink{mmult_8c_a3da0aec73de14aca78b9774e442c4eb7}{transpose}} (int row1, int col1, double m1\mbox{[}$\,$\mbox{]}\mbox{[}col1\mbox{]}, double m2\mbox{[}col1\mbox{]}\mbox{[}row1\mbox{]})
+\item 
+void \mbox{\hyperlink{mmult_8c_a541d152b9c31122399292af17edff8d9}{lin\+\_\+reg}} (int rowY, double y\mbox{[}rowY\mbox{]}, int rowX, int colX, double \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}}\mbox{[}$\,$\mbox{]}\mbox{[}rowX\mbox{]})
+\item 
+void \mbox{\hyperlink{mmult_8c_af8e02b05747f52bb528f1a33db10c37b}{printf2D}} (int nrow, int ncol, double two\+Darr\mbox{[}nrow\mbox{]}\mbox{[}ncol\mbox{]})
+\item 
+void \mbox{\hyperlink{mmult_8c_a60774eefccb4579b039c6a51467fb3af}{printf1D}} (int row, int vector\mbox{[}row\mbox{]})
+\item 
+void \mbox{\hyperlink{mmult_8c_a8257ad30dcdda67b98426e23b55921eb}{mmult\+Tests}} ()
+\item 
+void \mbox{\hyperlink{mmult_8c_a573a454a2de92557380237c93c4f5a17}{transpose\+Tests}} ()
+\item 
+void \mbox{\hyperlink{mmult_8c_ab4857662ef8066ef16d8ef80c1135dd8}{fill\+Cofactor\+Tests}} ()
+\item 
+void \mbox{\hyperlink{mmult_8c_a076aaff370086f6d9d252b21bcb02790}{determinant\+Tests}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{mmult_8c_ab4d758ae07980010332e0d0e0d64fecb}\label{mmult_8c_ab4d758ae07980010332e0d0e0d64fecb}} 
+\index{mmult.c@{mmult.c}!determinant@{determinant}}
+\index{determinant@{determinant}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{determinant()}{determinant()}}
+{\footnotesize\ttfamily double determinant (\begin{DoxyParamCaption}\item[{int}]{row,  }\item[{double}]{matrix\mbox{[}row\mbox{]}\mbox{[}row\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_aa6a7b138d497f3029b814f8b65ae740f}\label{mmult_8c_aa6a7b138d497f3029b814f8b65ae740f}} 
+\index{mmult.c@{mmult.c}!determinant2x2@{determinant2x2}}
+\index{determinant2x2@{determinant2x2}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{determinant2x2()}{determinant2x2()}}
+{\footnotesize\ttfamily double determinant2x2 (\begin{DoxyParamCaption}\item[{int}]{row,  }\item[{double}]{matrix\mbox{[}row\mbox{]}\mbox{[}row\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_a076aaff370086f6d9d252b21bcb02790}\label{mmult_8c_a076aaff370086f6d9d252b21bcb02790}} 
+\index{mmult.c@{mmult.c}!determinantTests@{determinantTests}}
+\index{determinantTests@{determinantTests}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{determinantTests()}{determinantTests()}}
+{\footnotesize\ttfamily void determinant\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_af7b25cc0f19dfbf272086921840c6c4c}\label{mmult_8c_af7b25cc0f19dfbf272086921840c6c4c}} 
+\index{mmult.c@{mmult.c}!fillCofactor@{fillCofactor}}
+\index{fillCofactor@{fillCofactor}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{fillCofactor()}{fillCofactor()}}
+{\footnotesize\ttfamily void fill\+Cofactor (\begin{DoxyParamCaption}\item[{int}]{row,  }\item[{double}]{matrix\mbox{[}row\mbox{]}\mbox{[}row\mbox{]},  }\item[{double}]{tmp\+Matrix\mbox{[}row-\/1\mbox{]}\mbox{[}row-\/1\mbox{]},  }\item[{int}]{strikeout }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_ab4857662ef8066ef16d8ef80c1135dd8}\label{mmult_8c_ab4857662ef8066ef16d8ef80c1135dd8}} 
+\index{mmult.c@{mmult.c}!fillCofactorTests@{fillCofactorTests}}
+\index{fillCofactorTests@{fillCofactorTests}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{fillCofactorTests()}{fillCofactorTests()}}
+{\footnotesize\ttfamily void fill\+Cofactor\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_a541d152b9c31122399292af17edff8d9}\label{mmult_8c_a541d152b9c31122399292af17edff8d9}} 
+\index{mmult.c@{mmult.c}!lin\_reg@{lin\_reg}}
+\index{lin\_reg@{lin\_reg}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{lin\_reg()}{lin\_reg()}}
+{\footnotesize\ttfamily void lin\+\_\+reg (\begin{DoxyParamCaption}\item[{int}]{rowY,  }\item[{double}]{y\mbox{[}row\+Y\mbox{]},  }\item[{int}]{rowX,  }\item[{int}]{colX,  }\item[{double}]{x\mbox{[}$\,$\mbox{]}\mbox{[}row\+X\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_a6c4e5dec13242db515cf4299e5b20745}\label{mmult_8c_a6c4e5dec13242db515cf4299e5b20745}} 
+\index{mmult.c@{mmult.c}!mmult@{mmult}}
+\index{mmult@{mmult}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{mmult()}{mmult()}}
+{\footnotesize\ttfamily void mmult (\begin{DoxyParamCaption}\item[{int}]{row1,  }\item[{int}]{col1,  }\item[{double}]{m1\mbox{[}$\,$\mbox{]}\mbox{[}col1\mbox{]},  }\item[{int}]{row2,  }\item[{int}]{col2,  }\item[{double}]{m2\mbox{[}$\,$\mbox{]}\mbox{[}col2\mbox{]},  }\item[{double}]{result\mbox{[}row1\mbox{]}\mbox{[}col2\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_a8257ad30dcdda67b98426e23b55921eb}\label{mmult_8c_a8257ad30dcdda67b98426e23b55921eb}} 
+\index{mmult.c@{mmult.c}!mmultTests@{mmultTests}}
+\index{mmultTests@{mmultTests}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{mmultTests()}{mmultTests()}}
+{\footnotesize\ttfamily void mmult\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_a60774eefccb4579b039c6a51467fb3af}\label{mmult_8c_a60774eefccb4579b039c6a51467fb3af}} 
+\index{mmult.c@{mmult.c}!printf1D@{printf1D}}
+\index{printf1D@{printf1D}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{printf1D()}{printf1D()}}
+{\footnotesize\ttfamily void printf1D (\begin{DoxyParamCaption}\item[{int}]{row,  }\item[{int}]{vector\mbox{[}row\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_af8e02b05747f52bb528f1a33db10c37b}\label{mmult_8c_af8e02b05747f52bb528f1a33db10c37b}} 
+\index{mmult.c@{mmult.c}!printf2D@{printf2D}}
+\index{printf2D@{printf2D}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{printf2D()}{printf2D()}}
+{\footnotesize\ttfamily void printf2D (\begin{DoxyParamCaption}\item[{int}]{nrow,  }\item[{int}]{ncol,  }\item[{double}]{two\+Darr\mbox{[}nrow\mbox{]}\mbox{[}ncol\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_a3da0aec73de14aca78b9774e442c4eb7}\label{mmult_8c_a3da0aec73de14aca78b9774e442c4eb7}} 
+\index{mmult.c@{mmult.c}!transpose@{transpose}}
+\index{transpose@{transpose}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{transpose()}{transpose()}}
+{\footnotesize\ttfamily void transpose (\begin{DoxyParamCaption}\item[{int}]{row1,  }\item[{int}]{col1,  }\item[{double}]{m1\mbox{[}$\,$\mbox{]}\mbox{[}col1\mbox{]},  }\item[{double}]{m2\mbox{[}col1\mbox{]}\mbox{[}row1\mbox{]} }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{mmult_8c_a573a454a2de92557380237c93c4f5a17}\label{mmult_8c_a573a454a2de92557380237c93c4f5a17}} 
+\index{mmult.c@{mmult.c}!transposeTests@{transposeTests}}
+\index{transposeTests@{transposeTests}!mmult.c@{mmult.c}}
+\doxysubsubsection{\texorpdfstring{transposeTests()}{transposeTests()}}
+{\footnotesize\ttfamily void transpose\+Tests (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+

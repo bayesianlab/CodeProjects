@@ -1,0 +1,369 @@
+\hypertarget{classLinRegGibbs}{}\doxysection{Lin\+Reg\+Gibbs Class Reference}
+\label{classLinRegGibbs}\index{LinRegGibbs@{LinRegGibbs}}
+
+
+{\ttfamily \#include $<$Lin\+Reg\+Gibbs.\+hpp$>$}
+
+
+
+Inheritance diagram for Lin\+Reg\+Gibbs\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=157pt]{classLinRegGibbs__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Lin\+Reg\+Gibbs\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=157pt]{classLinRegGibbs__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a4972faefeccf397f9808572e861f3894}{lr\+Cond\+Priors\+Gibbs}} (const Vector\+Xd \&, const Matrix\+Xd \&, const int, const int, const Vector\+Xd \&, const Matrix\+Xd \&, double, double)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLinRegGibbs_a061ca1b9dd7905d2290c2bdfb27add00}{gibbs\+L\+R\+Condtional\+Prior}} (const Vector\+Xd \&, const Matrix\+Xd \&, const int, const int, const Vector\+Xd \&, const Matrix\+Xd \&, double, double)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLinRegGibbs_a6dbfafce13c55e34cff2cad1a82cebc0}{gibbs\+LR}} (const Vector\+Xd \&, const Matrix\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}}, const int, const int, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLinRegGibbs_ae8d4331973cee08c120c545964179ff5}{gibbs\+Restrict\+Beta}} (const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, const Vector\+Xd \&, const int, const int, const Vector\+Xd \&, const Matrix\+Xd \&, const double, const double)
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a8ef2b82d16b5494146629f311cf35e3e}{gibbs\+Beta\+Updates}} (Matrix\+Xd \&, Vector\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, int)
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a7644de4dc9f3057cba726cdeb0d19875}{gibbs\+Beta\+Updates\+Condtional\+Prior}} (Matrix\+Xd \&, Vector\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLinRegGibbs_a27999e2560d49141739fbd3a62435f68}{calc\+Omega}} (const Matrix\+Xd \&)
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a991d850cd427445bfa7bfd1a10194c84}{analytical\+LL}} (const Vector\+Xd \&y, const Matrix\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+int \mbox{\hyperlink{classLinRegGibbs_aede9c94491c4cf00455b7d6a07cbb4b7}{in\+Theta}} (const Ref$<$ const Matrix\+Xd $>$ \&, const Ref$<$ const Matrix\+Xd $>$ \&, const Matrix\+Xd \&)
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_ae1be48fa79b9a491a631f572717f551d}{gelfand\+Dey\+M\+L\+Conditional\+Prior}} (const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, double, double)
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_a455dcd6c34d6d39c3350a4b88ec1446d}{gelfand\+Dey\+ML}} (const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&mle, const Matrix\+Xd \&ifish, const Vector\+Xd \&, const Matrix\+Xd \&, double, double)
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_a031d7d42d3a42e45e325f1b0a1056199}{modified\+Gelfand\+Dey\+ML}} (const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&mle, const Matrix\+Xd \&ifish, const Vector\+Xd \&, const Matrix\+Xd \&, double, double)
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_ac51d0230490df6b72a623c7338dad56f}{prior\+Beta\+Mvn\+Pdf}} (const Vector\+Xd \&mu, const Ref$<$ const Matrix\+Xd $>$ \&precision, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_ad782f18e12c0e9ff0d0d8ba8597672e2}{prior\+Beta\+Mvn\+Pdf}} (const Vector\+Xd \&mu, const Ref$<$ const Matrix\+Xd $>$ \&precision, const double, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_a85ad32d3e19aeb9944f4f59d656cc1db}{lr\+Restrict\+M\+L\+GD}} (const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int gibbs\+Steps, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_a9fea2cb7deed8cded872c395d531f68a}{lr\+Restrict\+M\+L\+Modified\+GD}} (const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int gibbs\+Steps, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a7c4b58934a30acf0f4dd8ade4ac701b3}{run\+Sim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&lower\+Constraint, const Vector\+Xd \&upper\+Constraint, const Vector\+Xd \&theta, const Matrix\+Xd \&sig, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_adde5654fa7cd1056528b65eb0ef3bc06}{run\+Sim\+Modified}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&lower\+Constraint, const Vector\+Xd \&upper\+Constraint, const Vector\+Xd \&theta, const Matrix\+Xd \&sig, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+\mbox{\hyperlink{classLinRegGibbs_a0f49e03634808fee332c64c382b7c96f}{Lin\+Reg\+Gibbs}} ()
+\item 
+\mbox{\hyperlink{classLinRegGibbs_ada11c1c4145f4ec13f4d4ac71d1a52a9}{Lin\+Reg\+Gibbs}} (int \mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a4972faefeccf397f9808572e861f3894}{lr\+Cond\+Priors\+Gibbs}} (const Vector\+Xd \&, const Matrix\+Xd \&, const int, const int, const Vector\+Xd \&, const Matrix\+Xd \&, double, double)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLinRegGibbs_afccd5792dfecd466db3d4b3d55698a3a}{gibbs\+LR}} (const Vector\+Xd \&, const Matrix\+Xd \&, const int, const int, const Vector\+Xd \&, const Matrix\+Xd \&, double, double)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLinRegGibbs_ace6b1cdbf075ef20683d7e1db3b4210c}{gibbs\+L\+R\+Condtional\+Prior}} (const Vector\+Xd \&, const Matrix\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}}, const int, const int, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLinRegGibbs_ae8d4331973cee08c120c545964179ff5}{gibbs\+Restrict\+Beta}} (const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, const Vector\+Xd \&, const int, const int, const Vector\+Xd \&, const Matrix\+Xd \&, const double, const double)
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a7644de4dc9f3057cba726cdeb0d19875}{gibbs\+Beta\+Updates\+Condtional\+Prior}} (Matrix\+Xd \&, Vector\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, int)
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a8ef2b82d16b5494146629f311cf35e3e}{gibbs\+Beta\+Updates}} (Matrix\+Xd \&, Vector\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLinRegGibbs_a27999e2560d49141739fbd3a62435f68}{calc\+Omega}} (const Matrix\+Xd \&)
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a991d850cd427445bfa7bfd1a10194c84}{analytical\+LL}} (const Vector\+Xd \&y, const Matrix\+Xd \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+int \mbox{\hyperlink{classLinRegGibbs_aede9c94491c4cf00455b7d6a07cbb4b7}{in\+Theta}} (const Ref$<$ const Matrix\+Xd $>$ \&, const Ref$<$ const Matrix\+Xd $>$ \&, const Matrix\+Xd \&)
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_ae1be48fa79b9a491a631f572717f551d}{gelfand\+Dey\+M\+L\+Conditional\+Prior}} (const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, double, double)
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_a06963a545c688be785b332eea406c73b}{modified\+Gelfand\+Dey}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&sample, Vector\+Xd \&logpdf, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&mle, const Matrix\+Xd \&ifish, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0)
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_acec1757a6685c60ccb13d1088bfc448b}{modified\+Gelfand\+DeyT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&sample, Vector\+Xd \&logpdf, const double df, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&mle, const Matrix\+Xd \&ifish, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0)
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_ac51d0230490df6b72a623c7338dad56f}{prior\+Beta\+Mvn\+Pdf}} (const Vector\+Xd \&mu, const Ref$<$ const Matrix\+Xd $>$ \&precision, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_ad782f18e12c0e9ff0d0d8ba8597672e2}{prior\+Beta\+Mvn\+Pdf}} (const Vector\+Xd \&mu, const Ref$<$ const Matrix\+Xd $>$ \&precision, const double, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{mh_8cpp_a50ddd862d7f7c8f11d9c43c2c7a3bf37}{x}})
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_abffcd0fdca48f1515a48bb9e3e2921e4}{lr\+Restrict\+Modified\+GD}} (const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&a, const Vector\+Xd \&b, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int gibbs\+Steps, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_a63730483512d35d542543ffd82a99b68}{lr\+Restrict\+G\+DT}} (const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd Linear\+Constraints, double df, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int gibbs\+Steps, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+double \mbox{\hyperlink{classLinRegGibbs_a8b7b64a80966b863a08891ceef6b7ff2}{lr\+Restrict\+Modified\+G\+DT}} (const Vector\+Xd \&mu, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd Linear\+Constraints, double df, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int gibbs\+Steps, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a7c4b58934a30acf0f4dd8ade4ac701b3}{run\+Sim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&lower\+Constraint, const Vector\+Xd \&upper\+Constraint, const Vector\+Xd \&theta, const Matrix\+Xd \&sig, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_adde5654fa7cd1056528b65eb0ef3bc06}{run\+Sim\+Modified}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&lower\+Constraint, const Vector\+Xd \&upper\+Constraint, const Vector\+Xd \&theta, const Matrix\+Xd \&sig, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_ae75edda638f31ca7c9ee163ef606f6de}{run\+Tsim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&lower\+Constraint, const Vector\+Xd \&upper\+Constraint, const Matrix\+Xd Linear\+Constraints, double df, const Vector\+Xd \&theta, const Matrix\+Xd \&sig, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\item 
+void \mbox{\hyperlink{classLinRegGibbs_a3742842d5bcaf9164a32497aa2e69d75}{run\+Tsim\+Modified}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&lower\+Constraint, const Vector\+Xd \&upper\+Constraint, const Matrix\+Xd Linear\+Constraints, double df, const Vector\+Xd \&theta, const Matrix\+Xd \&sig, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, const double a0, const double d0, const int sims, const int \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classLinRegGibbs_a0f49e03634808fee332c64c382b7c96f}\label{classLinRegGibbs_a0f49e03634808fee332c64c382b7c96f}} 
+\index{LinRegGibbs@{LinRegGibbs}!LinRegGibbs@{LinRegGibbs}}
+\index{LinRegGibbs@{LinRegGibbs}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{LinRegGibbs()}{LinRegGibbs()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Lin\+Reg\+Gibbs\+::\+Lin\+Reg\+Gibbs (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ada11c1c4145f4ec13f4d4ac71d1a52a9}\label{classLinRegGibbs_ada11c1c4145f4ec13f4d4ac71d1a52a9}} 
+\index{LinRegGibbs@{LinRegGibbs}!LinRegGibbs@{LinRegGibbs}}
+\index{LinRegGibbs@{LinRegGibbs}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{LinRegGibbs()}{LinRegGibbs()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Lin\+Reg\+Gibbs\+::\+Lin\+Reg\+Gibbs (\begin{DoxyParamCaption}\item[{int}]{x }\end{DoxyParamCaption})}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classLinRegGibbs_a991d850cd427445bfa7bfd1a10194c84}\label{classLinRegGibbs_a991d850cd427445bfa7bfd1a10194c84}} 
+\index{LinRegGibbs@{LinRegGibbs}!analyticalLL@{analyticalLL}}
+\index{analyticalLL@{analyticalLL}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{analyticalLL()}{analyticalLL()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::analytical\+LL (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a991d850cd427445bfa7bfd1a10194c84}\label{classLinRegGibbs_a991d850cd427445bfa7bfd1a10194c84}} 
+\index{LinRegGibbs@{LinRegGibbs}!analyticalLL@{analyticalLL}}
+\index{analyticalLL@{analyticalLL}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{analyticalLL()}{analyticalLL()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::analytical\+LL (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a27999e2560d49141739fbd3a62435f68}\label{classLinRegGibbs_a27999e2560d49141739fbd3a62435f68}} 
+\index{LinRegGibbs@{LinRegGibbs}!calcOmega@{calcOmega}}
+\index{calcOmega@{calcOmega}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{calcOmega()}{calcOmega()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Lin\+Reg\+Gibbs\+::calc\+Omega (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{theta }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a27999e2560d49141739fbd3a62435f68}\label{classLinRegGibbs_a27999e2560d49141739fbd3a62435f68}} 
+\index{LinRegGibbs@{LinRegGibbs}!calcOmega@{calcOmega}}
+\index{calcOmega@{calcOmega}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{calcOmega()}{calcOmega()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Lin\+Reg\+Gibbs\+::calc\+Omega (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a455dcd6c34d6d39c3350a4b88ec1446d}\label{classLinRegGibbs_a455dcd6c34d6d39c3350a4b88ec1446d}} 
+\index{LinRegGibbs@{LinRegGibbs}!gelfandDeyML@{gelfandDeyML}}
+\index{gelfandDeyML@{gelfandDeyML}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gelfandDeyML()}{gelfandDeyML()}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::gelfand\+Dey\+ML (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{sample,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{mle,  }\item[{const Matrix\+Xd \&}]{ifish,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ae1be48fa79b9a491a631f572717f551d}\label{classLinRegGibbs_ae1be48fa79b9a491a631f572717f551d}} 
+\index{LinRegGibbs@{LinRegGibbs}!gelfandDeyMLConditionalPrior@{gelfandDeyMLConditionalPrior}}
+\index{gelfandDeyMLConditionalPrior@{gelfandDeyMLConditionalPrior}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gelfandDeyMLConditionalPrior()}{gelfandDeyMLConditionalPrior()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::gelfand\+Dey\+M\+L\+Conditional\+Prior (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{sample,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ae1be48fa79b9a491a631f572717f551d}\label{classLinRegGibbs_ae1be48fa79b9a491a631f572717f551d}} 
+\index{LinRegGibbs@{LinRegGibbs}!gelfandDeyMLConditionalPrior@{gelfandDeyMLConditionalPrior}}
+\index{gelfandDeyMLConditionalPrior@{gelfandDeyMLConditionalPrior}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gelfandDeyMLConditionalPrior()}{gelfandDeyMLConditionalPrior()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::gelfand\+Dey\+M\+L\+Conditional\+Prior (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a8ef2b82d16b5494146629f311cf35e3e}\label{classLinRegGibbs_a8ef2b82d16b5494146629f311cf35e3e}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsBetaUpdates@{gibbsBetaUpdates}}
+\index{gibbsBetaUpdates@{gibbsBetaUpdates}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsBetaUpdates()}{gibbsBetaUpdates()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::gibbs\+Beta\+Updates (\begin{DoxyParamCaption}\item[{Matrix\+Xd \&}]{B1,  }\item[{Vector\+Xd \&}]{beta\+Bar,  }\item[{const Vector\+Xd \&}]{sigma2,  }\item[{const Matrix\+Xd \&}]{XpX,  }\item[{const Vector\+Xd \&}]{Xpy,  }\item[{const Matrix\+Xd \&}]{B0inv,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{int}]{curr\+Iteration }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a8ef2b82d16b5494146629f311cf35e3e}\label{classLinRegGibbs_a8ef2b82d16b5494146629f311cf35e3e}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsBetaUpdates@{gibbsBetaUpdates}}
+\index{gibbsBetaUpdates@{gibbsBetaUpdates}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsBetaUpdates()}{gibbsBetaUpdates()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::gibbs\+Beta\+Updates (\begin{DoxyParamCaption}\item[{Matrix\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a7644de4dc9f3057cba726cdeb0d19875}\label{classLinRegGibbs_a7644de4dc9f3057cba726cdeb0d19875}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsBetaUpdatesCondtionalPrior@{gibbsBetaUpdatesCondtionalPrior}}
+\index{gibbsBetaUpdatesCondtionalPrior@{gibbsBetaUpdatesCondtionalPrior}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsBetaUpdatesCondtionalPrior()}{gibbsBetaUpdatesCondtionalPrior()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::gibbs\+Beta\+Updates\+Condtional\+Prior (\begin{DoxyParamCaption}\item[{Matrix\+Xd \&}]{,  }\item[{Vector\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{int}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a7644de4dc9f3057cba726cdeb0d19875}\label{classLinRegGibbs_a7644de4dc9f3057cba726cdeb0d19875}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsBetaUpdatesCondtionalPrior@{gibbsBetaUpdatesCondtionalPrior}}
+\index{gibbsBetaUpdatesCondtionalPrior@{gibbsBetaUpdatesCondtionalPrior}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsBetaUpdatesCondtionalPrior()}{gibbsBetaUpdatesCondtionalPrior()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::gibbs\+Beta\+Updates\+Condtional\+Prior (\begin{DoxyParamCaption}\item[{Matrix\+Xd \&}]{B1,  }\item[{Vector\+Xd \&}]{beta\+Bar,  }\item[{const Vector\+Xd \&}]{sigma2,  }\item[{const Matrix\+Xd \&}]{XpX,  }\item[{const Vector\+Xd \&}]{Xpy,  }\item[{const Matrix\+Xd \&}]{B0inv,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{int}]{curr\+Iteration }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_afccd5792dfecd466db3d4b3d55698a3a}\label{classLinRegGibbs_afccd5792dfecd466db3d4b3d55698a3a}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsLR@{gibbsLR}}
+\index{gibbsLR@{gibbsLR}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsLR()}{gibbsLR()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Lin\+Reg\+Gibbs\+::gibbs\+LR (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const int}]{,  }\item[{const int}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a6dbfafce13c55e34cff2cad1a82cebc0}\label{classLinRegGibbs_a6dbfafce13c55e34cff2cad1a82cebc0}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsLR@{gibbsLR}}
+\index{gibbsLR@{gibbsLR}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsLR()}{gibbsLR()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Lin\+Reg\+Gibbs\+::gibbs\+LR (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{x,  }\item[{const int}]{gibbs\+Steps,  }\item[{const int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a061ca1b9dd7905d2290c2bdfb27add00}\label{classLinRegGibbs_a061ca1b9dd7905d2290c2bdfb27add00}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsLRCondtionalPrior@{gibbsLRCondtionalPrior}}
+\index{gibbsLRCondtionalPrior@{gibbsLRCondtionalPrior}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsLRCondtionalPrior()}{gibbsLRCondtionalPrior()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Lin\+Reg\+Gibbs\+::gibbs\+L\+R\+Condtional\+Prior (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{x,  }\item[{const int}]{gibbs\+Steps,  }\item[{const int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ace6b1cdbf075ef20683d7e1db3b4210c}\label{classLinRegGibbs_ace6b1cdbf075ef20683d7e1db3b4210c}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsLRCondtionalPrior@{gibbsLRCondtionalPrior}}
+\index{gibbsLRCondtionalPrior@{gibbsLRCondtionalPrior}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsLRCondtionalPrior()}{gibbsLRCondtionalPrior()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Lin\+Reg\+Gibbs\+::gibbs\+L\+R\+Condtional\+Prior (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{x,  }\item[{const int}]{,  }\item[{const int}]{,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ae8d4331973cee08c120c545964179ff5}\label{classLinRegGibbs_ae8d4331973cee08c120c545964179ff5}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsRestrictBeta@{gibbsRestrictBeta}}
+\index{gibbsRestrictBeta@{gibbsRestrictBeta}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsRestrictBeta()}{gibbsRestrictBeta()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Lin\+Reg\+Gibbs\+::gibbs\+Restrict\+Beta (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{x,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const int}]{gibbs\+Steps,  }\item[{const int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ae8d4331973cee08c120c545964179ff5}\label{classLinRegGibbs_ae8d4331973cee08c120c545964179ff5}} 
+\index{LinRegGibbs@{LinRegGibbs}!gibbsRestrictBeta@{gibbsRestrictBeta}}
+\index{gibbsRestrictBeta@{gibbsRestrictBeta}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{gibbsRestrictBeta()}{gibbsRestrictBeta()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Matrix\+Xd Lin\+Reg\+Gibbs\+::gibbs\+Restrict\+Beta (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const int}]{,  }\item[{const int}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const double}]{,  }\item[{const double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_aede9c94491c4cf00455b7d6a07cbb4b7}\label{classLinRegGibbs_aede9c94491c4cf00455b7d6a07cbb4b7}} 
+\index{LinRegGibbs@{LinRegGibbs}!inTheta@{inTheta}}
+\index{inTheta@{inTheta}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{inTheta()}{inTheta()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily int Lin\+Reg\+Gibbs\+::in\+Theta (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{theta,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{theta\+Bar,  }\item[{const Matrix\+Xd \&}]{Omega }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_aede9c94491c4cf00455b7d6a07cbb4b7}\label{classLinRegGibbs_aede9c94491c4cf00455b7d6a07cbb4b7}} 
+\index{LinRegGibbs@{LinRegGibbs}!inTheta@{inTheta}}
+\index{inTheta@{inTheta}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{inTheta()}{inTheta()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily int Lin\+Reg\+Gibbs\+::in\+Theta (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{,  }\item[{const Matrix\+Xd \&}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a4972faefeccf397f9808572e861f3894}\label{classLinRegGibbs_a4972faefeccf397f9808572e861f3894}} 
+\index{LinRegGibbs@{LinRegGibbs}!lrCondPriorsGibbs@{lrCondPriorsGibbs}}
+\index{lrCondPriorsGibbs@{lrCondPriorsGibbs}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{lrCondPriorsGibbs()}{lrCondPriorsGibbs()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::lr\+Cond\+Priors\+Gibbs (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{x,  }\item[{const int}]{gibbs\+Steps,  }\item[{const int}]{burnin,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a4972faefeccf397f9808572e861f3894}\label{classLinRegGibbs_a4972faefeccf397f9808572e861f3894}} 
+\index{LinRegGibbs@{LinRegGibbs}!lrCondPriorsGibbs@{lrCondPriorsGibbs}}
+\index{lrCondPriorsGibbs@{lrCondPriorsGibbs}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{lrCondPriorsGibbs()}{lrCondPriorsGibbs()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::lr\+Cond\+Priors\+Gibbs (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{const int}]{,  }\item[{const int}]{,  }\item[{const Vector\+Xd \&}]{,  }\item[{const Matrix\+Xd \&}]{,  }\item[{double}]{,  }\item[{double}]{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a63730483512d35d542543ffd82a99b68}\label{classLinRegGibbs_a63730483512d35d542543ffd82a99b68}} 
+\index{LinRegGibbs@{LinRegGibbs}!lrRestrictGDT@{lrRestrictGDT}}
+\index{lrRestrictGDT@{lrRestrictGDT}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{lrRestrictGDT()}{lrRestrictGDT()}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::lr\+Restrict\+G\+DT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{gibbs\+Steps,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a85ad32d3e19aeb9944f4f59d656cc1db}\label{classLinRegGibbs_a85ad32d3e19aeb9944f4f59d656cc1db}} 
+\index{LinRegGibbs@{LinRegGibbs}!lrRestrictMLGD@{lrRestrictMLGD}}
+\index{lrRestrictMLGD@{lrRestrictMLGD}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{lrRestrictMLGD()}{lrRestrictMLGD()}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::lr\+Restrict\+M\+L\+GD (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{gibbs\+Steps,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a9fea2cb7deed8cded872c395d531f68a}\label{classLinRegGibbs_a9fea2cb7deed8cded872c395d531f68a}} 
+\index{LinRegGibbs@{LinRegGibbs}!lrRestrictMLModifiedGD@{lrRestrictMLModifiedGD}}
+\index{lrRestrictMLModifiedGD@{lrRestrictMLModifiedGD}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{lrRestrictMLModifiedGD()}{lrRestrictMLModifiedGD()}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::lr\+Restrict\+M\+L\+Modified\+GD (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{gibbs\+Steps,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_abffcd0fdca48f1515a48bb9e3e2921e4}\label{classLinRegGibbs_abffcd0fdca48f1515a48bb9e3e2921e4}} 
+\index{LinRegGibbs@{LinRegGibbs}!lrRestrictModifiedGD@{lrRestrictModifiedGD}}
+\index{lrRestrictModifiedGD@{lrRestrictModifiedGD}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{lrRestrictModifiedGD()}{lrRestrictModifiedGD()}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::lr\+Restrict\+Modified\+GD (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{gibbs\+Steps,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a8b7b64a80966b863a08891ceef6b7ff2}\label{classLinRegGibbs_a8b7b64a80966b863a08891ceef6b7ff2}} 
+\index{LinRegGibbs@{LinRegGibbs}!lrRestrictModifiedGDT@{lrRestrictModifiedGDT}}
+\index{lrRestrictModifiedGDT@{lrRestrictModifiedGDT}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{lrRestrictModifiedGDT()}{lrRestrictModifiedGDT()}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::lr\+Restrict\+Modified\+G\+DT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{gibbs\+Steps,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a06963a545c688be785b332eea406c73b}\label{classLinRegGibbs_a06963a545c688be785b332eea406c73b}} 
+\index{LinRegGibbs@{LinRegGibbs}!modifiedGelfandDey@{modifiedGelfandDey}}
+\index{modifiedGelfandDey@{modifiedGelfandDey}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{modifiedGelfandDey()}{modifiedGelfandDey()}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::modified\+Gelfand\+Dey (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{sample,  }\item[{Vector\+Xd \&}]{logpdf,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{mle,  }\item[{const Matrix\+Xd \&}]{ifish,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a031d7d42d3a42e45e325f1b0a1056199}\label{classLinRegGibbs_a031d7d42d3a42e45e325f1b0a1056199}} 
+\index{LinRegGibbs@{LinRegGibbs}!modifiedGelfandDeyML@{modifiedGelfandDeyML}}
+\index{modifiedGelfandDeyML@{modifiedGelfandDeyML}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{modifiedGelfandDeyML()}{modifiedGelfandDeyML()}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::modified\+Gelfand\+Dey\+ML (\begin{DoxyParamCaption}\item[{const Matrix\+Xd \&}]{sample,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{mle,  }\item[{const Matrix\+Xd \&}]{ifish,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_acec1757a6685c60ccb13d1088bfc448b}\label{classLinRegGibbs_acec1757a6685c60ccb13d1088bfc448b}} 
+\index{LinRegGibbs@{LinRegGibbs}!modifiedGelfandDeyT@{modifiedGelfandDeyT}}
+\index{modifiedGelfandDeyT@{modifiedGelfandDeyT}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{modifiedGelfandDeyT()}{modifiedGelfandDeyT()}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::modified\+Gelfand\+DeyT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{sample,  }\item[{Vector\+Xd \&}]{logpdf,  }\item[{const double}]{df,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{mle,  }\item[{const Matrix\+Xd \&}]{ifish,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ad782f18e12c0e9ff0d0d8ba8597672e2}\label{classLinRegGibbs_ad782f18e12c0e9ff0d0d8ba8597672e2}} 
+\index{LinRegGibbs@{LinRegGibbs}!priorBetaMvnPdf@{priorBetaMvnPdf}}
+\index{priorBetaMvnPdf@{priorBetaMvnPdf}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{priorBetaMvnPdf()}{priorBetaMvnPdf()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::prior\+Beta\+Mvn\+Pdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{precision,  }\item[{const double}]{scale,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ad782f18e12c0e9ff0d0d8ba8597672e2}\label{classLinRegGibbs_ad782f18e12c0e9ff0d0d8ba8597672e2}} 
+\index{LinRegGibbs@{LinRegGibbs}!priorBetaMvnPdf@{priorBetaMvnPdf}}
+\index{priorBetaMvnPdf@{priorBetaMvnPdf}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{priorBetaMvnPdf()}{priorBetaMvnPdf()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::prior\+Beta\+Mvn\+Pdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{precision,  }\item[{const double}]{,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ac51d0230490df6b72a623c7338dad56f}\label{classLinRegGibbs_ac51d0230490df6b72a623c7338dad56f}} 
+\index{LinRegGibbs@{LinRegGibbs}!priorBetaMvnPdf@{priorBetaMvnPdf}}
+\index{priorBetaMvnPdf@{priorBetaMvnPdf}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{priorBetaMvnPdf()}{priorBetaMvnPdf()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::prior\+Beta\+Mvn\+Pdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{precision,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ac51d0230490df6b72a623c7338dad56f}\label{classLinRegGibbs_ac51d0230490df6b72a623c7338dad56f}} 
+\index{LinRegGibbs@{LinRegGibbs}!priorBetaMvnPdf@{priorBetaMvnPdf}}
+\index{priorBetaMvnPdf@{priorBetaMvnPdf}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{priorBetaMvnPdf()}{priorBetaMvnPdf()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
+{\footnotesize\ttfamily double Lin\+Reg\+Gibbs\+::prior\+Beta\+Mvn\+Pdf (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{mu,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{precision,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{x }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a7c4b58934a30acf0f4dd8ade4ac701b3}\label{classLinRegGibbs_a7c4b58934a30acf0f4dd8ade4ac701b3}} 
+\index{LinRegGibbs@{LinRegGibbs}!runSim@{runSim}}
+\index{runSim@{runSim}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{runSim()}{runSim()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::run\+Sim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{lower\+Constraint,  }\item[{const Vector\+Xd \&}]{upper\+Constraint,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sig,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a7c4b58934a30acf0f4dd8ade4ac701b3}\label{classLinRegGibbs_a7c4b58934a30acf0f4dd8ade4ac701b3}} 
+\index{LinRegGibbs@{LinRegGibbs}!runSim@{runSim}}
+\index{runSim@{runSim}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{runSim()}{runSim()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::run\+Sim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{lower\+Constraint,  }\item[{const Vector\+Xd \&}]{upper\+Constraint,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sig,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_adde5654fa7cd1056528b65eb0ef3bc06}\label{classLinRegGibbs_adde5654fa7cd1056528b65eb0ef3bc06}} 
+\index{LinRegGibbs@{LinRegGibbs}!runSimModified@{runSimModified}}
+\index{runSimModified@{runSimModified}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{runSimModified()}{runSimModified()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::run\+Sim\+Modified (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{lower\+Constraint,  }\item[{const Vector\+Xd \&}]{upper\+Constraint,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sig,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_adde5654fa7cd1056528b65eb0ef3bc06}\label{classLinRegGibbs_adde5654fa7cd1056528b65eb0ef3bc06}} 
+\index{LinRegGibbs@{LinRegGibbs}!runSimModified@{runSimModified}}
+\index{runSimModified@{runSimModified}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{runSimModified()}{runSimModified()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::run\+Sim\+Modified (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{lower\+Constraint,  }\item[{const Vector\+Xd \&}]{upper\+Constraint,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sig,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_ae75edda638f31ca7c9ee163ef606f6de}\label{classLinRegGibbs_ae75edda638f31ca7c9ee163ef606f6de}} 
+\index{LinRegGibbs@{LinRegGibbs}!runTsim@{runTsim}}
+\index{runTsim@{runTsim}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{runTsim()}{runTsim()}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::run\+Tsim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{lower\+Constraint,  }\item[{const Vector\+Xd \&}]{upper\+Constraint,  }\item[{const Matrix\+Xd}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sig,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classLinRegGibbs_a3742842d5bcaf9164a32497aa2e69d75}\label{classLinRegGibbs_a3742842d5bcaf9164a32497aa2e69d75}} 
+\index{LinRegGibbs@{LinRegGibbs}!runTsimModified@{runTsimModified}}
+\index{runTsimModified@{runTsimModified}!LinRegGibbs@{LinRegGibbs}}
+\doxysubsubsection{\texorpdfstring{runTsimModified()}{runTsimModified()}}
+{\footnotesize\ttfamily void Lin\+Reg\+Gibbs\+::run\+Tsim\+Modified (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{lower\+Constraint,  }\item[{const Vector\+Xd \&}]{upper\+Constraint,  }\item[{const Matrix\+Xd}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sig,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double}]{a0,  }\item[{const double}]{d0,  }\item[{const int}]{sims,  }\item[{const int}]{burnin }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Old/\+Gelfand\+Dey/include/\mbox{\hyperlink{GelfandDey_2include_2LinRegGibbs_8hpp}{Lin\+Reg\+Gibbs.\+hpp}}\item 
+Old/\+Gelfand\+Dey/src/\mbox{\hyperlink{GelfandDey_2src_2LinRegGibbs_8cpp}{Lin\+Reg\+Gibbs.\+cpp}}\item 
+Old/\+Simulation/bpp/src/\mbox{\hyperlink{pylrg_8cpp}{pylrg.\+cpp}}\end{DoxyCompactItemize}

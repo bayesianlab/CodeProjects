@@ -1,0 +1,13 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classDist.html" title=" " alt="" coords="5,233,53,260"/>
+<area shape="rect" id="node2" href="$classArk.html" title=" " alt="" coords="152,5,196,32"/>
+<area shape="rect" id="node3" href="$classAsk.html" title=" " alt="" coords="151,56,197,83"/>
+<area shape="rect" id="node4" href="$classCrb.html" title=" " alt="" coords="152,107,196,133"/>
+<area shape="rect" id="node5" href="$classCreateSampleData.html" title=" " alt="" coords="101,157,247,184"/>
+<area shape="rect" id="node6" href="$classCrt.html" title=" " alt="" coords="153,208,195,235"/>
+<area shape="rect" id="node7" href="$classImportance.html" title=" " alt="" coords="126,259,222,285"/>
+<area shape="rect" id="node8" href="$classLinRegGibbs.html" title=" " alt="" coords="123,309,225,336"/>
+<area shape="rect" id="node9" href="$classLogit.html" title=" " alt="" coords="147,360,201,387"/>
+<area shape="rect" id="node10" href="$classProbit.html" title=" " alt="" coords="144,411,204,437"/>
+<area shape="rect" id="node11" href="$classTimeSeries.html" title=" " alt="" coords="127,461,221,488"/>
+</map>

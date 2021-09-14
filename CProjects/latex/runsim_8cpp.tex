@@ -1,0 +1,196 @@
+\hypertarget{runsim_8cpp}{}\doxysection{Old/\+Simulation/src/runsim.cpp File Reference}
+\label{runsim_8cpp}\index{Old/Simulation/src/runsim.cpp@{Old/Simulation/src/runsim.cpp}}
+{\ttfamily \#include \char`\"{}Create\+Sample\+Data.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Dist.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Importance.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Lin\+Reg\+Gibbs.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ark.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}ask.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}crb.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}crt.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$Eigen/\+Dense$>$}\newline
+{\ttfamily \#include $<$ctime$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$limits$>$}\newline
+{\ttfamily \#include $<$math.\+h$>$}\newline
+Include dependency graph for runsim.\+cpp\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{runsim_8cpp__incl}
+\end{center}
+\end{figure}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{runsim_8cpp_aa887dc9b7db48419c8d0dcaf198f8d2c}{seed}}~100
+\item 
+\#define \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}~110
+\item 
+\#define \mbox{\hyperlink{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}{burnin}}~10
+\item 
+\#define \mbox{\hyperlink{runsim_8cpp_a28e2a6e0b6b094a3f30513097e31c88d}{ml\+Sims}}~50
+\item 
+\#define \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}~5
+\item 
+\#define \mbox{\hyperlink{runsim_8cpp_af7602b44757d4f322eaac00d684b015b}{lin\+Reg\+SS}}~2500
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{runsim_8cpp_a5fa4d8e93c9c661b782f418ff15a2f3c}{ask\+Test2}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_adef376363a3e6a44e168455b9889d6e1}{ask\+TestT}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_ab0355cde34620678d90e1e8c609afc67}{ark\+Test2}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_a956b33b281d5176ee8804294162e96cc}{ark\+TestT}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_a16dd942957fef118bc0722a572bca943}{crb\+Test2}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_af9a21a84fd46d9e614dcfd6112fd4b41}{crb\+TestT}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_a618864430dd9e5d91995d6ee308be73d}{crt\+Test2}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_a7f568b4b787b67dd0aa6a69bf4881391}{crt\+TestT}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_a89f970b4cab781c826ae670aead2b25c}{imp\+Test2}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_ad7aadda4769b2d9d091526104465403e}{imp\+TestT}} (Vector\+Xd \&betas, Vector\+Xd \&ll, Vector\+Xd \&ul)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_af5e66190f5490eaa6263128898e0d965}{modified\+Gelfand\+Dey\+Test}} (Vector\+Xd \&betas, Vector\+Xd \&a, Vector\+Xd \&b)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_a20d7c6ddae12450682495e4a77479820}{modified\+Gelfand\+Dey\+TestT}} (Vector\+Xd \&betas, Vector\+Xd \&a, Vector\+Xd \&b)
+\item 
+void \mbox{\hyperlink{runsim_8cpp_ab38a287a72d5e535a4f70c9b98ac182d}{run\+Tests}} (Vector\+Xd \&betas, Vector\+Xd \&a, Vector\+Xd \&b)
+\item 
+int \mbox{\hyperlink{runsim_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{runsim_8cpp_a44557441ffb065ccda39e03e17067014}\label{runsim_8cpp_a44557441ffb065ccda39e03e17067014}} 
+\index{runsim.cpp@{runsim.cpp}!batches@{batches}}
+\index{batches@{batches}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{batches}{batches}}
+{\footnotesize\ttfamily \#define batches~5}
+
+\mbox{\Hypertarget{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}\label{runsim_8cpp_adeb3314c316098b8f0457cdcd6fe4eae}} 
+\index{runsim.cpp@{runsim.cpp}!burnin@{burnin}}
+\index{burnin@{burnin}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{burnin}{burnin}}
+{\footnotesize\ttfamily \#define burnin~10}
+
+\mbox{\Hypertarget{runsim_8cpp_af7602b44757d4f322eaac00d684b015b}\label{runsim_8cpp_af7602b44757d4f322eaac00d684b015b}} 
+\index{runsim.cpp@{runsim.cpp}!linRegSS@{linRegSS}}
+\index{linRegSS@{linRegSS}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{linRegSS}{linRegSS}}
+{\footnotesize\ttfamily \#define lin\+Reg\+SS~2500}
+
+\mbox{\Hypertarget{runsim_8cpp_a28e2a6e0b6b094a3f30513097e31c88d}\label{runsim_8cpp_a28e2a6e0b6b094a3f30513097e31c88d}} 
+\index{runsim.cpp@{runsim.cpp}!mlSims@{mlSims}}
+\index{mlSims@{mlSims}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{mlSims}{mlSims}}
+{\footnotesize\ttfamily \#define ml\+Sims~50}
+
+\mbox{\Hypertarget{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}\label{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}} 
+\index{runsim.cpp@{runsim.cpp}!nSims@{nSims}}
+\index{nSims@{nSims}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{nSims}{nSims}}
+{\footnotesize\ttfamily \#define n\+Sims~110}
+
+\mbox{\Hypertarget{runsim_8cpp_aa887dc9b7db48419c8d0dcaf198f8d2c}\label{runsim_8cpp_aa887dc9b7db48419c8d0dcaf198f8d2c}} 
+\index{runsim.cpp@{runsim.cpp}!seed@{seed}}
+\index{seed@{seed}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{seed}{seed}}
+{\footnotesize\ttfamily \#define seed~100}
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{runsim_8cpp_ab0355cde34620678d90e1e8c609afc67}\label{runsim_8cpp_ab0355cde34620678d90e1e8c609afc67}} 
+\index{runsim.cpp@{runsim.cpp}!arkTest2@{arkTest2}}
+\index{arkTest2@{arkTest2}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{arkTest2()}{arkTest2()}}
+{\footnotesize\ttfamily void ark\+Test2 (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_a956b33b281d5176ee8804294162e96cc}\label{runsim_8cpp_a956b33b281d5176ee8804294162e96cc}} 
+\index{runsim.cpp@{runsim.cpp}!arkTestT@{arkTestT}}
+\index{arkTestT@{arkTestT}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{arkTestT()}{arkTestT()}}
+{\footnotesize\ttfamily void ark\+TestT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_a5fa4d8e93c9c661b782f418ff15a2f3c}\label{runsim_8cpp_a5fa4d8e93c9c661b782f418ff15a2f3c}} 
+\index{runsim.cpp@{runsim.cpp}!askTest2@{askTest2}}
+\index{askTest2@{askTest2}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{askTest2()}{askTest2()}}
+{\footnotesize\ttfamily void ask\+Test2 (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_adef376363a3e6a44e168455b9889d6e1}\label{runsim_8cpp_adef376363a3e6a44e168455b9889d6e1}} 
+\index{runsim.cpp@{runsim.cpp}!askTestT@{askTestT}}
+\index{askTestT@{askTestT}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{askTestT()}{askTestT()}}
+{\footnotesize\ttfamily void ask\+TestT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_a16dd942957fef118bc0722a572bca943}\label{runsim_8cpp_a16dd942957fef118bc0722a572bca943}} 
+\index{runsim.cpp@{runsim.cpp}!crbTest2@{crbTest2}}
+\index{crbTest2@{crbTest2}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{crbTest2()}{crbTest2()}}
+{\footnotesize\ttfamily void crb\+Test2 (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_af9a21a84fd46d9e614dcfd6112fd4b41}\label{runsim_8cpp_af9a21a84fd46d9e614dcfd6112fd4b41}} 
+\index{runsim.cpp@{runsim.cpp}!crbTestT@{crbTestT}}
+\index{crbTestT@{crbTestT}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{crbTestT()}{crbTestT()}}
+{\footnotesize\ttfamily void crb\+TestT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_a618864430dd9e5d91995d6ee308be73d}\label{runsim_8cpp_a618864430dd9e5d91995d6ee308be73d}} 
+\index{runsim.cpp@{runsim.cpp}!crtTest2@{crtTest2}}
+\index{crtTest2@{crtTest2}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{crtTest2()}{crtTest2()}}
+{\footnotesize\ttfamily void crt\+Test2 (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_a7f568b4b787b67dd0aa6a69bf4881391}\label{runsim_8cpp_a7f568b4b787b67dd0aa6a69bf4881391}} 
+\index{runsim.cpp@{runsim.cpp}!crtTestT@{crtTestT}}
+\index{crtTestT@{crtTestT}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{crtTestT()}{crtTestT()}}
+{\footnotesize\ttfamily void crt\+TestT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_a89f970b4cab781c826ae670aead2b25c}\label{runsim_8cpp_a89f970b4cab781c826ae670aead2b25c}} 
+\index{runsim.cpp@{runsim.cpp}!impTest2@{impTest2}}
+\index{impTest2@{impTest2}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{impTest2()}{impTest2()}}
+{\footnotesize\ttfamily void imp\+Test2 (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_ad7aadda4769b2d9d091526104465403e}\label{runsim_8cpp_ad7aadda4769b2d9d091526104465403e}} 
+\index{runsim.cpp@{runsim.cpp}!impTestT@{impTestT}}
+\index{impTestT@{impTestT}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{impTestT()}{impTestT()}}
+{\footnotesize\ttfamily void imp\+TestT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{ll,  }\item[{Vector\+Xd \&}]{ul }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{runsim_8cpp_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{runsim.cpp@{runsim.cpp}!main@{main}}
+\index{main@{main}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_af5e66190f5490eaa6263128898e0d965}\label{runsim_8cpp_af5e66190f5490eaa6263128898e0d965}} 
+\index{runsim.cpp@{runsim.cpp}!modifiedGelfandDeyTest@{modifiedGelfandDeyTest}}
+\index{modifiedGelfandDeyTest@{modifiedGelfandDeyTest}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{modifiedGelfandDeyTest()}{modifiedGelfandDeyTest()}}
+{\footnotesize\ttfamily void modified\+Gelfand\+Dey\+Test (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{a,  }\item[{Vector\+Xd \&}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_a20d7c6ddae12450682495e4a77479820}\label{runsim_8cpp_a20d7c6ddae12450682495e4a77479820}} 
+\index{runsim.cpp@{runsim.cpp}!modifiedGelfandDeyTestT@{modifiedGelfandDeyTestT}}
+\index{modifiedGelfandDeyTestT@{modifiedGelfandDeyTestT}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{modifiedGelfandDeyTestT()}{modifiedGelfandDeyTestT()}}
+{\footnotesize\ttfamily void modified\+Gelfand\+Dey\+TestT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{a,  }\item[{Vector\+Xd \&}]{b }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{runsim_8cpp_ab38a287a72d5e535a4f70c9b98ac182d}\label{runsim_8cpp_ab38a287a72d5e535a4f70c9b98ac182d}} 
+\index{runsim.cpp@{runsim.cpp}!runTests@{runTests}}
+\index{runTests@{runTests}!runsim.cpp@{runsim.cpp}}
+\doxysubsubsection{\texorpdfstring{runTests()}{runTests()}}
+{\footnotesize\ttfamily void run\+Tests (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{Vector\+Xd \&}]{a,  }\item[{Vector\+Xd \&}]{b }\end{DoxyParamCaption})}
+

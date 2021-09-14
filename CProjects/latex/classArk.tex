@@ -1,0 +1,125 @@
+\hypertarget{classArk}{}\doxysection{Ark Class Reference}
+\label{classArk}\index{Ark@{Ark}}
+
+
+{\ttfamily \#include $<$ark.\+hpp$>$}
+
+
+
+Inheritance diagram for Ark\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=116pt]{classArk__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Ark\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=116pt]{classArk__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classArk_a43b17df8df660c816a94e5c11d882e73}{ar\+Sample}} (const Vector\+Xd \&, const Vector\+Xd \&, const Vector\+Xd \&, const Matrix\+Xd \&, int, int)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classArk_af41ace607213f7b43ca82b9880b03720}{ar\+SampleT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&theta, const Matrix\+Xd \&Sigma, double df, int s\+Size, int max\+Iterations)
+\item 
+int \mbox{\hyperlink{classArk_abdcdce8e2c2eb3f9accaad856c11fcfc}{is\+Vect\+Vgreater}} (Vector\+Xd \&v, Vector\+Xd \&\mbox{\hyperlink{classDist_a5e25732f89c69924f16443d01b7efeec}{u}})
+\item 
+void \mbox{\hyperlink{classArk_a4fc529db176ec63503f71e71fdc517b8}{conditional\+Mean}} (double, Vector\+Xd \&, Vector\+Xd \&, Matrix\+Xd \&, double, Vector\+Xd \&)
+\item 
+void \mbox{\hyperlink{classArk_a9198475b3f92c36fac3042ca37059dd3}{tnormpdf}} (double, double, Vector\+Xd \&, double, double, Vector\+Xd \&)
+\item 
+double \mbox{\hyperlink{classArk_a9640501a1bb72374db0ead8d1889cebe}{ml}} (const Vector\+Xd \&, double, const Vector\+Xd \&, const Matrix\+Xd \&X, const Matrix\+Xd \&Kernel, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+double \mbox{\hyperlink{classArk_a4211fcb11a7f2bec62cdc0c132fd50ae}{mlT}} (Vector\+Xd \&betas, double sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Matrix\+Xd \&kernel, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+double \mbox{\hyperlink{classArk_a17fa19638071ba612d4cd23a3a0bc676}{ark\+KernelT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, const Vector\+Xd \&theta, const Matrix\+Xd \&Sigma, double df, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd b0, const Matrix\+Xd B0, double a0, double d0, int sims, int max\+Iterations)
+\item 
+Matrix\+Xd \mbox{\hyperlink{classArk_acb8d640d64edb8b959b3463d37712dd6}{gibbs\+KernelT}} (const Vector\+Xd \&a, const Vector\+Xd \&b, double df, const Vector\+Xd \&theta, const Matrix\+Xd \&Sigma, const Matrix\+Xd \&draws, Matrix\+Xd \&xnot, Vector\+Xd \&zstar)
+\item 
+void \mbox{\hyperlink{classArk_a99f11d87bd18469e78c9cd93aaac1c75}{run\+Sim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&theta, const Matrix\+Xd \&sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, const Vector\+Xd \&ll, const Vector\+Xd \&ul, int sample\+Size, int max\+Iterations, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\item 
+void \mbox{\hyperlink{classArk_abf81ae767edfda0d424dfb097d401591}{run\+Tsim}} (int \mbox{\hyperlink{runsim_8cpp_adc219b8f160f7506c2f7e016ba474095}{n\+Sims}}, int \mbox{\hyperlink{runsim_8cpp_a44557441ffb065ccda39e03e17067014}{batches}}, const Vector\+Xd \&a, const Vector\+Xd \&b, const Matrix\+Xd \&Linear\+Constraints, double df, const Vector\+Xd \&theta, const Matrix\+Xd \&Sigma, const Vector\+Xd \&y, const Matrix\+Xd \&X, int sims, int max\+Iter, const Vector\+Xd \&b0, const Matrix\+Xd \&B0, double a0, double d0)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classArk_a17fa19638071ba612d4cd23a3a0bc676}\label{classArk_a17fa19638071ba612d4cd23a3a0bc676}} 
+\index{Ark@{Ark}!arkKernelT@{arkKernelT}}
+\index{arkKernelT@{arkKernelT}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{arkKernelT()}{arkKernelT()}}
+{\footnotesize\ttfamily double Ark\+::ark\+KernelT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd}]{b0,  }\item[{const Matrix\+Xd}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0,  }\item[{int}]{sims,  }\item[{int}]{max\+Iterations }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_a43b17df8df660c816a94e5c11d882e73}\label{classArk_a43b17df8df660c816a94e5c11d882e73}} 
+\index{Ark@{Ark}!arSample@{arSample}}
+\index{arSample@{arSample}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{arSample()}{arSample()}}
+{\footnotesize\ttfamily Matrix\+Xd Ark\+::ar\+Sample (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{ll,  }\item[{const Vector\+Xd \&}]{ul,  }\item[{const Vector\+Xd \&}]{mu,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{int}]{s\+Size,  }\item[{int}]{max\+Iterations }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_af41ace607213f7b43ca82b9880b03720}\label{classArk_af41ace607213f7b43ca82b9880b03720}} 
+\index{Ark@{Ark}!arSampleT@{arSampleT}}
+\index{arSampleT@{arSampleT}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{arSampleT()}{arSampleT()}}
+{\footnotesize\ttfamily Matrix\+Xd Ark\+::ar\+SampleT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{double}]{df,  }\item[{int}]{s\+Size,  }\item[{int}]{max\+Iterations }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_a4fc529db176ec63503f71e71fdc517b8}\label{classArk_a4fc529db176ec63503f71e71fdc517b8}} 
+\index{Ark@{Ark}!conditionalMean@{conditionalMean}}
+\index{conditionalMean@{conditionalMean}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{conditionalMean()}{conditionalMean()}}
+{\footnotesize\ttfamily void Ark\+::conditional\+Mean (\begin{DoxyParamCaption}\item[{double}]{Hxx,  }\item[{Vector\+Xd \&}]{Hxy,  }\item[{Vector\+Xd \&}]{mu\+Notj,  }\item[{Matrix\+Xd \&}]{x\+Notj,  }\item[{double}]{muxx,  }\item[{Vector\+Xd \&}]{conditional\+Mean\+Vector }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_acb8d640d64edb8b959b3463d37712dd6}\label{classArk_acb8d640d64edb8b959b3463d37712dd6}} 
+\index{Ark@{Ark}!gibbsKernelT@{gibbsKernelT}}
+\index{gibbsKernelT@{gibbsKernelT}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{gibbsKernelT()}{gibbsKernelT()}}
+{\footnotesize\ttfamily Matrix\+Xd Ark\+::gibbs\+KernelT (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Matrix\+Xd \&}]{draws,  }\item[{Matrix\+Xd \&}]{xnot,  }\item[{Vector\+Xd \&}]{zstar }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_abdcdce8e2c2eb3f9accaad856c11fcfc}\label{classArk_abdcdce8e2c2eb3f9accaad856c11fcfc}} 
+\index{Ark@{Ark}!isVectVgreater@{isVectVgreater}}
+\index{isVectVgreater@{isVectVgreater}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{isVectVgreater()}{isVectVgreater()}}
+{\footnotesize\ttfamily int Ark\+::is\+Vect\+Vgreater (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{v,  }\item[{Vector\+Xd \&}]{u }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_a9640501a1bb72374db0ead8d1889cebe}\label{classArk_a9640501a1bb72374db0ead8d1889cebe}} 
+\index{Ark@{Ark}!ml@{ml}}
+\index{ml@{ml}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{ml()}{ml()}}
+{\footnotesize\ttfamily double Ark\+::ml (\begin{DoxyParamCaption}\item[{const Vector\+Xd \&}]{betas,  }\item[{double}]{sigmas,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Matrix\+Xd \&}]{Kernel,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_a4211fcb11a7f2bec62cdc0c132fd50ae}\label{classArk_a4211fcb11a7f2bec62cdc0c132fd50ae}} 
+\index{Ark@{Ark}!mlT@{mlT}}
+\index{mlT@{mlT}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{mlT()}{mlT()}}
+{\footnotesize\ttfamily double Ark\+::mlT (\begin{DoxyParamCaption}\item[{Vector\+Xd \&}]{betas,  }\item[{double}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Matrix\+Xd \&}]{kernel,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_a99f11d87bd18469e78c9cd93aaac1c75}\label{classArk_a99f11d87bd18469e78c9cd93aaac1c75}} 
+\index{Ark@{Ark}!runSim@{runSim}}
+\index{runSim@{runSim}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{runSim()}{runSim()}}
+{\footnotesize\ttfamily void Ark\+::run\+Sim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{const Vector\+Xd \&}]{ll,  }\item[{const Vector\+Xd \&}]{ul,  }\item[{int}]{sample\+Size,  }\item[{int}]{max\+Iterations,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_abf81ae767edfda0d424dfb097d401591}\label{classArk_abf81ae767edfda0d424dfb097d401591}} 
+\index{Ark@{Ark}!runTsim@{runTsim}}
+\index{runTsim@{runTsim}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{runTsim()}{runTsim()}}
+{\footnotesize\ttfamily void Ark\+::run\+Tsim (\begin{DoxyParamCaption}\item[{int}]{n\+Sims,  }\item[{int}]{batches,  }\item[{const Vector\+Xd \&}]{a,  }\item[{const Vector\+Xd \&}]{b,  }\item[{const Matrix\+Xd \&}]{Linear\+Constraints,  }\item[{double}]{df,  }\item[{const Vector\+Xd \&}]{theta,  }\item[{const Matrix\+Xd \&}]{Sigma,  }\item[{const Vector\+Xd \&}]{y,  }\item[{const Matrix\+Xd \&}]{X,  }\item[{int}]{sims,  }\item[{int}]{max\+Iter,  }\item[{const Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{double}]{a0,  }\item[{double}]{d0 }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classArk_a9198475b3f92c36fac3042ca37059dd3}\label{classArk_a9198475b3f92c36fac3042ca37059dd3}} 
+\index{Ark@{Ark}!tnormpdf@{tnormpdf}}
+\index{tnormpdf@{tnormpdf}!Ark@{Ark}}
+\doxysubsubsection{\texorpdfstring{tnormpdf()}{tnormpdf()}}
+{\footnotesize\ttfamily void Ark\+::tnormpdf (\begin{DoxyParamCaption}\item[{double}]{a,  }\item[{double}]{b,  }\item[{Vector\+Xd \&}]{mu,  }\item[{double}]{sigma,  }\item[{double}]{x,  }\item[{Vector\+Xd \&}]{k }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Old/\+Simulation/include/\mbox{\hyperlink{ark_8hpp}{ark.\+hpp}}\item 
+Old/\+Simulation/src/\mbox{\hyperlink{ark_8cpp}{ark.\+cpp}}\end{DoxyCompactItemize}

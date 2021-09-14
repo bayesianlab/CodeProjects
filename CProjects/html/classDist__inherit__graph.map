@@ -1,0 +1,13 @@
+<map id="Dist" name="Dist">
+<area shape="rect" id="node1" title=" " alt="" coords="425,5,473,32"/>
+<area shape="rect" id="node2" href="$classArk.html" title=" " alt="" coords="5,80,49,107"/>
+<area shape="rect" id="node3" href="$classAsk.html" title=" " alt="" coords="73,80,120,107"/>
+<area shape="rect" id="node4" href="$classCrb.html" title=" " alt="" coords="144,80,188,107"/>
+<area shape="rect" id="node5" href="$classCreateSampleData.html" title=" " alt="" coords="212,80,357,107"/>
+<area shape="rect" id="node6" href="$classCrt.html" title=" " alt="" coords="381,80,423,107"/>
+<area shape="rect" id="node7" href="$classImportance.html" title=" " alt="" coords="447,80,543,107"/>
+<area shape="rect" id="node8" href="$classLinRegGibbs.html" title=" " alt="" coords="568,80,671,107"/>
+<area shape="rect" id="node9" href="$classLogit.html" title=" " alt="" coords="695,80,749,107"/>
+<area shape="rect" id="node10" href="$classProbit.html" title=" " alt="" coords="773,80,833,107"/>
+<area shape="rect" id="node11" href="$classTimeSeries.html" title=" " alt="" coords="857,80,952,107"/>
+</map>

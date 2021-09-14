@@ -1,0 +1,297 @@
+\hypertarget{classMultilevelModel}{}\doxysection{Multilevel\+Model Class Reference}
+\label{classMultilevelModel}\index{MultilevelModel@{MultilevelModel}}
+
+
+{\ttfamily \#include $<$Multilevel\+Model.\+hpp$>$}
+
+
+
+Inheritance diagram for Multilevel\+Model\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classMultilevelModel__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Multilevel\+Model\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classMultilevelModel__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classMultilevelModel_a7a251ded0e9032acbefad45e5e4d5bcb}{set\+Int\+Like\+Model}} (const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_a19dba0cfc67a0c35f5be8b539a73f25e}{yt}}, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_ab4e49cd0d8ce03366ebdf1cf83e33e9e}{Xt}}, const Ref$<$ const Matrix\+Xd $>$ \&A, const Ref$<$ const Matrix\+Xd $>$ \&Ft, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_a168cab1f34902e84651e214d5439b645}{gammas}}, const Matrix$<$ int, Dynamic, 2 $>$ \&\mbox{\hyperlink{classMultilevelModel_aab9cdc06b2ee39f86d59e2b99cfc6360}{Info\+Mat}}, const Row\+Vector\+Xd \&\mbox{\hyperlink{classMultilevelModel_a546dcd9975ee473594b0e21df5631217}{b0}}, const Matrix\+Xd \&\mbox{\hyperlink{classMultilevelModel_a2d9994752068217798ae2e92c3175e97}{B0}}, const double \&a0, const double \&A0, const double \&\mbox{\hyperlink{classMultilevelModel_af1c715fc3717cfc0f513ec828859f343}{r0}}, const double \&\mbox{\hyperlink{classMultilevelModel_a81a6667a6629e81d89a8a067f248e181}{R0}}, const Ref$<$ const Row\+Vector\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_ab81645adb1d10a077b66e7615a9139fd}{g0}}, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_a5de2fd168275626d07937e6a45fc8d6d}{G0}})
+\item 
+void \mbox{\hyperlink{classMultilevelModel_a126466ec45080c41b0a7dd0e5433b774}{set\+Full\+Cond\+Model}} (const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_a19dba0cfc67a0c35f5be8b539a73f25e}{yt}}, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_ab4e49cd0d8ce03366ebdf1cf83e33e9e}{Xt}}, const Ref$<$ const Matrix\+Xd $>$ \&Ft, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_a168cab1f34902e84651e214d5439b645}{gammas}}, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_ab5d4f30da79d29b1f4f19c1bdce07bd4}{deltas}}, const Matrix$<$ int, Dynamic, 2 $>$ \&\mbox{\hyperlink{classMultilevelModel_aab9cdc06b2ee39f86d59e2b99cfc6360}{Info\+Mat}}, const Row\+Vector\+Xd \&\mbox{\hyperlink{classMultilevelModel_a546dcd9975ee473594b0e21df5631217}{b0}}, const Matrix\+Xd \&\mbox{\hyperlink{classMultilevelModel_a2d9994752068217798ae2e92c3175e97}{B0}}, const double \&\mbox{\hyperlink{classMultilevelModel_af1c715fc3717cfc0f513ec828859f343}{r0}}, const double \&\mbox{\hyperlink{classMultilevelModel_a81a6667a6629e81d89a8a067f248e181}{R0}}, const Ref$<$ const Row\+Vector\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_ab81645adb1d10a077b66e7615a9139fd}{g0}}, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_a5de2fd168275626d07937e6a45fc8d6d}{G0}})
+\item 
+void \mbox{\hyperlink{classMultilevelModel_a8033a28dd6bb39d3d2d25eab9aa03513}{full\+Conditionals}} (int \mbox{\hyperlink{classMultilevelModel_a1c2fedf7a8481ca6d6c5eeaf4fa9ed24}{Sims}})
+\item 
+void \mbox{\hyperlink{classMultilevelModel_aee338645f54e3aa7ff43fa89b827b216}{set\+Post\+Means\+And\+Covars}} (const Ref$<$ const Matrix\+Xd $>$ \&A, const Ref$<$ const Matrix\+Xd $>$ \&Xbeta, Matrix\+Xd \&Ft, const Ref$<$ const Matrix\+Xd $>$ \&\mbox{\hyperlink{classMultilevelModel_a168cab1f34902e84651e214d5439b645}{gammas}}, const Ref$<$ const Vector\+Xd $>$ \&obs\+Precision, const Ref$<$ const Vector\+Xd $>$ \&factor\+Variance, \mbox{\hyperlink{classOptimize}{Optimize}} \&optim)
+\item 
+void \mbox{\hyperlink{classMultilevelModel_a7a8e95ca70de377069ec3c70bc598e1a}{integrated\+Likelihood}} (int \mbox{\hyperlink{classMultilevelModel_a1c2fedf7a8481ca6d6c5eeaf4fa9ed24}{Sims}}, int \mbox{\hyperlink{classMultilevelModel_a99fda578712cf277c8d19d2481b9b8d9}{burnin}})
+\item 
+Vector\+Xd \mbox{\hyperlink{classMultilevelModel_a58c719bf404165fbacefd1868d04fb2c}{A\+Star\+Reduced\+Run\+\_\+G}} (int rr, \mbox{\hyperlink{classOptimize}{Optimize}} optim)
+\item 
+Vector\+Xd \mbox{\hyperlink{classMultilevelModel_ae0a223b50e820959e02ad351060b199f}{A\+Star\+Reduced\+Run\+\_\+J}} (const Ref$<$ const Matrix\+Xd $>$ \&Xbetaj, const Ref$<$ const Matrix\+Xd $>$ \&gammasj, const Ref$<$ const Vector\+Xd $>$ \&obs\+Precisionj, const Ref$<$ const Vector\+Xd $>$ \&factor\+Variancej, \mbox{\hyperlink{classOptimize}{Optimize}} \&optim)
+\item 
+double \mbox{\hyperlink{classMultilevelModel_a6f54a0a75e63256d12742e6ae7bf9dab}{ml}} (int rr)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ Matrix\+Xd $>$ \mbox{\hyperlink{classMultilevelModel_a434eb2daedeea4c99eb1d52c7dbed130}{Loadings\+Posterior\+Draws}}
+\item 
+std\+::vector$<$ Vector\+Xd $>$ \mbox{\hyperlink{classMultilevelModel_aa9474855ed9b2f0f66a4184169b81403}{Beta\+Posterior\+Draws}}
+\item 
+std\+::vector$<$ Matrix\+Xd $>$ \mbox{\hyperlink{classMultilevelModel_a409557ae70d8f6193cc7df63d5f9b187}{Factor\+Posterior\+Draws}}
+\item 
+std\+::vector$<$ Matrix\+Xd $>$ \mbox{\hyperlink{classMultilevelModel_a61b406ac2ebf92ac67cd5d018ba928c2}{Gammas\+Posterior\+Draws}}
+\item 
+std\+::vector$<$ Vector\+Xd $>$ \mbox{\hyperlink{classMultilevelModel_aa55386d1eea0751cf8fd7a8d4f5e80cd}{Obs\+Precision\+Posterior\+Draws}}
+\item 
+std\+::vector$<$ Vector\+Xd $>$ \mbox{\hyperlink{classMultilevelModel_a65e1718e2337cd261b78a430f5b15f63}{Factor\+Variance\+Posterior\+Draws}}
+\item 
+std\+::vector$<$ Vector\+Xd $>$ \mbox{\hyperlink{classMultilevelModel_a58b3a8e39aea8c3475a96f5c4601279a}{Posterior\+Means}}
+\item 
+std\+::vector$<$ Matrix\+Xd $>$ \mbox{\hyperlink{classMultilevelModel_a913b0606e7d0c568de08183a2c6ba168}{Posterior\+Covariances}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classMultilevelModel_a19dba0cfc67a0c35f5be8b539a73f25e}{yt}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classMultilevelModel_ab4e49cd0d8ce03366ebdf1cf83e33e9e}{Xt}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classMultilevelModel_a168cab1f34902e84651e214d5439b645}{gammas}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classMultilevelModel_ab5d4f30da79d29b1f4f19c1bdce07bd4}{deltas}}
+\item 
+Row\+Vector\+Xd \mbox{\hyperlink{classMultilevelModel_a546dcd9975ee473594b0e21df5631217}{b0}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classMultilevelModel_a2d9994752068217798ae2e92c3175e97}{B0}}
+\item 
+double \mbox{\hyperlink{classMultilevelModel_af1c715fc3717cfc0f513ec828859f343}{r0}}
+\item 
+double \mbox{\hyperlink{classMultilevelModel_a81a6667a6629e81d89a8a067f248e181}{R0}}
+\item 
+double \mbox{\hyperlink{classMultilevelModel_a6d5ebc544420a886206ab8d7457f1528}{marginal\+\_\+likelihood}}
+\item 
+Row\+Vector\+Xd \mbox{\hyperlink{classMultilevelModel_ab81645adb1d10a077b66e7615a9139fd}{g0}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classMultilevelModel_a5de2fd168275626d07937e6a45fc8d6d}{G0}}
+\item 
+Matrix\+Xi \mbox{\hyperlink{classMultilevelModel_aab9cdc06b2ee39f86d59e2b99cfc6360}{Info\+Mat}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classMultilevelModel_aa4e80adaf2ad691600452f43da1d6fca}{Identity}}
+\item 
+int \mbox{\hyperlink{classMultilevelModel_a1c2fedf7a8481ca6d6c5eeaf4fa9ed24}{Sims}}
+\item 
+int \mbox{\hyperlink{classMultilevelModel_a99fda578712cf277c8d19d2481b9b8d9}{burnin}}
+\item 
+int \mbox{\hyperlink{classMultilevelModel_a1e25cfb0eda8817904916d2aa048d422}{ar\+Order\+Om}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classMultilevelModel_a58c719bf404165fbacefd1868d04fb2c}\label{classMultilevelModel_a58c719bf404165fbacefd1868d04fb2c}} 
+\index{MultilevelModel@{MultilevelModel}!AStarReducedRun\_G@{AStarReducedRun\_G}}
+\index{AStarReducedRun\_G@{AStarReducedRun\_G}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{AStarReducedRun\_G()}{AStarReducedRun\_G()}}
+{\footnotesize\ttfamily Vector\+Xd Multilevel\+Model\+::\+A\+Star\+Reduced\+Run\+\_\+G (\begin{DoxyParamCaption}\item[{int}]{rr,  }\item[{\mbox{\hyperlink{classOptimize}{Optimize}}}]{optim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classMultilevelModel_ae0a223b50e820959e02ad351060b199f}\label{classMultilevelModel_ae0a223b50e820959e02ad351060b199f}} 
+\index{MultilevelModel@{MultilevelModel}!AStarReducedRun\_J@{AStarReducedRun\_J}}
+\index{AStarReducedRun\_J@{AStarReducedRun\_J}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{AStarReducedRun\_J()}{AStarReducedRun\_J()}}
+{\footnotesize\ttfamily Vector\+Xd Multilevel\+Model\+::\+A\+Star\+Reduced\+Run\+\_\+J (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Xbetaj,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{gammasj,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{obs\+Precisionj,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{factor\+Variancej,  }\item[{\mbox{\hyperlink{classOptimize}{Optimize}} \&}]{optim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classMultilevelModel_a8033a28dd6bb39d3d2d25eab9aa03513}\label{classMultilevelModel_a8033a28dd6bb39d3d2d25eab9aa03513}} 
+\index{MultilevelModel@{MultilevelModel}!fullConditionals@{fullConditionals}}
+\index{fullConditionals@{fullConditionals}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{fullConditionals()}{fullConditionals()}}
+{\footnotesize\ttfamily void Multilevel\+Model\+::full\+Conditionals (\begin{DoxyParamCaption}\item[{int}]{Sims }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classMultilevelModel_a7a8e95ca70de377069ec3c70bc598e1a}\label{classMultilevelModel_a7a8e95ca70de377069ec3c70bc598e1a}} 
+\index{MultilevelModel@{MultilevelModel}!integratedLikelihood@{integratedLikelihood}}
+\index{integratedLikelihood@{integratedLikelihood}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{integratedLikelihood()}{integratedLikelihood()}}
+{\footnotesize\ttfamily void Multilevel\+Model\+::integrated\+Likelihood (\begin{DoxyParamCaption}\item[{int}]{Sims,  }\item[{int}]{burnin }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classMultilevelModel_a6f54a0a75e63256d12742e6ae7bf9dab}\label{classMultilevelModel_a6f54a0a75e63256d12742e6ae7bf9dab}} 
+\index{MultilevelModel@{MultilevelModel}!ml@{ml}}
+\index{ml@{ml}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{ml()}{ml()}}
+{\footnotesize\ttfamily double Multilevel\+Model\+::ml (\begin{DoxyParamCaption}\item[{int}]{rr }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classMultilevelModel_a126466ec45080c41b0a7dd0e5433b774}\label{classMultilevelModel_a126466ec45080c41b0a7dd0e5433b774}} 
+\index{MultilevelModel@{MultilevelModel}!setFullCondModel@{setFullCondModel}}
+\index{setFullCondModel@{setFullCondModel}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{setFullCondModel()}{setFullCondModel()}}
+{\footnotesize\ttfamily void Multilevel\+Model\+::set\+Full\+Cond\+Model (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{yt,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Xt,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Ft,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{gammas,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{deltas,  }\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{Info\+Mat,  }\item[{const Row\+Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double \&}]{r0,  }\item[{const double \&}]{R0,  }\item[{const Ref$<$ const Row\+Vector\+Xd $>$ \&}]{g0,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{G0 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classMultilevelModel_a7a251ded0e9032acbefad45e5e4d5bcb}\label{classMultilevelModel_a7a251ded0e9032acbefad45e5e4d5bcb}} 
+\index{MultilevelModel@{MultilevelModel}!setIntLikeModel@{setIntLikeModel}}
+\index{setIntLikeModel@{setIntLikeModel}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{setIntLikeModel()}{setIntLikeModel()}}
+{\footnotesize\ttfamily void Multilevel\+Model\+::set\+Int\+Like\+Model (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{yt,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Xt,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{A,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Ft,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{gammas,  }\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{Info\+Mat,  }\item[{const Row\+Vector\+Xd \&}]{b0,  }\item[{const Matrix\+Xd \&}]{B0,  }\item[{const double \&}]{a0,  }\item[{const double \&}]{A0,  }\item[{const double \&}]{r0,  }\item[{const double \&}]{R0,  }\item[{const Ref$<$ const Row\+Vector\+Xd $>$ \&}]{g0,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{G0 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classMultilevelModel_aee338645f54e3aa7ff43fa89b827b216}\label{classMultilevelModel_aee338645f54e3aa7ff43fa89b827b216}} 
+\index{MultilevelModel@{MultilevelModel}!setPostMeansAndCovars@{setPostMeansAndCovars}}
+\index{setPostMeansAndCovars@{setPostMeansAndCovars}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{setPostMeansAndCovars()}{setPostMeansAndCovars()}}
+{\footnotesize\ttfamily void Multilevel\+Model\+::set\+Post\+Means\+And\+Covars (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{A,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Xbeta,  }\item[{Matrix\+Xd \&}]{Ft,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{gammas,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{obs\+Precision,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{factor\+Variance,  }\item[{\mbox{\hyperlink{classOptimize}{Optimize}} \&}]{optim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classMultilevelModel_a1e25cfb0eda8817904916d2aa048d422}\label{classMultilevelModel_a1e25cfb0eda8817904916d2aa048d422}} 
+\index{MultilevelModel@{MultilevelModel}!arOrderOm@{arOrderOm}}
+\index{arOrderOm@{arOrderOm}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{arOrderOm}{arOrderOm}}
+{\footnotesize\ttfamily int Multilevel\+Model\+::ar\+Order\+Om}
+
+\mbox{\Hypertarget{classMultilevelModel_a546dcd9975ee473594b0e21df5631217}\label{classMultilevelModel_a546dcd9975ee473594b0e21df5631217}} 
+\index{MultilevelModel@{MultilevelModel}!b0@{b0}}
+\index{b0@{b0}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{b0}{b0}}
+{\footnotesize\ttfamily Row\+Vector\+Xd Multilevel\+Model\+::b0}
+
+\mbox{\Hypertarget{classMultilevelModel_a2d9994752068217798ae2e92c3175e97}\label{classMultilevelModel_a2d9994752068217798ae2e92c3175e97}} 
+\index{MultilevelModel@{MultilevelModel}!B0@{B0}}
+\index{B0@{B0}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{B0}{B0}}
+{\footnotesize\ttfamily Matrix\+Xd Multilevel\+Model\+::\+B0}
+
+\mbox{\Hypertarget{classMultilevelModel_aa9474855ed9b2f0f66a4184169b81403}\label{classMultilevelModel_aa9474855ed9b2f0f66a4184169b81403}} 
+\index{MultilevelModel@{MultilevelModel}!BetaPosteriorDraws@{BetaPosteriorDraws}}
+\index{BetaPosteriorDraws@{BetaPosteriorDraws}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{BetaPosteriorDraws}{BetaPosteriorDraws}}
+{\footnotesize\ttfamily std\+::vector$<$Vector\+Xd$>$ Multilevel\+Model\+::\+Beta\+Posterior\+Draws}
+
+\mbox{\Hypertarget{classMultilevelModel_a99fda578712cf277c8d19d2481b9b8d9}\label{classMultilevelModel_a99fda578712cf277c8d19d2481b9b8d9}} 
+\index{MultilevelModel@{MultilevelModel}!burnin@{burnin}}
+\index{burnin@{burnin}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{burnin}{burnin}}
+{\footnotesize\ttfamily int Multilevel\+Model\+::burnin}
+
+\mbox{\Hypertarget{classMultilevelModel_ab5d4f30da79d29b1f4f19c1bdce07bd4}\label{classMultilevelModel_ab5d4f30da79d29b1f4f19c1bdce07bd4}} 
+\index{MultilevelModel@{MultilevelModel}!deltas@{deltas}}
+\index{deltas@{deltas}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{deltas}{deltas}}
+{\footnotesize\ttfamily Matrix\+Xd Multilevel\+Model\+::deltas}
+
+\mbox{\Hypertarget{classMultilevelModel_a409557ae70d8f6193cc7df63d5f9b187}\label{classMultilevelModel_a409557ae70d8f6193cc7df63d5f9b187}} 
+\index{MultilevelModel@{MultilevelModel}!FactorPosteriorDraws@{FactorPosteriorDraws}}
+\index{FactorPosteriorDraws@{FactorPosteriorDraws}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{FactorPosteriorDraws}{FactorPosteriorDraws}}
+{\footnotesize\ttfamily std\+::vector$<$Matrix\+Xd$>$ Multilevel\+Model\+::\+Factor\+Posterior\+Draws}
+
+\mbox{\Hypertarget{classMultilevelModel_a65e1718e2337cd261b78a430f5b15f63}\label{classMultilevelModel_a65e1718e2337cd261b78a430f5b15f63}} 
+\index{MultilevelModel@{MultilevelModel}!FactorVariancePosteriorDraws@{FactorVariancePosteriorDraws}}
+\index{FactorVariancePosteriorDraws@{FactorVariancePosteriorDraws}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{FactorVariancePosteriorDraws}{FactorVariancePosteriorDraws}}
+{\footnotesize\ttfamily std\+::vector$<$Vector\+Xd$>$ Multilevel\+Model\+::\+Factor\+Variance\+Posterior\+Draws}
+
+\mbox{\Hypertarget{classMultilevelModel_ab81645adb1d10a077b66e7615a9139fd}\label{classMultilevelModel_ab81645adb1d10a077b66e7615a9139fd}} 
+\index{MultilevelModel@{MultilevelModel}!g0@{g0}}
+\index{g0@{g0}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{g0}{g0}}
+{\footnotesize\ttfamily Row\+Vector\+Xd Multilevel\+Model\+::g0}
+
+\mbox{\Hypertarget{classMultilevelModel_a5de2fd168275626d07937e6a45fc8d6d}\label{classMultilevelModel_a5de2fd168275626d07937e6a45fc8d6d}} 
+\index{MultilevelModel@{MultilevelModel}!G0@{G0}}
+\index{G0@{G0}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{G0}{G0}}
+{\footnotesize\ttfamily Matrix\+Xd Multilevel\+Model\+::\+G0}
+
+\mbox{\Hypertarget{classMultilevelModel_a168cab1f34902e84651e214d5439b645}\label{classMultilevelModel_a168cab1f34902e84651e214d5439b645}} 
+\index{MultilevelModel@{MultilevelModel}!gammas@{gammas}}
+\index{gammas@{gammas}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{gammas}{gammas}}
+{\footnotesize\ttfamily Matrix\+Xd Multilevel\+Model\+::gammas}
+
+\mbox{\Hypertarget{classMultilevelModel_a61b406ac2ebf92ac67cd5d018ba928c2}\label{classMultilevelModel_a61b406ac2ebf92ac67cd5d018ba928c2}} 
+\index{MultilevelModel@{MultilevelModel}!GammasPosteriorDraws@{GammasPosteriorDraws}}
+\index{GammasPosteriorDraws@{GammasPosteriorDraws}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{GammasPosteriorDraws}{GammasPosteriorDraws}}
+{\footnotesize\ttfamily std\+::vector$<$Matrix\+Xd$>$ Multilevel\+Model\+::\+Gammas\+Posterior\+Draws}
+
+\mbox{\Hypertarget{classMultilevelModel_aa4e80adaf2ad691600452f43da1d6fca}\label{classMultilevelModel_aa4e80adaf2ad691600452f43da1d6fca}} 
+\index{MultilevelModel@{MultilevelModel}!Identity@{Identity}}
+\index{Identity@{Identity}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{Identity}{Identity}}
+{\footnotesize\ttfamily Matrix\+Xd Multilevel\+Model\+::\+Identity}
+
+\mbox{\Hypertarget{classMultilevelModel_aab9cdc06b2ee39f86d59e2b99cfc6360}\label{classMultilevelModel_aab9cdc06b2ee39f86d59e2b99cfc6360}} 
+\index{MultilevelModel@{MultilevelModel}!InfoMat@{InfoMat}}
+\index{InfoMat@{InfoMat}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{InfoMat}{InfoMat}}
+{\footnotesize\ttfamily Matrix\+Xi Multilevel\+Model\+::\+Info\+Mat}
+
+\mbox{\Hypertarget{classMultilevelModel_a434eb2daedeea4c99eb1d52c7dbed130}\label{classMultilevelModel_a434eb2daedeea4c99eb1d52c7dbed130}} 
+\index{MultilevelModel@{MultilevelModel}!LoadingsPosteriorDraws@{LoadingsPosteriorDraws}}
+\index{LoadingsPosteriorDraws@{LoadingsPosteriorDraws}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{LoadingsPosteriorDraws}{LoadingsPosteriorDraws}}
+{\footnotesize\ttfamily std\+::vector$<$Matrix\+Xd$>$ Multilevel\+Model\+::\+Loadings\+Posterior\+Draws}
+
+\mbox{\Hypertarget{classMultilevelModel_a6d5ebc544420a886206ab8d7457f1528}\label{classMultilevelModel_a6d5ebc544420a886206ab8d7457f1528}} 
+\index{MultilevelModel@{MultilevelModel}!marginal\_likelihood@{marginal\_likelihood}}
+\index{marginal\_likelihood@{marginal\_likelihood}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{marginal\_likelihood}{marginal\_likelihood}}
+{\footnotesize\ttfamily double Multilevel\+Model\+::marginal\+\_\+likelihood}
+
+\mbox{\Hypertarget{classMultilevelModel_aa55386d1eea0751cf8fd7a8d4f5e80cd}\label{classMultilevelModel_aa55386d1eea0751cf8fd7a8d4f5e80cd}} 
+\index{MultilevelModel@{MultilevelModel}!ObsPrecisionPosteriorDraws@{ObsPrecisionPosteriorDraws}}
+\index{ObsPrecisionPosteriorDraws@{ObsPrecisionPosteriorDraws}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{ObsPrecisionPosteriorDraws}{ObsPrecisionPosteriorDraws}}
+{\footnotesize\ttfamily std\+::vector$<$Vector\+Xd$>$ Multilevel\+Model\+::\+Obs\+Precision\+Posterior\+Draws}
+
+\mbox{\Hypertarget{classMultilevelModel_a913b0606e7d0c568de08183a2c6ba168}\label{classMultilevelModel_a913b0606e7d0c568de08183a2c6ba168}} 
+\index{MultilevelModel@{MultilevelModel}!PosteriorCovariances@{PosteriorCovariances}}
+\index{PosteriorCovariances@{PosteriorCovariances}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{PosteriorCovariances}{PosteriorCovariances}}
+{\footnotesize\ttfamily std\+::vector$<$Matrix\+Xd$>$ Multilevel\+Model\+::\+Posterior\+Covariances}
+
+\mbox{\Hypertarget{classMultilevelModel_a58b3a8e39aea8c3475a96f5c4601279a}\label{classMultilevelModel_a58b3a8e39aea8c3475a96f5c4601279a}} 
+\index{MultilevelModel@{MultilevelModel}!PosteriorMeans@{PosteriorMeans}}
+\index{PosteriorMeans@{PosteriorMeans}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{PosteriorMeans}{PosteriorMeans}}
+{\footnotesize\ttfamily std\+::vector$<$Vector\+Xd$>$ Multilevel\+Model\+::\+Posterior\+Means}
+
+\mbox{\Hypertarget{classMultilevelModel_af1c715fc3717cfc0f513ec828859f343}\label{classMultilevelModel_af1c715fc3717cfc0f513ec828859f343}} 
+\index{MultilevelModel@{MultilevelModel}!r0@{r0}}
+\index{r0@{r0}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{r0}{r0}}
+{\footnotesize\ttfamily double Multilevel\+Model\+::r0}
+
+\mbox{\Hypertarget{classMultilevelModel_a81a6667a6629e81d89a8a067f248e181}\label{classMultilevelModel_a81a6667a6629e81d89a8a067f248e181}} 
+\index{MultilevelModel@{MultilevelModel}!R0@{R0}}
+\index{R0@{R0}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{R0}{R0}}
+{\footnotesize\ttfamily double Multilevel\+Model\+::\+R0}
+
+\mbox{\Hypertarget{classMultilevelModel_a1c2fedf7a8481ca6d6c5eeaf4fa9ed24}\label{classMultilevelModel_a1c2fedf7a8481ca6d6c5eeaf4fa9ed24}} 
+\index{MultilevelModel@{MultilevelModel}!Sims@{Sims}}
+\index{Sims@{Sims}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{Sims}{Sims}}
+{\footnotesize\ttfamily int Multilevel\+Model\+::\+Sims}
+
+\mbox{\Hypertarget{classMultilevelModel_ab4e49cd0d8ce03366ebdf1cf83e33e9e}\label{classMultilevelModel_ab4e49cd0d8ce03366ebdf1cf83e33e9e}} 
+\index{MultilevelModel@{MultilevelModel}!Xt@{Xt}}
+\index{Xt@{Xt}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{Xt}{Xt}}
+{\footnotesize\ttfamily Matrix\+Xd Multilevel\+Model\+::\+Xt}
+
+\mbox{\Hypertarget{classMultilevelModel_a19dba0cfc67a0c35f5be8b539a73f25e}\label{classMultilevelModel_a19dba0cfc67a0c35f5be8b539a73f25e}} 
+\index{MultilevelModel@{MultilevelModel}!yt@{yt}}
+\index{yt@{yt}!MultilevelModel@{MultilevelModel}}
+\doxysubsubsection{\texorpdfstring{yt}{yt}}
+{\footnotesize\ttfamily Matrix\+Xd Multilevel\+Model\+::yt}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Multilevel\+Model/include/\mbox{\hyperlink{MultilevelModel_8hpp}{Multilevel\+Model.\+hpp}}\end{DoxyCompactItemize}

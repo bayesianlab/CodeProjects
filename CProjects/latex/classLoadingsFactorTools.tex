@@ -1,0 +1,108 @@
+\hypertarget{classLoadingsFactorTools}{}\doxysection{Loadings\+Factor\+Tools Class Reference}
+\label{classLoadingsFactorTools}\index{LoadingsFactorTools@{LoadingsFactorTools}}
+
+
+{\ttfamily \#include $<$Multilevel\+Model.\+hpp$>$}
+
+
+
+Inheritance diagram for Loadings\+Factor\+Tools\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=194pt]{classLoadingsFactorTools__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Loadings\+Factor\+Tools\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=194pt]{classLoadingsFactorTools__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classLoadingsFactorTools_a76690abe4df9264b113a1c8b88fc476e}{Loadings\+Factor\+Tools}} ()
+\item 
+void \mbox{\hyperlink{classLoadingsFactorTools_af76fcc8531f32415b2f9e6d37fa69467}{get\+Acceptance\+Rate}} (double n\+Runs)
+\item 
+void \mbox{\hyperlink{classLoadingsFactorTools_a575effbaef729c9c5e6457b31acdbf0f}{set\+Factors}} (const Ref$<$ const Matrix\+Xd $>$ \&F)
+\item 
+void \mbox{\hyperlink{classLoadingsFactorTools_ae5f196a40e3c9291942f9165340dbbf5}{set\+Loadings}} (const Ref$<$ const Matrix\+Xd $>$ \&A, const Matrix$<$ int, Dynamic, 2 $>$ \&Info\+Mat, Matrix\+Xd \&Identity, double restriction)
+\item 
+void \mbox{\hyperlink{classLoadingsFactorTools_acfa4101150a93ef235d40d8796267497}{update\+Loadings\+Factors}} (const Ref$<$ const Matrix\+Xd $>$ \&yt, const Ref$<$ const Matrix\+Xd $>$ \&Xbeta, const Ref$<$ const Matrix\+Xd $>$ \&gammas, const Ref$<$ const Vector\+Xd $>$ \&obs\+Precision, const Ref$<$ const Vector\+Xd $>$ \&factor\+Variance, const Matrix$<$ int, Dynamic, 2 $>$ \&Info\+Mat, vector$<$ Vector\+Xd $>$ \&loadings\+Prior\+Mean\+Map, vector$<$ Matrix\+Xd $>$ \&loadings\+Prior\+Precision\+Map, \mbox{\hyperlink{classOptimize}{Optimize}} \&optim)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLoadingsFactorTools_a5b3308f94efb0df95c2cbe08948de515}{Factors}}
+\item 
+Matrix\+Xd \mbox{\hyperlink{classLoadingsFactorTools_a336e5076791830f56e8ea0331787b73b}{Loadings}}
+\item 
+double \mbox{\hyperlink{classLoadingsFactorTools_aa7419bb01d12ce6f870632243fbdbf0a}{acceptance\+\_\+rate}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classLoadingsFactorTools_a76690abe4df9264b113a1c8b88fc476e}\label{classLoadingsFactorTools_a76690abe4df9264b113a1c8b88fc476e}} 
+\index{LoadingsFactorTools@{LoadingsFactorTools}!LoadingsFactorTools@{LoadingsFactorTools}}
+\index{LoadingsFactorTools@{LoadingsFactorTools}!LoadingsFactorTools@{LoadingsFactorTools}}
+\doxysubsubsection{\texorpdfstring{LoadingsFactorTools()}{LoadingsFactorTools()}}
+{\footnotesize\ttfamily Loadings\+Factor\+Tools\+::\+Loadings\+Factor\+Tools (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classLoadingsFactorTools_af76fcc8531f32415b2f9e6d37fa69467}\label{classLoadingsFactorTools_af76fcc8531f32415b2f9e6d37fa69467}} 
+\index{LoadingsFactorTools@{LoadingsFactorTools}!getAcceptanceRate@{getAcceptanceRate}}
+\index{getAcceptanceRate@{getAcceptanceRate}!LoadingsFactorTools@{LoadingsFactorTools}}
+\doxysubsubsection{\texorpdfstring{getAcceptanceRate()}{getAcceptanceRate()}}
+{\footnotesize\ttfamily void Loadings\+Factor\+Tools\+::get\+Acceptance\+Rate (\begin{DoxyParamCaption}\item[{double}]{n\+Runs }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classLoadingsFactorTools_a575effbaef729c9c5e6457b31acdbf0f}\label{classLoadingsFactorTools_a575effbaef729c9c5e6457b31acdbf0f}} 
+\index{LoadingsFactorTools@{LoadingsFactorTools}!setFactors@{setFactors}}
+\index{setFactors@{setFactors}!LoadingsFactorTools@{LoadingsFactorTools}}
+\doxysubsubsection{\texorpdfstring{setFactors()}{setFactors()}}
+{\footnotesize\ttfamily void Loadings\+Factor\+Tools\+::set\+Factors (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{F }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classLoadingsFactorTools_ae5f196a40e3c9291942f9165340dbbf5}\label{classLoadingsFactorTools_ae5f196a40e3c9291942f9165340dbbf5}} 
+\index{LoadingsFactorTools@{LoadingsFactorTools}!setLoadings@{setLoadings}}
+\index{setLoadings@{setLoadings}!LoadingsFactorTools@{LoadingsFactorTools}}
+\doxysubsubsection{\texorpdfstring{setLoadings()}{setLoadings()}}
+{\footnotesize\ttfamily void Loadings\+Factor\+Tools\+::set\+Loadings (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{A,  }\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{Info\+Mat,  }\item[{Matrix\+Xd \&}]{Identity,  }\item[{double}]{restriction }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\mbox{\Hypertarget{classLoadingsFactorTools_acfa4101150a93ef235d40d8796267497}\label{classLoadingsFactorTools_acfa4101150a93ef235d40d8796267497}} 
+\index{LoadingsFactorTools@{LoadingsFactorTools}!updateLoadingsFactors@{updateLoadingsFactors}}
+\index{updateLoadingsFactors@{updateLoadingsFactors}!LoadingsFactorTools@{LoadingsFactorTools}}
+\doxysubsubsection{\texorpdfstring{updateLoadingsFactors()}{updateLoadingsFactors()}}
+{\footnotesize\ttfamily void Loadings\+Factor\+Tools\+::update\+Loadings\+Factors (\begin{DoxyParamCaption}\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{yt,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{Xbeta,  }\item[{const Ref$<$ const Matrix\+Xd $>$ \&}]{gammas,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{obs\+Precision,  }\item[{const Ref$<$ const Vector\+Xd $>$ \&}]{factor\+Variance,  }\item[{const Matrix$<$ int, Dynamic, 2 $>$ \&}]{Info\+Mat,  }\item[{vector$<$ Vector\+Xd $>$ \&}]{loadings\+Prior\+Mean\+Map,  }\item[{vector$<$ Matrix\+Xd $>$ \&}]{loadings\+Prior\+Precision\+Map,  }\item[{\mbox{\hyperlink{classOptimize}{Optimize}} \&}]{optim }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classLoadingsFactorTools_aa7419bb01d12ce6f870632243fbdbf0a}\label{classLoadingsFactorTools_aa7419bb01d12ce6f870632243fbdbf0a}} 
+\index{LoadingsFactorTools@{LoadingsFactorTools}!acceptance\_rate@{acceptance\_rate}}
+\index{acceptance\_rate@{acceptance\_rate}!LoadingsFactorTools@{LoadingsFactorTools}}
+\doxysubsubsection{\texorpdfstring{acceptance\_rate}{acceptance\_rate}}
+{\footnotesize\ttfamily double Loadings\+Factor\+Tools\+::acceptance\+\_\+rate}
+
+\mbox{\Hypertarget{classLoadingsFactorTools_a5b3308f94efb0df95c2cbe08948de515}\label{classLoadingsFactorTools_a5b3308f94efb0df95c2cbe08948de515}} 
+\index{LoadingsFactorTools@{LoadingsFactorTools}!Factors@{Factors}}
+\index{Factors@{Factors}!LoadingsFactorTools@{LoadingsFactorTools}}
+\doxysubsubsection{\texorpdfstring{Factors}{Factors}}
+{\footnotesize\ttfamily Matrix\+Xd Loadings\+Factor\+Tools\+::\+Factors}
+
+\mbox{\Hypertarget{classLoadingsFactorTools_a336e5076791830f56e8ea0331787b73b}\label{classLoadingsFactorTools_a336e5076791830f56e8ea0331787b73b}} 
+\index{LoadingsFactorTools@{LoadingsFactorTools}!Loadings@{Loadings}}
+\index{Loadings@{Loadings}!LoadingsFactorTools@{LoadingsFactorTools}}
+\doxysubsubsection{\texorpdfstring{Loadings}{Loadings}}
+{\footnotesize\ttfamily Matrix\+Xd Loadings\+Factor\+Tools\+::\+Loadings}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Multilevel\+Model/include/\mbox{\hyperlink{MultilevelModel_8hpp}{Multilevel\+Model.\+hpp}}\end{DoxyCompactItemize}

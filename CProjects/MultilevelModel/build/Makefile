@@ -124,6 +124,19 @@ test2/fast:
 .PHONY : test2/fast
 
 #=============================================================================
+# Target rules for targets named datagen
+
+# Build rule for target.
+datagen: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 datagen
+.PHONY : datagen
+
+# fast build rule for target.
+datagen/fast:
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/build
+.PHONY : datagen/fast
+
+#=============================================================================
 # Target rules for targets named mlfunc
 
 # Build rule for target.
@@ -137,82 +150,17 @@ mlfunc/fast:
 .PHONY : mlfunc/fast
 
 #=============================================================================
-# Target rules for targets named ardatagen
+# Target rules for targets named basetools
 
 # Build rule for target.
-ardatagen: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ardatagen
-.PHONY : ardatagen
+basetools: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 basetools
+.PHONY : basetools
 
 # fast build rule for target.
-ardatagen/fast:
-	$(MAKE) -f CMakeFiles/ardatagen.dir/build.make CMakeFiles/ardatagen.dir/build
-.PHONY : ardatagen/fast
-
-#=============================================================================
-# Target rules for targets named plot
-
-# Build rule for target.
-plot: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 plot
-.PHONY : plot
-
-# fast build rule for target.
-plot/fast:
-	$(MAKE) -f CMakeFiles/plot.dir/build.make CMakeFiles/plot.dir/build
-.PHONY : plot/fast
-
-#=============================================================================
-# Target rules for targets named optim
-
-# Build rule for target.
-optim: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 optim
-.PHONY : optim
-
-# fast build rule for target.
-optim/fast:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/build
-.PHONY : optim/fast
-
-#=============================================================================
-# Target rules for targets named dist
-
-# Build rule for target.
-dist: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 dist
-.PHONY : dist
-
-# fast build rule for target.
-dist/fast:
-	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/build
-.PHONY : dist/fast
-
-#=============================================================================
-# Target rules for targets named mldatagen
-
-# Build rule for target.
-mldatagen: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 mldatagen
-.PHONY : mldatagen
-
-# fast build rule for target.
-mldatagen/fast:
-	$(MAKE) -f CMakeFiles/mldatagen.dir/build.make CMakeFiles/mldatagen.dir/build
-.PHONY : mldatagen/fast
-
-#=============================================================================
-# Target rules for targets named eigentools
-
-# Build rule for target.
-eigentools: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 eigentools
-.PHONY : eigentools
-
-# fast build rule for target.
-eigentools/fast:
-	$(MAKE) -f CMakeFiles/eigentools.dir/build.make CMakeFiles/eigentools.dir/build
-.PHONY : eigentools/fast
+basetools/fast:
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/build
+.PHONY : basetools/fast
 
 home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.o: home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.o
 
@@ -220,7 +168,7 @@ home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.o: home/dillo
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.o:
-	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.o
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.o
 
 home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.i: home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.i
@@ -229,7 +177,7 @@ home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.i: home/dillo
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.i:
-	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.i
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.i
 
 home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.s: home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.s
@@ -238,7 +186,7 @@ home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.s: home/dillo
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.s:
-	$(MAKE) -f CMakeFiles/dist.dir/build.make CMakeFiles/dist.dir/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.s
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.s
 
 home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.o: home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.o
@@ -247,7 +195,7 @@ home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.o: home/dillon/Code
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.o:
-	$(MAKE) -f CMakeFiles/eigentools.dir/build.make CMakeFiles/eigentools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.o
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.o
 
 home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.i: home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.i
@@ -256,7 +204,7 @@ home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.i: home/dillon/Code
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.i:
-	$(MAKE) -f CMakeFiles/eigentools.dir/build.make CMakeFiles/eigentools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.i
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.i
 
 home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.s: home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.s
@@ -265,7 +213,7 @@ home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.s: home/dillon/Code
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.s:
-	$(MAKE) -f CMakeFiles/eigentools.dir/build.make CMakeFiles/eigentools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.s
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.s
 
 home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.o: home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o
@@ -274,7 +222,7 @@ home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.o: home/dillon/CodePr
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o:
-	$(MAKE) -f CMakeFiles/plot.dir/build.make CMakeFiles/plot.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o
 
 home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.i: home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.i
@@ -283,7 +231,7 @@ home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.i: home/dillon/CodePr
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.i:
-	$(MAKE) -f CMakeFiles/plot.dir/build.make CMakeFiles/plot.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.i
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.i
 
 home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.s: home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.s
@@ -292,7 +240,7 @@ home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.s: home/dillon/CodePr
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.s:
-	$(MAKE) -f CMakeFiles/plot.dir/build.make CMakeFiles/plot.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.s
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.s
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.o: home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o
@@ -301,7 +249,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.o: h
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.i: home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i
@@ -310,7 +258,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.i: h
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.s: home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s
@@ -319,7 +267,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.s: h
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.o: home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o
@@ -328,7 +276,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiatio
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.i: home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i
@@ -337,7 +285,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiatio
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.s: home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s
@@ -346,7 +294,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiatio
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.o: home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o
@@ -355,7 +303,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.o: home/di
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.i: home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i
@@ -364,7 +312,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.i: home/di
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.s: home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s
@@ -373,7 +321,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.s: home/di
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s:
-	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s
+	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s
 
 home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.o: home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o
@@ -382,7 +330,7 @@ home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.o: 
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o:
-	$(MAKE) -f CMakeFiles/ardatagen.dir/build.make CMakeFiles/ardatagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o
 
 home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.i: home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.i
@@ -391,7 +339,7 @@ home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.i: 
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.i:
-	$(MAKE) -f CMakeFiles/ardatagen.dir/build.make CMakeFiles/ardatagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.i
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.i
 
 home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.s: home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.s
@@ -400,35 +348,8 @@ home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.s: 
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.s:
-	$(MAKE) -f CMakeFiles/ardatagen.dir/build.make CMakeFiles/ardatagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.s
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.s
-
-home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.o: home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.o
-
-.PHONY : home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.o
-
-# target to build an object file
-home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.o:
-	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.o
-.PHONY : home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.o
-
-home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.i: home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.i
-
-.PHONY : home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.i
-
-# target to preprocess a source file
-home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.i:
-	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.i
-.PHONY : home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.i
-
-home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.s: home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.s
-
-.PHONY : home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.s
-
-# target to generate assembly for a file
-home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.s:
-	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.s
-.PHONY : home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp.s
 
 src/GenerateMLFactorData.o: src/GenerateMLFactorData.cpp.o
 
@@ -436,7 +357,7 @@ src/GenerateMLFactorData.o: src/GenerateMLFactorData.cpp.o
 
 # target to build an object file
 src/GenerateMLFactorData.cpp.o:
-	$(MAKE) -f CMakeFiles/mldatagen.dir/build.make CMakeFiles/mldatagen.dir/src/GenerateMLFactorData.cpp.o
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o
 .PHONY : src/GenerateMLFactorData.cpp.o
 
 src/GenerateMLFactorData.i: src/GenerateMLFactorData.cpp.i
@@ -445,7 +366,7 @@ src/GenerateMLFactorData.i: src/GenerateMLFactorData.cpp.i
 
 # target to preprocess a source file
 src/GenerateMLFactorData.cpp.i:
-	$(MAKE) -f CMakeFiles/mldatagen.dir/build.make CMakeFiles/mldatagen.dir/src/GenerateMLFactorData.cpp.i
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.i
 .PHONY : src/GenerateMLFactorData.cpp.i
 
 src/GenerateMLFactorData.s: src/GenerateMLFactorData.cpp.s
@@ -454,7 +375,7 @@ src/GenerateMLFactorData.s: src/GenerateMLFactorData.cpp.s
 
 # target to generate assembly for a file
 src/GenerateMLFactorData.cpp.s:
-	$(MAKE) -f CMakeFiles/mldatagen.dir/build.make CMakeFiles/mldatagen.dir/src/GenerateMLFactorData.cpp.s
+	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.s
 .PHONY : src/GenerateMLFactorData.cpp.s
 
 src/MultilevelModelFunctions.o: src/MultilevelModelFunctions.cpp.o
@@ -484,6 +405,33 @@ src/MultilevelModelFunctions.cpp.s:
 	$(MAKE) -f CMakeFiles/mlfunc.dir/build.make CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.s
 .PHONY : src/MultilevelModelFunctions.cpp.s
 
+src/Test_MultilevelModel.o: src/Test_MultilevelModel.cpp.o
+
+.PHONY : src/Test_MultilevelModel.o
+
+# target to build an object file
+src/Test_MultilevelModel.cpp.o:
+	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.o
+.PHONY : src/Test_MultilevelModel.cpp.o
+
+src/Test_MultilevelModel.i: src/Test_MultilevelModel.cpp.i
+
+.PHONY : src/Test_MultilevelModel.i
+
+# target to preprocess a source file
+src/Test_MultilevelModel.cpp.i:
+	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.i
+.PHONY : src/Test_MultilevelModel.cpp.i
+
+src/Test_MultilevelModel.s: src/Test_MultilevelModel.cpp.s
+
+.PHONY : src/Test_MultilevelModel.s
+
+# target to generate assembly for a file
+src/Test_MultilevelModel.cpp.s:
+	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.s
+.PHONY : src/Test_MultilevelModel.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -493,13 +441,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... test2"
+	@echo "... datagen"
 	@echo "... mlfunc"
-	@echo "... ardatagen"
-	@echo "... plot"
-	@echo "... optim"
-	@echo "... dist"
-	@echo "... mldatagen"
-	@echo "... eigentools"
+	@echo "... basetools"
 	@echo "... home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.o"
 	@echo "... home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.i"
 	@echo "... home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.s"
@@ -521,15 +465,15 @@ help:
 	@echo "... home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.o"
 	@echo "... home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.i"
 	@echo "... home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.s"
-	@echo "... home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.o"
-	@echo "... home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.i"
-	@echo "... home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.s"
 	@echo "... src/GenerateMLFactorData.o"
 	@echo "... src/GenerateMLFactorData.i"
 	@echo "... src/GenerateMLFactorData.s"
 	@echo "... src/MultilevelModelFunctions.o"
 	@echo "... src/MultilevelModelFunctions.i"
 	@echo "... src/MultilevelModelFunctions.s"
+	@echo "... src/Test_MultilevelModel.o"
+	@echo "... src/Test_MultilevelModel.i"
+	@echo "... src/Test_MultilevelModel.s"
 .PHONY : help
 
 
