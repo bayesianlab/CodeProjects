@@ -8,6 +8,8 @@ set(CMAKE_BUILD_TYPE DEBUG)
 # message(STATUS ${CMAKE_CXX_FLAGS_REALEASE})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
+set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+
 find_package(Eigen3)
 if (${EIGEN3_FOUND})
   include_directories(${EIGEN3_INCLUDE_DIR})

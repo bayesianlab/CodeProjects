@@ -60,7 +60,7 @@ include CMakeFiles/mlfunc.dir/flags.make
 CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o: CMakeFiles/mlfunc.dir/flags.make
 CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o: ../src/MultilevelModelFunctions.cpp
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp
+	ccache /usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp
 
 CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.i"

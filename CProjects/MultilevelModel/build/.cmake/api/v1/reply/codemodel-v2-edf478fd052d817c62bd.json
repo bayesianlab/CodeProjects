@@ -1,0 +1,86 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"name" : "DEBUG",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "multilevel",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "basetools::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-basetools-DEBUG-74a60e4f66ce36408894.json",
+					"name" : "basetools",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "datagen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-datagen-DEBUG-0b6162df9a560b64f967.json",
+					"name" : "datagen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "mlfunc::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-mlfunc-DEBUG-7eb256d5fdae4b02c277.json",
+					"name" : "mlfunc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test2-DEBUG-960fbc08506e1bdf03ff.json",
+					"name" : "test2",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/dillon/CodeProjects/CProjects/MultilevelModel/build",
+		"source" : "/home/dillon/CodeProjects/CProjects/MultilevelModel"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <stdexcept>
-
+#include <fstream>
 #include <Eigen/Dense>
 #include <unsupported/Eigen/KroneckerProduct>
 
@@ -1073,6 +1073,20 @@ public:
         cout << "Marginal Likelihood ";
         cout << marginal_likelihood << endl;
         return marginal_likelihood;
+    }
+
+    void storePosterior(string fname, std::vector<MatrixXd> &M)
+    {
+        const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", "\n");
+        int size = M.size();
+        ofstream file(fname.c_str());
+        if (file.is_open())
+        {
+            for (int i = 0; i < size; ++i)
+            {
+                file << M[i].format(CSVFormat) << endl;
+            }
+        }
     }
 };
 
