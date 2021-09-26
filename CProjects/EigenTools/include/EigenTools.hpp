@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <math.h>
+#include <fstream>
 
 #include <eigen-3.3.9/Eigen/Dense>
 #include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
@@ -106,5 +107,8 @@ bool isPD(const MatrixBase<D> &x)
         return true;
     }
 }
+
+MatrixXd readCSV(std::string file, int rows, int cols);
+
 
 #endif

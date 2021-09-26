@@ -123,6 +123,8 @@ stdexcept
 -
 math.h
 -
+fstream
+-
 eigen-3.3.9/Eigen/Dense
 -
 eigen-3.3.9/unsupported/Eigen/KroneckerProduct
@@ -155,6 +157,8 @@ MultilevelModelFunctions.hpp
 /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.hpp
 FullConditionals.hpp
 /home/dillon/CodeProjects/CProjects/MultilevelModel/src/FullConditionals.hpp
+EigenTools.hpp
+/home/dillon/CodeProjects/CProjects/MultilevelModel/src/EigenTools.hpp
 
 /home/dillon/CodeProjects/CProjects/OptimizationTools/include/LineSearchRoutines.hpp
 eigen-3.3.9/Eigen/Dense

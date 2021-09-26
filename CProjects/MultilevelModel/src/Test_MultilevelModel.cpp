@@ -6,13 +6,13 @@
 #include "GenerateMLFactorData.hpp"
 #include "MultilevelModelFunctions.hpp"
 #include "FullConditionals.hpp"
+#include "EigenTools.hpp"
 
 using namespace std;
 using namespace Eigen;
 
 int main(int argc, char *argv[])
 {
-
     // DynamicFactorsArErrors dfae;
     // int T = 50;
     // int K = 10;
@@ -115,6 +115,7 @@ int main(int argc, char *argv[])
     int otrokwhitemantest = 0;
     int chanandj = 0;
     int comparemethods = 1;
+    int realdata = 0;
     if (otrokwhitemantest)
     {
         /* Run the standard otrok whiteman model, 1 factor*/
@@ -231,33 +232,52 @@ int main(int argc, char *argv[])
 
         mlotrok.runModel(sims, burnin);
         mlotrok.storePosterior("Beta.csv", mlotrok.BetaPosteriorDraws);
-        // mlotrok.ml();
+        mlotrok.ml();
+        double a0 = 1.0;
+        double A0 = 1.0;
 
+        g0.setZero(phi.cols());
+        G0 = MatrixXd::Identity(phi.cols(), phi.cols());
+        MultilevelModel ml;
+        ml.setModel(mldata.yt, mldata.Xt, mldata.Loadings, mldata.Factors, mldata.gammas, InfoMat, mldata.b0,
+                    mldata.B0, a0, A0, r0, R0, mldata.g0, mldata.G0);
 
-        // double a0 = 1.0;
-        // double A0 = 1.0;
+        ml.runModel(sims, burnin);
+        ml.ml();
+        ofstream fname;
+        fname.open("marginal_likelihood.txt"); 
+        fname << "MarginalLikelihood" << endl << ml.marginal_likelihood << endl; 
+        fname.close()
+        // if()
+        cout << "Beta avg" << endl;
+        cout << mean(ml.BetaPosteriorDraws) << endl;
+        cout << "Loading avg" << endl;
+        cout << mean(ml.LoadingsPosteriorDraws) << endl;
+        cout << "Gamma avg" << endl;
+        cout << mean(ml.GammasPosteriorDraws) << endl;
+        cout << "Factor Variance" << endl;
+        cout << mean(ml.FactorVariancePosteriorDraws) << endl;
+        cout << "OM Variance" << endl;
+        cout << 1. / mean(ml.ObsPrecisionPosteriorDraws).array() << endl;
 
-        // g0.setZero(phi.cols());
-        // G0 = MatrixXd::Identity(phi.cols(), phi.cols());
-        // MultilevelModel ml;
-        // ml.setModel(mldata.yt, mldata.Xt, mldata.Loadings, mldata.Factors, mldata.gammas, InfoMat, mldata.b0,
-        //             mldata.B0, a0, A0, r0, R0, mldata.g0, mldata.G0);
+        ml.storePosterior("betacj.csv", ml.BetaPosteriorDraws);
+        ml.storePosterior("loadingcj.csv", ml.LoadingsPosteriorDraws);
+        ml.storePosterior("gammacj.csv", ml.GammasPosteriorDraws);
+        ml.storePosterior("factorcj.csv", ml.FactorVariancePosteriorDraws);
+        ml.storePosterior("omprecison.csv", ml.ObsPrecisionPosteriorDraws);
+        ml.storePosterior("factors.csv", ml.FactorPosteriorDraws);
 
-        // ml.runModel(sims, burnin);
-        // ml.ml();
-        // cout << "Beta avg" << endl;
-        // cout << mean(ml.BetaPosteriorDraws) << endl;
-        // cout << "Loading avg" << endl;
-        // cout << mean(ml.LoadingsPosteriorDraws) << endl;
-        // cout << "Gamma avg" << endl;
-        // cout << mean(ml.GammasPosteriorDraws) << endl;
-        // cout << "Factor Variance" << endl;
-        // cout << mean(ml.FactorVariancePosteriorDraws) << endl;
-        // cout << "OM Variance" << endl;
-        // cout << 1. / mean(ml.ObsPrecisionPosteriorDraws).array() << endl;
+        MatrixXd Ftbar = mean(ml.FactorPosteriorDraws);
+        plotter("plot.p", Ftbar.row(0).transpose(), mldata.Factors.row(0).transpose(), "fest", "ftrue");
+    }
+    if (realdata)
+    {
+        /* Models to run, model with no country factors
+        * standard kow model
+        * model with country factors and country vars */
+        MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kow.csv", 180, 58);
+        MatrixXd Xt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kowXt.csv", 10440, 3);
 
-        // MatrixXd Ftbar = mean(ml.FactorPosteriorDraws);
-        // plotter("plot.p", Ftbar.row(0).transpose(),mldata.Factors.row(0).transpose(), "fest", "ftrue");
     }
     return 0;
 }

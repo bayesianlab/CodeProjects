@@ -1074,6 +1074,7 @@ public:
             residuals = ythat.row(k) - betaStar.row(k) * Xtemp.transpose();
             likelihood(k) = logmvnpdf(residuals, Z2, s2 * Covar);
         }
+        
         double marginal_likelihood = likelihood.sum() + priorGammaStar.sum() + priorBetaStar.sum() +
                                      priorFactorStar.sum() + priorOmVarianceStar.sum() +
                                      priorFactorVarianceStar.sum() - posteriorStar;
