@@ -166,7 +166,7 @@ void GenerateMLFactorData::genData(int _nObs, int _nEqns, const VectorXd &coeffV
     om_variance = omVar * VectorXd::Ones(K);
     om_precision = 1. / om_variance.array();
     b0 = RowVectorXd::Zero(1, nEqnsP);
-    B0 = 1000 * MatrixXd::Identity(nEqnsP, nEqnsP);
+    B0 = 100 * MatrixXd::Identity(nEqnsP, nEqnsP);
     g0 = RowVectorXd::Zero(factorLags);
     G0 = MatrixXd::Identity(factorLags, factorLags); 
 }

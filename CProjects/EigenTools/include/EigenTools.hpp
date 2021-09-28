@@ -10,7 +10,7 @@
 #include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
 
 using namespace std;
-using namespace Eigen; 
+using namespace Eigen;
 
 template <typename D>
 void dim(const MatrixBase<D> &M)
@@ -20,9 +20,7 @@ void dim(const MatrixBase<D> &M)
 
 VectorXd var(const Ref<const MatrixXd> &A, int row_col);
 
-
 VectorXi sequence(int b, int e);
-
 
 VectorXi sequence(int b, int e, int skip);
 
@@ -108,7 +106,8 @@ bool isPD(const MatrixBase<D> &x)
     }
 }
 
-MatrixXd readCSV(std::string file, int rows, int cols);
+MatrixXd readCSV(std::string file);
 
+Matrix<int, Dynamic, 2> castToInfoMat(const MatrixXd &I);
 
 #endif

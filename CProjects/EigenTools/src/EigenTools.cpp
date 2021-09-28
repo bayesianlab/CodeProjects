@@ -38,67 +38,57 @@ VectorXd var(const Ref<const MatrixXd> &A, int row_col)
     return (1. / A.cols()) * centered.rowwise().sum();
 }
 
-MatrixXd readCSV(std::string file, int rows, int cols)
+MatrixXd readCSV(std::string file)
 {
-
-    MatrixXd X = MatrixXd::Zero(rows, cols);
+    MatrixXd X;
+    int rows, cols;
     ifstream fin;
     fin.open(file);
     string line;
     size_t foundquote;
     int rowCount = -1;
+    int colCount;
     if (fin.is_open())
     {
         string field;
         string newfield;
-        while (getline(fin, line, '\n') && rowCount < rows - 1)
+        while (getline(fin, line, '\n'))
         {
             rowCount++;
-
-            int colCount = -1;
+            colCount = -1;
             istringstream buf(line);
-            foundquote = line.find(",");
-            if (foundquote == std::string::npos)
-            {
-                throw std::invalid_argument("Error in separator type in readCSV().");
-            }
-            foundquote = line.find('"');
-            if (foundquote != std::string::npos)
+            if (rowCount == 0)
             {
                 while (getline(buf, field, ','))
                 {
-                    newfield = (char *)malloc(sizeof(char) * field.length() + 1);
-                    for (int i = 0; i < field.length(); ++i)
-                    {
-                        if (field[i] != '"')
-                        {
-                            newfield += field[i];
-                        }
-                    }
                     ++colCount;
-                    if (colCount > cols)
-                    {
-                        throw invalid_argument("Columns not set correctly in readCSV");
-                    }
-                    X(rowCount, colCount) = stod(newfield);
                 }
+                cols = colCount;
             }
-            else
+        }
+        rows = rowCount;
+        X.resize(rows + 1, cols + 1);
+        rowCount = -1;
+        fin.close();
+        fin.open(file);
+        while (getline(fin, line, '\n') && rowCount < rows)
+        {
+            rowCount++;
+            colCount = -1;
+            istringstream buf(line);
+
+            while (getline(buf, field, ','))
             {
-                while (getline(buf, field, ','))
+                colCount++;
+                if (colCount > cols)
                 {
-                    colCount++;
-                    if (colCount > cols)
-                    {
-                        throw invalid_argument("Columns not set correctly in readCSV");
-                    }
-                    string number;
-                    X(rowCount, colCount) = stod(field);
+                    throw invalid_argument("Columns not set correctly in readCSV");
                 }
-                if (rowCount > rows)
-                {
-                    throw invalid_argument("Rows not set correctly in readCSV");
-                }
+                X(rowCount, colCount) = stod(field);
+            }
+            if (rowCount > rows)
+            {
+                throw invalid_argument("Rows not set correctly in readCSV");
             }
         }
         fin.close();
@@ -107,6 +97,20 @@ MatrixXd readCSV(std::string file, int rows, int cols)
     else
     {
         cout << "File " << file << " not opened." << endl;
+        X.resize(1, 1);
         return X;
     }
+}
+
+Matrix<int, Dynamic, 2> castToInfoMat(const MatrixXd &I)
+{
+    Matrix<int, Dynamic, 2> InfoMat(I.rows(), 2);
+    for (int i = 0; i < I.rows(); ++i)
+    {
+        for (int j = 0; j < 2; ++j)
+        {
+            InfoMat(i, j) = (int)I(i, j);
+        }
+    }
+    return InfoMat;
 }

@@ -1028,10 +1028,9 @@ public:
         {
             likelihood(k) = logmvnpdf(resids.row(k), Z2, omVariancestar(k) * IT);
         }
-
+        cout << likelihood << endl;
         double conditionalOfFactors = likelihood.sum() + priorFactorStar.sum() - posteriorFactorStar.sum();
-        double priorbeta = logmvnpdf(betastar.transpose(), RowVectorXd::Zero(betastar.size()),
-                                     MatrixXd::Identity(betastar.size(), betastar.size()));
+        double priorbeta = logmvnpdf(betastar.transpose(), b0, B0);
         VectorXd priorA(nFactors);
         VectorXd priorGammas(nFactors);
         VectorXd priorfactorVariances(nFactors);
@@ -1066,12 +1065,11 @@ public:
             priorOmVariances(n) = loginvgammapdf(1.0 / omPrecisionstar(k), .5 * r0, 1.0 / (.5 * R0));
             ++n;
         }
-
         double priorSum = priorbeta + priorA.sum() + priorGammas.sum() + priorfactorVariances.sum() +
                           priorOmVariances.sum();
+
         marginal_likelihood = conditionalOfFactors + priorSum - posteriorStar;
-        cout << "Marginal Likelihood ";
-        cout << marginal_likelihood << endl;
+        cout << "Marginal Likelihood " << marginal_likelihood << endl;
         return marginal_likelihood;
     }
 

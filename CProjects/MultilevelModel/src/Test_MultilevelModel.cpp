@@ -114,8 +114,8 @@ int main(int argc, char *argv[])
 
     int otrokwhitemantest = 0;
     int chanandj = 0;
-    int comparemethods = 1;
-    int realdata = 0;
+    int comparemethods = 0;
+    int realdata = 1;
     if (otrokwhitemantest)
     {
         /* Run the standard otrok whiteman model, 1 factor*/
@@ -209,7 +209,6 @@ int main(int argc, char *argv[])
         VectorXd betas = .5 * VectorXd::Ones(nXs, 1);
         Matrix<int, Dynamic, 2> InfoMat(1, 2);
         InfoMat << 0, K - 1;
-        cout << InfoMat << endl;
         int nFactors = InfoMat.rows();
         MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
         MatrixXd A = .5 * Identity;
@@ -228,56 +227,95 @@ int main(int argc, char *argv[])
         RowVectorXd otrokb0 = RowVectorXd::Zero(mldata.Xt.cols() + nFactors);
         MatrixXd otrokB0 = 100 * MatrixXd::Identity(mldata.Xt.cols() + nFactors, mldata.Xt.cols() + nFactors);
         mlotrok.setModel(mldata.yt, mldata.Xt, mldata.Factors, mldata.gammas, InfoMat,
-                         otrokb0, otrokB0, r0, R0, g0, G0, g0, G0);
+                         otrokb0, otrokB0, r0, R0, g0, G0);
 
         mlotrok.runModel(sims, burnin);
-        mlotrok.storePosterior("Beta.csv", mlotrok.BetaPosteriorDraws);
-        mlotrok.ml();
-        double a0 = 1.0;
-        double A0 = 1.0;
-
-        g0.setZero(phi.cols());
-        G0 = MatrixXd::Identity(phi.cols(), phi.cols());
-        MultilevelModel ml;
-        ml.setModel(mldata.yt, mldata.Xt, mldata.Loadings, mldata.Factors, mldata.gammas, InfoMat, mldata.b0,
-                    mldata.B0, a0, A0, r0, R0, mldata.g0, mldata.G0);
-
-        ml.runModel(sims, burnin);
-        ml.ml();
-        ofstream fname;
-        fname.open("marginal_likelihood.txt"); 
-        fname << "MarginalLikelihood" << endl << ml.marginal_likelihood << endl; 
-        fname.close()
-        // if()
-        cout << "Beta avg" << endl;
-        cout << mean(ml.BetaPosteriorDraws) << endl;
-        cout << "Loading avg" << endl;
-        cout << mean(ml.LoadingsPosteriorDraws) << endl;
-        cout << "Gamma avg" << endl;
-        cout << mean(ml.GammasPosteriorDraws) << endl;
-        cout << "Factor Variance" << endl;
-        cout << mean(ml.FactorVariancePosteriorDraws) << endl;
-        cout << "OM Variance" << endl;
-        cout << 1. / mean(ml.ObsPrecisionPosteriorDraws).array() << endl;
-
-        ml.storePosterior("betacj.csv", ml.BetaPosteriorDraws);
-        ml.storePosterior("loadingcj.csv", ml.LoadingsPosteriorDraws);
-        ml.storePosterior("gammacj.csv", ml.GammasPosteriorDraws);
-        ml.storePosterior("factorcj.csv", ml.FactorVariancePosteriorDraws);
-        ml.storePosterior("omprecison.csv", ml.ObsPrecisionPosteriorDraws);
-        ml.storePosterior("factors.csv", ml.FactorPosteriorDraws);
-
-        MatrixXd Ftbar = mean(ml.FactorPosteriorDraws);
+        MatrixXd Ftbar = mean(mlotrok.FactorPosteriorDraws);
         plotter("plot.p", Ftbar.row(0).transpose(), mldata.Factors.row(0).transpose(), "fest", "ftrue");
+        cout << "OM Variance" << endl;
+        cout << mean(mlotrok.OmVariancePosteriorDraws) << endl;
+        mlotrok.ml();
+        ofstream fname1;
+        fname1.open("marginal_likelihood_kow.txt");
+        fname1 << "MarginalLikelihood" << endl
+               << mlotrok.marginal_likelihood << endl;
+        fname1.close();
+
+        // double a0 = 1.0;
+        // double A0 = 1.0;
+        // g0.setZero(phi.cols());
+        // G0 = MatrixXd::Identity(phi.cols(), phi.cols());
+        // MultilevelModel ml;
+        // ml.setModel(mldata.yt, mldata.Xt, mldata.Loadings, mldata.Factors, mldata.gammas, InfoMat, mldata.b0,
+        //             mldata.B0, a0, A0, r0, R0, mldata.g0, mldata.G0);
+
+        // ml.runModel(sims, burnin);
+
+        // ml.ml();
+        // ofstream fname2;
+        // fname2.open("marginal_likelihood.txt");
+        // fname2 << "MarginalLikelihood" << endl
+        //       << ml.marginal_likelihood << endl;
+        // fname2.close();
+        // if()
+        // cout << "Beta avg" << endl;
+        // cout << mean(ml.BetaPosteriorDraws) << endl;
+        // cout << "Loading avg" << endl;
+        // cout << mean(ml.LoadingsPosteriorDraws) << endl;
+        // cout << "Gamma avg" << endl;
+        // cout << mean(ml.GammasPosteriorDraws) << endl;
+        // cout << "Factor Variance" << endl;
+        // cout << mean(ml.FactorVariancePosteriorDraws) << endl;
+        // cout << "OM Variance" << endl;
+        // cout << 1. / mean(ml.ObsPrecisionPosteriorDraws).array() << endl;
+
+        // ml.storePosterior("betacj.csv", ml.BetaPosteriorDraws);
+        // ml.storePosterior("loadingcj.csv", ml.LoadingsPosteriorDraws);
+        // ml.storePosterior("gammacj.csv", ml.GammasPosteriorDraws);
+        // ml.storePosterior("factorcj.csv", ml.FactorVariancePosteriorDraws);
+        // ml.storePosterior("omprecison.csv", ml.ObsPrecisionPosteriorDraws);
+        // ml.storePosterior("factors.csv", ml.FactorPosteriorDraws);
+
+        // MatrixXd Ftbar = mean(ml.FactorPosteriorDraws);
+        // plotter("plot.p", Ftbar.row(0).transpose(), mldata.Factors.row(0).transpose(), "fest", "ftrue");
     }
     if (realdata)
     {
         /* Models to run, model with no country factors
         * standard kow model
         * model with country factors and country vars */
-        MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kow.csv", 180, 58);
-        MatrixXd Xt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kowXt.csv", 10440, 3);
+        MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kow.csv");
+        MatrixXd xvals = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kowXt.csv");
+        MatrixXd I = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/factor_index_world_region_country.csv");
+        Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
+        int K = yt.rows();
+        int T = yt.cols();
+        int sims = 10;
+        int burnin = 1;
+        int nFactors = InfoMat.rows();
+        cout << InfoMat << endl;
+        MatrixXd Xt(xvals.rows(), xvals.cols() + 1);
+        Xt << VectorXd::Ones(xvals.rows()), xvals;
+        MatrixXd Factors = normrnd(0, 1, nFactors, T);
+        int gammaRows = 3;
+        int deltaRows = gammaRows; 
+        RowVectorXd g(3);
+        g << .01, .02, .03;
+        MatrixXd gammas = g.replicate(nFactors, 1);
+        MatrixXd deltas;
+        deltas = gammas;
+        RowVectorXd g0 = RowVectorXd::Zero(gammaRows);
+        MatrixXd G0 = MatrixXd::Identity(gammaRows, gammaRows);
+        RowVectorXd otrokb0 = RowVectorXd::Zero(Xt.cols() + nFactors);
+        MatrixXd otrokB0 = 100 * MatrixXd::Identity(Xt.cols() + nFactors, Xt.cols() + nFactors);
+        double r0 = 6;
+        double R0 = 12;
+        FullConditionals mlotrok;
 
+        mlotrok.setModel(yt, Xt, Factors, gammas, deltas, InfoMat, otrokb0, otrokB0,
+                         r0, R0, g0, G0, g0, G0);
+        mlotrok.runModel(sims, burnin);
+        mlotrok.ml();
     }
     return 0;
 }

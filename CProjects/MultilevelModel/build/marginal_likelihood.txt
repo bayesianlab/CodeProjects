@@ -1,2 +1,2 @@
 MarginalLikelihood
--829.183
+-856.666
