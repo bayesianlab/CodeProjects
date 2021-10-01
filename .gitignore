@@ -95,14 +95,13 @@ run_*.sh
 /MATLAB/discrete_choice/SSzhang/**
 /MATLAB/discrete_choice/SSzhangnewprop/**
 /MATLAB/discrete_choice/bin/**
-build/*
 /MATLAB/factor_models/kowmcc/**
 *.o*
 *.e*
-bin/
+*/bin/*
 TbsOutput/
 /.metadata/
 
 *.idea/*
 
-build/*
+*/build/*
