@@ -96,8 +96,8 @@ MatrixXd setInitialCovar(const MatrixBase<Derived1> &params, const double &var)
     MatrixXd Varmat(rows * lags, rows);
     Varmat << var, MatrixXd::Zero(rows * (lags - 1), rows);
     MatrixXd outerp = Varmat * Varmat.transpose();
-    outerp.resize(rows * rows * lags * lags, 1);
-    MatrixXd P0 = (Irows2 - SkronS).fullPivLu().solve(outerp);
+    outerp.resize(rows * rows * lags * lags, 1); 
+    MatrixXd P0 = (Irows2 - SkronS).householderQr().solve(outerp);
     P0.resize(rows * lags, rows * lags);
     if (isPD(P0) != true)
     {
@@ -278,11 +278,13 @@ MatrixXd makeStationary(const MatrixBase<T1> &M, const MatrixBase<T2> &params, c
         {
             throw invalid_argument("sigma is double, M must be 1 row. Error in makeStationary");
         }
+        
         int T = M.cols();
         MatrixXd D0upper;
         MatrixXd Xstationary(M.rows(), M.cols());
         for (int i = 0; i < M.rows(); ++i)
         {
+            
             Xstationary.row(i).rightCols(T - lags) = lagOperator(M.row(i), params, operatingDimension);
             D0 = setInitialCovar(params, sigma2);
             D0upper = D0.llt().matrixU();
@@ -351,16 +353,21 @@ public:
             }
             if (count == MAX_TRIES)
             {
+                proposal = current; 
                 P1 = MatrixXd::Identity(lags, lags);
-                break;
+                return;
             }
             ++count;
         }
+        //
+        P1 = sigma2*MatrixXd::Identity(lags, lags);
         MatrixXd S2new = MatrixXd::Identity(T, T);
         S2new = S2new.array() * sigma2;
         MatrixXd S2old = S2new;
         S2new.block(0, 0, lags, lags) = P1;
-        S2old.block(0, 0, lags, lags) = setInitialCovar(current, sigma2);
+        //
+        MatrixXd P0 = sigma2*MatrixXd::Identity(lags, lags);
+        S2old.block(0, 0, lags, lags) = P0;
         MatrixXd IT = MatrixXd::Identity(S2new.rows(), S2new.cols());
         MatrixXd S2newinv = S2new.ldlt().solve(IT);
         MatrixXd S2newinvlower = S2newinv.llt().matrixL();

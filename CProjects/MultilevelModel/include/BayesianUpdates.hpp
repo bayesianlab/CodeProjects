@@ -42,6 +42,7 @@ public:
         B = B0inv + ((Xt.transpose() * Xt) / s2);
         B = B.ldlt().solve(Ix);
         bmean = (B * (B0inv * b0.transpose() + (Xt.transpose() * yt.transpose()) / s2)).transpose();
+
         return logmvnpdf(betaStar, bmean, B);
     }
 };

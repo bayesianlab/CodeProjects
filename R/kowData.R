@@ -208,6 +208,8 @@ for(t in 1:(ncol(k)-1))
   }
 }
 
-write.table(Xt, paste(codePath, 'kowXt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+
+
+# write.table(Xt, paste(codePath, 'kowXt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
 

@@ -285,7 +285,7 @@ int main(int argc, char *argv[])
         * standard kow model
         * model with country factors and country vars */
         MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kow.csv");
-        MatrixXd xvals = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kowXt.csv");
+        // MatrixXd xvals = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kowXt.csv");
         MatrixXd I = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/factor_index_world_region_country.csv");
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
         int K = yt.rows();
@@ -293,23 +293,30 @@ int main(int argc, char *argv[])
         int sims = 10;
         int burnin = 1;
         int nFactors = InfoMat.rows();
-        cout << InfoMat << endl;
-        MatrixXd Xt(xvals.rows(), xvals.cols() + 1);
-        Xt << VectorXd::Ones(xvals.rows()), xvals;
-        MatrixXd Factors = normrnd(0, 1, nFactors, T);
+        
+        MatrixXd Xt(K*T, 1);
+        Xt << VectorXd::Ones(K*T);
+        int nXs = Xt.cols();
+        MatrixXd Factors = MatrixXd::Zero(nFactors, T);
         int gammaRows = 3;
         int deltaRows = gammaRows; 
         RowVectorXd g(3);
         g << .01, .02, .03;
         MatrixXd gammas = g.replicate(nFactors, 1);
         MatrixXd deltas;
-        deltas = gammas;
+        deltas = g.replicate(K,1);
         RowVectorXd g0 = RowVectorXd::Zero(gammaRows);
-        MatrixXd G0 = MatrixXd::Identity(gammaRows, gammaRows);
-        RowVectorXd otrokb0 = RowVectorXd::Zero(Xt.cols() + nFactors);
-        MatrixXd otrokB0 = 100 * MatrixXd::Identity(Xt.cols() + nFactors, Xt.cols() + nFactors);
+        VectorXd G0diag(gammaRows);
+        G0diag << .25, .5, 1; 
+        MatrixXd G0 = G0diag.asDiagonal();
+        int levels = calcLevels(InfoMat, K);
+        RowVectorXd otrokb0 = RowVectorXd::Zero(Xt.cols() + levels);
+        MatrixXd otrokB0 = MatrixXd::Identity(Xt.cols() + levels, Xt.cols() + levels);
+        otrokB0.block(0,0,nXs,nXs) = 10*MatrixXd::Identity(nXs, nXs); 
+        cout << otrokB0 << endl; 
+        
         double r0 = 6;
-        double R0 = 12;
+        double R0 = 6;
         FullConditionals mlotrok;
 
         mlotrok.setModel(yt, Xt, Factors, gammas, deltas, InfoMat, otrokb0, otrokB0,

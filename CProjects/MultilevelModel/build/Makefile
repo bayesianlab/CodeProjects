@@ -150,6 +150,19 @@ mlfunc/fast:
 .PHONY : mlfunc/fast
 
 #=============================================================================
+# Target rules for targets named optim
+
+# Build rule for target.
+optim: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 optim
+.PHONY : optim
+
+# fast build rule for target.
+optim/fast:
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/build
+.PHONY : optim/fast
+
+#=============================================================================
 # Target rules for targets named basetools
 
 # Build rule for target.
@@ -249,7 +262,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.o: h
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o:
-	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.i: home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i
@@ -258,7 +271,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.i: h
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i:
-	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.i
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.s: home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s
@@ -267,7 +280,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.s: h
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s:
-	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.s
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.o: home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o
@@ -276,7 +289,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiatio
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o:
-	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.i: home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i
@@ -285,7 +298,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiatio
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i:
-	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.i
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.s: home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s
@@ -294,7 +307,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiatio
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s:
-	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.s
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.o: home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o
@@ -303,7 +316,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.o: home/di
 
 # target to build an object file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o:
-	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.i: home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i
@@ -312,7 +325,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.i: home/di
 
 # target to preprocess a source file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i:
-	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.i
 
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.s: home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s
@@ -321,7 +334,7 @@ home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.s: home/di
 
 # target to generate assembly for a file
 home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s:
-	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s
 .PHONY : home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.s
 
 home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.o: home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o
@@ -443,6 +456,7 @@ help:
 	@echo "... test2"
 	@echo "... datagen"
 	@echo "... mlfunc"
+	@echo "... optim"
 	@echo "... basetools"
 	@echo "... home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.o"
 	@echo "... home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.i"

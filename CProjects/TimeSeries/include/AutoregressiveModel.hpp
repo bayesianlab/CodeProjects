@@ -79,7 +79,7 @@ public:
                 Xtemp = XtbyT[k];
                 Xthat = makeStationary(Xtemp, arparams.row(k), s2, 1);
                 s2 = sigma2(k);
-                ub.updateBetaUnivariate(ythat.row(k), Xtemp, s2, b0, B0);
+                ub.updateBetaUnivariate(ythat.row(k), Xthat, s2, b0, B0);
                 mut = ub.bnew * Xtemp.transpose();
                 epsilons = yt.row(k) - ub.bnew * Xtemp.transpose();
                 ar.updateArParameters(epsilons, arparams.row(k), s2, g0, G0);

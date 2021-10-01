@@ -74,15 +74,15 @@ double ConditionalLogLikelihood(const MatrixBase<D1> &guess, const MatrixBase<D2
 
 template <typename T0, typename T1, typename T2, typename T3, typename T4>
 MatrixXd otrokFactorUpdate(const MatrixBase<T0> &Factors, const MatrixXd &yt, std::vector<MatrixXd> &Xtk, const MatrixBase<T1> &betaParams,
-                       const double &loading, const MatrixBase<T2> &gammas, const MatrixBase<T3> &deltas,
-                       const VectorXd &omVariance, const VectorXd &factorVariance, const MatrixBase<T4> &Identity,
-                       const Matrix<int, 1, 2> &InfoMatRow)
+                           const double &loading, const MatrixBase<T2> &gammas, const MatrixBase<T3> &deltas,
+                           const VectorXd &omVariance, const VectorXd &factorVariance, const MatrixBase<T4> &Identity,
+                           const Matrix<int, 1, 2> &InfoMatRow)
 {
     int nFactors = Factors.rows();
     int T = Factors.cols();
     int K = deltas.rows();
     int nXs = Xtk[0].cols();
-    double  s2;
+    double s2;
     MatrixXd CovarSum;
     MatrixXd MeanSum;
     MatrixXd Xtemp;
@@ -122,4 +122,78 @@ MatrixXd otrokFactorUpdate(const MatrixBase<T0> &Factors, const MatrixXd &yt, st
     factorMean = CovarSum * MeanSum;
     return (factorMean + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows(), 1)).transpose();
 }
+
+template <typename T1, typename T2>
+MatrixXd removeZeros(const MatrixBase<T1> &ObsModelIdentity, const MatrixBase<T2> &betaParams, int nXs)
+{
+    int c;
+    int levels = (int)ObsModelIdentity.row(0).sum();
+    MatrixXd tb(ObsModelIdentity.rows(), levels + nXs);
+    MatrixXi Icopy = ObsModelIdentity.template cast<int>();
+    for (int i = 0; i < ObsModelIdentity.rows(); ++i)
+    {
+        c = nXs;
+        for (int j = nXs; j < ObsModelIdentity.cols() + nXs; ++j)
+        {
+            if (Icopy(i, j - nXs) > 0)
+            {
+                tb(i, c) = betaParams(i, j);
+                ++c;
+            }
+        }
+    }
+    tb.leftCols(nXs) = betaParams.leftCols(nXs);
+    return tb;
+}
+
+template <typename T1>
+MatrixXi createFactorInfo(const MatrixBase<T1> &I, const Matrix<int, Dynamic, 2> &InfoMat)
+{
+    int levels = (int)I.row(0).sum();
+    int K = I.rows();
+    MatrixXi FactorInfo(K, levels);
+    FactorInfo.setZero();
+    RowVectorXi r(2);
+    int start;
+    int end;
+    int c = 0;
+    int columnShift = 0;
+    int shift = K - 1;
+    for (int j = 0; j < InfoMat.rows(); ++j)
+    {
+        r = InfoMat.row(j);
+        start = r(0);
+        end = r(1);
+        for (int i = start; i < end + 1; ++i)
+        {
+            FactorInfo(i, columnShift) = c;
+        }
+        if (end == shift)
+        {
+            ++columnShift;
+        }
+        ++c;
+    }
+    return FactorInfo;
+}
+
+MatrixXi returnIdentificationRestictions(const MatrixXi &FactorInfo);
+
+template <typename T0, typename T1, typename T2>
+MatrixXd removeXtZeros(const MatrixBase<T0> &Xthat, const MatrixBase<T1> &I, const Matrix<int, Dynamic, -1> &InfoMat, const MatrixBase<T2> &FactorInfo)
+{
+    int xcols = Xthat.cols();
+    int T = Xthat.rows();
+    int nXs = xcols - I.cols();
+    int levels = (int)I.row(0).sum();
+    MatrixXd tempX(T, nXs + levels);
+    for (int i = 0; i < levels; ++i)
+    {
+        tempX.col(i + nXs) = Xthat.col(nXs + FactorInfo(i));
+    }
+    tempX.leftCols(nXs) = Xthat.leftCols(nXs);
+    return tempX;
+}
+
+int calcLevels(const Matrix<int, Dynamic, 2> &InfoMat, const int &K);
 #endif

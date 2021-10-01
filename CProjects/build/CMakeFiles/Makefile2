@@ -56,6 +56,7 @@ CMAKE_BINARY_DIR = /home/dillon/CodeProjects/CProjects/build
 all: CMakeFiles/test2.dir/all
 all: CMakeFiles/datagen.dir/all
 all: CMakeFiles/mlfunc.dir/all
+all: CMakeFiles/optim.dir/all
 all: CMakeFiles/basetools.dir/all
 
 .PHONY : all
@@ -69,6 +70,7 @@ preinstall:
 clean: CMakeFiles/test2.dir/clean
 clean: CMakeFiles/datagen.dir/clean
 clean: CMakeFiles/mlfunc.dir/clean
+clean: CMakeFiles/optim.dir/clean
 clean: CMakeFiles/basetools.dir/clean
 
 .PHONY : clean
@@ -77,17 +79,18 @@ clean: CMakeFiles/basetools.dir/clean
 # Target rules for target CMakeFiles/test2.dir
 
 # All Build rule for target.
-CMakeFiles/test2.dir/all: CMakeFiles/datagen.dir/all
 CMakeFiles/test2.dir/all: CMakeFiles/mlfunc.dir/all
+CMakeFiles/test2.dir/all: CMakeFiles/optim.dir/all
 CMakeFiles/test2.dir/all: CMakeFiles/basetools.dir/all
+CMakeFiles/test2.dir/all: CMakeFiles/datagen.dir/all
 	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/depend
 	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=13,14 "Built target test2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=14,15 "Built target test2"
 .PHONY : CMakeFiles/test2.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/test2.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 14
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 15
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/test2.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
 .PHONY : CMakeFiles/test2.dir/rule
@@ -110,12 +113,12 @@ CMakeFiles/datagen.dir/all: CMakeFiles/mlfunc.dir/all
 CMakeFiles/datagen.dir/all: CMakeFiles/basetools.dir/all
 	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/depend
 	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=8,9,10 "Built target datagen"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=5,6,7 "Built target datagen"
 .PHONY : CMakeFiles/datagen.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/datagen.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 12
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 9
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/datagen.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
 .PHONY : CMakeFiles/datagen.dir/rule
@@ -137,12 +140,12 @@ CMakeFiles/datagen.dir/clean:
 CMakeFiles/mlfunc.dir/all: CMakeFiles/basetools.dir/all
 	$(MAKE) -f CMakeFiles/mlfunc.dir/build.make CMakeFiles/mlfunc.dir/depend
 	$(MAKE) -f CMakeFiles/mlfunc.dir/build.make CMakeFiles/mlfunc.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=11,12 "Built target mlfunc"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=8,9 "Built target mlfunc"
 .PHONY : CMakeFiles/mlfunc.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/mlfunc.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 9
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 6
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/mlfunc.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
 .PHONY : CMakeFiles/mlfunc.dir/rule
@@ -158,18 +161,45 @@ CMakeFiles/mlfunc.dir/clean:
 .PHONY : CMakeFiles/mlfunc.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/optim.dir
+
+# All Build rule for target.
+CMakeFiles/optim.dir/all:
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/depend
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=10,11,12,13 "Built target optim"
+.PHONY : CMakeFiles/optim.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/optim.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 4
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/optim.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
+.PHONY : CMakeFiles/optim.dir/rule
+
+# Convenience name for target.
+optim: CMakeFiles/optim.dir/rule
+
+.PHONY : optim
+
+# clean rule for target.
+CMakeFiles/optim.dir/clean:
+	$(MAKE) -f CMakeFiles/optim.dir/build.make CMakeFiles/optim.dir/clean
+.PHONY : CMakeFiles/optim.dir/clean
+
+#=============================================================================
 # Target rules for target CMakeFiles/basetools.dir
 
 # All Build rule for target.
 CMakeFiles/basetools.dir/all:
 	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/depend
 	$(MAKE) -f CMakeFiles/basetools.dir/build.make CMakeFiles/basetools.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=1,2,3,4,5,6,7 "Built target basetools"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=1,2,3,4 "Built target basetools"
 .PHONY : CMakeFiles/basetools.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/basetools.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 4
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/basetools.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
 .PHONY : CMakeFiles/basetools.dir/rule

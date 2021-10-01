@@ -63,6 +63,14 @@ public:
             dim(Ft);
             throw invalid_argument("Error in set model, gammas not correct dim.");
         }
+        if (deltas.rows() != yt.rows())
+        {
+            cout << "Dimension deltas" << endl;
+            dim(deltas);
+            cout << "Dimension yt" << endl;
+            dim(yt);
+            throw invalid_argument("Error in set model, deltas or yt not set correctly.");
+        }
         this->yt = yt;
         this->Xt = Xt;
         this->gammas = gammas;
@@ -96,6 +104,7 @@ public:
         this->yt = yt;
         this->Xt = Xt;
         this->gammas = gammas;
+        this->deltas = gammas;
         this->InfoMat = InfoMat;
         this->b0 = b0;
         this->B0 = B0;
@@ -131,6 +140,7 @@ public:
         FactorPosteriorDraws.resize(Sims - burnin);
         GammasPosteriorDraws.resize(Sims - burnin);
         OmVariancePosteriorDraws.resize(Sims - burnin);
+        FactorVariancePosteriorDraws.resize(Sims - burnin);
         UnivariateBeta ub;
         ArParameterTools arupdater;
         ub.initializeBeta(b0);
@@ -163,6 +173,9 @@ public:
         MatrixXd P0lowerinv;
         MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
         ythat = yt;
+        int levels = (int)I.row(0).sum();
+
+        int colCount;
         for (int i = 0; i < Sims; ++i)
         {
             cout << "Sim " << i + 1 << endl;
@@ -185,22 +198,23 @@ public:
                 residuals = ythat.row(k) - betaParams.row(k) * Xthat.transpose();
                 omVariance(k) = updateVariance(residuals, r0, R0).value();
             }
+            colCount = 0;
             for (int n = 0; n < nFactors; ++n)
             {
                 CovarSum.setZero(T, T);
                 MeanSum.setZero(T, 1);
-                Icopy = zeroOutFactorLevel(I, n);
                 for (int k = InfoMat.row(n).head(1).value(); k <= InfoMat.row(n).tail(1).value(); ++k)
                 {
                     Xtemp = Xtk[k];
                     btemp = betaParams.row(k);
-                    btemp.rightCols(nFactors) = btemp.rightCols(nFactors).array() * Icopy.row(k).array();
+                    btemp(nXs + colCount) = 0;
                     epsilons.row(k) = yt.row(k) - btemp * Xtemp.transpose();
                     if (k == InfoMat.row(n).head(1).value())
                     {
                         f2 = factorVariance(n);
                         H1 = MakePrecision(gammas.row(n), f2, T);
-                        D0 = setInitialCovar(gammas.row(n), f2).ldlt().solve(Ilagfac);
+                        // D0 = setInitialCovar(gammas.row(n), f2).ldlt().solve(Ilagfac);
+                        D0 = Ilagfac * (1 / f2);
                         H1.topLeftCorner(arOrderFac, arOrderFac) = D0;
                         CovarSum += H1;
                     }
@@ -209,9 +223,13 @@ public:
                         s2 = omVariance(k);
                         s2 = 1 / s2;
                         H1 = s2 * IT;
-                        CovarSum += (betaParams(k, nXs + n) * betaParams(k, nXs + n)) * H1;
-                        MeanSum += betaParams(k, nXs + n) * (H1 * epsilons.row(k).transpose());
+                        CovarSum += (betaParams(k, nXs + colCount) * betaParams(k, nXs + colCount)) * H1;
+                        MeanSum += betaParams(k, nXs + colCount) * (H1 * epsilons.transpose());
                     }
+                }
+                if (K - 1 == InfoMat.row(n).tail(1).value())
+                {
+                    ++colCount;
                 }
                 CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
                 factorMean = CovarSum * MeanSum;
@@ -226,6 +244,7 @@ public:
                 FactorPosteriorDraws[i - burnin] = Factors;
                 GammasPosteriorDraws[i - burnin] = gammas;
                 OmVariancePosteriorDraws[i - burnin] = omVariance;
+                FactorVariancePosteriorDraws[i - burnin] = factorVariance;
             }
         }
         this->Sims = Sims;
@@ -260,13 +279,13 @@ public:
         DeltasPosteriorDraws.resize(Sims - burnin);
         GammasPosteriorDraws.resize(Sims - burnin);
         OmVariancePosteriorDraws.resize(Sims - burnin);
+        FactorVariancePosteriorDraws.resize(Sims - burnin);
 
         UnivariateBeta ub;
         ArParameterTools arupdater;
         ub.initializeBeta(b0);
-        deltas = g0.replicate(K, 1);
 
-        VectorXd factorVariance = omPrecision;
+        VectorXd factorVariance = VectorXd::Ones(nFactors);
         VectorXd MeanSum;
         VectorXd factorMean;
 
@@ -278,11 +297,10 @@ public:
         MatrixXd Xtfull(Xt.rows(), Xt.cols() + nFactors);
         Xtfull.leftCols(nXs) = Xt;
         Xtfull.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
-        MatrixXd btemp(1, Xtfull.cols());
-        MatrixXd betaParams(K, Xtfull.cols());
+
         MatrixXd Xtemp(T, Xtfull.cols());
         MatrixXd Xthat(T, Xtfull.cols());
-        MatrixXd epsilons(K, T);
+        MatrixXd epsilons(1, T);
         MatrixXd D0;
         MatrixXd Ilagom = MatrixXd::Identity(arOrderOm, arOrderOm);
         MatrixXd residuals(1, T);
@@ -294,8 +312,16 @@ public:
         MatrixXd P0;
         MatrixXd P0lower;
         MatrixXd P0lowerinv;
+        MatrixXd H;
+        MatrixXd nu;
         MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
+        MatrixXi FactorInfo = createFactorInfo(I, InfoMat);
+        int levels = (int)I.row(0).sum();
 
+        MatrixXd betaParams(K, nXs + levels);
+        MatrixXd btemp(1, nXs + levels);
+        int colCount;
+        MatrixXi IdentificationMat = returnIdentificationRestictions(FactorInfo);
         for (int i = 0; i < Sims; ++i)
         {
             cout << "Sim " << i + 1 << endl;
@@ -304,67 +330,85 @@ public:
             ythat = makeStationary(yt, deltas, omVariance, 0);
             for (int k = 0; k < K; ++k)
             {
-                Xtemp = Xtk[k];
+                Xtemp = removeXtZeros(Xtk[k], I, InfoMat, FactorInfo.row(k));
                 Xthat = makeStationary(Xtemp, deltas.row(k), s2, 1);
+
                 s2 = omVariance(k);
                 ub.updateBetaUnivariate(ythat.row(k), Xthat, s2, b0, B0);
-                ub.bnew.rightCols(nFactors) = ub.bnew.rightCols(nFactors).array() * I.row(k).array();
                 betaParams.row(k) = ub.bnew;
-                for (int n = 0; n < nFactors; ++n)
+                for (int t = 0; t < IdentificationMat.row(k).cols(); ++t)
                 {
-                    if (k == InfoMat.row(n).head(1).value())
+                    if (IdentificationMat(k, t) == 1)
                     {
-                        betaParams(k, nXs + n) = 1;
+                        // Identification scheme 1
+                        betaParams(k, nXs + t) = 1;
+                        // Identification scheme 2
+                        // betaParams(k, nXs + t) = abs(betaParams(k, nXs + t));
                     }
                 }
-                epsilons.row(k) = yt.row(k) - betaParams.row(k) * Xtemp.transpose();
-                arupdater.updateArParameters(epsilons.row(k), deltas.row(k), s2, g0, G0);
+
+                epsilons = yt.row(k) - betaParams.row(k) * Xtemp.transpose();
+                arupdater.updateArParameters(epsilons, deltas.row(k), s2, g0, G0);
                 deltas.row(k) = arupdater.phinew;
 
-                D0 = setInitialCovar(deltas.row(k), 1);
-                D0 = D0.ldlt().solve(Ilagom);
-                D0 = D0.llt().matrixL();
+                D0 = Ilagom * (1 / s2);
+                // D0 = setInitialCovar(deltas.row(k), s2);
+                // cout << D0 << endl;
+                // D0 = Ilagom;
+                // D0 = D0.ldlt().solve(Ilagom);
+                // D0 = D0.llt().matrixL();
                 residuals.rightCols(T - arOrderOm) = ythat.row(k).rightCols(T - arOrderOm) -
                                                      betaParams.row(k) * Xthat.transpose().rightCols(T - arOrderOm);
-                residuals.leftCols(arOrderOm) = epsilons.row(k).leftCols(arOrderOm) * D0;
+                residuals.leftCols(arOrderOm) = (D0 * epsilons.leftCols(arOrderOm).transpose()).transpose();
                 omVariance(k) = updateVariance(residuals, r0, R0).value();
             }
+            colCount = 0;
             for (int n = 0; n < nFactors; ++n)
             {
+                Xtfull.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+                Xtk = groupByTime(Xtfull, T, K);
                 CovarSum.setZero(T, T);
                 MeanSum.setZero(T, 1);
-                Icopy = zeroOutFactorLevel(I, n);
                 for (int k = InfoMat.row(n).head(1).value(); k <= InfoMat.row(n).tail(1).value(); ++k)
                 {
-                    Xtemp = Xtk[k];
+                    Xtemp = removeXtZeros(Xtk[k], I, InfoMat, FactorInfo.row(k));
                     btemp = betaParams.row(k);
-                    btemp.rightCols(nFactors) = btemp.rightCols(nFactors).array() * Icopy.row(k).array();
-                    epsilons.row(k) = yt.row(k) - btemp * Xtemp.transpose();
+                    btemp(nXs + colCount) = 0;
+                    epsilons = yt.row(k) - btemp * Xtemp.transpose();
                     if (k == InfoMat.row(n).head(1).value())
                     {
                         f2 = factorVariance(n);
                         H1 = MakePrecision(gammas.row(n), f2, T);
-                        D0 = setInitialCovar(gammas.row(n), f2).ldlt().solve(Ilagfac);
-                        H1.topLeftCorner(arOrderFac, arOrderFac) = D0;
+                        // D0 = setInitialCovar(gammas.row(n), f2).ldlt().solve(Ilagfac);
+                        D0 = Ilagfac * (1 / f2);
+                        // H1.topLeftCorner(arOrderFac, arOrderFac) = D0;
                         CovarSum += H1;
                     }
                     else
                     {
                         s2 = omVariance(k);
                         H1 = MakePrecision(deltas.row(k), s2, T);
-                        D0 = setInitialCovar(deltas.row(k), s2).ldlt().solve(Ilagom);
-                        H1.topLeftCorner(arOrderOm, arOrderOm) = D0;
-                        CovarSum += (betaParams(k, nXs + n) * betaParams(k, nXs + n)) * H1;
-                        MeanSum += betaParams(k, nXs + n) * (H1 * epsilons.row(k).transpose());
+                        // D0 = setInitialCovar(deltas.row(k), s2).ldlt().solve(Ilagom);
+                        D0 = Ilagom * (1 / s2);
+                        // H1.topLeftCorner(arOrderOm, arOrderOm) = D0;
+                        CovarSum += (betaParams(k, nXs + colCount) * betaParams(k, nXs + colCount)) * H1;
+                        MeanSum += betaParams(k, nXs + colCount) * (H1 * epsilons.transpose());
                     }
+                }
+                if (K - 1 == InfoMat.row(n).tail(1).value())
+                {
+                    ++colCount;
                 }
                 CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
                 factorMean = CovarSum * MeanSum;
                 Factors.row(n) = (factorMean + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows())).transpose();
-                factorVariance(n) = updateVariance(Factors.row(n), r0, R0).value();
                 arupdater.updateArParameters(Factors.row(n), gammas.row(n), factorVariance(n), g0, G0);
                 gammas.row(n) = arupdater.phinew;
+                H = ReturnH(gammas.row(n), T);
+                nu = (H * Factors.row(n).transpose()).transpose();
+                factorVariance(n) = updateVariance(nu, r0, R0).value();
             }
+            cout << factorVariance.transpose() << endl;
             if (i >= burnin)
             {
                 BetaPosteriorDraws[i - burnin] = betaParams;
@@ -372,6 +416,7 @@ public:
                 DeltasPosteriorDraws[i - burnin] = deltas;
                 GammasPosteriorDraws[i - burnin] = gammas;
                 OmVariancePosteriorDraws[i - burnin] = omVariance;
+                FactorVariancePosteriorDraws[i - burnin] = factorVariance;
             }
         }
         this->Sims = Sims;
@@ -407,7 +452,7 @@ public:
         MatrixXd Xtfull(Xt.rows(), nXs + nFactors);
         MatrixXd Xtemp;
         MatrixXd Xthat;
-        MatrixXd epsilons(K, T);
+        MatrixXd epsilons(1, T);
         MatrixXd residuals(1, T);
         MatrixXd D0(arOrderOm, arOrderOm);
         MatrixXd H1;
@@ -425,12 +470,16 @@ public:
         Xtfull.leftCols(nXs) = Xt;
         Xtfull.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
         UnivariateBeta ub;
-        MatrixXd betaStar = mean(BetaPosteriorDraws);
         MatrixXd piPosterior(K, rr);
         ArParameterTools arupdater;
         VectorXd priorBetaStar(K);
 
         cout << "Beta Reduced Runs" << endl;
+        int levels = (int)I.row(0).sum();
+        MatrixXi FactorInfo = createFactorInfo(I, InfoMat);
+        MatrixXd tempX(T, nXs + levels);
+        MatrixXd betaStar = mean(BetaPosteriorDraws);
+        int colCount;
         for (int j = 0; j < rr; ++j)
         {
             cout << "RR = " << j + 1 << endl;
@@ -444,38 +493,46 @@ public:
             for (int k = 0; k < K; ++k)
             {
                 s2 = omVariance(k);
-                Xtemp = Xtk[k];
+                Xtemp = removeXtZeros(Xtk[k], I, InfoMat, FactorInfo.row(k));
                 Xthat = makeStationary(Xtemp, deltas.row(k), s2, 1);
+
                 piPosterior(k, j) = ub.betaReducedRun(betaStar.row(k), ythat.row(k), Xthat, s2, b0, B0);
-                epsilons.row(k) = yt.row(k) - betaStar.row(k) * Xtemp.transpose();
-                arupdater.updateArParameters(epsilons.row(k), deltas.row(k), s2, g0, G0);
+
+                epsilons = yt.row(k) - betaStar.row(k) * Xtemp.transpose();
+                arupdater.updateArParameters(epsilons, deltas.row(k), s2, g0, G0);
                 deltas.row(k) = arupdater.phinew;
 
-                D0 = setInitialCovar(deltas.row(k), 1);
-                D0 = D0.ldlt().solve(Ilagom);
-                D0 = D0.llt().matrixL();
+                D0 = Ilagom * s2;
+                // D0 = setInitialCovar(deltas.row(k), 1);
+                // D0 = D0.ldlt().solve(Ilagom);
+                // D0 = D0.llt().matrixL();
                 residuals.rightCols(T - arOrderOm) = ythat.row(k).rightCols(T - arOrderOm) -
                                                      betaStar.row(k) * Xthat.transpose().rightCols(T - arOrderOm);
-                residuals.leftCols(arOrderOm) = epsilons.row(k).leftCols(arOrderOm) * D0;
+                residuals.leftCols(arOrderOm) = epsilons.leftCols(arOrderOm) * D0;
                 omVariance(k) = updateVariance(residuals, r0, R0).value();
+
                 priorBetaStar(k) = logmvnpdf(betaStar.row(k), b0, B0);
             }
+            colCount = 0;
+
             for (int n = 0; n < nFactors; ++n)
             {
+                Xtfull.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+                Xtk = groupByTime(Xtfull, T, K);
                 CovarSum.setZero(T, T);
                 MeanSum.setZero(T, 1);
-                Icopy = zeroOutFactorLevel(I, n);
                 for (int k = InfoMat.row(n).head(1).value(); k <= InfoMat.row(n).tail(1).value(); ++k)
                 {
-                    Xtemp = Xtk[k];
+                    Xtemp = removeXtZeros(Xtk[k], I, InfoMat, FactorInfo.row(k));
                     btemp = betaStar.row(k);
-                    btemp.rightCols(nFactors) = btemp.rightCols(nFactors).array() * Icopy.row(k).array();
+                    btemp(nXs + colCount) = 0;
                     epsilons.row(k) = yt.row(k) - btemp * Xtemp.transpose();
                     if (k == InfoMat.row(n).head(1).value())
                     {
                         f2 = factorVariance(n);
                         H1 = MakePrecision(gammas.row(n), f2, T);
-                        D0 = setInitialCovar(gammas.row(n), f2).ldlt().solve(Ilagfac);
+                        // D0 = setInitialCovar(gammas.row(n), f2).ldlt().solve(Ilagfac);
+                        D0 = Ilagfac * f2;
                         H1.topLeftCorner(arOrderFac, arOrderFac) = D0;
                         CovarSum += H1;
                     }
@@ -483,11 +540,16 @@ public:
                     {
                         s2 = omVariance(k);
                         H1 = MakePrecision(deltas.row(k), s2, T);
-                        D0 = setInitialCovar(deltas.row(k), s2).ldlt().solve(Ilagom);
+                        // D0 = setInitialCovar(deltas.row(k), s2).ldlt().solve(Ilagom);
+                        D0 = Ilagom * s2;
                         H1.topLeftCorner(arOrderOm, arOrderOm) = D0;
-                        CovarSum += (betaStar(k, nXs + n) * betaStar(k, nXs + n)) * H1;
-                        MeanSum += betaStar(k, nXs + n) * (H1 * epsilons.row(k).transpose());
+                        CovarSum += (betaStar(k, nXs + colCount) * betaStar(k, nXs + colCount)) * H1;
+                        MeanSum += betaStar(k, nXs + colCount) * (H1 * epsilons.transpose());
                     }
+                }
+                if (K - 1 == InfoMat.row(n).tail(1).value())
+                {
+                    ++colCount;
                 }
                 CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
                 factorMean = CovarSum * MeanSum;
@@ -503,7 +565,9 @@ public:
             OmVariancePosteriorDrawsj[j] = omVariance;
             FactorVariancePosteriorDrawsj[j] = factorVariance;
         }
+        cout << piPosterior << endl;
         posteriorStar += logavg(piPosterior, 0).sum();
+        cout << posteriorStar << endl;
         MatrixXd deltastar = mean(DeltasPosteriorDraws);
         MatrixXd Numerator(K, rr);
         MatrixXd Denominator(K, rr);
@@ -583,6 +647,7 @@ public:
             FactorVariancePosteriorDrawsj[j] = factorVariance;
         }
         posteriorStar += logavg(Numerator, 0).sum() - logavg(Denominator, 0).sum();
+        cout << posteriorStar << endl;
         Numerator.resize(nFactors, rr);
         Denominator.resize(nFactors, rr);
         MatrixXd gammastar = mean(GammasPosteriorDrawsj);
@@ -655,7 +720,7 @@ public:
             FactorVariancePosteriorDrawsj[j] = factorVariance;
         }
         posteriorStar += logavg(Numerator, 0).sum() - logavg(Denominator, 0).sum();
-
+        cout << posteriorStar << endl;
         piPosterior.resize(nFactors, rr);
 
         cout << "Om Variance Reduced Run" << endl;
@@ -723,7 +788,7 @@ public:
             FactorVariancePosteriorDrawsj[j] = factorVariance;
         }
         posteriorStar += logavg(piPosterior, 0).sum();
-
+        cout << posteriorStar << endl;
         cout << "Factor Variance Reduced Run" << endl;
         VectorXd factorVariancestar = mean(FactorVariancePosteriorDrawsj);
         parama = .5 * (T + r0);
@@ -750,7 +815,6 @@ public:
                 {
                     Xtemp = Xtk[k];
                     btemp = betaStar.row(k);
-                    btemp.rightCols(nFactors) = btemp.rightCols(nFactors).array() * Icopy.row(k).array();
                     epsilons.row(k) = yt.row(k) - btemp * Xtemp.transpose();
                     if (k == InfoMat.row(n).head(1).value())
                     {
@@ -780,7 +844,7 @@ public:
             FactorPosteriorDrawsj[j] = Factors;
         }
         posteriorStar += logavg(piPosterior, 0).sum();
-
+        cout << posteriorStar << endl;
         cout << "Final run for factors" << endl;
         Factorstar = mean(FactorPosteriorDrawsj);
         for (int n = 0; n < nFactors; ++n)
@@ -814,7 +878,6 @@ public:
             CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
             priorFactorStar(n) = logmvnpdf(Factorstar, Z1, CovarSum);
         }
-
         VectorXd posteriorFactorStar(nFactors, 1);
         for (int n = 0; n < nFactors; ++n)
         {
@@ -891,7 +954,7 @@ public:
         MatrixXd Xtfull(Xt.rows(), nXs + nFactors);
         MatrixXd Xtemp;
         MatrixXd Xthat;
-        MatrixXd epsilons(K, T);
+        MatrixXd epsilons(1, T);
         MatrixXd residuals(1, T);
         MatrixXd D0;
         MatrixXd H1;
@@ -933,7 +996,7 @@ public:
                 s2 = omVariance(k);
                 Xtemp = Xtk[k];
                 piPosterior(k, j) = ub.betaReducedRun(betaStar.row(k), ythat.row(k), Xtemp, s2, b0, B0);
-                epsilons.row(k) = yt.row(k) - betaStar.row(k) * Xtemp.transpose();
+                epsilons = yt.row(k) - betaStar.row(k) * Xtemp.transpose();
                 residuals = ythat.row(k) - betaStar.row(k) * Xtemp.transpose();
                 omVariance(k) = updateVariance(residuals, r0, R0).value();
             }
@@ -947,7 +1010,7 @@ public:
                     Xtemp = Xtk[k];
                     btemp = betaStar.row(k);
                     btemp.rightCols(nFactors) = btemp.rightCols(nFactors).array() * Icopy.row(k).array();
-                    epsilons.row(k) = yt.row(k) - btemp * Xtemp.transpose();
+                    epsilons = yt.row(k) - btemp * Xtemp.transpose();
                     if (k == InfoMat.row(n).head(1).value())
                     {
                         f2 = factorVariance(n);
@@ -962,7 +1025,7 @@ public:
                         s2 = 1 / s2;
                         H1 = s2 * IT;
                         CovarSum += (betaStar(k, nXs + n) * betaStar(k, nXs + n)) * H1;
-                        MeanSum += betaStar(k, nXs + n) * (H1 * epsilons.row(k).transpose());
+                        MeanSum += betaStar(k, nXs + n) * (H1 * epsilons.transpose());
                     }
                 }
                 CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));

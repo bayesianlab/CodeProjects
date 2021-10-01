@@ -1,52 +1,52 @@
 [
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_MultilevelModel.cpp",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_MultilevelModel.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_MultilevelModel.cpp"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o -c /home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o -c /home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateMLFactorData.cpp",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateMLFactorData.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateMLFactorData.cpp"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o -c /home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp"
-},
-{
-  "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.o -c /home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp"
-},
-{
-  "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.o -c /home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp"
-},
-{
-  "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build",
-  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -o CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp.o -c /home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o -c /home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/usr/include/python3.8 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -g   -o CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.o -c /home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp"
 }
 ]

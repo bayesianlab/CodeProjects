@@ -217,15 +217,3 @@ CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/Eigen
 CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o: /home/dillon/CodeProjects/CProjects/GnuPlotting/include/Plotter.hpp
 CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp.o: /home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp
 
-CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o: /home/dillon/CodeProjects/CProjects/OptimizationTools/include/LineSearchRoutines.hpp
-CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o: /home/dillon/CodeProjects/CProjects/OptimizationTools/include/NumericalDifferentiation.hpp
-CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o: /home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp
-
-CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o: /home/dillon/CodeProjects/CProjects/OptimizationTools/include/NumericalDifferentiation.hpp
-CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o: /home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp
-
-CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o: /home/dillon/CodeProjects/CProjects/OptimizationTools/include/LineSearchRoutines.hpp
-CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o: /home/dillon/CodeProjects/CProjects/OptimizationTools/include/NumericalDifferentiation.hpp
-CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o: /home/dillon/CodeProjects/CProjects/OptimizationTools/include/Optimization.hpp
-CMakeFiles/basetools.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o: /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp
-

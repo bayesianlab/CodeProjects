@@ -2,10 +2,10 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
 
-# set(CMAKE_BUILD_TYPE DEBUG)
-set(CMAKE_BUILD_TYPE RELEASE)
-set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops")
-message(STATUS ${CMAKE_CXX_FLAGS_REALEASE})
+set(CMAKE_BUILD_TYPE DEBUG)
+# set(CMAKE_BUILD_TYPE RELEASE)
+# set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops")
+# message(STATUS ${CMAKE_CXX_FLAGS_REALEASE})
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
 
 set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
@@ -32,7 +32,8 @@ set(numdiffsrc ${CODEPATH}/OptimizationTools/src/NumericalDifferentiation.cpp)
 set(plotsrc ${CODEPATH}/GnuPlotting/src/Plotter.cpp)
 set(ardatagensrc ${CODEPATH}/TimeSeries/src/GenerateAutoRegressiveData.cpp)
 
-add_library(basetools STATIC ${plotsrc} ${eigentoolsrc} ${distsrc} ${optimsrc} ${lssrc} ${numdiffsrc})
+add_library(basetools STATIC ${distsrc} ${plotsrc} ${eigentoolsrc})
+add_library(optim STATIC  ${optimsrc} ${lssrc} ${numdiffsrc})
 add_library(mlfunc STATIC src/MultilevelModelFunctions.cpp)
 add_library(datagen STATIC ${ardatagensrc} src/GenerateMLFactorData.cpp)
 target_link_libraries(mlfunc PUBLIC basetools)
@@ -47,6 +48,7 @@ set(plotinclude ${CODEPATH}/GnuPlotting/include)
 include_directories(${tsfuncinclude} ${plotinclude} ${eigentoolinclude} ${distinclude} ${optiminclude} include)
 
 add_executable(test2 src/Test_MultilevelModel.cpp)
-target_link_libraries(test2 PUBLIC basetools mlfunc datagen) 
+# add_executable(test2 ../TimeSeries/src/Test_ArModel.cpp)
+target_link_libraries(test2 PUBLIC datagen basetools optim mlfunc) 
 
 

@@ -77,3 +77,36 @@ double factorReducecdRun(const RowVectorXd &factorStar, const MatrixXd &residual
     RowVectorXd mu = (FplusAtOinv * vecmu);
     return logmvnpdf(factorStar, mu.transpose(), FplusAtOinv);
 }
+
+MatrixXi returnIdentificationRestictions(const MatrixXi &FactorInfo)
+{
+
+    int x = -1;
+    MatrixXi F(FactorInfo.rows(), FactorInfo.cols());
+    F.setZero();
+    for (int j = 0; j < FactorInfo.cols(); ++j)
+    {
+        for (int r = 0; r < FactorInfo.rows(); ++r)
+        {
+            if (x != FactorInfo(r, j))
+            {
+                F(r, j) = 1;
+            }
+            x = FactorInfo(r, j);
+        }
+    }
+    return F;
+}
+
+int calcLevels(const Matrix<int, Dynamic, 2> &InfoMat, const int &K)
+{
+    int levelCount = 0;
+    for (int n = 0; n < InfoMat.rows(); ++n)
+    {
+        if (K - 1 == InfoMat.row(n).tail(1).value())
+        {
+            ++levelCount;
+        }
+    }
+    return levelCount;
+}

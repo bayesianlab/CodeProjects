@@ -79,9 +79,9 @@ test2_EXTERNAL_OBJECTS =
 
 test2: CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.o
 test2: CMakeFiles/test2.dir/build.make
-test2: libbasetools.a
-test2: libmlfunc.a
 test2: libdatagen.a
+test2: libbasetools.a
+test2: liboptim.a
 test2: libmlfunc.a
 test2: libbasetools.a
 test2: CMakeFiles/test2.dir/link.txt

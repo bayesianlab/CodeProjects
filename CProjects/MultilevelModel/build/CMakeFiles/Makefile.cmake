@@ -56,5 +56,6 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/test2.dir/DependInfo.cmake"
   "CMakeFiles/datagen.dir/DependInfo.cmake"
   "CMakeFiles/mlfunc.dir/DependInfo.cmake"
+  "CMakeFiles/optim.dir/DependInfo.cmake"
   "CMakeFiles/basetools.dir/DependInfo.cmake"
   )
