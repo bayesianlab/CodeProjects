@@ -1,2 +1,2 @@
-/bin/ar qc libmlfunc.a  CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o
-/bin/ranlib libmlfunc.a
+ccache /bin/ar qc libmlfunc.a  CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o
+ccache /bin/ranlib libmlfunc.a

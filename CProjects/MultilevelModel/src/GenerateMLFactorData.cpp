@@ -6,6 +6,7 @@ void DynamicFactorsArErrors::genData(const int &nObs, const int &nEqns, const in
 {
     int T = nObs;
     int K = nEqns;
+    int levels = calcLevels(InfoMat, K);
     int nFactors = InfoMat.rows();
 
     double facVar = omVar;
@@ -25,20 +26,20 @@ void DynamicFactorsArErrors::genData(const int &nObs, const int &nEqns, const in
 
         if (nXs == 0)
         {
-            Xt.setZero(K * T, nFactors);
+            Xt.setZero(K * T, levels);
             Xt = makeOtrokXt(InfoMat, Factors, K);
         }
         else if (nXs == 1)
         {
-            Xt.setZero(K * T, nFactors + 1);
+            Xt.setZero(K * T, levels + 1);
             Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1);
-            Xt.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+            Xt.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
         }
         else if (nXs > 1)
         {
-            Xt.setZero(K * T, nXs + nFactors);
+            Xt.setZero(K * T, nXs + levels);
             Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1), normrnd(0, 1, K * T, nXs - 1);
-            Xt.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+            Xt.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
         }
         else
         {
@@ -48,14 +49,20 @@ void DynamicFactorsArErrors::genData(const int &nObs, const int &nEqns, const in
         VectorXd epsilonp(lagsOm);
         betas = coeffValues * MatrixXd::Ones(K, Xt.cols());
         b0 = RowVectorXd::Zero(betas.cols());
-        B0 = 100*MatrixXd::Identity(betas.cols(), betas.cols());
+        B0 = 100 * MatrixXd::Identity(betas.cols(), betas.cols());
+        MatrixXi FactorInfo = createFactorInfo(InfoMat, K);
+        MatrixXi IdentificationMat = returnIdentificationRestictions(FactorInfo);
+
         for (int k = 0; k < K; ++k)
         {
-            for (int n = 0; n < nFactors; ++n)
+            for (int t = 0; t < IdentificationMat.row(k).cols(); ++t)
             {
-                if (k == InfoMat.row(n).head(1).value())
+                if (IdentificationMat(k, t) == 1)
                 {
-                    betas(k, nXs + n) = 1;
+                    // Identification scheme 1
+                    betas(k, nXs + t) = 1;
+                    // Identification scheme 2
+                    // betaParams(k, nXs + t) = abs(betaParams(k, nXs + t));
                 }
             }
         }
@@ -77,20 +84,20 @@ void DynamicFactorsArErrors::genData(const int &nObs, const int &nEqns, const in
     {
         if (nXs == 0)
         {
-            Xt.setZero(K * T, nFactors);
+            Xt.setZero(K * T, levels);
             Xt = makeOtrokXt(InfoMat, Factors, K);
         }
         else if (nXs == 1)
         {
-            Xt.setZero(K * T, nFactors + 1);
+            Xt.setZero(K * T, levels + 1);
             Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1);
-            Xt.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+            Xt.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
         }
         else if (nXs > 1)
         {
-            Xt.setZero(K * T, nFactors + nXs);
+            Xt.setZero(K * T, levels + nXs);
             Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1), normrnd(0, 1, K * T, nXs - 1);
-            Xt.rightCols(nFactors) = makeOtrokXt(InfoMat, Factors, K);
+            Xt.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
         }
         else
         {
@@ -144,7 +151,7 @@ void GenerateMLFactorData::genData(int _nObs, int _nEqns, const VectorXd &coeffV
     Identity = MakeObsModelIdentity(InfoMat, K);
     nFactors = InfoMat.rows();
     gammas = factorCoeff.replicate(nFactors, 1);
-    int factorLags = gammas.cols(); 
+    int factorLags = gammas.cols();
 
     factorVariances = facVar * VectorXd::Ones(nFactors, 1);
 
@@ -168,5 +175,5 @@ void GenerateMLFactorData::genData(int _nObs, int _nEqns, const VectorXd &coeffV
     b0 = RowVectorXd::Zero(1, nEqnsP);
     B0 = 100 * MatrixXd::Identity(nEqnsP, nEqnsP);
     g0 = RowVectorXd::Zero(factorLags);
-    G0 = MatrixXd::Identity(factorLags, factorLags); 
+    G0 = MatrixXd::Identity(factorLags, factorLags);
 }

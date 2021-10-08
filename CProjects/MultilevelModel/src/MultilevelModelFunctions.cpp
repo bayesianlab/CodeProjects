@@ -1,5 +1,35 @@
 #include "MultilevelModelFunctions.hpp"
 
+MatrixXi createFactorInfo(const Matrix<int, Dynamic, 2> &InfoMat, const int &K)
+{
+    MatrixXd I = MakeObsModelIdentity(InfoMat, K);
+    int levels = (int)I.row(0).sum();
+    MatrixXi FactorInfo(K, levels);
+    FactorInfo.setZero();
+    RowVectorXi r(2);
+    int start;
+    int end;
+    int c = 0;
+    int columnShift = 0;
+    int shift = K - 1;
+    for (int j = 0; j < InfoMat.rows(); ++j)
+    {
+        r = InfoMat.row(j);
+        start = r(0);
+        end = r(1);
+        for (int i = start; i < end + 1; ++i)
+        {
+            FactorInfo(i, columnShift) = c;
+        }
+        if (end == shift)
+        {
+            ++columnShift;
+        }
+        ++c;
+    }
+    return FactorInfo;
+}
+
 MatrixXd makeOtrokXt(const Matrix<int, Dynamic, 2> &InfoMat, const Ref<MatrixXd> &Factors,
                      const int &K)
 {
@@ -8,30 +38,37 @@ MatrixXd makeOtrokXt(const Matrix<int, Dynamic, 2> &InfoMat, const Ref<MatrixXd>
     int nrows;
     int nFactors = Factors.rows();
     int T = Factors.cols();
+    int colShift;
+    int levels = calcLevels(InfoMat, K);
     MatrixXd Xt;
-    Xt.setZero(K * T, nFactors);
+    Xt.setZero(K * T, levels);
     for (int t = 0; t < T; ++t)
     {
+        colShift = 0;
         for (int i = 0; i < nFactors; ++i)
         {
             start = InfoMat.row(i).head(1).value();
             nrows = InfoMat.row(i).tail(1).value() - start + 1;
-            Xt.col(i).middleRows(start + start2, nrows) = Factors.row(i).col(t).replicate(nrows, 1);
+            Xt.col(colShift).middleRows(start + start2, nrows) = Factors.row(i).col(t).replicate(nrows, 1);
+            if ((InfoMat.row(i).tail(1).value()) == K - 1)
+            {
+                ++colShift;
+            }
         }
-        start2 += K;
+        start2 += K;    
     }
     return Xt;
 }
 
-MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &m, int eqns)
+MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &InfoMat, int eqns)
 {
-    int nFactors = m.rows();
+    int nFactors = InfoMat.rows();
     MatrixXd X = MatrixXd::Zero(eqns, nFactors);
     int factor = 0;
     for (int i = 0; i < nFactors; ++i)
     {
-        int begin = m.row(i).head(1).value();
-        int end = m.row(i).tail(1).value();
+        int begin = InfoMat.row(i).head(1).value();
+        int end = InfoMat.row(i).tail(1).value();
         if (end > eqns)
         {
             throw invalid_argument("In MakeObsModelIdentity, index passed number of equations.");
@@ -48,7 +85,7 @@ MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &m, int eqns)
 MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings, const MatrixXd &FactorPrecision,
                       const VectorXd &precision, int T)
 {
-    int K = precision.size();
+
     int nFactors = Loadings.cols();
     int nFactorsT = nFactors * T;
     MatrixXd AtO = Loadings.transpose() * precision.asDiagonal();
@@ -66,9 +103,6 @@ MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings, const
 double factorReducecdRun(const RowVectorXd &factorStar, const MatrixXd &residuals, const MatrixXd &Loadings,
                          const MatrixXd &FactorPrecision, const VectorXd &precision, int T)
 {
-    int K = precision.size();
-    int nFactors = Loadings.cols();
-    int nFactorsT = nFactors * T;
     MatrixXd AtO = Loadings.transpose() * precision.asDiagonal();
     MatrixXd FplusAtOinv = FactorPrecision + kroneckerProduct(MatrixXd::Identity(T, T), AtO * Loadings);
     FplusAtOinv = FplusAtOinv.ldlt().solve(MatrixXd::Identity(FplusAtOinv.rows(), FplusAtOinv.rows()));
@@ -109,4 +143,14 @@ int calcLevels(const Matrix<int, Dynamic, 2> &InfoMat, const int &K)
         }
     }
     return levelCount;
+}
+
+string dateString()
+{
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+    string l = "yhms";
+    string s = l + "_" + to_string(1900 + ltm->tm_year) + "_" + to_string(ltm->tm_hour) + "_" +
+               to_string(ltm->tm_min) + "_" + to_string(ltm->tm_sec);
+    return s;
 }

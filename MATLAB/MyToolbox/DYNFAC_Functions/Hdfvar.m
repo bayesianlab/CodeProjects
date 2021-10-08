@@ -95,9 +95,13 @@ G1bar = zeros(lagState);
 Xbeta = zeros(K,T);
 VAR = 0;
 currobsmod = currobsmod.*.5;
-fp = FactorPrecision(.35, eye(1), 1, 100); 
 obsPrecision = obsPrecision.*.5;
 currobsmod(1) = 1 ;
+StateObsModel = makeStateObsModel(currobsmod, Identities, 0);
+P0 = initCovar(stateTransitions, 1/factorVariance); 
+P = FactorPrecision(stateTransitions, P0, obsPrecision, T);
+betaDraw(yt(:), SurX, obsPrecision, StateObsModel, P, 0, .01, T)
+
 if finishedMainRun == 0
     for iterator = start : Sims
 %         if mod(iterator, saveFrequency) == 0
@@ -111,7 +115,7 @@ if finishedMainRun == 0
         [VAR, Xbeta] = VAR_ParameterUpdate(yt, Xt, obsPrecision,...
             currobsmod, stateTransitions, factorVariance, beta0,...
             B0inv, FtIndexMat, subsetIndices);
-
+break 
 
 
         %% Draw loadings

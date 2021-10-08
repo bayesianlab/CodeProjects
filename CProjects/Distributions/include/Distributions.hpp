@@ -71,7 +71,9 @@ double logmvnpdfCentered(const RowVectorXd &x,
   return v;
 }
 
-double unifrnd(double, double);
+double unifrnd();
+
+double unifrnd(double a, double b);
 
 VectorXd unifrnd(double, double, int);
 

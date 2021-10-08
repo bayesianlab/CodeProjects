@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+project(deg_audit)
+set(CMAKE_BUILD_TYPE DEBUG)
+include_directories(/usr/include/)
+add_executable(deg src/degree_audit.cpp)
+find_package(SQLite3 REQUIRED)
+include_directories(${SQLite3_INCLUDE_DIRS})
+target_link_libraries(deg PUBLIC sqlite3)

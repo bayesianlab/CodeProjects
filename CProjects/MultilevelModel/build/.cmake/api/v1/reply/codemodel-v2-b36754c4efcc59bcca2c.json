@@ -1,0 +1,95 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"name" : "RELEASE",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "multilevel",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "basetools::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-basetools-RELEASE-e8a35ec065931511deee.json",
+					"name" : "basetools",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "datagen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-datagen-RELEASE-aca644258a2c7c27224d.json",
+					"name" : "datagen",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "mlfunc::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-mlfunc-RELEASE-6feafc8c6f366984c8ff.json",
+					"name" : "mlfunc",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "optim::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-optim-RELEASE-c78a5be49e2f15437eef.json",
+					"name" : "optim",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test2-RELEASE-39f9076178b014f7805e.json",
+					"name" : "test2",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/dillon/CodeProjects/CProjects/MultilevelModel/build",
+		"source" : "/home/dillon/CodeProjects/CProjects/MultilevelModel"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

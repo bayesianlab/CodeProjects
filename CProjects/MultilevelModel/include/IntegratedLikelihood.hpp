@@ -7,7 +7,7 @@
 #include <fstream>
 #include <Eigen/Dense>
 #include <unsupported/Eigen/KroneckerProduct>
-
+#include <chrono>
 #include "Optimization.hpp"
 #include "MultilevelModelFunctions.hpp"
 #include "AutoregressiveModel.hpp"
@@ -25,17 +25,17 @@ public:
 
     template <typename D1, typename D2, typename D3, typename D4, typename D5,
               typename D6, typename D7>
-    void betaupdate(const MatrixBase<D1> &yt, const MatrixBase<D2> &surX,
-                    const MatrixBase<D3> &om_precision, const MatrixBase<D4> &A,
-                    const MatrixBase<D5> &FactorPrecision, const MatrixBase<D6> &b0,
-                    const MatrixBase<D7> &B0)
+    void betaUpdater(const MatrixBase<D1> &yt, const MatrixBase<D2> &Xt,
+                     const MatrixBase<D3> &om_precision, const MatrixBase<D4> &A,
+                     const MatrixBase<D5> &FactorPrecision, const MatrixBase<D6> &b0,
+                     const MatrixBase<D7> &B0)
     {
         /* b0 is a column */
         int T = yt.cols();
         int K = yt.rows();
         int nFactors = A.cols();
         int nFactorsT = nFactors * T;
-        int KP = surX.cols();
+        int KP = Xt.cols();
         MatrixXd It = MatrixXd::Identity(T, T);
         MatrixXd InFactorsT = MatrixXd::Identity(nFactorsT, nFactorsT);
         MatrixXd Ikp = MatrixXd::Identity(KP, KP);
@@ -48,32 +48,80 @@ public:
         MatrixXd tx;
         MatrixXd ty;
         MatrixXd AtO = A.transpose() * FullPrecision;
-
-        MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).ldlt().solve(InFactorsT);
-
+        MatrixXd AtOA = AtO * A;
+        MatrixXd XzzPinv(nFactorsT, nFactorsT);
+        XzzPinv = XzzPinv.ldlt().solve(InFactorsT);
+        
+        XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).ldlt().solve(InFactorsT);
+        stop = std::chrono::high_resolution_clock::now();
+        duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        cout << duration.count() << endl;
         int c1 = 0;
         int c2 = 0;
         for (int t = 0; t < T; ++t)
         {
-            tx = FullPrecision * surX.middleRows(c1, K);
+            tx = FullPrecision * Xt.middleRows(c1, K);
             ty = FullPrecision * yt.col(t);
             xzz.middleRows(c2, nFactors) = A.transpose() * tx;
             yzz.middleRows(c2, nFactors) = A.transpose() * ty;
-            xpx += surX.middleRows(c1, K).transpose() * tx;
-            xpy += surX.middleRows(c1, K).transpose() * ty;
-
+            xpx += Xt.middleRows(c1, K).transpose() * tx;
+            xpy += Xt.middleRows(c1, K).transpose() * ty;
             c1 += K;
             c2 += nFactors;
         }
-
         XzzPinv = xzz.transpose() * XzzPinv;
         B = B0inv + xpx - (XzzPinv * xzz);
-
         B = B.ldlt().solve(MatrixXd::Identity(KP, KP));
         betamean = B * (B0inv * b0.transpose() + xpy - (XzzPinv * yzz));
-
         betanew = betamean + (B.llt().matrixL() * normrnd(0, 1, KP, 1));
-        xbt = surX * betanew;
+        xbt = Xt * betanew;
+        xbt.resize(K, T);
+    }
+
+    template <typename D1, typename D2, typename D4, typename D5,
+              typename D6, typename D7>
+    void betaUpdater(const MatrixBase<D1> &yt, const MatrixBase<D2> &Xt,
+                     const double &om_precision, const MatrixBase<D4> &A,
+                     const MatrixBase<D5> &FactorPrecision, const MatrixBase<D6> &b0,
+                     const MatrixBase<D7> &B0)
+    {
+        /* b0 is a column */
+        int T = yt.cols();
+        int K = yt.rows();
+        int nFactors = A.cols();
+        int nFactorsT = nFactors * T;
+        int KP = Xt.cols();
+        MatrixXd It = MatrixXd::Identity(T, T);
+        MatrixXd InFactorsT = MatrixXd::Identity(nFactorsT, nFactorsT);
+        MatrixXd Ikp = MatrixXd::Identity(KP, KP);
+        MatrixXd B0inv = (B0.diagonal().array().pow(-1)).matrix().asDiagonal();
+        MatrixXd xpx = MatrixXd::Zero(KP, KP);
+        MatrixXd xpy = MatrixXd::Zero(KP, 1);
+        MatrixXd xzz = MatrixXd::Zero(nFactorsT, KP);
+        MatrixXd yzz = MatrixXd::Zero(nFactorsT, 1);
+        MatrixXd tx;
+        MatrixXd ty;
+        MatrixXd AtO = A.array() / om_precision;
+        MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).ldlt().solve(InFactorsT);
+        int c1 = 0;
+        int c2 = 0;
+        for (int t = 0; t < T; ++t)
+        {
+            tx = om_precision * Xt.middleRows(c1, K);
+            ty = om_precision * yt.col(t);
+            xzz.middleRows(c2, nFactors) = A.transpose() * tx;
+            yzz.middleRows(c2, nFactors) = A.transpose() * ty;
+            xpx += Xt.middleRows(c1, K).transpose() * tx;
+            xpy += Xt.middleRows(c1, K).transpose() * ty;
+            c1 += K;
+            c2 += nFactors;
+        }
+        XzzPinv = xzz.transpose() * XzzPinv;
+        B = B0inv + xpx - (XzzPinv * xzz);
+        B = B.ldlt().solve(MatrixXd::Identity(KP, KP));
+        betamean = B * (B0inv * b0.transpose() + xpy - (XzzPinv * yzz));
+        betanew = betamean + (B.llt().matrixL() * normrnd(0, 1, KP, 1));
+        xbt = Xt * betanew;
         xbt.resize(K, T);
     }
 
@@ -191,7 +239,7 @@ public:
     }
 
     void setLoadings(const Ref<const MatrixXd> &A, const Matrix<int, Dynamic, 2> &InfoMat,
-                     MatrixXd &Identity, double restriction)
+                     double restriction)
     {
         Loadings = A;
         for (int i = 0; i < InfoMat.rows(); ++i)
@@ -208,13 +256,11 @@ public:
     {
 
         int T = yt.cols();
-        int nFactors = InfoMat.rows();
         int nrows;
         int c = 0;
         int df = 15;
         int disp_on = 1;
         double lalpha;
-        double tau = 100;
         MatrixXd ytdemeaned;
         MatrixXd subytdemeaned;
         MatrixXd subgammas;
@@ -284,7 +330,7 @@ public:
             {
                 throw std::domain_error("Error in update factor MH step.");
             }
-            if (log(unifrnd(0, 1)) < lalpha)
+            if (log(unifrnd()) < lalpha)
             {
                 acceptance_rate += 1;
                 subA = proposal;
@@ -325,6 +371,7 @@ public:
     MatrixXd gammas;
     MatrixXd deltas;
     MatrixXd B0;
+    string fname;
 
     void setModel(const Ref<const MatrixXd> &yt, const Ref<const MatrixXd> &Xt, const Ref<const MatrixXd> &A,
                   const Ref<const MatrixXd> &Ft, const Ref<const MatrixXd> &gammas, const Matrix<int, Dynamic, 2> &InfoMat,
@@ -349,7 +396,7 @@ public:
         this->G0 = G0;
         this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
         setFactors(Ft);
-        setLoadings(A, InfoMat, Identity, 1.);
+        setLoadings(A, InfoMat, 1.);
         setPriors(a0, A0, InfoMat);
     }
 
@@ -378,7 +425,6 @@ public:
         VectorXd subomPrecision;
 
         int disp_on = 0;
-        int N = LoadingsPosteriorDraws.size();
 
         int nrows;
         int start;
@@ -418,25 +464,33 @@ public:
     {
         this->Sims = Sims;
         this->burnin = burnin;
-        int T = yt.cols();
-        int K = yt.rows();
-        int nFactors = InfoMat.rows();
-
+        const int T = yt.cols();
+        const int K = yt.rows();
+        const int nFactors = InfoMat.rows();
+        const int sxtcols = Xt.cols() * K;
         VectorXd omVariance = VectorXd::Ones(K);
         VectorXd omPrecision = 0.5 * omVariance.array().pow(-1);
         VectorXd factorVariance = VectorXd::Ones(nFactors);
 
-        MatrixXd surX = surForm(Xt, K);
+        MatrixXd surX(sxtcols, Xt.rows());
+        surX = surForm(Xt, K);
+        betanew = VectorXd::Ones(surX.cols());
+        double mil = 1e6;
+        MatrixXd xbt(K * T, 1);
+        auto start = std::chrono::high_resolution_clock::now();
+        xbt = surX * betanew;
+        auto stop = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+        cout << duration.count() / mil << endl;
 
-        betanew = .5 * VectorXd::Ones(surX.cols());
-        MatrixXd xbt = surX * betanew;
         xbt.resize(K, T);
 
-        MatrixXd FactorPrecision = MakePrecision(gammas, factorVariance, T);
+        MatrixXd FactorPrecision(nFactors * T, nFactors * T);
+        FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
+
         MatrixXd resids;
         MatrixXd H;
         VectorXd Hf;
-
         double optim_options[5] = {1e-6, 1e-4, 1e-4, 1e-4, 25};
         double parama = .5 * (r0 + T);
         double paramb;
@@ -452,13 +506,12 @@ public:
         FactorVariancePosteriorDraws.resize(stationarySims);
 
         ArParameterTools apt;
-
         for (int i = 0; i < Sims; ++i)
         {
 
             cout << "Sim " << i + 1 << endl;
 
-            betaupdate(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
+            betaUpdater(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
 
             updateLoadingsFactors(yt, xbt, gammas, omPrecision,
                                   factorVariance, InfoMat, loadingsPriorMeans,
@@ -482,7 +535,7 @@ public:
             }
             omPrecision = omVariance.array().pow(-1.0);
 
-            FactorPrecision = MakePrecision(gammas, factorVariance, T);
+            FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
 
             if (i >= burnin)
             {
@@ -496,6 +549,30 @@ public:
         }
         getAcceptanceRate(nFactors * Sims);
         cout << "Acceptance Rate " << acceptance_rate << endl;
+        int p = std::system("mkdir -p mllogfiles");
+        string date = dateString();
+        string version = "integrate_likelihood_";
+        string ext = ".txt";
+        string path = "mllogfiles/";
+        fname = path + version + date + ext;
+        std::ofstream file;
+        file.open(fname);
+        if (file.is_open())
+        {
+            file << "Integrated Likelihood Version run with: " << Sims << " "
+                 << "burnin " << burnin << endl;
+            file << "Beta avg" << endl;
+            file << mean(BetaPosteriorDraws).transpose() << endl;
+            file << "Loadings avg" << endl;
+            file << mean(LoadingsPosteriorDraws) << endl;
+            file << "Gamma avg" << endl;
+            file << mean(GammasPosteriorDraws) << endl;
+            file << "Factor Variance" << endl;
+            file << mean(FactorVariancePosteriorDraws).transpose() << endl;
+            file << "OM Variance" << endl;
+            file << (1.0 / mean(ObsPrecisionPosteriorDraws).array()).transpose() << endl;
+            file.close();
+        }
     }
 
     VectorXd AStarReducedRun_G(int rr, Optimize optim)
@@ -509,7 +586,6 @@ public:
         int K = yt.rows();
         int nFactors = InfoMat.rows();
         int nrows;
-        int c;
         int d = 0;
         int df = 15;
         int disp_on = 0;
@@ -557,7 +633,6 @@ public:
             Factorg = FactorPosteriorDraws[i];
             Xbetag = surX * betag;
             Xbetag.resize(K, T);
-            c = 0;
 
             for (int j = 0; j < nFactors; ++j)
             {
@@ -620,15 +695,12 @@ public:
     {
 
         int T = yt.cols();
-        int K = yt.rows();
         int nFactors = InfoMat.rows();
         int nrows;
         int c = 0;
-        int d = 0;
         int df = 15;
         int disp_on = 0;
         double lalpha;
-        double qg;
         MatrixXd ytdemeaned;
         MatrixXd subytdemeanedstar;
         MatrixXd subytdemeanedj;
@@ -770,7 +842,7 @@ public:
         for (int j = 0; j < rr; ++j)
         {
             cout << "Loading Reduced Run " << j + 1 << endl;
-            betaupdate(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
+            betaUpdater(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
             Denominator.col(j) = AStarReducedRun_J(xbt, gammas, omPrecision, factorVariance, optim);
             Factors = FactorPosteriorDraws[j];
             for (int i = 0; i < nFactors; ++i)
@@ -947,7 +1019,7 @@ public:
             for (int k = 0; k < K; ++k)
             {
                 paramb = 0.5 * (R0 + (resids.row(k) * resids.row(k).transpose()));
-                piOmPrecision(k, j) = loginvgammapdf(1.0 / omPrecisionstar(k), parama, 1.0 / paramb);
+                piOmPrecision(k, j) = loginvgammapdf(1.0 / omPrecisionstar(k), parama, paramb);
             }
             FactorPrecision = MakePrecision(gammastar, factorVariancestar, T);
 
@@ -982,7 +1054,7 @@ public:
                 H = ReturnH(gammastar.row(n), T);
                 Hf = H * Factors.row(n).transpose();
                 paramb = (.5 * (R0 + Hf.transpose() * Hf));
-                pifactorVariancestar(n, j) = loginvgammapdf(factorVariancestar(n), parama, 1.0 / paramb);
+                pifactorVariancestar(n, j) = loginvgammapdf(factorVariancestar(n), parama, paramb);
             }
             resids = yt - (Astar * Factors) - xbt;
             FactorPrecision = MakePrecision(gammastar, factorVariancestar, T);
@@ -1028,7 +1100,6 @@ public:
         {
             likelihood(k) = logmvnpdf(resids.row(k), Z2, omVariancestar(k) * IT);
         }
-        cout << likelihood << endl;
         double conditionalOfFactors = likelihood.sum() + priorFactorStar.sum() - posteriorFactorStar.sum();
         double priorbeta = logmvnpdf(betastar.transpose(), b0, B0);
         VectorXd priorA(nFactors);
@@ -1054,7 +1125,7 @@ public:
             subPriorPrecision = loadingsPriorPrecision[n];
             subPriorPrecision.ldlt().solve(MatrixXd::Identity(subPriorPrecision.rows(),
                                                               subPriorPrecision.rows()));
-            priorfactorVariances(n) = loginvgammapdf(factorVariancestar(n), .5 * r0, 1. / (.5 * R0));
+            priorfactorVariances(n) = loginvgammapdf(factorVariancestar(n), .5 * r0, (.5 * R0));
             priorA(n) = logmvnpdf(subA.transpose(), subPriorMean, subPriorPrecision);
             priorGammas(n) = logmvnpdf(gammastar.row(n), g0, G0);
         }
@@ -1062,7 +1133,7 @@ public:
         n = 0;
         for (int k = 0; k < K; ++k)
         {
-            priorOmVariances(n) = loginvgammapdf(1.0 / omPrecisionstar(k), .5 * r0, 1.0 / (.5 * R0));
+            priorOmVariances(n) = loginvgammapdf(1.0 / omPrecisionstar(k), .5 * r0, (.5 * R0));
             ++n;
         }
         double priorSum = priorbeta + priorA.sum() + priorGammas.sum() + priorfactorVariances.sum() +
@@ -1070,6 +1141,12 @@ public:
 
         marginal_likelihood = conditionalOfFactors + priorSum - posteriorStar;
         cout << "Marginal Likelihood " << marginal_likelihood << endl;
+        std::ofstream file(fname, ios_base::app | ios_base::out);
+        if (file.is_open())
+        {
+            file << "Marginal Likelihood: " << marginal_likelihood << endl;
+        }
+
         return marginal_likelihood;
     }
 

@@ -22,7 +22,6 @@ VectorXd NumericalDifferentiation::CentralDifferences(const Ref<const VectorXd> 
 {
     int n = x0.size();
     MatrixXd I = MatrixXd::Identity(n, n);
-    double fval0 = F(x0);
     VectorXd q = VectorXd::Zero(n);
     VectorXd grad = VectorXd::Zero(n);
     long double h = 1e-8;

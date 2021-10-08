@@ -113,6 +113,4 @@ plot(Factors)
     burnin, initFactor,  initobsmodel, initStateTransitions, initObsPrecision, initFactorVar,...
     beta0, B0inv, v0, r0, s0, d0, a0, A0inv, g0, G0, identification, estML, 'Tests');
 
-ftbar = mean(storeFt,3);
-hold on
-plot(ftbar)
+

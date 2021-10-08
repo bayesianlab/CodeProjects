@@ -60,7 +60,7 @@ public:
         MatrixXd Ilags = MatrixXd::Identity(lags, lags);
         VectorXd sig;
 
-        std::vector<MatrixXd> XtbyT = groupByTime(Xt, T, K);
+        std::vector<MatrixXd> XtbyT = groupByTime(Xt, K);
         UnivariateBeta ub;
         ArParameterTools ar;
         ub.initializeBeta(b0);

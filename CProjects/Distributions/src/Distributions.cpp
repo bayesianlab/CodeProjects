@@ -8,8 +8,8 @@ boost::random::mt19937 GLOBAL_SEED(now);
 double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
                  const MatrixXd &Sig)
 {
+  
   int p = Sig.cols();
-
   double c = -.5 * p * log(2 * M_PI) - .5 * logdet(Sig);
   double v = -.5 * ((x - mu) * Sig.llt().solve((x - mu).transpose())).value() + c;
   return v;
@@ -110,11 +110,17 @@ MatrixXd normrnd(double mu, double sig, int N, int J)
   return Z;
 }
 
-double unifrnd(double a, double b)
+double unifrnd()
 {
   boost::random::uniform_01<> u;
   boost::variate_generator<boost::mt19937 &, boost::uniform_01<>> unif(GLOBAL_SEED, u);
   return unif();
+}
+
+double unifrnd(double a, double b)
+{
+  double diff = b - a;
+  return a + unifrnd() * diff;
 }
 
 VectorXd unifrnd(double a, double b, int N)
@@ -123,7 +129,7 @@ VectorXd unifrnd(double a, double b, int N)
   double diff = b - a;
   for (int i = 0; i < N; i++)
   {
-    unifVector(i) = a + unifrnd(a, b) * diff;
+    unifVector(i) = a + unifrnd() * diff;
   }
   return unifVector;
 }
@@ -141,18 +147,18 @@ MatrixXd unifrnd(double a, double b, int N, int J)
 VectorXd loginvgammapdf(const Ref<const VectorXd> &y, double alpha,
                         double beta)
 {
-  double C1 = -(alpha * log(beta) + lgamma(alpha));
-  VectorXd ligampdf = y.array().log();
-  ligampdf *= -(alpha + 1);
-  return ligampdf.array() - (y.array() * beta).pow(-1) + C1;
+  VectorXd pdf(y.size());
+  for(int i = 0; i < y.size(); ++i)
+  {
+    pdf(i) = loginvgammapdf(y(i), alpha, beta); 
+  }
+  return pdf; 
 }
 
 double loginvgammapdf(double y, double alpha, double beta)
 {
-  double C1 = -(alpha * log(beta) + lgamma(alpha));
-  double ligampdf = log(y);
-  ligampdf = ligampdf * (-(alpha + 1));
-  return ligampdf - pow(y * beta, -1) + C1;
+  /* Greenberg parameterization, appendix A.1.8 */ 
+  return (alpha * log(beta) - lgamma(alpha)) - ((alpha+1)*log(y)) - (beta/y);
 }
 
 double chi2rnd(int df)
@@ -1678,4 +1684,4 @@ MatrixXd Dist::Cov(const MatrixXd &X, int dim) {
   }
 }
 */
-;
+// ;

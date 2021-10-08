@@ -22,7 +22,7 @@ GenerateAutoRegressiveData::GenerateAutoRegressiveData(int time, const MatrixXd 
     yt.setZero(K, time);
     Xt.setZero(K*time, 2);
     Xt << MatrixXd::Ones(K*time, 1), normrnd(0, 1, K*time, 1);
-    std::vector<MatrixXd> Xtcontainer = groupByTime(Xt, time, K); 
+    std::vector<MatrixXd> Xtcontainer = groupByTime(Xt, K); 
     VectorXd beta = betaparams*VectorXd::Ones(Xt.cols());
     MatrixXd Xbeta;
     MatrixXd D0;

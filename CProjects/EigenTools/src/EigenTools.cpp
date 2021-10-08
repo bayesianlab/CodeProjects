@@ -32,7 +32,7 @@ VectorXi sequence(int b, int e, int skip)
     return c;
 }
 
-VectorXd var(const Ref<const MatrixXd> &A, int row_col)
+VectorXd var(const Ref<const MatrixXd> &A)
 {
     MatrixXd centered = (A.colwise() - A.rowwise().mean()).array().pow(2);
     return (1. / A.cols()) * centered.rowwise().sum();
@@ -45,7 +45,6 @@ MatrixXd readCSV(std::string file)
     ifstream fin;
     fin.open(file);
     string line;
-    size_t foundquote;
     int rowCount = -1;
     int colCount;
     if (fin.is_open())

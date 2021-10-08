@@ -5,12 +5,18 @@
 #include <stdexcept>
 
 #include <eigen-3.3.9/Eigen/Dense>
+#include <Eigen/Sparse>
 #include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
 #include "Distributions.hpp"
 
 template <typename D>
-std::vector<MatrixXd> groupByTime(const MatrixBase<D> &Xtfull, const int &T, const int &K)
+std::vector<MatrixXd> groupByTime(const MatrixBase<D> &Xtfull, const int &K)
 {
+    if (Xtfull.rows() % K)
+    {
+        throw(std::invalid_argument("Invalid number of rows in Xtfull for function groupByTime."));
+    }
+    const int T = Xtfull.rows() / K;
     ArrayXi indices = sequence(0, K * T, K);
     ArrayXi indexshift;
     std::vector<MatrixXd> Xtk;
@@ -89,14 +95,13 @@ MatrixXd setInitialCovar(const MatrixBase<Derived1> &params, const double &var)
     int lags = params.cols();
     int rows = params.rows();
     MatrixXd stateSpaceParams = makeStateSpace(params);
-    int eqns = stateSpaceParams.rows();
     MatrixXd SkronS = kroneckerProduct(stateSpaceParams, stateSpaceParams);
     int rows2 = SkronS.rows();
     MatrixXd Irows2 = MatrixXd::Identity(rows2, rows2);
     MatrixXd Varmat(rows * lags, rows);
     Varmat << var, MatrixXd::Zero(rows * (lags - 1), rows);
     MatrixXd outerp = Varmat * Varmat.transpose();
-    outerp.resize(rows * rows * lags * lags, 1); 
+    outerp.resize(rows * rows * lags * lags, 1);
     MatrixXd P0 = (Irows2 - SkronS).householderQr().solve(outerp);
     P0.resize(rows * lags, rows * lags);
     if (isPD(P0) != true)
@@ -121,24 +126,55 @@ MatrixXd ReturnH(const MatrixBase<D> &params, int T)
     return CreateDiag(X, sequence(-eqns * (lags), 0, eqns), T * eqns, T * eqns);
 }
 
+template <typename Q, typename D>
+void  ReturnBigH(SparseMatrix<Q> EmptyT, const MatrixBase<D> &params, int T)
+{
+    /* param vector should include the greatest lag in the 0th column */
+    int eqns = params.rows();
+    int lags = params.cols();
+    MatrixXd negparams = -params.replicate(T, 1);
+    MatrixXd X(T * eqns, lags + 1);
+    X << negparams, MatrixXd::Ones(T * eqns, 1);
+    return CreateBigDiag(EmptyT, X, sequence(-eqns * (lags), 0, eqns), T * eqns, T * eqns);
+}
+
 template <typename D1, typename D2>
 MatrixXd MakePrecision(const MatrixBase<D1> &params, const MatrixBase<D2> &var,
                        int T)
 {
-    int eqns = params.rows();
-    int lags = params.cols();
+    double mil = 1e6;
     MatrixXd H = ReturnH(params, T);
     VectorXd v = (var.array().pow(-1)).replicate(T, 1);
     MatrixXd Sinv = v.asDiagonal();
     return H.transpose() * Sinv * H;
 }
 
+template <typename D1, typename D2>
+MatrixXd MakePrecisionBig(const MatrixBase<D1> &params, const MatrixBase<D2> &var,
+                       int T)
+{
+    // double mil = 1e6;
+    // auto start = std::chrono::high_resolution_clock::now();
+    SparseMatrix<double> H(var.size()*T, var.size()*T);
+    ReturnBigH(H, params, T);
+    // auto stop = std::chrono::high_resolution_clock::now();
+    // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    // cout << duration.count() / mil << endl;
+    VectorXd v = (var.array().pow(-1)).replicate(T, 1);
+    SparseMatrix<double> Sinv(H.rows(), H.cols());
+    for(int i = 0; i < H.rows(); ++i)
+    {
+        Sinv.insert(i,i) = v(i);
+    } 
+    return H.transpose() * Sinv * H;
+}
+
+
+
 template <typename D1>
 MatrixXd MakePrecision(const MatrixBase<D1> &params, const double &var,
                        int T)
 {
-    int eqns = params.rows();
-    int lags = params.cols();
     MatrixXd H = ReturnH(params, T);
     VectorXd v = VectorXd::Ones(T).array() / var;
     MatrixXd Sinv = v.asDiagonal();
@@ -278,13 +314,13 @@ MatrixXd makeStationary(const MatrixBase<T1> &M, const MatrixBase<T2> &params, c
         {
             throw invalid_argument("sigma is double, M must be 1 row. Error in makeStationary");
         }
-        
+
         int T = M.cols();
         MatrixXd D0upper;
         MatrixXd Xstationary(M.rows(), M.cols());
         for (int i = 0; i < M.rows(); ++i)
         {
-            
+
             Xstationary.row(i).rightCols(T - lags) = lagOperator(M.row(i), params, operatingDimension);
             D0 = setInitialCovar(params, sigma2);
             D0upper = D0.llt().matrixU();
@@ -353,20 +389,20 @@ public:
             }
             if (count == MAX_TRIES)
             {
-                proposal = current; 
+                proposal = current;
                 P1 = MatrixXd::Identity(lags, lags);
                 return;
             }
             ++count;
         }
         //
-        P1 = sigma2*MatrixXd::Identity(lags, lags);
+        P1 = sigma2 * MatrixXd::Identity(lags, lags);
         MatrixXd S2new = MatrixXd::Identity(T, T);
         S2new = S2new.array() * sigma2;
         MatrixXd S2old = S2new;
         S2new.block(0, 0, lags, lags) = P1;
         //
-        MatrixXd P0 = sigma2*MatrixXd::Identity(lags, lags);
+        MatrixXd P0 = sigma2 * MatrixXd::Identity(lags, lags);
         S2old.block(0, 0, lags, lags) = P0;
         MatrixXd IT = MatrixXd::Identity(S2new.rows(), S2new.cols());
         MatrixXd S2newinv = S2new.ldlt().solve(IT);
@@ -388,7 +424,7 @@ public:
                                      (logmvnpdfCentered(epsilonstarold, dden) +
                                       logmvnpdf(current, g0, G0) -
                                       logmvnpdf(proposal, v.transpose(), Vinv)));
-        if (log(unifrnd(0, 1)) < lalpha)
+        if (log(unifrnd()) < lalpha)
         {
             phinew = proposal;
         }

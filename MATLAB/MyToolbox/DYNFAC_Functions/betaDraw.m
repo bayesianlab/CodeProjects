@@ -26,17 +26,11 @@ for t=1:T
     xpy = xpy + SurX(select1,:)'*ty;
 end
 XzzPinv = Xzz'*Pinv;
-
 B = (B0inv + xpx - XzzPinv*Xzz);
-
-
 Blowerinv = chol(B,'lower')\eye(pK);
-
-
 B = Blowerinv'*Blowerinv;
-
 b = B*(B0inv*b0' + xpy - XzzPinv*yzz);
-
+b
 bupdate = b + Blowerinv'*normrnd(0,1,pK,1);
 
 xbt = SurX*bupdate;
