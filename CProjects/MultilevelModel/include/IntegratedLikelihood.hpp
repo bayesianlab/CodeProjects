@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <fstream>
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <chrono>
 #include "Optimization.hpp"
