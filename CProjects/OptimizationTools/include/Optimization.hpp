@@ -2,7 +2,7 @@
 #ifndef OPTIM_H
 #define OPTIM_H
 
-#include <eigen-3.3.9/Eigen/Dense>
+#include <Eigen/Dense>
 #include "Optimization.hpp"
 #include <iostream>
 #include <math.h>

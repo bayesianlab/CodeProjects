@@ -7,7 +7,7 @@
 #include <fstream>
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
-#include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
+#include <eigen3/unsupported/Eigen/KroneckerProduct>
 #include <chrono>
 using namespace std;
 using namespace chrono;

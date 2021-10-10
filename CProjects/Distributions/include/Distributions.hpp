@@ -11,7 +11,7 @@
 #include <limits>
 #include <math.h>
 #include <random>
-#include "eigen-3.3.9/unsupported/Eigen/KroneckerProduct"
+#include "eigen3/unsupported/Eigen/KroneckerProduct"
 #include <stdexcept>
 
 using namespace Eigen;

@@ -7,7 +7,7 @@
 #include <boost/format.hpp>
 
 
-#include <eigen-3.3.9/Eigen/Dense>
+#include <Eigen/Dense>
 
 using namespace std; 
 using namespace Eigen; 

@@ -2,7 +2,7 @@
 #ifndef NUMERICALDIFF_H
 #define NUMERICALDIFF_H
 #include <iostream> 
-#include <eigen-3.3.9/Eigen/Dense>
+#include <Eigen/Dense>
 
 using namespace Eigen;
 using namespace std;

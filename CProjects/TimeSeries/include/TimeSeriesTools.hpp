@@ -4,9 +4,9 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <eigen-3.3.9/Eigen/Dense>
+#include <Eigen/Dense>
 #include <Eigen/Sparse>
-#include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
+#include <eigen3/unsupported/Eigen/KroneckerProduct>
 #include "Distributions.hpp"
 
 template <typename D>

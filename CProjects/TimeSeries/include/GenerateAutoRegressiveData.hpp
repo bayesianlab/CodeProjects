@@ -1,8 +1,8 @@
 #pragma once
 #ifndef GENARDATA_H
 #define GENARDATA_H
-#include <eigen-3.3.9/Eigen/Dense>
-#include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
+#include <Eigen/Dense>
+#include <eigen3/unsupported/Eigen/KroneckerProduct>
 #include "MultilevelModelFunctions.hpp"
 #include "TimeSeriesTools.hpp"
 using namespace Eigen;
