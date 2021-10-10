@@ -6,6 +6,7 @@
 #include <math.h>
 #include <string.h>
 #include <Eigen/Dense>
+#include <Eigen/Sprase> 
 #include <unsupported/Eigen/KroneckerProduct>
 #include <stdlib.h>
 #include "Distributions.hpp"

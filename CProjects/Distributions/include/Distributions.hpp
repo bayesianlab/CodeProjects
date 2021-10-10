@@ -1,6 +1,8 @@
 #ifndef DIST_H
 #define DIST_H
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
+#include <unsupported/Eigen/KroneckerProduct>
 #include <boost/math/distributions/exponential.hpp>
 #include <boost/math/distributions/normal.hpp>
 #include <boost/random/gamma_distribution.hpp>
@@ -11,8 +13,6 @@
 #include <limits>
 #include <math.h>
 #include <random>
-#include <Eigen/Sparse>
-#include <unsupported/Eigen/KroneckerProduct>
 #include <stdexcept>
 
 using namespace Eigen;
