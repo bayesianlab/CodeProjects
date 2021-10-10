@@ -1,2 +1,0 @@
-/usr/bin/ar qc libdists.a  CMakeFiles/dists.dir/src/Distributions.cpp.o CMakeFiles/dists.dir/src/MultilevelModel.cpp.o
-/usr/bin/ranlib libdists.a
