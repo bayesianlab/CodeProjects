@@ -137,6 +137,8 @@ Eigen/Dense
 -
 eigen-3.3.9/unsupported/Eigen/KroneckerProduct
 -
+chrono
+-
 
 /home/dillon/CodeProjects/CProjects/GnuPlotting/include/Plotter.hpp
 iostream

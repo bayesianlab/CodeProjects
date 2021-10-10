@@ -285,7 +285,7 @@ int main()
         MatrixXd Factors = normrnd(0, 1, nFactors, T);
         int gammaRows = 3;
         RowVectorXd g(3);
-        g << .01, .02, .03;
+        g <<  .03;
         MatrixXd gammas = g.replicate(nFactors, 1);
         MatrixXd deltas;
         deltas = g.replicate(K, 1);

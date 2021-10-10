@@ -1,4 +1,20 @@
 #include "EigenTools.hpp"
+
+
+high_resolution_clock::time_point timeit()
+{
+    high_resolution_clock::time_point start = high_resolution_clock::now();
+    return start;
+}
+
+double timeit(high_resolution_clock::time_point &start)
+{
+    high_resolution_clock::time_point end = high_resolution_clock::now();
+    duration<double> d = duration_cast<duration<double>>(end - start);
+    double sec = d.count(); 
+    return sec;
+}
+
 VectorXi sequence(int b, int e)
 {
     if (e < b)

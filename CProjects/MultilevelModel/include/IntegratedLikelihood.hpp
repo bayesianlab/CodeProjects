@@ -15,6 +15,8 @@
 #include "BayesianUpdates.hpp"
 #include "TimeSeriesTools.hpp"
 
+using namespace std::chrono;
+
 class BetaParameterTools
 {
 public:
@@ -39,7 +41,7 @@ public:
         MatrixXd It = MatrixXd::Identity(T, T);
         MatrixXd InFactorsT = MatrixXd::Identity(nFactorsT, nFactorsT);
         MatrixXd Ikp = MatrixXd::Identity(KP, KP);
-        MatrixXd FullPrecision = om_precision.asDiagonal();
+        DiagonalMatrix<double, Dynamic> FullPrecision = om_precision.asDiagonal();
         MatrixXd B0inv = (B0.diagonal().array().pow(-1)).matrix().asDiagonal();
         MatrixXd xpx = MatrixXd::Zero(KP, KP);
         MatrixXd xpy = MatrixXd::Zero(KP, 1);
@@ -47,15 +49,8 @@ public:
         MatrixXd yzz = MatrixXd::Zero(nFactorsT, 1);
         MatrixXd tx;
         MatrixXd ty;
-        MatrixXd AtO = A.transpose() * FullPrecision;
-        MatrixXd AtOA = AtO * A;
         MatrixXd XzzPinv(nFactorsT, nFactorsT);
-        XzzPinv = XzzPinv.ldlt().solve(InFactorsT);
-        
-        XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).ldlt().solve(InFactorsT);
-        stop = std::chrono::high_resolution_clock::now();
-        duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-        cout << duration.count() << endl;
+        XzzPinv = (FactorPrecision + kroneckerProduct(It, (A.transpose()*FullPrecision) * A)).llt().solve(InFactorsT);
         int c1 = 0;
         int c2 = 0;
         for (int t = 0; t < T; ++t)
@@ -71,7 +66,7 @@ public:
         }
         XzzPinv = xzz.transpose() * XzzPinv;
         B = B0inv + xpx - (XzzPinv * xzz);
-        B = B.ldlt().solve(MatrixXd::Identity(KP, KP));
+        B = B.llt().solve(MatrixXd::Identity(KP, KP));
         betamean = B * (B0inv * b0.transpose() + xpy - (XzzPinv * yzz));
         betanew = betamean + (B.llt().matrixL() * normrnd(0, 1, KP, 1));
         xbt = Xt * betanew;
@@ -102,7 +97,7 @@ public:
         MatrixXd tx;
         MatrixXd ty;
         MatrixXd AtO = A.array() / om_precision;
-        MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).ldlt().solve(InFactorsT);
+        MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).llt().solve(InFactorsT);
         int c1 = 0;
         int c2 = 0;
         for (int t = 0; t < T; ++t)
@@ -118,7 +113,7 @@ public:
         }
         XzzPinv = xzz.transpose() * XzzPinv;
         B = B0inv + xpx - (XzzPinv * xzz);
-        B = B.ldlt().solve(MatrixXd::Identity(KP, KP));
+        B = B.llt().solve(MatrixXd::Identity(KP, KP));
         betamean = B * (B0inv * b0.transpose() + xpy - (XzzPinv * yzz));
         betanew = betamean + (B.llt().matrixL() * normrnd(0, 1, KP, 1));
         xbt = Xt * betanew;
@@ -151,7 +146,7 @@ public:
         MatrixXd ty;
         MatrixXd AtO = A.transpose() * FullPrecision;
 
-        MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).ldlt().solve(InFactorsT);
+        MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, AtO * A)).llt().solve(InFactorsT);
 
         int c1 = 0;
         int c2 = 0;
@@ -171,7 +166,7 @@ public:
         XzzPinv = xzz.transpose() * XzzPinv;
         B = B0inv + xpx - (XzzPinv * xzz);
 
-        B = B.ldlt().solve(MatrixXd::Identity(KP, KP));
+        B = B.llt().solve(MatrixXd::Identity(KP, KP));
         betamean = B * (B0inv * b0.transpose() + xpy - (XzzPinv * yzz));
     }
 
@@ -454,7 +449,7 @@ public:
             };
             optim.BFGS(subA, CLL, disp_on);
             postCovar = optim.AprroximateDiagHessian(optim.x1, CLL, optim.fval1);
-            postCovar = postCovar.ldlt().solve(MatrixXd::Identity(nrows, nrows));
+            postCovar = postCovar.llt().solve(MatrixXd::Identity(nrows, nrows));
             PosteriorMeans[i] = subA.transpose();
             PosteriorCovariances[i] = postCovar;
         }
@@ -476,15 +471,9 @@ public:
         surX = surForm(Xt, K);
         betanew = VectorXd::Ones(surX.cols());
         double mil = 1e6;
-        MatrixXd xbt(K * T, 1);
-        auto start = std::chrono::high_resolution_clock::now();
+        MatrixXd xbt(K * T, 1);        
         xbt = surX * betanew;
-        auto stop = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-        cout << duration.count() / mil << endl;
-
         xbt.resize(K, T);
-
         MatrixXd FactorPrecision(nFactors * T, nFactors * T);
         FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
 
@@ -510,9 +499,9 @@ public:
         {
 
             cout << "Sim " << i + 1 << endl;
-
+            std::chrono::high_resolution_clock::time_point start = timeit(); 
             betaUpdater(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
-
+            cout << timeit(start) << endl; 
             updateLoadingsFactors(yt, xbt, gammas, omPrecision,
                                   factorVariance, InfoMat, loadingsPriorMeans,
                                   loadingsPriorPrecision, optim);
@@ -677,7 +666,7 @@ public:
                 optim.BFGS(subA, CLLg, disp_on);
                 postMean = optim.x1;
                 postCovar = optim.AprroximateDiagHessian(optim.x1, CLLg, optim.fval1);
-                postCovar = postCovar.ldlt().solve(MatrixXd::Identity(nrows, nrows));
+                postCovar = postCovar.llt().solve(MatrixXd::Identity(nrows, nrows));
                 qg = logmvtpdf(subAstar.transpose(), postMean.transpose(), postCovar, df);
                 lalpha = -CLLstar(subAstar) + logmvtpdf(subA.transpose(), MeanStar.transpose(), CovarianceStar, df) +
                          CLLg(subA) - qg;
@@ -778,7 +767,7 @@ public:
             optim.BFGS(subA, CLLj, disp_on);
             jmean = optim.x1;
             jCovar = optim.AprroximateDiagHessian(optim.x1, CLLj, optim.fval1);
-            jCovar = jCovar.ldlt().solve(MatrixXd::Identity(nrows, nrows));
+            jCovar = jCovar.llt().solve(MatrixXd::Identity(nrows, nrows));
             lalpha = -CLLj(subA) + logmvtpdf(subAstar.transpose(), MeanStar.transpose(), CovarianceStar, df) +
                      CLLstar(subAstar) - logmvtpdf(subA.transpose(), jmean.transpose(), jCovar, df);
             lalpha = min(0., lalpha);
@@ -1082,10 +1071,10 @@ public:
             subFp = MakePrecision(subgammas, subfv, T);
             subytdemeaned = ytdemeaned.middleRows(start, nrows);
             subomPrecision = omPrecisionstar.segment(start, nrows);
-            Covar = subFp.ldlt().solve(IT);
+            Covar = subFp.llt().solve(IT);
             priorFactorStar(n) = logmvnpdf(FactorStar.row(n), Z1, Covar);
             P = subFp + (subA.transpose() * subomPrecision.asDiagonal() * subA) * IT;
-            P = P.ldlt().solve(IT);
+            P = P.llt().solve(IT);
             factorMean = P * (subA.transpose() * subomPrecision.asDiagonal() * subytdemeaned).transpose();
             posteriorFactorStar(n) = logmvnpdf(FactorStar.row(n), factorMean, P);
         }
@@ -1123,7 +1112,7 @@ public:
             subomPrecision = omPrecision.segment(start, nrows);
             subPriorMean = loadingsPriorMeans[n].transpose();
             subPriorPrecision = loadingsPriorPrecision[n];
-            subPriorPrecision.ldlt().solve(MatrixXd::Identity(subPriorPrecision.rows(),
+            subPriorPrecision.llt().solve(MatrixXd::Identity(subPriorPrecision.rows(),
                                                               subPriorPrecision.rows()));
             priorfactorVariances(n) = loginvgammapdf(factorVariancestar(n), .5 * r0, (.5 * R0));
             priorA(n) = logmvnpdf(subA.transpose(), subPriorMean, subPriorPrecision);

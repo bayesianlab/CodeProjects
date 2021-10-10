@@ -8,15 +8,15 @@
 #include <Eigen/Sparse>
 #include <Eigen/Dense>
 #include <eigen-3.3.9/unsupported/Eigen/KroneckerProduct>
-
+#include <chrono>
 using namespace std;
+using namespace chrono;
 using namespace Eigen;
 
-// template <typename D>
-// void dim(const MatrixBase<D> &M)
-// {
-//     cout << M.rows() << " x " << M.cols() << endl;
-// }
+high_resolution_clock::time_point timeit();
+
+double timeit(high_resolution_clock::time_point &start);
+
 
 template <typename D>
 void dim(const EigenBase<D> &M)
@@ -214,7 +214,7 @@ MatrixXd makeBlockDiagonal(const MatrixBase<T> &Block, const int &reptimes)
 template <typename D, typename Y>
 void bigBlockDiag(SparseMatrix<D> &BigSparseBlock, const MatrixBase<Y> &StackedBlock, const int &blocksizerows)
 {
-    if(StackedBlock.rows() % blocksizerows)
+    if (StackedBlock.rows() % blocksizerows)
     {
         throw(invalid_argument("Error in bigBlockDiag."));
     }
@@ -246,7 +246,7 @@ void bigBlockDiag(SparseMatrix<D> &BigSparseBlock, const MatrixBase<Y> &StackedB
 template <typename T, typename D>
 void makeBigBlockDiag(SparseMatrix<T> &BigSparseBlock, const MatrixBase<D> &Block, const int &reptimes)
 {
-    if((long int)BigSparseBlock.rows() != (long int)reptimes*Block.rows())
+    if ((long int)BigSparseBlock.rows() != (long int)reptimes * Block.rows())
     {
         throw(invalid_argument("Error in makeBigBlockDiag, BigSparseBlock.rows() is not a multiple of reptimes x Block."));
     }

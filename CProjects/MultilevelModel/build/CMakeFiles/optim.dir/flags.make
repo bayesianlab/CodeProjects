@@ -6,5 +6,5 @@ CXX_FLAGS = -O3 -DNDEBUG
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include 
+CXX_INCLUDES = -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../TimeSeries/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../EigenTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../Distributions/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include 
 

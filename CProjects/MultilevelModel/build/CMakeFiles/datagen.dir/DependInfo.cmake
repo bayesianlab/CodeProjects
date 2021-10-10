@@ -12,11 +12,11 @@ set(CMAKE_CXX_COMPILER_ID "GNU")
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/usr/local/include/eigen3"
-  "/home/dillon/CodeProjects/CProjects/TimeSeries/include"
-  "/home/dillon/CodeProjects/CProjects/GnuPlotting/include"
-  "/home/dillon/CodeProjects/CProjects/EigenTools/include"
-  "/home/dillon/CodeProjects/CProjects/Distributions/include"
-  "/home/dillon/CodeProjects/CProjects/OptimizationTools/include"
+  "../../TimeSeries/include"
+  "../../GnuPlotting/include"
+  "../../EigenTools/include"
+  "../../Distributions/include"
+  "../../OptimizationTools/include"
   "../include"
   )
 

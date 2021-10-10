@@ -79,10 +79,10 @@ clean: CMakeFiles/basetools.dir/clean
 # Target rules for target CMakeFiles/test2.dir
 
 # All Build rule for target.
-CMakeFiles/test2.dir/all: CMakeFiles/basetools.dir/all
+CMakeFiles/test2.dir/all: CMakeFiles/datagen.dir/all
 CMakeFiles/test2.dir/all: CMakeFiles/mlfunc.dir/all
 CMakeFiles/test2.dir/all: CMakeFiles/optim.dir/all
-CMakeFiles/test2.dir/all: CMakeFiles/datagen.dir/all
+CMakeFiles/test2.dir/all: CMakeFiles/basetools.dir/all
 	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/depend
 	$(MAKE) -f CMakeFiles/test2.dir/build.make CMakeFiles/test2.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=14,15 "Built target test2"
@@ -109,8 +109,8 @@ CMakeFiles/test2.dir/clean:
 # Target rules for target CMakeFiles/datagen.dir
 
 # All Build rule for target.
-CMakeFiles/datagen.dir/all: CMakeFiles/basetools.dir/all
 CMakeFiles/datagen.dir/all: CMakeFiles/mlfunc.dir/all
+CMakeFiles/datagen.dir/all: CMakeFiles/basetools.dir/all
 	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/depend
 	$(MAKE) -f CMakeFiles/datagen.dir/build.make CMakeFiles/datagen.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/MultilevelModel/build/CMakeFiles --progress-num=5,6,7 "Built target datagen"
