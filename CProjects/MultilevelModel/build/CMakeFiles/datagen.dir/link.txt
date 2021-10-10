@@ -1,2 +1,0 @@
-ccache /usr/bin/ar qc libdatagen.a  CMakeFiles/datagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o CMakeFiles/datagen.dir/src/GenerateMLFactorData.cpp.o
-ccache /usr/bin/ranlib libdatagen.a

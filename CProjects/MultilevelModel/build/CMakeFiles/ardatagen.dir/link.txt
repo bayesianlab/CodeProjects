@@ -1,2 +1,0 @@
-/usr/bin/ar qc libardatagen.a  CMakeFiles/ardatagen.dir/home/dillon/CodeProjects/CProjects/TimeSeries/src/GenerateAutoRegressiveData.cpp.o
-/usr/bin/ranlib libardatagen.a
