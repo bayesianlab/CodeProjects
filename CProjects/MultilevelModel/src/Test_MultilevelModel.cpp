@@ -323,6 +323,9 @@ int main()
         MatrixXd A = .5 * Identity;
         RowVectorXd b02 = RowVectorXd::Zero(betacols);
         MatrixXd B02 = 10 * MatrixXd::Identity(betacols, betacols);
+        cout << yt << endl; 
+        cout << xvals << endl; 
+        cout << InfoMat << endl; 
 
         intlike.setModel(yt, xvals, A, Factors, gammas, InfoMat, b02, B02, a0, A0, r0, R0, g0, G0);
         intlike.runModel(sims, burnin);
