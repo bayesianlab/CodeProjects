@@ -1,7 +1,7 @@
 # Top level cmake 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
-
+set(CMAKE_CXX_STANDARD 11)
 # set(CMAKE_BUILD_TYPE DEBUG)
 set(CMAKE_BUILD_TYPE RELEASE)
 set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops -fopenmp -DNDEBUG -ffast-math")
@@ -12,14 +12,8 @@ if(CCACHE_FOUND)
   message(STATUS "Found CCACHE")
   set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) 
+  set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 endif(CCACHE_FOUND)
-
-
-# message(STATUS ${CMAKE_CXX_FLAGS_REALEASE})
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-message(STATUS ${PROJECT_SOURCE_DIR})
-
-set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 
 find_package(Eigen3)
 if (${EIGEN3_FOUND})
