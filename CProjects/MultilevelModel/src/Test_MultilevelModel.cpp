@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Eigen/Dense>
 #include <ctime>
+#include <filesystem>
 #include "IntegratedLikelihood.hpp"
 #include "Plotter.hpp"
 #include "GenerateMLFactorData.hpp"
@@ -10,7 +11,6 @@
 
 using namespace std;
 using namespace Eigen;
-
 
 int main()
 {
@@ -143,7 +143,7 @@ int main()
         VectorXd betas = .5 * VectorXd::Ones(2, 1);
         Matrix<int, Dynamic, 2> InfoMat(3, 2);
         InfoMat << 0, K - 1,
-        0, 4, 5, K-1;
+            0, 4, 5, K - 1;
         cout << InfoMat << endl;
         int nFactors = InfoMat.rows();
         MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
@@ -269,9 +269,17 @@ int main()
         /* Models to run, model with no country factors
         * standard kow model
         * model with country factors and country vars */
-        MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kow.csv");
-        // MatrixXd xvals = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kowXt.csv");
-        MatrixXd I = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/factor_index_world_region_country.csv");
+        char h[256];
+        getcwd(h, 256);
+        string x = h;
+        size_t t = x.find("build");
+        string path = x.substr(0, t);
+        string ytpath = path + "kow.csv";
+        string xtpath = path + "kowXt.csv";
+        string indexpath = path + "factor_index_world_region_country.csv";
+        MatrixXd yt = readCSV(ytpath);
+        MatrixXd xvals = readCSV(xtpath);
+        MatrixXd I = readCSV(indexpath);
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
         int K = yt.rows();
         int T = yt.cols();
@@ -285,7 +293,7 @@ int main()
         MatrixXd Factors = normrnd(0, 1, nFactors, T);
         int gammaRows = 3;
         RowVectorXd g(3);
-        g <<  .03;
+        g << .03;
         MatrixXd gammas = g.replicate(nFactors, 1);
         MatrixXd deltas;
         deltas = g.replicate(K, 1);
@@ -308,15 +316,14 @@ int main()
         // mlotrok.runModel(sims, burnin);
         // mlotrok.ml();
 
-        MatrixXd xvals = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kowXt.csv");
         MultilevelModel intlike;
-        int betacols = K*xvals.cols();
+        int betacols = K * xvals.cols();
         double a0 = 1.0;
         double A0 = 1.0;
         MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
         MatrixXd A = .5 * Identity;
         RowVectorXd b02 = RowVectorXd::Zero(betacols);
-        MatrixXd B02 = 10*MatrixXd::Identity(betacols, betacols);
+        MatrixXd B02 = 10 * MatrixXd::Identity(betacols, betacols);
 
         intlike.setModel(yt, xvals, A, Factors, gammas, InfoMat, b02, B02, a0, A0, r0, R0, g0, G0);
         intlike.runModel(sims, burnin);

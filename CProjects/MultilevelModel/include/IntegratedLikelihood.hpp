@@ -500,9 +500,7 @@ public:
         {
 
             cout << "Sim " << i + 1 << endl;
-            std::chrono::high_resolution_clock::time_point start = timeit(); 
             betaUpdater(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
-            cout << timeit(start) << endl; 
             updateLoadingsFactors(yt, xbt, gammas, omPrecision,
                                   factorVariance, InfoMat, loadingsPriorMeans,
                                   loadingsPriorPrecision, optim);
