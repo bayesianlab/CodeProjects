@@ -3,7 +3,6 @@
 #define TSTOOL_H
 #include <iostream>
 #include <stdexcept>
-
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <eigen3/unsupported/Eigen/KroneckerProduct>
@@ -127,7 +126,7 @@ MatrixXd ReturnH(const MatrixBase<D> &params, int T)
 }
 
 template <typename Q, typename D>
-void  ReturnBigH(SparseMatrix<Q> EmptyT, const MatrixBase<D> &params, int T)
+void ReturnBigH(SparseMatrix<Q> EmptyT, const MatrixBase<D> &params, int T)
 {
     /* param vector should include the greatest lag in the 0th column */
     int eqns = params.rows();
@@ -151,25 +150,23 @@ MatrixXd MakePrecision(const MatrixBase<D1> &params, const MatrixBase<D2> &var,
 
 template <typename D1, typename D2>
 MatrixXd MakePrecisionBig(const MatrixBase<D1> &params, const MatrixBase<D2> &var,
-                       int T)
+                          int T)
 {
     // double mil = 1e6;
     // auto start = std::chrono::high_resolution_clock::now();
-    SparseMatrix<double> H(var.size()*T, var.size()*T);
+    SparseMatrix<double> H(var.size() * T, var.size() * T);
     ReturnBigH(H, params, T);
     // auto stop = std::chrono::high_resolution_clock::now();
     // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     // cout << duration.count() / mil << endl;
     VectorXd v = (var.array().pow(-1)).replicate(T, 1);
     SparseMatrix<double> Sinv(H.rows(), H.cols());
-    for(int i = 0; i < H.rows(); ++i)
+    for (int i = 0; i < H.rows(); ++i)
     {
-        Sinv.insert(i,i) = v(i);
-    } 
+        Sinv.insert(i, i) = v(i);
+    }
     return H.transpose() * Sinv * H;
 }
-
-
 
 template <typename D1>
 MatrixXd MakePrecision(const MatrixBase<D1> &params, const double &var,

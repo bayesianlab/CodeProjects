@@ -2,6 +2,7 @@
 #ifndef DGPML_H
 #define DGPML_H
 #include <Eigen/Dense>
+#include <Eigen/Sparse>
 #include <unsupported/Eigen/KroneckerProduct>
 #include "Distributions.hpp"
 #include "MultilevelModelFunctions.hpp"
