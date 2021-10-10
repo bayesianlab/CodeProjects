@@ -1,1 +1,0 @@
-ccache /usr/bin/c++  -g  -rdynamic CMakeFiles/x.dir/src/scratch.cpp.o  -o x  libdatagen.a libbasetools.a liboptim.a libmlfunc.a libbasetools.a 

@@ -1,1 +1,0 @@
-ccache /usr/lib/ccache/c++  -O3 -DNDEBUG  -rdynamic CMakeFiles/test2.dir/src/Test_MultilevelModel.cpp.o  -o test2  libdatagen.a libbasetools.a liboptim.a libmlfunc.a libbasetools.a 

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libeigentools.a  CMakeFiles/eigentools.dir/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp.o
-/usr/bin/ranlib libeigentools.a
