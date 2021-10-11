@@ -487,6 +487,7 @@ public:
         double f2;
         Optimize optim(optim_options);
         int stationarySims = Sims - (burnin);
+        MatrixXd omidentity = MakeObsModelIdentity(InfoMat, K); 
 
         LoadingsPosteriorDraws.resize(stationarySims);
         BetaPosteriorDraws.resize(stationarySims);
@@ -524,7 +525,7 @@ public:
             omPrecision = omVariance.array().pow(-1.0);
 
             FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
-
+            cout << removeZeros(omidentity, Loadings, 0) << endl; 
             if (i >= burnin)
             {
                 BetaPosteriorDraws[i - (burnin)] = betanew;

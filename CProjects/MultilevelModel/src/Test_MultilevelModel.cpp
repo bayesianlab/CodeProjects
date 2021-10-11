@@ -282,22 +282,23 @@ int main()
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
         int K = yt.rows();
         int T = yt.cols();
-        int sims = 5;
-        int burnin = 1;
+        int sims = 5000;
+        int burnin = 1000;
         int nFactors = InfoMat.rows();
 
         MatrixXd Xt(K * T, 1);
         Xt << VectorXd::Ones(K * T);
         int nXs = Xt.cols();
         MatrixXd Factors = normrnd(0, 1, nFactors, T);
-        int gammaRows = 3;
-        RowVectorXd g(3);
-        g << .03;
+        int gammaCols = 3;
+        RowVectorXd g(gammaCols);
+        g << .01,.02,.03;
         MatrixXd gammas = g.replicate(nFactors, 1);
+        gammas.setZero();
         MatrixXd deltas;
         deltas = g.replicate(K, 1);
-        RowVectorXd g0 = RowVectorXd::Zero(gammaRows);
-        VectorXd G0diag(gammaRows);
+        RowVectorXd g0 = RowVectorXd::Zero(gammaCols);
+        VectorXd G0diag(gammaCols);
         G0diag << .25, .5, 1;
         MatrixXd G0 = G0diag.asDiagonal();
         int levels = calcLevels(InfoMat, K);
@@ -323,9 +324,12 @@ int main()
         MatrixXd A = .5 * Identity;
         RowVectorXd b02 = RowVectorXd::Zero(betacols);
         MatrixXd B02 = 10 * MatrixXd::Identity(betacols, betacols);
-        cout << yt << endl; 
-        cout << xvals << endl; 
-        cout << InfoMat << endl; 
+
+        MatrixXd Xt2(K*T, xvals.cols() + 1);
+        Xt2 <<  VectorXd::Ones(K * T), xvals; 
+        MatrixXd gammas2(K,1);
+        gammas2.setZero(); 
+
 
         intlike.setModel(yt, xvals, A, Factors, gammas, InfoMat, b02, B02, a0, A0, r0, R0, g0, G0);
         intlike.runModel(sims, burnin);
