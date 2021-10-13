@@ -85,7 +85,7 @@ int main()
     int otrokwhitemantest = 0;
     int chanandj = 0;
     int comparemethods = 0;
-    int realdata = 1;
+    int realdata =1;
     if (otrokwhitemantest)
     {
         /* Run the standard otrok whiteman model, 1 factor*/
@@ -136,20 +136,19 @@ int main()
     if (chanandj)
     {
         int T = 50;
-        int K = 10;
+        int K = 18;
         int sims = 10;
         int burnin = 1;
         VectorXd betas = .5 * VectorXd::Ones(2, 1);
-        Matrix<int, Dynamic, 2> InfoMat(3, 2);
-        InfoMat << 0, K - 1,
-            0, 4, 5, K - 1;
+        Matrix<int, Dynamic, 2> InfoMat(1, 2);
+        InfoMat << 0, K - 1;
         cout << InfoMat << endl;
         int nFactors = InfoMat.rows();
         MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
         MatrixXd A = .5 * Identity;
         VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
-        RowVectorXd phi(2);
-        phi << .05, .25;
+        RowVectorXd phi(1);
+        phi << .25;
         GenerateMLFactorData mldata;
         mldata.genData(T, K, betas, InfoMat, phi, A, 1);
         double a0 = 1.0;
@@ -282,8 +281,8 @@ int main()
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
         int K = yt.rows();
         int T = yt.cols();
-        int sims = 5000;
-        int burnin = 1000;
+        int sims = 1000;
+        int burnin = 100;
         int nFactors = InfoMat.rows();
 
         MatrixXd Xt(K * T, 1);
@@ -327,12 +326,16 @@ int main()
 
         MatrixXd Xt2(K*T, xvals.cols() + 1);
         Xt2 <<  VectorXd::Ones(K * T), xvals; 
-        MatrixXd gammas2(K,1);
-        gammas2.setZero(); 
+        RowVectorXd g2(1); 
+        g2 << .01; 
+        MatrixXd gammas2(nFactors,1);
+        gammas2 = g2.replicate(nFactors,1); 
+        g0 = RowVectorXd::Zero(gammas2.cols()); 
+        G0 = MatrixXd::Identity(gammas2.cols(), gammas2.cols()); 
 
-
-        intlike.setModel(yt, xvals, A, Factors, gammas, InfoMat, b02, B02, a0, A0, r0, R0, g0, G0);
+        intlike.setModel(yt, xvals, A, Factors, gammas2, InfoMat, b02, B02, a0, A0, r0, R0, g0, G0);
         intlike.runModel(sims, burnin);
+        intlike.ml(); 
     }
     return 0;
 }

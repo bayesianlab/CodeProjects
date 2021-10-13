@@ -8,6 +8,7 @@
 #include <eigen3/unsupported/Eigen/KroneckerProduct>
 #include "Distributions.hpp"
 
+typedef SparseMatrix<double> SparseDouble;
 template <typename D>
 std::vector<MatrixXd> groupByTime(const MatrixBase<D> &Xtfull, const int &K)
 {
@@ -125,8 +126,8 @@ MatrixXd ReturnH(const MatrixBase<D> &params, int T)
     return CreateDiag(X, sequence(-eqns * (lags), 0, eqns), T * eqns, T * eqns);
 }
 
-template <typename Q, typename D>
-void ReturnBigH(SparseMatrix<Q> EmptyT, const MatrixBase<D> &params, int T)
+template <typename D>
+SparseDouble ReturnBigH(const MatrixBase<D> &params, int T)
 {
     /* param vector should include the greatest lag in the 0th column */
     int eqns = params.rows();
@@ -134,14 +135,14 @@ void ReturnBigH(SparseMatrix<Q> EmptyT, const MatrixBase<D> &params, int T)
     MatrixXd negparams = -params.replicate(T, 1);
     MatrixXd X(T * eqns, lags + 1);
     X << negparams, MatrixXd::Ones(T * eqns, 1);
-    return CreateBigDiag(EmptyT, X, sequence(-eqns * (lags), 0, eqns), T * eqns, T * eqns);
+    return CreateBigDiag( X, sequence(-eqns * (lags), 0, eqns),
+                                           T * eqns, T * eqns);
 }
 
 template <typename D1, typename D2>
 MatrixXd MakePrecision(const MatrixBase<D1> &params, const MatrixBase<D2> &var,
                        int T)
 {
-    double mil = 1e6;
     MatrixXd H = ReturnH(params, T);
     VectorXd v = (var.array().pow(-1)).replicate(T, 1);
     MatrixXd Sinv = v.asDiagonal();
@@ -155,7 +156,7 @@ MatrixXd MakePrecisionBig(const MatrixBase<D1> &params, const MatrixBase<D2> &va
     // double mil = 1e6;
     // auto start = std::chrono::high_resolution_clock::now();
     SparseMatrix<double> H(var.size() * T, var.size() * T);
-    ReturnBigH(H, params, T);
+    H=ReturnBigH( params, T);
     // auto stop = std::chrono::high_resolution_clock::now();
     // auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     // cout << duration.count() / mil << endl;
@@ -379,6 +380,7 @@ public:
         while (notvalid == 1)
         {
             proposal = (v + (Vinv.llt().matrixL() * normrnd(0, 1, lags, 1))).transpose();
+
             P1 = setInitialCovar(proposal, sigma2);
             if (isPD(P1))
             {

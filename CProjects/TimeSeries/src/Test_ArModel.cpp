@@ -10,19 +10,19 @@ using namespace Eigen;
 int main()
 {
 
-    MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kow.csv");
-    RowVectorXd g(3);
-    g << .01, .02, .03;
-    MatrixXd deltas(180, 3);
-    deltas = g.replicate(180, 1);
-    yt = yt.leftCols(10);
-    cout << yt << endl;
-    VectorXd omv = VectorXd::Ones(yt.rows());
-    cout << endl;
-    cout << makeStationary(yt, deltas, omv, 0) << endl;
-    int on = 1;
+    int on = 0;
     if (on == 1)
     {
+        MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kow.csv");
+        RowVectorXd g(3);
+        g << .01, .02, .03;
+        MatrixXd deltas(180, 3);
+        deltas = g.replicate(180, 1);
+        yt = yt.leftCols(10);
+        cout << yt << endl;
+        VectorXd omv = VectorXd::Ones(yt.rows());
+        cout << endl;
+        cout << makeStationary(yt, deltas, omv, 0) << endl;
         int T = 50;
         MatrixXd p(1, 3);
         p << 0.05, 0.15, 0.25;
@@ -42,6 +42,16 @@ int main()
         cout << mean(ar.storeArParams) << endl;
         cout << mean(ar.storeSigma2) << endl;
     }
+    MatrixXd yt(1,10);
+    yt = normrnd(0,1,1,10); 
+    RowVectorXd h(1); 
+    h << .01; 
+    RowVectorXd g0(1); 
+    g0 << 0; 
+    MatrixXd G0(1, 1);
+    G0 << 1; 
+    ArParameterTools apt;
+    apt.updateArParameters(yt, h, 1, g0, G0);
 
     return 0;
 }

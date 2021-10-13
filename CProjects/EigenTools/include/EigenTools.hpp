@@ -14,9 +14,9 @@ using namespace chrono;
 using namespace Eigen;
 
 high_resolution_clock::time_point timeit();
+typedef SparseMatrix<double> SparseDouble;
 
 double timeit(high_resolution_clock::time_point &start);
-
 
 template <typename D>
 void dim(const EigenBase<D> &M)
@@ -85,11 +85,11 @@ MatrixXd CreateDiag(const MatrixBase<Derived1> &diagonalMat, const ArrayXi &diag
     return D;
 }
 
-template <typename D, typename Derived1>
-void CreateBigDiag(SparseMatrix<D> &EmptyD, const MatrixBase<Derived1> &diagonalMat, const ArrayXi &diagonalVector,
-                   int k, int c)
+template <typename Derived1>
+SparseDouble CreateBigDiag(const MatrixBase<Derived1> &diagonalMat, const ArrayXi &diagonalVector,
+                           int k, int c)
 {
-
+    SparseMatrix<double> EmptyD(k,c);
     if (k > c)
     {
         if (min(k - diagonalVector.cwiseAbs().minCoeff(), c) > diagonalMat.rows())
@@ -136,6 +136,7 @@ void CreateBigDiag(SparseMatrix<D> &EmptyD, const MatrixBase<Derived1> &diagonal
             }
         }
     }
+    return EmptyD; 
 }
 
 template <typename D>

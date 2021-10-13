@@ -231,6 +231,12 @@ public:
         file.open(fname);
         if (file.is_open())
         {
+            storePosterior(path + version + "beta.csv", BetaPosteriorDraws);
+            // storePosterior(path + version + "deltas.csv", DeltasPosteriorDraws);
+            storePosterior(path + version + "gammas.csv", GammasPosteriorDraws);
+            storePosterior(path + version + "factors.csv", FactorPosteriorDraws);
+            storePosterior(path + version + "factorVariance.csv", FactorVariancePosteriorDraws);
+            storePosterior(path + version + "omVariance.csv", OmVariancePosteriorDraws);
             file << "Full Conditional Version run with: " << Sims << " "
                  << "burnin " << burnin << endl;
             file << "Beta avg" << endl;
@@ -368,6 +374,7 @@ public:
 
             if (i >= burnin)
             {
+
                 BetaPosteriorDraws[i - burnin] = betaParams;
                 FactorPosteriorDraws[i - burnin] = Factors;
                 DeltasPosteriorDraws[i - burnin] = deltas;
@@ -389,6 +396,12 @@ public:
         file.open(fname);
         if (file.is_open())
         {
+            storePosterior(path + version + "beta.csv", BetaPosteriorDraws);
+            storePosterior(path + version + "deltas.csv", DeltasPosteriorDraws);
+            storePosterior(path + version + "gammas.csv", GammasPosteriorDraws);
+            storePosterior(path + version + "factors.csv", FactorPosteriorDraws);
+            storePosterior(path + version + "factorVariance.csv", FactorVariancePosteriorDraws);
+            storePosterior(path + version + "omVariance.csv", OmVariancePosteriorDraws);
             file << "Full Conditional Version run with: " << Sims << " "
                  << "burnin " << burnin << endl;
             file << "Beta avg" << endl;
@@ -477,7 +490,7 @@ public:
             gammas = GammasPosteriorDraws[j];
             omVariance = OmVariancePosteriorDraws[j];
             Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
-            Xtk = groupByTime(Xtfull,  K);
+            Xtk = groupByTime(Xtfull, K);
             ythat = makeStationary(yt, deltas, omVariance, 0);
             for (int k = 0; k < K; ++k)
             {
@@ -596,7 +609,7 @@ public:
             omVariance = OmVariancePosteriorDrawsj[j];
             gammas = GammasPosteriorDrawsj[j];
             Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
-            Xtk = groupByTime(Xtfull,  K);
+            Xtk = groupByTime(Xtfull, K);
             ythat = makeStationary(yt, deltastar, omVariance, 0);
             for (int k = 0; k < K; ++k)
             {
@@ -649,7 +662,7 @@ public:
         for (int j = 0; j < rr; ++j)
         {
             cout << "RR = " << j + 1 << endl;
-            Xtk = groupByTime(Xtfull,  K);
+            Xtk = groupByTime(Xtfull, K);
             for (int k = 0; k < K; ++k)
             {
                 s2 = omVariancestar(k);
@@ -675,7 +688,7 @@ public:
             FactorVariancePosteriorDrawsj[j] = factorVariance;
         }
         posteriorStar += logavg(piPosterior, 0).sum();
-        cout << posteriorStar << endl; 
+        cout << posteriorStar << endl;
 
         cout << "Factor Variance Reduced Run" << endl;
         VectorXd factorVariancestar = mean(FactorVariancePosteriorDrawsj);
@@ -683,7 +696,7 @@ public:
         piPosterior.resize(nFactors, rr);
         Factorstar = mean(FactorPosteriorDrawsj);
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factorstar, K);
-        Xtk = groupByTime(Xtfull,  K);
+        Xtk = groupByTime(Xtfull, K);
         VectorXd priorFactorVarianceStar(nFactors);
         for (int n = 0; n < nFactors; ++n)
         {
@@ -705,7 +718,7 @@ public:
             FactorPosteriorDrawsj[j] = Factors;
         }
         posteriorStar += logavg(piPosterior, 0).sum();
-        cout << posteriorStar << endl; 
+        cout << posteriorStar << endl;
 
         cout << "Final run for factors" << endl;
         Factorstar = mean(FactorPosteriorDrawsj);
@@ -715,7 +728,7 @@ public:
                                                factorVariance, deltastar, gammastar);
         RowVectorXd Z2 = RowVectorXd::Zero(1, T);
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factorstar, K);
-        Xtk = groupByTime(Xtfull,  K);
+        Xtk = groupByTime(Xtfull, K);
         VectorXd likelihood(K);
         MatrixXd Covar = MatrixXd::Identity(T, T);
         for (int k = 0; k < K; ++k)
@@ -725,7 +738,7 @@ public:
             residuals = ythat.row(k) - betaStar.row(k) * Xthat.transpose();
             likelihood(k) = logmvnpdf(residuals, Z2, s2 * Covar);
         }
-        
+
         double conditionalOfFactors = likelihood.sum() + priorFactorStar.sum() - posteriorFactorStar.sum();
 
         double priorSum = priorGammaStar.sum() + priorBetaStar.sum() + priorOmVarianceStar.sum() +
@@ -855,7 +868,7 @@ public:
             omVariance = OmVariancePosteriorDrawsj[j];
             gammas = GammasPosteriorDrawsj[j];
             Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
-            Xtk = groupByTime(Xtfull,  K);
+            Xtk = groupByTime(Xtfull, K);
             for (int k = 0; k < K; ++k)
             {
                 s2 = omVariance(k);
@@ -887,7 +900,7 @@ public:
         piPosterior.resize(K, rr);
         MatrixXd Factorstar = mean(FactorPosteriorDrawsj);
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factorstar, K);
-        Xtk = groupByTime(Xtfull,  K);
+        Xtk = groupByTime(Xtfull, K);
         VectorXd priorOmVarianceStar(K);
         for (int k = 0; k < K; ++k)
         {
@@ -955,7 +968,7 @@ public:
 
         RowVectorXd Z2 = RowVectorXd::Zero(1, T);
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factorstar, K);
-        Xtk = groupByTime(Xtfull,  K);
+        Xtk = groupByTime(Xtfull, K);
         VectorXd likelihood(K);
         MatrixXd Covar = MatrixXd::Identity(T, T);
         for (int k = 0; k < K; ++k)
@@ -982,6 +995,20 @@ public:
         const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", "\n");
         int size = M.size();
         std::ofstream file(fname.c_str());
+        if (file.is_open())
+        {
+            for (int i = 0; i < size; ++i)
+            {
+                file << M[i].format(CSVFormat) << endl;
+            }
+        }
+    }
+
+    void storePosterior(string fname, std::vector<VectorXd> &M)
+    {
+        const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", "\n");
+        int size = M.size();
+        ofstream file(fname.c_str());
         if (file.is_open())
         {
             for (int i = 0; i < size; ++i)

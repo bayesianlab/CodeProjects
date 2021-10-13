@@ -42,7 +42,7 @@ public:
         MatrixXd It = MatrixXd::Identity(T, T);
         MatrixXd InFactorsT = MatrixXd::Identity(nFactorsT, nFactorsT);
         MatrixXd Ikp = MatrixXd::Identity(KP, KP);
-        DiagonalMatrix<double, Dynamic> FullPrecision = om_precision.asDiagonal();
+        MatrixXd FullPrecision = om_precision.asDiagonal();
         MatrixXd B0inv = (B0.diagonal().array().pow(-1)).matrix().asDiagonal();
         MatrixXd xpx = MatrixXd::Zero(KP, KP);
         MatrixXd xpy = MatrixXd::Zero(KP, 1);
@@ -50,8 +50,7 @@ public:
         MatrixXd yzz = MatrixXd::Zero(nFactorsT, 1);
         MatrixXd tx;
         MatrixXd ty;
-        MatrixXd XzzPinv(nFactorsT, nFactorsT);
-        XzzPinv = (FactorPrecision + kroneckerProduct(It, (A.transpose()*FullPrecision) * A)).llt().solve(InFactorsT);
+        MatrixXd XzzPinv=(FactorPrecision + kroneckerProduct(It, (A.transpose()*FullPrecision) * A)).llt().solve(InFactorsT);
         int c1 = 0;
         int c2 = 0;
         for (int t = 0; t < T; ++t)
@@ -380,6 +379,12 @@ public:
             dim(Ft);
             throw invalid_argument("Error in set model, gammas not correct dim.");
         }
+        if(g0.cols() != gammas.cols())
+        {
+            dim(g0);
+            dim(gammas);
+            throw invalid_argument("Error in set model, gammas and g0 rows not correct.");
+        }
         this->yt = yt;
         this->Xt = Xt;
         this->gammas = gammas;
@@ -465,19 +470,16 @@ public:
         const int nFactors = InfoMat.rows();
         const int sxtcols = Xt.cols() * K;
         VectorXd omVariance = VectorXd::Ones(K);
-        VectorXd omPrecision = 0.5 * omVariance.array().pow(-1);
+        VectorXd omPrecision = omVariance.array().pow(-1);
         VectorXd factorVariance = VectorXd::Ones(nFactors);
 
         MatrixXd surX(sxtcols, Xt.rows());
         surX = surForm(Xt, K);
         betanew = VectorXd::Ones(surX.cols());
         double mil = 1e6;
-        MatrixXd xbt(K * T, 1);        
-        xbt = surX * betanew;
-        xbt.resize(K, T);
+        setXbeta(surX, betanew, K, T);
         MatrixXd FactorPrecision(nFactors * T, nFactors * T);
         FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
-
         MatrixXd resids;
         MatrixXd H;
         VectorXd Hf;
@@ -495,7 +497,6 @@ public:
         GammasPosteriorDraws.resize(stationarySims);
         ObsPrecisionPosteriorDraws.resize(stationarySims);
         FactorVariancePosteriorDraws.resize(stationarySims);
-
         ArParameterTools apt;
         for (int i = 0; i < Sims; ++i)
         {
@@ -523,9 +524,7 @@ public:
                 omVariance(j) = igammarnd(parama, 1.0 / paramb);
             }
             omPrecision = omVariance.array().pow(-1.0);
-
             FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
-            cout << removeZeros(omidentity, Loadings, 0) << endl; 
             if (i >= burnin)
             {
                 BetaPosteriorDraws[i - (burnin)] = betanew;
@@ -548,6 +547,12 @@ public:
         file.open(fname);
         if (file.is_open())
         {
+            storePosterior(path+version +"beta.csv", BetaPosteriorDraws);
+            storePosterior(path+version +"loadings.csv", LoadingsPosteriorDraws);
+            storePosterior(path+version+"gammas.csv", GammasPosteriorDraws);
+            storePosterior(path+version+"factors.csv", FactorPosteriorDraws);
+            storePosterior(path+version+"factorVariance.csv", FactorVariancePosteriorDraws);
+            storePosterior(path+version+"omPrecision.csv", ObsPrecisionPosteriorDraws);
             file << "Integrated Likelihood Version run with: " << Sims << " "
                  << "burnin " << burnin << endl;
             file << "Beta avg" << endl;

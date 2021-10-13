@@ -2,6 +2,7 @@
 #include "EigenTools.hpp"
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
+#include "TimeSeriesTools.hpp"
 int main()
 {
 
@@ -18,6 +19,12 @@ int main()
     
     makeBigBlockDiag(S, A, T); 
     cout << S << endl;
+
+    RowVectorXd p(1); 
+    p << .4;
+    MatrixXd params = p; 
+    VectorXd var = VectorXd::Ones(1); 
+    cout << MakePrecisionBig(params, var, 10) << endl; 
 
     return 0;
 }
