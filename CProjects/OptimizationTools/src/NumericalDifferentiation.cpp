@@ -35,8 +35,9 @@ VectorXd NumericalDifferentiation::CentralDifferences(const Ref<const VectorXd> 
 }
 
 MatrixXd NumericalDifferentiation::AprroximateHessian(const Ref<const VectorXd> &point,
-                                                  std::function<double(const Ref<const VectorXd> &xstar)> F, double fval1)
+                                                  std::function<double(const Ref<const VectorXd> &xstar)> F)
 {
+    double fval1 = F(point);
     int n = point.size();
     MatrixXd ei = MatrixXd::Identity(n, n);
     VectorXd p1(n);
@@ -62,8 +63,9 @@ MatrixXd NumericalDifferentiation::AprroximateHessian(const Ref<const VectorXd> 
 }
 
 MatrixXd NumericalDifferentiation::AprroximateDiagHessian(const Ref<const VectorXd> &point,
-                                                      std::function<double(const Ref<const VectorXd> &xstar)> F, double fval1)
+                                                      std::function<double(const Ref<const VectorXd> &xstar)> F)
 {
+    double fval1 = F(point); 
     int n = point.size();
     MatrixXd ei = MatrixXd::Identity(n, n);
     VectorXd p1(n);

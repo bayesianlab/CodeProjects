@@ -50,7 +50,7 @@ public:
         MatrixXd yzz = MatrixXd::Zero(nFactorsT, 1);
         MatrixXd tx;
         MatrixXd ty;
-        MatrixXd XzzPinv=(FactorPrecision + kroneckerProduct(It, (A.transpose()*FullPrecision) * A)).llt().solve(InFactorsT);
+        MatrixXd XzzPinv = (FactorPrecision + kroneckerProduct(It, (A.transpose() * FullPrecision) * A)).llt().solve(InFactorsT);
         int c1 = 0;
         int c2 = 0;
         for (int t = 0; t < T; ++t)
@@ -182,7 +182,7 @@ public:
     }
 
     template <typename T1, typename T2>
-    void setXbeta(const MatrixBase<T1> &betastar, const MatrixBase<T2> &surX, const int &K, const int &T)
+    void setXbeta(const MatrixBase<T2> &surX, const MatrixBase<T1> &betastar, const int &K, const int &T)
     {
         xbt = surX * betastar;
         xbt.resize(K, T);
@@ -304,7 +304,7 @@ public:
 
             optim.BFGS(subA, CLL, disp_on);
             proposalMean = optim.x1;
-            covDiag = optim.AprroximateDiagHessian(optim.x1, CLL, optim.fval1);
+            covDiag = optim.AprroximateDiagHessian(optim.x1, CLL);
             Diag = covDiag.diagonal();
             Diag = Diag.array().pow(-1);
             proposalCovariance = Diag.asDiagonal();
@@ -379,11 +379,17 @@ public:
             dim(Ft);
             throw invalid_argument("Error in set model, gammas not correct dim.");
         }
-        if(g0.cols() != gammas.cols())
+        if (g0.cols() != gammas.cols())
         {
             dim(g0);
             dim(gammas);
             throw invalid_argument("Error in set model, gammas and g0 rows not correct.");
+        }
+        if (b0.cols() != Xt.cols())
+        {
+            dim(b0);
+            dim(Xt);
+            throw invalid_argument("Error in set model, b0 not correct.");
         }
         this->yt = yt;
         this->Xt = Xt;
@@ -454,7 +460,7 @@ public:
                                                  subomPrecision, subFt, subFp);
             };
             optim.BFGS(subA, CLL, disp_on);
-            postCovar = optim.AprroximateDiagHessian(optim.x1, CLL, optim.fval1);
+            postCovar = optim.AprroximateDiagHessian(optim.x1, CLL);
             postCovar = postCovar.llt().solve(MatrixXd::Identity(nrows, nrows));
             PosteriorMeans[i] = subA.transpose();
             PosteriorCovariances[i] = postCovar;
@@ -476,7 +482,6 @@ public:
         MatrixXd surX(sxtcols, Xt.rows());
         surX = surForm(Xt, K);
         betanew = VectorXd::Ones(surX.cols());
-        double mil = 1e6;
         setXbeta(surX, betanew, K, T);
         MatrixXd FactorPrecision(nFactors * T, nFactors * T);
         FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
@@ -489,7 +494,7 @@ public:
         double f2;
         Optimize optim(optim_options);
         int stationarySims = Sims - (burnin);
-        MatrixXd omidentity = MakeObsModelIdentity(InfoMat, K); 
+        MatrixXd omidentity = MakeObsModelIdentity(InfoMat, K);
 
         LoadingsPosteriorDraws.resize(stationarySims);
         BetaPosteriorDraws.resize(stationarySims);
@@ -503,6 +508,7 @@ public:
 
             cout << "Sim " << i + 1 << endl;
             betaUpdater(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
+
             updateLoadingsFactors(yt, xbt, gammas, omPrecision,
                                   factorVariance, InfoMat, loadingsPriorMeans,
                                   loadingsPriorPrecision, optim);
@@ -547,12 +553,12 @@ public:
         file.open(fname);
         if (file.is_open())
         {
-            storePosterior(path+version +"beta.csv", BetaPosteriorDraws);
-            storePosterior(path+version +"loadings.csv", LoadingsPosteriorDraws);
-            storePosterior(path+version+"gammas.csv", GammasPosteriorDraws);
-            storePosterior(path+version+"factors.csv", FactorPosteriorDraws);
-            storePosterior(path+version+"factorVariance.csv", FactorVariancePosteriorDraws);
-            storePosterior(path+version+"omPrecision.csv", ObsPrecisionPosteriorDraws);
+            storePosterior(path + version + date + "_beta.csv", BetaPosteriorDraws);
+            storePosterior(path + version + date + "_loadings.csv", LoadingsPosteriorDraws);
+            storePosterior(path + version + date + "_gammas.csv", GammasPosteriorDraws);
+            storePosterior(path + version + date + "_factors.csv", FactorPosteriorDraws);
+            storePosterior(path + version + date + "_factorVariance.csv", FactorVariancePosteriorDraws);
+            storePosterior(path + version + date + "_omPrecision.csv", ObsPrecisionPosteriorDraws);
             file << "Integrated Likelihood Version run with: " << Sims << " "
                  << "burnin " << burnin << endl;
             file << "Beta avg" << endl;
@@ -670,7 +676,7 @@ public:
                 };
                 optim.BFGS(subA, CLLg, disp_on);
                 postMean = optim.x1;
-                postCovar = optim.AprroximateDiagHessian(optim.x1, CLLg, optim.fval1);
+                postCovar = optim.AprroximateDiagHessian(postMean, CLLg);
                 postCovar = postCovar.llt().solve(MatrixXd::Identity(nrows, nrows));
                 qg = logmvtpdf(subAstar.transpose(), postMean.transpose(), postCovar, df);
                 lalpha = -CLLstar(subAstar) + logmvtpdf(subA.transpose(), MeanStar.transpose(), CovarianceStar, df) +
@@ -771,7 +777,7 @@ public:
             };
             optim.BFGS(subA, CLLj, disp_on);
             jmean = optim.x1;
-            jCovar = optim.AprroximateDiagHessian(optim.x1, CLLj, optim.fval1);
+            jCovar = optim.AprroximateDiagHessian(optim.x1, CLLj);
             jCovar = jCovar.llt().solve(MatrixXd::Identity(nrows, nrows));
             lalpha = -CLLj(subA) + logmvtpdf(subAstar.transpose(), MeanStar.transpose(), CovarianceStar, df) +
                      CLLstar(subAstar) - logmvtpdf(subA.transpose(), jmean.transpose(), jCovar, df);
@@ -815,12 +821,12 @@ public:
 
         VectorXd Hf;
         VectorXd factorVariancestar = mean(FactorVariancePosteriorDraws);
-        MatrixXd FactorPrecision = MakePrecision(gammastar, factorVariancestar, T);
-
+        MatrixXd FactorPrecision(nFactors * T, nFactors * T);
         VectorXd omPrecisionstar = mean(ObsPrecisionPosteriorDraws);
         VectorXd omPrecision = omPrecisionstar;
         VectorXd omVariance = 1. / omPrecision.array();
         VectorXd factorVariance = factorVariancestar;
+        FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
         MatrixXd Numerator;
         MatrixXd Denominator;
         Denominator.setZero(nFactors, rr);
@@ -837,8 +843,8 @@ public:
         {
             cout << "Loading Reduced Run " << j + 1 << endl;
             betaUpdater(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
+            // change this someday to not have factors be mutable, should return as argument
             Denominator.col(j) = AStarReducedRun_J(xbt, gammas, omPrecision, factorVariance, optim);
-            Factors = FactorPosteriorDraws[j];
             for (int i = 0; i < nFactors; ++i)
             {
                 f2 = factorVariance(i);
@@ -857,8 +863,7 @@ public:
                 omVariance(i) = igammarnd(parama, 1.0 / paramb);
             }
             omPrecision = omVariance.array().pow(-1.0);
-            FactorPrecision = MakePrecision(gammas, factorVariance, T);
-
+            FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
             BetaRRj[j] = betanew;
             FactorRRj[j] = Factors;
             gammasRRj[j] = gammas;
@@ -870,12 +875,12 @@ public:
 
         /* Beta Reduced Run */
         betastar = mean(BetaRRj);
-        setXbeta(betastar, surX, K, T);
+        setXbeta(surX, betastar, K, T);
         VectorXd pibeta;
         pibeta.setZero(rr);
         gammastar = mean(gammasRRj);
         factorVariancestar = mean(factorVarianceRRj);
-        FactorPrecision = MakePrecision(gammastar, factorVariancestar, T);
+        FactorPrecision = MakePrecisionBig(gammastar, factorVariance, T);
         MatrixXd ytdemeaned;
         MatrixXd subytdemeaned;
         MatrixXd subgammas;
@@ -928,7 +933,7 @@ public:
                 omVariance(k) = igammarnd(parama, 1.0 / paramb);
             }
             omPrecision = omVariance.array().pow(-1.0);
-            FactorPrecision = MakePrecision(gammasRRj[j], factorVarianceRRj[j], T);
+            FactorPrecision = MakePrecisionBig(gammasRRj[j], factorVarianceRRj[j], T);
 
             FactorRRj[j] = Factors;
             gammasRRj[j] = gammas;
@@ -974,7 +979,7 @@ public:
                 omVariance(k) = igammarnd(parama, 1.0 / paramb);
             }
             omPrecision = omVariance.array().pow(-1.0);
-            FactorPrecision = MakePrecision(gammastar, factorVarianceRRj[j], T);
+            FactorPrecision = MakePrecisionBig(gammastar, factorVarianceRRj[j], T);
             FactorRRj[j] = Factors;
             omPrecisionRRj[j] = omPrecision;
             factorVarianceRRj[j] = factorVariance;
@@ -984,6 +989,7 @@ public:
         MatrixXd piOmPrecision(K, rr);
         d = 0;
         cout << "Om Precision Reduced Run" << endl;
+        FactorPrecision = MakePrecision(gammastar, factorVariancestar, T);
         for (int j = 0; j < rr; ++j)
         {
             cout << "RR = " << j + 1 << endl;
@@ -1007,7 +1013,6 @@ public:
                 paramb = (.5 * (R0 + Hf.transpose() * Hf));
                 factorVariance(n) = igammarnd(parama, 1.0 / paramb);
             }
-
             resids = yt - (Astar * Factors) - xbt;
 
             for (int k = 0; k < K; ++k)
@@ -1015,7 +1020,6 @@ public:
                 paramb = 0.5 * (R0 + (resids.row(k) * resids.row(k).transpose()));
                 piOmPrecision(k, j) = loginvgammapdf(1.0 / omPrecisionstar(k), parama, paramb);
             }
-            FactorPrecision = MakePrecision(gammastar, factorVariancestar, T);
 
             FactorRRj[j] = Factors;
             factorVarianceRRj[j] = factorVariance;
@@ -1051,7 +1055,6 @@ public:
                 pifactorVariancestar(n, j) = loginvgammapdf(factorVariancestar(n), parama, paramb);
             }
             resids = yt - (Astar * Factors) - xbt;
-            FactorPrecision = MakePrecision(gammastar, factorVariancestar, T);
             FactorRRj[j] = Factors;
         }
         posteriorStar += logavg(pifactorVariancestar, 0).sum();
@@ -1080,8 +1083,7 @@ public:
             priorFactorStar(n) = logmvnpdf(FactorStar.row(n), Z1, Covar);
             P = subFp + (subA.transpose() * subomPrecision.asDiagonal() * subA) * IT;
             P = P.llt().solve(IT);
-            factorMean = P * (subA.transpose() * subomPrecision.asDiagonal() * subytdemeaned).transpose();
-            posteriorFactorStar(n) = logmvnpdf(FactorStar.row(n), factorMean, P);
+            posteriorFactorStar(n) = logmvnpdf(FactorStar.row(n), FactorStar.row(n), P);
         }
 
         resids.resize(K, T);
@@ -1118,7 +1120,7 @@ public:
             subPriorMean = loadingsPriorMeans[n].transpose();
             subPriorPrecision = loadingsPriorPrecision[n];
             subPriorPrecision.llt().solve(MatrixXd::Identity(subPriorPrecision.rows(),
-                                                              subPriorPrecision.rows()));
+                                                             subPriorPrecision.rows()));
             priorfactorVariances(n) = loginvgammapdf(factorVariancestar(n), .5 * r0, (.5 * R0));
             priorA(n) = logmvnpdf(subA.transpose(), subPriorMean, subPriorPrecision);
             priorGammas(n) = logmvnpdf(gammastar.row(n), g0, G0);

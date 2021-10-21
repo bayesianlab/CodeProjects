@@ -231,12 +231,12 @@ public:
         file.open(fname);
         if (file.is_open())
         {
-            storePosterior(path + version + "beta.csv", BetaPosteriorDraws);
+            storePosterior(path + version + "_beta.csv", BetaPosteriorDraws);
             // storePosterior(path + version + "deltas.csv", DeltasPosteriorDraws);
-            storePosterior(path + version + "gammas.csv", GammasPosteriorDraws);
-            storePosterior(path + version + "factors.csv", FactorPosteriorDraws);
-            storePosterior(path + version + "factorVariance.csv", FactorVariancePosteriorDraws);
-            storePosterior(path + version + "omVariance.csv", OmVariancePosteriorDraws);
+            storePosterior(path + version + date + "_gammas.csv", GammasPosteriorDraws);
+            storePosterior(path + version + date + "_factors.csv", FactorPosteriorDraws);
+            storePosterior(path + version + date + "_factorVariance.csv", FactorVariancePosteriorDraws);
+            storePosterior(path + version + date + "_omVariance.csv", OmVariancePosteriorDraws);
             file << "Full Conditional Version run with: " << Sims << " "
                  << "burnin " << burnin << endl;
             file << "Beta avg" << endl;
@@ -396,12 +396,12 @@ public:
         file.open(fname);
         if (file.is_open())
         {
-            storePosterior(path + version + "beta.csv", BetaPosteriorDraws);
-            storePosterior(path + version + "deltas.csv", DeltasPosteriorDraws);
-            storePosterior(path + version + "gammas.csv", GammasPosteriorDraws);
-            storePosterior(path + version + "factors.csv", FactorPosteriorDraws);
-            storePosterior(path + version + "factorVariance.csv", FactorVariancePosteriorDraws);
-            storePosterior(path + version + "omVariance.csv", OmVariancePosteriorDraws);
+            storePosterior(path + version + date + "_beta.csv", BetaPosteriorDraws);
+            storePosterior(path + version + date + "_deltas.csv", DeltasPosteriorDraws);
+            storePosterior(path + version + date + "_gammas.csv", GammasPosteriorDraws);
+            storePosterior(path + version + date + "_factors.csv", FactorPosteriorDraws);
+            storePosterior(path + version + date + "_factorVariance.csv", FactorVariancePosteriorDraws);
+            storePosterior(path + version + date + "_omVariance.csv", OmVariancePosteriorDraws);
             file << "Full Conditional Version run with: " << Sims << " "
                  << "burnin " << burnin << endl;
             file << "Beta avg" << endl;

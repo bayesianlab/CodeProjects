@@ -365,14 +365,8 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt, Matrix
             ++colCount;
         }
         CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
-        MeanSum = CovarSum * MeanSum;
-        rrvals(n) = logmvnpdf(Factorstar.row(n), MeanSum.transpose(), CovarSum);
-        // if( isnan( rrvals(n)) )
-        // {
-        //     cout << CovarSum.diagonal() << endl; 
-        //     exit(1);
-        //     return rrvals;  
-        // }
+        // MeanSum = CovarSum * MeanSum;
+        rrvals(n) = logmvnpdf(Factorstar.row(n), Factorstar.row(n), CovarSum);
     }
     return rrvals;
 }
@@ -439,8 +433,8 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt, Matrix
             ++colCount;
         }
         CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
-        MeanSum = CovarSum * MeanSum;
-        rrvals(n) = logmvnpdf(Factorstar.row(n), MeanSum.transpose(), CovarSum);
+        // MeanSum = CovarSum * MeanSum;
+        rrvals(n) = logmvnpdf(Factorstar.row(n), Factorstar.row(n), CovarSum);
     }
     return rrvals;
 }
