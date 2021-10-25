@@ -8,7 +8,7 @@ boost::random::mt19937 GLOBAL_SEED(now);
 double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
                  const MatrixXd &Sig)
 {
-  
+
   int p = Sig.cols();
   double c = -.5 * p * log(2 * M_PI) - .5 * logdet(Sig);
   double v = -.5 * ((x - mu) * Sig.llt().solve((x - mu).transpose())).value() + c;
@@ -148,17 +148,17 @@ VectorXd loginvgammapdf(const Ref<const VectorXd> &y, double alpha,
                         double beta)
 {
   VectorXd pdf(y.size());
-  for(int i = 0; i < y.size(); ++i)
+  for (int i = 0; i < y.size(); ++i)
   {
-    pdf(i) = loginvgammapdf(y(i), alpha, beta); 
+    pdf(i) = loginvgammapdf(y(i), alpha, beta);
   }
-  return pdf; 
+  return pdf;
 }
 
 double loginvgammapdf(double y, double alpha, double beta)
 {
-  /* Greenberg parameterization, appendix A.1.8 */ 
-  return (alpha * log(beta) - lgamma(alpha)) - ((alpha+1)*log(y)) - (beta/y);
+  /* Greenberg parameterization, appendix A.1.8 */
+  return (alpha * log(beta) - lgamma(alpha)) - ((alpha + 1) * log(y)) - (beta / y);
 }
 
 double chi2rnd(int df)

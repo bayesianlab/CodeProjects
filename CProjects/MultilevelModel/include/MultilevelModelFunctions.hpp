@@ -6,7 +6,7 @@
 #include <math.h>
 #include <string.h>
 #include <Eigen/Dense>
-#include <Eigen/Sparse> 
+#include <Eigen/Sparse>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <stdlib.h>
 #include "Distributions.hpp"
@@ -22,7 +22,7 @@ MatrixXd makeOtrokXt(const Matrix<int, Dynamic, 2> &InfoMat, const Ref<MatrixXd>
 MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings,
                       const MatrixXd &FactorPrecision, const VectorXd &precision, int T);
 
-MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &m, int eqns);
+MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &m, const int eqns);
 
 template <typename D>
 MatrixXd zeroOutFactorLevel(const MatrixBase<D> &Id, int level)
@@ -197,9 +197,10 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
     MatrixXd D0;
     RowVectorXd btemp;
     double f2, s2;
+    Xtk = groupByTime(Xtfull, K);
+
     for (int n = 0; n < nFactors; ++n)
     {
-        Xtk = groupByTime(Xtfull, K);
         CovarSum.setZero(T, T);
         MeanSum.setZero(T, 1);
         for (int k = InfoMat.row(n).head(1).value(); k <= InfoMat.row(n).tail(1).value(); ++k)
@@ -230,11 +231,11 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
         {
             ++colCount;
         }
-        CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
+        CovarSum = CovarSum.llt().solve(MatrixXd::Identity(T, T));
         MeanSum = CovarSum * MeanSum;
-        Factors.row(n) = (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows())).transpose();
-        Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+        Factors.row(n) = (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows(), 1)).transpose();
     }
+    Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
 }
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
@@ -263,7 +264,7 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
     double f2, s2;
     for (int n = 0; n < nFactors; ++n)
     {
-        Xtk = groupByTime(Xtfull,  K);
+        Xtk = groupByTime(Xtfull, K);
         CovarSum.setZero(T, T);
         MeanSum.setZero(T, 1);
         for (int k = InfoMat.row(n).head(1).value(); k <= InfoMat.row(n).tail(1).value(); ++k)
@@ -285,7 +286,7 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
             else
             {
                 s2 = omVariance(k);
-                H1 = (1/s2) * IT;
+                H1 = (1 / s2) * IT;
                 CovarSum += (betaParams(k, nXs + colCount) * betaParams(k, nXs + colCount)) * H1;
                 MeanSum += betaParams(k, nXs + colCount) * (H1 * epsilons.transpose());
             }
@@ -366,6 +367,7 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt, Matrix
         }
         CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
         // MeanSum = CovarSum * MeanSum;
+        // rrvals(n) = logmvnpdf(Factorstar.row(n), MeanSum, CovarSum);
         rrvals(n) = logmvnpdf(Factorstar.row(n), Factorstar.row(n), CovarSum);
     }
     return rrvals;

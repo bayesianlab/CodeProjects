@@ -60,15 +60,17 @@ MatrixXd makeOtrokXt(const Matrix<int, Dynamic, 2> &InfoMat, const Ref<MatrixXd>
     return Xt;
 }
 
-MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &InfoMat, int eqns)
+MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &InfoMat, const int eqns)
 {
     int nFactors = InfoMat.rows();
     MatrixXd X = MatrixXd::Zero(eqns, nFactors);
     int factor = 0;
+
     for (int i = 0; i < nFactors; ++i)
     {
         int begin = InfoMat.row(i).head(1).value();
         int end = InfoMat.row(i).tail(1).value();
+
         if (end > eqns)
         {
             throw invalid_argument("In MakeObsModelIdentity, index passed number of equations.");

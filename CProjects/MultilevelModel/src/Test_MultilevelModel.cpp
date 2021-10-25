@@ -85,45 +85,48 @@ int main()
     int otrokwhitemantest = 0;
     int chanandj = 0;
     int comparemethods = 0;
-    int realdata_kow = 0;
-    int realdata_intlike = 1;
+    int realdata_kow = 1;
+    int realdata_intlike = 0;
     if (otrokwhitemantest)
     {
         /* Run the standard otrok whiteman model, 1 factor*/
         DynamicFactorsArErrors dfae;
-        int T = 50;
+        int T = 100;
         int K = 18;
         int nXs = 2;
         double beta = .5;
         RowVectorXd gam(1);
         gam << .25;
-        Matrix<int, Dynamic, 2> InfoMat(1, 2);
-        InfoMat << 0, K - 1;
+        // Matrix<int, Dynamic, 2> InfoMat(1, 2);
+        // InfoMat << 0, K - 1;
 
-        // Matrix<int, Dynamic, 2> InfoMat(9, 2);
-        // InfoMat << 0, K - 1,
-        //     0, 8,
-        //     9, K - 1,
-        //     0, 2,
-        //     3, 5,
-        //     6, 8,
-        //     9, 11,
-        //     12, 14,
-        //     15, 17;
+        Matrix<int, Dynamic, 2> InfoMat(9, 2);
+        InfoMat << 0, K - 1,
+            0, 8,
+            9, K - 1,
+            0, 2,
+            3, 5,
+            6, 8,
+            9, 11,
+            12, 14,
+            15, 17;
 
         dfae.genData(T, K, nXs, beta, InfoMat, gam, gam, 1);
         FullConditionals mlotrok;
         double r0 = 6;
-        double R0 = 12;
+        double R0 = 20;
+        double d0 = 6;
+        double D0 = 20; 
+        int id = 2; 
         RowVectorXd g0 = RowVectorXd::Zero(gam.size());
         MatrixXd G0 = MatrixXd::Identity(gam.size(), gam.size());
         MatrixXd Xt = dfae.Xt.leftCols(nXs);
 
         mlotrok.setModel(dfae.yt, Xt, dfae.Factors, dfae.gammas, dfae.deltas, InfoMat,
-                         dfae.b0, dfae.B0, r0, R0, g0, G0, g0, G0);
+                         dfae.b0, dfae.B0, r0, R0, d0, D0, g0, G0, g0, G0, id);
 
-        int sims1 = 10;
-        int burnin1 = 1;
+        int sims1 = 100;
+        int burnin1 = 10;
         mlotrok.runModel(sims1, burnin1);
         mlotrok.ml();
 
@@ -131,8 +134,12 @@ int main()
         cout << mean(mlotrok.BetaPosteriorDraws) << endl;
         cout << mean(mlotrok.DeltasPosteriorDraws).colwise().mean() << endl;
         cout << mean(mlotrok.GammasPosteriorDraws).colwise().mean() << endl;
+        cout << mean(mlotrok.FactorVariancePosteriorDraws).mean() << endl; 
+        cout << mean(mlotrok.OmVariancePosteriorDraws).mean() << endl; 
         plotter("plot.p", Factorbar.row(0).transpose(),
                 dfae.Factors.row(0).transpose(), "fest", "ftrue");
+        plotter("plot.p", Factorbar.row(1).transpose(),
+                dfae.Factors.row(1).transpose(), "fest", "ftrue");
     }
     if (chanandj)
     {
@@ -276,16 +283,15 @@ int main()
         size_t t = x.find("build");
         string path = x.substr(0, t);
         string ytpath = path + "kow.csv";
-        string xtpath = path + "kowXt.csv";
-        string indexpath = path + "factor_index_world_region.csv";
+        string indexpath = path + "factor_index_world_region_country.csv";
         MatrixXd yt = readCSV(ytpath);
-        MatrixXd xvals = readCSV(xtpath);
+
         MatrixXd I = readCSV(indexpath);
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
         int K = yt.rows();
         int T = yt.cols();
-        int sims = 500;
-        int burnin = 100;
+        int sims = 100;
+        int burnin = 50;
         int nFactors = InfoMat.rows();
 
         MatrixXd Xt(K * T, 1);
@@ -294,9 +300,8 @@ int main()
         MatrixXd Factors = normrnd(0, 1, nFactors, T);
         int gammaCols = 3;
         RowVectorXd g(gammaCols);
-        g << .01, .02, .03;
+        g << .0, .05, .1;
         MatrixXd gammas = g.replicate(nFactors, 1);
-        gammas.setZero();
         MatrixXd deltas;
         deltas = g.replicate(K, 1);
         RowVectorXd g0 = RowVectorXd::Zero(gammaCols);
@@ -306,17 +311,19 @@ int main()
         int levels = calcLevels(InfoMat, K);
         RowVectorXd otrokb0 = RowVectorXd::Zero(Xt.cols() + levels);
         MatrixXd otrokB0 = MatrixXd::Identity(Xt.cols() + levels, Xt.cols() + levels);
-        otrokB0.block(0, 0, nXs, nXs) = 10 * MatrixXd::Identity(nXs, nXs);
-        cout << otrokB0 << endl;
+        otrokB0.block(0, 0, nXs, nXs) = MatrixXd::Identity(nXs, nXs);
 
         double r0 = 6;
-        double R0 = 6;
+        double R0 = 100;
+        double d0 = 6;
+        double D0 = .001;
+        int id = 2;
         FullConditionals mlotrok;
 
-        // mlotrok.setModel(yt, Xt, Factors, gammas, deltas, InfoMat, otrokb0, otrokB0,
-        //                  r0, R0, g0, G0, g0, G0);
-        // mlotrok.runModel(sims, burnin);
-        // mlotrok.ml();
+        mlotrok.setModel(yt, Xt, Factors, gammas, deltas, InfoMat, otrokb0, otrokB0,
+                         r0, R0, d0, D0, g0, G0, g0, G0, id);
+        mlotrok.runModel(sims, burnin);
+        mlotrok.ml();
     }
     if (realdata_intlike)
     {

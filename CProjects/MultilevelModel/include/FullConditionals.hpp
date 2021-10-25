@@ -32,8 +32,11 @@ public:
     int Sims;
     int burnin;
     int noAr;
+    int id;
     double r0;
     double R0;
+    double d0;
+    double D0;
     double marginal_likelihood;
     RowVectorXd b0;
     RowVectorXd g0;
@@ -52,8 +55,8 @@ public:
     void setModel(const Ref<const MatrixXd> &yt, const Ref<const MatrixXd> &Xt,
                   const Ref<const MatrixXd> &Ft, const Ref<const MatrixXd> &gammas, const Ref<const MatrixXd> &deltas,
                   const Matrix<int, Dynamic, 2> &InfoMat, const RowVectorXd &b0, const MatrixXd &B0, const double &r0,
-                  const double &R0, const Ref<const RowVectorXd> &g0, const Ref<const MatrixXd> &G0,
-                  const Ref<const RowVectorXd> &delta0, const Ref<const MatrixXd> &Delta0)
+                  const double &R0, const double &d0, const double &D0, const Ref<const RowVectorXd> &g0, const Ref<const MatrixXd> &G0,
+                  const Ref<const RowVectorXd> &delta0, const Ref<const MatrixXd> &Delta0, const double &id)
     {
         noAr = 0;
         if ((gammas.rows() > Ft.rows()) || (gammas.rows() < Ft.rows()))
@@ -70,6 +73,7 @@ public:
             dim(yt);
             throw invalid_argument("Error in set model, deltas or yt not set correctly.");
         }
+
         this->yt = yt;
         this->Xt = Xt;
         this->gammas = gammas;
@@ -81,11 +85,21 @@ public:
         this->R0 = R0;
         this->g0 = g0;
         this->G0 = G0;
+        this->d0 = d0;
+        this->D0 = D0;
         this->omPrecision = VectorXd::Ones(this->yt.rows());
         this->factorVariance = VectorXd::Ones(Ft.rows());
         this->omVariance = 1. / this->omPrecision.array();
         this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
         setFactors(Ft);
+        int K = yt.rows();
+        int nXs = Xt.cols();
+        int levels = calcLevels(InfoMat, K);
+        this->id = id;
+        if (nXs + levels != b0.cols())
+        {
+            throw invalid_argument("Error in set model, number of b0 cols must equal number of levels + nXs");
+        }
     }
 
     void setModel(const Ref<const MatrixXd> &yt, const Ref<const MatrixXd> &Xt,
@@ -116,13 +130,13 @@ public:
         this->omVariance = 1. / this->omPrecision.array();
         this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
         setFactors(Ft);
-        int check = Xt.cols() + Factors.rows();
-        if (b0.cols() != check)
+        int K = yt.rows();
+        int nXs = Xt.cols();
+        int levels = calcLevels(InfoMat, K);
+        if (nXs + levels != b0.cols())
         {
-            throw invalid_argument("Error in set model. prior b0 must have equal columns to stacked Xt + nFactors.");
+            throw invalid_argument("Error in set model, number of b0 cols must equal number of levels + nXs");
         }
-        if (B0.rows() != check || B0.cols() != check)
-            throw invalid_argument("Error in set model. prior B0 must have equal columns and rows to stacked Xt + nFactors.");
     }
 
     void runModelNoAr(const int &Sims, const int &burnin)
@@ -151,13 +165,12 @@ public:
         ArrayXi all = sequence(0, K * T);
         ArrayXi indexshift;
         MatrixXd ythat(K, T);
-        dim(Xt);
         MatrixXd Xtfull(Xt.rows(), Xt.cols() + levels);
         Xtfull.leftCols(nXs) = Xt;
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
         MatrixXd btemp(1, Xtfull.cols());
         MatrixXd betaParams(K, Xtfull.cols());
-        MatrixXd Xtemp(T, Xtfull.cols());
+
         MatrixXd Xthat(T, Xtfull.cols());
         MatrixXd epsilons(K, T);
         MatrixXd D0;
@@ -301,63 +314,86 @@ public:
         Xtfull.leftCols(nXs) = Xt;
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
 
-        MatrixXd Xtemp(T, Xtfull.cols());
         MatrixXd Xthat(T, Xtfull.cols());
         MatrixXd epsilons(1, T);
-        MatrixXd D0;
         MatrixXd Ilagom = MatrixXd::Identity(arOrderOm, arOrderOm);
         MatrixXd residuals(1, T);
-        MatrixXd H1;
-        MatrixXd H2;
-        MatrixXd CovarSum;
         MatrixXd I = MakeObsModelIdentity(InfoMat, K);
-        MatrixXd P0;
-        MatrixXd P0lower;
-        MatrixXd P0lowerinv;
-        MatrixXd H;
         MatrixXd nu;
         MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
         MatrixXi FactorInfo = createFactorInfo(InfoMat, K);
 
         MatrixXd betaParams(K, nXs + levels);
+        betaParams.setZero(K, nXs + levels);
+
+        betaParams = MatrixXd::Ones(K, nXs + levels) * .5;
+
         RowVectorXd btemp(nXs + levels);
         MatrixXi IdentificationMat = returnIdentificationRestictions(FactorInfo);
-
+        MatrixXd H;
+        int id2;
         for (int i = 0; i < Sims; ++i)
         {
             cout << "Sim " << i + 1 << endl;
             Xtk = groupByTime(Xtfull, K);
-            ythat = makeStationary(yt, deltas, omVariance, 0);
             for (int k = 0; k < K; ++k)
             {
+                H = ReturnH(deltas.row(k), T);
+                // ythat = makeStationary(yt.row(k), deltas.row(k), s2, 1);
+                ythat = H * yt.row(k).transpose();
+                ythat.transposeInPlace();
+                Xthat = H * Xtk[k];
 
-                Xthat = makeStationary(Xtk[k], deltas.row(k), s2, 1);
+                // Xthat = makeStationary(Xtk[k], deltas.row(k), s2, 1);
 
                 s2 = omVariance(k);
-                ub.updateBetaUnivariate(ythat.row(k), Xthat, s2, b0, B0);
+                ub.updateBetaUnivariate(ythat, Xthat, s2, b0, B0);
                 betaParams.row(k) = ub.bnew;
                 for (int t = 0; t < IdentificationMat.row(k).cols(); ++t)
                 {
                     if (IdentificationMat(k, t) == 1)
                     {
                         // Identification scheme 1
-                        betaParams(k, nXs + t) = 1;
+                        if (id == 1)
+                        {
+                            betaParams(k, nXs + t) = 1;
+                        }
                         // Identification scheme 2
-                        // betaParams(k, nXs + t) = abs(betaParams(k, nXs + t));
+                        if (id == 2)
+                        {
+                            if (betaParams(k, nXs + t) < 0)
+                            {
+                                id2 = 0;
+                                while (betaParams(k, nXs + t) < 0)
+                                {
+                                    ub.updateBetaUnivariate(ythat, Xthat, s2, b0, B0);
+                                    betaParams.row(k) = ub.bnew;
+                                    id2++;
+                                    if (id2 == 20)
+                                    {
+                                        betaParams(k, nXs + t) = abs(betaParams(k, nXs + t));
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-
-                epsilons = yt.row(k) - betaParams.row(k) * Xtemp.transpose();
+                epsilons = yt.row(k) - betaParams.row(k) * Xtk[k].transpose();
                 arupdater.updateArParameters(epsilons, deltas.row(k), s2, g0, G0);
                 deltas.row(k) = arupdater.phinew;
                 // D0 = Ilagom;
                 // D0 = Ilagom * (1 / s2);
-                D0 = setInitialCovar(deltas.row(k), s2);
-                D0 = D0.ldlt().solve(Ilagom);
-                D0 = D0.llt().matrixL();
-                residuals.rightCols(T - arOrderOm) = ythat.row(k).rightCols(T - arOrderOm) -
+                // D0 = setInitialCovar(deltas.row(k), s2);
+                // D0 = D0.ldlt().solve(Ilagom);
+                // D0 = D0.llt().matrixL();
+                H = ReturnH(deltas.row(k), T);
+                ythat = H * yt.row(k).transpose();
+                ythat.transposeInPlace();
+                Xthat = H * Xtk[k];
+                residuals.rightCols(T - arOrderOm) = ythat.rightCols(T - arOrderOm) -
                                                      betaParams.row(k) * Xthat.transpose().rightCols(T - arOrderOm);
-                residuals.leftCols(arOrderOm) = (D0 * epsilons.leftCols(arOrderOm).transpose()).transpose();
+                residuals.leftCols(arOrderOm) = ythat.leftCols(arOrderOm);
                 omVariance(k) = updateVariance(residuals, r0, R0).value();
             }
 
@@ -367,14 +403,16 @@ public:
             {
                 arupdater.updateArParameters(Factors.row(n), gammas.row(n), factorVariance(n), g0, G0);
                 gammas.row(n) = arupdater.phinew;
-                H = ReturnH(gammas.row(n), T);
-                nu = (H * Factors.row(n).transpose()).transpose();
-                factorVariance(n) = updateVariance(nu, r0, R0).value();
+                if (id == 1)
+                {
+                    H = ReturnH(gammas.row(n), T);
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    factorVariance(n) = updateVariance(nu, d0, D0).value();
+                }
             }
 
             if (i >= burnin)
             {
-
                 BetaPosteriorDraws[i - burnin] = betaParams;
                 FactorPosteriorDraws[i - burnin] = Factors;
                 DeltasPosteriorDraws[i - burnin] = deltas;
@@ -444,13 +482,12 @@ public:
         DeltasPosteriorDrawsj.resize(rr);
         OmVariancePosteriorDrawsj.resize(rr);
         FactorVariancePosteriorDrawsj.resize(rr);
-        MatrixXd ythat(K, T);
+        MatrixXd ythat(1, T);
         MatrixXd Xtfull(Xt.rows(), nXs + levels);
-        MatrixXd Xtemp;
+
         MatrixXd Xthat;
         MatrixXd epsilons(1, T);
         MatrixXd residuals(1, T);
-        MatrixXd D0(arOrderOm, arOrderOm);
         MatrixXd H1;
         MatrixXd H2;
         MatrixXd CovarSum;
@@ -473,6 +510,7 @@ public:
         MatrixXd nu;
         std::vector<MatrixXd> Xtk;
         Xtk.resize(K);
+
         cout << "Beta Reduced Runs" << endl;
         MatrixXi FactorInfo = createFactorInfo(InfoMat, K);
         MatrixXd tempX(T, nXs + levels);
@@ -489,27 +527,33 @@ public:
             deltas = DeltasPosteriorDraws[j];
             gammas = GammasPosteriorDraws[j];
             omVariance = OmVariancePosteriorDraws[j];
-            Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+            factorVariance = FactorVariancePosteriorDraws[j];
             Xtk = groupByTime(Xtfull, K);
-            ythat = makeStationary(yt, deltas, omVariance, 0);
             for (int k = 0; k < K; ++k)
             {
                 s2 = omVariance(k);
-                Xthat = makeStationary(Xtk[k], deltas.row(k), s2, 1);
+                H = ReturnH(deltas.row(k), T);
+                ythat = H * yt.row(k).transpose();
+                ythat.transposeInPlace();
+                Xthat = H * Xtk[k];
+                // Xthat = makeStationary(Xtk[k], deltas.row(k), s2, 1);
 
-                piPosterior(k, j) = ub.betaReducedRun(betaStar.row(k), ythat.row(k), Xthat, s2, b0, B0);
+                piPosterior(k, j) = ub.betaReducedRun(betaStar.row(k), ythat, Xthat, s2, b0, B0);
 
                 epsilons = yt.row(k) - betaStar.row(k) * Xtk[k].transpose();
                 arupdater.updateArParameters(epsilons, deltas.row(k), s2, g0, G0);
                 deltas.row(k) = arupdater.phinew;
-
-                D0 = Ilagom * (1 / s2);
+                // D0 = Ilagom * (1 / s2);
                 // D0 = setInitialCovar(deltas.row(k), 1);
                 // D0 = D0.ldlt().solve(Ilagom);
                 // D0 = D0.llt().matrixL();
-                residuals.rightCols(T - arOrderOm) = ythat.row(k).rightCols(T - arOrderOm) -
+                H = ReturnH(deltas.row(k), T);
+                ythat = H * yt.row(k).transpose();
+                ythat.transposeInPlace();
+                Xthat = H * Xtk[k];
+                residuals.rightCols(T - arOrderOm) = ythat.rightCols(T - arOrderOm) -
                                                      betaStar.row(k) * Xthat.transpose().rightCols(T - arOrderOm);
-                residuals.leftCols(arOrderOm) = epsilons.leftCols(arOrderOm) * D0;
+                residuals.leftCols(arOrderOm) = ythat.leftCols(arOrderOm);
                 omVariance(k) = updateVariance(residuals, r0, R0).value();
             }
 
@@ -519,9 +563,12 @@ public:
             {
                 arupdater.updateArParameters(Factors.row(n), gammas.row(n), factorVariance(n), g0, G0);
                 gammas.row(n) = arupdater.phinew;
-                H = ReturnH(gammas.row(n), T);
-                nu = (H * Factors.row(n).transpose()).transpose();
-                factorVariance(n) = updateVariance(nu, r0, R0).value();
+                if (id == 1)
+                {
+                    H = ReturnH(gammas.row(n), T);
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    factorVariance(n) = updateVariance(nu, d0, D0).value();
+                }
             }
             FactorPosteriorDrawsj[j] = Factors;
             GammasPosteriorDrawsj[j] = gammas;
@@ -538,7 +585,6 @@ public:
         MatrixXd Numerator(K, rr);
         MatrixXd Denominator(K, rr);
         VectorXd priorDeltaStar(K);
-        ythat = makeStationary(yt, deltastar, omVariance, 0);
         for (int k = 0; k < K; ++k)
         {
             priorDeltaStar(k) = logmvnpdf(deltastar.row(k), g0, G0);
@@ -549,25 +595,32 @@ public:
             deltas = DeltasPosteriorDrawsj[j];
             gammas = GammasPosteriorDrawsj[j];
             omVariance = OmVariancePosteriorDrawsj[j];
-            Factors = FactorPosteriorDraws[j];
-            Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+            Factors = FactorPosteriorDrawsj[j];
+            factorVariance = FactorVariancePosteriorDrawsj[j];
             Xtk = groupByTime(Xtfull, K);
-            ythat = makeStationary(yt, deltastar, omVariance, 0);
 
             for (int k = 0; k < K; ++k)
             {
                 s2 = omVariance(k);
-                Xthat = makeStationary(Xtk[k], deltas.row(k), s2, 1);
+                H = ReturnH(deltastar.row(k), T);
+                ythat = H * yt.row(k).transpose();
+                ythat.transposeInPlace();
+                Xthat = H * Xtk[k];
                 epsilons = yt.row(k) - betaStar.row(k) * Xtk[k].transpose();
                 Numerator(k, j) = arupdater.alphag(epsilons, deltas.row(k), deltastar.row(k), s2, g0, G0);
                 Denominator(k, j) = arupdater.alphaj(deltastar.row(k), epsilons, s2, g0, G0);
-
-                D0 = setInitialCovar(deltastar.row(k), 1);
-                D0 = D0.ldlt().solve(Ilagom);
-                D0 = D0.llt().matrixL();
-                residuals.rightCols(T - arOrderOm) = ythat.row(k).rightCols(T - arOrderOm) -
+                // D0 = Ilagom;
+                // D0 = Ilagom * (1 / s2);
+                // D0 = setInitialCovar(deltastar.row(k), 1);
+                // D0 = D0.ldlt().solve(Ilagom);
+                // D0 = D0.llt().matrixL();
+                H = ReturnH(deltastar.row(k), T);
+                ythat = H * yt.row(k).transpose();
+                ythat.transposeInPlace();
+                Xthat = H * Xtk[k];
+                residuals.rightCols(T - arOrderOm) = ythat.rightCols(T - arOrderOm) -
                                                      betaStar.row(k) * Xthat.transpose().rightCols(T - arOrderOm);
-                residuals.leftCols(arOrderOm) = epsilons.leftCols(arOrderOm) * D0;
+                residuals.leftCols(arOrderOm) = ythat.leftCols(arOrderOm);
                 omVariance(k) = updateVariance(residuals, r0, R0).value();
             }
             updateFactor2(Factors, yt, Xtfull, InfoMat, betaStar, omVariance, factorVariance, deltastar, gammas);
@@ -576,9 +629,12 @@ public:
             {
                 arupdater.updateArParameters(Factors.row(n), gammas.row(n), factorVariance(n), g0, G0);
                 gammas.row(n) = arupdater.phinew;
-                H = ReturnH(gammas.row(n), T);
-                nu = (H * Factors.row(n).transpose()).transpose();
-                factorVariance(n) = updateVariance(nu, r0, R0).value();
+                if (id == 1)
+                {
+                    H = ReturnH(gammas.row(n), T);
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    factorVariance(n) = updateVariance(nu, d0, D0).value();
+                }
             }
 
             FactorPosteriorDrawsj[j] = Factors;
@@ -608,21 +664,28 @@ public:
             Factors = FactorPosteriorDraws[j];
             omVariance = OmVariancePosteriorDrawsj[j];
             gammas = GammasPosteriorDrawsj[j];
+            factorVariance = FactorVariancePosteriorDrawsj[j];
             Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
             Xtk = groupByTime(Xtfull, K);
-            ythat = makeStationary(yt, deltastar, omVariance, 0);
             for (int k = 0; k < K; ++k)
             {
                 s2 = omVariance(k);
-                Xthat = makeStationary(Xtk[k], deltastar.row(k), s2, 1);
+                H = ReturnH(deltastar.row(k), T);
+                ythat = H * yt.row(k).transpose();
+                ythat.transposeInPlace();
+                Xthat = H * Xtk[k];
                 epsilons = yt.row(k) - betaStar.row(k) * Xtk[k].transpose();
-
-                D0 = setInitialCovar(deltastar.row(k), 1);
-                D0 = D0.ldlt().solve(Ilagom);
-                D0 = D0.llt().matrixL();
-                residuals.rightCols(T - arOrderOm) = ythat.row(k).rightCols(T - arOrderOm) -
+                // D0 = Ilagom * (1 / s2);
+                // D0 = setInitialCovar(deltastar.row(k), 1);
+                // D0 = D0.ldlt().solve(Ilagom);
+                // D0 = D0.llt().matrixL();
+                H = ReturnH(deltastar.row(k), T);
+                ythat = H * yt.row(k).transpose();
+                ythat.transposeInPlace();
+                Xthat = H * Xtk[k];
+                residuals.rightCols(T - arOrderOm) = ythat.rightCols(T - arOrderOm) -
                                                      betaStar.row(k) * Xthat.transpose().rightCols(T - arOrderOm);
-                residuals.leftCols(arOrderOm) = epsilons.leftCols(arOrderOm) * D0;
+                residuals.leftCols(arOrderOm) = ythat.leftCols(arOrderOm);
                 omVariance(k) = updateVariance(residuals, r0, R0).value();
             }
 
@@ -633,9 +696,12 @@ public:
                 f2 = factorVariance(n);
                 Numerator(n, j) = arupdater.alphag(Factors.row(n), gammas.row(n), gammastar.row(n), f2, g0, G0);
                 Denominator(n, j) = arupdater.alphaj(gammastar.row(n), Factors.row(n), f2, g0, G0);
-                H = StoreH[n];
-                nu = (H * Factors.row(n).transpose()).transpose();
-                factorVariance(n) = updateVariance(nu, r0, R0).value();
+                if (id == 1)
+                {
+                    H = ReturnH(gammas.row(n), T);
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    factorVariance(n) = updateVariance(nu, d0, D0).value();
+                }
             }
             FactorPosteriorDrawsj[j] = Factors;
             OmVariancePosteriorDrawsj[j] = omVariance;
@@ -652,7 +718,6 @@ public:
         double paramb;
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factorstar, K);
         VectorXd priorOmVarianceStar(K);
-        ythat = makeStationary(yt, deltastar, omVariancestar, 0);
 
         for (int k = 0; k < K; ++k)
         {
@@ -663,14 +728,16 @@ public:
         {
             cout << "RR = " << j + 1 << endl;
             Xtk = groupByTime(Xtfull, K);
+            factorVariance = FactorVariancePosteriorDrawsj[j];
             for (int k = 0; k < K; ++k)
             {
                 s2 = omVariancestar(k);
-                Xthat = makeStationary(Xtk[k], deltastar.row(k), s2, 1);
-
-                residuals = ythat.row(k) - betaStar.row(k) * Xthat.transpose();
+                H = ReturnH(deltastar.row(k), T);
+                ythat = H * yt.row(k).transpose();
+                ythat.transposeInPlace();
+                Xthat = H * Xtk[k];
+                residuals = ythat - betaStar.row(k) * Xthat.transpose();
                 paramb = .5 * (R0 + (residuals * residuals.transpose()).value());
-
                 piPosterior(k, j) = loginvgammapdf(s2, parama, paramb);
             }
             updateFactor2(Factors, yt, Xtfull, InfoMat, betaStar, omVariancestar, factorVariance,
@@ -678,54 +745,63 @@ public:
 
             for (int n = 0; n < nFactors; ++n)
             {
-                arupdater.updateArParameters(Factors.row(n), gammas.row(n), factorVariance(n), g0, G0);
-                gammastar.row(n) = arupdater.phinew;
-                H = StoreH[n];
-                nu = (H * Factors.row(n).transpose()).transpose();
-                factorVariance(n) = updateVariance(nu, r0, R0).value();
+                if (id == 1)
+                {
+                    H = StoreH[n];
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    factorVariance(n) = updateVariance(nu, d0, D0).value();
+                }
             }
             FactorPosteriorDrawsj[j] = Factors;
             FactorVariancePosteriorDrawsj[j] = factorVariance;
         }
         posteriorStar += logavg(piPosterior, 0).sum();
-        cout << posteriorStar << endl;
-
-        cout << "Factor Variance Reduced Run" << endl;
+        cout << "Factor Variance Reduced Run (if id == 1)" << endl;
         VectorXd factorVariancestar = mean(FactorVariancePosteriorDrawsj);
-        parama = .5 * (T + r0);
-        piPosterior.resize(nFactors, rr);
-        Factorstar = mean(FactorPosteriorDrawsj);
-        Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factorstar, K);
-        Xtk = groupByTime(Xtfull, K);
         VectorXd priorFactorVarianceStar(nFactors);
-        for (int n = 0; n < nFactors; ++n)
+        cout << posteriorStar << endl;
+        if (id == 1)
         {
-            f2 = factorVariancestar(n);
-            priorFactorVarianceStar(n) = loginvgammapdf(f2, .5 * r0, .5 * R0);
-        }
-        for (int j = 0; j < rr; ++j)
-        {
-            cout << "RR = " << j + 1 << endl;
-            updateFactor2(Factors, yt, Xtfull, InfoMat, betaStar, omVariancestar,
-                          factorVariancestar, deltastar, gammastar);
+
+            parama = .5 * (T + r0);
+            piPosterior.resize(nFactors, rr);
+            Factorstar = mean(FactorPosteriorDrawsj);
+            Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factorstar, K);
+            Xtk = groupByTime(Xtfull, K);
             for (int n = 0; n < nFactors; ++n)
             {
-                H = StoreH[n];
-                nu = (H * Factors.row(n).transpose()).transpose();
-                paramb = .5 * (R0 + (nu * nu.transpose()).value());
-                piPosterior(n, j) = loginvgammapdf(factorVariancestar(n), parama, paramb);
+                f2 = factorVariancestar(n);
+                priorFactorVarianceStar(n) = loginvgammapdf(f2, .5 * d0, .5 * D0);
             }
-            FactorPosteriorDrawsj[j] = Factors;
-        }
-        posteriorStar += logavg(piPosterior, 0).sum();
-        cout << posteriorStar << endl;
 
+            for (int j = 0; j < rr; ++j)
+            {
+                cout << "RR = " << j + 1 << endl;
+                updateFactor2(Factors, yt, Xtfull, InfoMat, betaStar, omVariancestar,
+                              factorVariancestar, deltastar, gammastar);
+                for (int n = 0; n < nFactors; ++n)
+                {
+                    H = StoreH[n];
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    paramb = .5 * (R0 + (nu * nu.transpose()).value());
+                    piPosterior(n, j) = loginvgammapdf(factorVariancestar(n), parama, paramb);
+                }
+                FactorPosteriorDrawsj[j] = Factors;
+            }
+            posteriorStar += logavg(piPosterior, 0).sum();
+            cout << posteriorStar << endl;
+        }
+
+        // cout << mean(FactorVariancePosteriorDraws).transpose() << endl;
+        // cout << mean(OmVariancePosteriorDrawsj).transpose() << endl;
+        cout << factorVariancestar << endl;
         cout << "Final run for factors" << endl;
         Factorstar = mean(FactorPosteriorDrawsj);
-        VectorXd priorFactorStar = evalFactorPriors(Factorstar, InfoMat, factorVariance, gammastar);
+        MatrixXd fp = g0.replicate(nFactors, 1);
+        VectorXd priorFactorStar = evalFactorPriors(Factorstar, InfoMat, factorVariancestar, fp);
         VectorXd posteriorFactorStar(nFactors, 1);
         posteriorFactorStar = factorReducedRun(Factorstar, yt, Xtfull, InfoMat, betaStar, omVariancestar,
-                                               factorVariance, deltastar, gammastar);
+                                               factorVariancestar, deltastar, gammastar);
         RowVectorXd Z2 = RowVectorXd::Zero(1, T);
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factorstar, K);
         Xtk = groupByTime(Xtfull, K);
@@ -734,17 +810,32 @@ public:
         for (int k = 0; k < K; ++k)
         {
             s2 = omVariancestar(k);
-            Xthat = makeStationary(Xtk[k], deltastar.row(k), s2, 1);
-            residuals = ythat.row(k) - betaStar.row(k) * Xthat.transpose();
+            H = ReturnH(deltastar.row(k), T);
+            ythat = H * yt.row(k).transpose();
+            ythat.transposeInPlace();
+            Xthat = H * Xtk[k];
+            residuals = ythat - betaStar.row(k) * Xthat.transpose();
             likelihood(k) = logmvnpdf(residuals, Z2, s2 * Covar);
         }
-
+        cout << likelihood.sum() << endl;
+        cout << priorFactorStar.sum() << endl;
+        cout << posteriorFactorStar.sum() << endl;
         double conditionalOfFactors = likelihood.sum() + priorFactorStar.sum() - posteriorFactorStar.sum();
+        double priorSum;
+        if (id == 1)
+        {
+            priorSum = priorGammaStar.sum() + priorBetaStar.sum() + priorOmVarianceStar.sum() +
+              priorFactorVarianceStar.sum() + priorDeltaStar.sum();
+        }
+        else
+        {
+            priorSum = priorGammaStar.sum() + priorBetaStar.sum() + priorOmVarianceStar.sum() +
+                              +priorDeltaStar.sum();
+        }
 
-        double priorSum = priorGammaStar.sum() + priorBetaStar.sum() + priorOmVarianceStar.sum() +
-                          priorFactorVarianceStar.sum() + priorDeltaStar.sum();
         marginal_likelihood = conditionalOfFactors + priorSum - posteriorStar;
-
+        cout << priorSum << endl;
+        cout << posteriorStar << endl;
         cout << "Marginal Likelihood " << marginal_likelihood << endl;
 
         std::ofstream file(fname, ios_base::app | ios_base::out);
@@ -778,7 +869,7 @@ public:
         FactorVariancePosteriorDrawsj.resize(rr);
         MatrixXd ythat(K, T);
         MatrixXd Xtfull(Xt.rows(), nXs + levels);
-        MatrixXd Xtemp;
+
         MatrixXd Xthat;
         MatrixXd epsilons(1, T);
         MatrixXd residuals(1, T);
@@ -977,9 +1068,11 @@ public:
             residuals = yt.row(k) - betaStar.row(k) * Xtk[k].transpose();
             likelihood(k) = logmvnpdf(residuals, Z2, s2 * Covar);
         }
+
         double conditionalOfFactors = likelihood.sum() + priorFactorStar.sum() - posteriorFactorStar.sum();
         double priorSum = priorGammaStar.sum() + priorBetaStar.sum() + priorOmVarianceStar.sum() +
                           priorFactorVarianceStar.sum();
+
         marginal_likelihood = conditionalOfFactors + priorSum - posteriorStar;
         cout << "Marginal Likelihood " << marginal_likelihood << endl;
         std::ofstream file(fname, ios_base::app | ios_base::out);
