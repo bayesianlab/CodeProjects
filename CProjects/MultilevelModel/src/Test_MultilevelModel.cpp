@@ -291,7 +291,7 @@ int main()
         int K = yt.rows();
         int T = yt.cols();
         int sims = 100;
-        int burnin = 50;
+        int burnin = 10;
         int nFactors = InfoMat.rows();
 
         MatrixXd Xt(K * T, 1);
@@ -310,13 +310,13 @@ int main()
         MatrixXd G0 = G0diag.asDiagonal();
         int levels = calcLevels(InfoMat, K);
         RowVectorXd otrokb0 = RowVectorXd::Zero(Xt.cols() + levels);
-        MatrixXd otrokB0 = MatrixXd::Identity(Xt.cols() + levels, Xt.cols() + levels);
-        otrokB0.block(0, 0, nXs, nXs) = MatrixXd::Identity(nXs, nXs);
+        MatrixXd otrokB0 = 10*MatrixXd::Identity(Xt.cols() + levels, Xt.cols() + levels);
+        // otrokB0.block(0, 0, nXs, nXs) = MatrixXd::Identity(nXs, nXs);
 
         double r0 = 6;
-        double R0 = 100;
+        double R0 = 10;
         double d0 = 6;
-        double D0 = .001;
+        double D0 = 4;
         int id = 2;
         FullConditionals mlotrok;
 

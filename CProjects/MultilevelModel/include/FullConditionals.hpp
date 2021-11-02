@@ -301,7 +301,7 @@ public:
         ArParameterTools arupdater;
         ub.initializeBeta(b0);
 
-        VectorXd factorVariance = VectorXd::Ones(nFactors);
+        VectorXd factorVariance = .1*VectorXd::Ones(nFactors);
         VectorXd MeanSum;
         VectorXd factorMean;
 

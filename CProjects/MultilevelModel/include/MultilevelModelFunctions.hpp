@@ -234,8 +234,8 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
         CovarSum = CovarSum.llt().solve(MatrixXd::Identity(T, T));
         MeanSum = CovarSum * MeanSum;
         Factors.row(n) = (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows(), 1)).transpose();
+        Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
     }
-    Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
 }
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
