@@ -9,16 +9,12 @@ setuptools.setup(
     author="Dillon Flannery",
     author_email="dflannery@weimar.edu",
     description="Schedules courses for final exam slots",
-    url="https://github.com/dillon4287",
-    project_urls={
-        "Bug Tracker": "https://github.com/pypa/sampleproject/issues",
-    },
+    url="https://github.com/dillon4287/CodeProjects/Python/FinalScheduler",
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "src"},
-    packages=setuptools.find_packages(where="src"),
+    packages = setuptools.find_packages(),
+    scripts=["final_scheduler.py"],
     python_requires=">=3.6",
 )
