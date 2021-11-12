@@ -186,13 +186,14 @@ colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rnnaUSA',
 
 KOWpercent <- (KOW[2:nrow(KOW),2:181] - KOW[1:nrow(KOW)-1, 2:181])/KOW[2:nrow(KOW), 2:181]
 KOWlfd <- log(KOW[2:nrow(KOW),2:181]) - log(KOW[1:nrow(KOW)-1, 2:181])
-k <- round(t(KOWpercent), 10)
+k <- round(t(KOWlfd), 10)
 codePath <- '~/CodeProjects/CProjects/MultilevelModel/'
 dataPath <- '~/GoogleDrive/Datasets/'
 # write.csv(KOWpercent, '~/GoogleDrive/Datasets/kow_percent.csv', row.names = FALSE)
 # write.csv(KOW, '~/GoogleDrive/Datasets/kow_raw.csv', row.names = FALSE)
 # write.csv(KOWlfd, '~/GoogleDrive/Datasets/kow_march6.csv', row.names = FALSE)
 write.table(k[,2:ncol(k)], paste(codePath, 'kow.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+
 r <- nrow(k)/3
 Xt <- matrix(0, nrow=3*r*(ncol(k)-1), ncol=3)
 ones <-matrix(rep(1,3,1), nrow=3, ncol=1)

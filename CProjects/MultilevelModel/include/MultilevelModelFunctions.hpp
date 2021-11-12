@@ -197,8 +197,6 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
     MatrixXd D0;
     RowVectorXd btemp;
     double f2, s2;
-    Xtk = groupByTime(Xtfull, K);
-
     for (int n = 0; n < nFactors; ++n)
     {
         CovarSum.setZero(T, T);
@@ -235,6 +233,7 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
         MeanSum = CovarSum * MeanSum;
         Factors.row(n) = (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows(), 1)).transpose();
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+        Xtk = groupByTime(Xtfull, K);
     }
 }
 

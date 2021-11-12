@@ -33,6 +33,7 @@ public:
     int burnin;
     int noAr;
     int id;
+    int nXs;
     double r0;
     double R0;
     double d0;
@@ -56,7 +57,7 @@ public:
                   const Ref<const MatrixXd> &Ft, const Ref<const MatrixXd> &gammas, const Ref<const MatrixXd> &deltas,
                   const Matrix<int, Dynamic, 2> &InfoMat, const RowVectorXd &b0, const MatrixXd &B0, const double &r0,
                   const double &R0, const double &d0, const double &D0, const Ref<const RowVectorXd> &g0, const Ref<const MatrixXd> &G0,
-                  const Ref<const RowVectorXd> &delta0, const Ref<const MatrixXd> &Delta0, const double &id)
+                  const Ref<const RowVectorXd> &delta0, const Ref<const MatrixXd> &Delta0, const int &id)
     {
         noAr = 0;
         if ((gammas.rows() > Ft.rows()) || (gammas.rows() < Ft.rows()))
@@ -93,7 +94,55 @@ public:
         this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
         setFactors(Ft);
         int K = yt.rows();
-        int nXs = Xt.cols();
+        this->nXs = Xt.cols();
+        int levels = calcLevels(InfoMat, K);
+        this->id = id;
+        if (nXs + levels != b0.cols())
+        {
+            throw invalid_argument("Error in set model, number of b0 cols must equal number of levels + nXs");
+        }
+    }
+
+    void setModel(const Ref<const MatrixXd> &yt, const Ref<const MatrixXd> &Ft, const Ref<const MatrixXd> &gammas,
+                  const Ref<const MatrixXd> &deltas, const Matrix<int, Dynamic, 2> &InfoMat, const RowVectorXd &b0,
+                  const MatrixXd &B0, const double &r0, const double &R0, const double &d0, const double &D0,
+                  const Ref<const RowVectorXd> &g0, const Ref<const MatrixXd> &G0, const Ref<const RowVectorXd> &delta0,
+                  const Ref<const MatrixXd> &Delta0, const int &id)
+    {
+        noAr = 0;
+        if ((gammas.rows() > Ft.rows()) || (gammas.rows() < Ft.rows()))
+        {
+            dim(gammas);
+            dim(Ft);
+            throw invalid_argument("Error in set model, gammas not correct dim.");
+        }
+        if (deltas.rows() != yt.rows())
+        {
+            cout << "Dimension deltas" << endl;
+            dim(deltas);
+            cout << "Dimension yt" << endl;
+            dim(yt);
+            throw invalid_argument("Error in set model, deltas or yt not set correctly.");
+        }
+        this->yt = yt;
+        this->gammas = gammas;
+        this->deltas = deltas;
+        this->InfoMat = InfoMat;
+        this->b0 = b0;
+        this->B0 = B0;
+        this->r0 = r0;
+        this->R0 = R0;
+        this->g0 = g0;
+        this->G0 = G0;
+        this->d0 = d0;
+        this->D0 = D0;
+        this->omPrecision = VectorXd::Ones(this->yt.rows());
+        this->factorVariance = VectorXd::Ones(Ft.rows());
+        this->omVariance = 1. / this->omPrecision.array();
+        this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
+        setFactors(Ft);
+        int K = yt.rows();
+        this->nXs = 0;
         int levels = calcLevels(InfoMat, K);
         this->id = id;
         if (nXs + levels != b0.cols())
@@ -131,7 +180,7 @@ public:
         this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
         setFactors(Ft);
         int K = yt.rows();
-        int nXs = Xt.cols();
+        this->nXs = Xt.cols();
         int levels = calcLevels(InfoMat, K);
         if (nXs + levels != b0.cols())
         {
@@ -145,7 +194,6 @@ public:
         int arOrderFac = gammas.cols();
         int K = yt.rows();
         int T = yt.cols();
-        int nXs = Xt.cols();
         int nFactors = InfoMat.rows();
         int levels = calcLevels(InfoMat, K);
         double s2;
@@ -165,8 +213,11 @@ public:
         ArrayXi all = sequence(0, K * T);
         ArrayXi indexshift;
         MatrixXd ythat(K, T);
-        MatrixXd Xtfull(Xt.rows(), Xt.cols() + levels);
-        Xtfull.leftCols(nXs) = Xt;
+        MatrixXd Xtfull(K * T, Xt.cols() + levels);
+        if (nXs > 0)
+        {
+            Xtfull.leftCols(nXs) = Xt;
+        }
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
         MatrixXd btemp(1, Xtfull.cols());
         MatrixXd betaParams(K, Xtfull.cols());
@@ -283,7 +334,6 @@ public:
         int arOrderFac = gammas.cols();
         int K = yt.rows();
         int T = yt.cols();
-        int nXs = Xt.cols();
         int nFactors = InfoMat.rows();
         int levels = calcLevels(InfoMat, K);
         double s2;
@@ -301,7 +351,7 @@ public:
         ArParameterTools arupdater;
         ub.initializeBeta(b0);
 
-        VectorXd factorVariance = .1*VectorXd::Ones(nFactors);
+        VectorXd factorVariance = VectorXd::Ones(nFactors);
         VectorXd MeanSum;
         VectorXd factorMean;
 
@@ -310,10 +360,12 @@ public:
         ArrayXi indexshift;
 
         MatrixXd ythat(K, T);
-        MatrixXd Xtfull(Xt.rows(), Xt.cols() + levels);
-        Xtfull.leftCols(nXs) = Xt;
+        MatrixXd Xtfull(K * T, nXs + levels);
+        if (nXs > 0)
+        {
+            Xtfull.leftCols(nXs) = Xt;
+        }
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
-
         MatrixXd Xthat(T, Xtfull.cols());
         MatrixXd epsilons(1, T);
         MatrixXd Ilagom = MatrixXd::Identity(arOrderOm, arOrderOm);
@@ -471,7 +523,6 @@ public:
         int T = yt.cols();
         int K = yt.rows();
         int nFactors = Factors.rows();
-        int nXs = Xt.cols();
         int arOrderOm = DeltasPosteriorDraws[0].cols();
         int arOrderFac = GammasPosteriorDraws[0].cols();
         int levels = calcLevels(InfoMat, K);
@@ -483,7 +534,7 @@ public:
         OmVariancePosteriorDrawsj.resize(rr);
         FactorVariancePosteriorDrawsj.resize(rr);
         MatrixXd ythat(1, T);
-        MatrixXd Xtfull(Xt.rows(), nXs + levels);
+        MatrixXd Xtfull(K * T, nXs + levels);
 
         MatrixXd Xthat;
         MatrixXd epsilons(1, T);
@@ -500,7 +551,10 @@ public:
         MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
         RowVectorXd Z1 = RowVectorXd::Zero(T);
         MatrixXd IT = MatrixXd::Identity(T, T);
-        Xtfull.leftCols(nXs) = Xt;
+        if (nXs > 0)
+        {
+            Xtfull.leftCols(nXs) = Xt;
+        }
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
         UnivariateBeta ub;
         MatrixXd piPosterior(K, rr);
@@ -825,12 +879,12 @@ public:
         if (id == 1)
         {
             priorSum = priorGammaStar.sum() + priorBetaStar.sum() + priorOmVarianceStar.sum() +
-              priorFactorVarianceStar.sum() + priorDeltaStar.sum();
+                       priorFactorVarianceStar.sum() + priorDeltaStar.sum();
         }
         else
         {
             priorSum = priorGammaStar.sum() + priorBetaStar.sum() + priorOmVarianceStar.sum() +
-                              +priorDeltaStar.sum();
+                       +priorDeltaStar.sum();
         }
 
         marginal_likelihood = conditionalOfFactors + priorSum - posteriorStar;
@@ -858,7 +912,6 @@ public:
         int T = yt.cols();
         int K = yt.rows();
         int nFactors = Factors.rows();
-        int nXs = Xt.cols();
         int levels = calcLevels(InfoMat, K);
         int arOrderFac = GammasPosteriorDraws[0].cols();
         double s2;
@@ -868,7 +921,7 @@ public:
         OmVariancePosteriorDrawsj.resize(rr);
         FactorVariancePosteriorDrawsj.resize(rr);
         MatrixXd ythat(K, T);
-        MatrixXd Xtfull(Xt.rows(), nXs + levels);
+        MatrixXd Xtfull(K * T, nXs + levels);
 
         MatrixXd Xthat;
         MatrixXd epsilons(1, T);
@@ -886,8 +939,10 @@ public:
         MatrixXd IT = MatrixXd::Identity(T, T);
         MatrixXd H(T, T);
         MatrixXd nu(1, T);
-
-        Xtfull.leftCols(nXs) = Xt;
+        if (nXs > 0)
+        {
+            Xtfull.leftCols(nXs) = Xt;
+        }
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
         UnivariateBeta ub;
         MatrixXd piPosterior(K, rr);

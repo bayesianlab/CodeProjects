@@ -85,14 +85,14 @@ int main()
     int otrokwhitemantest = 0;
     int chanandj = 0;
     int comparemethods = 0;
-    int realdata_kow = 1;
-    int realdata_intlike = 0;
+    int realdata_kow = 0;
+    int realdata_intlike = 1;
     if (otrokwhitemantest)
     {
         /* Run the standard otrok whiteman model, 1 factor*/
         DynamicFactorsArErrors dfae;
-        int T = 100;
-        int K = 18;
+        int T = 50;
+        int K = 180;
         int nXs = 2;
         double beta = .5;
         RowVectorXd gam(1);
@@ -102,22 +102,22 @@ int main()
 
         Matrix<int, Dynamic, 2> InfoMat(9, 2);
         InfoMat << 0, K - 1,
-            0, 8,
-            9, K - 1,
-            0, 2,
-            3, 5,
-            6, 8,
-            9, 11,
-            12, 14,
-            15, 17;
+            0, 89,
+            90, K - 1,
+            0, 29,
+            30, 59,
+            60, 89,
+            90, 119,
+            120, 149,
+            150, 179;
 
         dfae.genData(T, K, nXs, beta, InfoMat, gam, gam, 1);
         FullConditionals mlotrok;
         double r0 = 6;
-        double R0 = 20;
+        double R0 = 6;
         double d0 = 6;
-        double D0 = 20; 
-        int id = 2; 
+        double D0 = 6;
+        int id = 2;
         RowVectorXd g0 = RowVectorXd::Zero(gam.size());
         MatrixXd G0 = MatrixXd::Identity(gam.size(), gam.size());
         MatrixXd Xt = dfae.Xt.leftCols(nXs);
@@ -134,8 +134,8 @@ int main()
         cout << mean(mlotrok.BetaPosteriorDraws) << endl;
         cout << mean(mlotrok.DeltasPosteriorDraws).colwise().mean() << endl;
         cout << mean(mlotrok.GammasPosteriorDraws).colwise().mean() << endl;
-        cout << mean(mlotrok.FactorVariancePosteriorDraws).mean() << endl; 
-        cout << mean(mlotrok.OmVariancePosteriorDraws).mean() << endl; 
+        cout << mean(mlotrok.FactorVariancePosteriorDraws).mean() << endl;
+        cout << mean(mlotrok.OmVariancePosteriorDraws).mean() << endl;
         plotter("plot.p", Factorbar.row(0).transpose(),
                 dfae.Factors.row(0).transpose(), "fest", "ftrue");
         plotter("plot.p", Factorbar.row(1).transpose(),
@@ -285,13 +285,15 @@ int main()
         string ytpath = path + "kow.csv";
         string indexpath = path + "factor_index_world_region_country.csv";
         MatrixXd yt = readCSV(ytpath);
+        VectorXd ytmean = yt.rowwise().mean();
+        yt = (yt.colwise() - ytmean);
 
         MatrixXd I = readCSV(indexpath);
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
         int K = yt.rows();
         int T = yt.cols();
-        int sims = 100;
-        int burnin = 10;
+        int sims = 10000;
+        int burnin = 1000;
         int nFactors = InfoMat.rows();
 
         MatrixXd Xt(K * T, 1);
@@ -309,14 +311,14 @@ int main()
         G0diag << .25, .5, 1;
         MatrixXd G0 = G0diag.asDiagonal();
         int levels = calcLevels(InfoMat, K);
-        RowVectorXd otrokb0 = RowVectorXd::Zero(Xt.cols() + levels);
-        MatrixXd otrokB0 = 10*MatrixXd::Identity(Xt.cols() + levels, Xt.cols() + levels);
+        RowVectorXd otrokb0 = RowVectorXd::Zero(nXs + levels);
+        MatrixXd otrokB0 = 10*MatrixXd::Identity(nXs + levels, nXs + levels);
         // otrokB0.block(0, 0, nXs, nXs) = MatrixXd::Identity(nXs, nXs);
 
         double r0 = 6;
-        double R0 = 10;
+        double R0 = 8;
         double d0 = 6;
-        double D0 = 4;
+        double D0 = 6;
         int id = 2;
         FullConditionals mlotrok;
 
@@ -341,8 +343,8 @@ int main()
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
         int K = yt.rows();
         int T = yt.cols();
-        int sims = 500;
-        int burnin = 100;
+        int sims = 10;
+        int burnin = 1;
         int nFactors = InfoMat.rows();
         MatrixXd Xt2(K * T, xvals.cols() + 1);
         Xt2 << VectorXd::Ones(K * T), xvals;
@@ -367,7 +369,7 @@ int main()
 
         intlike.setModel(yt, Xt2, A, Factors, gammas2, InfoMat, b02, B02, a0, A0, r0, R0, g0, G0);
         intlike.runModel(sims, burnin);
-        intlike.ml();
+        // intlike.ml();
     }
     return 0;
 }
