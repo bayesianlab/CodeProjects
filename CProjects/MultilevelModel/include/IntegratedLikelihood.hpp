@@ -385,7 +385,7 @@ public:
             dim(gammas);
             throw invalid_argument("Error in set model, gammas and g0 rows not correct.");
         }
-        if (b0.cols() != Xt.cols())
+        if ( (b0.cols()/yt.rows()) != Xt.cols())
         {
             dim(b0);
             dim(Xt);
@@ -488,7 +488,7 @@ public:
         MatrixXd resids;
         MatrixXd H;
         VectorXd Hf;
-        double optim_options[5] = {1e-6, 1e-4, 1e-4, 1e-4, 25};
+        double optim_options[5] = {1e-5, 1e-4, 1e-4, 1e-4, 50};
         double parama = .5 * (r0 + T);
         double paramb;
         double f2;

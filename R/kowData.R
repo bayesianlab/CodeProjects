@@ -187,6 +187,8 @@ colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rnnaUSA',
 KOWpercent <- (KOW[2:nrow(KOW),2:181] - KOW[1:nrow(KOW)-1, 2:181])/KOW[2:nrow(KOW), 2:181]
 KOWlfd <- log(KOW[2:nrow(KOW),2:181]) - log(KOW[1:nrow(KOW)-1, 2:181])
 k <- round(t(KOWlfd), 10)
+k <- k-apply(k, 1, mean)
+
 codePath <- '~/CodeProjects/CProjects/MultilevelModel/'
 dataPath <- '~/GoogleDrive/Datasets/'
 # write.csv(KOWpercent, '~/GoogleDrive/Datasets/kow_percent.csv', row.names = FALSE)
@@ -208,9 +210,6 @@ for(t in 1:(ncol(k)-1))
     Xt[q, ] = kronecker(ones, t(as.matrix(k[w, t])))
   }
 }
-
-
-
-# write.table(Xt, paste(codePath, 'kowXt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+write.table(Xt, paste(codePath, 'kowXt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
 

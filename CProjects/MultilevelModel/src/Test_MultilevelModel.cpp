@@ -144,15 +144,12 @@ int main()
     if (chanandj)
     {
         int T = 50;
-        int K = 18;
+        int K = 50;
         int sims = 10;
         int burnin = 1;
         VectorXd betas = .5 * VectorXd::Ones(2, 1);
-        Matrix<int, Dynamic, 2> InfoMat(3, 2);
-        InfoMat << 0, K - 1,
-            0, 8,
-            9, K - 1;
-        cout << InfoMat << endl;
+        Matrix<int, Dynamic, 2> InfoMat(1, 2);
+        InfoMat << 0, K - 1;
         int nFactors = InfoMat.rows();
         MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
         MatrixXd A = .5 * Identity;
@@ -161,10 +158,10 @@ int main()
         phi << .25;
         GenerateMLFactorData mldata;
         mldata.genData(T, K, betas, InfoMat, phi, A, 1);
-        double a0 = 1.0;
+        double a0 = 0.0;
         double A0 = 1.0;
         double r0 = 6;
-        double R0 = 12;
+        double R0 = 4;
         RowVectorXd g0;
         MatrixXd G0;
         g0.setZero(phi.cols());
@@ -174,7 +171,7 @@ int main()
                     mldata.B0, a0, A0, r0, R0, mldata.g0, mldata.G0);
 
         ml.runModel(sims, burnin);
-        ml.ml();
+        // ml.ml();
         cout << "Beta avg" << endl;
         cout << mean(ml.BetaPosteriorDraws) << endl;
         cout << "Loading avg" << endl;
@@ -312,7 +309,7 @@ int main()
         MatrixXd G0 = G0diag.asDiagonal();
         int levels = calcLevels(InfoMat, K);
         RowVectorXd otrokb0 = RowVectorXd::Zero(nXs + levels);
-        MatrixXd otrokB0 = 10*MatrixXd::Identity(nXs + levels, nXs + levels);
+        MatrixXd otrokB0 = 10 * MatrixXd::Identity(nXs + levels, nXs + levels);
         // otrokB0.block(0, 0, nXs, nXs) = MatrixXd::Identity(nXs, nXs);
 
         double r0 = 6;
@@ -338,6 +335,7 @@ int main()
         string xtpath = path + "kowXt.csv";
         string indexpath = path + "factor_index_world_region_country.csv";
         MatrixXd yt = readCSV(ytpath);
+        VectorXd ytmean = yt.rowwise().mean();
         MatrixXd xvals = readCSV(xtpath);
         MatrixXd I = readCSV(indexpath);
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
@@ -350,12 +348,12 @@ int main()
         Xt2 << VectorXd::Ones(K * T), xvals;
         MultilevelModel intlike;
         int betacols = K * Xt2.cols();
-        double a0 = 1.0;
+        double a0 = 0.0;
         double A0 = 1.0;
         MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
         MatrixXd A = .5 * Identity;
         RowVectorXd b02 = RowVectorXd::Zero(betacols);
-        MatrixXd B02 = 10 * MatrixXd::Identity(betacols, betacols);
+        MatrixXd B02 = 10*MatrixXd::Identity(betacols, betacols);
         double r0 = 6;
         double R0 = 6;
 
