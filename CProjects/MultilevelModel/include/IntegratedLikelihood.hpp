@@ -332,7 +332,7 @@ public:
                 subA(0) = 1;
                 Loadings.col(i).segment(start, nrows) = subA;
             }
-            Factors.row(c) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
+            Factors.row(i) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
         }
     }
 };
@@ -488,7 +488,7 @@ public:
         MatrixXd resids;
         MatrixXd H;
         VectorXd Hf;
-        double optim_options[5] = {1e-5, 1e-4, 1e-4, 1e-4, 50};
+        double optim_options[5] = {1e-5, 1e-4, 1e-4, 1e-4, 30};
         double parama = .5 * (r0 + T);
         double paramb;
         double f2;
