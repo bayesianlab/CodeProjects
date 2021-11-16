@@ -187,6 +187,7 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
     VectorXd MeanSum(T, 1);
     std::vector<MatrixXd> Xtk;
     Xtk.resize(K);
+    Xtk = groupByTime(Xtfull, K); 
     RowVectorXd epsilons(T);
     MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
     MatrixXd Ilagom = MatrixXd::Identity(arOrderOm, arOrderOm);
