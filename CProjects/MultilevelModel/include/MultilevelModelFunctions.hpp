@@ -208,8 +208,6 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
             Xtemp = Xtk[k];
             btemp = betaParams.row(k);
             btemp(nXs + colCount) = 0;
-	    dim(btemp);
-	    dim(Xtemp); 
             epsilons = yt.row(k) - btemp * Xtemp.transpose();
             if (k == InfoMat.row(n).head(1).value())
             {
