@@ -85,8 +85,8 @@ int main()
     int otrokwhitemantest = 0;
     int chanandj = 0;
     int comparemethods = 0;
-    int realdata_kow = 0;
-    int realdata_intlike = 1;
+    int realdata_kow = 1;
+    int realdata_intlike = 0;
     if (otrokwhitemantest)
     {
         /* Run the standard otrok whiteman model, 1 factor*/
