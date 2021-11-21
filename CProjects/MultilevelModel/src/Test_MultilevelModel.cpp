@@ -85,8 +85,8 @@ int main()
     int otrokwhitemantest = 0;
     int chanandj = 0;
     int comparemethods = 0;
-    int realdata_kow = 1;
-    int realdata_intlike = 0;
+    int realdata_kow = 0;
+    int realdata_intlike = 1;
     if (otrokwhitemantest)
     {
         /* Run the standard otrok whiteman model, 1 factor*/
@@ -331,8 +331,8 @@ int main()
         string x = h;
         size_t t = x.find("build");
         string path = x.substr(0, t);
-        string ytpath = path + "kow.csv";
-        string xtpath = path + "kowXt.csv";
+        string ytpath = path + "kowz.csv";
+        string xtpath = path + "kowXtz.csv";
         string indexpath = path + "factor_index_world_region_country.csv";
         MatrixXd yt = readCSV(ytpath);
         VectorXd ytmean = yt.rowwise().mean();
@@ -341,8 +341,8 @@ int main()
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
         int K = yt.rows();
         int T = yt.cols();
-        int sims = 500;
-        int burnin = 100;
+        int sims = 100;
+        int burnin = 10;
         int nFactors = InfoMat.rows();
         MatrixXd Xt2(K * T, xvals.cols() + 1);
         Xt2 << VectorXd::Ones(K * T), xvals;

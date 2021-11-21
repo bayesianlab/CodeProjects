@@ -188,13 +188,13 @@ KOWpercent <- (KOW[2:nrow(KOW),2:181] - KOW[1:nrow(KOW)-1, 2:181])/KOW[2:nrow(KO
 KOWlfd <- log(KOW[2:nrow(KOW),2:181]) - log(KOW[1:nrow(KOW)-1, 2:181])
 k <- round(t(KOWlfd), 10)
 k <- k-apply(k, 1, mean)
-
+k <-k/apply(k, 1, sd)
 codePath <- '~/CodeProjects/CProjects/MultilevelModel/'
 dataPath <- '~/GoogleDrive/Datasets/'
 # write.csv(KOWpercent, '~/GoogleDrive/Datasets/kow_percent.csv', row.names = FALSE)
 # write.csv(KOW, '~/GoogleDrive/Datasets/kow_raw.csv', row.names = FALSE)
 # write.csv(KOWlfd, '~/GoogleDrive/Datasets/kow_march6.csv', row.names = FALSE)
-write.table(k[,2:ncol(k)], paste(codePath, 'kow.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+write.table(k[,2:ncol(k)], paste(codePath, 'kowz.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
 r <- nrow(k)/3
 Xt <- matrix(0, nrow=3*r*(ncol(k)-1), ncol=3)
@@ -210,6 +210,6 @@ for(t in 1:(ncol(k)-1))
     Xt[q, ] = kronecker(ones, t(as.matrix(k[w, t])))
   }
 }
-write.table(Xt, paste(codePath, 'kowXt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+write.table(Xt, paste(codePath, 'kowXtz.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
 
