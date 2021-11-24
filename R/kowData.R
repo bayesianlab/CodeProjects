@@ -188,7 +188,7 @@ KOWpercent <- (KOW[2:nrow(KOW),2:181] - KOW[1:nrow(KOW)-1, 2:181])/KOW[2:nrow(KO
 KOWlfd <- log(KOW[2:nrow(KOW),2:181]) - log(KOW[1:nrow(KOW)-1, 2:181])
 k <- round(t(KOWlfd), 10)
 k <- k-apply(k, 1, mean)
-k <-k/apply(k, 1, sd)
+k <- k/apply(k,1, sd)
 codePath <- '~/CodeProjects/CProjects/MultilevelModel/'
 dataPath <- '~/GoogleDrive/Datasets/'
 # write.csv(KOWpercent, '~/GoogleDrive/Datasets/kow_percent.csv', row.names = FALSE)
@@ -212,4 +212,5 @@ for(t in 1:(ncol(k)-1))
 }
 write.table(Xt, paste(codePath, 'kowXtz.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
+plot(k[1,])
 

@@ -252,10 +252,10 @@ public:
 
         int T = yt.cols();
         int nrows;
-        int c = 0;
         int df = 15;
         int disp_on = 1;
         double lalpha;
+        double tau;
         MatrixXd ytdemeaned;
         MatrixXd subytdemeaned;
         MatrixXd subgammas;
@@ -276,7 +276,6 @@ public:
         VectorXd proposalMean;
         VectorXd proposal;
         int start;
-
         for (int i = 0; i < InfoMat.rows(); ++i)
         {
             cout << "Factor level " << i + 1 << endl;
@@ -312,8 +311,21 @@ public:
             lower = proposalCovariance.llt().matrixL();
 
             proposal = proposalMean + lower * normrnd(0, 1, lower.rows(), 1);
-            lalpha = -CLL(proposal) + logmvtpdf(subA.transpose(), proposalMean.transpose(), proposalCovariance, df) +
-                     CLL(subA) - logmvtpdf(proposal.transpose(), proposalMean.transpose(), proposalCovariance, df);
+            if (proposalCovariance.cols() > 100)
+            {
+                tau = .1;
+            }
+            else if ((proposalCovariance.cols() <= 100) && (proposalCovariance.cols() > 10))
+            {
+                tau = 1;
+            }
+            else
+            {
+                tau = 5;
+            }
+            
+            lalpha = -CLL(proposal) + logmvnpdf(subA.transpose(), proposalMean.transpose(), tau * proposalCovariance) +
+                     CLL(subA) - logmvnpdf(proposal.transpose(), proposalMean.transpose(), tau * proposalCovariance);
             lalpha = min(0., lalpha);
             // cout << lalpha << endl;
             // cout << proposal << endl;
@@ -332,13 +344,27 @@ public:
                 subA(0) = 1;
                 Loadings.col(i).segment(start, nrows) = subA;
             }
+        }
+        for (int i = 0; i < InfoMat.rows(); ++i)
+        {
+            COM = zeroOutFactorLevel(Loadings, i);
+            mut = Xbeta + COM * Factors;
+            ytdemeaned = yt - mut;
+            start = InfoMat.row(i).head(1).value();
+            nrows = InfoMat.row(i).tail(1).value() - start + 1;
+            subytdemeaned = ytdemeaned.middleRows(start, nrows);
+            subomPrecision = obsPrecision.segment(start, nrows);
+            subA = Loadings.col(i).segment(start, nrows);
+            subgammas = gammas.row(i);
+            subfv = factorVariance.row(i);
+            subFp = MakePrecision(subgammas, subfv, T);
+            subFt = Factors.row(i);
             Factors.row(i) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
         }
     }
 };
 
 class MultilevelModel : public BetaParameterTools, public LoadingsFactorTools, public LoadingsPriorsSetup
-
 {
 public:
     std::vector<MatrixXd> LoadingsPosteriorDraws;
@@ -385,7 +411,7 @@ public:
             dim(gammas);
             throw invalid_argument("Error in set model, gammas and g0 rows not correct.");
         }
-        if ( (b0.cols()/yt.rows()) != Xt.cols())
+        if ((b0.cols() / yt.rows()) != Xt.cols())
         {
             dim(b0);
             dim(Xt);
@@ -488,7 +514,7 @@ public:
         MatrixXd resids;
         MatrixXd H;
         VectorXd Hf;
-        double optim_options[5] = {1e-5, 1e-4, 1e-4, 1e-4, 30};
+        double optim_options[5] = {1e-5, 1e-4, 1e-4, 1e-4, 20};
         double parama = .5 * (r0 + T);
         double paramb;
         double f2;
@@ -509,9 +535,8 @@ public:
             cout << "Sim " << i + 1 << endl;
             betaUpdater(yt, surX, omPrecision, Loadings, FactorPrecision, b0, B0);
 
-            updateLoadingsFactors(yt, xbt, gammas, omPrecision,
-                                  factorVariance, InfoMat, loadingsPriorMeans,
-                                  loadingsPriorPrecision, optim);
+            updateLoadingsFactors(yt, xbt, gammas, omPrecision, factorVariance, InfoMat,
+                                  loadingsPriorMeans, loadingsPriorPrecision, optim);
 
             for (int j = 0; j < nFactors; ++j)
             {
@@ -571,6 +596,8 @@ public:
             file << mean(FactorVariancePosteriorDraws).transpose() << endl;
             file << "OM Variance" << endl;
             file << (1.0 / mean(ObsPrecisionPosteriorDraws).array()).transpose() << endl;
+            file << "Acceptance Rate" << endl;
+            file << acceptance_rate << endl;
             file.close();
         }
     }
@@ -743,12 +770,12 @@ public:
             proposalj(1) = 1;
             Loadings.col(i).segment(start, nrows) = proposalj;
 
-            COM = zeroOutFactorLevel(Astar, c);
+            COM = zeroOutFactorLevel(Astar, i);
             mut = Xbetaj + COM * Factors;
             ytdemeaned = yt - mut;
             subytdemeanedstar = ytdemeaned.middleRows(start, nrows);
 
-            COM = zeroOutFactorLevel(Loadings, c);
+            COM = zeroOutFactorLevel(Loadings, i);
 
             mut = Xbetaj + COM * Factors;
             ytdemeaned = yt - mut;
@@ -871,6 +898,8 @@ public:
             factorVarianceRRj[j] = factorVariance;
         }
         Numerator.resize(nFactors, rr);
+        cout << Numerator << endl;
+        cout << Denominator << endl; 
         posteriorStar += logavg(Numerator, 0).sum() - logavg(Denominator, 0).sum();
 
         /* Beta Reduced Run */
@@ -902,9 +931,10 @@ public:
             factorVariance = factorVarianceRRj[j];
             gammas = gammasRRj[j];
             n = 0;
+            cout << "RR = " << j + 1 << endl;
+
             for (int n = 0; n < nFactors; ++n)
             {
-                cout << "RR = " << j + 1 << endl;
                 start = InfoMat.row(n).head(1).value();
                 nrows = InfoMat.row(n).tail(1).value() - start + 1;
                 COM = zeroOutFactorLevel(Astar, n);
@@ -940,6 +970,7 @@ public:
             omPrecisionRRj[j] = omPrecision;
             factorVarianceRRj[j] = factorVariance;
         }
+        cout << pibeta << endl; 
         posteriorStar += logavg(pibeta);
 
         gammastar = mean(gammasRRj);
@@ -984,6 +1015,8 @@ public:
             omPrecisionRRj[j] = omPrecision;
             factorVarianceRRj[j] = factorVariance;
         }
+        cout << Numerator << endl;
+        cout << Denominator << endl; 
         posteriorStar += logavg(Numerator, 0).sum() - logavg(Denominator, 0).sum();
         omPrecisionstar = mean(omPrecisionRRj);
         MatrixXd piOmPrecision(K, rr);
@@ -1025,6 +1058,7 @@ public:
             factorVarianceRRj[j] = factorVariance;
         }
         piOmPrecision.resize(K, rr);
+        cout << piOmPrecision << endl; 
         posteriorStar += logavg(piOmPrecision, 0).sum();
 
         factorVariancestar = mean(factorVarianceRRj);
@@ -1057,6 +1091,7 @@ public:
             resids = yt - (Astar * Factors) - xbt;
             FactorRRj[j] = Factors;
         }
+        cout << pifactorVariancestar << endl; 
         posteriorStar += logavg(pifactorVariancestar, 0).sum();
         RowVectorXd Z1 = RowVectorXd::Zero(T);
         MatrixXd Covar(T, T);
@@ -1096,6 +1131,12 @@ public:
         {
             likelihood(k) = logmvnpdf(resids.row(k), Z2, omVariancestar(k) * IT);
         }
+        cout << "likelihood" << endl;
+        cout << likelihood << endl;
+        cout << "priorFactorStar" << endl;
+        cout << priorFactorStar << endl;
+        cout << "posteriorFactorStar" << endl;
+        cout << posteriorFactorStar << endl;
         double conditionalOfFactors = likelihood.sum() + priorFactorStar.sum() - posteriorFactorStar.sum();
         double priorbeta = logmvnpdf(betastar.transpose(), b0, B0);
         VectorXd priorA(nFactors);
@@ -1134,6 +1175,10 @@ public:
         }
         double priorSum = priorbeta + priorA.sum() + priorGammas.sum() + priorfactorVariances.sum() +
                           priorOmVariances.sum();
+        cout << "priorSum" << endl;
+        cout << priorSum << endl;
+        cout << "posteriorStar" << endl;
+        cout << posteriorStar << endl;
 
         marginal_likelihood = conditionalOfFactors + priorSum - posteriorStar;
         cout << "Marginal Likelihood " << marginal_likelihood << endl;

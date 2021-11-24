@@ -92,7 +92,7 @@ MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings, const
     int nFactorsT = nFactors * T;
     MatrixXd AtO = Loadings.transpose() * precision.asDiagonal();
     MatrixXd FplusAtOinv = FactorPrecision + kroneckerProduct(MatrixXd::Identity(T, T), AtO * Loadings);
-    FplusAtOinv = FplusAtOinv.ldlt().solve(MatrixXd::Identity(FplusAtOinv.rows(), FplusAtOinv.rows()));
+    FplusAtOinv = FplusAtOinv.llt().solve(MatrixXd::Identity(FplusAtOinv.rows(), FplusAtOinv.rows()));
     MatrixXd lower = FplusAtOinv.llt().matrixL();
     MatrixXd musum = AtO * residuals;
     Map<VectorXd> vecmu(musum.data(), musum.size());

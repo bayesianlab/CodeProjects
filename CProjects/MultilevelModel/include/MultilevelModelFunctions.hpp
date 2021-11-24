@@ -47,7 +47,7 @@ MatrixXd mean(const std::vector<T> &X)
 template <typename D1, typename D2, typename D3, typename D4, typename D5,
           typename D6, typename D7>
 double ConditionalLogLikelihood(const MatrixBase<D1> &guess, const MatrixBase<D2> &resids,
-                                const MatrixBase<D3> &priorMeanA0, const MatrixBase<D4> &priorPrecisionA0,
+                                const MatrixBase<D3> &priorMeanA0, const MatrixBase<D4> &priorA0,
                                 const MatrixBase<D5> &obsPrecision, const MatrixBase<D6> &factor,
                                 const MatrixBase<D7> &FactorPrecision)
 {
@@ -57,6 +57,7 @@ double ConditionalLogLikelihood(const MatrixBase<D1> &guess, const MatrixBase<D2
     int T = factor.cols();
     int K = obsPrecision.size();
     MatrixXd Avariance = (obsPrecision * (factor * factor.transpose())).asDiagonal();
+    MatrixXd priorPrecisionA0 = priorA0.llt().solve(MatrixXd::Identity(K,K));
     Avariance = priorPrecisionA0 + Avariance;
     Avariance = Avariance.ldlt().solve(MatrixXd::Identity(K, K));
     MatrixXd Amean = (factor * resids.transpose()).array() * obsPrecision.transpose().array();

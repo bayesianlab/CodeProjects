@@ -131,11 +131,6 @@ int main()
         mlotrok.ml();
 
         MatrixXd Factorbar = mean(mlotrok.FactorPosteriorDraws);
-        cout << mean(mlotrok.BetaPosteriorDraws) << endl;
-        cout << mean(mlotrok.DeltasPosteriorDraws).colwise().mean() << endl;
-        cout << mean(mlotrok.GammasPosteriorDraws).colwise().mean() << endl;
-        cout << mean(mlotrok.FactorVariancePosteriorDraws).mean() << endl;
-        cout << mean(mlotrok.OmVariancePosteriorDraws).mean() << endl;
         plotter("plot.p", Factorbar.row(0).transpose(),
                 dfae.Factors.row(0).transpose(), "fest", "ftrue");
         plotter("plot.p", Factorbar.row(1).transpose(),
@@ -144,12 +139,19 @@ int main()
     if (chanandj)
     {
         int T = 50;
-        int K = 50;
-        int sims = 10;
-        int burnin = 1;
+        int K = 25;
+        int sims = 100;
+        int burnin = 10;
         VectorXd betas = .5 * VectorXd::Ones(2, 1);
-        Matrix<int, Dynamic, 2> InfoMat(1, 2);
-        InfoMat << 0, K - 1;
+        Matrix<int, Dynamic, 2> InfoMat(6, 2);
+        InfoMat << 0, K - 1,
+        0,4,
+        5,9,
+        10,15,
+        16,19,
+        20,24;
+        
+   
         int nFactors = InfoMat.rows();
         MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
         MatrixXd A = .5 * Identity;
@@ -159,7 +161,7 @@ int main()
         GenerateMLFactorData mldata;
         mldata.genData(T, K, betas, InfoMat, phi, A, 1);
         double a0 = 0.0;
-        double A0 = 1.0;
+        double A0 = 10.0;
         double r0 = 6;
         double R0 = 4;
         RowVectorXd g0;
@@ -171,17 +173,17 @@ int main()
                     mldata.B0, a0, A0, r0, R0, mldata.g0, mldata.G0);
 
         ml.runModel(sims, burnin);
-        // ml.ml();
-        cout << "Beta avg" << endl;
-        cout << mean(ml.BetaPosteriorDraws) << endl;
-        cout << "Loading avg" << endl;
-        cout << mean(ml.LoadingsPosteriorDraws) << endl;
-        cout << "Gamma avg" << endl;
-        cout << mean(ml.GammasPosteriorDraws) << endl;
-        cout << "Factor Variance" << endl;
-        cout << mean(ml.FactorVariancePosteriorDraws) << endl;
-        cout << "OM Variance" << endl;
-        cout << 1. / mean(ml.ObsPrecisionPosteriorDraws).array() << endl;
+        ml.ml();
+        // cout << "Beta avg" << endl;
+        // cout << mean(ml.BetaPosteriorDraws) << endl;
+        // cout << "Loading avg" << endl;
+        // cout << mean(ml.LoadingsPosteriorDraws) << endl;
+        // cout << "Gamma avg" << endl;
+        // cout << mean(ml.GammasPosteriorDraws) << endl;
+        // cout << "Factor Variance" << endl;
+        // cout << mean(ml.FactorVariancePosteriorDraws) << endl;
+        // cout << "OM Variance" << endl;
+        // cout << 1. / mean(ml.ObsPrecisionPosteriorDraws).array() << endl;
 
         MatrixXd Ftbar = mean(ml.FactorPosteriorDraws);
         plotter("plot.p", Ftbar.row(0).transpose(),
@@ -335,7 +337,6 @@ int main()
         string xtpath = path + "kowXtz.csv";
         string indexpath = path + "factor_index_world_region_country.csv";
         MatrixXd yt = readCSV(ytpath);
-        VectorXd ytmean = yt.rowwise().mean();
         MatrixXd xvals = readCSV(xtpath);
         MatrixXd I = readCSV(indexpath);
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
@@ -344,18 +345,18 @@ int main()
         int sims = 100;
         int burnin = 10;
         int nFactors = InfoMat.rows();
-        MatrixXd Xt2(K * T, xvals.cols() + 1);
+        MatrixXd Xt2(K * T,  xvals.cols() + 1);
         Xt2 << VectorXd::Ones(K * T), xvals;
         MultilevelModel intlike;
         int betacols = K * Xt2.cols();
-        double a0 = 0.0;
+        double a0 = 1.0;
         double A0 = 1.0;
         MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
-        MatrixXd A = .5 * Identity;
+        MatrixXd A = .01 * Identity;
         RowVectorXd b02 = RowVectorXd::Zero(betacols);
-        MatrixXd B02 = 10*MatrixXd::Identity(betacols, betacols);
+        MatrixXd B02 = 10 * MatrixXd::Identity(betacols, betacols);
         double r0 = 6;
-        double R0 = 6;
+        double R0 = 4;
 
         RowVectorXd g2(1);
         g2 << .01;
@@ -363,7 +364,7 @@ int main()
         gammas2 = g2.replicate(nFactors, 1);
         RowVectorXd g0 = RowVectorXd::Zero(gammas2.cols());
         MatrixXd G0 = MatrixXd::Identity(gammas2.cols(), gammas2.cols());
-        MatrixXd Factors = normrnd(0, 1, nFactors, T);
+        MatrixXd Factors = normrnd(0, .1, nFactors, T);
 
         intlike.setModel(yt, Xt2, A, Factors, gammas2, InfoMat, b02, B02, a0, A0, r0, R0, g0, G0);
         intlike.runModel(sims, burnin);
