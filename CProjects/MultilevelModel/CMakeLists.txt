@@ -50,8 +50,8 @@ set(plotinclude ${PROJECT_SOURCE_DIR}/../GnuPlotting/include)
 
 include_directories(${tsfuncinclude} ${plotinclude} ${eigentoolinclude} ${distinclude} ${optiminclude} include)
 
-add_executable(kow src/Test_MultilevelModel.cpp)
-target_link_libraries(kow PUBLIC basetools optim mlfunc datagen) 
+add_executable(tb src/tb.cpp)
+target_link_libraries(tb PUBLIC basetools optim mlfunc datagen) 
 # add_executable(test2 src/scratch.cpp)
 # add_executable(test2 ../TimeSeries/src/Test_ArModel.cpp)
 # add_executable(test2 ../EigenTools/src/Test_EigenTools.cpp)

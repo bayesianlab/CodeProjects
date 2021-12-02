@@ -57,7 +57,7 @@ double ConditionalLogLikelihood(const MatrixBase<D1> &guess, const MatrixBase<D2
     int T = factor.cols();
     int K = obsPrecision.size();
     MatrixXd Avariance = (obsPrecision * (factor * factor.transpose())).asDiagonal();
-    MatrixXd priorPrecisionA0 = priorA0.llt().solve(MatrixXd::Identity(K,K));
+    MatrixXd priorPrecisionA0 = priorA0.llt().solve(MatrixXd::Identity(K, K));
     Avariance = priorPrecisionA0 + Avariance;
     Avariance = Avariance.ldlt().solve(MatrixXd::Identity(K, K));
     MatrixXd Amean = (factor * resids.transpose()).array() * obsPrecision.transpose().array();
@@ -188,7 +188,7 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
     VectorXd MeanSum(T, 1);
     std::vector<MatrixXd> Xtk;
     Xtk.resize(K);
-    Xtk = groupByTime(Xtfull, K); 
+    Xtk = groupByTime(Xtfull, K);
     RowVectorXd epsilons(T);
     MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
     MatrixXd Ilagom = MatrixXd::Identity(arOrderOm, arOrderOm);
@@ -255,6 +255,7 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
     VectorXd MeanSum(T, 1);
     std::vector<MatrixXd> Xtk;
     Xtk.resize(K);
+    Xtk = groupByTime(Xtfull, K);
     RowVectorXd epsilons(T);
     MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
     MatrixXd H1;
@@ -265,7 +266,6 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
     double f2, s2;
     for (int n = 0; n < nFactors; ++n)
     {
-        Xtk = groupByTime(Xtfull, K);
         CovarSum.setZero(T, T);
         MeanSum.setZero(T, 1);
         for (int k = InfoMat.row(n).head(1).value(); k <= InfoMat.row(n).tail(1).value(); ++k)
@@ -287,7 +287,7 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
             else
             {
                 s2 = omVariance(k);
-                H1 = (1 / s2) * IT;
+                H1 = (1.0 / s2) * IT;
                 CovarSum += (betaParams(k, nXs + colCount) * betaParams(k, nXs + colCount)) * H1;
                 MeanSum += betaParams(k, nXs + colCount) * (H1 * epsilons.transpose());
             }
@@ -300,6 +300,7 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
         MeanSum = CovarSum * MeanSum;
         Factors.row(n) = (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows())).transpose();
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+        Xtk = groupByTime(Xtfull, K);
     }
 }
 

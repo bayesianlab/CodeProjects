@@ -187,30 +187,67 @@ colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rnnaUSA',
 KOWpercent <- (KOW[2:nrow(KOW),2:181] - KOW[1:nrow(KOW)-1, 2:181])/KOW[2:nrow(KOW), 2:181]
 KOWlfd <- log(KOW[2:nrow(KOW),2:181]) - log(KOW[1:nrow(KOW)-1, 2:181])
 k <- round(t(KOWlfd), 10)
-k <- k-apply(k, 1, mean)
-k <- k/apply(k,1, sd)
+kz <- k-apply(k, 1, mean)
+kz <- k/apply(k,1, sd)
 codePath <- '~/CodeProjects/CProjects/MultilevelModel/'
 dataPath <- '~/GoogleDrive/Datasets/'
-# write.csv(KOWpercent, '~/GoogleDrive/Datasets/kow_percent.csv', row.names = FALSE)
-# write.csv(KOW, '~/GoogleDrive/Datasets/kow_raw.csv', row.names = FALSE)
-# write.csv(KOWlfd, '~/GoogleDrive/Datasets/kow_march6.csv', row.names = FALSE)
-write.table(k[,2:ncol(k)], paste(codePath, 'kowz.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
+yt <- k[,2:ncol(k)]
+ytz <- kz[,2:ncol(k)]
+write.table(kz[,2:ncol(k)], paste(codePath, 'kowz.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+write.table(k[,2:ncol(k)], paste(codePath, 'kow.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 r <- nrow(k)/3
+Xtz <- matrix(0, nrow=3*r*(ncol(k)-1), ncol=3)
 Xt <- matrix(0, nrow=3*r*(ncol(k)-1), ncol=3)
 ones <-matrix(rep(1,3,1), nrow=3, ncol=1)
-
-
 for(t in 1:(ncol(k)-1))
 {
   for (j in 1:r)
   {
     w <- (1:3) + ((j-1)*3)
     q <- w + ( (t-1)*180 )
+    Xtz[q, ] = kronecker(ones, t(as.matrix(kz[w, t])))
     Xt[q, ] = kronecker(ones, t(as.matrix(k[w, t])))
   }
 }
-write.table(Xt, paste(codePath, 'kowXtz.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+write.table(Xtz, paste(codePath, 'kowXtz.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+write.table(Xt, paste(codePath, 'kowXt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
-plot(k[1,])
+years <- 1980:1990
+
+for (y in 1:10)
+{
+  end <- k[,1:(20 + (y-1))]
+  beg <- k[,(20+y):dim(k)[2]]
+  begnameyt <- sprintf("yt_%d_beg.csv",years[y]+1)
+  endnameyt <- sprintf("yt_%d_end.csv",years[y])
+  begnameXt <- sprintf("Xt_%d_beg.csv",years[y]+1)
+  endnameXt <- sprintf("Xt_%d_end.csv",years[y])
+  Xtbeg <- matrix(0, nrow=3*r*(ncol(beg)-1), ncol=3)
+  Xtend <- matrix(0, nrow=3*r*(ncol(end)-1), ncol=3)
+  for(t in 1:(ncol(beg)-1))
+  {
+    for (j in 1:r)
+    {
+      w <- (1:3) + ((j-1)*3)
+      q <- w + ( (t-1)*180 )
+      Xtbeg[q, ] = kronecker(ones, t(as.matrix(beg[w, t])))
+    }
+  }
+  for(t in 1:(ncol(end)-1))
+  {
+    for (j in 1:r)
+    {
+      w <- (1:3) + ((j-1)*3)
+      q <- w + ( (t-1)*180 )
+      Xtend[q, ] = kronecker(ones, t(as.matrix(end[w, t])))
+    }
+  }
+  write.table(beg, paste(paste(codePath, "timebreaks/", sep=''), begnameyt,sep=''), row.names=FALSE,col.names=FALSE,sep=",")
+  write.table(Xtbeg, paste(paste(codePath, "timebreaks/", sep=''), begnameXt,sep=''), row.names=FALSE,col.names=FALSE,sep=",")
+  write.table(end, paste(paste(codePath, "timebreaks/", sep=''), endnameyt,sep=''), row.names=FALSE,col.names=FALSE,sep=",")
+  write.table(Xtend, paste(paste(codePath, "timebreaks/", sep=''), endnameXt,sep=''), row.names=FALSE,col.names=FALSE,sep=",")
+  
+  
+}
 

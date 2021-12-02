@@ -313,7 +313,7 @@ public:
             proposal = proposalMean + lower * normrnd(0, 1, lower.rows(), 1);
             if (proposalCovariance.cols() > 100)
             {
-                tau = .1;
+                tau = 1;
             }
             else if ((proposalCovariance.cols() <= 100) && (proposalCovariance.cols() > 10))
             {
@@ -321,18 +321,12 @@ public:
             }
             else
             {
-                tau = 5;
+                tau = 1;
             }
-            
+
             lalpha = -CLL(proposal) + logmvnpdf(subA.transpose(), proposalMean.transpose(), tau * proposalCovariance) +
                      CLL(subA) - logmvnpdf(proposal.transpose(), proposalMean.transpose(), tau * proposalCovariance);
             lalpha = min(0., lalpha);
-            // cout << lalpha << endl;
-            // cout << proposal << endl;
-            // cout <<    CLL(proposal) << endl;
-            // cout <<    logmvtpdf(subA.transpose(), proposalMean.transpose(), proposalCovariance, df) << endl;
-            // cout << CLL(subA) << endl;
-            // cout << logmvtpdf(proposal.transpose(), proposalMean.transpose(), proposalCovariance, df) << endl;
             if (isnan(lalpha))
             {
                 throw std::domain_error("Error in update factor MH step.");
@@ -344,7 +338,10 @@ public:
                 subA(0) = 1;
                 Loadings.col(i).segment(start, nrows) = subA;
             }
+
+            Factors.row(i) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
         }
+        /*
         for (int i = 0; i < InfoMat.rows(); ++i)
         {
             COM = zeroOutFactorLevel(Loadings, i);
@@ -358,9 +355,9 @@ public:
             subgammas = gammas.row(i);
             subfv = factorVariance.row(i);
             subFp = MakePrecision(subgammas, subfv, T);
-            subFt = Factors.row(i);
             Factors.row(i) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
         }
+        */
     }
 };
 
@@ -502,8 +499,8 @@ public:
         const int nFactors = InfoMat.rows();
         const int sxtcols = Xt.cols() * K;
         VectorXd omVariance = VectorXd::Ones(K);
-        VectorXd omPrecision = omVariance.array().pow(-1);
-        VectorXd factorVariance = VectorXd::Ones(nFactors);
+        VectorXd omPrecision = 10 * omVariance.array().pow(-1);
+        VectorXd factorVariance = .1 * VectorXd::Ones(nFactors);
 
         MatrixXd surX(sxtcols, Xt.rows());
         surX = surForm(Xt, K);
@@ -899,7 +896,7 @@ public:
         }
         Numerator.resize(nFactors, rr);
         cout << Numerator << endl;
-        cout << Denominator << endl; 
+        cout << Denominator << endl;
         posteriorStar += logavg(Numerator, 0).sum() - logavg(Denominator, 0).sum();
 
         /* Beta Reduced Run */
@@ -970,7 +967,7 @@ public:
             omPrecisionRRj[j] = omPrecision;
             factorVarianceRRj[j] = factorVariance;
         }
-        cout << pibeta << endl; 
+        cout << pibeta << endl;
         posteriorStar += logavg(pibeta);
 
         gammastar = mean(gammasRRj);
@@ -1016,7 +1013,7 @@ public:
             factorVarianceRRj[j] = factorVariance;
         }
         cout << Numerator << endl;
-        cout << Denominator << endl; 
+        cout << Denominator << endl;
         posteriorStar += logavg(Numerator, 0).sum() - logavg(Denominator, 0).sum();
         omPrecisionstar = mean(omPrecisionRRj);
         MatrixXd piOmPrecision(K, rr);
@@ -1058,7 +1055,7 @@ public:
             factorVarianceRRj[j] = factorVariance;
         }
         piOmPrecision.resize(K, rr);
-        cout << piOmPrecision << endl; 
+        cout << piOmPrecision << endl;
         posteriorStar += logavg(piOmPrecision, 0).sum();
 
         factorVariancestar = mean(factorVarianceRRj);
@@ -1091,7 +1088,7 @@ public:
             resids = yt - (Astar * Factors) - xbt;
             FactorRRj[j] = Factors;
         }
-        cout << pifactorVariancestar << endl; 
+        cout << pifactorVariancestar << endl;
         posteriorStar += logavg(pifactorVariancestar, 0).sum();
         RowVectorXd Z1 = RowVectorXd::Zero(T);
         MatrixXd Covar(T, T);
