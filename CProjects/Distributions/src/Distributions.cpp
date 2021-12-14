@@ -284,6 +284,13 @@ MatrixXd logavg(const Ref<const MatrixXd> &X, const int &dim)
   }
 }
 
+VectorXd shiftedExponential(const double &shift, const double &alpha, const int &n)
+{
+  VectorXd udouble = unifrnd(0,1,n);
+  udouble = shift - (1.0/alpha)*(1-udouble.array()).array().log();
+  return udouble;
+}
+
 /* VectorXd generateChiSquaredVec(double df, int rows) {
   std::mt19937 gen(rd());
   std::chi_squared_distribution<double> csd(df);

@@ -83,10 +83,10 @@ int main()
     }
 
     int otrokwhitemantest = 0;
-    int chanandj = 0;
+    int chanandj = 1;
     int comparemethods = 0;
     int realdata_kow = 0;
-    int realdata_intlike = 1;
+    int realdata_intlike = 0;
     int other = 0;
     if (otrokwhitemantest)
     {
@@ -122,7 +122,7 @@ int main()
         RowVectorXd otrokb0 = RowVectorXd::Zero(nXs + levels);
         MatrixXd otrokB0 =  MatrixXd::Identity(nXs + levels, nXs + levels);
         mlotrok.setModel(mldata.yt, Xt, mldata.Factors, mldata.gammas, InfoMat,
-                         otrokb0, otrokB0, r0, R0, g0, G0);
+                         otrokb0, otrokB0, r0, R0, g0, G0, id);
 
 
         mlotrok.runModel(sims, burnin);
@@ -137,17 +137,12 @@ int main()
     if (chanandj)
     {
         int T = 50;
-        int K = 25;
+        int K = 50;
         int sims = 100;
         int burnin = 10;
         VectorXd betas = .5 * VectorXd::Ones(2, 1);
-        Matrix<int, Dynamic, 2> InfoMat(6, 2);
-        InfoMat << 0, K - 1,
-            0, 4,
-            5, 9,
-            10, 15,
-            16, 19,
-            20, 24;
+        Matrix<int, Dynamic, 2> InfoMat(1, 2);
+        InfoMat << 0, K - 1;
 
         int nFactors = InfoMat.rows();
         MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
@@ -160,7 +155,7 @@ int main()
         double a0 = 0.0;
         double A0 = 10.0;
         double r0 = 6;
-        double R0 = 4;
+        double R0 = 6;
         RowVectorXd g0;
         MatrixXd G0;
         g0.setZero(phi.cols());
@@ -186,88 +181,7 @@ int main()
         plotter("plot.p", Ftbar.row(0).transpose(),
                 mldata.Factors.row(0).transpose(), "fest", "ftrue");
     }
-    if (comparemethods)
-    {
-        int T = 50;
-        int K = 10;
-        int sims = 10;
-        int burnin = 1;
-        int nXs = 2;
-        double omVar = 1.0;
-        VectorXd betas = .5 * VectorXd::Ones(nXs, 1);
-        Matrix<int, Dynamic, 2> InfoMat(1, 2);
-        InfoMat << 0, K - 1;
-        int nFactors = InfoMat.rows();
-        MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
-        MatrixXd A = .5 * Identity;
-        VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
-        RowVectorXd phi(2);
-        phi << .05, .25;
-        GenerateMLFactorData mldata;
-        mldata.genData(T, K, betas, InfoMat, phi, A, omVar);
-
-        FullConditionals mlotrok;
-        double r0 = 6;
-        double R0 = 12;
-
-        RowVectorXd g0 = RowVectorXd::Zero(phi.size());
-        MatrixXd G0 = MatrixXd::Identity(phi.size(), phi.size());
-        RowVectorXd otrokb0 = RowVectorXd::Zero(mldata.Xt.cols() + nFactors);
-        MatrixXd otrokB0 = 100 * MatrixXd::Identity(mldata.Xt.cols() + nFactors, mldata.Xt.cols() + nFactors);
-        mlotrok.setModel(mldata.yt, mldata.Xt, mldata.Factors, mldata.gammas, InfoMat,
-                         otrokb0, otrokB0, r0, R0, g0, G0);
-
-        mlotrok.runModel(sims, burnin);
-        MatrixXd Ftbar = mean(mlotrok.FactorPosteriorDraws);
-        plotter("plot.p", Ftbar.row(0).transpose(), mldata.Factors.row(0).transpose(), "fest", "ftrue");
-        cout << "OM Variance" << endl;
-        cout << mean(mlotrok.OmVariancePosteriorDraws).transpose() << endl;
-        cout << "Beta" << endl;
-        cout << mean(mlotrok.BetaPosteriorDraws) << endl;
-        mlotrok.ml();
-        std::ofstream fname1;
-        fname1.open("marginal_likelihood_kow.txt");
-        fname1 << "MarginalLikelihood" << endl
-               << mlotrok.marginal_likelihood << endl;
-        fname1.close();
-
-        double a0 = 1.0;
-        double A0 = 1.0;
-        g0.setZero(phi.cols());
-        G0 = MatrixXd::Identity(phi.cols(), phi.cols());
-        MultilevelModel ml;
-        ml.setModel(mldata.yt, mldata.Xt, mldata.Loadings, mldata.Factors, mldata.gammas, InfoMat, mldata.b0,
-                    mldata.B0, a0, A0, r0, R0, mldata.g0, mldata.G0);
-
-        ml.runModel(sims, burnin);
-        ml.ml();
-
-        std::ofstream fname2;
-        fname2.open("marginal_likelihood.txt");
-        fname2 << "MarginalLikelihood" << endl
-               << ml.marginal_likelihood << endl;
-        fname2.close();
-        cout << "Beta avg" << endl;
-        cout << mean(ml.BetaPosteriorDraws) << endl;
-        cout << "Loading avg" << endl;
-        cout << mean(ml.LoadingsPosteriorDraws) << endl;
-        cout << "Gamma avg" << endl;
-        cout << mean(ml.GammasPosteriorDraws) << endl;
-        cout << "Factor Variance" << endl;
-        cout << mean(ml.FactorVariancePosteriorDraws) << endl;
-        cout << "OM Variance" << endl;
-        cout << 1. / mean(ml.ObsPrecisionPosteriorDraws).array() << endl;
-
-        ml.storePosterior("betacj.csv", ml.BetaPosteriorDraws);
-        ml.storePosterior("loadingcj.csv", ml.LoadingsPosteriorDraws);
-        ml.storePosterior("gammacj.csv", ml.GammasPosteriorDraws);
-        ml.storePosterior("factorcj.csv", ml.FactorVariancePosteriorDraws);
-        ml.storePosterior("omprecison.csv", ml.ObsPrecisionPosteriorDraws);
-        ml.storePosterior("factors.csv", ml.FactorPosteriorDraws);
-
-        Ftbar = mean(ml.FactorPosteriorDraws);
-        plotter("plot.p", Ftbar.row(0).transpose(), mldata.Factors.row(0).transpose(), "fest", "ftrue");
-    }
+  
     if (realdata_kow)
     {
         /* Models to run, model with no country factors
@@ -402,8 +316,9 @@ int main()
         MatrixXd G0 = MatrixXd::Identity(gammas.cols(), gammas.cols());
         double r0 = 6;
         double R0 = 6;
+        int id = 1;
         mlotrok.setModel(yt, Xt2, Factors, gammas, InfoMat, otrokb0, otrokB0,
-                         r0, R0, g0, G0);
+                         r0, R0, g0, G0, id);
         int sims = 100;
         int burnin = 10;
         mlotrok.runModel(sims, burnin);

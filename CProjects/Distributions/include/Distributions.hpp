@@ -102,6 +102,8 @@ double logavg(const Ref<const VectorXd> &logpdf);
 
 MatrixXd logavg(const Ref<const MatrixXd> &logpdf, const int &dim);
 
+VectorXd shiftedExponential(const double &shift, const double &alpha, const int &n);
+
 /*
 class Dist {
 private:

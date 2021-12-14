@@ -171,8 +171,8 @@ MatrixXd removeXtZeros(const MatrixBase<T0> &Xthat, const MatrixBase<T1> &I, con
 
 int calcLevels(const Matrix<int, Dynamic, 2> &InfoMat, const int &K);
 
-template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
-void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &Xtfull, const Matrix<int, Dynamic, 2> &InfoMat,
+template <typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
+MatrixXd updateFactor2(const MatrixBase<T0> &Fac, const MatrixBase<T1> &yt, MatrixBase<T2> &Xtfull, const Matrix<int, Dynamic, 2> &InfoMat,
                    const MatrixBase<T3> &betaParams, const MatrixBase<T4> &omVariance, const MatrixBase<T5> &factorVariance,
                    const MatrixBase<T6> &deltas, const MatrixBase<T7> &gammas)
 {
@@ -198,6 +198,8 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
     MatrixXd Xtemp;
     MatrixXd D0;
     RowVectorXd btemp;
+    MatrixXd F(nFactors, T);
+    F = Fac;
     double f2, s2;
     for (int n = 0; n < nFactors; ++n)
     {
@@ -233,14 +235,15 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
         }
         CovarSum = CovarSum.llt().solve(MatrixXd::Identity(T, T));
         MeanSum = CovarSum * MeanSum;
-        Factors.row(n) = (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows(), 1)).transpose();
-        Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+        F.row(n) = (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows(), 1)).transpose();
+        Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, F, K);
         Xtk = groupByTime(Xtfull, K);
     }
+    return F; 
 }
 
-template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
-void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &Xtfull, const Matrix<int, Dynamic, 2> &InfoMat,
+template <typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
+MatrixXd updateFactor2(const MatrixBase<T0> &Fac, const MatrixBase<T1> &yt, MatrixBase<T2> &Xtfull, const Matrix<int, Dynamic, 2> &InfoMat,
                    const MatrixBase<T3> &betaParams, const MatrixBase<T4> &omVariance, const MatrixBase<T5> &factorVariance,
                    const MatrixBase<T6> &gammas)
 {
@@ -262,6 +265,8 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
     MatrixXd IT = MatrixXd::Identity(T, T);
     MatrixXd Xthat;
     MatrixXd D0;
+    MatrixXd F(nFactors, T); 
+    F = Fac; 
     RowVectorXd btemp;
     double f2, s2;
     for (int n = 0; n < nFactors; ++n)
@@ -298,10 +303,11 @@ void updateFactor2(MatrixXd &Factors, const MatrixBase<T1> &yt, MatrixBase<T2> &
         }
         CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
         MeanSum = CovarSum * MeanSum;
-        Factors.row(n) = (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows())).transpose();
-        Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+        F.row(n) = (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows())).transpose();
+        Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, F, K);
         Xtk = groupByTime(Xtfull, K);
     }
+    return F; 
 }
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>

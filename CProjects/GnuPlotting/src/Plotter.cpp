@@ -1,7 +1,7 @@
 #include "Plotter.hpp"
 const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", "\n");
 
-void writeToCSVfile(string name, MatrixXd matrix)
+void writeToCSVfile(string name, const MatrixXd &matrix)
 {
     ofstream file(name.c_str());
     if (file.is_open())

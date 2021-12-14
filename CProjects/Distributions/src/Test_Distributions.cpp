@@ -1,7 +1,7 @@
 #include <chrono>
 #include <iostream>
-
-#include <eigen-3.3.9/Eigen/Dense>
+#include <Plotter.hpp>
+#include <Eigen/Dense>
 #include <boost/random/mersenne_twister.hpp>
 
 #include "Distributions.hpp"
@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
 {
 
     int on = 0;
+    int shiftedexponential = 1;
     if (on)
     {
         int n = 3;
@@ -72,18 +73,26 @@ int main(int argc, char *argv[])
         cout << logmvtpdf(x, mu, sig, 15) << endl;
         cout << "Correct answer"
              << " -3.3695" << endl;
+
+        VectorXd RandVals = unifrnd(1, 10, 10);
+        cout << "Correct Answer:" << endl;
+        cout << log(RandVals.mean()) << endl;
+        RandVals = RandVals.array().log();
+        cout << "Should be equal to:" << endl;
+        cout << logavg(RandVals) << endl;
+        RandVals = unifrnd(1, 100, 1000);
+        cout << "Correct Answer:" << endl;
+        cout << log(RandVals.mean()) << endl;
+        RandVals = RandVals.array().log();
+        cout << "Should be equal to:" << endl;
+        cout << logavg(RandVals) << endl;
     }
-    VectorXd RandVals = unifrnd(1, 10, 10);
-    cout << "Correct Answer:" << endl;
-    cout << log(RandVals.mean()) << endl;
-    RandVals = RandVals.array().log();
-    cout << "Should be equal to:" << endl;
-    cout << logavg(RandVals) << endl;
-    RandVals = unifrnd(1, 100, 1000);
-    cout << "Correct Answer:" << endl;
-    cout << log(RandVals.mean()) << endl;
-    RandVals = RandVals.array().log();
-    cout << "Should be equal to:" << endl;
-    cout << logavg(RandVals) << endl;
+
+    if(shiftedexponential)
+    {
+        VectorXd V = shiftedExponential(-2, 1, 1000);
+        writeToCSVfile("V.csv", V);
+    }
+
     return 0;
 }

@@ -895,8 +895,6 @@ public:
             factorVarianceRRj[j] = factorVariance;
         }
         Numerator.resize(nFactors, rr);
-        cout << Numerator << endl;
-        cout << Denominator << endl;
         posteriorStar += logavg(Numerator, 0).sum() - logavg(Denominator, 0).sum();
 
         /* Beta Reduced Run */
@@ -967,7 +965,6 @@ public:
             omPrecisionRRj[j] = omPrecision;
             factorVarianceRRj[j] = factorVariance;
         }
-        cout << pibeta << endl;
         posteriorStar += logavg(pibeta);
 
         gammastar = mean(gammasRRj);
@@ -1012,8 +1009,7 @@ public:
             omPrecisionRRj[j] = omPrecision;
             factorVarianceRRj[j] = factorVariance;
         }
-        cout << Numerator << endl;
-        cout << Denominator << endl;
+
         posteriorStar += logavg(Numerator, 0).sum() - logavg(Denominator, 0).sum();
         omPrecisionstar = mean(omPrecisionRRj);
         MatrixXd piOmPrecision(K, rr);
@@ -1055,7 +1051,6 @@ public:
             factorVarianceRRj[j] = factorVariance;
         }
         piOmPrecision.resize(K, rr);
-        cout << piOmPrecision << endl;
         posteriorStar += logavg(piOmPrecision, 0).sum();
 
         factorVariancestar = mean(factorVarianceRRj);
@@ -1088,7 +1083,6 @@ public:
             resids = yt - (Astar * Factors) - xbt;
             FactorRRj[j] = Factors;
         }
-        cout << pifactorVariancestar << endl;
         posteriorStar += logavg(pifactorVariancestar, 0).sum();
         RowVectorXd Z1 = RowVectorXd::Zero(T);
         MatrixXd Covar(T, T);

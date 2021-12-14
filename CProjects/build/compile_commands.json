@@ -1,8 +1,26 @@
 [
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../TimeSeries/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../EigenTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../Distributions/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/testml.dir/src/Test_MultilevelModel.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_MultilevelModel.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_MultilevelModel.cpp"
+},
+
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build",
   "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../TimeSeries/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../EigenTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../Distributions/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/tb.dir/src/tb.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/tb.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/tb.cpp"
+},
+
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../TimeSeries/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../EigenTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../Distributions/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/tb_noworld.dir/src/tb_noworld.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/tb_noworld.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/tb_noworld.cpp"
+},
+
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../TimeSeries/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../EigenTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../Distributions/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/test_otrok.dir/src/Test_otrok.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_otrok.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/Test_otrok.cpp"
 },
 
 {
@@ -21,6 +39,12 @@
   "directory": "/home/dillon/CodeProjects/CProjects/build",
   "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../TimeSeries/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../EigenTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../Distributions/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/mlfunc.dir/src/MultilevelModelFunctions.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp"
+},
+
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../TimeSeries/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../EigenTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../Distributions/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/../OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include  -O3 -DNDEBUG   -std=gnu++11 -o CMakeFiles/wo.dir/src/worldonly.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/worldonly.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/worldonly.cpp"
 },
 
 {

@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
     string path = x.substr(0, t);
     // string ytpath = path + "kow.csv";
     // string xtpath = path + "kowXt.csv";
-    string indexpath = path + "factor_index_world_region_country.csv";
+    string indexpath = path + "factor_index_world_region.csv";
     MatrixXd yt = readCSV(ytpath);
     MatrixXd xvals = readCSV(xtpath);
     MatrixXd I = readCSV(indexpath);

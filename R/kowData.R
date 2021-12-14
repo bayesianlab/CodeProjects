@@ -217,8 +217,10 @@ years <- 1980:1990
 
 for (y in 1:10)
 {
-  end <- k[,1:(20 + (y-1))]
-  beg <- k[,(20+y):dim(k)[2]]
+  end <- ytz[,1:(20 + (y-1))]
+  beg <- ytz[,(20+y):dim(ytz)[2]]
+  print(dim(beg))
+  print(dim(end))
   begnameyt <- sprintf("yt_%d_beg.csv",years[y]+1)
   endnameyt <- sprintf("yt_%d_end.csv",years[y])
   begnameXt <- sprintf("Xt_%d_beg.csv",years[y]+1)
@@ -250,4 +252,6 @@ for (y in 1:10)
   
   
 }
+
+
 
