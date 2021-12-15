@@ -34,7 +34,7 @@ template <typename Derived1>
 MatrixXd CreateDiag(const MatrixBase<Derived1> &diagonalMat, const ArrayXi &diagonalVector,
                     int k, int c)
 {
-
+    /* Puts elements of diagonalMat along the diagonals in diagonalVector */
     MatrixXd D = MatrixXd::Zero(k, c);
     if (k > c)
     {
@@ -212,6 +212,15 @@ MatrixXd makeBlockDiagonal(const MatrixBase<T> &Block, const int &reptimes)
     return blockDiag(B, r);
 }
 
+template <typename T>
+MatrixXd makeBlockDiagonal(const MatrixBase<T> &Block, const int &reptimes, const ArrayXi &diag)
+{
+    VectorXd v = VectorXd::Ones(reptimes); 
+    MatrixXd M = CreateDiag(v,diag, reptimes,reptimes); 
+    MatrixXd X = kroneckerProduct(M, Block);
+    return X; 
+}
+
 template <typename D, typename Y>
 void bigBlockDiag(SparseMatrix<D> &BigSparseBlock, const MatrixBase<Y> &StackedBlock, const int &blocksizerows)
 {
@@ -255,5 +264,7 @@ void makeBigBlockDiag(SparseMatrix<T> &BigSparseBlock, const MatrixBase<D> &Bloc
     MatrixXd B = Block.replicate(reptimes, 1);
     return bigBlockDiag(BigSparseBlock, B, r);
 }
+
+
 
 #endif

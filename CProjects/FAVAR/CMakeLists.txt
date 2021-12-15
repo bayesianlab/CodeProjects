@@ -28,12 +28,14 @@ endif(Boost_FOUND)
 
 set(plotsrc ${PROJECT_SOURCE_DIR}/../GnuPlotting/src/Plotter.cpp)
 set(distsrc ${PROJECT_SOURCE_DIR}/../Distributions/src/Distributions.cpp)
+set(et ${PROJECT_SOURCE_DIR}/../EigenTools/src/EigenTools.cpp)
+add_library(et STATIC ${et})
 add_library(basetools STATIC ${plotsrc} )
 add_library(di STATIC ${distsrc} )
 set(plotinclude ${PROJECT_SOURCE_DIR}/../GnuPlotting/include)
 set(distinclude ${PROJECT_SOURCE_DIR}/../Distributions/include)
-
-include_directories(${plotinclude} "/usr/local/include/stats-master/include" "/usr/local/include/gcem/include" ${distinclude} "include")
+set(etinclude ${PROJECT_SOURCE_DIR}/../EigenTools/include)
+include_directories(${plotinclude} "/usr/local/include/stats-master/include" "/usr/local/include/gcem/include" ${distinclude} ${etinclude} "include")
 
 add_executable(favar src/test_favar.cpp)
 target_link_libraries(favar PUBLIC basetools di) 
