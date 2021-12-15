@@ -32,7 +32,9 @@ set(distsrc ${PROJECT_SOURCE_DIR}/../Distributions/src/Distributions.cpp)
 add_library(basetools STATIC ${plotsrc} )
 add_library(di STATIC ${distsrc} )
 set(plotinclude ${PROJECT_SOURCE_DIR}/../GnuPlotting/include)
-include_directories(${plotinclude} "/usr/local/include/stats-master/include" "/usr/local/include/gcem/include" include)
+set(distinclude ${PROJECT_SOURCE_DIR}/../Distributions/include)
 
-add_executable(testd src/Test_Distributions.cpp)
-target_link_libraries(testd PUBLIC basetools di) 
+include_directories(${plotinclude} "/usr/local/include/stats-master/include" "/usr/local/include/gcem/include" ${distinclude} "include")
+
+add_executable(mvp src/test_mvp.cpp)
+target_link_libraries(mvp PUBLIC basetools di) 

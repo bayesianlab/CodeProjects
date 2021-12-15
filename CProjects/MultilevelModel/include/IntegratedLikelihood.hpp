@@ -338,26 +338,8 @@ public:
                 subA(0) = 1;
                 Loadings.col(i).segment(start, nrows) = subA;
             }
-
             Factors.row(i) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
         }
-        /*
-        for (int i = 0; i < InfoMat.rows(); ++i)
-        {
-            COM = zeroOutFactorLevel(Loadings, i);
-            mut = Xbeta + COM * Factors;
-            ytdemeaned = yt - mut;
-            start = InfoMat.row(i).head(1).value();
-            nrows = InfoMat.row(i).tail(1).value() - start + 1;
-            subytdemeaned = ytdemeaned.middleRows(start, nrows);
-            subomPrecision = obsPrecision.segment(start, nrows);
-            subA = Loadings.col(i).segment(start, nrows);
-            subgammas = gammas.row(i);
-            subfv = factorVariance.row(i);
-            subFp = MakePrecision(subgammas, subfv, T);
-            Factors.row(i) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
-        }
-        */
     }
 };
 
@@ -520,6 +502,7 @@ public:
         MatrixXd omidentity = MakeObsModelIdentity(InfoMat, K);
 
         LoadingsPosteriorDraws.resize(stationarySims);
+        FactorPosteriorDraws.resize(stationarySims);
         BetaPosteriorDraws.resize(stationarySims);
         FactorPosteriorDraws.resize(stationarySims);
         GammasPosteriorDraws.resize(stationarySims);

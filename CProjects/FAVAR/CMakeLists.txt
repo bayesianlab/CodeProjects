@@ -1,4 +1,3 @@
-# Top level cmake 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
 set(CMAKE_CXX_STANDARD 11)
@@ -32,7 +31,9 @@ set(distsrc ${PROJECT_SOURCE_DIR}/../Distributions/src/Distributions.cpp)
 add_library(basetools STATIC ${plotsrc} )
 add_library(di STATIC ${distsrc} )
 set(plotinclude ${PROJECT_SOURCE_DIR}/../GnuPlotting/include)
-include_directories(${plotinclude} "/usr/local/include/stats-master/include" "/usr/local/include/gcem/include" include)
+set(distinclude ${PROJECT_SOURCE_DIR}/../Distributions/include)
 
-add_executable(testd src/Test_Distributions.cpp)
-target_link_libraries(testd PUBLIC basetools di) 
+include_directories(${plotinclude} "/usr/local/include/stats-master/include" "/usr/local/include/gcem/include" ${distinclude} "include")
+
+add_executable(favar src/test_favar.cpp)
+target_link_libraries(favar PUBLIC basetools di) 

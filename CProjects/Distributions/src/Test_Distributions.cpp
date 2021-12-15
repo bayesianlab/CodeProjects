@@ -12,7 +12,8 @@ int main(int argc, char *argv[])
 {
 
     int on = 0;
-    int shiftedexponential = 1;
+    int shiftedexponential = 0;
+    int truncnorm = 1;
     if (on)
     {
         int n = 3;
@@ -92,6 +93,15 @@ int main(int argc, char *argv[])
     {
         VectorXd V = shiftedExponential(-2, 1, 1000);
         writeToCSVfile("V.csv", V);
+        cout << normalCDF(0) << endl;
+        cout << normalCDF(1) << endl; 
+        cout << normalCDF(-1) << endl; 
+    }
+
+    if(truncnorm)
+    {
+        VectorXd Y = NormalTruncatedPositive(1,1,10000);
+        writeToCSVfile("Y.csv", Y);
     }
 
     return 0;

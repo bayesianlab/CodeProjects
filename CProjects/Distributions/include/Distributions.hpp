@@ -14,6 +14,7 @@
 #include <math.h>
 #include <random>
 #include <stdexcept>
+#include "stats.hpp"
 
 using namespace Eigen;
 using namespace std;
@@ -103,6 +104,14 @@ double logavg(const Ref<const VectorXd> &logpdf);
 MatrixXd logavg(const Ref<const MatrixXd> &logpdf, const int &dim);
 
 VectorXd shiftedExponential(const double &shift, const double &alpha, const int &n);
+
+double drawTruncatedNormal(const double &lowercut);
+
+VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2, const int &n);
+
+double normalCDF(double value);
+
+double inverseCDFTruncatedNormal(const double &lowercut);
 
 /*
 class Dist {
