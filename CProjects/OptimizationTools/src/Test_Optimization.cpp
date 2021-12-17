@@ -1,6 +1,6 @@
 #include <chrono>
 #include <iostream>
-#include <eigen-3.3.9/Eigen/Dense>
+#include <Eigen/Dense>
 #include "Optimization.hpp"
 
 using namespace std;

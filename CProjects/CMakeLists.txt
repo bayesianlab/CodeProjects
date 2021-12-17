@@ -1,3 +1,4 @@
+# Top level cmake 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
 set(CMAKE_CXX_STANDARD 11)
@@ -26,17 +27,23 @@ if(Boost_FOUND)
   message(STATUS "Found boost headers")
 endif(Boost_FOUND)
 
-set(plotsrc ${PROJECT_SOURCE_DIR}/../GnuPlotting/src/Plotter.cpp)
-set(distsrc ${PROJECT_SOURCE_DIR}/../Distributions/src/Distributions.cpp)
-set(et ${PROJECT_SOURCE_DIR}/../EigenTools/src/EigenTools.cpp)
-add_library(et STATIC ${et})
-add_library(basetools STATIC ${plotsrc} )
-add_library(di STATIC ${distsrc} )
-set(plotinclude ${PROJECT_SOURCE_DIR}/../GnuPlotting/include)
-set(distinclude ${PROJECT_SOURCE_DIR}/../Distributions/include)
-set(etinclude ${PROJECT_SOURCE_DIR}/../EigenTools/include)
-set(intlike ${PROJECT_SOURCE_DIR}/../MultilevelModel/include)
-include_directories(${plotinclude} "/usr/local/include/stats-master/include" "/usr/local/include/gcem/include" ${intlike} ${distinclude} ${etinclude} "include")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/EigenTools/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/Distributions/include 
+  ${CMAKE_CURRENT_SOURCE_DIR}/TimeSeries/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/Distributions/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/GnuPlotting/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/MultilevelModel/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/OptimizationTools/include
+  "/usr/local/include/stats-master/include"
+  "/usr/local/include/gcem/include"
+  )
 
-add_executable(favar src/test_favar.cpp)
-target_link_libraries(favar PUBLIC basetools di) 
+add_subdirectory(GnuPlotting)
+add_subdirectory(Distributions)
+add_subdirectory(EigenTools)
+add_subdirectory(TimeSeries)
+add_subdirectory(OptimizationTools)
+add_subdirectory(MultilevelModel)
+

@@ -19,13 +19,13 @@ int main(int argc, char *argv[])
     char h[256];
     getcwd(h, 256);
     string x = h;
-    size_t t = x.find("build");
-    string path = x.substr(0, t);
+
     // string ytpath = path + "kow.csv";
     // string xtpath = path + "kowXt.csv";
-    string indexpath = path + "factor_index_world_region_country.csv";
+    string indexpath = "/home/dillon/CodeProjects/CProjects/MultilevelModel/factor_index_world_region_country.csv";
     MatrixXd yt = readCSV(ytpath);
     MatrixXd xvals = readCSV(xtpath);
+    // MatrixXd xvals = MatrixXd::Ones(yt.rows()*yt.cols(),1);
     MatrixXd I = readCSV(indexpath);
     Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
     int K = yt.rows();

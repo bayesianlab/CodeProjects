@@ -1,4 +1,4 @@
-# Install script for directory: /home/dillon/CodeProjects/CProjects/MultilevelModel
+# Install script for directory: /home/dillon/CodeProjects/CProjects
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -35,6 +35,17 @@ endif()
 # Is this installation the result of a crosscompile?
 if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for each subdirectory.
+  include("/home/dillon/CodeProjects/CProjects/build/GnuPlotting/cmake_install.cmake")
+  include("/home/dillon/CodeProjects/CProjects/build/Distributions/cmake_install.cmake")
+  include("/home/dillon/CodeProjects/CProjects/build/EigenTools/cmake_install.cmake")
+  include("/home/dillon/CodeProjects/CProjects/build/TimeSeries/cmake_install.cmake")
+  include("/home/dillon/CodeProjects/CProjects/build/OptimizationTools/cmake_install.cmake")
+  include("/home/dillon/CodeProjects/CProjects/build/MultilevelModel/cmake_install.cmake")
+
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

@@ -187,14 +187,14 @@ colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rnnaUSA',
 KOWpercent <- (KOW[2:nrow(KOW),2:181] - KOW[1:nrow(KOW)-1, 2:181])/KOW[2:nrow(KOW), 2:181]
 KOWlfd <- log(KOW[2:nrow(KOW),2:181]) - log(KOW[1:nrow(KOW)-1, 2:181])
 k <- round(t(KOWlfd), 10)
-kz <- k-apply(k, 1, mean)
-kz <- k/apply(k,1, sd)
-codePath <- '~/CodeProjects/CProjects/MultilevelModel/'
+kz <- (k-apply(k, 1, mean))/apply(k,1, sd)
+
+codePath <- '~/CodeProjects/CProjects/build/'
 dataPath <- '~/GoogleDrive/Datasets/'
 
 yt <- k[,2:ncol(k)]
 ytz <- kz[,2:ncol(k)]
-write.table(kz[,2:ncol(k)], paste(codePath, 'kowz.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+write.table(ytz, paste(codePath, 'kowz.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 write.table(k[,2:ncol(k)], paste(codePath, 'kow.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 r <- nrow(k)/3
 Xtz <- matrix(0, nrow=3*r*(ncol(k)-1), ncol=3)
@@ -214,11 +214,13 @@ write.table(Xtz, paste(codePath, 'kowXtz.csv', sep=''), row.names = FALSE, col.n
 write.table(Xt, paste(codePath, 'kowXt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
 years <- 1980:1990
-
+print(dim(ytz))
 for (y in 1:10)
 {
-  end <- ytz[,1:(20 + (y-1))]
-  beg <- ytz[,(20+y):dim(ytz)[2]]
+  ending <- kz[,1:(20+y-1)]
+  beginning <- kz[,(20+y):dim(kz)[2]]
+  beg <- beginning[,2:dim(beginning)[2]]
+  end <- ending[,2:dim(ending)[2]]
   print(dim(beg))
   print(dim(end))
   begnameyt <- sprintf("yt_%d_beg.csv",years[y]+1)
@@ -233,7 +235,7 @@ for (y in 1:10)
     {
       w <- (1:3) + ((j-1)*3)
       q <- w + ( (t-1)*180 )
-      Xtbeg[q, ] = kronecker(ones, t(as.matrix(beg[w, t])))
+      Xtbeg[q, ] = kronecker(ones, t(as.matrix(beginning[w, t])))
     }
   }
   for(t in 1:(ncol(end)-1))
@@ -242,16 +244,70 @@ for (y in 1:10)
     {
       w <- (1:3) + ((j-1)*3)
       q <- w + ( (t-1)*180 )
-      Xtend[q, ] = kronecker(ones, t(as.matrix(end[w, t])))
+      Xtend[q, ] = kronecker(ones, t(as.matrix(ending[w, t])))
     }
   }
-  write.table(beg, paste(paste(codePath, "timebreaks/", sep=''), begnameyt,sep=''), row.names=FALSE,col.names=FALSE,sep=",")
-  write.table(Xtbeg, paste(paste(codePath, "timebreaks/", sep=''), begnameXt,sep=''), row.names=FALSE,col.names=FALSE,sep=",")
-  write.table(end, paste(paste(codePath, "timebreaks/", sep=''), endnameyt,sep=''), row.names=FALSE,col.names=FALSE,sep=",")
-  write.table(Xtend, paste(paste(codePath, "timebreaks/", sep=''), endnameXt,sep=''), row.names=FALSE,col.names=FALSE,sep=",")
-  
-  
+  write.table(beg, paste(paste(codePath, "timebreaks/", sep=''), begnameyt,sep=''), 
+              row.names=FALSE,col.names=FALSE,sep=",")
+  write.table(Xtbeg, paste(paste(codePath, "timebreaks/", sep=''), begnameXt,sep=''), 
+              row.names=FALSE,col.names=FALSE,sep=",")
+  write.table(end, paste(paste(codePath, "timebreaks/", sep=''), endnameyt,sep=''), 
+              row.names=FALSE,col.names=FALSE,sep=",")
+  write.table(Xtend, paste(paste(codePath, "timebreaks/", sep=''), endnameXt,sep=''), 
+              row.names=FALSE,col.names=FALSE,sep=",")
 }
 
+# setwd("~/CodeProjects/CProjects/build")
+# for(y in 1:10)
+# {
+#   begnameyt <- sprintf("yt_%d_beg.csv",years[y]+1)
+#   begnameXt <- sprintf("Xt_%d_beg.csv",years[y]+1)
+#   com1 <- paste("timebreaks/", begnameyt, sep="")
+#   com2 <- paste(" timebreaks/", begnameXt, sep="")
+#   com3 <- paste("./tb ")
+#   command <- paste(com3, paste(com1, com2))
+#   system(command)
+# }
+# for(y in 1:10)
+# {
+#   endnameyt <- sprintf("yt_%d_end.csv",years[y])
+#   endnameXt <- sprintf("Xt_%d_end.csv",years[y])
+#   com1 <- paste("timebreaks/", endnameyt, sep="")
+#   com2 <- paste(" timebreaks/", endnameXt, sep="")
+#   com3 <- paste("./tb ")
+#   command <- paste(com3, paste(com1, com2))
+#   system(command)
+# }
 
+tbbeg <- data.frame(rbind(c(-7919.92, "beg1981"),
+c(-7629.77, "beg1982"),
+c(-7448.75, "beg1983"),
+c(-7281.12, "beg1984"),
+c(-7082.96, "beg1985"),
+c(-6883, "beg1986"),
+c(-6713.52, "beg1987"),
+c(-6449.11, "beg1988"),
+c(-6210.19, "beg1989"),
+c(-6096.6, "beg1990")))
+
+tbend <- data.frame(rbind(c(-5266.75, "end1980"),
+c(-5405.46, "end1981"),
+c(-5745.68, "end1982"),
+c(-5938.99, "end1983"),
+c(-6147.34, "end1984"),
+c(-6350.31, "end1985"),
+c(-6581.35, "end1986"),
+c(-6787.35, "end1987"),
+c(-7082.75, "end1988"),
+c(-7218.1, "end1989")))
+
+tb <- data.frame(Date=1980:1989, ML=as.numeric(tbbeg$X1) + as.numeric(tbend$X1))
+
+library(ggplot2)
+ggplot(data=tb, aes(x=Date, y = ML)) + geom_line() + theme(text=element_text(size=20), axis.text.x=element_text(size=20),
+                                                           axis.text.y=element_text(size=20), panel.grid.minor = element_blank(),
+                                                           panel.background = element_blank(), axis.line = element_line(colour = "black")) + 
+  xlab("Date") + ylab("Marginal Likelihood") + 
+  
+  scale_x_continuous(breaks=1980:1989) + geom_hline(yintercept=-12370, color="red", linetype="dashed")
 

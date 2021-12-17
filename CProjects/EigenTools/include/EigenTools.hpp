@@ -215,6 +215,7 @@ MatrixXd makeBlockDiagonal(const MatrixBase<T> &Block, const int &reptimes)
 template <typename T>
 MatrixXd makeBlockDiagonal(const MatrixBase<T> &Block, const int &reptimes, const ArrayXi &diag)
 {
+    /* Makes a block diagonal of Block along diagonal diag */ 
     VectorXd v = VectorXd::Ones(reptimes); 
     MatrixXd M = CreateDiag(v,diag, reptimes,reptimes); 
     MatrixXd X = kroneckerProduct(M, Block);

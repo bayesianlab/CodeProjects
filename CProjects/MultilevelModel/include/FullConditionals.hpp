@@ -1014,6 +1014,14 @@ public:
         MatrixXd tempX(T, nXs + levels);
         MatrixXd betaStar = mean(BetaPosteriorDraws);
         RowVectorXd btemp(nXs + levels);
+        if (id == 1)
+        {
+            factorVariance = mean(FactorVariancePosteriorDraws);
+        }
+        else
+        {
+            factorVariance = VectorXd::Ones(nFactors);
+        }
         for (int k = 0; k < K; ++k)
         {
             priorBetaStar(k) = logmvnpdf(betaStar.row(k), b0, B0);
@@ -1040,9 +1048,14 @@ public:
             {
                 arupdater.updateArParameters(Factors.row(n), gammas.row(n), factorVariance(n), g0, G0);
                 gammas.row(n) = arupdater.phinew;
-                H = ReturnH(gammas.row(n), T);
-                nu = (H * Factors.row(n).transpose()).transpose();
-                factorVariance(n) = updateVariance(nu, r0, R0).value();
+                if (id == 1)
+                {
+                    H = ReturnH(gammas.row(n), T);
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    H = ReturnH(gammas.row(n), T);
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    factorVariance(n) = updateVariance(nu, r0, R0).value();
+                }
             }
             FactorPosteriorDrawsj[j] = Factors;
             GammasPosteriorDrawsj[j] = gammas;
@@ -1086,9 +1099,14 @@ public:
                 f2 = factorVariance(n);
                 Numerator(n, j) = arupdater.alphag(Factors.row(n), gammas.row(n), gammastar.row(n), f2, g0, G0);
                 Denominator(n, j) = arupdater.alphaj(gammastar.row(n), Factors.row(n), f2, g0, G0);
-                H = StoreH[n];
-                nu = (H * Factors.row(n).transpose()).transpose();
-                factorVariance(n) = updateVariance(nu, r0, R0).value();
+                if (id == 1)
+                {
+                    H = ReturnH(gammastar.row(n), T);
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    H = ReturnH(gammas.row(n), T);
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    factorVariance(n) = updateVariance(nu, r0, R0).value();
+                }
             }
             FactorPosteriorDrawsj[j] = Factors;
             OmVariancePosteriorDrawsj[j] = omVariance;
@@ -1122,22 +1140,24 @@ public:
                 piPosterior(k, j) = loginvgammapdf(s2, parama, paramb);
             }
             Factors = updateFactor2(Factors, yt, Xtfull, InfoMat, betaStar, omVariancestar, factorVariance, gammastar);
-
-            for (int n = 0; n < nFactors; ++n)
+            if (id == 1)
             {
-                H = StoreH[n];
-                nu = (H * Factors.row(n).transpose()).transpose();
-                factorVariance(n) = updateVariance(nu, r0, R0).value();
+                for (int n = 0; n < nFactors; ++n)
+                {
+                    H = StoreH[n];
+                    nu = (H * Factors.row(n).transpose()).transpose();
+                    factorVariance(n) = updateVariance(nu, r0, R0).value();
+                }
             }
             FactorPosteriorDrawsj[j] = Factors;
             FactorVariancePosteriorDrawsj[j] = factorVariance;
         }
         posteriorStar += logavg(piPosterior, 0).sum();
         double priorSum = 0;
+        VectorXd factorVariancestar = mean(FactorVariancePosteriorDrawsj);
         if (id == 1)
         {
             cout << "Factor Variance Reduced Run" << endl;
-            VectorXd factorVariancestar = mean(FactorVariancePosteriorDrawsj);
             parama = .5 * (T + r0);
             piPosterior.resize(nFactors, rr);
             Factors = mean(FactorPosteriorDrawsj);
@@ -1170,24 +1190,22 @@ public:
         Factorstar = mean(FactorPosteriorDrawsj);
         VectorXd priorFactorStar = evalFactorPriors(Factorstar, InfoMat, factorVariance, gammastar);
         VectorXd posteriorFactorStar = factorReducedRun(Factorstar, yt, Xtfull, InfoMat, betaStar, omVariancestar,
-                                                        factorVariance, gammastar);
+                                                        factorVariancestar, gammastar);
 
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factorstar, K);
         Xtk = groupByTime(Xtfull, K);
 
-        residuals.resize(K, T);
+        VectorXd likelihood(K);
+        RowVectorXd Z2 = RowVectorXd::Zero(1, T);
+        MatrixXd Covar(T,T);
         for (int k = 0; k < K; ++k)
         {
             s2 = omVariancestar(k);
-            residuals.row(k) = yt.row(k) - betaStar.row(k) * Xtk[k].transpose();
+            Covar = (omVariancestar(k)*MatrixXd::Identity(T,T));
+            likelihood(k) = logmvnpdf(yt.row(k) - betaStar.row(k) * Xtk[k].transpose(), Z2, Covar); 
+
         }
-        VectorXd likelihood(T);
-        RowVectorXd Z2 = RowVectorXd::Zero(1, K);
-        MatrixXd Covar = omVariancestar.asDiagonal();
-        for (int t = 0; t < T; ++t)
-        {
-            likelihood(t) = logmvnpdf(residuals.col(t).transpose(), Z2, Covar);
-        }
+
         cout << likelihood.sum() << endl;
         cout << priorFactorStar.sum() << endl;
         cout << posteriorFactorStar.sum() << endl;

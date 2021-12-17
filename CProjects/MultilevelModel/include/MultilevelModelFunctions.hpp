@@ -411,7 +411,6 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt, Matrix
     Xtk = groupByTime(Xtfull, K);
     for (int n = 0; n < nFactors; ++n)
     {
-
         CovarSum.setZero(T, T);
         MeanSum.setZero(T, 1);
         for (int k = InfoMat.row(n).head(1).value(); k <= InfoMat.row(n).tail(1).value(); ++k)
@@ -443,8 +442,8 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt, Matrix
             ++colCount;
         }
         CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
-        // MeanSum = CovarSum * MeanSum;
-        rrvals(n) = logmvnpdf(Factorstar.row(n), Factorstar.row(n), CovarSum);
+        MeanSum = CovarSum * MeanSum;
+        rrvals(n) = logmvnpdf(MeanSum, MeanSum, CovarSum);
     }
     return rrvals;
 }

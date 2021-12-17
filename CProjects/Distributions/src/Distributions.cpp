@@ -286,33 +286,34 @@ MatrixXd logavg(const Ref<const MatrixXd> &X, const int &dim)
 
 VectorXd shiftedExponential(const double &shift, const double &alpha, const int &n)
 {
-  VectorXd udouble = unifrnd(0,1,n);
-  udouble = shift - (1.0/alpha)*(1-udouble.array()).array().log();
+  VectorXd udouble = unifrnd(0, 1, n);
+  udouble = shift - (1.0 / alpha) * (1 - udouble.array()).array().log();
   return udouble;
 }
 
 double drawTruncatedNormal(const double &lowercut)
 {
   int c = 0;
-  int MAX = 100; 
-  double alphaOptimal = 0.5*(lowercut + sqrt(lowercut*lowercut + 4)); 
-  double logrhoz, lu, z; 
+  int MAX = 100;
+  double alphaOptimal = 0.5 * (lowercut + sqrt(lowercut * lowercut + 4));
+  double logrhoz, lu, z;
   while (c <= MAX)
   {
     z = shiftedExponential(alphaOptimal, lowercut, 1).value();
-    logrhoz = -0.5*(z-alphaOptimal)*(z-alphaOptimal);
-    lu = unifrnd(0,1,1).array().log().value();
-    if(lu <= logrhoz)
+    logrhoz = -0.5 * (z - alphaOptimal) * (z - alphaOptimal);
+    lu = unifrnd(0, 1, 1).array().log().value();
+    if (lu <= logrhoz)
     {
       return z;
     }
-    c++; 
+    c++;
   }
+  return normrnd(0, 1);
 }
 
 double normalCDF(double value)
 {
-   return 0.5 * erfc(-value * M_SQRT1_2);
+  return 0.5 * erfc(-value * M_SQRT1_2);
 }
 
 double inverseCDFTruncatedNormal(const double &lowercut)
@@ -320,25 +321,25 @@ double inverseCDFTruncatedNormal(const double &lowercut)
   double Fa, q1;
   Fa = normalCDF(lowercut);
   q1 = 1 - Fa;
-  return stats::qnorm(Fa + unifrnd(0,1)*q1); 
+  return stats::qnorm(Fa + unifrnd(0, 1) * q1);
 }
 
 VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2, const int &n)
 {
   VectorXd ntp(n);
-  double newcut = -mu/sqrt(sigma2); 
-  for(int i = 0; i < n ; ++i)
+  double newcut = -mu / sqrt(sigma2);
+  for (int i = 0; i < n; ++i)
   {
-    if(newcut > 5)
+    if (newcut > 5)
     {
-       ntp(i) = mu + (sqrt(sigma2) * drawTruncatedNormal(newcut)); 
+      ntp(i) = mu + (sqrt(sigma2) * drawTruncatedNormal(newcut));
     }
     else
     {
       ntp(i) = mu + (sqrt(sigma2) * inverseCDFTruncatedNormal(newcut));
     }
   }
-  return ntp; 
+  return ntp;
 }
 
 /* VectorXd generateChiSquaredVec(double df, int rows) {

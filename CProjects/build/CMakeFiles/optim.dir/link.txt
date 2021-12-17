@@ -1,2 +1,0 @@
-ccache /bin/ar qc liboptim.a  CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp.o CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp.o CMakeFiles/optim.dir/home/dillon/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp.o
-ccache /bin/ranlib liboptim.a
