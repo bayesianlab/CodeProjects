@@ -171,8 +171,7 @@ def checkForConlicts(slotNum, candidateList, connection):
                         dupes.append(j)
                         dupes.append(i)
                 except:
-                    print(
-                        "Record has incomplete incormation, however duplicate exists!")
+                    print("Record has incomplete incormation, however duplicate exists!")
 
             else:
                 x = "SELECT * FROM {} WHERE StudentID = {}".format(slot, i[0])
@@ -182,7 +181,7 @@ def checkForConlicts(slotNum, candidateList, connection):
         if len(dupes) > 0:
             print(
                 "Some student records are found in both {} and the candidate pool.".format(slot))
-            print("Remove duplicates in candidate pool:")
+            print("These students cannot be assigned to this slot:")
             prettyPrintSql(dupes)
         else:
             print("No conflicts found, putting students and faculty into this slot")
@@ -204,6 +203,12 @@ def prettyPrintSql(sql):
     for i in sql:
         print("{:<20}{:<20}{:<20}{:<15}".format(i[1], i[2], i[3], i[4]))
 
+def printCsv(fname):
+    f1 = pd.read_csv(fname, keep_default_na=False)
+    f1 = getFields(f1)
+    print(f1)
+    
+
 
 
 f = Figlet(font='slant')
@@ -216,9 +221,10 @@ print("{:<35}".format("Check for conflicts and drop files\nif there are or move 
 print("{:<35} {:<20}".format("Drop any table in the database:", "deletetable NAME"))
 print("{:<35} {:<20}".format("Delete a course from a table", "deletebycourse NAME"))
 print("{:<35} {:<20}".format("Delete a student from a table:", "deletebystudentid NAME"))
-print("{:<35} {:<20}".format("Print all tables in the database:", "printtablesinfo"))
+print("{:<35} {:<20}".format("Print all tables in the database:", "printtables"))
 print("{:<35} {:<20}".format("Print all records in a table:", "print NAME"))
 print("{:<35} {:<20}".format("Execute any sql type statement:", "sql SQL_COMMANDS"))
+print("{:<35} {:<20}".format("Print a csv file:", "printcsv FILENAME"))
 print("{:<35} {:<20}".format("Save the progress:", "save"))
 print("{:<35} {:<20}".format("Quit:", "q or quit"))
 print()
@@ -244,9 +250,15 @@ while(1):
         slotnum = clist[1]
         for i in clist[2:]:
             if i.endswith(".csv"):
-                createTable(i, conn)
+                try:
+                    createTable(i, conn)
+                except:
+                    print("No connection or filename incorrect")
                 names.append(getTableName(i))
-        checkForConlicts(slotnum, names, conn)
+        try:
+            checkForConlicts(slotnum, names, conn)
+        except:
+            print("Possibly no table by that name, create more slots")
     if clist[0] == "save":
         conn.commit()
     if (clist[0] == "q" ) or (clist[0] == "quit" ):
@@ -276,8 +288,6 @@ while(1):
             except:
                 print("There is no connection!")
                 print("Make a database first.")
-    if clist[0] == "printtableinfo":
-        printTableInfo(conn)
     if clist[0] == "deletebycourse":
         tablename = clist[1]
         courseid = clist[2]
@@ -287,7 +297,7 @@ while(1):
         id = clist[2]
         deleteRowsById(tablename, id, conn)
     if clist[0] == "printtables":
-        printTableInfo()
+        printTableInfo(conn)
     if clist[0] == "sql":
         stmt = ' '.join(clist[1:])
         cur = conn.cursor()
@@ -295,5 +305,11 @@ while(1):
             cur.execute(stmt)
         except:
             print("Input error")
+    if clist[0] == "printcsv":
+        try:
+            printCsv(clist[1])
+        except:
+            print("Input error")
+
 
 
