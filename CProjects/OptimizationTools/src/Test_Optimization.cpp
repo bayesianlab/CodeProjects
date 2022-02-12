@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
     cout << endl;
     cout << "BFGS" << endl;
     f.BFGS(x, f2, 1);
-    f.AprroximateHessian(f.x1, f2);
+    f.ApproximateHessian(f.x1, f2);
     cout << "Correct solution:" << " 1, 1" << endl; 
     return 0;
 }

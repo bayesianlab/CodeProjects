@@ -5,26 +5,46 @@
 int main()
 {
     cout << " Test mvp" << endl;
-    MatrixXd zt = normrnd(0, 1, 3, 100);
-    MatrixXd yt(3, 100);
-    for (int i = 0; i < 100; ++i)
+    int N = 100;
+    int p = 2;
+    int K = 3;
+    MatrixXd B0 = MatrixXd::Identity((p + 1) * K, (p + 1) * K);
+    RowVectorXd b0((p + 1) * K);
+    b0.setZero();
+    MatrixXd xt = normrnd(0, 1, N * K, p);
+    MatrixXd Xt(K * N, p + 1);
+    Xt << VectorXd::Ones(K * N), xt;
+    VectorXd beta(p + 1);
+    beta << 1, 1, 1;
+    MatrixXd zt = Xt * beta + normrnd(0, 1, N * K, 1);
+    zt.resize(K, N);
+    MatrixXd yt(K, N);
+    for (int i = 0; i < N; ++i)
     {
-        for (int j = 0; j < 3; ++j)
+        for (int j = 0; j < K; ++j)
         {
-            if (zt(i, j) > .5)
+            if (zt(j, i) > 0)
             {
-                yt(i, j) = 1;
+                yt(j, i) = 1;
             }
             else
             {
-                yt(i, j) = 0;
+                yt(j, i) = 0;
             }
         }
     }
-    MatrixXd mut = normrnd(0, 1, 3, 100);
+    int blocks = K-1;
+    std::vector<VectorXd> s0;
+    std::vector<MatrixXd> S0;
+    s0.resize(blocks);
+    S0.resize(blocks);
+    s0[0] = VectorXd::Zero(2);
+    S0[0] = MatrixXd::Identity(2, 2);
+    s0[1] = VectorXd::Zero(1);
+    S0[1] = MatrixXd::Identity(1, 1);
+    MVP mv;
+    mv.setModel(yt, Xt, beta.replicate(K, 1), b0, B0, s0, S0);
 
-    drawLatentData(zt,yt,mut);
-    cout << zt << endl; 
-
+    mv.runModel(10, 1);
     return 1;
 }

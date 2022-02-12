@@ -13,7 +13,8 @@ int main(int argc, char *argv[])
 
     int on = 0;
     int shiftedexponential = 0;
-    int truncnorm = 1;
+    int truncnorm = 0;
+    int tmvn = 1;
     if (on)
     {
         int n = 3;
@@ -102,6 +103,19 @@ int main(int argc, char *argv[])
     {
         VectorXd Y = NormalTruncatedPositive(1,1,10000);
         writeToCSVfile("Y.csv", Y);
+    }
+    if(tmvn)
+    {
+        int K = 3; 
+        RowVectorXd constraints(K);
+        RowVectorXd mu(K);
+        MatrixXd Sigma(K,K);
+        Sigma = CreateSigma(.2,K);
+        cout << Sigma << endl; 
+        constraints << 1,1,-1;
+        mu << 0,-3,0;
+        MatrixXd sample = mvtnrnd(constraints, constraints, mu, Sigma, 100,10);
+        cout << sample << endl; 
     }
 
     return 0;

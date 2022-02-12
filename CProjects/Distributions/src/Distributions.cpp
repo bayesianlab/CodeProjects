@@ -342,6 +342,42 @@ VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2, const i
   return ntp;
 }
 
+MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints, const RowVectorXd &mu,
+                 const MatrixXd &Sigma, const int N, const int bn)
+{
+  int K = Sigma.rows();
+  MatrixXd Precision = Sigma.llt().solve(MatrixXd::Identity(K, K));
+  MatrixXd NotK = Precision;
+  for (int i = 0; i < K; ++i)
+  {
+    NotK(i, i) = 0;
+  }
+  RowVectorXd Hknk(K);
+  double condmean;
+  double condvar;
+  MatrixXd sample(K, N);
+  sample.setZero();
+  sample.col(0) = init;
+  for (int n = 0; n < N; ++n)
+  {
+    for (int k = 0; k < K; ++k)
+    {
+      Hknk = NotK.row(k);
+      condvar = 1.0 / Precision(k, k);
+      condmean = mu(k) - condvar * Hknk * (sample.col(0) - mu.transpose());
+      if (constraints(k) == 1)
+      {
+        sample(k, n) = NormalTruncatedPositive(condmean, condvar, 1).value();
+      }
+      else
+      {
+        sample(k, n) = -NormalTruncatedPositive(-condmean, condvar, 1).value();
+      }
+    }
+  }
+  return sample.rightCols(N - bn);
+}
+
 /* VectorXd generateChiSquaredVec(double df, int rows) {
   std::mt19937 gen(rd());
   std::chi_squared_distribution<double> csd(df);

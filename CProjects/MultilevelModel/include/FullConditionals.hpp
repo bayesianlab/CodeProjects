@@ -204,7 +204,7 @@ public:
         GammasPosteriorDraws.resize(Sims - burnin);
         OmVariancePosteriorDraws.resize(Sims - burnin);
         FactorVariancePosteriorDraws.resize(Sims - burnin);
-        UnivariateBeta ub;
+        BayesBetaUpdater ub;
         ArParameterTools arupdater;
         ub.initializeBeta(b0);
 
@@ -393,7 +393,7 @@ public:
         OmVariancePosteriorDraws.resize(Sims - burnin);
         FactorVariancePosteriorDraws.resize(Sims - burnin);
 
-        UnivariateBeta ub;
+        BayesBetaUpdater ub;
         ArParameterTools arupdater;
         ub.initializeBeta(b0);
 
@@ -618,7 +618,7 @@ public:
             Xtfull.leftCols(nXs) = Xt;
         }
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
-        UnivariateBeta ub;
+        BayesBetaUpdater ub;
         MatrixXd piPosterior(K, rr);
         ArParameterTools arupdater;
         VectorXd priorBetaStar(K);
@@ -1001,7 +1001,7 @@ public:
             Xtfull.leftCols(nXs) = Xt;
         }
         Xtfull.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
-        UnivariateBeta ub;
+        BayesBetaUpdater ub;
         MatrixXd piPosterior(K, rr);
         ArParameterTools arupdater;
         VectorXd priorBetaStar(K);

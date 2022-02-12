@@ -227,6 +227,19 @@ ml/fast:
 	$(MAKE) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/build
 .PHONY : ml/fast
 
+#=============================================================================
+# Target rules for targets named mvp
+
+# Build rule for target.
+mvp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mvp
+.PHONY : mvp
+
+# fast build rule for target.
+mvp/fast:
+	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/build
+.PHONY : mvp/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -244,6 +257,7 @@ help:
 	@echo "... optim"
 	@echo "... tb"
 	@echo "... ml"
+	@echo "... mvp"
 .PHONY : help
 
 

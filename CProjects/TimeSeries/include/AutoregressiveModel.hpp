@@ -61,7 +61,7 @@ public:
         VectorXd sig;
 
         std::vector<MatrixXd> XtbyT = groupByTime(Xt, K);
-        UnivariateBeta ub;
+        BayesBetaUpdater ub;
         ArParameterTools ar;
         ub.initializeBeta(b0);
 
