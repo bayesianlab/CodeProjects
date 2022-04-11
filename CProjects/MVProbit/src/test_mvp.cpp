@@ -7,7 +7,7 @@ int main()
     cout << " Test mvp" << endl;
     int N = 100;
     int p = 2;
-    int K = 3;
+    int K = 4;
     MatrixXd B0 = MatrixXd::Identity((p + 1) * K, (p + 1) * K);
     RowVectorXd b0((p + 1) * K);
     b0.setZero();
@@ -33,18 +33,25 @@ int main()
             }
         }
     }
-    int blocks = K-1;
+    int blocks = K - 1;
     std::vector<VectorXd> s0;
     std::vector<MatrixXd> S0;
     s0.resize(blocks);
     S0.resize(blocks);
-    s0[0] = VectorXd::Zero(2);
-    S0[0] = MatrixXd::Identity(2, 2);
-    s0[1] = VectorXd::Zero(1);
-    S0[1] = MatrixXd::Identity(1, 1);
-    MVP mv;
-    mv.setModel(yt, Xt, beta.replicate(K, 1), b0, B0, s0, S0);
+    int dim;
+    for (int i = 0; i < K - 1; ++i)
+    {
+        dim = (K - 1) - i;
+        s0[i] = VectorXd::Zero(dim);
+        S0[i] = MatrixXd::Identity(dim, dim);
+    }
 
-    mv.runModel(10, 1);
+    MVP mv;
+    double optim_options[5] = {1e-5, 1e-4, 1e-4, 1e-4, 20};
+    Optimize optim(optim_options);
+    mv.setModel(yt, Xt, beta.replicate(K, 1), b0, B0, s0, S0, optim);
+
+    mv.runModel(100, 10);
+    mv.ml();
     return 1;
 }
