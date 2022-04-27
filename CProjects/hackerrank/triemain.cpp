@@ -4,8 +4,10 @@ using namespace std;
 
 int main()
 {
-    Dictionary D("mini.txt");
+    Dictionary D("collins_dictionary.txt");
     Trie *root = makeTrie(D.dict);
-    printTrie(root);
+    // printTrie(root);
+    string s = "SKEERY";
+    cout << isWord(root,s) << endl;
     return 0;
 }

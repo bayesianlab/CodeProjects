@@ -18,11 +18,11 @@ public:
                 word.erase(remove(word.begin(), word.end(), '\"'), word.end());
                 dict.push_back(word);
             }
-            cout << "success" << endl;
+            cout << "Loaded Dictionary successfully." << endl;
         }
         else
         {
-            cout << "Error" << endl;
+            cout << "Error dictionary not loaded!" << endl;
         }
     }
 };
@@ -34,9 +34,23 @@ public:
 
     bool endsword;
 
-    
+    bool isBarren()
+    {
+        for(int i =0; i < 26; ++i)
+        {
+            if(next)
+            {
+                return false; 
+            }
+        }
+        return true; 
+    }
 
     Trie *next[26];
+
+    ~Trie()
+    {
+    };
 };
 
 Trie *newTrie(char);
@@ -49,4 +63,6 @@ void pritnTrieUtil(Trie *, string str);
 
 Trie *makeTrie(vector<string> words);
 
-bool findSubWord(Trie *root, string sub);
+bool isSubWord(Trie *root,  string sub);
+
+bool isWord(Trie *, string sub); 

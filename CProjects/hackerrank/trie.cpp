@@ -29,6 +29,7 @@ Trie *makeTrie(vector<string> words)
         }
         t = home;
     }
+    cout << "Successfully created Trie." << endl; 
     return root;
 }
 
@@ -102,19 +103,41 @@ Trie *newTrie(char d)
     return t;
 }
 
-bool findSubWord(Trie *root, int nextroot, string sub)
+bool isSubWord(Trie *root, string sub)
 {
     if (sub.empty())
     {
         return true;
     }
-    if (nextroot >= 26)
+    int c = 0;
+    while (c < 26)
+    {
+        if ((root->next[c] != NULL) && (root->next[c]->data == sub[0]))
+        {
+            root = root->next[c];
+            break;
+        }
+        ++c;
+    }
+    if (c == 26)
     {
         return false;
     }
-    if (root->data == sub[0])
+    if (isSubWord(root, sub.substr(1, sub.length())))
     {
-        if (findSubWord(root->next[nextroot], nextroot + 1, sub.substr(1, sub.length() - 1)))
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool isWord(Trie *root, string sub)
+{
+    if (sub.empty())
+    {
+        if (root->endsword == 1)
         {
             return true;
         }
@@ -122,6 +145,24 @@ bool findSubWord(Trie *root, int nextroot, string sub)
         {
             return false;
         }
+    }
+    int c = 0;
+    while (c < 26)
+    {
+        if ((root->next[c] != NULL) && (root->next[c]->data == sub[0]))
+        {
+            root = root->next[c];
+            break;
+        }
+        ++c;
+    }
+    if (c == 26)
+    {
+        return false;
+    }
+    if (isWord(root, sub.substr(1, sub.length())))
+    {
+        return true;
     }
     else
     {
