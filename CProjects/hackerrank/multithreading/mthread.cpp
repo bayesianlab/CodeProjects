@@ -32,7 +32,8 @@ void fo(string dir)
 
 int main(int argc, char *argv[])
 {
-    
+    vector<thread> ts(3);
+    vector<string> dirs(3); 
     thread mythread(fo, "/home/dillon"); 
     mythread.join();
     return 0;
