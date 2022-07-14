@@ -1,6 +1,7 @@
 #include <iostream> 
 #include <vector> 
 using namespace std; 
+
 template <typename T>
 void printvec(const vector<T> &x)
 {
