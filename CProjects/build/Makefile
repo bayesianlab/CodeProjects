@@ -176,69 +176,17 @@ ettools/fast:
 .PHONY : ettools/fast
 
 #=============================================================================
-# Target rules for targets named optimtest
+# Target rules for targets named tstest
 
 # Build rule for target.
-optimtest: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 optimtest
-.PHONY : optimtest
+tstest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 tstest
+.PHONY : tstest
 
 # fast build rule for target.
-optimtest/fast:
-	$(MAKE) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/build
-.PHONY : optimtest/fast
-
-#=============================================================================
-# Target rules for targets named optim
-
-# Build rule for target.
-optim: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 optim
-.PHONY : optim
-
-# fast build rule for target.
-optim/fast:
-	$(MAKE) -f OptimizationTools/CMakeFiles/optim.dir/build.make OptimizationTools/CMakeFiles/optim.dir/build
-.PHONY : optim/fast
-
-#=============================================================================
-# Target rules for targets named tb
-
-# Build rule for target.
-tb: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 tb
-.PHONY : tb
-
-# fast build rule for target.
-tb/fast:
-	$(MAKE) -f MultilevelModel/CMakeFiles/tb.dir/build.make MultilevelModel/CMakeFiles/tb.dir/build
-.PHONY : tb/fast
-
-#=============================================================================
-# Target rules for targets named ml
-
-# Build rule for target.
-ml: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ml
-.PHONY : ml
-
-# fast build rule for target.
-ml/fast:
-	$(MAKE) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/build
-.PHONY : ml/fast
-
-#=============================================================================
-# Target rules for targets named mvp
-
-# Build rule for target.
-mvp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 mvp
-.PHONY : mvp
-
-# fast build rule for target.
-mvp/fast:
-	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/build
-.PHONY : mvp/fast
+tstest/fast:
+	$(MAKE) -f TimeSeries/CMakeFiles/tstest.dir/build.make TimeSeries/CMakeFiles/tstest.dir/build
+.PHONY : tstest/fast
 
 # Help Target
 help:
@@ -253,11 +201,7 @@ help:
 	@echo "... Dist"
 	@echo "... ettest"
 	@echo "... ettools"
-	@echo "... optimtest"
-	@echo "... optim"
-	@echo "... tb"
-	@echo "... ml"
-	@echo "... mvp"
+	@echo "... tstest"
 .PHONY : help
 
 

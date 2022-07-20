@@ -15,6 +15,8 @@ using namespace boost;
 
 void writeToCSVfile(string name, const MatrixXd &matrix);
 
+int plotter(string filename, const VectorXd &A);
+
 int plotter(string filename, const VectorXd &A, const VectorXd &B);
 
 int plotter(string filename, const VectorXd &A, const VectorXd &B, string labelA, string labelB);

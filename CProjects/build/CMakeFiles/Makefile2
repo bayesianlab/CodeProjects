@@ -57,9 +57,6 @@ all: GnuPlotting/all
 all: Distributions/all
 all: EigenTools/all
 all: TimeSeries/all
-all: OptimizationTools/all
-all: MultilevelModel/all
-all: MVProbit/all
 
 .PHONY : all
 
@@ -68,9 +65,6 @@ preinstall: GnuPlotting/preinstall
 preinstall: Distributions/preinstall
 preinstall: EigenTools/preinstall
 preinstall: TimeSeries/preinstall
-preinstall: OptimizationTools/preinstall
-preinstall: MultilevelModel/preinstall
-preinstall: MVProbit/preinstall
 
 .PHONY : preinstall
 
@@ -79,9 +73,6 @@ clean: GnuPlotting/clean
 clean: Distributions/clean
 clean: EigenTools/clean
 clean: TimeSeries/clean
-clean: OptimizationTools/clean
-clean: MultilevelModel/clean
-clean: MVProbit/clean
 
 .PHONY : clean
 
@@ -144,68 +135,10 @@ GnuPlotting/clean: GnuPlotting/CMakeFiles/plot.dir/clean
 .PHONY : GnuPlotting/clean
 
 #=============================================================================
-# Directory level rules for directory MVProbit
-
-# Recursive "all" directory target.
-MVProbit/all: MVProbit/CMakeFiles/mvp.dir/all
-
-.PHONY : MVProbit/all
-
-# Recursive "preinstall" directory target.
-MVProbit/preinstall:
-
-.PHONY : MVProbit/preinstall
-
-# Recursive "clean" directory target.
-MVProbit/clean: MVProbit/CMakeFiles/mvp.dir/clean
-
-.PHONY : MVProbit/clean
-
-#=============================================================================
-# Directory level rules for directory MultilevelModel
-
-# Recursive "all" directory target.
-MultilevelModel/all: MultilevelModel/CMakeFiles/tb.dir/all
-MultilevelModel/all: MultilevelModel/CMakeFiles/ml.dir/all
-
-.PHONY : MultilevelModel/all
-
-# Recursive "preinstall" directory target.
-MultilevelModel/preinstall:
-
-.PHONY : MultilevelModel/preinstall
-
-# Recursive "clean" directory target.
-MultilevelModel/clean: MultilevelModel/CMakeFiles/tb.dir/clean
-MultilevelModel/clean: MultilevelModel/CMakeFiles/ml.dir/clean
-
-.PHONY : MultilevelModel/clean
-
-#=============================================================================
-# Directory level rules for directory OptimizationTools
-
-# Recursive "all" directory target.
-OptimizationTools/all: OptimizationTools/CMakeFiles/optimtest.dir/all
-OptimizationTools/all: OptimizationTools/CMakeFiles/optim.dir/all
-
-.PHONY : OptimizationTools/all
-
-# Recursive "preinstall" directory target.
-OptimizationTools/preinstall:
-
-.PHONY : OptimizationTools/preinstall
-
-# Recursive "clean" directory target.
-OptimizationTools/clean: OptimizationTools/CMakeFiles/optimtest.dir/clean
-OptimizationTools/clean: OptimizationTools/CMakeFiles/optim.dir/clean
-
-.PHONY : OptimizationTools/clean
-
-#=============================================================================
 # Directory level rules for directory TimeSeries
 
 # Recursive "all" directory target.
-TimeSeries/all:
+TimeSeries/all: TimeSeries/CMakeFiles/tstest.dir/all
 
 .PHONY : TimeSeries/all
 
@@ -215,7 +148,7 @@ TimeSeries/preinstall:
 .PHONY : TimeSeries/preinstall
 
 # Recursive "clean" directory target.
-TimeSeries/clean:
+TimeSeries/clean: TimeSeries/CMakeFiles/tstest.dir/clean
 
 .PHONY : TimeSeries/clean
 
@@ -226,7 +159,7 @@ TimeSeries/clean:
 GnuPlotting/CMakeFiles/plot.dir/all:
 	$(MAKE) -f GnuPlotting/CMakeFiles/plot.dir/build.make GnuPlotting/CMakeFiles/plot.dir/depend
 	$(MAKE) -f GnuPlotting/CMakeFiles/plot.dir/build.make GnuPlotting/CMakeFiles/plot.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=21,22 "Built target plot"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=9,10 "Built target plot"
 .PHONY : GnuPlotting/CMakeFiles/plot.dir/all
 
 # Build rule for subdir invocation for target.
@@ -356,143 +289,33 @@ EigenTools/CMakeFiles/ettools.dir/clean:
 .PHONY : EigenTools/CMakeFiles/ettools.dir/clean
 
 #=============================================================================
-# Target rules for target OptimizationTools/CMakeFiles/optimtest.dir
+# Target rules for target TimeSeries/CMakeFiles/tstest.dir
 
 # All Build rule for target.
-OptimizationTools/CMakeFiles/optimtest.dir/all: OptimizationTools/CMakeFiles/optim.dir/all
-	$(MAKE) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/depend
-	$(MAKE) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=19,20 "Built target optimtest"
-.PHONY : OptimizationTools/CMakeFiles/optimtest.dir/all
+TimeSeries/CMakeFiles/tstest.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
+TimeSeries/CMakeFiles/tstest.dir/all: Distributions/CMakeFiles/Dist.dir/all
+TimeSeries/CMakeFiles/tstest.dir/all: EigenTools/CMakeFiles/ettools.dir/all
+	$(MAKE) -f TimeSeries/CMakeFiles/tstest.dir/build.make TimeSeries/CMakeFiles/tstest.dir/depend
+	$(MAKE) -f TimeSeries/CMakeFiles/tstest.dir/build.make TimeSeries/CMakeFiles/tstest.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=11,12,13 "Built target tstest"
+.PHONY : TimeSeries/CMakeFiles/tstest.dir/all
 
 # Build rule for subdir invocation for target.
-OptimizationTools/CMakeFiles/optimtest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 6
-	$(MAKE) -f CMakeFiles/Makefile2 OptimizationTools/CMakeFiles/optimtest.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : OptimizationTools/CMakeFiles/optimtest.dir/rule
-
-# Convenience name for target.
-optimtest: OptimizationTools/CMakeFiles/optimtest.dir/rule
-
-.PHONY : optimtest
-
-# clean rule for target.
-OptimizationTools/CMakeFiles/optimtest.dir/clean:
-	$(MAKE) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/clean
-.PHONY : OptimizationTools/CMakeFiles/optimtest.dir/clean
-
-#=============================================================================
-# Target rules for target OptimizationTools/CMakeFiles/optim.dir
-
-# All Build rule for target.
-OptimizationTools/CMakeFiles/optim.dir/all:
-	$(MAKE) -f OptimizationTools/CMakeFiles/optim.dir/build.make OptimizationTools/CMakeFiles/optim.dir/depend
-	$(MAKE) -f OptimizationTools/CMakeFiles/optim.dir/build.make OptimizationTools/CMakeFiles/optim.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=15,16,17,18 "Built target optim"
-.PHONY : OptimizationTools/CMakeFiles/optim.dir/all
-
-# Build rule for subdir invocation for target.
-OptimizationTools/CMakeFiles/optim.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 4
-	$(MAKE) -f CMakeFiles/Makefile2 OptimizationTools/CMakeFiles/optim.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : OptimizationTools/CMakeFiles/optim.dir/rule
-
-# Convenience name for target.
-optim: OptimizationTools/CMakeFiles/optim.dir/rule
-
-.PHONY : optim
-
-# clean rule for target.
-OptimizationTools/CMakeFiles/optim.dir/clean:
-	$(MAKE) -f OptimizationTools/CMakeFiles/optim.dir/build.make OptimizationTools/CMakeFiles/optim.dir/clean
-.PHONY : OptimizationTools/CMakeFiles/optim.dir/clean
-
-#=============================================================================
-# Target rules for target MultilevelModel/CMakeFiles/tb.dir
-
-# All Build rule for target.
-MultilevelModel/CMakeFiles/tb.dir/all: Distributions/CMakeFiles/Dist.dir/all
-MultilevelModel/CMakeFiles/tb.dir/all: EigenTools/CMakeFiles/ettools.dir/all
-MultilevelModel/CMakeFiles/tb.dir/all: MultilevelModel/CMakeFiles/ml.dir/all
-	$(MAKE) -f MultilevelModel/CMakeFiles/tb.dir/build.make MultilevelModel/CMakeFiles/tb.dir/depend
-	$(MAKE) -f MultilevelModel/CMakeFiles/tb.dir/build.make MultilevelModel/CMakeFiles/tb.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=23,24 "Built target tb"
-.PHONY : MultilevelModel/CMakeFiles/tb.dir/all
-
-# Build rule for subdir invocation for target.
-MultilevelModel/CMakeFiles/tb.dir/rule: cmake_check_build_system
+TimeSeries/CMakeFiles/tstest.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 9
-	$(MAKE) -f CMakeFiles/Makefile2 MultilevelModel/CMakeFiles/tb.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 TimeSeries/CMakeFiles/tstest.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : MultilevelModel/CMakeFiles/tb.dir/rule
+.PHONY : TimeSeries/CMakeFiles/tstest.dir/rule
 
 # Convenience name for target.
-tb: MultilevelModel/CMakeFiles/tb.dir/rule
+tstest: TimeSeries/CMakeFiles/tstest.dir/rule
 
-.PHONY : tb
-
-# clean rule for target.
-MultilevelModel/CMakeFiles/tb.dir/clean:
-	$(MAKE) -f MultilevelModel/CMakeFiles/tb.dir/build.make MultilevelModel/CMakeFiles/tb.dir/clean
-.PHONY : MultilevelModel/CMakeFiles/tb.dir/clean
-
-#=============================================================================
-# Target rules for target MultilevelModel/CMakeFiles/ml.dir
-
-# All Build rule for target.
-MultilevelModel/CMakeFiles/ml.dir/all:
-	$(MAKE) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/depend
-	$(MAKE) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=9,10,11 "Built target ml"
-.PHONY : MultilevelModel/CMakeFiles/ml.dir/all
-
-# Build rule for subdir invocation for target.
-MultilevelModel/CMakeFiles/ml.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 MultilevelModel/CMakeFiles/ml.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : MultilevelModel/CMakeFiles/ml.dir/rule
-
-# Convenience name for target.
-ml: MultilevelModel/CMakeFiles/ml.dir/rule
-
-.PHONY : ml
+.PHONY : tstest
 
 # clean rule for target.
-MultilevelModel/CMakeFiles/ml.dir/clean:
-	$(MAKE) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/clean
-.PHONY : MultilevelModel/CMakeFiles/ml.dir/clean
-
-#=============================================================================
-# Target rules for target MVProbit/CMakeFiles/mvp.dir
-
-# All Build rule for target.
-MVProbit/CMakeFiles/mvp.dir/all: Distributions/CMakeFiles/Dist.dir/all
-MVProbit/CMakeFiles/mvp.dir/all: EigenTools/CMakeFiles/ettools.dir/all
-MVProbit/CMakeFiles/mvp.dir/all: OptimizationTools/CMakeFiles/optim.dir/all
-	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/depend
-	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=12,13,14 "Built target mvp"
-.PHONY : MVProbit/CMakeFiles/mvp.dir/all
-
-# Build rule for subdir invocation for target.
-MVProbit/CMakeFiles/mvp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 11
-	$(MAKE) -f CMakeFiles/Makefile2 MVProbit/CMakeFiles/mvp.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : MVProbit/CMakeFiles/mvp.dir/rule
-
-# Convenience name for target.
-mvp: MVProbit/CMakeFiles/mvp.dir/rule
-
-.PHONY : mvp
-
-# clean rule for target.
-MVProbit/CMakeFiles/mvp.dir/clean:
-	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/clean
-.PHONY : MVProbit/CMakeFiles/mvp.dir/clean
+TimeSeries/CMakeFiles/tstest.dir/clean:
+	$(MAKE) -f TimeSeries/CMakeFiles/tstest.dir/build.make TimeSeries/CMakeFiles/tstest.dir/clean
+.PHONY : TimeSeries/CMakeFiles/tstest.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

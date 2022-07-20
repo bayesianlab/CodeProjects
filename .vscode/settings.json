@@ -82,8 +82,12 @@
         "qtxml": "cpp",
         "any": "cpp",
         "charconv": "cpp",
-        "cuchar": "cpp"
+        "cuchar": "cpp",
+        "kroneckerproduct": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "clang-format.executable": "/usr/bin/clang-format-12",
+    "clang-format.style": "google",
+
 }
