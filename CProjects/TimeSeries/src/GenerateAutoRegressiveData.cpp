@@ -24,6 +24,8 @@ GenerateAutoRegressiveData::GenerateAutoRegressiveData(
   VectorXd mup = Xt.bottomRows(lags) * beta;
   MatrixXd D0 = setInitialCovar(arparams, 1);
   epst.leftCols(lags) = mvnrnd(RowVectorXd::Zero(lags), D0, 1);
+
+  yt.leftCols(lags) = epst.leftCols(lags) + mup.transpose(); 
   for (int t = lags; t < time; ++t) {
     double mut = Xt.row(t) * beta;
     double e = (epst.segment(t - lags, lags) * arparams.transpose()).value();
@@ -31,5 +33,5 @@ GenerateAutoRegressiveData::GenerateAutoRegressiveData(
     epst(t) = yt(t) - mut;
   }
 
-  plotter("plot.p", yt);
+//   plotter("plot.p", yt);
 }

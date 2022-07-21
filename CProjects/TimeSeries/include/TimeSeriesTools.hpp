@@ -209,123 +209,32 @@ MatrixXd lag(const MatrixBase<D> &xt, const int &lags, const int &dimension) {
   }
 }
 
-template <typename T1, typename T2>
-MatrixXd lagOperator(const MatrixBase<T1> &X, const MatrixBase<T2> &params,
-                     const int operatingDimension) {
-  int lags = params.cols();
-
-  if (operatingDimension == 0) {
-    if (params.rows() != X.rows()) {
-      throw invalid_argument("Params and X must have equal rows in lag.");
+  template <typename T>
+  MatrixXd lagPolynomial(const MatrixBase<T> &X, const RowVectorXd &arparams,
+                         const int lags, int dim) {
+                          // prefer this to lagOperator
+    if (dim == 1) {
+      MatrixXd Xn(X.rows() - lags, X.cols());
+      for (int i = 0; i < X.cols(); ++i) {
+        MatrixXd Xl = lag(X.col(i), lags, dim);
+        Xn.col(i) =
+            X.col(i).bottomRows(X.rows() - lags) - Xl * arparams.transpose();
+      }
+      return Xn;
+    } else if (dim == 0) {
+      MatrixXd Xn(X.rows(), X.cols() - lags);
+      for (int i = 0; i < X.rows(); ++i) {
+        MatrixXd Xl = lag(X.row(i), lags, 0);
+        Xn.row(i) = X.row(i).rightCols(X.cols() - lags) - arparams * Xl;
+      }
+      return Xn;
+    } else {
+      invalid_argument("Error in lag polynomial");
+      return X;
     }
-    // T extends over rows, t1,t2,...T
-    int T = X.cols();
-    MatrixXd LagX(X.rows(), X.cols() - lags);
-    for (int i = 0; i < X.rows(); ++i) {
-      LagX.row(i) =
-          X.row(i).tail(T - lags) - params.row(i) * lag(X.row(i), lags, 0);
-    }
-    return LagX;
-  } else {
-    if (params.rows() != X.cols()) {
-      throw invalid_argument("Params rows and X cols must be equal.");
-    }
-    // T extends over cols, (t1,t2,...T)^T
-    int T = X.rows();
-    MatrixXd LagX(X.rows() - lags, X.cols());
-    for (int i = 0; i < X.cols(); ++i) {
-      LagX.col(i) = X.col(i).tail(T - lags) -
-                    lag(X.col(i), lags, 1) * params.row(i).transpose();
-    }
-    return LagX;
   }
-}
 
-template <typename T1, typename T2>
-MatrixXd makeStationary(const MatrixBase<T1> &M, const MatrixBase<T2> &params,
-                        const VectorXd &sigma2, const int &operatingDimension) {
-  MatrixXd D0;
-  int lags = params.cols();
 
-  if (operatingDimension == 0) {
-    int T = M.cols();
-    MatrixXd Mend(M.rows(), T);
-    MatrixXd D0upper;
-    MatrixXd Xstationary(M.rows(), M.cols());
-    for (int i = 0; i < M.rows(); ++i) {
-      Mend.row(i).rightCols(T - lags) =
-          lagOperator(M.row(i), params.row(i), operatingDimension);
-      D0 = setInitialCovar(params.row(i), sigma2[i]);
-      D0upper = D0.llt().matrixU();
-      Xstationary.row(i).leftCols(lags) = M.row(i).leftCols(lags) * D0upper;
-      Xstationary.row(i).rightCols(T - lags) = Mend.row(i).rightCols(T - lags);
-    }
-    return Xstationary;
-  } else if (operatingDimension == 1) {
-    int T = M.rows();
-    MatrixXd Mend(T, M.cols());
-    MatrixXd D0lower;
-    MatrixXd Xstationary(T, M.cols());
-    for (int i = 0; i < M.cols(); ++i) {
-      Mend.col(i).bottomRows(T - lags) =
-          lagOperator(M.col(i), params.row(i), operatingDimension);
-      D0 = setInitialCovar(params.row(i), sigma2[i]);
-      D0lower = D0.llt().matrixL();
-      Xstationary.col(i).topRows(lags) = D0lower * M.col(i).topRows(lags);
-      Xstationary.col(i).bottomRows(T - lags) =
-          Mend.col(i).bottomRows(T - lags);
-    }
-    return Xstationary;
-  } else {
-    throw invalid_argument(
-        "Invalid input in makeStationary for operating dimension.");
-  }
-}
-
-template <typename T1, typename T2>
-MatrixXd makeStationary(const MatrixBase<T1> &M, const MatrixBase<T2> &params,
-                        const double &sigma2, const int &operatingDimension) {
-  MatrixXd D0;
-  int lags = params.cols();
-
-  if (operatingDimension == 0) {
-    if (params.rows() != 1) {
-      throw invalid_argument(
-          "sigma is double, M must be 1 row. Error in makeStationary");
-    }
-
-    int T = M.cols();
-    MatrixXd D0upper;
-    MatrixXd Xstationary(M.rows(), M.cols());
-    for (int i = 0; i < M.rows(); ++i) {
-      Xstationary.row(i).rightCols(T - lags) =
-          lagOperator(M.row(i), params, operatingDimension);
-      D0 = setInitialCovar(params, sigma2);
-      D0upper = D0.llt().matrixU();
-      Xstationary.row(i).leftCols(lags) = M.row(i).leftCols(lags) * D0upper;
-    }
-    return Xstationary;
-  } else if (operatingDimension == 1) {
-    if (params.rows() != 1) {
-      throw invalid_argument(
-          "sigma is double, M must be 1 col. Error in makeStationary");
-    }
-    int T = M.rows();
-    MatrixXd D0lower;
-    MatrixXd Xstationary(T, M.cols());
-    for (int i = 0; i < M.cols(); ++i) {
-      Xstationary.col(i).bottomRows(T - lags) =
-          lagOperator(M.col(i), params, operatingDimension);
-      D0 = setInitialCovar(params, sigma2);
-      D0lower = D0.llt().matrixL();
-      Xstationary.col(i).topRows(lags) = D0lower * M.col(i).topRows(lags);
-    }
-    return Xstationary;
-  } else {
-    throw invalid_argument(
-        "Invalid input in makeStationary for operating dimension.");
-  }
-}
 
 class ArParameterTools {
  public:
