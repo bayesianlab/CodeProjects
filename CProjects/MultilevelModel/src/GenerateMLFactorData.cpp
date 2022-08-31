@@ -27,19 +27,19 @@ void DynamicFactorsArErrors::genData(const int &nObs, const int &nEqns, const in
         if (nXs == 0)
         {
             Xt.setZero(K * T, levels);
-            Xt = makeOtrokXt(InfoMat, Factors, K);
+            Xt = packageFactorsInXt(InfoMat, Factors, K);
         }
         else if (nXs == 1)
         {
             Xt.setZero(K * T, levels + 1);
             Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1);
-            Xt.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+            Xt.rightCols(levels) = packageFactorsInXt(InfoMat, Factors, K);
         }
         else if (nXs > 1)
         {
             Xt.setZero(K * T, nXs + levels);
             Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1), normrnd(0, 1, K * T, nXs - 1);
-            Xt.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+            Xt.rightCols(levels) = packageFactorsInXt(InfoMat, Factors, K);
         }
         else
         {
@@ -85,19 +85,19 @@ void DynamicFactorsArErrors::genData(const int &nObs, const int &nEqns, const in
         if (nXs == 0)
         {
             Xt.setZero(K * T, levels);
-            Xt = makeOtrokXt(InfoMat, Factors, K);
+            Xt = packageFactorsInXt(InfoMat, Factors, K);
         }
         else if (nXs == 1)
         {
             Xt.setZero(K * T, levels + 1);
             Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1);
-            Xt.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+            Xt.rightCols(levels) = packageFactorsInXt(InfoMat, Factors, K);
         }
         else if (nXs > 1)
         {
             Xt.setZero(K * T, levels + nXs);
             Xt.leftCols(nXs) << MatrixXd::Ones(K * T, 1), normrnd(0, 1, K * T, nXs - 1);
-            Xt.rightCols(levels) = makeOtrokXt(InfoMat, Factors, K);
+            Xt.rightCols(levels) = packageFactorsInXt(InfoMat, Factors, K);
         }
         else
         {

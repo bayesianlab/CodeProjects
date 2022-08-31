@@ -328,12 +328,22 @@ string sortPalindromes(string a, string b, string cur) {
   sort(last2Palins.begin(), last2Palins.end());
   return last2Palins.front();
 }
-void maxPalin(const string &a, const string &b, string &cur) {
+
+int maxPalin(const string &a, const string &b, string &cur) {
   int candlen = a.length() + b.length();
   if (cur.length() < candlen) {
     cur = a + b;
+    return 1;
   } else if (cur.length() == candlen) {
+    string old = cur;
     cur = sortPalindromes(a, b, cur);
+    if (cur != old) {
+      return 1;
+    } else {
+      return 0;
+    }
+  } else {
+    return 0;
   }
 }
 bool isPalindrome2(const string &a, const string &b) {
@@ -371,34 +381,13 @@ bool isPalindrome2(const string &a, const string &b) {
 string buildPalindrome(string a, string b) {
   map<char, vector<size_t>> mp;
   size_t t = 0;
-  for (auto it = a.begin(); it != a.end(); ++it) {
+  string x = a + b;
+  for (auto it = x.begin(); it != x.end(); ++it) {
     mp[*it].push_back(t);
     ++t;
   }
-  set<char> sb(b.begin(), b.end());
-  int stopflag = 1;
-  for (auto it = sb.begin(); it != sb.end(); ++it) {
-    if (mp.find(*it) != mp.end()) {
-      stopflag = 0;
-      break;
-    }
-  }
-  if (stopflag == 1) {
-    cout << "-1" << endl;
-    return "-1";
-  } else {
-    for (auto it = b.begin(); it != b.end(); ++it) {
-      mp[*it].push_back(t);
-      ++t;
-    }
-  }
 
-  map<size_t, vector<size_t>> mp2;
-  for (auto it = mp.begin(); it != mp.end(); ++it) {
-    mp2[(it->second).size()] = it->second;
-  }
-
-  // for (const auto &i : mp2) {
+  // for (const auto &i : mp) {
   //   cout << i.first << " ";
   //   printvec(i.second);
   // }
@@ -406,130 +395,42 @@ string buildPalindrome(string a, string b) {
   string curLongestPalin = "";
   vector<int> begEndIndices(2);
   int itcount = 0;
+  vector<string> tsubs;
   // beginning and ending indexes of all possible palindromes in this
   // map
-  for (auto it = mp2.rbegin(); it != mp2.rend(); ++it) {
-    // ++itcount;
+  for (auto it = mp.begin(); it != mp.end(); ++it) {
+    ++itcount;
     vector<size_t> indexVector = it->second;
-    // printvec(indexVector);
     if (indexVector.size() >= 2) {
-      int indexVectorCounter = 0;
-      // break out of all loops if found a palindrome, because all other
-      // palindromes inside this palindrome must be of less length
-      bool found = false;
       for (auto palinBegIndex = indexVector.begin();
-           palinBegIndex != indexVector.end() && found == false;
-           ++palinBegIndex) {
+           palinBegIndex != indexVector.end(); ++palinBegIndex) {
         ++itcount;
-        if (*palinBegIndex > a.length() - 1) {
-          break;
-        }
-        for (auto palinEndIndex = indexVector.rbegin();
-             palinEndIndex != indexVector.rend() && found == false;
-             ++palinEndIndex) {
-          if (*palinEndIndex <= (int)a.length() - 1) {
-            break;
-          }
-          ++itcount;
-          if (isSubstringABigger(*palinEndIndex, *palinBegIndex, a)) {
-            string substrA =
-                a.substr(*palinBegIndex, a.length() - *palinBegIndex);
-            for (int p = 0;
-                 p < *palinEndIndex + 1 - a.length() && found == false; ++p) {
-              ++itcount;
-              string substrB = b.substr(p, *palinEndIndex + 1 - a.length() - p);
-              string ssbcpy = substrB;
-              reverse(ssbcpy.begin(), ssbcpy.end());
-              size_t begPalindromeIndex = substrA.find(ssbcpy);
-              int largestPossiblePalin = substrA.length() + substrB.length();
-              if (begPalindromeIndex != string::npos) {
-                if (largestPossiblePalin >= curLongestPalin.length()) {
-                  int palindromeLenCounter;
-                  if ((int)curLongestPalin.length() - 2 * (int)ssbcpy.length() >
-                      0) {
-                    palindromeLenCounter =
-                        (int)curLongestPalin.length() - (int)ssbcpy.length();
-                  } else {
-                    palindromeLenCounter = ssbcpy.length();
+        if (*palinBegIndex <= a.length() - 1) {
+          int m = a.length() - *palinBegIndex;
+          int first = 0;
+          while (m >= 1) {
+            string atemp = a.substr(*palinBegIndex, m);
+            --m;
+            for (auto palinEndIndex = indexVector.rbegin();
+                 palinEndIndex != indexVector.rend(); ++palinEndIndex) {
+              if (*palinEndIndex > (int)a.length() - 1) {
+                int j = 0;
+                int n = *palinEndIndex - a.length() + 1;
+                while (n >= 1) {
+                  itcount++;
+                  string btemp = b.substr(j, n);
+                  if (btemp.length() + atemp.length() <
+                      curLongestPalin.length()) {
+                    break;
                   }
-                  string candidateA = "";
-                  int check = curLongestPalin.length();
-                  while (palindromeLenCounter <= a.length() && found == false) {
-                    itcount++;
-                    string ca = substrA.substr(begPalindromeIndex,
-                                               palindromeLenCounter);
-                    // cout << "A " << ca << " " << substrB << " "
-                    //      << curLongestPalin.length() << endl;
-                    if (ca.length() + substrB.length() >=
-                            curLongestPalin.length() &&
-                        isPalindrome2(ca, substrB)) {
-                      maxPalin(ca, substrB, curLongestPalin);
-                      if (p > 0) {
-                        string other = b.substr(
-                            p - 1, *palinEndIndex - a.length() - p + 2);
-                        if (isPalindrome2(ca, other)) {
-                          maxPalin(ca, other, curLongestPalin);
-                        }
-                      }
+                  cout << atemp << " " << btemp << endl;
+                  if (isPalindrome2(atemp, btemp)) {
+                    if (maxPalin(atemp, btemp, curLongestPalin)) {
+                      break;
                     }
-                    palindromeLenCounter++;
                   }
-                  if (check < curLongestPalin.length()) {
-                    found = true;
-                  }
-                }
-              }
-            }
-          } else {
-            // B is bigger
-            string substrB = b.substr(0, *palinEndIndex - a.length() + 1);
-            for (int p = a.length() - *palinBegIndex; p > 0 && found == false;
-                 --p) {
-              ++itcount;
-              string substrA = a.substr(*palinBegIndex, p);
-              string ssacpy = substrA;
-              reverse(ssacpy.begin(), ssacpy.end());
-              int endPalinIndex = substrB.rfind(ssacpy);
-              int largestPossiblePalin =
-                  endPalinIndex + ssacpy.length() + substrA.length();
-              if (endPalinIndex != string::npos) {
-                if (largestPossiblePalin >= curLongestPalin.length()) {
-                  string candidateB = "";
-                  int charCount;
-                  if ((int)curLongestPalin.length() - 2 * (int)ssacpy.length() >
-                      0) {
-                    int diff = (int)curLongestPalin.length() -
-                               2 * (int)ssacpy.length();
-                    endPalinIndex -= diff;
-                    charCount = ssacpy.length() + diff;
-                  } else {
-                    charCount = ssacpy.length();
-                  }
-                  int check = curLongestPalin.length();
-                  while (endPalinIndex >= 0 && found == false) {
-                    itcount++;
-                    string cb = substrB.substr(endPalinIndex, charCount);
-                    // cout << "B " << substrA << " " << cb << " "
-                    //      << curLongestPalin.length() << endl;
-                    // cout << *palinBegIndex << " " << endPalinIndex +
-                    // charCount + a.length() - 1<< endl;
-                    if (cb.length() + substrA.length() >=
-                            curLongestPalin.length() &&
-                        isPalindrome2(substrA, cb)) {
-                      maxPalin(substrA, cb, curLongestPalin);
-                      if (p <= a.length()) {
-                        string other = a.substr(*palinBegIndex, p + 1);
-                        if (isPalindrome2(other, cb)) {
-                          maxPalin(other, cb, curLongestPalin);
-                        }
-                      }
-                    }
-                    --endPalinIndex;
-                    ++charCount;
-                  }
-                  if (check < curLongestPalin.length()) {
-                    found = true;
-                  }
+                  ++j;
+                  --n;
                 }
               }
             }
@@ -539,33 +440,34 @@ string buildPalindrome(string a, string b) {
     }
   }
   cout << itcount << endl;
-  cout << curLongestPalin << endl;
-  if (curLongestPalin.empty()) {
-    curLongestPalin = -1;
+  if (curLongestPalin.length() == 0) {
+    curLongestPalin = "-1";
   }
+
   return curLongestPalin;
 }
 
 int main() {
-  // string a14 = "aeyoozlty";
-  // string b14 = "pzoo";
-  // buildPalindrome(a14, b14);
-
-  // string aa = "o";
-  // string bb = "ozalzoo";
-  // cout << isPalindrome2(aa, bb) << endl;
+  // string at3 = "ab";
+  // string bt3 = "ntba";
+  // buildPalindrome(at3, bt3);
+  string a14 = "noozlqat";
+  string b14 = "zoootor";
+  cout << buildPalindrome(a14, b14) << endl;
+  cout << "oozlzoo" << endl;
 
   // string a = "jdfh";
   // string b = "fds";
   // buildPalindrome(a, b);
+  // cout << "dfhfd" << endl;
 
   // string at1 =
   //     "ottloictodtdtloloollllyocidyiodttoacoctcdcidcdttyoiilocltacdlydaailaiylc"
   //     "ttilld";
   // string bt1 =
   //     "jevgfsuujwrunvgvgwpfbknkruvwzgxxgksmexqvxbghfffseuugxkwexhzfbpu";
-  // buildPalindrome(at1, bt1);
-  // -1
+  // cout << buildPalindrome(at1, bt1) << endl;
+  // cout << "-1" << endl;
 
   // string at2 =
   //     "qquhuwqhdswxxrxuzzfhkplwunfagppcoildagktgdarveusjuqfistulgbglwmfgzrnyxry"
@@ -573,7 +475,7 @@ int main() {
   // string bt2 =
   //     "jwgzcfabbkoxyjxkatjmpprswkdkobdagwdwxsufeesrvncbszcepigpbzuzoootorzfskcw"
   //     "bqorvw";
-  // buildPalindrome(at2, bt2);
+  // cout <<buildPalindrome(at2, bt2) << endl;
   // oozlzoo
 
   // string at3 = "dczatfarqdkelalxzxillkfdvpfpxabqlngdscrentzamztvvcvrtcm";
@@ -583,9 +485,8 @@ int main() {
   // buildPalindrome(at3, bt3);
   // lxsysxl
 
-  string at3 = "alxzxillk";
-  string bt3 = "lilsysxlf";
-  buildPalindrome(at3, bt3);
+  // string at3 = "alxzxillk";
+  // string bt3 = "lilsysxlf";
 
   // folpcfblpncetyhtrwxkbosccskxbuvcrosavnpxzoeoyyghbbqkflslfkqbbhgyyoeozxpnvasorcvubxksccsobkxwrthytecnplbfcplof
 

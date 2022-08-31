@@ -188,6 +188,45 @@ tstest/fast:
 	$(MAKE) -f TimeSeries/CMakeFiles/tstest.dir/build.make TimeSeries/CMakeFiles/tstest.dir/build
 .PHONY : tstest/fast
 
+#=============================================================================
+# Target rules for targets named optimtest
+
+# Build rule for target.
+optimtest: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 optimtest
+.PHONY : optimtest
+
+# fast build rule for target.
+optimtest/fast:
+	$(MAKE) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/build
+.PHONY : optimtest/fast
+
+#=============================================================================
+# Target rules for targets named optim
+
+# Build rule for target.
+optim: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 optim
+.PHONY : optim
+
+# fast build rule for target.
+optim/fast:
+	$(MAKE) -f OptimizationTools/CMakeFiles/optim.dir/build.make OptimizationTools/CMakeFiles/optim.dir/build
+.PHONY : optim/fast
+
+#=============================================================================
+# Target rules for targets named mvp
+
+# Build rule for target.
+mvp: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 mvp
+.PHONY : mvp
+
+# fast build rule for target.
+mvp/fast:
+	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/build
+.PHONY : mvp/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -202,6 +241,9 @@ help:
 	@echo "... ettest"
 	@echo "... ettools"
 	@echo "... tstest"
+	@echo "... optimtest"
+	@echo "... optim"
+	@echo "... mvp"
 .PHONY : help
 
 

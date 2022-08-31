@@ -11,7 +11,6 @@
 #include <chrono>
 #include "Optimization.hpp"
 #include "MultilevelModelFunctions.hpp"
-#include "AutoregressiveModel.hpp"
 #include "EigenTools.hpp"
 #include "BayesianUpdates.hpp"
 #include "TimeSeriesTools.hpp"

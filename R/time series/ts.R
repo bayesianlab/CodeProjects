@@ -136,7 +136,7 @@ shock <- c(1,0, 0)
 res <- ortho_impulse(coefmat,B0inv, shock, 3,2,100)
 res
 res2 <- impulse(coefmat, 100, shock, 2)
-plot(res[1,], type="l")
+plot(res[3,], type="l")
 plot(res2[1,], type="l")
 plot(irf(v1))
 

@@ -129,3 +129,16 @@ Matrix<int, Dynamic, 2> castToInfoMat(const MatrixXd &I)
     }
     return InfoMat;
 }
+
+VectorXd vech(const MatrixXd &X) {
+  size_t r = X.rows(); 
+  VectorXd vh(r*(r-1)/2); 
+  int k = 0; 
+  for(int c = 0; c <X.cols(); ++c){
+    for(int x = c+1; x < r; ++x){
+      vh[k] = X(x,c); 
+      ++k;
+    }
+  }
+  return vh; 
+}

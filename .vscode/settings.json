@@ -83,7 +83,8 @@
         "any": "cpp",
         "charconv": "cpp",
         "cuchar": "cpp",
-        "kroneckerproduct": "cpp"
+        "kroneckerproduct": "cpp",
+        "source_location": "cpp"
     },
     "C_Cpp.errorSquiggles": "Disabled",
     "cmake.configureOnOpen": false,

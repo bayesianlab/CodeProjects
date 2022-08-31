@@ -92,7 +92,8 @@ double LineSearchRoutines::Zoom(double alo, double ahi, const Ref<const VectorXd
         }
         catch (domain_error const &)
         {
-            cout << "Domain error" << endl; 
+            cout << "Domain error in line search, using GoldenSection" << endl; 
+            flag = 1; 
             aj = GoldenSection(point, pk, alo, ahi, F, 10);
         }
         if (abs(alo - aj) < line_search_tol || abs(ahi - aj) < line_search_tol)

@@ -14,3 +14,10 @@
 /home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/edit_cache.dir
 /home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/rebuild_cache.dir
 /home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/tstest.dir
+/home/dillon/CodeProjects/CProjects/build/OptimizationTools/CMakeFiles/rebuild_cache.dir
+/home/dillon/CodeProjects/CProjects/build/OptimizationTools/CMakeFiles/edit_cache.dir
+/home/dillon/CodeProjects/CProjects/build/OptimizationTools/CMakeFiles/optimtest.dir
+/home/dillon/CodeProjects/CProjects/build/OptimizationTools/CMakeFiles/optim.dir
+/home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/rebuild_cache.dir
+/home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/edit_cache.dir
+/home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/mvp.dir

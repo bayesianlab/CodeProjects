@@ -30,7 +30,7 @@ MatrixXi createFactorInfo(const Matrix<int, Dynamic, 2> &InfoMat, const int &K)
     return FactorInfo;
 }
 
-MatrixXd makeOtrokXt(const Matrix<int, Dynamic, 2> &InfoMat, const Ref<MatrixXd> &Factors,
+MatrixXd packageFactorsInXt(const Matrix<int, Dynamic, 2> &InfoMat, const Ref<MatrixXd> &Factors,
                      const int &K)
 {
     int start;
