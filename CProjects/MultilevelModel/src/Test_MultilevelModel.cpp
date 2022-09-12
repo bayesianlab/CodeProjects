@@ -82,58 +82,12 @@ int main()
         cout << makeStateSpace(gammas4) << endl;
     }
 
-    int otrokwhitemantest = 0;
-    int chanandj = 1;
+    int chanandj = 0;
     int comparemethods = 0;
     int realdata_kow = 0;
     int realdata_intlike = 0;
     int other = 0;
-    if (otrokwhitemantest)
-    {
-        /* Run the standard otrok whiteman model, 1 factor*/
-        int T = 50;
-        int K = 100;
-        int sims = 1000;
-        int burnin = 500;
-        VectorXd betas = .5 * VectorXd::Ones(1, 1);
-        int nXs = betas.size();
-        Matrix<int, Dynamic, 2> InfoMat(1, 2);
-        InfoMat << 0, K - 1;
 
-        int nFactors = InfoMat.rows();
-        MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
-        MatrixXd A = .5 * Identity;
-        VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
-        RowVectorXd phi(1);
-        phi << .25;
-        GenerateMLFactorData mldata;
-        mldata.genData(T, K, betas, InfoMat, phi, A, 1);
-        FullConditionals mlotrok;
-        double r0 = 6;
-        double R0 = 1;
-
-        int id = 1;
-        RowVectorXd g0;
-        MatrixXd G0;
-        g0.setZero(phi.cols());
-        G0 = MatrixXd::Identity(phi.cols(), phi.cols());
-        MatrixXd Xt = mldata.Xt;
-        int levels = calcLevels(InfoMat, K);
-        RowVectorXd otrokb0 = RowVectorXd::Zero(nXs + levels);
-        MatrixXd otrokB0 =  MatrixXd::Identity(nXs + levels, nXs + levels);
-        mlotrok.setModel(mldata.yt, Xt, mldata.Factors, mldata.gammas, InfoMat,
-                         otrokb0, otrokB0, r0, R0, g0, G0, id);
-
-
-        mlotrok.runModel(sims, burnin);
-        // mlotrok.ml();
-
-        MatrixXd Factorbar = mean(mlotrok.FactorPosteriorDraws);
-        plotter("plot.p", Factorbar.row(0).transpose(),
-                mldata.Factors.row(0).transpose(), "fest", "ftrue");
-        // plotter("plot.p", Factorbar.row(1).transpose(),
-        //         mldata.Factors.row(1).transpose(), "fest", "ftrue");
-    }
     if (chanandj)
     {
         int T = 50;
@@ -233,7 +187,7 @@ int main()
         FullConditionals mlotrok;
 
         mlotrok.setModel(yt, Xt, Factors, gammas, deltas, InfoMat, otrokb0, otrokB0,
-                         r0, R0, d0, D0, g0, G0, g0, G0, id);
+                         r0, R0, d0, D0, g0, G0, id);
         mlotrok.runModel(sims, burnin);
         mlotrok.ml();
     }

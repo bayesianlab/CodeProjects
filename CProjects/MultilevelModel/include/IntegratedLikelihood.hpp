@@ -251,7 +251,7 @@ public:
 
         int T = yt.cols();
         int nrows;
-        int df = 15;
+        
         int disp_on = 1;
         double lalpha;
         double tau;
@@ -547,7 +547,7 @@ public:
         }
         getAcceptanceRate(nFactors * Sims);
         cout << "Acceptance Rate " << acceptance_rate << endl;
-        int p = std::system("mkdir -p mllogfiles");
+        std::system("mkdir -p mllogfiles");
         string date = dateString();
         string version = "integrate_likelihood_";
         string ext = ".txt";
@@ -703,7 +703,6 @@ public:
         int T = yt.cols();
         int nFactors = InfoMat.rows();
         int nrows;
-        int c = 0;
         int df = 15;
         int disp_on = 0;
         double lalpha;

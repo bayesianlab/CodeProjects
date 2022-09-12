@@ -34,15 +34,6 @@ MatrixXd zeroOutFactorLevel(const MatrixBase<D> &Id, int level) {
   return I;
 }
 
-template <typename T>
-MatrixXd mean(const std::vector<T> &X) {
-  MatrixXd avg;
-  avg.setZero(X[0].rows(), X[0].cols());
-  for (T i : X) {
-    avg += i;
-  }
-  return avg.array() / X.size();
-}
 
 template <typename D1, typename D2, typename D3, typename D4, typename D5,
           typename D6, typename D7>
@@ -77,6 +68,8 @@ double ConditionalLogLikelihood(const MatrixBase<D1> &guess,
   Fmean = Fvariance * Fmean;
   return pdfA - logmvnpdf(factor, Fmean.transpose(), Fvariance);
 }
+
+
 
 template <typename T0, typename T1, typename T2, typename T3, typename T4>
 MatrixXd fullConditionalUpdate(
@@ -254,6 +247,7 @@ MatrixXd updateFactor2(const MatrixBase<T0> &Fac, const MatrixBase<T1> &yt,
                        const MatrixBase<T5> &factorVariance,
                        const MatrixBase<T6> &gammas) {
   // only gammas
+  // Xtfull is remade in each call
   int nFactors = InfoMat.rows();
   int K = yt.rows();
   int T = yt.cols();

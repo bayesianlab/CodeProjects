@@ -223,6 +223,16 @@ void bigBlockDiag(SparseMatrix<D> &BigSparseBlock,
   }
 }
 
+template <typename T>
+MatrixXd mean(const std::vector<T> &X) {
+  MatrixXd avg;
+  avg.setZero(X[0].rows(), X[0].cols());
+  for (T i : X) {
+    avg += i;
+  }
+  return avg.array() / X.size();
+}
+
 template <typename T, typename D>
 void makeBigBlockDiag(SparseMatrix<T> &BigSparseBlock,
                       const MatrixBase<D> &Block, const int &reptimes) {

@@ -17,10 +17,7 @@ using namespace std;
 
 class ARMA {
  public:
-  MatrixXd phinew;
-
   VectorXd autoCorr(const VectorXd &yt, int plot = 1) {
-    int lags = 20;
     double g0 = yt.transpose() * yt;
     VectorXd acf(20);
     cout << 1 << endl;
@@ -94,7 +91,7 @@ class ARMA {
                                  const RowVectorXd &current,
                                  const double sigma2, const RowVectorXd &g0,
                                  const MatrixXd &G0) {
-    // yt comes in as 1 row
+    // epsilon comes in as 1 row
     // mut is 1 row of the mean function Xbeta
     if (epsilons.rows() != 1) {
       throw invalid_argument(
@@ -270,7 +267,7 @@ class ARMA {
 
 class AutoregressiveModel : public BayesBetaUpdater, public ARMA {
  public:
-  MatrixXd yt;
+  VectorXd yt;
   MatrixXd Xt;
   RowVectorXd b0;
   MatrixXd B0;
@@ -284,7 +281,7 @@ class AutoregressiveModel : public BayesBetaUpdater, public ARMA {
   MatrixXd storeArParams;
   VectorXd storeSigma2;
 
-  void setModel(const MatrixXd &yt, const MatrixXd &Xt, const MatrixXd &g0,
+  void setModel(const VectorXd &yt, const MatrixXd &Xt, const MatrixXd &g0,
                 const MatrixXd &G0, const double &r0, const double &R0,
                 const RowVectorXd &b0, const MatrixXd &B0) {
     this->yt = yt;
@@ -297,42 +294,35 @@ class AutoregressiveModel : public BayesBetaUpdater, public ARMA {
     this->G0 = G0;
   }
   void runAr(const int &Sims, const int burnin) {
-    int T = yt.cols();
-    int K = yt.rows();
+    int T = yt.rows();
     int lags = g0.cols();
-    MatrixXd Xthat;
-    MatrixXd ythat;
-    MatrixXd epsilons;
-    MatrixXd arparams(K, lags);
-    MatrixXd residuals(1, T);
+    RowVectorXd arparams = RowVectorXd::Zero(lags);
+    MatrixXd Xthat = lagPolynomial(Xt, arparams, lags, 1);
+    VectorXd ythat = lagPolynomial(yt, arparams, lags, 1);
+    VectorXd epsilons(T);
+    VectorXd residuals(T);
     MatrixXd D0(lags, lags);
     MatrixXd Ilags = MatrixXd::Identity(lags, lags);
-    initializeBeta(b0);
     storeBeta.resize(Sims - burnin, Xt.cols());
     storeArParams.resize(Sims - burnin, lags);
     storeSigma2.resize(Sims - burnin);
-    arparams = g0.replicate(K, 1);
     double sigma2 = 1;
-    ythat = lagPolynomial(yt, arparams, lags, 0);
-    Xthat = lagPolynomial(Xt, arparams, lags, 1);
-
+    RowVectorXd bnew(b0.size());
     for (int i = 0; i < Sims; ++i) {
       cout << "Sim " << i << endl;
-      ythat = lagPolynomial(yt, arparams, lags, 0);
+      ythat = lagPolynomial(yt, arparams, lags, 1);
       Xthat = lagPolynomial(Xt, arparams, lags, 1);
-      updateBetaUnivariate(ythat, Xthat, sigma2, b0, B0);
-
-      epsilons = yt - bnew * Xt.transpose();
-      arparams = updateArParameters(epsilons, arparams, sigma2, g0, G0);
+      bnew = updateBetaUnivariate(ythat, Xthat, sigma2, b0, B0);
+      epsilons = yt - Xt * bnew.transpose();
+      arparams = updateArParameters(epsilons.transpose(), arparams, sigma2, g0, G0);
       D0 = setInitialCovar(arparams, 1);
       D0 = D0.ldlt().solve(Ilags);
       D0 = D0.llt().matrixL();
-      residuals.rightCols(T - lags) = ythat - bnew * Xthat.transpose();
-      residuals.leftCols(lags) = epsilons.leftCols(lags) * D0;
-      sigma2 = updateVariance(residuals, r0, R0).value();
-
+      residuals.topRows(lags) = (epsilons.transpose().leftCols(lags) * D0).transpose();
+      residuals.bottomRows(T-lags) = ythat - Xthat * bnew.transpose();
+      sigma2 = updateSigma2(residuals.transpose(), r0, R0).value();
       if (i >= burnin) {
-        storeBeta.row(i - burnin) = bnew;
+        storeBeta.row(i - burnin) = bnew.transpose();
         storeArParams.row(i - burnin) = arparams;
         storeSigma2(i - burnin) = sigma2;
       }
@@ -472,7 +462,7 @@ class MovingAverageModel : ARMA {
     for (size_t i = 0; i < sims; ++i) {
       cout << "Sim " << i << endl;
       thetas = updateMA(yt, epsilons, thetas, theta0, Theta0, sigma2);
-      sigma2 = updateVariance(epsilons.transpose(), v0, V0).value();
+      sigma2 = updateSigma2(epsilons.transpose(), v0, V0).value();
       if (i > burnin) {
         storeThetas.row(i - burnin) = thetas;
         storeSigma2(i - burnin) = sigma2;

@@ -1,5 +1,8 @@
 
-add_executable(tstest src/Test_ArModel.cpp src/GenerateAutoRegressiveData.cpp)
-target_link_libraries(tstest PUBLIC ettools Dist plot)
+add_executable(test_armodel src/Test_ArModel.cpp src/GenerateAutoRegressiveData.cpp)
+target_link_libraries(test_armodel PUBLIC ettools Dist plot)
+add_executable(test_mamodel src/Test_MAmodel.cpp)
+target_link_libraries(test_mamodel PUBLIC ettools Dist plot)
+
 
  

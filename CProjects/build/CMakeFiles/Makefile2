@@ -58,7 +58,7 @@ all: Distributions/all
 all: EigenTools/all
 all: TimeSeries/all
 all: OptimizationTools/all
-all: MVProbit/all
+all: MultilevelModel/all
 
 .PHONY : all
 
@@ -68,7 +68,7 @@ preinstall: Distributions/preinstall
 preinstall: EigenTools/preinstall
 preinstall: TimeSeries/preinstall
 preinstall: OptimizationTools/preinstall
-preinstall: MVProbit/preinstall
+preinstall: MultilevelModel/preinstall
 
 .PHONY : preinstall
 
@@ -78,7 +78,7 @@ clean: Distributions/clean
 clean: EigenTools/clean
 clean: TimeSeries/clean
 clean: OptimizationTools/clean
-clean: MVProbit/clean
+clean: MultilevelModel/clean
 
 .PHONY : clean
 
@@ -141,22 +141,24 @@ GnuPlotting/clean: GnuPlotting/CMakeFiles/plot.dir/clean
 .PHONY : GnuPlotting/clean
 
 #=============================================================================
-# Directory level rules for directory MVProbit
+# Directory level rules for directory MultilevelModel
 
 # Recursive "all" directory target.
-MVProbit/all: MVProbit/CMakeFiles/mvp.dir/all
+MultilevelModel/all: MultilevelModel/CMakeFiles/test_fullconditionals.dir/all
+MultilevelModel/all: MultilevelModel/CMakeFiles/ml.dir/all
 
-.PHONY : MVProbit/all
+.PHONY : MultilevelModel/all
 
 # Recursive "preinstall" directory target.
-MVProbit/preinstall:
+MultilevelModel/preinstall:
 
-.PHONY : MVProbit/preinstall
+.PHONY : MultilevelModel/preinstall
 
 # Recursive "clean" directory target.
-MVProbit/clean: MVProbit/CMakeFiles/mvp.dir/clean
+MultilevelModel/clean: MultilevelModel/CMakeFiles/test_fullconditionals.dir/clean
+MultilevelModel/clean: MultilevelModel/CMakeFiles/ml.dir/clean
 
-.PHONY : MVProbit/clean
+.PHONY : MultilevelModel/clean
 
 #=============================================================================
 # Directory level rules for directory OptimizationTools
@@ -182,7 +184,8 @@ OptimizationTools/clean: OptimizationTools/CMakeFiles/optim.dir/clean
 # Directory level rules for directory TimeSeries
 
 # Recursive "all" directory target.
-TimeSeries/all: TimeSeries/CMakeFiles/tstest.dir/all
+TimeSeries/all: TimeSeries/CMakeFiles/test_mamodel.dir/all
+TimeSeries/all: TimeSeries/CMakeFiles/test_armodel.dir/all
 
 .PHONY : TimeSeries/all
 
@@ -192,7 +195,8 @@ TimeSeries/preinstall:
 .PHONY : TimeSeries/preinstall
 
 # Recursive "clean" directory target.
-TimeSeries/clean: TimeSeries/CMakeFiles/tstest.dir/clean
+TimeSeries/clean: TimeSeries/CMakeFiles/test_mamodel.dir/clean
+TimeSeries/clean: TimeSeries/CMakeFiles/test_armodel.dir/clean
 
 .PHONY : TimeSeries/clean
 
@@ -333,33 +337,62 @@ EigenTools/CMakeFiles/ettools.dir/clean:
 .PHONY : EigenTools/CMakeFiles/ettools.dir/clean
 
 #=============================================================================
-# Target rules for target TimeSeries/CMakeFiles/tstest.dir
+# Target rules for target TimeSeries/CMakeFiles/test_mamodel.dir
 
 # All Build rule for target.
-TimeSeries/CMakeFiles/tstest.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
-TimeSeries/CMakeFiles/tstest.dir/all: Distributions/CMakeFiles/Dist.dir/all
-TimeSeries/CMakeFiles/tstest.dir/all: EigenTools/CMakeFiles/ettools.dir/all
-	$(MAKE) -f TimeSeries/CMakeFiles/tstest.dir/build.make TimeSeries/CMakeFiles/tstest.dir/depend
-	$(MAKE) -f TimeSeries/CMakeFiles/tstest.dir/build.make TimeSeries/CMakeFiles/tstest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=20,21,22 "Built target tstest"
-.PHONY : TimeSeries/CMakeFiles/tstest.dir/all
+TimeSeries/CMakeFiles/test_mamodel.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
+TimeSeries/CMakeFiles/test_mamodel.dir/all: Distributions/CMakeFiles/Dist.dir/all
+TimeSeries/CMakeFiles/test_mamodel.dir/all: EigenTools/CMakeFiles/ettools.dir/all
+	$(MAKE) -f TimeSeries/CMakeFiles/test_mamodel.dir/build.make TimeSeries/CMakeFiles/test_mamodel.dir/depend
+	$(MAKE) -f TimeSeries/CMakeFiles/test_mamodel.dir/build.make TimeSeries/CMakeFiles/test_mamodel.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=25,26 "Built target test_mamodel"
+.PHONY : TimeSeries/CMakeFiles/test_mamodel.dir/all
 
 # Build rule for subdir invocation for target.
-TimeSeries/CMakeFiles/tstest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 9
-	$(MAKE) -f CMakeFiles/Makefile2 TimeSeries/CMakeFiles/tstest.dir/all
+TimeSeries/CMakeFiles/test_mamodel.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 8
+	$(MAKE) -f CMakeFiles/Makefile2 TimeSeries/CMakeFiles/test_mamodel.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : TimeSeries/CMakeFiles/tstest.dir/rule
+.PHONY : TimeSeries/CMakeFiles/test_mamodel.dir/rule
 
 # Convenience name for target.
-tstest: TimeSeries/CMakeFiles/tstest.dir/rule
+test_mamodel: TimeSeries/CMakeFiles/test_mamodel.dir/rule
 
-.PHONY : tstest
+.PHONY : test_mamodel
 
 # clean rule for target.
-TimeSeries/CMakeFiles/tstest.dir/clean:
-	$(MAKE) -f TimeSeries/CMakeFiles/tstest.dir/build.make TimeSeries/CMakeFiles/tstest.dir/clean
-.PHONY : TimeSeries/CMakeFiles/tstest.dir/clean
+TimeSeries/CMakeFiles/test_mamodel.dir/clean:
+	$(MAKE) -f TimeSeries/CMakeFiles/test_mamodel.dir/build.make TimeSeries/CMakeFiles/test_mamodel.dir/clean
+.PHONY : TimeSeries/CMakeFiles/test_mamodel.dir/clean
+
+#=============================================================================
+# Target rules for target TimeSeries/CMakeFiles/test_armodel.dir
+
+# All Build rule for target.
+TimeSeries/CMakeFiles/test_armodel.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
+TimeSeries/CMakeFiles/test_armodel.dir/all: Distributions/CMakeFiles/Dist.dir/all
+TimeSeries/CMakeFiles/test_armodel.dir/all: EigenTools/CMakeFiles/ettools.dir/all
+	$(MAKE) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/depend
+	$(MAKE) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=20,21,22 "Built target test_armodel"
+.PHONY : TimeSeries/CMakeFiles/test_armodel.dir/all
+
+# Build rule for subdir invocation for target.
+TimeSeries/CMakeFiles/test_armodel.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 9
+	$(MAKE) -f CMakeFiles/Makefile2 TimeSeries/CMakeFiles/test_armodel.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
+.PHONY : TimeSeries/CMakeFiles/test_armodel.dir/rule
+
+# Convenience name for target.
+test_armodel: TimeSeries/CMakeFiles/test_armodel.dir/rule
+
+.PHONY : test_armodel
+
+# clean rule for target.
+TimeSeries/CMakeFiles/test_armodel.dir/clean:
+	$(MAKE) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/clean
+.PHONY : TimeSeries/CMakeFiles/test_armodel.dir/clean
 
 #=============================================================================
 # Target rules for target OptimizationTools/CMakeFiles/optimtest.dir
@@ -416,33 +449,63 @@ OptimizationTools/CMakeFiles/optim.dir/clean:
 .PHONY : OptimizationTools/CMakeFiles/optim.dir/clean
 
 #=============================================================================
-# Target rules for target MVProbit/CMakeFiles/mvp.dir
+# Target rules for target MultilevelModel/CMakeFiles/test_fullconditionals.dir
 
 # All Build rule for target.
-MVProbit/CMakeFiles/mvp.dir/all: Distributions/CMakeFiles/Dist.dir/all
-MVProbit/CMakeFiles/mvp.dir/all: EigenTools/CMakeFiles/ettools.dir/all
-MVProbit/CMakeFiles/mvp.dir/all: OptimizationTools/CMakeFiles/optim.dir/all
-	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/depend
-	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=9,10,11 "Built target mvp"
-.PHONY : MVProbit/CMakeFiles/mvp.dir/all
+MultilevelModel/CMakeFiles/test_fullconditionals.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
+MultilevelModel/CMakeFiles/test_fullconditionals.dir/all: Distributions/CMakeFiles/Dist.dir/all
+MultilevelModel/CMakeFiles/test_fullconditionals.dir/all: EigenTools/CMakeFiles/ettools.dir/all
+MultilevelModel/CMakeFiles/test_fullconditionals.dir/all: OptimizationTools/CMakeFiles/optim.dir/all
+MultilevelModel/CMakeFiles/test_fullconditionals.dir/all: MultilevelModel/CMakeFiles/ml.dir/all
+	$(MAKE) -f MultilevelModel/CMakeFiles/test_fullconditionals.dir/build.make MultilevelModel/CMakeFiles/test_fullconditionals.dir/depend
+	$(MAKE) -f MultilevelModel/CMakeFiles/test_fullconditionals.dir/build.make MultilevelModel/CMakeFiles/test_fullconditionals.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=23,24 "Built target test_fullconditionals"
+.PHONY : MultilevelModel/CMakeFiles/test_fullconditionals.dir/all
 
 # Build rule for subdir invocation for target.
-MVProbit/CMakeFiles/mvp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 11
-	$(MAKE) -f CMakeFiles/Makefile2 MVProbit/CMakeFiles/mvp.dir/all
+MultilevelModel/CMakeFiles/test_fullconditionals.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 15
+	$(MAKE) -f CMakeFiles/Makefile2 MultilevelModel/CMakeFiles/test_fullconditionals.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : MVProbit/CMakeFiles/mvp.dir/rule
+.PHONY : MultilevelModel/CMakeFiles/test_fullconditionals.dir/rule
 
 # Convenience name for target.
-mvp: MVProbit/CMakeFiles/mvp.dir/rule
+test_fullconditionals: MultilevelModel/CMakeFiles/test_fullconditionals.dir/rule
 
-.PHONY : mvp
+.PHONY : test_fullconditionals
 
 # clean rule for target.
-MVProbit/CMakeFiles/mvp.dir/clean:
-	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/clean
-.PHONY : MVProbit/CMakeFiles/mvp.dir/clean
+MultilevelModel/CMakeFiles/test_fullconditionals.dir/clean:
+	$(MAKE) -f MultilevelModel/CMakeFiles/test_fullconditionals.dir/build.make MultilevelModel/CMakeFiles/test_fullconditionals.dir/clean
+.PHONY : MultilevelModel/CMakeFiles/test_fullconditionals.dir/clean
+
+#=============================================================================
+# Target rules for target MultilevelModel/CMakeFiles/ml.dir
+
+# All Build rule for target.
+MultilevelModel/CMakeFiles/ml.dir/all: Distributions/CMakeFiles/Dist.dir/all
+MultilevelModel/CMakeFiles/ml.dir/all: EigenTools/CMakeFiles/ettools.dir/all
+	$(MAKE) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/depend
+	$(MAKE) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=9,10,11 "Built target ml"
+.PHONY : MultilevelModel/CMakeFiles/ml.dir/all
+
+# Build rule for subdir invocation for target.
+MultilevelModel/CMakeFiles/ml.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 7
+	$(MAKE) -f CMakeFiles/Makefile2 MultilevelModel/CMakeFiles/ml.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
+.PHONY : MultilevelModel/CMakeFiles/ml.dir/rule
+
+# Convenience name for target.
+ml: MultilevelModel/CMakeFiles/ml.dir/rule
+
+.PHONY : ml
+
+# clean rule for target.
+MultilevelModel/CMakeFiles/ml.dir/clean:
+	$(MAKE) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/clean
+.PHONY : MultilevelModel/CMakeFiles/ml.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

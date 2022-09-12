@@ -55,15 +55,16 @@ int main() {
   mv.ml();
 
   MatrixXd Loadings = MatrixXd::Ones(K, 1);
-  MatrixXd Ft = normrnd(0, 1, T, 1);
+  MatrixXd Ft = normrnd(0, 1, N, 1);
   Matrix<int, Dynamic, 2> InfoMat(1, 2);
   InfoMat << 0, K - 1;
-  int nFactors = InforMat.rows();
+  int nFactors = InfoMat.rows();
   RowVectorXd b02(K * (p + nFactors));
   MatrixXd B02 = MatrixXd::Identity(K * (p + nFactors), K * (p + nFactors));
+  int lags = 2;
+
   MatrixXd gammas(nFactors, lags);
-  int lags = 2; 
-  gammas <<.2,.1; 
+  gammas << .2, .1;
   mv.setModel(yt, Xt, beta, Loadings, Ft, gammas, b02, B02, InfoMat);
   return 1;
 }

@@ -16,19 +16,20 @@ int main(int argc, char* argv[])
   char *s;
   s = getcwd(h, 256);
   string x = h;
-  size_t t = x.find("build");
-  string path = x.substr(0, t);
-  string ytpath = path + "kowz.csv";
-  string xtpath = path + "kowXtz.csv";
-  string indexpath = path + "factor_index_world_region_country.csv";
+  // size_t t = x.find("build");
+  // string path = x.substr(0, t);
+  x = s; 
+  string ytpath = x + "/kowz.csv";
+  string xtpath = x + "/kowXtz.csv";
+  string indexpath = x + "/factor_index_world_region_country.csv";
   MatrixXd yt = readCSV(ytpath);
   MatrixXd xvals = readCSV(xtpath);
   MatrixXd I = readCSV(indexpath);
   Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
   int K = yt.rows();
   int T = yt.cols();
-  int sims = 10000;
-  int burnin = 1000;
+  int sims = 1000;
+  int burnin = 100;
   int nFactors = InfoMat.rows();
 
   MatrixXd Xt(K * T, 1);

@@ -176,17 +176,30 @@ ettools/fast:
 .PHONY : ettools/fast
 
 #=============================================================================
-# Target rules for targets named tstest
+# Target rules for targets named test_mamodel
 
 # Build rule for target.
-tstest: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 tstest
-.PHONY : tstest
+test_mamodel: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_mamodel
+.PHONY : test_mamodel
 
 # fast build rule for target.
-tstest/fast:
-	$(MAKE) -f TimeSeries/CMakeFiles/tstest.dir/build.make TimeSeries/CMakeFiles/tstest.dir/build
-.PHONY : tstest/fast
+test_mamodel/fast:
+	$(MAKE) -f TimeSeries/CMakeFiles/test_mamodel.dir/build.make TimeSeries/CMakeFiles/test_mamodel.dir/build
+.PHONY : test_mamodel/fast
+
+#=============================================================================
+# Target rules for targets named test_armodel
+
+# Build rule for target.
+test_armodel: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_armodel
+.PHONY : test_armodel
+
+# fast build rule for target.
+test_armodel/fast:
+	$(MAKE) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/build
+.PHONY : test_armodel/fast
 
 #=============================================================================
 # Target rules for targets named optimtest
@@ -215,17 +228,30 @@ optim/fast:
 .PHONY : optim/fast
 
 #=============================================================================
-# Target rules for targets named mvp
+# Target rules for targets named test_fullconditionals
 
 # Build rule for target.
-mvp: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 mvp
-.PHONY : mvp
+test_fullconditionals: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_fullconditionals
+.PHONY : test_fullconditionals
 
 # fast build rule for target.
-mvp/fast:
-	$(MAKE) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/build
-.PHONY : mvp/fast
+test_fullconditionals/fast:
+	$(MAKE) -f MultilevelModel/CMakeFiles/test_fullconditionals.dir/build.make MultilevelModel/CMakeFiles/test_fullconditionals.dir/build
+.PHONY : test_fullconditionals/fast
+
+#=============================================================================
+# Target rules for targets named ml
+
+# Build rule for target.
+ml: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 ml
+.PHONY : ml
+
+# fast build rule for target.
+ml/fast:
+	$(MAKE) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/build
+.PHONY : ml/fast
 
 # Help Target
 help:
@@ -240,10 +266,12 @@ help:
 	@echo "... Dist"
 	@echo "... ettest"
 	@echo "... ettools"
-	@echo "... tstest"
+	@echo "... test_mamodel"
+	@echo "... test_armodel"
 	@echo "... optimtest"
 	@echo "... optim"
-	@echo "... mvp"
+	@echo "... test_fullconditionals"
+	@echo "... ml"
 .PHONY : help
 
 

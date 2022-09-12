@@ -3,7 +3,7 @@
 MatrixXi createFactorInfo(const Matrix<int, Dynamic, 2> &InfoMat, const int &K)
 {
     MatrixXd I = MakeObsModelIdentity(InfoMat, K);
-    int levels = (int)I.row(0).sum();
+    int levels = I.cols();
     MatrixXi FactorInfo(K, levels);
     FactorInfo.setZero();
     RowVectorXi r(2);

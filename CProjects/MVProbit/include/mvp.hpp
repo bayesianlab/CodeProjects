@@ -30,8 +30,7 @@ void drawLatentData(MatrixBase<Tz> &zt, const MatrixBase<Ty> &yt,
   }
 }
 
-class MVP : public LoadingsFactorTools,
-            public BetaParameterTools,
+class MVP : public BetaParameterTools,
             public SurBetaUpdater,
             public FullConditionals {
  public:
@@ -138,27 +137,27 @@ class MVP : public LoadingsFactorTools,
     int K = yt.rows();
     int T = yt.cols();
     int nXs = Xt.cols();
-    int nFactors = InfoMat.rows();
-    MatrixXd Xtfull(K * T, nXs + nFactors);
-    Xtfull.rightCols(levels) = packageFactorsInXt(InfoMat, Ft, K);
-    surX = surForm(Xtfull, K);
-    Sigma = MatrixXd::Identity(K, K);
-    for (int i = 0; i < Sims; ++i) {
-      cout << "Sim " << i + 1 << endl;
-      for (int t = 0; t < T; ++t) {
-        zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
-                            Xbeta.col(t).transpose(), Sigma, 1, 0);
-      }
-      updateSurBeta(zt, surX, Sigma, b0, B0);
-      Xbeta = surX * bnew.transpose();
-      Xbeta.resize(K, T);
-      MatrixXd btemp = bnew; 
-      btemp.resize(K, nFactors + nXs);
-      Ft = updateFactor2(Ft, zt, Xtfull, InfoMat, btemp, 1, 1, gammas);
-    
-      if (i >= burnin) {
-      }
-    }
+    // int nFactors = InfoMat.rows();
+    // MatrixXd Xtfull(K * T, nXs + nFactors);
+    // Xtfull.rightCols(levels) = packageFactorsInXt(InfoMat, Ft, K);
+    // surX = surForm(Xtfull, K);
+    // MatrixXd Sigma = MatrixXd::Identity(K, K);
+    //   for (int i = 0; i < Sims; ++i) {
+    //     cout << "Sim " << i + 1 << endl;
+    //     for (int t = 0; t < T; ++t) {
+    //       zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
+    //                           Xbeta.col(t).transpose(), Sigma, 1, 0);
+    //     }
+    //     updateSurBeta(zt, surX, Sigma, b0, B0);
+    //     Xbeta = surX * bnew.transpose();
+    //     Xbeta.resize(K, T);
+    //     MatrixXd btemp = bnew;
+    //     btemp.resize(K, nFactors + nXs);
+    //     Ft = updateFactor2(Ft, zt, Xtfull, InfoMat, btemp, 1, 1, gammas);
+
+    //     if (i >= burnin) {
+    //     }
+    //   }
   }
 
   template <typename T1, typename T2, typename T3>

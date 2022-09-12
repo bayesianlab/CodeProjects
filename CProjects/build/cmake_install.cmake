@@ -44,7 +44,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/dillon/CodeProjects/CProjects/build/EigenTools/cmake_install.cmake")
   include("/home/dillon/CodeProjects/CProjects/build/TimeSeries/cmake_install.cmake")
   include("/home/dillon/CodeProjects/CProjects/build/OptimizationTools/cmake_install.cmake")
-  include("/home/dillon/CodeProjects/CProjects/build/MVProbit/cmake_install.cmake")
+  include("/home/dillon/CodeProjects/CProjects/build/MultilevelModel/cmake_install.cmake")
 
 endif()
 

@@ -1,14 +1,16 @@
 #include <stdio.h>
+
 #include <Eigen/Dense>
+
+#include "ARMA.hpp"
 #include "GenerateAutoRegressiveData.hpp"
 #include "MultilevelModelFunctions.hpp"
-#include "ARMA.hpp"
 
 using namespace std;
 using namespace Eigen;
 
 int main() {
-  int ar = 0;
+  int ar = 1;
   if (ar == 1) {
     int T = 200;
     MatrixXd params(1, 3);
@@ -19,16 +21,21 @@ int main() {
     double R0 = 8;
     RowVectorXd b0 = RowVectorXd::Zero(gar.Xt.cols());
     MatrixXd B0 = 10 * MatrixXd::Identity(gar.Xt.cols(), gar.Xt.cols());
-    // RowVectorXd g0 = RowVectorXd::Zero(gar.lags);
-    RowVectorXd g0 = params;
+    RowVectorXd g0 = RowVectorXd::Zero(gar.lags);
+    // RowVectorXd g0 = params;
     MatrixXd G0 = MatrixXd::Identity(gar.lags, gar.lags);
     ar.setModel(gar.yt, gar.Xt, g0, G0, r0, R0, b0, B0);
     ar.runAr(300, 50);
-    cout << ar.storeBeta.colwise().mean() << endl;
+    cout << "AR Parameters" << endl;
+    cout << "True values "
+         << "AR " << params << endl;
     cout << ar.storeArParams.colwise().mean() << endl;
+    cout << "True values beta " << -1 << endl;
+    cout << ar.storeBeta.colwise().mean() << endl;
+    cout << "True Values sigma2 " << 1 << endl;
     cout << ar.storeSigma2.mean() << endl;
   }
-  int ma = 1;
+  int ma = 0;
   if (ma == 1) {
     MovingAverageModel ma;
     int p = 3;
@@ -36,7 +43,7 @@ int main() {
     thetas << .5, .5, .5;
     int T = 50;
     ma.genData(p, thetas, T);
-    ma.runModel(10,1);
+    ma.runModel(10, 1);
   }
 
   return 0;
