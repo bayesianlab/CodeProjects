@@ -1,4 +1,4 @@
-set(mlsrc src/MultilevelModelFunctions.cpp src/GenerateMLFactorData.cpp)
+set(mlsrc src/MultilevelModelFunctions.cpp src/GenerateFactorData.cpp )
 add_library(ml STATIC ${mlsrc})
 target_link_libraries(ml PUBLIC Dist ettools)
 # add_executable(test_otrok src/Test_otrok.cpp)

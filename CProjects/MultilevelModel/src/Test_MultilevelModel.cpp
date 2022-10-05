@@ -104,7 +104,7 @@ int main()
         VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
         RowVectorXd phi(1);
         phi << .25;
-        GenerateMLFactorData mldata;
+        GenerateFactorData mldata;
         mldata.genData(T, K, betas, InfoMat, phi, A, 1);
         double a0 = 0.0;
         double A0 = 10.0;

@@ -7,33 +7,18 @@
 #include <stdexcept>
 
 #include "Distributions.hpp"
+#include "MultilevelModelFunctions.hpp"
 using namespace Eigen;
 using namespace std;
-
-
-
-class GenerateRegressionData {
- public:
-  MatrixXd yt;
-  MatrixXd Xt;
-  GenerateRegressionData(int N, const VectorXd &beta) {
-    int K = beta.size();
-    MatrixXd G(N, K); 
-    G << VectorXd::Ones(N), normrnd(0, 1, N, K-1); 
-    Xt = G;
-    yt = Xt * beta + normrnd(0, 1, N, 1);
-  }
-};
 
 class BayesBetaUpdater {
  public:
   MatrixXd B;
   RowVectorXd bmean;
   template <typename T1, typename T2, typename T3, typename T4>
-  RowVectorXd updateBetaUnivariate(const MatrixBase<T1> &yt,
-                                   const MatrixBase<T2> &Xt, const double &s2,
-                                   const MatrixBase<T3> &b0,
-                                   const MatrixBase<T4> &B0) {
+  RowVectorXd updateBeta(const MatrixBase<T1> &yt, const MatrixBase<T2> &Xt,
+                         const double &s2, const MatrixBase<T3> &b0,
+                         const MatrixBase<T4> &B0) {
     RowVectorXd bnew(b0.size());
     MatrixXd Ix = MatrixXd::Identity(B0.rows(), B0.cols());
     MatrixXd B0inv = B0.llt().solve(Ix);
@@ -41,8 +26,7 @@ class BayesBetaUpdater {
     B = B.llt().solve(Ix);
     MatrixXd Blower = B.llt().matrixL();
     bmean =
-        (B * (B0inv * b0.transpose() + (Xt.transpose() * yt) / s2))
-            .transpose();
+        (B * (B0inv * b0.transpose() + (Xt.transpose() * yt) / s2)).transpose();
     bnew =
         (bmean.transpose() + Blower * normrnd(0, 1, B.rows(), 1)).transpose();
     return bnew;
@@ -159,43 +143,6 @@ VectorXd updateSigma2(const MatrixBase<D> &residuals, const int &v0,
   return igammarnd(parama, paramb);
 }
 
-class LinearModel : BayesBetaUpdater {
- public:
-  VectorXd yt;
-  MatrixXd Xt;
-  VectorXd residuals;
-  RowVectorXd b0;
-  MatrixXd B0;
-  double s0;
-  double S0;
-  vector<VectorXd> betaPosterior;
-  VectorXd sigmaPosterior; 
-  void setModel(const VectorXd &yt, const MatrixXd &Xt, const RowVectorXd &b0,
-                const MatrixXd &B0, const double s0, const double S0) {
-    this->yt = yt;
-    this->Xt = Xt;
-    this->b0 = b0;
-    this->B0 = B0;
-    this->s0 = s0;
-    this->S0 = S0;
-    residuals = VectorXd::Zero(yt.size());
-  }
-  void runModel(int Sims, int burnin) {
-    betaPosterior.resize(Sims - burnin);
-    sigmaPosterior.resize(Sims-burnin); 
-    RowVectorXd bnew(b0.size());
-    double s2 = 1;
-    for (int i = 0; i < Sims; ++i) {
-      bnew = updateBetaUnivariate(yt, Xt, s2, b0, B0);
-      residuals = yt - Xt * bnew.transpose();
-      s2 = updateSigma2(residuals.transpose(), s0, S0).value();
 
-      if (i >= burnin) {
-        betaPosterior[i - burnin] = bnew.transpose();
-        sigmaPosterior[i - burnin] = s2;
-      }
-    }
-  }
-};
 
 #endif

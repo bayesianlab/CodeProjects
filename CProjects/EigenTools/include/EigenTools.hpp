@@ -24,7 +24,7 @@ void dim(const EigenBase<D> &M) {
   cout << M.rows() << " x " << M.cols() << endl;
 }
 
-VectorXd var(const Ref<const MatrixXd> &A);
+VectorXd variance(const Ref<const MatrixXd> &A, int);
 
 VectorXi sequence(int b, int e);
 

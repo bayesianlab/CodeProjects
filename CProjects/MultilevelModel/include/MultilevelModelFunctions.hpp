@@ -25,15 +25,14 @@ MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings,
                       const MatrixXd &FactorPrecision,
                       const VectorXd &precision, int T);
 
-MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &m, const int eqns);
+MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &InfoMat, const int eqns);
 
 template <typename D>
-MatrixXd zeroOutFactorLevel(const MatrixBase<D> &Id, int level) {
+MatrixXd zeroOutColumn(const MatrixBase<D> &Id, int level) {
   MatrixXd I = Id;
   I.col(level) = MatrixXd::Zero(I.rows(), 1);
   return I;
 }
-
 
 template <typename D1, typename D2, typename D3, typename D4, typename D5,
           typename D6, typename D7>
@@ -68,8 +67,6 @@ double ConditionalLogLikelihood(const MatrixBase<D1> &guess,
   Fmean = Fvariance * Fmean;
   return pdfA - logmvnpdf(factor, Fmean.transpose(), Fvariance);
 }
-
-
 
 template <typename T0, typename T1, typename T2, typename T3, typename T4>
 MatrixXd fullConditionalUpdate(
@@ -165,49 +162,48 @@ MatrixXd removeXtZeros(const MatrixBase<T0> &Xthat, const MatrixBase<T1> &I,
 
 int calcLevels(const Matrix<int, Dynamic, 2> &InfoMat, const int &K);
 
-template <typename T0, typename T1, typename T2, typename T3, typename T4,
-          typename T5, typename T6, typename T7>
-MatrixXd updateFactor2(
-    const MatrixBase<T0> &Fac, const MatrixBase<T1> &yt, MatrixBase<T2> &Xtfull,
-    const Matrix<int, Dynamic, 2> &InfoMat, const MatrixBase<T3> &betaParams,
-    const MatrixBase<T4> &omVariance, const MatrixBase<T5> &factorVariance,
-    const MatrixBase<T6> &deltas, const MatrixBase<T7> &gammas) {
+template <typename T0, typename T1, typename T3, typename T4, typename T5,
+          typename T6, typename T7>
+void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
+                   const vector<MatrixXd> &Xtk,
+                   const Matrix<int, Dynamic, 2> &InfoMat,
+                   const MatrixBase<T3> &betaParams,
+                   const MatrixBase<T4> &omVariance,
+                   const MatrixBase<T5> &factorVariance,
+                   const MatrixBase<T6> &deltas, const MatrixBase<T7> &gammas) {
+  // for autoregressive model
   int nFactors = InfoMat.rows();
   int K = yt.rows();
   int T = yt.cols();
   int colCount = 0;
   int arOrderFac = gammas.cols();
   int arOrderOm = deltas.cols();
-  int levels = calcLevels(InfoMat, K);
-  int nXs = Xtfull.cols() - levels;
+  int nXs = Xtk[0].cols();
   MatrixXd CovarSum(T, T);
   VectorXd MeanSum(T, 1);
-  std::vector<MatrixXd> Xtk;
-  Xtk.resize(K);
-  Xtk = groupByTime(Xtfull, K);
   RowVectorXd epsilons(T);
+  MatrixXd IT = MatrixXd::Identity(T, T);
   MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
   MatrixXd Ilagom = MatrixXd::Identity(arOrderOm, arOrderOm);
   MatrixXd H1;
-  MatrixXd IT = MatrixXd::Identity(T, T);
   MatrixXd Xthat;
   MatrixXd Xtemp;
   MatrixXd D0;
-  RowVectorXd btemp;
-  MatrixXd F(nFactors, T);
-  F = Fac;
+  RowVectorXd btemp(nXs);
+  RowVectorXd loadings(nFactors);
   double f2, s2;
   for (int n = 0; n < nFactors; ++n) {
     CovarSum.setZero(T, T);
     MeanSum.setZero(T, 1);
+    double start = InfoMat(n, 0);
     for (int k = InfoMat.row(n).head(1).value();
          k <= InfoMat.row(n).tail(1).value(); ++k) {
+      loadings = betaParams.row(k).tail(nFactors);
+      btemp = betaParams.row(k).head(nXs);
+      loadings(colCount) = 0;
       s2 = omVariance(k);
-      Xtemp = Xtk[k];
-      btemp = betaParams.row(k);
-      btemp(nXs + colCount) = 0;
-      epsilons = yt.row(k) - btemp * Xtemp.transpose();
-      if (k == InfoMat.row(n).head(1).value()) {
+      epsilons = yt.row(k) - btemp * Xtk[k].transpose() - loadings * Factors;
+      if (k == start) {
         f2 = factorVariance(n);
         H1 = MakePrecision(gammas.row(n), f2, T);
         // D0 = setInitialCovar(gammas.row(n), f2).ldlt().solve(Ilagfac);
@@ -223,29 +219,24 @@ MatrixXd updateFactor2(
         MeanSum += betaParams(k, nXs + colCount) * (H1 * epsilons.transpose());
       }
     }
-    if (K - 1 == InfoMat.row(n).tail(1).value()) {
-      ++colCount;
-    }
-    CovarSum = CovarSum.llt().solve(MatrixXd::Identity(T, T));
+    ++colCount;
+    CovarSum = CovarSum.llt().solve(IT);
     MeanSum = CovarSum * MeanSum;
-    F.row(n) =
+    Factors.row(n) =
         (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows(), 1))
             .transpose();
-    Xtfull.rightCols(levels) = packageFactorsInXt(InfoMat, F, K);
-    Xtk = groupByTime(Xtfull, K);
   }
-  return F;
 }
 
-template <typename T0, typename T1, typename T2, typename T3, typename T4,
-          typename T5, typename T6>
-MatrixXd updateFactor2(const MatrixBase<T0> &Fac, const MatrixBase<T1> &yt,
-                       MatrixBase<T2> &Xtfull,
-                       const Matrix<int, Dynamic, 2> &InfoMat,
-                       const MatrixBase<T3> &betaParams,
-                       const MatrixBase<T4> &omVariance,
-                       const MatrixBase<T5> &factorVariance,
-                       const MatrixBase<T6> &gammas) {
+template <typename T0, typename T1, typename T3, typename T4, typename T5,
+          typename T6>
+void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
+                   const vector<MatrixXd> &Xtk,
+                   const Matrix<int, Dynamic, 2> &InfoMat,
+                   const MatrixBase<T3> &betaParams,
+                   const MatrixBase<T4> &omVariance,
+                   const MatrixBase<T5> &factorVariance,
+                   const MatrixBase<T6> &gammas) {
   // only gammas
   // Xtfull is remade in each call
   int nFactors = InfoMat.rows();
@@ -253,34 +244,30 @@ MatrixXd updateFactor2(const MatrixBase<T0> &Fac, const MatrixBase<T1> &yt,
   int T = yt.cols();
   int colCount = 0;
   int arOrderFac = gammas.cols();
-  int levels = calcLevels(InfoMat, K);
-  int nXs = Xtfull.cols() - levels;
+  int nXs = Xtk[0].cols();
   MatrixXd CovarSum(T, T);
   VectorXd MeanSum(T, 1);
-  std::vector<MatrixXd> Xtk;
-  Xtk.resize(K);
-  Xtk = groupByTime(Xtfull, K);
   RowVectorXd epsilons(T);
   MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
   MatrixXd H1;
   MatrixXd IT = MatrixXd::Identity(T, T);
-  MatrixXd Xthat;
   MatrixXd D0;
-  MatrixXd F(nFactors, T);
-  F = Fac;
-  RowVectorXd btemp;
+  RowVectorXd btemp(nXs);
+  RowVectorXd loadings(nFactors);
   double f2, s2;
   for (int n = 0; n < nFactors; ++n) {
     CovarSum.setZero(T, T);
     MeanSum.setZero(T, 1);
+    double start = InfoMat(n, 0);
     for (int k = InfoMat.row(n).head(1).value();
          k <= InfoMat.row(n).tail(1).value(); ++k) {
       s2 = omVariance(k);
-      Xthat = Xtk[k];
-      btemp = betaParams.row(k);
-      btemp(nXs + colCount) = 0;
-      epsilons = yt.row(k) - btemp * Xthat.transpose();
-      if (k == InfoMat.row(n).head(1).value()) {
+      loadings = betaParams.row(k).tail(nFactors);
+      btemp = betaParams.row(k).head(nXs);
+      loadings(colCount) = 0;
+      // break up x and factors
+      epsilons = yt.row(k) - btemp * Xtk[k].transpose() - loadings * Factors;
+      if (k == start) {
         f2 = factorVariance(n);
         H1 = MakePrecision(gammas.row(n), f2, T);
         // D0 = setInitialCovar(gammas.row(n), f2).ldlt().solve(Ilagfac);
@@ -296,24 +283,19 @@ MatrixXd updateFactor2(const MatrixBase<T0> &Fac, const MatrixBase<T1> &yt,
         MeanSum += betaParams(k, nXs + colCount) * (H1 * epsilons.transpose());
       }
     }
-    if (K - 1 == InfoMat.row(n).tail(1).value()) {
-      ++colCount;
-    }
+    ++colCount;
     CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
     MeanSum = CovarSum * MeanSum;
-    F.row(n) =
+    Factors.row(n) =
         (MeanSum + CovarSum.llt().matrixL() * normrnd(0, 1, CovarSum.rows()))
             .transpose();
-    Xtfull.rightCols(levels) = packageFactorsInXt(InfoMat, F, K);
-    Xtk = groupByTime(Xtfull, K);
   }
-  return F;
 }
 
-template <typename T1, typename T2, typename T3, typename T4, typename T5,
+template <typename T1,  typename T3, typename T4, typename T5,
           typename T6, typename T7>
 VectorXd factorReducedRun(
-    MatrixXd &Factorstar, const MatrixBase<T1> &yt, MatrixBase<T2> &Xtfull,
+    MatrixXd &Factorstar, const MatrixBase<T1> &yt, const std::vector<MatrixXd> &Xtk,
     const Matrix<int, Dynamic, 2> &InfoMat, const MatrixBase<T3> &betaParams,
     const MatrixBase<T4> &omVariance, const MatrixBase<T5> &factorVariance,
     const MatrixBase<T6> &deltas, const MatrixBase<T7> &gammas) {
@@ -322,14 +304,12 @@ VectorXd factorReducedRun(
   int K = yt.rows();
   int T = yt.cols();
   int levels = calcLevels(InfoMat, K);
-  int nXs = Xtfull.cols() - levels;
+  int nXs = Xtk[0].cols();
   int colCount = 0;
   int arOrderFac = gammas.cols();
   int arOrderOm = deltas.cols();
   MatrixXd CovarSum(T, T);
   VectorXd MeanSum(T, 1);
-  std::vector<MatrixXd> Xtk;
-  Xtk.resize(K);
   RowVectorXd epsilons(T);
   MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
   MatrixXd Ilagom = MatrixXd::Identity(arOrderOm, arOrderOm);
@@ -341,8 +321,6 @@ VectorXd factorReducedRun(
   RowVectorXd btemp;
   double f2, s2;
   VectorXd rrvals(nFactors);
-  Xtfull.rightCols(levels) = packageFactorsInXt(InfoMat, Factorstar, K);
-  Xtk = groupByTime(Xtfull, K);
   for (int n = 0; n < nFactors; ++n) {
     CovarSum.setZero(T, T);
     MeanSum.setZero(T, 1);
@@ -350,9 +328,10 @@ VectorXd factorReducedRun(
          k <= InfoMat.row(n).tail(1).value(); ++k) {
       s2 = omVariance(k);
       Xtemp = Xtk[k];
-      btemp = betaParams.row(k);
-      btemp(nXs + colCount) = 0;
-      epsilons = yt.row(k) - btemp * Xtemp.transpose();
+      RowVectorXd loadings = betaParams.row(k).tail(nFactors);
+      btemp = betaParams.row(k).head(nXs);
+      loadings(colCount) = 0;
+      epsilons = yt.row(k) - btemp * Xtemp.transpose() - loadings*Factorstar;
       if (k == InfoMat.row(n).head(1).value()) {
         f2 = factorVariance(n);
         H1 = MakePrecision(gammas.row(n), f2, T);
@@ -380,10 +359,10 @@ VectorXd factorReducedRun(
   return rrvals;
 }
 
-template <typename T1, typename T2, typename T3, typename T4, typename T5,
+template <typename T1,  typename T3, typename T4, typename T5,
           typename T6>
 VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
-                          MatrixBase<T2> &Xtfull,
+                          const vector<MatrixXd> &Xtk,
                           const Matrix<int, Dynamic, 2> &InfoMat,
                           const MatrixBase<T3> &betaParams,
                           const MatrixBase<T4> &omVariance,
@@ -395,23 +374,19 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
   int colCount = 0;
   int arOrderFac = gammas.cols();
   int levels = calcLevels(InfoMat, K);
-  int nXs = Xtfull.cols() - levels;
+  int nXs = Xtk[0].cols();
   MatrixXd CovarSum(T, T);
   VectorXd MeanSum(T, 1);
-  std::vector<MatrixXd> Xtk;
-  Xtk.resize(K);
   RowVectorXd epsilons(T);
   MatrixXd Ilagfac = MatrixXd::Identity(arOrderFac, arOrderFac);
   MatrixXd H1;
   MatrixXd IT = MatrixXd::Identity(T, T);
   MatrixXd Xthat;
-  MatrixXd Xtemp;
   MatrixXd D0;
   RowVectorXd btemp;
+  RowVectorXd loadings(nFactors);
   double f2, s2;
   VectorXd rrvals(nFactors);
-  Xtfull.rightCols(levels) = packageFactorsInXt(InfoMat, Factorstar, K);
-  Xtk = groupByTime(Xtfull, K);
   for (int n = 0; n < nFactors; ++n) {
     CovarSum.setZero(T, T);
     MeanSum.setZero(T, 1);
@@ -420,8 +395,11 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
       s2 = omVariance(k);
       Xthat = Xtk[k];
       btemp = betaParams.row(k);
-      btemp(nXs + colCount) = 0;
-      epsilons = yt.row(k) - btemp * Xthat.transpose();
+      loadings = betaParams.row(k).tail(nFactors);
+      btemp = betaParams.row(k).head(nXs);
+      loadings(colCount) = 0;
+      // break up x and factors
+      epsilons = yt.row(k) - btemp * Xthat.transpose() + loadings * Factorstar;
       if (k == InfoMat.row(n).head(1).value()) {
         f2 = factorVariance(n);
         H1 = MakePrecision(gammas.row(n), f2, T);
@@ -438,9 +416,7 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
         MeanSum += betaParams(k, nXs + colCount) * (H1 * epsilons.transpose());
       }
     }
-    if (K - 1 == InfoMat.row(n).tail(1).value()) {
-      ++colCount;
-    }
+    ++colCount;
     CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
     MeanSum = CovarSum * MeanSum;
     rrvals(n) = logmvnpdf(MeanSum, MeanSum, CovarSum);

@@ -278,7 +278,7 @@ public:
         for (int i = 0; i < InfoMat.rows(); ++i)
         {
             cout << "Factor level " << i + 1 << endl;
-            COM = zeroOutFactorLevel(Loadings, i);
+            COM = zeroOutColumn(Loadings, i);
             mut = Xbeta + COM * Factors;
             ytdemeaned = yt - mut;
             start = InfoMat.row(i).head(1).value();
@@ -444,7 +444,7 @@ public:
         {
             nrows = InfoMat.row(i).tail(1).value() - InfoMat.row(i).head(1).value() + 1;
             start = InfoMat.row(i).head(1).value();
-            COM = zeroOutFactorLevel(A, c);
+            COM = zeroOutColumn(A, c);
             mut = Xbeta + COM * Ft;
             ytdemeaned = yt - mut;
             subytdemeaned = ytdemeaned.middleRows(start, nrows);
@@ -645,12 +645,12 @@ public:
                 cout << "Factor level " << j + 1 << endl;
                 start = InfoMat.row(j).head(1).value();
                 nrows = InfoMat.row(j).tail(1).value() - start + 1;
-                COM = zeroOutFactorLevel(Astar, j);
+                COM = zeroOutColumn(Astar, j);
                 mut = Xbetag + COM * Factorg;
                 ytdemeaned = yt - mut;
                 subytdemeanedstar = ytdemeaned.middleRows(start, nrows);
 
-                COM = zeroOutFactorLevel(Ag, j);
+                COM = zeroOutColumn(Ag, j);
                 mut = Xbetag + COM * Factorg;
                 ytdemeaned = yt - mut;
                 subytdemeanedg = ytdemeaned.middleRows(start, nrows);
@@ -748,12 +748,12 @@ public:
             proposalj(1) = 1;
             Loadings.col(i).segment(start, nrows) = proposalj;
 
-            COM = zeroOutFactorLevel(Astar, i);
+            COM = zeroOutColumn(Astar, i);
             mut = Xbetaj + COM * Factors;
             ytdemeaned = yt - mut;
             subytdemeanedstar = ytdemeaned.middleRows(start, nrows);
 
-            COM = zeroOutFactorLevel(Loadings, i);
+            COM = zeroOutColumn(Loadings, i);
 
             mut = Xbetaj + COM * Factors;
             ytdemeaned = yt - mut;
@@ -913,7 +913,7 @@ public:
             {
                 start = InfoMat.row(n).head(1).value();
                 nrows = InfoMat.row(n).tail(1).value() - start + 1;
-                COM = zeroOutFactorLevel(Astar, n);
+                COM = zeroOutColumn(Astar, n);
                 mut = xbt + COM * Factors;
                 ytdemeaned = yt - mut;
                 subA = Astar.col(n).segment(start, nrows);
@@ -966,7 +966,7 @@ public:
                 Numerator(d) = apt.alphag(Factors.row(n), gammas.row(n), gammastar.row(n), f2, g0, G0);
                 start = InfoMat.row(n).head(1).value();
                 nrows = InfoMat.row(n).tail(1).value() - start + 1;
-                COM = zeroOutFactorLevel(Astar, n);
+                COM = zeroOutColumn(Astar, n);
                 mut = xbt + COM * Factors;
                 ytdemeaned = yt - mut;
                 subA = Astar.col(n).segment(start, nrows);
@@ -1005,7 +1005,7 @@ public:
             {
                 start = InfoMat.row(n).head(1).value();
                 nrows = InfoMat.row(n).tail(1).value() - start + 1;
-                COM = zeroOutFactorLevel(Astar, n);
+                COM = zeroOutColumn(Astar, n);
                 mut = xbt + COM * Factors;
                 ytdemeaned = yt - mut;
                 subA = Astar.col(n).segment(start, nrows);
@@ -1046,7 +1046,7 @@ public:
             {
                 start = InfoMat.row(n).head(1).value();
                 nrows = InfoMat.row(n).tail(1).value() - start + 1;
-                COM = zeroOutFactorLevel(Astar, n);
+                COM = zeroOutColumn(Astar, n);
                 mut = xbt + COM * Factors;
                 ytdemeaned = yt - mut;
                 subA = Astar.col(n).segment(start, nrows);
@@ -1077,7 +1077,7 @@ public:
         {
             start = InfoMat.row(n).head(1).value();
             nrows = InfoMat.row(n).tail(1).value() - start + 1;
-            COM = zeroOutFactorLevel(Astar, n);
+            COM = zeroOutColumn(Astar, n);
             mut = xbt + COM * FactorStar;
             ytdemeaned = yt - mut;
             subA = Astar.col(n).segment(start, nrows);
@@ -1121,7 +1121,7 @@ public:
         {
             start = InfoMat.row(n).head(1).value();
             nrows = InfoMat.row(n).tail(1).value() - start + 1;
-            COM = zeroOutFactorLevel(Astar, n);
+            COM = zeroOutColumn(Astar, n);
             mut = xbt + COM * Factors;
             ytdemeaned = yt - mut;
             subA = Astar.col(n).segment(start, nrows);

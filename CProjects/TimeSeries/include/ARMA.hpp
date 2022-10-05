@@ -312,7 +312,7 @@ class AutoregressiveModel : public BayesBetaUpdater, public ARMA {
       cout << "Sim " << i << endl;
       ythat = lagPolynomial(yt, arparams, lags, 1);
       Xthat = lagPolynomial(Xt, arparams, lags, 1);
-      bnew = updateBetaUnivariate(ythat, Xthat, sigma2, b0, B0);
+      bnew = updateBeta(ythat, Xthat, sigma2, b0, B0);
       epsilons = yt - Xt * bnew.transpose();
       arparams = updateArParameters(epsilons.transpose(), arparams, sigma2, g0, G0);
       D0 = setInitialCovar(arparams, 1);
