@@ -1,4 +1,3 @@
-setwd('/home/dillon/CodeProjects/R/capitalone')
 library(dplyr)
 library(readr)
 library(Rcpp)

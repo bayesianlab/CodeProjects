@@ -11,8 +11,12 @@ target_link_libraries(ml PUBLIC Dist ettools)
 # target_link_libraries(tb PUBLIC ettools Dist ml) 
 # add_executable(wo src/worldonly.cpp)
 # target_link_libraries(wo PUBLIC ettools  Dist ml) 
-add_executable(test_fullconditionals src/test_fullconditionals.cpp)
-target_link_libraries(test_fullconditionals PUBLIC optim ettools plot Dist ml)
+# add_executable(test_fullconditionals src/test_fullconditionals.cpp)
+# target_link_libraries(test_fullconditionals PUBLIC optim ettools plot Dist ml)
+add_executable(fullcond src/fullcond.cpp)
+target_link_libraries(fullcond PUBLIC optim ettools plot Dist ml)
+
+
 
 
 

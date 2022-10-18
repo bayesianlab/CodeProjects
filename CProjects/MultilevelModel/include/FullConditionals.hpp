@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 #include <fstream>
 #include <iostream>
+#include <math.h>
 #include <string>
 
 #include "ARMA.hpp"
@@ -19,7 +20,7 @@ using namespace std;
 class FullConditionals : public LoadingsFactorTools,
                          public BayesBetaUpdater,
                          public ARMA {
- public:
+public:
   std::vector<MatrixXd> BetaPosteriorDraws;
   std::vector<MatrixXd> FactorPosteriorDraws;
   std::vector<MatrixXd> GammasPosteriorDraws;
@@ -46,7 +47,6 @@ class FullConditionals : public LoadingsFactorTools,
   RowVectorXd b0;
   RowVectorXd g0;
   VectorXd omVariance;
-  VectorXd omPrecision;
   VectorXd factorVariance;
   MatrixXd G0;
   MatrixXi InfoMat;
@@ -61,6 +61,45 @@ class FullConditionals : public LoadingsFactorTools,
   RowVectorXd del0;
   MatrixXd Del0;
   string fname;
+
+  void easySetModel(const Ref<const MatrixXd> &_yt,
+                    const Ref<const MatrixXd> &_Xt,
+                    const Ref<const MatrixXd> &_gammas,
+                    const Ref<const MatrixXd> &_deltas,
+                    const Matrix<int, Dynamic, 2> &_InfoMat) {
+    yt = _yt;
+    Xt = _Xt;
+    gammas = _gammas.replicate(_InfoMat.rows(), 1);
+    deltas = _deltas.replicate(yt.rows(), 1);
+    InfoMat = _InfoMat;
+    int nFactors = InfoMat.rows();
+    nXs = Xt.cols();
+    Factors = MatrixXd::Zero(InfoMat.rows(), yt.cols());
+    b0 = RowVectorXd::Zero(nFactors + nXs);
+    B0 = MatrixXd::Identity(nFactors + nXs, nFactors + nXs) * 10;
+    del0 = RowVectorXd::Zero(deltas.cols());
+    Del0 = createArPriorCovMat(1, deltas.cols());
+    g0 = RowVectorXd::Zero(gammas.cols());
+    G0 = createArPriorCovMat(1, gammas.cols());
+    r0 = 6;
+    R0 = 10;
+    d0 = 6;
+    D0 = R0;
+    omVariance = VectorXd::Ones(yt.rows()); 
+    factorVariance = VectorXd::Ones(nFactors); 
+  }
+
+  MatrixXd createArPriorCovMat(double startvar, size_t sz) {
+    vector<double> rho;
+    for (int i = 0; i < sz; ++i) {
+      rho.push_back(pow(startvar, i));
+      startvar = startvar / 2.0;
+    }
+    Map<VectorXd> M(&rho[0], rho.size(), 1);
+    MatrixXd Q = M.asDiagonal();
+    return Q;
+  }
+
   void setModel(const Ref<const MatrixXd> &yt, const Ref<const MatrixXd> &Xt,
                 const Ref<const MatrixXd> &Ft,
                 const Ref<const MatrixXd> &gammas,
@@ -72,7 +111,6 @@ class FullConditionals : public LoadingsFactorTools,
                 const Ref<const RowVectorXd> &del0,
                 const Ref<const MatrixXd> &Del0, const int &id) {
     /* Has Xt */
-    noAr = 0;
     if ((gammas.rows() > Ft.rows()) || (gammas.rows() < Ft.rows())) {
       dim(gammas);
       dim(Ft);
@@ -102,9 +140,8 @@ class FullConditionals : public LoadingsFactorTools,
     this->D0 = D0;
     this->del0 = del0;
     this->Del0 = Del0;
-    this->omPrecision = VectorXd::Ones(this->yt.rows());
     this->factorVariance = VectorXd::Ones(Ft.rows());
-    this->omVariance = 1. / this->omPrecision.array();
+    this->omVariance = VectorXd::Ones(yt.rows()); 
     this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
     setFactors(Ft);
     int K = yt.rows();
@@ -121,7 +158,6 @@ class FullConditionals : public LoadingsFactorTools,
                 const double &d0, const double &D0,
                 const Ref<const RowVectorXd> &g0, const Ref<const MatrixXd> &G0,
                 const int &id) {
-    noAr = 0;
     if ((gammas.rows() > Ft.rows()) || (gammas.rows() < Ft.rows())) {
       dim(gammas);
       dim(Ft);
@@ -147,9 +183,8 @@ class FullConditionals : public LoadingsFactorTools,
     this->G0 = G0;
     this->d0 = d0;
     this->D0 = D0;
-    this->omPrecision = VectorXd::Ones(this->yt.rows());
     this->factorVariance = VectorXd::Ones(Ft.rows());
-    this->omVariance = 1. / this->omPrecision.array();
+    this->omVariance = VectorXd::Ones(yt.rows()); 
     this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
     setFactors(Ft);
     int K = yt.rows();
@@ -197,7 +232,7 @@ class FullConditionals : public LoadingsFactorTools,
     }
   }
 
-  void runModel(const int &Sims, const int &burnin) {
+  void runModel(const int _Sims, const int _burnin) {
     // Assumes there are Xs in the estimation
     int arOrderOm = deltas.cols();
     if (arOrderOm + 1 >= yt.cols())
@@ -205,17 +240,16 @@ class FullConditionals : public LoadingsFactorTools,
     {
       throw invalid_argument("T must be greater than lags of Om model.");
     }
-
+    Sims = _Sims;
+    burnin = _burnin;
     int K = yt.rows();
     int T = yt.cols();
     int nFactors = InfoMat.rows();
-    int levels = calcLevels(InfoMat, K);
     double s2;
     std::vector<MatrixXd> Xtk;
     Xtk.resize(K);
     Xtk = groupByTime(Xt, K);
     setPosteriorSizes(Sims, burnin);
-    ArParameterTools arupdater;
     VectorXd factorVariance = VectorXd::Ones(nFactors);
     VectorXd MeanSum;
     VectorXd factorMean;
@@ -245,10 +279,11 @@ class FullConditionals : public LoadingsFactorTools,
         MatrixXd Xthat = H * Xtk[k];
         // beta update
         bnew = updateBeta(ythat, Xthat, s2, b02, B02);
-        RowVectorXd rhat = ytmaf.row(k) - bnew * Xtk[k].transpose();
+        RowVectorXd ytstar = ytmaf.row(k) - bnew * Xtk[k].transpose();
         betaParams.leftCols(nXs).row(k) = bnew;
         // delta update
-        deltas.row(k) = updateArParameters(rhat, deltas.row(k), s2, del0, Del0);
+        deltas.row(k) =
+            updateArParameters(ytstar, deltas.row(k), s2, del0, Del0);
         H = ReturnH(deltas.row(k), T);
         ythat = H * ytmaf.row(k).transpose();
         ythat.transposeInPlace();
@@ -282,8 +317,7 @@ class FullConditionals : public LoadingsFactorTools,
         FactorVariancePosteriorDraws[i - burnin] = factorVariance;
       }
     }
-    this->Sims = Sims;
-    this->burnin = burnin;
+
     MatrixXd betastar = mean(BetaPosteriorDraws);
     MatrixXd fstar = mean(FactorPosteriorDraws);
     Xtk = groupByTime(Xt, K);
@@ -355,9 +389,7 @@ class FullConditionals : public LoadingsFactorTools,
     // Gets rid of zeros
     vector<VectorXd> tempbeta;
     int col = 0;
-    if (InfoMat.rows() != beta.cols()) {
-      cout << "something is wrong in repackageBeta()" << endl;
-    }
+
     for (int i = 0; i < InfoMat.rows(); ++i) {
       RowVectorXi temp = InfoMat.row(i);
       VectorXd t(K);
@@ -395,7 +427,7 @@ class FullConditionals : public LoadingsFactorTools,
     FactorVariancePosteriorDrawsj.resize(rr);
     MatrixXd ythat(1, T);
     MatrixXd Xthat;
-    MatrixXd epsilons(1, T);
+    MatrixXd ytstar(1, T);
     MatrixXd residuals(1, T);
     MatrixXd I = MakeObsModelIdentity(InfoMat, K);
     MatrixXd Ilagom = MatrixXd::Identity(arOrderOm, arOrderOm);
@@ -408,11 +440,22 @@ class FullConditionals : public LoadingsFactorTools,
     cout << "Beta Reduced Runs" << endl;
     MatrixXi FactorInfo = createFactorInfo(InfoMat, K);
     MatrixXd betaStar = mean(BetaPosteriorDraws);
-    MatrixXd Loadings = betaStar.rightCols(nFactors);
-    repackageBeta(betaStar, InfoMat, K);
-
+    MatrixXd factorLoadings = betaStar.rightCols(nFactors);
+    RowVectorXd b02 = b0.segment(0, nXs);
+    MatrixXd B02 = B0.block(0, 0, nXs, nXs);
     for (int k = 0; k < K; ++k) {
-      priorBetaStar(k) = logmvnpdf(betaStar.row(k), b0, B0);
+      RowVectorXi loadingselect = FactorInfo.row(k);
+      vector<double> temp;
+      for (int i = 0; i < loadingselect.size(); ++i) {
+        if (loadingselect(i) != -1) {
+          temp.push_back(betaStar(k, loadingselect(i) + nXs));
+        }
+      }
+      Map<RowVectorXd> v(&temp[0], temp.size());
+      RowVectorXd b0F = RowVectorXd::Zero(v.size());
+      MatrixXd B0F = 10 * MatrixXd::Identity(v.size(), v.size());
+      priorBetaStar(k) = logmvnpdf(betaStar.leftCols(nXs).row(k), b02, B02) +
+                         logmvnpdf(v, b0F, B0F);
     }
     for (int j = 0; j < rr; ++j) {
       cout << "RR = " << j + 1 << endl;
@@ -421,32 +464,52 @@ class FullConditionals : public LoadingsFactorTools,
       gammas = GammasPosteriorDraws[j];
       omVariance = OmVariancePosteriorDraws[j];
       factorVariance = FactorVariancePosteriorDraws[j];
+      MatrixXd ytmaf = yt - factorLoadings * Factors;
+
       for (int k = 0; k < K; ++k) {
         s2 = omVariance(k);
         H = ReturnH(deltas.row(k), T);
-        ythat = H * yt.row(k).transpose();
+        ythat = H * ytmaf.row(k).transpose();
         ythat.transposeInPlace();
         Xthat = H * Xtk[k];
+        RowVectorXi loadingselect = FactorInfo.row(k);
+        vector<double> temp;
+        vector<double> fx;
+        int nrows = 0;
+        for (int i = 0; i < loadingselect.size(); ++i) {
+          if (loadingselect(i) != -1) {
+            ++nrows;
+            temp.push_back(betaStar(k, loadingselect(i) + nXs));
+            for (int j = 0; j < T; ++j) {
+              fx.push_back(Factors(loadingselect(i), j));
+            }
+          }
+        }
+        Map<Matrix<double, Dynamic, Dynamic>> FX(&fx[0], T, nrows);
+        Map<RowVectorXd> v(&temp[0], temp.size());
+        RowVectorXd b0F = RowVectorXd::Zero(v.size());
+        MatrixXd B0F = 10 * MatrixXd::Identity(v.size(), v.size());
+        piPosterior(k, j) = betaReducedRun(betaStar.leftCols(nXs).row(k), ythat,
+                                           Xthat, s2, b02, B02) +
+                            betaReducedRun(v, ythat, FX, s2, b0F, B0F);
 
-        piPosterior(k, j) =
-            betaReducedRun(betaStar.row(k), ythat, Xthat, s2, b0, B0);
+        RowVectorXd ytstar =
+            ytmaf.row(k) - betaStar.leftCols(nXs).row(k) * Xtk[k].transpose();
 
-        epsilons = yt.row(k) -
-                   betaStar.leftCols(nXs).row(k) * Xtk[k].transpose() -
-                   Loadings * Factors;
-
-        deltas.row(k) = updateArParameters(epsilons, deltas.row(k), s2, g0, G0);
+        deltas.row(k) =
+            updateArParameters(ytstar, deltas.row(k), s2, del0, Del0);
         // D0 = Ilagom * (1 / s2);
         // D0 = setInitialCovar(deltas.row(k), 1);
         // D0 = D0.ldlt().solve(Ilagom);
         // D0 = D0.llt().matrixL();
         H = ReturnH(deltas.row(k), T);
-        ythat = H * yt.row(k).transpose();
+        ythat = H * ytmaf.row(k).transpose();
         ythat.transposeInPlace();
         Xthat = H * Xtk[k];
         residuals.rightCols(T - arOrderOm) =
             ythat.rightCols(T - arOrderOm) -
-            betaStar.row(k) * Xthat.transpose().rightCols(T - arOrderOm);
+            betaStar.leftCols(nXs).row(k) *
+                Xthat.transpose().rightCols(T - arOrderOm);
         residuals.leftCols(arOrderOm) = ythat.leftCols(arOrderOm);
         omVariance(k) = updateSigma2(residuals, r0, R0).value();
       }
@@ -469,7 +532,6 @@ class FullConditionals : public LoadingsFactorTools,
       OmVariancePosteriorDrawsj[j] = omVariance;
       FactorVariancePosteriorDrawsj[j] = factorVariance;
     }
-
     posteriorStar += logavg(piPosterior, 0).sum();
     cout << posteriorStar << endl;
 
@@ -479,7 +541,7 @@ class FullConditionals : public LoadingsFactorTools,
     MatrixXd Denominator(K, rr);
     VectorXd priorDeltaStar(K);
     for (int k = 0; k < K; ++k) {
-      priorDeltaStar(k) = logmvnpdf(deltastar.row(k), g0, G0);
+      priorDeltaStar(k) = logmvnpdf(deltastar.row(k), del0, Del0);
     }
     for (int j = 0; j < rr; ++j) {
       cout << "RR = " << j + 1 << endl;
@@ -488,19 +550,14 @@ class FullConditionals : public LoadingsFactorTools,
       omVariance = OmVariancePosteriorDrawsj[j];
       Factors = FactorPosteriorDrawsj[j];
       factorVariance = FactorVariancePosteriorDrawsj[j];
-
+      MatrixXd ytmaf = yt - factorLoadings * Factors;
       for (int k = 0; k < K; ++k) {
         s2 = omVariance(k);
-        H = ReturnH(deltastar.row(k), T);
-        ythat = H * yt.row(k).transpose();
-        ythat.transposeInPlace();
-        Xthat = H * Xtk[k];
-        epsilons = yt.row(k) -
-                   betaStar.leftCols(nXs).row(k) * Xtk[k].transpose() -
-                   Loadings * Factors;
+        ytstar =
+            ytmaf.row(k) - betaStar.leftCols(nXs).row(k) * Xtk[k].transpose();
         Numerator(k, j) =
-            alphag(epsilons, deltas.row(k), deltastar.row(k), s2, g0, G0);
-        Denominator(k, j) = alphaj(deltastar.row(k), epsilons, s2, g0, G0);
+            alphag(ytstar, deltas.row(k), deltastar.row(k), s2, del0, Del0);
+        Denominator(k, j) = alphaj(deltastar.row(k), ytstar, s2, del0, Del0);
         // D0 = Ilagom;
         // D0 = Ilagom * (1 / s2);
         // D0 = setInitialCovar(deltastar.row(k), 1);
@@ -556,14 +613,11 @@ class FullConditionals : public LoadingsFactorTools,
       omVariance = OmVariancePosteriorDrawsj[j];
       gammas = GammasPosteriorDrawsj[j];
       factorVariance = FactorVariancePosteriorDrawsj[j];
+      MatrixXd ytmaf = yt - factorLoadings * Factors;
       for (int k = 0; k < K; ++k) {
         s2 = omVariance(k);
-        H = ReturnH(deltastar.row(k), T);
-        ythat = H * yt.row(k).transpose();
-        ythat.transposeInPlace();
-        Xthat = H * Xtk[k];
-        epsilons = yt.row(k) - betaStar.row(k) * Xtk[k].transpose() -
-                   Loadings * Factors;
+        ytstar =
+            ytmaf.row(k) - betaStar.leftCols(nXs).row(k) * Xtk[k].transpose();
         // D0 = Ilagom * (1 / s2);
         // D0 = setInitialCovar(deltastar.row(k), 1);
         // D0 = D0.ldlt().solve(Ilagom);
@@ -574,7 +628,8 @@ class FullConditionals : public LoadingsFactorTools,
         Xthat = H * Xtk[k];
         residuals.rightCols(T - arOrderOm) =
             ythat.rightCols(T - arOrderOm) -
-            betaStar.row(k) * Xthat.transpose().rightCols(T - arOrderOm);
+            betaStar.leftCols(nXs).row(k) *
+                Xthat.transpose().rightCols(T - arOrderOm);
         residuals.leftCols(arOrderOm) = ythat.leftCols(arOrderOm);
         omVariance(k) = updateSigma2(residuals, r0, R0).value();
       }
@@ -604,6 +659,8 @@ class FullConditionals : public LoadingsFactorTools,
     cout << "Om Variance Reduced Run" << endl;
     MatrixXd Factorstar = mean(FactorPosteriorDrawsj);
     VectorXd omVariancestar = mean(OmVariancePosteriorDrawsj);
+    MatrixXd ytmaf = yt - factorLoadings * Factorstar;
+
     piPosterior.resize(K, rr);
     double parama = .5 * (T + r0);
     double paramb;
@@ -616,14 +673,15 @@ class FullConditionals : public LoadingsFactorTools,
     for (int j = 0; j < rr; ++j) {
       cout << "RR = " << j + 1 << endl;
       factorVariance = FactorVariancePosteriorDrawsj[j];
+      Factors = FactorPosteriorDraws[j];
+      MatrixXd ytmaf = yt - factorLoadings * Factors;
       for (int k = 0; k < K; ++k) {
         s2 = omVariancestar(k);
         H = ReturnH(deltastar.row(k), T);
-        ythat = H * yt.row(k).transpose();
+        ythat = H * ytmaf.row(k).transpose();
         ythat.transposeInPlace();
         Xthat = H * Xtk[k];
-        residuals = ythat - betaStar.leftCols(nXs).row(k) * Xthat.transpose() -
-                    Loadings * Factors;
+        residuals = ythat - betaStar.leftCols(nXs).row(k) * Xthat.transpose();
         paramb = .5 * (R0 + (residuals * residuals.transpose()).value());
         piPosterior(k, j) = loginvgammapdf(s2, parama, paramb);
       }
@@ -648,11 +706,11 @@ class FullConditionals : public LoadingsFactorTools,
       parama = .5 * (T + r0);
       piPosterior.resize(nFactors, rr);
       Factorstar = mean(FactorPosteriorDrawsj);
+      Factors = Factorstar;
       for (int n = 0; n < nFactors; ++n) {
         f2 = factorVariancestar(n);
         priorFactorVarianceStar(n) = loginvgammapdf(f2, .5 * d0, .5 * D0);
       }
-
       for (int j = 0; j < rr; ++j) {
         cout << "RR = " << j + 1 << endl;
         updateFactor2(Factors, yt, Xtk, InfoMat, betaStar, omVariancestar,
@@ -687,8 +745,8 @@ class FullConditionals : public LoadingsFactorTools,
       ythat = H * yt.row(k).transpose();
       ythat.transposeInPlace();
       Xthat = H * Xtk[k];
-      residuals =
-          ythat - betaStar.row(k) * Xthat.transpose() - Loadings * Factors;
+      residuals = ythat - betaStar.leftCols(nXs).row(k) * Xthat.transpose() -
+                  factorLoadings.row(k) * Factorstar;
       likelihood(k) = logmvnpdf(residuals, Z2, s2 * Covar);
     }
     cout << "Likelihood " << likelihood.sum() << endl;
@@ -697,14 +755,17 @@ class FullConditionals : public LoadingsFactorTools,
     double conditionalOfFactors =
         likelihood.sum() + priorFactorStar.sum() - posteriorFactorStar.sum();
     double priorSum;
-    if (id == 1) {
+    // if (id == 1) {
+      cout << priorGammaStar.sum() << " " << priorBetaStar.sum() << " "
+           << priorOmVarianceStar.sum() << " " << priorFactorVarianceStar.sum()
+           << " " << priorDeltaStar.sum() << endl;
       priorSum = priorGammaStar.sum() + priorBetaStar.sum() +
                  priorOmVarianceStar.sum() + priorFactorVarianceStar.sum() +
                  priorDeltaStar.sum();
-    } else {
-      priorSum = priorGammaStar.sum() + priorBetaStar.sum() +
-                 priorOmVarianceStar.sum() + +priorDeltaStar.sum();
-    }
+    // } else {
+    //   priorSum = priorGammaStar.sum() + priorBetaStar.sum() +
+    //              priorOmVarianceStar.sum() + +priorDeltaStar.sum();
+    // }
 
     marginal_likelihood = conditionalOfFactors + priorSum - posteriorStar;
     cout << "priorSum " << priorSum << endl;
@@ -719,8 +780,7 @@ class FullConditionals : public LoadingsFactorTools,
     return marginal_likelihood;
   }
 
-  template <typename T>
-  void storePosterior(string fname, std::vector<T> &M) {
+  template <typename T> void storePosterior(string fname, std::vector<T> &M) {
     const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision,
                                            Eigen::DontAlignCols, ", ", "\n");
     int size = M.size();
@@ -735,8 +795,6 @@ class FullConditionals : public LoadingsFactorTools,
   void summary() {
     // Variance decompositions
     MatrixXd betaBar = mean(BetaPosteriorDraws);
-    cout << "Average beta" << endl;
-    cout << betaBar << endl;
     int K = yt.rows();
 
     MatrixXd factorBar = mean(FactorPosteriorDraws);
@@ -747,18 +805,17 @@ class FullConditionals : public LoadingsFactorTools,
     VarDecomp.setZero();
     vector<MatrixXd> Xtk = groupByTime(Xt, K);
     VarDecomp.col(nXs + nFactors) = variance(residuals, 0);
-    cout << VarDecomp << endl;
     for (int i = 0; i < Xtk.size(); ++i) {
-      VarDecomp.row(i).head(nXs) =
-          betaBar.row(i).head(nXs).array() * variance(Xtk[i], 1).array();
+      VarDecomp.row(i).head(nXs) = (betaBar.row(i).head(nXs).array() *
+                                    betaBar.row(i).head(nXs).array()) *
+                                   variance(Xtk[i], 1).transpose().array();
       VectorXd beta2 = betaBar.row(i).tail(nFactors).array().pow(2);
-
       VarDecomp.block(i, nXs, 1, nFactors) =
           (beta2.array() * variance(factorBar, 0).array()).transpose();
       double s = VarDecomp.row(i).sum();
       VarDecomp.row(i) = VarDecomp.row(i).array() / s;
     }
-    cout << VarDecomp << endl;
+    // cout << VarDecomp << endl;
     std::ofstream file;
     file.open(fname);
     if (file.is_open()) {
@@ -768,7 +825,7 @@ class FullConditionals : public LoadingsFactorTools,
     }
   }
 
- private:
+private:
   void setPosteriorSizes(int Sims, int burnin) {
     BetaPosteriorDraws.resize(Sims - burnin);
     FactorPosteriorDraws.resize(Sims - burnin);

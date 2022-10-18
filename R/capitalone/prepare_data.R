@@ -1,191 +1,326 @@
-source("/home/dillon/CodeProjects/R/capitalone/flight_functions.R")
+setwd('/home/dillon/CodeProjects/R/capitalone')
+source('/home/dillon/CodeProjects/R/capitalone/flight_functions.R')
 
-Airport_Codes <-
-  read_csv("/home/dillon/CodeProjects/R/capitalone/Airport_Codes.csv")
-Tickets <-
-  read_csv("/home/dillon/CodeProjects/R/capitalone/Tickets.csv")
 Flights <-
   read_csv("/home/dillon/CodeProjects/R/capitalone/Flights.csv")
+Tickets <-
+  read_csv("/home/dillon/CodeProjects/R/capitalone/Tickets.csv")
+Airports <-
+  read_csv("/home/dillon/CodeProjects/R/capitalone/Airport_Codes.csv")
 
-##  Data Quality Insights
-colSums(is.na(Flights))
-colSums(is.na(Tickets))
-# 1. na's for distances of flights. Flights connecting the same two 
-# airports have good data for distance in the file. This does cause problems
-# for computing the distances unless these values are dealt with by dropping
-# them. Example, BWI to DFW has many NA's, however, the distance is known
-# from other records in the data:
-Flights[which(is.na(Flights$DISTANCE)),]
-Flights %>% filter(ORIGIN == "BWI" & DESTINATION == "DFW") %>%
-  select(ORIGIN, DESTINATION, DISTANCE)
-# 2. The same issue of NA's occurs with ITIN_FARE. Several are missing which
-# did cause problems computing an average itinerary fare. 
-# 3. Computing round trips flights is ambiguous with this dataset. Planes that 
-# return to and from the same airports exist in the data, however, if this 
-# should qualify as a roundtrip is not clear. In the Tickets dataset passengers
-# who purchased roundtrip tickets are known by the column ROUNDTRIP, however,
-# they may have connecting flights in between their origin and destination. 
-# Therefore, it is difficult to know if flights that are round trip are actually
-# the best roundtrip routes, since connections are not taken into account. 
-# The tickets and flights dataset can only be connected through the origin
-# and destination airports, which most likely were taken on a variety of flights. 
+library(mapdata)
+library(ggrepel)
+library(usmap)
+library(profvis)
 
-## Cleaning the data for use
-## Airports, only medium and large used
-big_airports <- clean_airport_codes(Airport_Codes)
-big_airports <-
-  select(big_airports, -c(CONTINENT, MUNICIPALITY, ISO_COUNTRY))
-## Flights, eliminate canceled flights and flights in and out of small 
-# airports
-valid_flights <- drop_cancelled(Flights)
-valid_flights <-
-  valid_flights %>% inner_join(big_airports[, c(1, 2, 4, 5)], c("ORIGIN" = "IATA_CODE")) %>%
-  rename(ORIGIN_SIZE = TYPE) %>% rename(ORIGIN_AIRPORT_NAME = NAME) %>%
-  rename(ORIGIN_COOR = COORDINATES) %>%
-  inner_join(big_airports[, c(1, 2, 4, 5)], c("DESTINATION" = "IATA_CODE")) %>%
-  rename(DEST_SIZE = TYPE) %>% rename(DEST_AIRPORT_NAME = NAME) %>%
-  rename(DEST_COOR = COORDINATES)
-# Some flights were into and out of the same airport, not useful for this 
-# exercise 
-valid_flights <-
-  valid_flights[-which(valid_flights$ORIGIN == valid_flights$DESTINATION), ]
+sourceCpp("caponecpp.cpp")
 
-## Tickets
-tickets_roundtrip <- drop_oneways(Tickets)
-tickets_roundtrip$ITIN_FARE <-
-  as.numeric(tickets_roundtrip$ITIN_FARE)
-tickets_roundtrip <- select(tickets_roundtrip,
-                            ORIGIN, PASSENGERS, ITIN_FARE, DESTINATION)
-tickets_roundtrip$rowid <- 1:nrow(tickets_roundtrip)
-tickets_roundtrip <-
-  tickets_roundtrip %>% inner_join(big_airports[, c(1, 4)],
-                                   by = c("ORIGIN" = "IATA_CODE")) %>%
-  rename(origin_airport_size = TYPE) %>%
-  inner_join(big_airports[, c(1, 4)],
-             by = c("DESTINATION" = "IATA_CODE")) %>%
-  rename(dest_airport_size = TYPE)
-## Data is cleaned and ready to connect together
-
-uniquelevels <- unique(c(
-  levels(factor(valid_flights$ORIGIN)),
-  levels(factor(valid_flights$DESTINATION)),
-  levels(factor(tickets_roundtrip$ORIGIN)),
-  levels(factor(tickets_roundtrip$DESTINATION))
-))
-airid_dict <- make_airid_dict(uniquelevels)
-airid <- airid_dict %>% mutate(NAME = rownames(airid_dict))
-rownames(airid) <- 1:nrow(airid)
-roundtripid <- make_roundtripid(uniquelevels)
-
-## Connect Flights and Tickets through the airid
-valid_flights <-
-  inner_join(valid_flights, airid, by = c("ORIGIN" = "NAME"))
-valid_flights <- rename(valid_flights, ORG_AIRID = AIRID)
-valid_flights <-
-  inner_join(valid_flights, airid, by = c("DESTINATION" = "NAME"))
-valid_flights <- rename(valid_flights, DEST_AIRID = AIRID)
-
-tickets_roundtrip <- tickets_roundtrip %>%
-  inner_join(airid, by = c("ORIGIN" = "NAME")) %>%
-  rename(ORG_AIRID = AIRID) %>%
-  inner_join(airid, by = c("DESTINATION" = "NAME")) %>%
-  rename(DEST_AIRID = AIRID)
+flights <- join_data(Airports, Tickets, Flights)
 
 
-valid_flights <-
-  impute_flightid(valid_flights, roundtripid, airid_dict)
-tickets_roundtrip <-
-  impute_flightid(tickets_roundtrip, roundtripid, airid_dict)
+flights <- join_data(Airports, Tickets, Flights)
+flights$REVENUE <-  compute_flightrev(flights)
+flights$COSTS <- compute_flightcost(flights)
+flights <-
+  flights %>% mutate(PROFIT = REVENUE - COSTS) %>% filter(N_TICKETS > 75,
+                                                          PROFIT > 0)
+repflights <- flights
+repflights$TRIP_NAME <- make_tripname(repflights)
+FLIGHTS_TO_BREAKEVEN <- unlist(lapply(repflights$PROFIT, breakeven))
+repflights$FLIGHTS_TO_BREAKEVEN <- FLIGHTS_TO_BREAKEVEN
+top_ten <- flights[1:10,]
+top_ten <- cbind(top_ten, unpack_latlon(top_ten))
+top_ten$TRIP_NAME <- make_tripname(top_ten)
 
-
-valid_flights <-
-  select(
-    valid_flights,
-    ORIGIN,
-    DESTINATION,
-    ORIGIN_AIRPORT_ID,
-    DEST_AIRPORT_ID,
-    ORIGIN_CITY_NAME,
-    DEST_CITY_NAME,
-    TAIL_NUM,
-    DEP_DELAY,
-    ARR_DELAY,
-    AIR_TIME,
-    DISTANCE,
-    OCCUPANCY_RATE,
-    ORIGIN_SIZE,
-    DEST_SIZE,
-    ORIGIN_AIRPORT_NAME,
-    DEST_AIRPORT_NAME,
-    ORIGIN_COOR,
-    DEST_COOR,
-    flightid
-  )
-valid_flights <-
-  valid_flights %>% mutate(
-    DEP_DELAY = as.numeric(DEP_DELAY),
-    ARR_DELAY = as.numeric(ARR_DELAY),
-    OCCUPANCY_RATE = as.numeric(OCCUPANCY_RATE),
-    DISTANCE = as.numeric(DISTANCE),
-    AIR_TIME = as.numeric(AIR_TIME),
-    DEST_SIZE = factor(DEST_SIZE),
-    ORIGIN_SIZE = factor(ORIGIN_SIZE)
+usa <- map_data('usa')
+ggplot() +
+  geom_polygon(data = usa,
+               aes(x = long, y = lat, group = group),
+               fill = 'black') +
+  theme(
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.grid = element_blank(),
+    panel.background = element_rect("grey15")
+  ) +
+  ggtitle('U.S. Map') + coord_fixed(1.3) +
+  geom_point(data = top_ten,
+             aes(x = ORIGIN_LAT, y = ORIGIN_LON),
+             color = 'red') + geom_curve(
+               curvature = .25,
+               data = top_ten,
+               aes(
+                 x = ORIGIN_LAT,
+                 y = ORIGIN_LON,
+                 xend = DEST_LAT,
+                 yend = DEST_LON
+               ),
+               col = "orange"
+             ) +
+  geom_text_repel(data = top_ten,
+                  aes(x = ORIGIN_LAT, y = ORIGIN_LON, label = TRIP_NAME),
+                  col = "yellow") +
+  geom_label_repel(
+    data = top_ten,
+    aes(x = ORIGIN_LAT, y = ORIGIN_LON, label = N_FLIGHTS),
+    arrow = arrow(length = unit(.01, 'npc')),
+    box.padding = unit(2.5, 'lines'),
+    segment.color = "red"
   )
 
-# Busiest Flight Route
-busy_route <- valid_flights %>% group_by(ORIGIN, DESTINATION) %>%
+profit1 <- lm(PROFIT ~  DIST ,
+              data = repflights)
+summary(profit)
+
+profit2 <- lm(PROFIT ~ DIST + AVG_ITIN_FARE,
+              data = repflights)
+
+summary(profit2)
+
+
+
+top_profit <- repflights %>% arrange(desc(PROFIT))
+top_profit <- top_profit[1:10, ]
+top_profit <- cbind(top_profit, unpack_latlon(top_profit))
+
+top_profit$TRIP_NAME <- make_tripname(top_profit)
+
+ggplot() +
+  geom_polygon(data = usa,
+               aes(x = long, y = lat, group = group),
+               fill = 'black') +
+  theme(
+    axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    panel.grid = element_blank(),
+    panel.background = element_rect("grey15")
+  ) +
+  ggtitle('U.S. Map') + coord_fixed(1.3) +
+  geom_point(data = top_profit,
+             aes(x = ORIGIN_LAT, y = ORIGIN_LON),
+             color = 'red') + geom_curve(
+               curvature = .25,
+               data = top_profit,
+               aes(
+                 x = ORIGIN_LAT,
+                 y = ORIGIN_LON,
+                 xend = DEST_LAT,
+                 yend = DEST_LON
+               ),
+               col = "orange"
+             ) +
+  geom_text_repel(data = top_profit,
+                  aes(x = ORIGIN_LAT, y = ORIGIN_LON, label = TRIP_NAME),
+                  col = "yellow") +
+  geom_label_repel(
+    data = top_profit,
+    aes(x = ORIGIN_LAT, y = ORIGIN_LON, label = N_TICKETS),
+    arrow = arrow(length = unit(.01, 'npc')),
+    box.padding = unit(2.5, 'lines'),
+    segment.color = "red"
+  )
+
+
+
+repflights <-
+  repflights %>% mutate(SIZE = as.numeric((ORIGIN_SIZE == 'medium_airport' &
+                                             DEST_SIZE == 'medium_airport')
+  ) +
+    2 * as.numeric((
+      ORIGIN_SIZE == 'medium_airport' &
+        DEST_SIZE == 'large_airport'
+    )) +
+    3 * as.numeric((
+      ORIGIN_SIZE == 'large_airport' &
+        DEST_SIZE == 'medium_airport'
+    )))
+
+repflights$SIZE <- factor(repflights$SIZE)
+levels(repflights$SIZE) <-
+  c("Large_to_Large",
+    "Medium_to_Medium",
+    "Medium_to_Large",
+    "Large_to_Medium")
+
+# repflights <-
+#   repflights %>% mutate(SIZE = (MEDMED == 1) + 2 * (MEDLARGE == 1) + 3 * (LARGEMED == 1))
+#
+
+
+ggplot() +geom_point(data=repflights, aes(x=AVG_ARR_DELAY, y = PROFIT)) + 
+  ggtitle("Profit on Arrival Delay")
+ggplot() +geom_point(data=repflights, aes(x=AVG_DEP_DELAY, y = PROFIT))+
+  ggtitle("Profit on Departure Delay")
+
+
+ggplot() + geom_point(data = repflights, aes(x = DIST, y = AVG_ITIN_FARE))
+
+ggplot() + geom_point(data = repflights, aes(x = N_TICKETS, y = PROFIT))
+ggplot() + geom_point(data = repflights, aes(x = N_FLIGHTS, y = PROFIT))
+
+summary(lm(PROFIT ~ N_FLIGHTS + DIST + AVG_ITIN_FARE + SIZE + AVG_ARR_DELAY + AVG_DEP_DELAY, data = repflights))
+
+ggplot() +
+  geom_point(data = repflights, aes(x = DIST, y = PROFIT, colour = SIZE)) +
+  scale_colour_manual(
+    values = c(
+      "Large_to_Large" = "darkgrey",
+      "Large_to_Medium" = "red",
+      "Medium_to_Medium" = "green",
+      "Medium_to_Large" = "purple"
+    )
+  ) +
+  ggtitle("Profit vs Dist Colored by Airport Size") +
+  geom_smooth(data = repflights,
+              method = "lm",
+              aes(x = DIST, y = PROFIT),
+              se = FALSE)
+ggplot() +
+  geom_point(data = repflights, aes(x = DIST, y = PROFIT, colour = SIZE)) +
+  scale_colour_manual(
+    values = c(
+      "Large_to_Large" = "darkgrey",
+      "Large_to_Medium" = "red",
+      "Medium_to_Medium" = "green",
+      "Medium_to_Large" = "purple"
+    )
+  ) +
+  ggtitle(label = "Profit vs Distance", subtitle = "Colored by Airport Size")
+
+geom_smooth(data = repflights,
+            method = "lm",
+            aes(x = DIST, y = PROFIT),
+            se = FALSE) +
+  geom_jitter() + xlab("Distance") + ylab("Profit")
+
+
+ggplot(data = repflights, aes(x = AVG_ITIN_FARE, y = PROFIT)) + geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+
+
+ggplot(data = repflights, aes(x = SIZE, y = PROFIT, fill = SIZE)) + geom_boxplot() +
+  ggtitle("Profit Summary By Airport Size")
+
+repflights %>% group_by(SIZE) %>%
   summarise(
-    N_FLIGHTS = n(),
-    ORIGIN_SIZE = mode(ORIGIN_SIZE),
-    DEST_SIZE = mode(DEST_SIZE),
-    flightid = mode(flightid)
-  )
-
-summarydata <-
-  valid_flights %>% group_by(flightid) %>%
-  summarise(
-    AVG_DEP_DELAY = mean(DEP_DELAY),
-    AVG_ARR_DELAY = mean(ARR_DELAY, na.rm = TRUE),
-    AVG_AIR_TIME = mean(AIR_TIME, na.rm = TRUE),
-    DIST = mode(DISTANCE),
-    AVG_OCCUPANCY = mean(OCCUPANCY_RATE, na.rm = TRUE),
-    ORIGIN_AIRPORT_NAME = mode(ORIGIN_AIRPORT_NAME),
-    DEST_AIRPORT_NAME = mode(DEST_AIRPORT_NAME),
-    ORIGIN_COOR = mode(ORIGIN_COOR),
-    DEST_COOR = mode(DEST_COOR)
-  )
-
-flights_roundtrips <- busy_route %>% group_by(flightid) %>%
-  summarise(
-    N_FLIGHTS = min(N_FLIGHTS),
-    ORIGIN_SIZE = mode(ORIGIN_SIZE),
-    DEST_SIZE = mode(DEST_SIZE),
-    ORIGIN = mode(ORIGIN),
-    DESTINATION = mode(DESTINATION)
+    Min = min(PROFIT),
+    Q1 = quantile(PROFIT, .25),
+    Median = median(PROFIT),
+    Avg = mean(PROFIT),
+    Q3 = quantile(PROFIT, .75),
+    Max = max(PROFIT)
   ) %>%
-  arrange(desc(N_FLIGHTS))
-
-tickets_roundtrip <-
-  tickets_roundtrip[which(!is.na(tickets_roundtrip$ITIN_FARE)),]
-
-ticket_summary <- tickets_roundtrip %>% group_by(flightid) %>%
-  summarise(N_TICKETS = n(),
-            AVG_ITIN_FARE = mean(ITIN_FARE)) %>%
-  arrange(desc(N_TICKETS))
+  arrange(desc(Median))
 
 
-## Actually connects the three tables together
-flights_roundtrips <-
-  inner_join(flights_roundtrips, summarydata, by = c("flightid" = "flightid"))
+library(mltools)
+
+dummy <- one_hot(repflights$SIZE)
+dummy <- dummyVars(" ~ .", data = repflights$SIZE)
+
+p <-
+  lm(
+    PROFIT ~ DIST + AVG_ITIN_FARE + SIZE + DIST * SIZE + AVG_OCCUPANCY + AVG_OCCUPANCY *
+      SIZE +
+      DIST * AVG_OCCUPANCY + N_FLIGHTS + DIST * AVG_ITIN_FARE,
+    data = repflights
+  )
+summary(p)
 
 
-ten_busiest <- flights_roundtrips[1:10,]
+topflight <-
+  repflights %>% mutate(
+    TOP_FARES = AVG_ITIN_FARE > quantile(AVG_ITIN_FARE, .90),
+    TOP_DIST = DIST > quantile(DIST, .90)
+  )
+topflight$TOP_DIST <- factor(topflight$TOP_DIST)
+levels(topflight$TOP_DIST) <- c("LOW_DISTANCE", "HIGH_DISTANCE")
+topflight$TOP_FARES <- factor(topflight$TOP_FARES)
+levels(topflight$TOP_FARES) <- c("LOW_FARE", "HIGH_FARE")
 
-popular_flights <-
-  flights_roundtrips %>% inner_join(ticket_summary, by = c("flightid" = "flightid"))
-popular_flights$FLIGHT_REV <- compute_flightrev(popular_flights)
-popular_flights$FLIGHT_COST <- compute_flightcost(popular_flights)
-popular_flights <- popular_flights %>% 
-  mutate(PROFIT = (FLIGHT_REV - FLIGHT_COST)) %>%
-  arrange(desc(PROFIT))
+ggplot() +
+  geom_point(data = topflight, aes(x = DIST, y = PROFIT, colour =
+                                     TOP_FARES)) + ggtitle("Profit vs Fair Paid") + xlab("Distance") +
+  ylab("Profit") + guides(colour = guide_legend(title = ">90% In Fares"))
+
+ggplot() +
+  geom_point(data = topflight, aes(x = AVG_ITIN_FARE, y = PROFIT, colour =
+                                     TOP_DIST)) + ggtitle("Profit vs Average Itinerary Fare") +
+  xlab("Average Itinerary Fare") + ylab("Profit") + guides(colour = guide_legend(title =
+                                                                                   ">90% In Distance"))
+
+
+
+
+ggplot() + geom_point(data = topflight,
+                      aes(x = FLIGHTS_TO_BREAKEVEN,
+                          y = PROFIT, colour = TOP_FARES)) +
+  geom_line(data = estdata, aes(x = X, y = Y))
+
+est <- lm(log(PROFIT) ~ log(FLIGHTS_TO_BREAKEVEN), data = repflights)
+summary(est)
+
+estfun <- function(fls) {
+  y <- exp(19.13) * fls ^ (-2.022)
+}
+a <- min(topflight$FLIGHTS_TO_BREAKEVEN)
+y <- unlist(lapply(a:800, estfun))
+estdata <-
+  data.frame(cbind(X = a:800, Y = unlist(lapply((
+    a:800
+  ), estfun))))
+
+plot(100:800, y, type = "l")
+ggplot() + geom_point(data = topflight, aes(x = FLIGHTS_TO_BREAKEVEN, y = PROFIT, colour =
+                                              TOP_DIST))
+
+ggplot() + geom_point(data = topflight,
+                      aes(x = FLIGHTS_TO_BREAKEVEN, y = AVG_ITIN_FARE, colour = TOP_DIST))
+
+
+by_breakeven <- repflights %>% arrange(FLIGHTS_TO_BREAKEVEN)
+
+newdata <- by_breakeven%>% select(PROFIT, SIZE, N_FLIGHTS, N_TICKETS, AVG_ITIN_FARE,
+                                  DIST, AVG_OCCUPANCY)
+newdata <- newdata %>% mutate(DIFF = N_FLIGHTS - N_TICKETS)
+summary(lm(PROFIT ~ SIZE +  DIST +AVG_ITIN_FARE+AVG_OCCUPANCY, data=newdata))
+
+
+
+
+Z <- by_breakeven %>% mutate(zprofit = scale(PROFIT))
+
+score <- function(be, sz, d){
+  airport_effect <- 0
+  if(sz == "Medium_to_Medium"){
+    airport_effect <- 9.52e+03
+  }
+  if(sz == "Medium_to_Large"){
+    airport_effect <- 4.723e+03
+  }
+  if(sz =="Large_to_Medium"){
+    airport_effect <- 4.93e+03
+  }
+  dist_effect <- -9.418*d
+  
+  c <- -2.022*exp(19.13)
+  s <- abs(c/be^(3.022))
+  s
+}
+
+
+
+Z$SCORE <-  unlist(lapply(Z$FLIGHTS_TO_BREAKEVEN, score))
+Z<- Z %>% mutate(zscore = PROFIT - SCORE)
+
+
+
 

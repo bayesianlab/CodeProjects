@@ -3,7 +3,7 @@
 #include <ctime>
 #include "IntegratedLikelihood.hpp"
 #include "Plotter.hpp"
-#include "GenerateMLFactorData.hpp"
+#include "GenerateFactorData.hpp"
 #include "MultilevelModelFunctions.hpp"
 #include "FullConditionals.hpp"
 #include "EigenTools.hpp"

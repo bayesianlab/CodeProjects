@@ -20,18 +20,23 @@ int main() { /* Run the standard otrok whiteman model, 1 factor*/
   VectorXd betas = .5 * VectorXd::Ones(1, 1);
   int nXs = betas.size();
   Matrix<int, Dynamic, 2> InfoMat(7, 2);
-  InfoMat << 0, K - 1, 0, 9, 10, K - 1, 0, 4, 5, 9, 10, 14, 15, 17;
+  InfoMat << 0, K - 1, 
+  0, 9, 
+  10, K - 1, 
+  0, 4, 
+  5, 9, 
+  10, 14, 
+  15, 17;
 
   int nFactors = InfoMat.rows();
-  MatrixXd Identity = MakeObsModelIdentity(InfoMat, K);
-  MatrixXd A = .5 * Identity;
   VectorXd factorVariances = VectorXd::Ones(nFactors, 1);
-  RowVectorXd phi(1);
-  phi << .25;
+  RowVectorXd phi(2);
+  phi << .25, .05;
   RowVectorXd del(2);
   del << .25, .05;
   GenerateFactorData mldata;
-  mldata.genDataArErrors(T, K, 2, 1, InfoMat, phi, del, 1);
+  double betaVal = 1; 
+  mldata.genDataArErrors(T, K, nXs, betaVal, InfoMat, phi, del, 1);
   FullConditionals mlotrok;
   double r0 = 6;
   double R0 = 10;
