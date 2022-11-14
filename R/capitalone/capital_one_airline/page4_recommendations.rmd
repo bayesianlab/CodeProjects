@@ -1,0 +1,79 @@
+---
+title: "(4) Recommendations"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: lumen
+---
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+source("flight_functions.R")
+
+Airports <-
+  read_csv("/home/dillon/CodeProjects/R/capitalone/Airport_Codes.csv")
+Tickets <-
+  read_csv("/home/dillon/CodeProjects/R/capitalone/Tickets.csv")
+Flights <-
+  read_csv("/home/dillon/CodeProjects/R/capitalone/Flights.csv")
+flights <- join_data(Airports, Tickets, Flights)
+
+flights$REVENUE <-  compute_flightrev(flights)
+flights$COSTS <- compute_flightcost(flights)
+flights <-  flights %>% mutate(PROFIT = REVENUE - COSTS)
+flights <-  flights %>% mutate(PROFIT = REVENUE - COSTS) %>% filter(N_TICKETS > 75, 
+                                                                    PROFIT > 0)
+repflights <- flights
+repflights$TRIP_NAME <- make_tripname(repflights)
+FLIGHTS_TO_BREAKEVEN <- unlist(lapply(repflights$PROFIT, breakeven))
+repflights$FLIGHTS_TO_BREAKEVEN <- FLIGHTS_TO_BREAKEVEN
+repflights <-
+  repflights %>% mutate(SIZE = as.numeric((ORIGIN_SIZE == 'medium_airport' &
+                                             DEST_SIZE == 'medium_airport')
+  ) +
+    2 * as.numeric((
+      ORIGIN_SIZE == 'medium_airport' &
+        DEST_SIZE == 'large_airport'
+    )) +
+    3*as.numeric((
+      ORIGIN_SIZE == 'large_airport' &
+        DEST_SIZE == 'medium_airport'
+    )))
+repflights$SIZE <- factor(repflights$SIZE)
+levels(repflights$SIZE) <- c("Large_to_Large", "Medium_to_Medium", 
+                             "Medium_to_Large", "Large_to_Medium")
+```
+
+# Back to main page
+- [Link back to main page](capitalone_data.html)
+
+# Recommendations 
+
+- The most profitable flights are consistently Large to Large, Large to Medium, Medium to Large airport sizes. Despite there being a positive effect of Medium to Medium airports they cannot command a high enough fare to break even quickly. 
+
+- The most profitable flights are typically longer distance flights. Despite a negative multiplier in the profit function the increase in fares justifies these flights.  
+
+- From this data the number of other available flights does not impact profit. When demand is high the competition does not appear to drive profits to low levels. 
+
+- The most profitable flights will be ones which can command a high itinerary fare. 
+
+***Therefore, the recommendation is to track flights which are not medium to medium airport flights, have high fares, are longer distance, and most importantly have a low number of flights to break even.*** A search of the data for these types of flights came up with the following best five flights for profitability: 
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+by_profit <- repflights %>% arrange(desc(PROFIT))
+kable(by_profit[1:5, c("TRIP_NAME", "ORIGIN_NAME", "DEST_NAME", "PROFIT", "REVENUE", "COSTS", "DIST", "SIZE", "AVG_ITIN_FARE","N_FLIGHTS", "FLIGHTS_TO_BREAKEVEN")])
+```
+Notice that these flights are all in the top for itinerary fare, distance, go between large airports, and have the fewest number of flights to break even. 
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+D <- repflights %>%summarise(TOP_PROFIT = quantile(PROFIT, .95),
+                        TOP_DIST = quantile(DIST, .95),
+                        LOW_BREAKEVEN = quantile(FLIGHTS_TO_BREAKEVEN, .05),
+                        TOP_FARE = quantile(AVG_ITIN_FARE, .95))
+kable(D)
+```
+
+This summary shows the top 95% quantiles for profit, distance, and fare and the lowest 5% quantile for break even flights. All the recommended flights are beyond these levels. 
+
+# Future Research
+- [Link to next step, Future Research](page5_future_research.html)

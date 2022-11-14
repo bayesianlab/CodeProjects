@@ -4,6 +4,7 @@ library(Rcpp)
 library(stringi)
 library(tidyverse)
 library(knitr)
+setwd("/home/dillon/CodeProjects/R/capitalone/capital_one_airline/")
 sourceCpp("caponecpp.cpp")
 
 unpack_latlon <- function(data) {
@@ -152,9 +153,6 @@ names_from_flightid <-
     data_with_flightid$TRIP_NAME <-  do.call(rbind, names)
     data_with_flightid
   }
-
-
-
 
 flight_revenue <- function(occ_rate, avg_fare) {
   pass_rev <- occ_rate * avg_fare * 200
@@ -321,13 +319,128 @@ join_data <- function(AirportData, TicketData, FlightData) {
   roundtripmatrix <<- roundtripidmatrix
   airid <<- airid
   valid_flights <- connect_airid(valid_flights, airid)
-  fid <- impute_flightid_cpp(valid_flights, roundtripidmatrix, airid)
+  fid <- impute_flightid_cpp(valid_flights, roundtripidmatrix)
   valid_flights$flightid <- fid
   # valid_flights <- impute_flightid(valid_flights, roundtripidmatrix, airid)
   tickets_roundtrip <- connect_airid(tickets_roundtrip, airid)
   # tickets_roundtrip <- impute_flightid(tickets_roundtrip, roundtripidmatrix, airid)
-  fid <- impute_flightid_cpp(tickets_roundtrip, roundtripidmatrix, airid)
+  fid <- impute_flightid_cpp(tickets_roundtrip, roundtripidmatrix)
   tickets_roundtrip$flightid <- fid
+  # Now the tables are connected through the airid
+  valid_flights <-
+    valid_flights %>% mutate(
+      DEP_DELAY = as.numeric(DEP_DELAY),
+      ARR_DELAY = as.numeric(ARR_DELAY),
+      OCCUPANCY_RATE = as.numeric(OCCUPANCY_RATE),
+      DISTANCE = as.numeric(DISTANCE),
+      AIR_TIME = as.numeric(AIR_TIME),
+      DEST_SIZE = factor(DEST_SIZE),
+      ORIGIN_SIZE = factor(ORIGIN_SIZE)
+    )
+  # Aggregate data down to link together
+  busy_route <- valid_flights %>% group_by(ORIGIN, DESTINATION) %>%
+    summarise(
+      N_FLIGHTS = n(),
+      ORIGIN_SIZE = mode(ORIGIN_SIZE),
+      DEST_SIZE = mode(DEST_SIZE),
+      flightid = mode(flightid)
+    )
+  
+  summarydata <-
+    valid_flights %>% group_by(flightid) %>%
+    summarise(
+      AVG_DEP_DELAY = mean(DEP_DELAY),
+      AVG_ARR_DELAY = mean(ARR_DELAY, na.rm = TRUE),
+      AVG_AIR_TIME = mean(AIR_TIME, na.rm = TRUE),
+      DIST = mode(DISTANCE),
+      AVG_OCCUPANCY = mean(OCCUPANCY_RATE, na.rm = TRUE),
+    )
+  
+  flights_roundtrips <- busy_route %>% group_by(flightid) %>%
+    summarise(
+      N_FLIGHTS = min(N_FLIGHTS),
+      ORIGIN = mode(ORIGIN),
+      DESTINATION = mode(DESTINATION)
+    ) %>%
+    arrange(desc(N_FLIGHTS))
+  flights_roundtrips <- flights_roundtrips %>%
+    inner_join(big_airports[, c(1, 2, 4, 5)], by = c("ORIGIN" = "IATA_CODE")) %>%
+    rename(
+      "ORIGIN_NAME" = "NAME",
+      "ORIGIN_SIZE" = "TYPE",
+      "ORIGIN_COOR" = "COORDINATES"
+    ) %>%
+    inner_join(big_airports[, c(1, 2, 4, 5)], by = c("DESTINATION" = "IATA_CODE")) %>%
+    rename(
+      "DEST_NAME" = "NAME",
+      "DEST_SIZE" = "TYPE",
+      "DEST_COOR" = "COORDINATES"
+    )
+  
+  tickets_roundtrip <-
+    tickets_roundtrip[which(!is.na(tickets_roundtrip$ITIN_FARE)), ]
+  ticket_summary <- tickets_roundtrip %>% group_by(flightid) %>%
+    summarise(N_TICKETS = n(),
+              AVG_ITIN_FARE = mean(ITIN_FARE)) %>%
+    arrange(desc(N_TICKETS))
+  
+  flights_roundtrips <-
+    inner_join(flights_roundtrips,
+               summarydata,
+               by = c("flightid" = "flightid"))
+  ## Actually connects the three tables together
+  flights_roundtrips <- flights_roundtrips %>% 
+    inner_join(ticket_summary, by=c("flightid" = "flightid"))
+  
+  flights_roundtrips <- flights_roundtrips %>% select(
+    flightid,
+    N_FLIGHTS,
+    N_TICKETS,
+    ORIGIN,
+    DESTINATION,
+    ORIGIN_SIZE,
+    DEST_SIZE,
+    ORIGIN_COOR,
+    DEST_COOR,
+    ORIGIN_NAME,
+    DEST_NAME,
+    AVG_ITIN_FARE,
+    AVG_DEP_DELAY,
+    AVG_ARR_DELAY,
+    AVG_AIR_TIME,
+    AVG_OCCUPANCY,
+    DIST
+  )
+  bad <- impossible_airspeed(flights_roundtrips)
+  flights_roundtrips <- flights_roundtrips[-bad, ]
+  
+  flights_roundtrips
+}
+
+join_data_slow <- function(AirportData, TicketData, FlightData) {
+  big_airports <- clean_airports(AirportData)
+  valid_flights <- clean_flights(FlightData, big_airports)
+  tickets_roundtrip <- clean_tickets(TicketData, big_airports)
+  uniquelevels <- unique(c(
+    levels(factor(valid_flights$ORIGIN)),
+    levels(factor(valid_flights$DESTINATION)),
+    levels(factor(tickets_roundtrip$ORIGIN)),
+    levels(factor(tickets_roundtrip$DESTINATION))
+  ))
+  airid_dict <- make_airid_dict(uniquelevels)
+  airid <- airid_dict %>% mutate(NAME = rownames(airid_dict))
+  rownames(airid) <- 1:nrow(airid)
+  roundtripidmatrix <- make_roundtripid_matrix(uniquelevels)
+  roundtripmatrix <<- roundtripidmatrix
+  airid <<- airid
+  valid_flights <- connect_airid(valid_flights, airid)
+  # fid <- impute_flightid_cpp(valid_flights, roundtripidmatrix, airid)
+  # valid_flights$flightid <- fid
+  valid_flights <- impute_flightid(valid_flights, roundtripidmatrix, airid)
+  tickets_roundtrip <- connect_airid(tickets_roundtrip, airid)
+  tickets_roundtrip <- impute_flightid(tickets_roundtrip, roundtripidmatrix, airid)
+  # fid <- impute_flightid_cpp(tickets_roundtrip, roundtripidmatrix, airid)
+  # tickets_roundtrip$flightid <- fid
   # Now the tables are connected through the airid
   valid_flights <-
     valid_flights %>% mutate(

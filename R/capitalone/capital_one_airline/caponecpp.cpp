@@ -13,7 +13,7 @@ using namespace std;
 //
 
 // [[Rcpp::export]]
-vector<int> impute_flightid_cpp(DataFrame F, NumericMatrix M, DataFrame Airid) {
+vector<int> impute_flightid_cpp(DataFrame F, NumericMatrix M) {
   NumericVector Rowid =  F["ORG_AIRID"];
   NumericVector Colid = F["DEST_AIRID"];
   vector<int> flightid; 
@@ -24,13 +24,3 @@ vector<int> impute_flightid_cpp(DataFrame F, NumericMatrix M, DataFrame Airid) {
 }
 
 
-// You can include R code blocks in C++ files processed with sourceCpp
-// (useful for testing and development). The R code will be automatically 
-// run after the compilation.
-//
-
-/*** R
-
-
-  
-  */

@@ -1,5 +1,4 @@
-setwd('/home/dillon/CodeProjects/R/capitalone')
-source('/home/dillon/CodeProjects/R/capitalone/flight_functions.R')
+source('/home/dillon/CodeProjects/R/capitalone/capital_one_airline/flight_functions.R')
 
 Flights <-
   read_csv("/home/dillon/CodeProjects/R/capitalone/Flights.csv")
@@ -12,6 +11,8 @@ library(mapdata)
 library(ggrepel)
 library(usmap)
 library(profvis)
+
+
 
 sourceCpp("caponecpp.cpp")
 
