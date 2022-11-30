@@ -12,18 +12,17 @@ using namespace Eigen;
 using namespace std;
 
 
-int main(int argc, char *argv[]) {
-  string ytpath = argv[1];
-  string xtpath = argv[2];
-  string indexpath = argv[3];
-  string gammapath = argv[4];
-  string deltapath = argv[5];
 
-  // string ytpath = "kowz.csv";
-  // string xtpath = "kowXtz.csv";
-  // string indexpath = "factor_index_world_region_country.csv";
-  // string gammapath = "gammas.csv";
-  // string deltapath = "deltas.csv";
+int main(int argc, char *argv[]) {
+  // string ytpath = argv[1];
+  // string xtpath = argv[2];
+  // string indexpath = argv[3];
+  // string gammapath = argv[4];
+
+  string ytpath = "yt.csv";
+  string xtpath = "Xt.csv";
+  string indexpath = "wrc_index.csv";
+  string gammapath = "gammas_onedim.csv";
 
   cout << ytpath << endl;
   cout << xtpath << endl;
@@ -36,17 +35,14 @@ int main(int argc, char *argv[]) {
   MatrixXd Xt = readCSV(xtpath);
   MatrixXd I = readCSV(indexpath);
   MatrixXd gammas = readCSV(gammapath);
-  MatrixXd deltas = readCSV(gammapath);
 
   Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
-  
   int K = yt.rows();
-  indexMap(InfoMat, K);
   int T = yt.cols();
   int nFactors = InfoMat.rows();
-  FullConditionals fcond;
-  fcond.easySetModel(yt, Xt, gammas, deltas, InfoMat);
-  fcond.runModel(1000, 200);
+  FullConditionalsNoAr fcond;
+  fcond.easySetModel(yt, Xt, gammas, InfoMat);
+  fcond.runModel(10, 2);
   std::ofstream file(fcond.fname, ios_base::app);
   if (file.is_open()) {
     file << "Paths" << endl;
@@ -57,5 +53,5 @@ int main(int argc, char *argv[]) {
     cout << "DID NOT WRITE" << endl;
   }
   fcond.ml();
-  fcond.summary();
+  // fcond.summary();
 }

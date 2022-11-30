@@ -1690,8 +1690,18 @@ Flights &lt;-
 </tbody>
 </table>
 <ul>
-<li>The same issue of NA’s occurs with ITIN_FARE. Several are missing which did cause problems computing an average itinerary fare. These must be omitted. # Roundtrips calculation</li>
-<li>Computing round trips flights is ambiguous with this dataset. Planes that return to and from the same airports exist in the data, however, if this should qualify as a roundtrip is not clear. In the Tickets dataset passengers who purchased roundtrip tickets are known by the column ROUNDTRIP, however, they may have connecting flights in between their origin and destination. Therefore, it is difficult to know if flights that are round trip are actually the best roundtrip routes, since connections are not taken into account. The tickets and flights dataset can only be connected through the origin and roundtrips from the tickets dataset were likely using a multiple flights to reach the destination. # Impossible Airspeeds</li>
+<li>The same issue of NA’s occurs with ITIN_FARE. Several are missing which did cause problems computing an average itinerary fare. These must be omitted.</li>
+</ul>
+</div>
+<div id="roundtrips-calculation" class="section level1">
+<h1>Roundtrips calculation</h1>
+<ul>
+<li>Computing round trips flights is ambiguous with this dataset. Planes that return to and from the same airports exist in the data, however, if this should qualify as a roundtrip is not clear. In the Tickets dataset passengers who purchased roundtrip tickets are known by the column ROUNDTRIP, however, they may have connecting flights in between their origin and destination. Therefore, it is difficult to know if flights that are round trip are actually the best roundtrip routes, since connections are not taken into account. The tickets and flights dataset can only be connected through the origin and roundtrips from the tickets dataset were likely using a multiple flights to reach the destination.</li>
+</ul>
+</div>
+<div id="impossible-airspeeds" class="section level1">
+<h1>Impossible Airspeeds</h1>
+<ul>
 <li>There are some records that have impossible air speeds given the flight time and distance. For instance, on average one flight was recorded as flying for two minutes but convering a distance of many hundred miles. A function for dealing with this is based on basic physics, <span class="math inline">\(d = rt\)</span>. A assumed airspeed of 500 m.p.h is input and a tolerance of 1,000 miles difference on the distance is used.</li>
 </ul>
 <pre class="r"><code>impossible_airspeed &lt;- function(flights){

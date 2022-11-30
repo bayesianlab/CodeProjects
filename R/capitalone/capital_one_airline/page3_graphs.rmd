@@ -176,6 +176,7 @@ $$A(x) = \begin{cases}
  10,000 &\text{ if  } x = \text{Large} \\
 5,000 & \text{otherwise.}
 \end{cases}$$
+
 - $d_d$ is departure delay time in minutes. 
 
 - $a_d$ is arrival delay time in minutes. 

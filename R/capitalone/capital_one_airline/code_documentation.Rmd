@@ -10,6 +10,65 @@ output:
 # Back to main page
 [Click here to jump back to main page](capitalone_data.html)
 
+# clean_airports 
+- Selects only large and medium size airports. 
+```{r}
+clean_airports <- function(Airports) {
+  big_airports <- clean_airport_codes(Airports)
+  big_airports <-
+    select(big_airports,-c(CONTINENT, MUNICIPALITY, ISO_COUNTRY))
+  big_airports
+}
+```
+
+# clean_flights 
+- Drops not canceled flights, selects only flights that were in and out of a large or medium airport, 
+and returns the dataframe. 
+```{r}
+clean_flights <- function(Flights, big_airports) {
+  valid_flights <- drop_cancelled(Flights)
+  valid_flights <-
+    valid_flights %>% inner_join(big_airports[, c(1, 2, 4, 5)], c("ORIGIN" = "IATA_CODE")) %>%
+    rename(ORIGIN_SIZE = TYPE) %>% rename(ORIGIN_AIRPORT_NAME = NAME) %>%
+    rename(ORIGIN_COOR = COORDINATES) %>%
+    inner_join(big_airports[, c(1, 2, 4, 5)], c("DESTINATION" = "IATA_CODE")) %>%
+    rename(DEST_SIZE = TYPE) %>% rename(DEST_AIRPORT_NAME = NAME) %>%
+    rename(DEST_COOR = COORDINATES)
+  # Some flights were into and out of the same airport, not useful for this
+  # exercise
+  valid_flights <-
+    valid_flights[-which(valid_flights$ORIGIN == valid_flights$DESTINATION), ]
+}
+```
+
+
+# clean_tickets 
+- Drops all one way flights, and all flights not into a large or medium size airport. 
+```{r}
+clean_tickets <- function(TicketsData, big_airports) {
+  tickets_roundtrip <- drop_oneways(TicketsData)
+  tickets_roundtrip$ITIN_FARE <-
+    as.numeric(tickets_roundtrip$ITIN_FARE)
+  tickets_roundtrip <- select(tickets_roundtrip,
+                              ORIGIN,
+                              PASSENGERS,
+                              ITIN_FARE,
+                              DESTINATION)
+  tickets_roundtrip$rowid <- 1:nrow(tickets_roundtrip)
+  tickets_roundtrip <-
+    tickets_roundtrip %>% inner_join(big_airports[, c(1, 4)],
+                                     by = c("ORIGIN" = "IATA_CODE")) %>%
+    rename(origin_airport_size = TYPE) %>%
+    inner_join(big_airports[, c(1, 4)],
+               by = c("DESTINATION" = "IATA_CODE")) %>%
+    rename(dest_airport_size = TYPE)
+  tickets_roundtrip
+}
+```
+
+
+
+
 # make_airid_dict
 - This function takes the *set* (unique) airports in the 
 dataset and simply associates an integer from 1:N where N is the number of airports in the set. 
@@ -200,7 +259,22 @@ compute_flightcost <- function(flight_data) {
 
 
 
+# breakeven
+Computes the number of flights to breakeven with a 90,000,000 fixed cost investment. 
+```{r}
 
+breakeven <- function(per_flight_profit){
+  cost <- 90000000
+  c<- 1
+  total <- 0
+  
+  while(total < cost){
+    total <- total + per_flight_profit*c
+    c<-c+1
+  }
+  c
+}
+```
 
 
 

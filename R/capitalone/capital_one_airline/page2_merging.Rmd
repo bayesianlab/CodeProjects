@@ -145,8 +145,7 @@ flights <- join_data(Airports, Tickets, Flights)
 kable(head(flights[,1:5]))
 ```
 
-
-- To see [Functions realted to AIRID Click Here.](code_documentation.html)
+- To see [Functions realted to AIRID and Data Cleaning Click Here.](code_documentation.html)
 
 # Graphs and Visualizations
 - [Link to step 3 Graphs and Visualizations](page3_graphs.html)

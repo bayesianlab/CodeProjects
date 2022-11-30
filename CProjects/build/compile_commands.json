@@ -46,8 +46,8 @@
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel",
-  "command": "/usr/lib/ccache/c++   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/local/include/stats-master/include -I/usr/local/include/gcem/include  -g   -std=gnu++11 -o CMakeFiles/fullcond.dir/src/fullcond.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/fullcond.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/fullcond.cpp"
+  "command": "/usr/lib/ccache/c++   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/local/include/stats-master/include -I/usr/local/include/gcem/include  -g   -std=gnu++11 -o CMakeFiles/fullcondnoar.dir/src/fullcondnoar.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/fullcondnoar.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/fullcondnoar.cpp"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel",

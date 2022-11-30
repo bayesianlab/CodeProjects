@@ -1528,6 +1528,63 @@ div.tocify {
 <h1>Back to main page</h1>
 <p><a href="capitalone_data.html">Click here to jump back to main page</a></p>
 </div>
+<div id="clean_airports" class="section level1">
+<h1>clean_airports</h1>
+<ul>
+<li>Selects only large and medium size airports.</li>
+</ul>
+<pre class="r"><code>clean_airports &lt;- function(Airports) {
+  big_airports &lt;- clean_airport_codes(Airports)
+  big_airports &lt;-
+    select(big_airports,-c(CONTINENT, MUNICIPALITY, ISO_COUNTRY))
+  big_airports
+}</code></pre>
+</div>
+<div id="clean_flights" class="section level1">
+<h1>clean_flights</h1>
+<ul>
+<li>Drops not canceled flights, selects only flights that were in and out of a large or medium airport, and returns the dataframe.</li>
+</ul>
+<pre class="r"><code>clean_flights &lt;- function(Flights, big_airports) {
+  valid_flights &lt;- drop_cancelled(Flights)
+  valid_flights &lt;-
+    valid_flights %&gt;% inner_join(big_airports[, c(1, 2, 4, 5)], c(&quot;ORIGIN&quot; = &quot;IATA_CODE&quot;)) %&gt;%
+    rename(ORIGIN_SIZE = TYPE) %&gt;% rename(ORIGIN_AIRPORT_NAME = NAME) %&gt;%
+    rename(ORIGIN_COOR = COORDINATES) %&gt;%
+    inner_join(big_airports[, c(1, 2, 4, 5)], c(&quot;DESTINATION&quot; = &quot;IATA_CODE&quot;)) %&gt;%
+    rename(DEST_SIZE = TYPE) %&gt;% rename(DEST_AIRPORT_NAME = NAME) %&gt;%
+    rename(DEST_COOR = COORDINATES)
+  # Some flights were into and out of the same airport, not useful for this
+  # exercise
+  valid_flights &lt;-
+    valid_flights[-which(valid_flights$ORIGIN == valid_flights$DESTINATION), ]
+}</code></pre>
+</div>
+<div id="clean_tickets" class="section level1">
+<h1>clean_tickets</h1>
+<ul>
+<li>Drops all one way flights, and all flights not into a large or medium size airport.</li>
+</ul>
+<pre class="r"><code>clean_tickets &lt;- function(TicketsData, big_airports) {
+  tickets_roundtrip &lt;- drop_oneways(TicketsData)
+  tickets_roundtrip$ITIN_FARE &lt;-
+    as.numeric(tickets_roundtrip$ITIN_FARE)
+  tickets_roundtrip &lt;- select(tickets_roundtrip,
+                              ORIGIN,
+                              PASSENGERS,
+                              ITIN_FARE,
+                              DESTINATION)
+  tickets_roundtrip$rowid &lt;- 1:nrow(tickets_roundtrip)
+  tickets_roundtrip &lt;-
+    tickets_roundtrip %&gt;% inner_join(big_airports[, c(1, 4)],
+                                     by = c(&quot;ORIGIN&quot; = &quot;IATA_CODE&quot;)) %&gt;%
+    rename(origin_airport_size = TYPE) %&gt;%
+    inner_join(big_airports[, c(1, 4)],
+               by = c(&quot;DESTINATION&quot; = &quot;IATA_CODE&quot;)) %&gt;%
+    rename(dest_airport_size = TYPE)
+  tickets_roundtrip
+}</code></pre>
+</div>
 <div id="make_airid_dict" class="section level1">
 <h1>make_airid_dict</h1>
 <ul>
@@ -1709,6 +1766,21 @@ vector&lt;int&gt; impute_flightid_cpp(DataFrame F, NumericMatrix M, DataFrame Ai
   }
   cost &lt;- do.call(rbind, cost)
   cost
+}</code></pre>
+</div>
+<div id="breakeven" class="section level1">
+<h1>breakeven</h1>
+<p>Computes the number of flights to breakeven with a 90,000,000 fixed cost investment.</p>
+<pre class="r"><code>breakeven &lt;- function(per_flight_profit){
+  cost &lt;- 90000000
+  c&lt;- 1
+  total &lt;- 0
+  
+  while(total &lt; cost){
+    total &lt;- total + per_flight_profit*c
+    c&lt;-c+1
+  }
+  c
 }</code></pre>
 </div>
 

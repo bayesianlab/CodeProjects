@@ -1,10 +1,11 @@
 #pragma once
 #ifndef FULLCOND_H
 #define FULLCOND_H
+#include <math.h>
+
 #include <Eigen/Dense>
 #include <fstream>
 #include <iostream>
-#include <math.h>
 #include <string>
 
 #include "ARMA.hpp"
@@ -20,7 +21,7 @@ using namespace std;
 class FullConditionals : public LoadingsFactorTools,
                          public BayesBetaUpdater,
                          public ARMA {
-public:
+ public:
   std::vector<MatrixXd> BetaPosteriorDraws;
   std::vector<MatrixXd> FactorPosteriorDraws;
   std::vector<MatrixXd> GammasPosteriorDraws;
@@ -85,8 +86,10 @@ public:
     R0 = 10;
     d0 = 6;
     D0 = R0;
-    omVariance = VectorXd::Ones(yt.rows()); 
-    factorVariance = VectorXd::Ones(nFactors); 
+    omVariance = VectorXd::Ones(yt.rows());
+    factorVariance = VectorXd::Ones(nFactors);
+    // Estimate variance, set loadings to one on diagonal
+    id = 1;
   }
 
   MatrixXd createArPriorCovMat(double startvar, size_t sz) {
@@ -141,7 +144,7 @@ public:
     this->del0 = del0;
     this->Del0 = Del0;
     this->factorVariance = VectorXd::Ones(Ft.rows());
-    this->omVariance = VectorXd::Ones(yt.rows()); 
+    this->omVariance = VectorXd::Ones(yt.rows());
     this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
     setFactors(Ft);
     int K = yt.rows();
@@ -184,7 +187,7 @@ public:
     this->d0 = d0;
     this->D0 = D0;
     this->factorVariance = VectorXd::Ones(Ft.rows());
-    this->omVariance = VectorXd::Ones(yt.rows()); 
+    this->omVariance = VectorXd::Ones(yt.rows());
     this->Identity = MakeObsModelIdentity(InfoMat, yt.rows());
     setFactors(Ft);
     int K = yt.rows();
@@ -265,7 +268,6 @@ public:
     MatrixXd B02 = B0.block(0, 0, nXs, nXs);
     MatrixXd betaParams(K, nXs + nFactors);
     betaParams.setZero();
-
     betaParams.rightCols(nFactors) = MakeObsModelIdentity(InfoMat, K);
     residuals.resize(1, T);
     for (int i = 0; i < Sims; ++i) {
@@ -306,6 +308,12 @@ public:
         // gamma update
         gammas.row(n) = updateArParameters(Factors.row(n), gammas.row(n),
                                            factorVariance(n), g0, G0);
+        if (id == 1) {
+          MatrixXd H = ReturnH(gammas.row(n), T);
+          MatrixXd nu = (H * Factors.row(n).transpose()).transpose();
+          // factor variance update
+          factorVariance(n) = updateSigma2(nu, d0, D0).value();
+        }
       }
 
       if (i >= burnin) {
@@ -339,21 +347,18 @@ public:
     string ext = ".txt";
     string path = "mllogfiles/";
     fname = path + version + date + ext;
-    std::ofstream file;
-    file.open(fname);
+    storePosterior(path + version + date + "_beta.csv", BetaPosteriorDraws);
+    storePosterior(path + version + date + "_deltas.csv", DeltasPosteriorDraws);
+    storePosterior(path + version + date + "_gammas.csv", GammasPosteriorDraws);
+    storePosterior(path + version + date + "_factors.csv",
+                   FactorPosteriorDraws);
+    storePosterior(path + version + date + "_factorVariance.csv",
+                   FactorVariancePosteriorDraws);
+    storePosterior(path + version + date + "_omVariance.csv",
+                   OmVariancePosteriorDraws);
+    storePosterior(path + version + date + "_residuals.csv", Resids);
+    ofstream file(fname);
     if (file.is_open()) {
-      storePosterior(path + version + date + "_beta.csv", BetaPosteriorDraws);
-      storePosterior(path + version + date + "_deltas.csv",
-                     DeltasPosteriorDraws);
-      storePosterior(path + version + date + "_gammas.csv",
-                     GammasPosteriorDraws);
-      storePosterior(path + version + date + "_factors.csv",
-                     FactorPosteriorDraws);
-      storePosterior(path + version + date + "_factorVariance.csv",
-                     FactorVariancePosteriorDraws);
-      storePosterior(path + version + date + "_omVariance.csv",
-                     OmVariancePosteriorDraws);
-      storePosterior(path + version + date + "_residuals.csv", Resids);
       file << "Full Conditional Version run with: " << Sims << " "
            << "burnin " << burnin << endl;
       file << "Beta avg" << endl;
@@ -367,6 +372,8 @@ public:
       file << "OM Variance" << endl;
       file << (mean(OmVariancePosteriorDraws)).transpose() << endl;
       file.close();
+    } else {
+      cout << "something went wrong" << endl;
     }
   }
 
@@ -443,19 +450,32 @@ public:
     MatrixXd factorLoadings = betaStar.rightCols(nFactors);
     RowVectorXd b02 = b0.segment(0, nXs);
     MatrixXd B02 = B0.block(0, 0, nXs, nXs);
+    map<int, vector<int>> indexMap = createIndexMap(InfoMat, K);
+
     for (int k = 0; k < K; ++k) {
       RowVectorXi loadingselect = FactorInfo.row(k);
       vector<double> temp;
+      int nrows = 0;
       for (int i = 0; i < loadingselect.size(); ++i) {
         if (loadingselect(i) != -1) {
-          temp.push_back(betaStar(k, loadingselect(i) + nXs));
+          bool ex = find(indexMap[k].begin(), indexMap[k].end(),
+                         loadingselect(i)) != indexMap[k].end();
+          if (!ex) {
+            ++nrows;
+            temp.push_back(betaStar(k, loadingselect(i) + nXs));
+          }
         }
       }
       Map<RowVectorXd> v(&temp[0], temp.size());
       RowVectorXd b0F = RowVectorXd::Zero(v.size());
       MatrixXd B0F = 10 * MatrixXd::Identity(v.size(), v.size());
-      priorBetaStar(k) = logmvnpdf(betaStar.leftCols(nXs).row(k), b02, B02) +
-                         logmvnpdf(v, b0F, B0F);
+      if (v.size() != 0) {
+        priorBetaStar(k) = logmvnpdf(betaStar.leftCols(nXs).row(k),
+                                      b02, B02) +
+                           logmvnpdf(v, b0F, B0F);
+      } else {
+        priorBetaStar(k) = logmvnpdf(betaStar.leftCols(nXs).row(k), b02, B02);
+      }
     }
     for (int j = 0; j < rr; ++j) {
       cout << "RR = " << j + 1 << endl;
@@ -465,7 +485,6 @@ public:
       omVariance = OmVariancePosteriorDraws[j];
       factorVariance = FactorVariancePosteriorDraws[j];
       MatrixXd ytmaf = yt - factorLoadings * Factors;
-
       for (int k = 0; k < K; ++k) {
         s2 = omVariance(k);
         H = ReturnH(deltas.row(k), T);
@@ -699,6 +718,7 @@ public:
       FactorVariancePosteriorDrawsj[j] = factorVariance;
     }
     posteriorStar += logavg(piPosterior, 0).sum();
+
     cout << "Factor Variance Reduced Run (if id == 1)" << endl;
     VectorXd factorVariancestar = mean(FactorVariancePosteriorDrawsj);
     VectorXd priorFactorVarianceStar(nFactors);
@@ -755,24 +775,20 @@ public:
     double conditionalOfFactors =
         likelihood.sum() + priorFactorStar.sum() - posteriorFactorStar.sum();
     double priorSum;
-    // if (id == 1) {
-      cout << priorGammaStar.sum() << " " << priorBetaStar.sum() << " "
-           << priorOmVarianceStar.sum() << " " << priorFactorVarianceStar.sum()
-           << " " << priorDeltaStar.sum() << endl;
-      priorSum = priorGammaStar.sum() + priorBetaStar.sum() +
-                 priorOmVarianceStar.sum() + priorFactorVarianceStar.sum() +
-                 priorDeltaStar.sum();
-    // } else {
-    //   priorSum = priorGammaStar.sum() + priorBetaStar.sum() +
-    //              priorOmVarianceStar.sum() + +priorDeltaStar.sum();
-    // }
+
+    cout << priorGammaStar.sum() << " " << priorBetaStar.sum() << " "
+         << priorOmVarianceStar.sum() << " " << priorFactorVarianceStar.sum()
+         << " " << priorDeltaStar.sum() << endl;
+    priorSum = priorGammaStar.sum() + priorBetaStar.sum() +
+               priorOmVarianceStar.sum() + priorFactorVarianceStar.sum() +
+               priorDeltaStar.sum();
 
     marginal_likelihood = conditionalOfFactors + priorSum - posteriorStar;
     cout << "priorSum " << priorSum << endl;
     cout << "posteriorStar " << posteriorStar << endl;
     cout << "Marginal Likelihood " << marginal_likelihood << endl;
 
-    std::ofstream file(fname, ios_base::app | ios_base::out);
+    std::ofstream file(fname, ios_base::app);
     if (file.is_open()) {
       file << "Marginal Likelihood: " << marginal_likelihood << endl;
     }
@@ -780,7 +796,8 @@ public:
     return marginal_likelihood;
   }
 
-  template <typename T> void storePosterior(string fname, std::vector<T> &M) {
+  template <typename T>
+  void storePosterior(string fname, std::vector<T> &M) {
     const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision,
                                            Eigen::DontAlignCols, ", ", "\n");
     int size = M.size();
@@ -789,7 +806,20 @@ public:
       for (int i = 0; i < size; ++i) {
         file << M[i].format(CSVFormat) << endl;
       }
+      file.close();
     }
+  }
+
+  map<int, vector<int>> createIndexMap(const Matrix<int, Dynamic, 2> &InfoMat,
+                                       int K) {
+    map<int, vector<int>> im;
+    for (int i = 0; i < K; ++i) {
+      im[i];
+    }
+    for (int i = 0; i < InfoMat.rows(); ++i) {
+      im[InfoMat(i, 0)].push_back(i);
+    }
+    return im;
   }
 
   void summary() {
@@ -815,9 +845,7 @@ public:
       double s = VarDecomp.row(i).sum();
       VarDecomp.row(i) = VarDecomp.row(i).array() / s;
     }
-    // cout << VarDecomp << endl;
-    std::ofstream file;
-    file.open(fname);
+    std::ofstream file(fname, ios_base::app);
     if (file.is_open()) {
       file << "Variance Decomposition" << endl;
       file << VarDecomp << endl;
@@ -825,7 +853,7 @@ public:
     }
   }
 
-private:
+ private:
   void setPosteriorSizes(int Sims, int burnin) {
     BetaPosteriorDraws.resize(Sims - burnin);
     FactorPosteriorDraws.resize(Sims - burnin);

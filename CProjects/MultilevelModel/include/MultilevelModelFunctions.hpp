@@ -238,7 +238,6 @@ void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
                    const MatrixBase<T5> &factorVariance,
                    const MatrixBase<T6> &gammas) {
   // only gammas
-  // Xtfull is remade in each call
   int nFactors = InfoMat.rows();
   int K = yt.rows();
   int T = yt.cols();

@@ -48,7 +48,8 @@ kable(head(Flights %>% filter(ORIGIN == "BWI" & DESTINATION == "DFW") %>%
   select(ORIGIN, DESTINATION, DISTANCE)))
 ```
 - The same issue of NA's occurs with ITIN_FARE. Several are missing which
-did cause problems computing an average itinerary fare. These must be omitted. 
+did cause problems computing an average itinerary fare. These must be omitted.
+
 # Roundtrips calculation
 - Computing round trips flights is ambiguous with this dataset. Planes that 
 return to and from the same airports exist in the data, however, if this 
@@ -59,6 +60,7 @@ Therefore, it is difficult to know if flights that are round trip are actually
 the best roundtrip routes, since connections are not taken into account. 
 The tickets and flights dataset can only be connected through the origin
 and roundtrips from the tickets dataset were likely using a multiple flights to reach the destination. 
+
 # Impossible Airspeeds 
 - There are some records that have impossible air speeds given the flight time and distance. For instance,
 on average one flight was recorded as flying for two minutes but convering a distance of many hundred miles. A function for dealing with this is based on basic physics, $d = rt$. A assumed airspeed of 500 m.p.h is input and a tolerance of 1,000 miles difference on the distance is used.  
