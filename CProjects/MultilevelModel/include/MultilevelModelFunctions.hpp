@@ -398,7 +398,7 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
       btemp = betaParams.row(k).head(nXs);
       loadings(colCount) = 0;
       // break up x and factors
-      epsilons = yt.row(k) - btemp * Xthat.transpose() + loadings * Factorstar;
+      epsilons = yt.row(k) - (btemp * Xthat.transpose() + loadings * Factorstar);
       if (k == InfoMat.row(n).head(1).value()) {
         f2 = factorVariance(n);
         H1 = MakePrecision(gammas.row(n), f2, T);

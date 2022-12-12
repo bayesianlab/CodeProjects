@@ -151,6 +151,8 @@ newdata <- newdata[,c('year', 'rgdpnaUSA', 'rconnaUSA', 'rcapUSA',
   'rgdpnaTHA', 'rconnaTHA', 'rcapTHA')]
 
 
+K <- 171
+N <- 60
 newkow <- rbind(KOWlfd, newdata[60:61,2:172])
 row.names(newkow) <- NULL
 codePath <- '~/CodeProjects/CProjects/build/'
@@ -161,18 +163,19 @@ data <- cbind(year=1961:2021, newkow)
 
 yt <- t(newkow)
 write.table(row.names(yt), paste(dataPath, "country_index.csv", sep=""))
-
 ncountries <- K/3
-Xt <- matrix(0, nrow=K*(ncol(yt)-1), ncol=3)
+Xt <- matrix(0, nrow=K*N, ncol=3)
 ones <-matrix(1, nrow=3, ncol=1)
 
 # Predict for time t = 1 to time N-1 for Xt
-for(t in 1:(N-1))
+for(t in 1:(N))
 {
   for (j in 1:ncountries)
   {
     w <- (1:3) + ((j-1)*3)
+    
     q <- w + (t-1)*K
+    
     Xt[q,] <- kronecker(ones, t(yt[w,t]))
   }
 }
@@ -180,9 +183,11 @@ for(t in 1:(N-1))
 Xt <- cbind(rep(1,nrow(Xt)),Xt)
 Xtkow <- rep(1,nrow(Xt))
 yt <- yt[,2:61]
+yt <- (yt - mean(yt))/sd(yt)
+
 write.table(yt, paste(codePath, 'yt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 write.table(Xt, paste(codePath, 'Xt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
-write.table(Xt, paste(codePath, 'Xtbaseline.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
+write.table(Xtkow, paste(codePath, 'Xtbaseline.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
 N <- ncol(yt)
 K <- nrow(yt)
@@ -197,15 +202,15 @@ for (y in 1:10)
   endnameyt <- sprintf("yt_%d_end.csv",years[y])
   begnameXt <- sprintf("Xt_%d_beg.csv",years[y]+1)
   endnameXt <- sprintf("Xt_%d_end.csv",years[y])
-  Xtbeg <- matrix(0, nrow=K*(ncol(beginning)-1), ncol=3)
-  Xtend <- matrix(0, nrow=K*(ncol(ending)-1), ncol=3)
+  Xtbeg <- matrix(0, nrow=K*(ncol(beginning)-1), ncol=4)
+  Xtend <- matrix(0, nrow=K*(ncol(ending)-1), ncol=4)
   for(t in 1:(ncol(beginning)-1))
   {
     for (j in 1:ncountries)
     {
       w <- (1:3) + ((j-1)*3)
       q <- w + (t-1)*K
-      Xtbeg[q,] <- kronecker(ones, t(beginning[w,t]))
+      Xtbeg[q,] <- kronecker(ones, cbind(1,t(beginning[w,t])))
     }
   }
   
@@ -215,7 +220,7 @@ for (y in 1:10)
     {
       w <- (1:3) + ((j-1)*3)
       q <- w + ( (t-1)*K )
-      Xtend[q, ] = kronecker(ones, t(ending[w, t]))
+      Xtend[q, ] = kronecker(ones, cbind(1,t(ending[w, t])))
     }
   }
   beg <- beginning[,2:ncol(beginning)]

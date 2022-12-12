@@ -83,12 +83,12 @@ class FullConditionals : public LoadingsFactorTools,
     g0 = RowVectorXd::Zero(gammas.cols());
     G0 = createArPriorCovMat(1, gammas.cols());
     r0 = 6;
-    R0 = 10;
+    R0 = 6;
     d0 = 6;
-    D0 = R0;
+    D0 = 6;
     omVariance = VectorXd::Ones(yt.rows());
     factorVariance = VectorXd::Ones(nFactors);
-    // Estimate variance, set loadings to one on diagonal
+    // 1 is not estimating factor variances
     id = 1;
   }
 
@@ -196,11 +196,13 @@ class FullConditionals : public LoadingsFactorTools,
     this->id = id;
   }
 
-  void updateLoadingsFullConditionals(
-      MatrixXd &betaParams, const MatrixXd &yt, const VectorXd &omVariance,
-      const Matrix<int, Dynamic, 2> &InfoMat, const std::vector<MatrixXd> &Xtk,
-      const MatrixXd &Factors, const MatrixXd &deltas, const RowVectorXd &b0L,
-      const MatrixXd &B0L) {
+  void updateLoadingsFullConditionals(MatrixXd &betaParams, const MatrixXd &yt,
+                                      const VectorXd &omVariance,
+                                      const Matrix<int, Dynamic, 2> &InfoMat,
+                                      const std::vector<MatrixXd> &Xtk,
+                                      MatrixXd &Factors, const MatrixXd &deltas,
+                                      const RowVectorXd &b0L,
+                                      const MatrixXd &B0L) {
     /// Updates loadings conditional on factors ///
 
     int K = yt.rows();
@@ -209,7 +211,6 @@ class FullConditionals : public LoadingsFactorTools,
     int T = yt.cols();
     MatrixXd factorLoadings = betaParams.rightCols(nFactors);
     int nXs = Xtk[0].cols();
-    RowVectorXd yttemp(T);
     VectorXd ythat;
     VectorXd Fthat;
     for (int i = 0; i < nFactors; ++i) {
@@ -224,14 +225,16 @@ class FullConditionals : public LoadingsFactorTools,
                             A.row(j) * Factors;
         ythat = H * ytmaf.transpose();
         Fthat = H * Factors.row(i).transpose();
-        betaParams(j, i + nXs) =
-            updateBeta(ytmaf.transpose(), Fthat, s2, b0L.segment(i, 1),
-                       B0L.block(i, i, 1, 1))
-                .value();
-        if (j == b) {
-          betaParams(j, i + nXs) = 1;
+        betaParams(j, i + nXs) = updateBeta(ythat, Fthat, s2, b0L.segment(i, 1),
+                                            B0L.block(i, i, 1, 1))
+                                     .value();
+      }
+      if (betaParams(b, i + nXs) < 0) {
+        for (int j = b; j <= e; ++j) {
+          betaParams(j, i + nXs) = -betaParams(j, i + nXs);
         }
       }
+      factorLoadings = betaParams.rightCols(nFactors);
     }
   }
 
@@ -261,9 +264,10 @@ class FullConditionals : public LoadingsFactorTools,
     RowVectorXd bnew(nXs);
     MatrixXd factorLoadings(K, nFactors);
     factorLoadings.setZero();
-    RowVectorXd b0F = b0.segment(b0.size() - nFactors - 1, nFactors);
-    MatrixXd B0F = B0.block(B0.rows() - nFactors - 1, B0.cols() - nFactors - 1,
-                            nFactors, nFactors);
+    RowVectorXd b0F =
+        1 + b0.segment(b0.size() - nFactors - 1, nFactors).array();
+    MatrixXd B0F = .1 * B0.block(B0.rows() - nFactors - 1,
+                                 B0.cols() - nFactors - 1, nFactors, nFactors);
     RowVectorXd b02 = b0.segment(0, nXs);
     MatrixXd B02 = B0.block(0, 0, nXs, nXs);
     MatrixXd betaParams(K, nXs + nFactors);
@@ -308,7 +312,7 @@ class FullConditionals : public LoadingsFactorTools,
         // gamma update
         gammas.row(n) = updateArParameters(Factors.row(n), gammas.row(n),
                                            factorVariance(n), g0, G0);
-        if (id == 1) {
+        if (id == 2) {
           MatrixXd H = ReturnH(gammas.row(n), T);
           MatrixXd nu = (H * Factors.row(n).transpose()).transpose();
           // factor variance update
@@ -449,7 +453,7 @@ class FullConditionals : public LoadingsFactorTools,
     MatrixXd betaStar = mean(BetaPosteriorDraws);
     MatrixXd factorLoadings = betaStar.rightCols(nFactors);
     RowVectorXd b02 = b0.segment(0, nXs);
-    MatrixXd B02 = B0.block(0, 0, nXs, nXs);
+    MatrixXd B02 = 100 * B0.block(0, 0, nXs, nXs);
     map<int, vector<int>> indexMap = createIndexMap(InfoMat, K);
 
     for (int k = 0; k < K; ++k) {
@@ -458,20 +462,15 @@ class FullConditionals : public LoadingsFactorTools,
       int nrows = 0;
       for (int i = 0; i < loadingselect.size(); ++i) {
         if (loadingselect(i) != -1) {
-          bool ex = find(indexMap[k].begin(), indexMap[k].end(),
-                         loadingselect(i)) != indexMap[k].end();
-          if (!ex) {
-            ++nrows;
-            temp.push_back(betaStar(k, loadingselect(i) + nXs));
-          }
+          ++nrows;
+          temp.push_back(betaStar(k, loadingselect(i) + nXs));
         }
       }
       Map<RowVectorXd> v(&temp[0], temp.size());
       RowVectorXd b0F = RowVectorXd::Zero(v.size());
-      MatrixXd B0F = 10 * MatrixXd::Identity(v.size(), v.size());
+      MatrixXd B0F = 100 * MatrixXd::Identity(v.size(), v.size());
       if (v.size() != 0) {
-        priorBetaStar(k) = logmvnpdf(betaStar.leftCols(nXs).row(k),
-                                      b02, B02) +
+        priorBetaStar(k) = logmvnpdf(betaStar.leftCols(nXs).row(k), b02, B02) +
                            logmvnpdf(v, b0F, B0F);
       } else {
         priorBetaStar(k) = logmvnpdf(betaStar.leftCols(nXs).row(k), b02, B02);
@@ -489,6 +488,8 @@ class FullConditionals : public LoadingsFactorTools,
         s2 = omVariance(k);
         H = ReturnH(deltas.row(k), T);
         ythat = H * ytmaf.row(k).transpose();
+        RowVectorXd ytmxt =
+            H * (ythat.row(k) + factorLoadings.row(k) * Factors).transpose();
         ythat.transposeInPlace();
         Xthat = H * Xtk[k];
         RowVectorXi loadingselect = FactorInfo.row(k);
@@ -506,11 +507,17 @@ class FullConditionals : public LoadingsFactorTools,
         }
         Map<Matrix<double, Dynamic, Dynamic>> FX(&fx[0], T, nrows);
         Map<RowVectorXd> v(&temp[0], temp.size());
-        RowVectorXd b0F = RowVectorXd::Zero(v.size());
-        MatrixXd B0F = 10 * MatrixXd::Identity(v.size(), v.size());
-        piPosterior(k, j) = betaReducedRun(betaStar.leftCols(nXs).row(k), ythat,
-                                           Xthat, s2, b02, B02) +
-                            betaReducedRun(v, ythat, FX, s2, b0F, B0F);
+        RowVectorXd b0F = RowVectorXd::Zero(v.size()).array() + 1;
+        MatrixXd B0F = 100 * MatrixXd::Identity(v.size(), v.size());
+        FX = H*FX.transpose(); 
+        if (v.size() != 0) {
+          piPosterior(k, j) = betaReducedRun(betaStar.leftCols(nXs).row(k),
+                                             ythat, Xthat, s2, b02, B02) +
+                              betaReducedRun(v, ytmxt, FX, s2, b0F, B0F);
+        } else {
+          piPosterior(k, j) = betaReducedRun(betaStar.leftCols(nXs).row(k),
+                                             ythat, Xthat, s2, b02, B02);
+        }
 
         RowVectorXd ytstar =
             ytmaf.row(k) - betaStar.leftCols(nXs).row(k) * Xtk[k].transpose();
@@ -539,7 +546,7 @@ class FullConditionals : public LoadingsFactorTools,
       for (int n = 0; n < nFactors; ++n) {
         gammas.row(n) = updateArParameters(Factors.row(n), gammas.row(n),
                                            factorVariance(n), g0, G0);
-        if (id == 1) {
+        if (id == 2) {
           H = ReturnH(gammas.row(n), T);
           nu = (H * Factors.row(n).transpose()).transpose();
           factorVariance(n) = updateSigma2(nu, d0, D0).value();
@@ -599,7 +606,7 @@ class FullConditionals : public LoadingsFactorTools,
       for (int n = 0; n < nFactors; ++n) {
         gammas.row(n) = updateArParameters(Factors.row(n), gammas.row(n),
                                            factorVariance(n), g0, G0);
-        if (id == 1) {
+        if (id == 2) {
           H = ReturnH(gammas.row(n), T);
           nu = (H * Factors.row(n).transpose()).transpose();
           factorVariance(n) = updateSigma2(nu, d0, D0).value();
@@ -662,7 +669,7 @@ class FullConditionals : public LoadingsFactorTools,
             alphag(Factors.row(n), gammas.row(n), gammastar.row(n), f2, g0, G0);
         Denominator(n, j) =
             alphaj(gammastar.row(n), Factors.row(n), f2, g0, G0);
-        if (id == 1) {
+        if (id == 2) {
           H = ReturnH(gammas.row(n), T);
           nu = (H * Factors.row(n).transpose()).transpose();
           factorVariance(n) = updateSigma2(nu, d0, D0).value();
@@ -708,7 +715,7 @@ class FullConditionals : public LoadingsFactorTools,
                     factorVariance, deltastar, gammastar);
 
       for (int n = 0; n < nFactors; ++n) {
-        if (id == 1) {
+        if (id == 2) {
           H = StoreH[n];
           nu = (H * Factors.row(n).transpose()).transpose();
           factorVariance(n) = updateSigma2(nu, d0, D0).value();
@@ -719,10 +726,10 @@ class FullConditionals : public LoadingsFactorTools,
     }
     posteriorStar += logavg(piPosterior, 0).sum();
 
-    cout << "Factor Variance Reduced Run (if id == 1)" << endl;
+    cout << "Factor Variance Reduced Run (if id == 2)" << endl;
     VectorXd factorVariancestar = mean(FactorVariancePosteriorDrawsj);
     VectorXd priorFactorVarianceStar(nFactors);
-    if (id == 1) {
+    if (id == 2) {
       parama = .5 * (T + r0);
       piPosterior.resize(nFactors, rr);
       Factorstar = mean(FactorPosteriorDrawsj);
@@ -769,27 +776,35 @@ class FullConditionals : public LoadingsFactorTools,
                   factorLoadings.row(k) * Factorstar;
       likelihood(k) = logmvnpdf(residuals, Z2, s2 * Covar);
     }
-    cout << "Likelihood " << likelihood.sum() << endl;
-    cout << "priorFactorStar " << priorFactorStar.sum() << endl;
-    cout << "posteriorFactorStar " << posteriorFactorStar.sum() << endl;
     double conditionalOfFactors =
         likelihood.sum() + priorFactorStar.sum() - posteriorFactorStar.sum();
     double priorSum;
 
-    cout << priorGammaStar.sum() << " " << priorBetaStar.sum() << " "
-         << priorOmVarianceStar.sum() << " " << priorFactorVarianceStar.sum()
-         << " " << priorDeltaStar.sum() << endl;
-    priorSum = priorGammaStar.sum() + priorBetaStar.sum() +
-               priorOmVarianceStar.sum() + priorFactorVarianceStar.sum() +
-               priorDeltaStar.sum();
+    if (id == 2) {
+      cout << priorGammaStar.sum() << " " << priorBetaStar.sum() << " "
+           << priorOmVarianceStar.sum() << " "
+           << " " << priorDeltaStar.sum() << endl;
+      priorSum = priorGammaStar.sum() + priorBetaStar.sum() +
+                 priorOmVarianceStar.sum() + priorDeltaStar.sum();
+    } else {
+      priorSum = priorGammaStar.sum() + priorBetaStar.sum() +
+                 priorOmVarianceStar.sum() + priorFactorVarianceStar.sum() +
+                 priorDeltaStar.sum();
+    }
 
     marginal_likelihood = conditionalOfFactors + priorSum - posteriorStar;
+    cout << "Likelihood " << likelihood.sum() << endl;
     cout << "priorSum " << priorSum << endl;
     cout << "posteriorStar " << posteriorStar << endl;
     cout << "Marginal Likelihood " << marginal_likelihood << endl;
 
     std::ofstream file(fname, ios_base::app);
     if (file.is_open()) {
+      file << "Likelihood " << likelihood.sum() << endl;
+      file << "Prior factor " << priorFactorStar.sum() << endl;
+      file << "Priors " << priorSum << endl;
+      file << "Conditional of factors " << conditionalOfFactors << endl;
+      file << "Posteriors " << posteriorStar << endl;
       file << "Marginal Likelihood: " << marginal_likelihood << endl;
     }
 

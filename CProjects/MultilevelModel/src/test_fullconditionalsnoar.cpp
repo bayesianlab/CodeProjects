@@ -15,8 +15,8 @@ using namespace Eigen;
 int main() { /* Run the standard otrok whiteman model, 1 factor*/
   int T = 100;
   int K = 20;
-  int sims = 10;
-  int burnin = 2;
+  int sims = 1000;
+  int burnin = 200;
   VectorXd betas = .5 * VectorXd::Ones(1, 1);
   int nXs = betas.size();
   Matrix<int, Dynamic, 2> InfoMat(7, 2);
@@ -30,8 +30,14 @@ int main() { /* Run the standard otrok whiteman model, 1 factor*/
   del << .25, .05;
   GenerateFactorData mldata;
   double betaVal = 1;
-  mldata.genDataArErrors(T, K, nXs, betaVal, InfoMat, phi, del, 1);
-  FullConditionals mlotrok;
+  MatrixXd Loadings = MatrixXd::Ones(K, nFactors); 
+  mldata.genData(T, K, betas, InfoMat, phi, Loadings, 1);
+
+
+
+  FullConditionalsNoAr mlotrok;
+  
+  
   double r0 = 6;
   double R0 = 10;
   double d0 = 6;
@@ -50,14 +56,20 @@ int main() { /* Run the standard otrok whiteman model, 1 factor*/
   del0.setZero();
   MatrixXd Del0 = MatrixXd::Identity(del.size(), del.size());
 
-  mlotrok.easySetModel(mldata.yt, mldata.Xt, phi, del, InfoMat);
+  mlotrok.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat);
 
   mlotrok.runModel(sims, burnin);
 
   MatrixXd Factorbar = mean(mlotrok.FactorPosteriorDraws);
+  
+
   plotter("plot.p", Factorbar.row(0).transpose(),
           mldata.Factors.row(0).transpose(), "fest", "ftrue");
-  mlotrok.ml();
-  mlotrok.summary();
+  plotter("plot2.p", mldata.yt.row(0).transpose(), mlotrok.fittedModel.row(0));
+  plotter("plot2.p", mldata.yt.row(1).transpose(), mlotrok.fittedModel.row(1));
 
+  // mlotrok.ml();
+  mlotrok.summary();
+  // plotter("plot.p", Factorbar.row(1).transpose(),
+  //         mldata.Factors.row(1).transpose(), "fest", "ftrue");
 }
