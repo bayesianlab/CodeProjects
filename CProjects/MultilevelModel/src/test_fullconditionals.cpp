@@ -11,8 +11,8 @@
 
 using namespace std;
 using namespace Eigen;
-
-int main() { /* Run the standard otrok whiteman model, 1 factor*/
+/* Run the standard otrok whiteman model, 1 factor*/
+int main() { 
   int T = 100;
   int K = 20;
   int sims = 10;
@@ -20,7 +20,13 @@ int main() { /* Run the standard otrok whiteman model, 1 factor*/
   VectorXd betas = .5 * VectorXd::Ones(1, 1);
   int nXs = betas.size();
   Matrix<int, Dynamic, 2> InfoMat(7, 2);
-  InfoMat << 0, K - 1, 0, 9, 10, K - 1, 0, 4, 5, 9, 10, 14, 15, 19;
+  InfoMat << 0, K - 1, 
+  0, 9, 
+  10, K - 1, 
+  0, 4, 
+  5, 9, 
+  10, 14, 
+  15, 19;
 
   int nFactors = InfoMat.rows();
   VectorXd factorVariances = VectorXd::Ones(nFactors, 1);

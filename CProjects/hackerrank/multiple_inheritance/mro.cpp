@@ -1,38 +1,35 @@
 #include <iostream>
 
 using namespace std;
-
 class Base {
  public:
-  void display() { cout << "Base class called" << endl; }
+ // Declaring virtual means that this function can be bound at 
+ // runtime. Without the compiler would bind display only to Base
+ // and if the pointer was assigned a new address Base display would 
+ // still be called. Now the display function is flexible to apply to
+ // different classes when the pointer is reassigned to a new class. 
+  virtual void display() { cout << "Base class called" << endl; }
 };
 
-class A : virtual public Base {
+class A : public Base {
  public:
+ // Automatically considered virtual
   void display() { cout << "A class called" << endl; }
 };
 
-class B : virtual public Base {
+class B : public Base {
  public:
+ // Automatically considered virtual
   void display() { cout << "B class called" << endl; }
 };
 
-class Derived : public A, public B {
- public:
-  void display() { cout << "Derived class called" << endl; }
-};
-
 int main() {
-  Base b;
+  Base b; 
   b.display();
-
-  Derived d;
-  d.display();
-  Base *g; 
-  g = new Derived(); 
-  
-
-  
+  Base *x; 
+  A a; 
+  x = &a; 
+  x->display(); 
 
   return 0;
 }

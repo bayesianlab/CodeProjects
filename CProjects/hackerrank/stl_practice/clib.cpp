@@ -51,15 +51,15 @@ Node *maketree(vector<int> data)
     return root;
 }
 
-void printTree(Node *root)
+void printTreeDepthFirst(Node *root)
 {
     if (root == NULL)
     {
         return;
     }
     cout << root->data << endl;
-    printTree(root->left);
-    printTree(root->right);
+    printTreeDepthFirst(root->left);
+    printTreeDepthFirst(root->right);
 }
 
 void printTree2(Node *root)
@@ -121,7 +121,7 @@ int main()
 
     vector<int> treevals{1, 3, 6, 3, 2, 9, 10};
     Node *root = maketree(treevals);
-    printTree(root);
+    printTreeDepthFirst(root);
     printTree2(root);
 
     return 0;

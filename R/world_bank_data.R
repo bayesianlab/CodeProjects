@@ -29,9 +29,10 @@ logkow <- cbind(kowcon[,1:2], logkow)
 difflogkow <- logkow[, 4:64] - logkow[,3:63]
 cons_growth <- cbind(kowcon[,1:2], difflogkow)
 
-world_bank_gdp <- read_csv("GoogleDrive/Datasets/world_bank_imf_gdp.csv")
+world_bank_gdp <- read_csv("GoogleDrive/Datasets/world_bank_gdp.csv")
 
 kowgdp <- world_bank_gdp%>%filter(Country_Code %in% countries)
+
 
 logkow <- log(kowgdp[,3:64])
 logkow <- cbind(kowgdp[,1:2], logkow)
@@ -162,6 +163,7 @@ dataPath <- '~/GoogleDrive/Datasets/'
 data <- cbind(year=1961:2021, newkow)
 
 yt <- t(newkow)
+
 write.table(row.names(yt), paste(dataPath, "country_index.csv", sep=""))
 ncountries <- K/3
 Xt <- matrix(0, nrow=K*N, ncol=3)
@@ -184,7 +186,7 @@ Xt <- cbind(rep(1,nrow(Xt)),Xt)
 Xtkow <- rep(1,nrow(Xt))
 yt <- yt[,2:61]
 yt <- (yt - mean(yt))/sd(yt)
-
+write.table(newkow, paste(codePath, 'newkow.csv', sep=''), row.names = TRUE, col.names=TRUE, sep=",")
 write.table(yt, paste(codePath, 'yt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 write.table(Xt, paste(codePath, 'Xt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 write.table(Xtkow, paste(codePath, 'Xtbaseline.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
@@ -234,3 +236,5 @@ for (y in 1:10)
   write.table(Xtend, paste(paste(codePath, "timebreaks/", sep=''), endnameXt,sep=''),
               row.names=FALSE,col.names=FALSE,sep=",")
 }
+
+mean(as.numeric(newdata[61,1+seq(1,ncol(newdata)-1, 3)]))

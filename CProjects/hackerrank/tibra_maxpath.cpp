@@ -30,15 +30,15 @@ public:
     Node *right;
 };
 
-void printTree(Node *root)
+void printTreeDepthFirst(Node *root)
 {
     if (root == NULL)
     {
         return;
     }
     cout << root->data << endl;
-    printTree(root->left);
-    printTree(root->right);
+    printTreeDepthFirst(root->left);
+    printTreeDepthFirst(root->right);
 }
 
 void printTree2(Node *root)
