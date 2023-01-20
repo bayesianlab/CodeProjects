@@ -176,6 +176,32 @@ ettools/fast:
 .PHONY : ettools/fast
 
 #=============================================================================
+# Target rules for targets named test_mamodel
+
+# Build rule for target.
+test_mamodel: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_mamodel
+.PHONY : test_mamodel
+
+# fast build rule for target.
+test_mamodel/fast:
+	$(MAKE) -f TimeSeries/CMakeFiles/test_mamodel.dir/build.make TimeSeries/CMakeFiles/test_mamodel.dir/build
+.PHONY : test_mamodel/fast
+
+#=============================================================================
+# Target rules for targets named test_armodel
+
+# Build rule for target.
+test_armodel: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_armodel
+.PHONY : test_armodel
+
+# fast build rule for target.
+test_armodel/fast:
+	$(MAKE) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/build
+.PHONY : test_armodel/fast
+
+#=============================================================================
 # Target rules for targets named optimtest
 
 # Build rule for target.
@@ -202,30 +228,17 @@ optim/fast:
 .PHONY : optim/fast
 
 #=============================================================================
-# Target rules for targets named fullcondnoar
+# Target rules for targets named test_fullconditionals
 
 # Build rule for target.
-fullcondnoar: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 fullcondnoar
-.PHONY : fullcondnoar
+test_fullconditionals: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_fullconditionals
+.PHONY : test_fullconditionals
 
 # fast build rule for target.
-fullcondnoar/fast:
-	$(MAKE) -f MultilevelModel/CMakeFiles/fullcondnoar.dir/build.make MultilevelModel/CMakeFiles/fullcondnoar.dir/build
-.PHONY : fullcondnoar/fast
-
-#=============================================================================
-# Target rules for targets named fullcond
-
-# Build rule for target.
-fullcond: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 fullcond
-.PHONY : fullcond
-
-# fast build rule for target.
-fullcond/fast:
-	$(MAKE) -f MultilevelModel/CMakeFiles/fullcond.dir/build.make MultilevelModel/CMakeFiles/fullcond.dir/build
-.PHONY : fullcond/fast
+test_fullconditionals/fast:
+	$(MAKE) -f MultilevelModel/CMakeFiles/test_fullconditionals.dir/build.make MultilevelModel/CMakeFiles/test_fullconditionals.dir/build
+.PHONY : test_fullconditionals/fast
 
 #=============================================================================
 # Target rules for targets named ml
@@ -253,10 +266,11 @@ help:
 	@echo "... Dist"
 	@echo "... ettest"
 	@echo "... ettools"
+	@echo "... test_mamodel"
+	@echo "... test_armodel"
 	@echo "... optimtest"
 	@echo "... optim"
-	@echo "... fullcondnoar"
-	@echo "... fullcond"
+	@echo "... test_fullconditionals"
 	@echo "... ml"
 .PHONY : help
 

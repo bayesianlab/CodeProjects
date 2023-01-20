@@ -3,6 +3,7 @@
 #include <Eigen/Dense>
 
 #include "ARMA.hpp"
+#include "MA.hpp"
 #include "GenerateAutoRegressiveData.hpp"
 #include "MultilevelModelFunctions.hpp"
 
@@ -34,6 +35,7 @@ int main() {
     cout << ar.storeBeta.colwise().mean() << endl;
     cout << "True Values sigma2 " << 1 << endl;
     cout << ar.storeSigma2.mean() << endl;
+    ar.bayesFit(); 
   }
   int ma = 0;
   if (ma == 1) {

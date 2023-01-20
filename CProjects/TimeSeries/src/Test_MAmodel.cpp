@@ -5,6 +5,7 @@
 #include "ARMA.hpp"
 #include "GenerateAutoRegressiveData.hpp"
 #include "MultilevelModelFunctions.hpp"
+#include "MA.hpp"
 
 using namespace std;
 using namespace Eigen;
