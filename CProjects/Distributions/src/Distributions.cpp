@@ -100,6 +100,14 @@ VectorXd normrnd(double mu, double sig, int N)
   return Z;
 }
 
+double normalpdflog(double value, double mean, double variance){
+  double lnsig = -log(sqrt(variance));
+  double log2pi = -.5*long(2*M_PI);
+  double isig = 1/variance; 
+  double v = -.5*(value-mean)*(value-mean) * isig; 
+  return lnsig+log2pi+v; 
+}
+
 MatrixXd normrnd(double mu, double sig, int N, int J)
 {
   MatrixXd Z(N, J);

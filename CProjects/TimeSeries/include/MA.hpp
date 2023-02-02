@@ -6,6 +6,7 @@
 #include <eigen3/unsupported/Eigen/KroneckerProduct>
 #include <iostream>
 #include <stdexcept>
+
 #include "BayesianUpdates.hpp"
 #include "Distributions.hpp"
 #include "Plotter.hpp"

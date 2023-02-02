@@ -32,10 +32,10 @@ void GenerateFactorData::genDataArErrors(const int &nObs, const int &nEqns,
   B0 = 100 * MatrixXd::Identity(betas.cols(), betas.cols());
 
   betas.resize(K * Xt.cols(), 1);
-  MatrixXd AF = OMI*Factors; 
+  MatrixXd AF = OMI * Factors;
   MatrixXd Xbeta = surForm(Xt, K) * betas;
   Xbeta.resize(K, T);
-  Xbeta = Xbeta + AF; 
+  Xbeta = Xbeta + AF;
   yt.setZero(K, T);
   for (int k = 0; k < K; ++k) {
     D0 = setInitialCovar(deltas.row(k), omVariance(k));
@@ -102,4 +102,53 @@ void GenerateFactorData::genData(int _nObs, int _nEqns,
   B0 = 100 * MatrixXd::Identity(nEqnsP, nEqnsP);
   g0 = RowVectorXd::Zero(factorLags);
   G0 = MatrixXd::Identity(factorLags, factorLags);
+}
+
+void GenerateFactorData::breakPointGenData(
+    int Time, int nEqns, const Matrix<int, Dynamic, 2> &InfoMat, int breakpoint, double loadingMag) {
+  double facVar = 1;
+  betas = VectorXd::Ones(2);
+  if (betas.size() == 1) {
+    Xt = MatrixXd::Ones(Time * nEqns, betas.size());
+  } else {
+    Xt = MatrixXd::Ones(Time * nEqns, betas.size());
+    Xt.rightCols(betas.size() - 1) =
+        normrnd(0, 1, Time * nEqns, betas.size() - 1);
+  }
+  surX = surForm(Xt, nEqns);
+
+  nEqnsP = surX.cols();
+  VectorXd allBetas = betas.replicate(nEqns, 1);
+  Xbeta = surX * allBetas;
+  Xbeta.resize(nEqns, Time);
+  nFactors = InfoMat.rows();
+  MatrixXd A = loadingMag*MatrixXd::Ones(K, nFactors);
+  for (int i = 0; i < A.rows(); ++i) {
+    for (int j = 0; j < nFactors; ++j) {
+      if (j > i) {
+        A(i, j) = 0;
+      }
+    }
+  }
+  
+  gammas = .25*VectorXd::Ones(nFactors);
+  int factorLags = gammas.cols();
+
+  factorVariances = facVar * VectorXd::Ones(nFactors, 1);
+
+  FactorPrecision = MakePrecision(gammas, factorVariances, Time);
+
+  MatrixXd FactorCovar = FactorPrecision.householderQr().solve(
+      MatrixXd::Identity(FactorPrecision.rows(), FactorPrecision.rows()));
+
+  Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
+  Factors.resize(nFactors, Time);
+  MatrixXd AFactors = MatrixXd::Zero(nEqns, Time);
+  cout << Factors << endl; 
+  MatrixXd Factorbreak1 = Factors.block(0,0, nFactors, breakpoint);
+  Factors.block(0, breakpoint+1, nFactors, breakpoint); 
+  AF = Loadings * Factors;
+  mu = AF + Xbeta;
+  MatrixXd nu = normrnd(0, 1, nEqns, Time);
+  yt = mu + nu;
 }

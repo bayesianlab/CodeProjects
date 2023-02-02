@@ -49,10 +49,10 @@ class GenerateFactorData {
   MatrixXd deltas;
   // For KOW model
   void genDataArErrors(const int &nObs, const int &nEqns, const int &nXs,
-               const double &coeffValues,
-               const Matrix<int, Dynamic, 2> &InfoMap,
-               const RowVectorXd &gammas, const RowVectorXd &omArTerms,
-               const double &omVar);
+                       const double &coeffValues,
+                       const Matrix<int, Dynamic, 2> &InfoMap,
+                       const RowVectorXd &gammas, const RowVectorXd &omArTerms,
+                       const double &omVar);
 
   void genData(int nObs, int nEqns, const VectorXd &coeffValues,
                const Matrix<int, Dynamic, 2> &InfoMap,
@@ -71,5 +71,8 @@ class GenerateFactorData {
     }
     Loadings = Identity.array() * Loadings.array();
   }
+  void breakPointGenData(int Time, int nEqns,
+                         const Matrix<int, Dynamic, 2> &InfoMat, int breakpoint,
+                         double loadingMag);
 };
 #endif

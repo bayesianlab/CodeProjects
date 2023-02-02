@@ -111,6 +111,8 @@ VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2, const i
 
 double normalCDF(double value);
 
+double normalpdflog(double value, double mean, double variance); 
+
 double inverseCDFTruncatedNormal(const double &lowercut);
 
 MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints, const RowVectorXd &mu,

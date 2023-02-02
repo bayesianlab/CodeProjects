@@ -176,19 +176,6 @@ ettools/fast:
 .PHONY : ettools/fast
 
 #=============================================================================
-# Target rules for targets named test_mamodel
-
-# Build rule for target.
-test_mamodel: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 test_mamodel
-.PHONY : test_mamodel
-
-# fast build rule for target.
-test_mamodel/fast:
-	$(MAKE) -f TimeSeries/CMakeFiles/test_mamodel.dir/build.make TimeSeries/CMakeFiles/test_mamodel.dir/build
-.PHONY : test_mamodel/fast
-
-#=============================================================================
 # Target rules for targets named test_armodel
 
 # Build rule for target.
@@ -226,6 +213,19 @@ optim: cmake_check_build_system
 optim/fast:
 	$(MAKE) -f OptimizationTools/CMakeFiles/optim.dir/build.make OptimizationTools/CMakeFiles/optim.dir/build
 .PHONY : optim/fast
+
+#=============================================================================
+# Target rules for targets named test_timebreak
+
+# Build rule for target.
+test_timebreak: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 test_timebreak
+.PHONY : test_timebreak
+
+# fast build rule for target.
+test_timebreak/fast:
+	$(MAKE) -f MultilevelModel/CMakeFiles/test_timebreak.dir/build.make MultilevelModel/CMakeFiles/test_timebreak.dir/build
+.PHONY : test_timebreak/fast
 
 #=============================================================================
 # Target rules for targets named test_fullconditionals
@@ -266,10 +266,10 @@ help:
 	@echo "... Dist"
 	@echo "... ettest"
 	@echo "... ettools"
-	@echo "... test_mamodel"
 	@echo "... test_armodel"
 	@echo "... optimtest"
 	@echo "... optim"
+	@echo "... test_timebreak"
 	@echo "... test_fullconditionals"
 	@echo "... ml"
 .PHONY : help

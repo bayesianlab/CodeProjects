@@ -110,13 +110,13 @@ MatrixXd setInitialCovar(const MatrixBase<Derived1> &params,
   int rows2 = SkronS.rows();
   MatrixXd Irows2 = MatrixXd::Identity(rows2, rows2);
   MatrixXd Varmat(rows * lags, rows);
-  Varmat << var, MatrixXd::Zero(rows * (lags - 1), rows);
+  Varmat << 1, MatrixXd::Zero(rows * (lags - 1), rows);
   MatrixXd outerp = Varmat * Varmat.transpose();
   outerp.resize(rows * rows * lags * lags, 1);
   MatrixXd P0 = (Irows2 - SkronS).householderQr().solve(outerp);
   P0.resize(rows * lags, rows * lags);
   if (isPD(P0)) {
-    return P0;
+    return var*P0;
   } else {
     return MatrixXd::Identity(rows * lags, rows * lags);
   }

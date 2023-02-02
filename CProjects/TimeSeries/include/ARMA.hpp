@@ -17,6 +17,7 @@ using namespace std;
 
 class ARMA {
  public:
+
   VectorXd autoCorr(const VectorXd &yt, int plot = 1) {
     double g0 = yt.transpose() * yt;
     VectorXd acf(20);
@@ -262,130 +263,6 @@ class ARMA {
                         (logmvnpdfCentered(epsilonstarold, dden) +
                          logmvnpdf(gammastar, g0, G0) -
                          logmvnpdf(proposal, v.transpose(), Vinv)));
-  }
-};
-
-class AutoregressiveModel : public BayesBetaUpdater, public ARMA {
- public:
-  VectorXd yt;
-  MatrixXd Xt;
-  RowVectorXd b0;
-  MatrixXd B0;
-  RowVectorXd g0;
-  MatrixXd G0;
-  MatrixXd arparams;
-  VectorXd sigma2;
-  double r0;
-  double R0;
-  MatrixXd storeBeta;
-  MatrixXd storeArParams;
-  VectorXd storeSigma2;
-  int Sims;
-  int burnin;
-  int estMean;
-
-  void setModel(const VectorXd &_yt, const MatrixXd &_Xt, const MatrixXd &_g0,
-                const MatrixXd &_G0, const double &_r0, const double &_R0,
-                const RowVectorXd &_b0, const MatrixXd &_B0) {
-    yt = yt;
-    Xt = Xt;
-    b0 = b0;
-    B0 = B0;
-    r0 = r0;
-    R0 = R0;
-    g0 = g0;
-    G0 = G0;
-    estMean = 0;
-  }
-
-  void setModel(const VectorXd &_yt, const MatrixXd &_g0, const MatrixXd &_G0,
-                const double &_r0, const double &_R0) {
-    yt = yt;
-    r0 = r0;
-    R0 = R0;
-    g0 = g0;
-    G0 = G0;
-    estMean = 1;
-  }
-
-  void runAr(const int &_Sims, const int _burnin) {
-    Sims = _Sims;
-    burnin = _burnin;
-    if (estMean == 1) {
-      runNoMeanAr();
-    }
-    int T = yt.rows();
-    int lags = g0.cols();
-    RowVectorXd arparams = RowVectorXd::Zero(lags);
-    MatrixXd Xthat = lagPolynomial(Xt, arparams, lags, 1);
-    VectorXd ythat = lagPolynomial(yt, arparams, lags, 1);
-    VectorXd epsilons(T);
-    VectorXd residuals(T);
-    MatrixXd D0(lags, lags);
-    MatrixXd Ilags = MatrixXd::Identity(lags, lags);
-    storeBeta.resize(Sims - burnin, Xt.cols());
-    storeArParams.resize(Sims - burnin, lags);
-    storeSigma2.resize(Sims - burnin);
-    double sigma2 = 1;
-    RowVectorXd bnew(b0.size());
-    for (int i = 0; i < Sims; ++i) {
-      cout << "Sim " << i << endl;
-      ythat = lagPolynomial(yt, arparams, lags, 1);
-      Xthat = lagPolynomial(Xt, arparams, lags, 1);
-      bnew = updateBeta(ythat, Xthat, sigma2, b0, B0);
-      epsilons = yt - Xt * bnew.transpose();
-      arparams =
-          updateArParameters(epsilons.transpose(), arparams, sigma2, g0, G0);
-      D0 = setInitialCovar(arparams, sigma2);
-      D0 = D0.ldlt().solve(Ilags);
-      D0 = D0.llt().matrixL();
-      residuals.topRows(lags) =
-          (epsilons.transpose().leftCols(lags) * D0).transpose();
-      residuals.bottomRows(T - lags) = ythat - Xthat * bnew.transpose();
-      sigma2 = updateSigma2(residuals.transpose(), r0, R0).value();
-      if (i >= burnin) {
-        storeBeta.row(i - burnin) = bnew.transpose();
-        storeArParams.row(i - burnin) = arparams;
-        storeSigma2(i - burnin) = sigma2;
-      }
-    }
-  }
-
-  void runNoMeanAr() {
-    int T = yt.rows();
-    int lags = g0.cols();
-    RowVectorXd arparams = RowVectorXd::Zero(lags);
-    MatrixXd Xthat = lagPolynomial(Xt, arparams, lags, 1);
-    VectorXd ythat = lagPolynomial(yt, arparams, lags, 1);
-    VectorXd epsilons(T);
-    VectorXd residuals(T);
-    MatrixXd D0(lags, lags);
-    MatrixXd Ilags = MatrixXd::Identity(lags, lags);
-    storeArParams.resize(Sims - burnin, lags);
-    storeSigma2.resize(Sims - burnin);
-    double sigma2 = 1;
-    for (int i = 0; i < Sims; ++i) {
-      cout << "Sim " << i << endl;
-      ythat = lagPolynomial(yt, arparams, lags, 1);
-      arparams =
-          updateArParameters(ythat.transpose(), arparams, sigma2, g0, G0);
-      ythat = lagPolynomial(yt, arparams, lags, 1);
-      D0 = setInitialCovar(arparams, sigma2);
-      D0 = D0.ldlt().solve(Ilags);
-      D0 = D0.llt().matrixL();
-      residuals.topRows(lags) =
-          (epsilons.transpose().leftCols(lags) * D0).transpose();
-      residuals.bottomRows(T - lags) = ythat;
-      sigma2 = updateSigma2(residuals.transpose(), r0, R0).value();
-      if (i >= burnin) {
-        storeArParams.row(i - burnin) = arparams;
-        storeSigma2(i - burnin) = sigma2;
-      }
-    }
-  }
-
-  void bayesFit(){
-    plotter("yt", yt); 
   }
 };
 

@@ -35,13 +35,12 @@ int main(int argc, char *argv[]) {
   MatrixXd gammas = readCSV(gammapath);
   MatrixXd deltas = readCSV(gammapath);
 
-  Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
-  int K = yt.rows();
-  int T = yt.cols();
-  int nFactors = InfoMat.rows();
-  FullConditionals fcond;
-  fcond.easySetModel(yt, Xt, gammas, deltas, InfoMat);
-  fcond.runModel(10,2);
-  fcond.ml(); 
-  fcond.summary(); 
+  // Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
+  // int K = yt.rows();
+  // int T = yt.cols();
+  // int nFactors = InfoMat.rows();
+  // FullConditionals fcond(yt, Xt, gammas, deltas, InfoMat);
+  // fcond.runModel(10,2);
+  // fcond.ml(); 
+  // fcond.summary(); 
 }

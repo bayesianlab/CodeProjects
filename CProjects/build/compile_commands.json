@@ -26,11 +26,6 @@
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/TimeSeries",
-  "command": "/usr/lib/ccache/c++   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/local/include/stats-master/include -I/usr/local/include/gcem/include  -g   -std=gnu++11 -o CMakeFiles/test_mamodel.dir/src/Test_MAmodel.cpp.o -c /home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_MAmodel.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_MAmodel.cpp"
-},
-{
-  "directory": "/home/dillon/CodeProjects/CProjects/build/TimeSeries",
   "command": "/usr/lib/ccache/c++   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/local/include/stats-master/include -I/usr/local/include/gcem/include  -g   -std=gnu++11 -o CMakeFiles/test_armodel.dir/src/Test_ArModel.cpp.o -c /home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/TimeSeries/src/Test_ArModel.cpp"
 },
@@ -58,6 +53,11 @@
   "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
   "command": "/usr/lib/ccache/c++   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/local/include/stats-master/include -I/usr/local/include/gcem/include  -g   -std=gnu++11 -o CMakeFiles/optim.dir/src/Optimization.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel",
+  "command": "/usr/lib/ccache/c++   -I/usr/local/include/eigen3 -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/local/include/stats-master/include -I/usr/local/include/gcem/include  -g   -std=gnu++11 -o CMakeFiles/test_timebreak.dir/src/test_timebreak.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/test_timebreak.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/test_timebreak.cpp"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel",
