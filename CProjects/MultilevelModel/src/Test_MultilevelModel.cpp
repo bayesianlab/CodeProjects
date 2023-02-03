@@ -83,10 +83,10 @@ int main()
     }
 
     int otrokwhitemantest = 0;
-    int chanandj = 0;
+    int chanandj = 1;
     int comparemethods = 0;
     int realdata_kow = 0;
-    int realdata_intlike = 1;
+    int realdata_intlike = 0;
     if (otrokwhitemantest)
     {
         /* Run the standard otrok whiteman model, 1 factor*/
@@ -341,8 +341,8 @@ int main()
         Matrix<int, Dynamic, 2> InfoMat = castToInfoMat(I);
         int K = yt.rows();
         int T = yt.cols();
-        int sims = 10;
-        int burnin = 1;
+        int sims = 800;
+        int burnin = 100;
         int nFactors = InfoMat.rows();
         MatrixXd Xt2(K * T, xvals.cols() + 1);
         Xt2 << VectorXd::Ones(K * T), xvals;
@@ -367,7 +367,7 @@ int main()
 
         intlike.setModel(yt, Xt2, A, Factors, gammas2, InfoMat, b02, B02, a0, A0, r0, R0, g0, G0);
         intlike.runModel(sims, burnin);
-        // intlike.ml();
+        intlike.ml();
     }
     return 0;
 }
