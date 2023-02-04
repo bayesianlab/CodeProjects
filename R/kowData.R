@@ -14,7 +14,7 @@ KOW <- cbind(pwt90[pwt90$countrycode == 'USA' & pwt90$year >= 1960, c('year', 'r
              pwt90[pwt90$countrycode == 'HND' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'JAM' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'PAN' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
-             pwt90[pwt90$countrycode == 'TTO' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
+             #pwt90[pwt90$countrycode == 'TTO' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'ARG' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'BOL' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'BRA' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
@@ -24,7 +24,7 @@ KOW <- cbind(pwt90[pwt90$countrycode == 'USA' & pwt90$year >= 1960, c('year', 'r
              pwt90[pwt90$countrycode == 'PRY' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'PER' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'URY' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
-             pwt90[pwt90$countrycode == 'VEN' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
+             #pwt90[pwt90$countrycode == 'VEN' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'FRA' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'AUT' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'BEL' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
@@ -49,7 +49,7 @@ KOW <- cbind(pwt90[pwt90$countrycode == 'USA' & pwt90$year >= 1960, c('year', 'r
              pwt90[pwt90$countrycode == 'MAR' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'SEN' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'ZAF' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
-             pwt90[pwt90$countrycode == 'ZWE' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
+             #pwt90[pwt90$countrycode == 'ZWE' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'BGD' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'IND' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
              pwt90[pwt90$countrycode == 'IDN' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rnna')],
@@ -123,93 +123,75 @@ KOW <- cbind(pwt90[pwt90$countrycode == 'USA' & pwt90$year >= 1960, c('year', 'r
 #              pwt90[pwt90$countrycode == 'SGP' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rkna')],
 #              pwt90[pwt90$countrycode == 'THA' & pwt90$year >= 1960, c('rgdpna', 'rconna', 'rkna')])
 
-colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rnnaUSA',
-  'rgdpnaCAN', 'rconnaCAN', 'rnnaCAN',
-  'rgdpnaMEX', 'rconnaMEX', 'rnnaMEX',
-  'rgdpnaAUS', 'rconnaAUS', 'rnnaAUS',
-  'rgdpnaNZL', 'rconnaNZL', 'rnnaNZL',
-  'rgdpnaCRI', 'rconnaCRI', 'rnnaCRI',
-  'rgdpnaDOM', 'rconnaDOM', 'rnnaDOM',
-  'rgdpnaSLV', 'rconnaSLV', 'rnnaSLV',
-  'rgdpnaGTM', 'rconnaGTM', 'rnnaGTM',
-  'rgdpnaHND', 'rconnaHND', 'rnnaHND',
-  'rgdpnaJAM', 'rconnaJAM', 'rnnaJAM',
-  'rgdpnaPAN', 'rconnaPAN', 'rnnaPAN',
-  'rgdpnaTTO', 'rconnaTTO', 'rnnaTTO',
-  'rgdpnaARG', 'rconnaARG', 'rnnaARG',
-  'rgdpnaBOL', 'rconnaBOL', 'rnnaBOL',
-  'rgdpnaBRA', 'rconnaBRA', 'rnnaBRA',
-  'rgdpnaCHL', 'rconnaCHL', 'rnnaCHL',
-  'rgdpnaCOL', 'rconnaCOL', 'rnnaCOL',
-  'rgdpnaECU', 'rconnaECU', 'rnnaECU',
-  'rgdpnaPRY', 'rconnaPRY', 'rnnaPRY',
-  'rgdpnaPER', 'rconnaPER', 'rnnaPER',
-  'rgdpnaURY', 'rconnaURY', 'rnnaURY',
-  'rgdpnaVEN', 'rconnaVEN', 'rnnaVEN',
-  'rgdpnaFRA', 'rconnaFRA', 'rnnaFRA',
-  'rgdpnaAUT', 'rconnaAUT', 'rnnaAUT',
-  'rgdpnaBEL', 'rconnaBEL', 'rnnaBEL',
-  'rgdpnaDNK', 'rconnaDNK', 'rnnaDNK',
-  'rgdpnaFIN', 'rconnaFIN', 'rnnaFIN',
-  'rgdpnaDEU', 'rconnaDEU', 'rnnaDEU',
-  'rgdpnaGRC', 'rconnaGRC', 'rnnaGRC',
-  'rgdpnaISL', 'rconnaISL', 'rnnaISL',
-  'rgdpnaIRL', 'rconnaIRL', 'rnnaIRL',
-  'rgdpnaITA', 'rconnaITA', 'rnnaITA',
-  'rgdpnaLUX', 'rconnaLUX', 'rnnaLUX',
-  'rgdpnaNLD', 'rconnaNLD', 'rnnaNLD',
-  'rgdpnaNOR', 'rconnaNOR', 'rnnaNOR',
-  'rgdpnaPRT', 'rconnaPRT', 'rnnaPRT',
-  'rgdpnaESP', 'rconnaESP', 'rnnaESP',
-  'rgdpnaSWE', 'rconnaSWE', 'rnnaSWE',
-  'rgdpnaCHE', 'rconnaCHE', 'rnnaCHE',
-  'rgdpnaGBR', 'rconnaGBR', 'rnnaGBR',
-  'rgdpnaCMR', 'rconnaCMR', 'rnnaCMR',
-  'rgdpnaCIV', 'rconnaCIV', 'rnnaCIV',
-  'rgdpnaKEN', 'rconnaKEN', 'rnnaKEN',
-  'rgdpnaMAR', 'rconnaMAR', 'rnnaMAR',
-  'rgdpnaSEN', 'rconnaSEN', 'rnnaSEN',
-  'rgdpnaZAF', 'rconnaZAF', 'rnnaZAF',
-  'rgdpnaZWE', 'rconnaZWE', 'rnnaZWE',
-  'rgdpnaBGD', 'rconnaBGD', 'rnnaBGD',
-  'rgdpnaIND', 'rconnaIND', 'rnnaIND',
-  'rgdpnaIDN', 'rconnaIDN', 'rnnaIDN',
-  'rgdpnaPAK', 'rconnaPAK', 'rnnaPAK',
-  'rgdpnaPHL', 'rconnaPHL', 'rnnaPHL',
-  'rgdpnaLKA', 'rconnaLKA', 'rnnaLKA',
-  'rgdpnaHKG', 'rconnaHKG', 'rnnaHKG',
-  'rgdpnaJPN', 'rconnaJPN', 'rnnaJPN',
-  'rgdpnaKOR', 'rconnaKOR', 'rnnaKOR',
-  'rgdpnaMYS', 'rconnaMYS', 'rnnaMYS',
-  'rgdpnaSGP', 'rconnaSGP', 'rnnaSGP',
-  'rgdpnaTHA', 'rconnaTHA', 'rnnaTHA')
+colnames(KOW) <- c('year', 'rgdpnaUSA', 'rconnaUSA', 'rcapUSA',
+  'rgdpnaCAN', 'rconnaCAN', 'rcapCAN',
+  'rgdpnaMEX', 'rconnaMEX', 'rcapMEX',
+  'rgdpnaAUS', 'rconnaAUS', 'rcapAUS',
+  'rgdpnaNZL', 'rconnaNZL', 'rcapNZL',
+  'rgdpnaCRI', 'rconnaCRI', 'rcapCRI',
+  'rgdpnaDOM', 'rconnaDOM', 'rcapDOM',
+  'rgdpnaSLV', 'rconnaSLV', 'rcapSLV',
+  'rgdpnaGTM', 'rconnaGTM', 'rcapGTM',
+  'rgdpnaHND', 'rconnaHND', 'rcapHND',
+  'rgdpnaJAM', 'rconnaJAM', 'rcapJAM',
+  'rgdpnaPAN', 'rconnaPAN', 'rcapPAN',
+  #'rgdpnaTTO', 'rconnaTTO', 'rcapTTO',
+  'rgdpnaARG', 'rconnaARG', 'rcapARG',
+  'rgdpnaBOL', 'rconnaBOL', 'rcapBOL',
+  'rgdpnaBRA', 'rconnaBRA', 'rcapBRA',
+  'rgdpnaCHL', 'rconnaCHL', 'rcapCHL',
+  'rgdpnaCOL', 'rconnaCOL', 'rcapCOL',
+  'rgdpnaECU', 'rconnaECU', 'rcapECU',
+  'rgdpnaPRY', 'rconnaPRY', 'rcapPRY',
+  'rgdpnaPER', 'rconnaPER', 'rcapPER',
+  'rgdpnaURY', 'rconnaURY', 'rcapURY',
+  #'rgdpnaVEN', 'rconnaVEN', 'rcapVEN',
+  'rgdpnaFRA', 'rconnaFRA', 'rcapFRA',
+  'rgdpnaAUT', 'rconnaAUT', 'rcapAUT',
+  'rgdpnaBEL', 'rconnaBEL', 'rcapBEL',
+  'rgdpnaDNK', 'rconnaDNK', 'rcapDNK',
+  'rgdpnaFIN', 'rconnaFIN', 'rcapFIN',
+  'rgdpnaDEU', 'rconnaDEU', 'rcapDEU',
+  'rgdpnaGRC', 'rconnaGRC', 'rcapGRC',
+  'rgdpnaISL', 'rconnaISL', 'rcapISL',
+  'rgdpnaIRL', 'rconnaIRL', 'rcapIRL',
+  'rgdpnaITA', 'rconnaITA', 'rcapITA',
+  'rgdpnaLUX', 'rconnaLUX', 'rcapLUX',
+  'rgdpnaNLD', 'rconnaNLD', 'rcapNLD',
+  'rgdpnaNOR', 'rconnaNOR', 'rcapNOR',
+  'rgdpnaPRT', 'rconnaPRT', 'rcapPRT',
+  'rgdpnaESP', 'rconnaESP', 'rcapESP',
+  'rgdpnaSWE', 'rconnaSWE', 'rcapSWE',
+  'rgdpnaCHE', 'rconnaCHE', 'rcapCHE',
+  'rgdpnaGBR', 'rconnaGBR', 'rcapGBR',
+  'rgdpnaCMR', 'rconnaCMR', 'rcapCMR',
+  'rgdpnaCIV', 'rconnaCIV', 'rcapCIV',
+  'rgdpnaKEN', 'rconnaKEN', 'rcapKEN',
+  'rgdpnaMAR', 'rconnaMAR', 'rcapMAR',
+  'rgdpnaSEN', 'rconnaSEN', 'rcapSEN',
+  'rgdpnaZAF', 'rconnaZAF', 'rcapZAF',
+  #'rgdpnaZWE', 'rconnaZWE', 'rcapZWE',
+  'rgdpnaBGD', 'rconnaBGD', 'rcapBGD',
+  'rgdpnaIND', 'rconnaIND', 'rcapIND',
+  'rgdpnaIDN', 'rconnaIDN', 'rcapIDN',
+  'rgdpnaPAK', 'rconnaPAK', 'rcapPAK',
+  'rgdpnaPHL', 'rconnaPHL', 'rcapPHL',
+  'rgdpnaLKA', 'rconnaLKA', 'rcapLKA',
+  'rgdpnaHKG', 'rconnaHKG', 'rcapHKG',
+  'rgdpnaJPN', 'rconnaJPN', 'rcapJPN',
+  'rgdpnaKOR', 'rconnaKOR', 'rcapKOR',
+  'rgdpnaMYS', 'rconnaMYS', 'rcapMYS',
+  'rgdpnaSGP', 'rconnaSGP', 'rcapSGP',
+  'rgdpnaTHA', 'rconnaTHA', 'rcapTHA')
 
-KOWpercent <- (KOW[2:nrow(KOW),2:181] - KOW[1:nrow(KOW)-1, 2:181])/KOW[2:nrow(KOW), 2:181]
-KOWlfd <- log(KOW[2:nrow(KOW),2:181]) - log(KOW[1:nrow(KOW)-1, 2:181])
-k <- round(t(KOWlfd), 10)
-k <- k-apply(k, 1, mean)
+numcols = ncol(KOW)
+KOWlfd <- log(KOW[2:nrow(KOW),2:ncol(KOW)]) - log(KOW[1:nrow(KOW)-1, 2:numcols])
 
-codePath <- '~/CodeProjects/CProjects/MultilevelModel/'
+codePath <- '~/CodeProjects/CProjects/build/'
 dataPath <- '~/GoogleDrive/Datasets/'
-# write.csv(KOWpercent, '~/GoogleDrive/Datasets/kow_percent.csv', row.names = FALSE)
-# write.csv(KOW, '~/GoogleDrive/Datasets/kow_raw.csv', row.names = FALSE)
-# write.csv(KOWlfd, '~/GoogleDrive/Datasets/kow_march6.csv', row.names = FALSE)
-write.table(k[,2:ncol(k)], paste(codePath, 'kow.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
-
-r <- nrow(k)/3
-Xt <- matrix(0, nrow=3*r*(ncol(k)-1), ncol=3)
-ones <-matrix(rep(1,3,1), nrow=3, ncol=1)
 
 
-for(t in 1:(ncol(k)-1))
-{
-  for (j in 1:r)
-  {
-    w <- (1:3) + ((j-1)*3)
-    q <- w + ( (t-1)*180 )
-    Xt[q, ] = kronecker(ones, t(as.matrix(k[w, t])))
-  }
-}
-write.table(Xt, paste(codePath, 'kowXt.csv', sep=''), row.names = FALSE, col.names=FALSE, sep=",")
 
-
+r <- nrow(KOWlfd)/3
+ncolkow <- ncol(KOWlfd) 
+Xt <- matrix(0, nrow=3*r*(ncolkow-1), ncol=3)

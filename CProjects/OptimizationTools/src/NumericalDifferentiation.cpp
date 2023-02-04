@@ -34,7 +34,7 @@ VectorXd NumericalDifferentiation::CentralDifferences(const Ref<const VectorXd> 
     return grad;
 }
 
-MatrixXd NumericalDifferentiation::AprroximateHessian(const Ref<const VectorXd> &point,
+MatrixXd NumericalDifferentiation::ApproximateHessian(const Ref<const VectorXd> &point,
                                                   std::function<double(const Ref<const VectorXd> &xstar)> F)
 {
     double fval1 = F(point);

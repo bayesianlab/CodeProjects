@@ -13,7 +13,9 @@ using namespace std;
 using namespace Eigen; 
 using namespace boost;
 
-void writeToCSVfile(string name, MatrixXd matrix);
+void writeToCSVfile(string name, const MatrixXd &matrix);
+
+int plotter(string filename, const VectorXd &A);
 
 int plotter(string filename, const VectorXd &A, const VectorXd &B);
 

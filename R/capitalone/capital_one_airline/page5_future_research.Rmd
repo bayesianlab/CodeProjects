@@ -1,0 +1,25 @@
+---
+title: "(5) Future Research"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: lumen
+---
+# Back to main page
+- [Click here to go back to main page](capitalone_data.html)
+
+# Future Research 
+
+The following summary will describe things that should be done in future work to make this research better. 
+
+# Supply and Demand
+I attempted many different ways of manipulating the data to estimate supply and demand equations for flights. However, it does not seem like there is an effective way to do this from the data at hand. With an effective equation for demand and supply airports that are undervalued could be identified and exploited. 
+
+# Nonlinear optimization
+Another area that needs further work is introducing nonlinearities in the profit equation for optimization. Profit only depends linearly on distance and other variables. Therefore, nonlinear optimization methods will merely maximize the variables with positive partial effects and shrink to negative infinity the variables with negative partial effects. However, there is clearly a nonlinear effect to these variables. Distance cannot be 0 or even small because then other modes of transportation are viable. Similarly, fare price has a diminishing effect as well. Fare cannot be increased to infinity, people will stop buying and switch to other airlines. Adequate representation of these equations would enable one to optimize the profit in a more effective way. Once this was known flights could be picked that maximized profit and were as close to the maximal values as possible. 
+
+# Key indicators
+In the future, in order to make sure that these recommendations are the best for the company it will be critical to make sure ***average itinerary fare*** is tracked carefully along with ***occupancy rate***. Keeping high ***occupancy rates above 64% on average and high itinerary fares above $700 per flight would ensure a high payoff even for longer distance flights to high fee airports.*** 
+

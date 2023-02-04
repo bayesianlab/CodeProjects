@@ -11,7 +11,7 @@ double LineSearchRoutines::LineSearch(const Ref<const VectorXd> &point, const Re
     double F0 = F(point);
     double alphalast = 0.;
     double Flast = F0;
-    double alphamax = 10.;
+    double alphamax = 2.;
     double Fhi = F(point + alphamax * pk);
     double Fprimehi = ForwardDifferences(point + alphamax * pk, F).transpose() * pk;
     double alphacurrent = 1;
@@ -58,6 +58,7 @@ double LineSearchRoutines::LineSearch(const Ref<const VectorXd> &point, const Re
         Flast = Fcurrent;
         try
         {
+            // cout << "try" << endl; 
             alphacurrent = CubicInterpolation(Fcurrent, Fhi, Fprimecurrent, Fprimehi, alphacurrent, alphamax);
         }
         catch (domain_error const &)
@@ -91,7 +92,8 @@ double LineSearchRoutines::Zoom(double alo, double ahi, const Ref<const VectorXd
         }
         catch (domain_error const &)
         {
-
+            cout << "Domain error in line search, using GoldenSection" << endl; 
+            flag = 1; 
             aj = GoldenSection(point, pk, alo, ahi, F, 10);
         }
         if (abs(alo - aj) < line_search_tol || abs(ahi - aj) < line_search_tol)

@@ -1,7 +1,7 @@
 #include <chrono>
 #include <iostream>
-
-#include <eigen-3.3.9/Eigen/Dense>
+#include <Plotter.hpp>
+#include <Eigen/Dense>
 #include <boost/random/mersenne_twister.hpp>
 
 #include "Distributions.hpp"
@@ -12,6 +12,9 @@ int main(int argc, char *argv[])
 {
 
     int on = 0;
+    int shiftedexponential = 0;
+    int truncnorm = 0;
+    int tmvn = 1;
     if (on)
     {
         int n = 3;
@@ -72,18 +75,48 @@ int main(int argc, char *argv[])
         cout << logmvtpdf(x, mu, sig, 15) << endl;
         cout << "Correct answer"
              << " -3.3695" << endl;
+
+        VectorXd RandVals = unifrnd(1, 10, 10);
+        cout << "Correct Answer:" << endl;
+        cout << log(RandVals.mean()) << endl;
+        RandVals = RandVals.array().log();
+        cout << "Should be equal to:" << endl;
+        cout << logavg(RandVals) << endl;
+        RandVals = unifrnd(1, 100, 1000);
+        cout << "Correct Answer:" << endl;
+        cout << log(RandVals.mean()) << endl;
+        RandVals = RandVals.array().log();
+        cout << "Should be equal to:" << endl;
+        cout << logavg(RandVals) << endl;
     }
-    VectorXd RandVals = unifrnd(1, 10, 10);
-    cout << "Correct Answer:" << endl;
-    cout << log(RandVals.mean()) << endl;
-    RandVals = RandVals.array().log();
-    cout << "Should be equal to:" << endl;
-    cout << logavg(RandVals) << endl;
-    RandVals = unifrnd(1, 100, 1000);
-    cout << "Correct Answer:" << endl;
-    cout << log(RandVals.mean()) << endl;
-    RandVals = RandVals.array().log();
-    cout << "Should be equal to:" << endl;
-    cout << logavg(RandVals) << endl;
+
+    if(shiftedexponential)
+    {
+        VectorXd V = shiftedExponential(-2, 1, 1000);
+        writeToCSVfile("V.csv", V);
+        cout << normalCDF(0) << endl;
+        cout << normalCDF(1) << endl; 
+        cout << normalCDF(-1) << endl; 
+    }
+
+    if(truncnorm)
+    {
+        VectorXd Y = NormalTruncatedPositive(1,1,10000);
+        writeToCSVfile("Y.csv", Y);
+    }
+    if(tmvn)
+    {
+        int K = 3; 
+        RowVectorXd constraints(K);
+        RowVectorXd mu(K);
+        MatrixXd Sigma(K,K);
+        Sigma = CreateSigma(.2,K);
+        cout << Sigma << endl; 
+        constraints << 1,1,-1;
+        mu << 0,-3,0;
+        MatrixXd sample = mvtnrnd(constraints, constraints, mu, Sigma, 100,10);
+        cout << sample << endl; 
+    }
+
     return 0;
 }

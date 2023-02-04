@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/home/dillon4287/CodeProjects/CProjects/OptimizationTools/src",
+  "command": "ccache /usr/bin/c++    -I/usr/include/eigen3 -I/home/dillon4287/CodeProjects/CProjects/OptimizationTools/include  -g   -Wall -Wextra -std=gnu++11 -o CMakeFiles/opt.dir/Test_Optimization.cpp.o -c /home/dillon4287/CodeProjects/CProjects/OptimizationTools/src/Test_Optimization.cpp",
+  "file": "/home/dillon4287/CodeProjects/CProjects/OptimizationTools/src/Test_Optimization.cpp"
+},
+{
+  "directory": "/home/dillon4287/CodeProjects/CProjects/OptimizationTools/src",
+  "command": "ccache /usr/bin/c++    -I/usr/include/eigen3 -I/home/dillon4287/CodeProjects/CProjects/OptimizationTools/include  -g   -Wall -Wextra -std=gnu++11 -o CMakeFiles/opt.dir/Optimization.cpp.o -c /home/dillon4287/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp",
+  "file": "/home/dillon4287/CodeProjects/CProjects/OptimizationTools/src/Optimization.cpp"
+},
+{
+  "directory": "/home/dillon4287/CodeProjects/CProjects/OptimizationTools/src",
+  "command": "ccache /usr/bin/c++    -I/usr/include/eigen3 -I/home/dillon4287/CodeProjects/CProjects/OptimizationTools/include  -g   -Wall -Wextra -std=gnu++11 -o CMakeFiles/opt.dir/LineSearchRoutines.cpp.o -c /home/dillon4287/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp",
+  "file": "/home/dillon4287/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp"
+},
+{
+  "directory": "/home/dillon4287/CodeProjects/CProjects/OptimizationTools/src",
+  "command": "ccache /usr/bin/c++    -I/usr/include/eigen3 -I/home/dillon4287/CodeProjects/CProjects/OptimizationTools/include  -g   -Wall -Wextra -std=gnu++11 -o CMakeFiles/opt.dir/NumericalDifferentiation.cpp.o -c /home/dillon4287/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp",
+  "file": "/home/dillon4287/CodeProjects/CProjects/OptimizationTools/src/NumericalDifferentiation.cpp"
+}
+]

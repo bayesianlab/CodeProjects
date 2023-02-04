@@ -1,0 +1,51 @@
+# Top level cmake 
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+project(multilevel)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_BUILD_TYPE DEBUG)
+#  set(CMAKE_BUILD_TYPE RELEASE)
+#  set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops -fopenmp -DNDEBUG -ffast-math -j")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# add_compile_options(-Wall -Wextra -pedantic)
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+  message(STATUS "Found CCACHE")
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+  set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) 
+  set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
+endif(CCACHE_FOUND)
+
+find_package(Eigen3)
+if (${EIGEN3_FOUND})
+  include_directories(${EIGEN3_INCLUDE_DIR})
+else()
+  message(STATUS "Eigen3 not found")
+endif()
+find_package(Boost REQUIRED COMPONENTS filesystem)
+if(Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIRS})
+  message(STATUS "Found boost headers")
+endif(Boost_FOUND)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/EigenTools/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/Distributions/include 
+  ${CMAKE_CURRENT_SOURCE_DIR}/TimeSeries/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/Distributions/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/GnuPlotting/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/MultilevelModel/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/OptimizationTools/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/MVProbit/include
+  "/usr/local/include/stats-master/include"
+  "/usr/local/include/gcem/include"
+  )
+
+add_subdirectory(GnuPlotting)
+add_subdirectory(Distributions)
+add_subdirectory(EigenTools)
+add_subdirectory(TimeSeries)
+add_subdirectory(OptimizationTools)
+add_subdirectory(MultilevelModel)
+# add_subdirectory(MVProbit)
+

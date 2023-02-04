@@ -1,0 +1,36 @@
+---
+title: "Five Recommended Flights"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: lumen
+---
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+source("flight_functions.R")
+Airports <-
+  read_csv("/home/dillon/CodeProjects/R/capitalone/Airport_Codes.csv")
+Tickets <-
+  read_csv("/home/dillon/CodeProjects/R/capitalone/Tickets.csv")
+Flights <-
+  read_csv("/home/dillon/CodeProjects/R/capitalone/Flights.csv")
+```
+
+# Quick Overview
+- The top five flights are DFW-OGG, EWR-SFO, HNL-SFO, HNL-IAH, ATL-HNL. These would be my recommendations as they would provide the most profit in the shortest amount of time. 
+- The top flights for profitability are different than the busiest flights. 
+- Key metrics to track: profitability, average delays, ticket fares, break even flights, and airport size. 
+
+# Links to Five Stages of Analysis
+- [Link to Data Quality Analysis](page1_dataquality.html)
+- [Link to Merging the Data](page2_merging.html)
+- [Link to Graphs and Visualizations](page3_graphs.html)
+- [Link to Recommendations](page4_recommendations.html)
+- [Link to Future Research](page5_future_research.html)
+
+# Functions Documentation
+- [Link to Documentation](code_documentation.html)
+
+
+

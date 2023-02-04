@@ -6,6 +6,7 @@
 #include <eigen3/unsupported/Eigen/KroneckerProduct>
 #include "MultilevelModelFunctions.hpp"
 #include "TimeSeriesTools.hpp"
+#include "Plotter.hpp"
 using namespace Eigen;
 using namespace std;
 class GenerateAutoRegressiveData
@@ -14,7 +15,7 @@ public:
     int lags;
     MatrixXd H;
     MatrixXd epsilon;
-    MatrixXd yt;
+    RowVectorXd yt;
     MatrixXd G0;
     MatrixXd g0;
     VectorXd sigma2;

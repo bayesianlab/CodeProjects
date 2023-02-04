@@ -1,57 +1,39 @@
 #include <stdio.h>
+
 #include <Eigen/Dense>
-#include "GenerateAutoRegressiveData.hpp"
+
+#include "ARMA.hpp"
 #include "AutoregressiveModel.hpp"
-#include "MultilevelModelFunctions.hpp"
+#include "GenerateAutoRegressiveData.hpp"
 
 using namespace std;
 using namespace Eigen;
 
-int main()
-{
+int main() {
+  int T = 250;
+  MatrixXd params(1, 1);
+  params << .9;
+  GenerateAutoRegressiveData gar(T, params);
+  AutoregressiveModel ar;
+  double r0 = 6;
+  double R0 = 8;
+  RowVectorXd b0 = RowVectorXd::Zero(gar.Xt.cols());
+  MatrixXd B0 = 10* MatrixXd::Identity(gar.Xt.cols(), gar.Xt.cols());
+  RowVectorXd g0 = RowVectorXd::Zero(gar.lags);
+  MatrixXd G0 = 10*MatrixXd::Identity(gar.lags, gar.lags);
+  ar.setModel(gar.yt, gar.Xt, g0, G0, r0, R0, b0, B0);
 
-    int on = 0;
-    if (on == 1)
-    {
-        MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/MultilevelModel/kow.csv");
-        RowVectorXd g(3);
-        g << .01, .02, .03;
-        MatrixXd deltas(180, 3);
-        deltas = g.replicate(180, 1);
-        yt = yt.leftCols(10);
-        cout << yt << endl;
-        VectorXd omv = VectorXd::Ones(yt.rows());
-        cout << endl;
-        cout << makeStationary(yt, deltas, omv, 0) << endl;
-        int T = 50;
-        MatrixXd p(1, 3);
-        p << 0.05, 0.15, 0.25;
-        MatrixXd params = p.replicate(1, 1);
+  // plotter("epst", );
+  ar.runAr(1500, 500);
+  cout << "AR Parameters" << endl;
+  cout << "True values "
+       << "AR " << params << endl;
+  cout << ar.storeArParams.colwise().mean() << endl;
+  cout << "True values beta " << -1 << endl;
+  cout << ar.storeBeta.colwise().mean() << endl;
+  cout << "True Values sigma2 " << 1 << endl;
+  cout << ar.storeSigma2.mean() << endl;
+  ar.bayesFit();
 
-        GenerateAutoRegressiveData gar(T, params, -.25);
-        AutoregressiveModel ar;
-        double r0 = 6;
-        double R0 = 8;
-        RowVectorXd b0 = RowVectorXd::Zero(gar.Xt.cols());
-        MatrixXd B0 = 10 * MatrixXd::Identity(gar.Xt.cols(), gar.Xt.cols());
-        RowVectorXd g0 = RowVectorXd::Zero(gar.lags);
-        MatrixXd G0 = MatrixXd::Identity(gar.lags, gar.lags);
-        ar.setModel(gar.yt, gar.Xt, g0, G0, r0, R0, b0, B0);
-        ar.runAr(100, 20);
-        cout << mean(ar.storeBeta) << endl;
-        cout << mean(ar.storeArParams) << endl;
-        cout << mean(ar.storeSigma2) << endl;
-    }
-    MatrixXd yt(1,10);
-    yt = normrnd(0,1,1,10); 
-    RowVectorXd h(1); 
-    h << .01; 
-    RowVectorXd g0(1); 
-    g0 << 0; 
-    MatrixXd G0(1, 1);
-    G0 << 1; 
-    ArParameterTools apt;
-    apt.updateArParameters(yt, h, 1, g0, G0);
-
-    return 0;
+  return 0;
 }

@@ -1,0 +1,281 @@
+---
+title: "Code Documentation "
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    theme: lumen
+---
+# Back to main page
+[Click here to jump back to main page](capitalone_data.html)
+
+# clean_airports 
+- Selects only large and medium size airports. 
+```{r}
+clean_airports <- function(Airports) {
+  big_airports <- clean_airport_codes(Airports)
+  big_airports <-
+    select(big_airports,-c(CONTINENT, MUNICIPALITY, ISO_COUNTRY))
+  big_airports
+}
+```
+
+# clean_flights 
+- Drops not canceled flights, selects only flights that were in and out of a large or medium airport, 
+and returns the dataframe. 
+```{r}
+clean_flights <- function(Flights, big_airports) {
+  valid_flights <- drop_cancelled(Flights)
+  valid_flights <-
+    valid_flights %>% inner_join(big_airports[, c(1, 2, 4, 5)], c("ORIGIN" = "IATA_CODE")) %>%
+    rename(ORIGIN_SIZE = TYPE) %>% rename(ORIGIN_AIRPORT_NAME = NAME) %>%
+    rename(ORIGIN_COOR = COORDINATES) %>%
+    inner_join(big_airports[, c(1, 2, 4, 5)], c("DESTINATION" = "IATA_CODE")) %>%
+    rename(DEST_SIZE = TYPE) %>% rename(DEST_AIRPORT_NAME = NAME) %>%
+    rename(DEST_COOR = COORDINATES)
+  # Some flights were into and out of the same airport, not useful for this
+  # exercise
+  valid_flights <-
+    valid_flights[-which(valid_flights$ORIGIN == valid_flights$DESTINATION), ]
+}
+```
+
+
+# clean_tickets 
+- Drops all one way flights, and all flights not into a large or medium size airport. 
+```{r}
+clean_tickets <- function(TicketsData, big_airports) {
+  tickets_roundtrip <- drop_oneways(TicketsData)
+  tickets_roundtrip$ITIN_FARE <-
+    as.numeric(tickets_roundtrip$ITIN_FARE)
+  tickets_roundtrip <- select(tickets_roundtrip,
+                              ORIGIN,
+                              PASSENGERS,
+                              ITIN_FARE,
+                              DESTINATION)
+  tickets_roundtrip$rowid <- 1:nrow(tickets_roundtrip)
+  tickets_roundtrip <-
+    tickets_roundtrip %>% inner_join(big_airports[, c(1, 4)],
+                                     by = c("ORIGIN" = "IATA_CODE")) %>%
+    rename(origin_airport_size = TYPE) %>%
+    inner_join(big_airports[, c(1, 4)],
+               by = c("DESTINATION" = "IATA_CODE")) %>%
+    rename(dest_airport_size = TYPE)
+  tickets_roundtrip
+}
+```
+
+
+
+
+# make_airid_dict
+- This function takes the *set* (unique) airports in the 
+dataset and simply associates an integer from 1:N where N is the number of airports in the set. 
+- Returns a dictionary or hashmap type datastructure in the form of a dataframe.  
+```{r}
+make_airid_dict <- function(all_airports_set) {
+  N <- length(all_airports_set)
+  airid_dict <-
+    data.frame(row.names = all_airports_set, AIRID = 1:N)
+  airid_dict
+}
+```
+
+
+# make_roundtripid_matrix
+```{r}
+make_roundtripid_matrix <- function(uniquelevels) {
+  N <- length(uniquelevels)
+  RoundId <- matrix(0, nrow = N,
+                    ncol = N)
+  c <- 0
+  for (i in 1:N) {
+    for (j in i:N) {
+      if (j != i) {
+        c <- c + 1
+        RoundId[j, i] = c
+        RoundId[i, j] = c
+      }
+    }
+  }
+  RoundId
+}
+```
+
+
+# connect_airid
+- This function makes a matrix that is symmetric so that origin and destination airports can be treated as the same roundtrip flight. For example, LAX to SFO is give the same number as SFO to LAX because of the symmetry of the matrix. LAX could have the number 3 and SFO the number 10. The flight LAX-SFO is give an id on the *interior* of the matrix at row position 3 and column position 10, or the transpose, regardless the number will be the same by symmetry. 
+- The connect_airid function connects a data frame with its AIRID, renaming the new columns along the way. 
+```{r}
+connect_airid <- function(data, airid) {
+  newdata <- data %>% inner_join(airid, by = c("ORIGIN" =  "NAME")) %>%
+    rename(ORG_AIRID = AIRID) %>%
+    inner_join(airid, by = c("DESTINATION" = "NAME")) %>%
+    rename(DEST_AIRID = AIRID)
+  newdata
+}
+```
+
+# impute_flight_id
+- This function is done in C++ because after profiling the code a bottleneck was found here. The efficiency is measured using the package profvis. The results are [here for cpp](profile_fast.html) and [here for the code written solely in R](profile_slow.html). The arguments are a dataframe with valid origin and destination id's given. Also necessary is the Roundtrip matrix. The function calls a row and a column in the matrix and returns the appropriate flight id. The result is nearly a 99\% improvement in computational efficiency. 
+```{Rcpp}
+#include <Rcpp.h>
+#include <bits/stdc++.h>
+using namespace Rcpp;
+using namespace std; 
+
+// [[Rcpp::export]]
+vector<int> impute_flightid_cpp(DataFrame F, NumericMatrix M, DataFrame Airid) {
+  NumericVector Rowid =  F["ORG_AIRID"];
+  NumericVector Colid = F["DEST_AIRID"];
+  vector<int> flightid; 
+  for(int i = 0; i < Rowid.size(); ++i){
+    flightid.push_back(M(Rowid(i)-1, Colid(i)-1));
+  }
+  return flightid; 
+}
+
+```
+
+
+# airport_cost 
+- Cost is defined as 
+$$A(x) = \begin{cases}
+ 10,000 &\text{ if  } x = \text{Large} \\
+5,000 & \text{otherwise.}
+\end{cases}$$
+Input $x$ is a indicator variable denoting size. 
+```{r}
+airport_cost <- function(airport_size) {
+  cost <- 0
+  if (airport_size == "large_airport") {
+    cost <- 10000
+  }
+  else{
+    cost <- 5000
+  }
+  cost
+}
+```
+
+# delay_cost 
+- Computes the arival or delay cost, if a time is greater than 15 minutes it computes 75 times the excess minutes over 15, otherwise returns 0. 
+```{r}
+delay_cost <- function(delay_time) {
+  cost <- 0
+  if (delay_time > 15) {
+    cost <- (delay_time - 15) * 75
+  }
+  cost
+}
+
+```
+
+# flight_costs
+- The cost function is
+
+$$C(d, d_d, a_d, o_s, d_s) = 9.44 d + \mathbb{1}_{d_d > 15}\{75(d_d - 15) \} +  \mathbb{1}_{a_d > 15}\{75(a_d - 15) \} 
++ A(o_s) + A(d_s)$$ 
+$$A(x) = \begin{cases}
+ 10,000 &\text{ if  } x = \text{Large} \\
+5,000 & \text{otherwise.}
+\end{cases}$$
+
+- $o_s$ and $d_s$ are airport size indicator variables. 
+
+- $d_d$ is departure delay time in minutes. 
+
+- $a_d$ is arrival delay time in minutes. 
+
+- $\mathbb{1}_{d_i}$ is an indicator function which is 1 if delay or arrival time is greater than 15 minutes. 
+```{r}
+flight_costs <-
+  function(dist,
+           airport_org_size,
+           airport_dest_size,
+           avg_dep_delay,
+           avg_arr_delay) {
+    dep <- 9.44 * dist
+    fixed_airport_cost <- airport_cost(airport_org_size) +
+      airport_cost(airport_dest_size)
+    delay1 <- delay_cost(avg_arr_delay)
+    delay2 <- delay_cost(avg_arr_delay)
+    cost <- dep + fixed_airport_cost + delay1 + delay2
+    cost
+  }
+```
+
+# flight_revenue 
+- The revenue function is: 
+$$R(r, f) = r\cdot(200f + 7000  )$$
+- $r$ is the occupancy rate. 
+- $f$ is the fare paid
+- Note: 200 is the assumed max capacity of the plane and 7000 is the baggage fee constant ($100\times70$ since it is expected only half the passengers will check). 
+```{r}
+flight_revenue <- function(occ_rate, avg_fare) {
+  pass_rev <- occ_rate * avg_fare * 200
+  bags_rev <- 7000 * occ_rate
+  rev <- pass_rev + bags_rev
+  rev
+}
+```
+
+# compute_flightrev
+- This function applies flight_revenue in a loop. Returns a vector of revenues. 
+```{r}
+compute_flightrev <- function(flight_data) {
+  rev = list()
+  for (i in 1:nrow(flight_data)) {
+    occ_rate <- flight_data[i, "AVG_OCCUPANCY"]
+    fare <- flight_data[i, "AVG_ITIN_FARE"]
+    rev[[i]] <-
+      flight_revenue(as.numeric(occ_rate), as.numeric(fare))
+  }
+  rev <- do.call(rbind, rev)
+  rev
+}
+```
+
+# compute_flightcost 
+- This function applies flight_cost in a loop. Returns a vector of costs. 
+```{r}
+compute_flightcost <- function(flight_data) {
+  cost = list()
+  for (i in 1:nrow(flight_data)) {
+    org_size <- flight_data[i, "ORIGIN_SIZE"]
+    dest_size <- flight_data[i, "DEST_SIZE"]
+    dist <- as.numeric(flight_data[i, "DIST"])
+    ar_delay <- as.numeric(flight_data[i, "AVG_ARR_DELAY"])
+    dep_delay <- as.numeric(flight_data[i, "AVG_DEP_DELAY"])
+    cost[[i]] <-
+      flight_costs(dist, org_size, dest_size, ar_delay, dep_delay)
+  }
+  cost <- do.call(rbind, cost)
+  cost
+}
+```
+
+
+
+
+# breakeven
+Computes the number of flights to breakeven with a 90,000,000 fixed cost investment. 
+```{r}
+
+breakeven <- function(per_flight_profit){
+  cost <- 90000000
+  c<- 1
+  total <- 0
+  
+  while(total < cost){
+    total <- total + per_flight_profit*c
+    c<-c+1
+  }
+  c
+}
+```
+
+
+
+

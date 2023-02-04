@@ -63,9 +63,7 @@ void Optimize::BFGS_Display(VectorXd &x0, std::function<double(const Ref<const V
     for (int k = 0; k < MaxIterations; k++)
     {
         pk = -B0 * del0;
-
         alpha = LineSearch(x0, pk, del0, F);
-
         xlast = x0;
         x0 = x0 + alpha * pk;
         F1 = F(x0);

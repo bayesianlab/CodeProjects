@@ -14,6 +14,8 @@
 #include <math.h>
 #include <random>
 #include <stdexcept>
+#include "stats.hpp"
+#include "EigenTools.hpp"
 
 using namespace Eigen;
 using namespace std;
@@ -60,11 +62,11 @@ double logdet(const MatrixBase<Derived1> &sig)
 double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
                  const MatrixXd &Sig);
 
-template <typename D> 
-double logmvnpdfCentered(const RowVectorXd &x, 
+template <typename D>
+double logmvnpdfCentered(const RowVectorXd &x,
                          const MatrixBase<D> &SigLowerInvDiag)
 {
-  // Takes the centered and scaled data and also the 
+  // Takes the centered and scaled data and also the
   // diagonal of the cholesky of the precision
   int p = SigLowerInvDiag.size();
   double c = -.5 * p * log(2 * M_PI) + SigLowerInvDiag.array().log().sum();
@@ -95,12 +97,26 @@ MatrixXd chi2rnd(int df, int N, int J);
 MatrixXd CreateSigma(double rho, int size);
 
 double logmvtpdf(const RowVectorXd &x, const RowVectorXd &mu, const MatrixXd &Variance,
-              double df);
-
+                 double df);
 
 double logavg(const Ref<const VectorXd> &logpdf);
 
 MatrixXd logavg(const Ref<const MatrixXd> &logpdf, const int &dim);
+
+VectorXd shiftedExponential(const double &shift, const double &alpha, const int &n);
+
+double drawTruncatedNormal(const double &lowercut);
+
+VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2, const int &n);
+
+double normalCDF(double value);
+
+double normalpdflog(double value, double mean, double variance); 
+
+double inverseCDFTruncatedNormal(const double &lowercut);
+
+MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints, const RowVectorXd &mu,
+                 const MatrixXd &Sigma, const int N, const int bn);
 
 /*
 class Dist {

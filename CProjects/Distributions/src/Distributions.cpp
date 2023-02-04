@@ -100,6 +100,14 @@ VectorXd normrnd(double mu, double sig, int N)
   return Z;
 }
 
+double normalpdflog(double value, double mean, double variance){
+  double lnsig = -log(sqrt(variance));
+  double log2pi = -.5*long(2*M_PI);
+  double isig = 1/variance; 
+  double v = -.5*(value-mean)*(value-mean) * isig; 
+  return lnsig+log2pi+v; 
+}
+
 MatrixXd normrnd(double mu, double sig, int N, int J)
 {
   MatrixXd Z(N, J);
@@ -282,6 +290,100 @@ MatrixXd logavg(const Ref<const MatrixXd> &X, const int &dim)
   {
     throw invalid_argument("Invalid input in logavg(), dim must be 0 or 1.");
   }
+}
+
+VectorXd shiftedExponential(const double &shift, const double &alpha, const int &n)
+{
+  VectorXd udouble = unifrnd(0, 1, n);
+  udouble = shift - (1.0 / alpha) * (1 - udouble.array()).array().log();
+  return udouble;
+}
+
+double drawTruncatedNormal(const double &lowercut)
+{
+  int c = 0;
+  int MAX = 100;
+  double alphaOptimal = 0.5 * (lowercut + sqrt(lowercut * lowercut + 4));
+  double logrhoz, lu, z;
+  while (c <= MAX)
+  {
+    z = shiftedExponential(alphaOptimal, lowercut, 1).value();
+    logrhoz = -0.5 * (z - alphaOptimal) * (z - alphaOptimal);
+    lu = unifrnd(0, 1, 1).array().log().value();
+    if (lu <= logrhoz)
+    {
+      return z;
+    }
+    c++;
+  }
+  return normrnd(0, 1);
+}
+
+double normalCDF(double value)
+{
+  return 0.5 * erfc(-value * M_SQRT1_2);
+}
+
+double inverseCDFTruncatedNormal(const double &lowercut)
+{
+  double Fa, q1;
+  Fa = normalCDF(lowercut);
+  q1 = 1 - Fa;
+  return stats::qnorm(Fa + unifrnd(0, 1) * q1);
+}
+
+VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2, const int &n)
+{
+  VectorXd ntp(n);
+  double newcut = -mu / sqrt(sigma2);
+  for (int i = 0; i < n; ++i)
+  {
+    if (newcut > 5)
+    {
+      ntp(i) = mu + (sqrt(sigma2) * drawTruncatedNormal(newcut));
+    }
+    else
+    {
+      ntp(i) = mu + (sqrt(sigma2) * inverseCDFTruncatedNormal(newcut));
+    }
+  }
+  return ntp;
+}
+
+MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints, const RowVectorXd &mu,
+                 const MatrixXd &Sigma, const int N, const int bn)
+{
+  int K = Sigma.rows();
+  MatrixXd Precision = Sigma.llt().solve(MatrixXd::Identity(K, K));
+  MatrixXd NotK = Precision;
+  for (int i = 0; i < K; ++i)
+  {
+    NotK(i, i) = 0;
+  }
+  RowVectorXd Hknk(K);
+  double condmean;
+  double condvar;
+  MatrixXd sample(K, N);
+  sample.setZero();
+  sample.col(0) = init;
+  for (int n = 0; n < N; ++n)
+  {
+    for (int k = 0; k < K; ++k)
+    {
+      Hknk = NotK.row(k);
+      condvar = 1.0 / Precision(k, k);
+      condmean = mu(k) - condvar * Hknk * (sample.col(0) - mu.transpose());
+      if (constraints(k) == 1)
+      {
+        sample(k, n) = NormalTruncatedPositive(condmean, condvar, 1).value();
+      }
+      else
+      {
+        sample(k, n) = -NormalTruncatedPositive(-condmean, condvar, 1).value();
+      }
+    }
+  }
+  return sample.rightCols(N - bn);
 }
 
 /* VectorXd generateChiSquaredVec(double df, int rows) {

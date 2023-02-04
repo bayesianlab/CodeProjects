@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Top level cmake 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
@@ -14,47 +15,17 @@ if(CCACHE_FOUND)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) 
   set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 endif(CCACHE_FOUND)
+=======
+set(mlsrc src/MultilevelModelFunctions.cpp src/GenerateFactorData.cpp )
+add_library(ml STATIC ${mlsrc})
+target_link_libraries(ml PUBLIC Dist ettools)
+>>>>>>> ba54b8bd8f3d59df81621edd37d4754a64fcfdfc
 
-find_package(Eigen3)
-if (${EIGEN3_FOUND})
-  include_directories(${EIGEN3_INCLUDE_DIR})
-else()
-  message(STATUS "Eigen3 not found")
-endif()
-find_package(Boost REQUIRED COMPONENTS filesystem)
-if(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})
-  message(STATUS "Found boost headers")
-endif(Boost_FOUND)
+add_executable(test_fullconditionals src/test_fullconditionals.cpp)
+target_link_libraries(test_fullconditionals PUBLIC optim ettools plot Dist ml)
 
-set(eigentoolsrc ${PROJECT_SOURCE_DIR}/../EigenTools/src/EigenTools.cpp)
-set(distsrc ${PROJECT_SOURCE_DIR}/../Distributions/src/Distributions.cpp)
-set(optimsrc ${PROJECT_SOURCE_DIR}/../OptimizationTools/src/Optimization.cpp)
-set(lssrc ${PROJECT_SOURCE_DIR}/../OptimizationTools/src/LineSearchRoutines.cpp)
-set(numdiffsrc ${PROJECT_SOURCE_DIR}/../OptimizationTools/src/NumericalDifferentiation.cpp)
-set(plotsrc ${PROJECT_SOURCE_DIR}/../GnuPlotting/src/Plotter.cpp)
-set(ardatagensrc ${PROJECT_SOURCE_DIR}/../TimeSeries/src/GenerateAutoRegressiveData.cpp)
+add_executable(test_timebreak src/test_timebreak.cpp)
+target_link_libraries(test_timebreak PUBLIC optim ettools plot Dist ml)
 
-add_library(basetools STATIC ${distsrc} ${plotsrc} ${eigentoolsrc})
-add_library(optim STATIC  ${optimsrc} ${lssrc} ${numdiffsrc})
-add_library(mlfunc STATIC src/MultilevelModelFunctions.cpp)
-add_library(datagen STATIC ${ardatagensrc} src/GenerateMLFactorData.cpp)
-target_link_libraries(mlfunc PUBLIC basetools)
-target_link_libraries(datagen PUBLIC basetools mlfunc)
-
-set(tsfuncinclude ${PROJECT_SOURCE_DIR}/../TimeSeries/include)
-set(eigentoolinclude ${PROJECT_SOURCE_DIR}/../EigenTools/include)
-set(distinclude ${PROJECT_SOURCE_DIR}/../Distributions/include)
-set(optiminclude ${PROJECT_SOURCE_DIR}/../OptimizationTools/include)
-set(plotinclude ${PROJECT_SOURCE_DIR}/../GnuPlotting/include)
-
-include_directories(${tsfuncinclude} ${plotinclude} ${eigentoolinclude} ${distinclude} ${optiminclude} include)
-
-add_executable(int src/Test_MultilevelModel.cpp)
-target_link_libraries(int PUBLIC basetools optim mlfunc datagen) 
-# add_executable(test2 src/scratch.cpp)
-# add_executable(test2 ../TimeSeries/src/Test_ArModel.cpp)
-# add_executable(test2 ../EigenTools/src/Test_EigenTools.cpp)
-# target_link_libraries(test2 PUBLIC basetools) 
-
-
+# add_executable(test_fullconditionalsnoar src/test_fullconditionalsnoar.cpp)
+# target_link_libraries(test_fullconditionalsnoar PUBLIC optim ettools plot Dist ml)
