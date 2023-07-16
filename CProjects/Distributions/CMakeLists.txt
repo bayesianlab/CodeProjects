@@ -1,4 +1,5 @@
 set(distsrc ${CMAKE_CURRENT_SOURCE_DIR}/src/Distributions.cpp)
 add_library(Dist STATIC ${distsrc})
 add_executable(disttest src/Test_Distributions.cpp)
+include_directories(Dist /home/dillon/stats) 
 target_link_libraries(disttest PUBLIC Dist plot)

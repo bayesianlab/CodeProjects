@@ -37,15 +37,39 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/dillon/CodeProjects/CProjects/build/GnuPlotting/cmake_install.cmake")
-  include("/home/dillon/CodeProjects/CProjects/build/Distributions/cmake_install.cmake")
-  include("/home/dillon/CodeProjects/CProjects/build/EigenTools/cmake_install.cmake")
-  include("/home/dillon/CodeProjects/CProjects/build/TimeSeries/cmake_install.cmake")
-  include("/home/dillon/CodeProjects/CProjects/build/OptimizationTools/cmake_install.cmake")
-  include("/home/dillon/CodeProjects/CProjects/build/MultilevelModel/cmake_install.cmake")
+# Set default install directory permissions.
+if(NOT DEFINED CMAKE_OBJDUMP)
+  set(CMAKE_OBJDUMP "/usr/bin/objdump")
+endif()
 
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/dillon/CodeProjects/CProjects/build/GnuPlotting/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/dillon/CodeProjects/CProjects/build/Distributions/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/dillon/CodeProjects/CProjects/build/EigenTools/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/dillon/CodeProjects/CProjects/build/TimeSeries/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/dillon/CodeProjects/CProjects/build/OptimizationTools/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
+  include("/home/dillon/CodeProjects/CProjects/build/MultilevelModel/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)

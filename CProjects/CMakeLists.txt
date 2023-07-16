@@ -1,7 +1,7 @@
 # Top level cmake 
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.22) 
 project(multilevel)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_BUILD_TYPE DEBUG)
 #  set(CMAKE_BUILD_TYPE RELEASE)
 #  set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops -fopenmp -DNDEBUG -ffast-math -j")
@@ -15,13 +15,7 @@ if(CCACHE_FOUND)
   set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 endif(CCACHE_FOUND)
 
-find_package(Eigen3)
-if (${EIGEN3_FOUND})
-  include_directories(${EIGEN3_INCLUDE_DIR})
-else()
-  message(STATUS "Eigen3 not found")
-endif()
-find_package(Boost REQUIRED COMPONENTS filesystem)
+find_package(Boost)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
   message(STATUS "Found boost headers")
@@ -29,6 +23,10 @@ endif(Boost_FOUND)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
 include_directories(
+  /home/dillon/gcem/include/
+  /home/dillon/stats/include/
+  /home/dillon/eigen/
+  /home/dillon/eigen/unsupported
   ${CMAKE_CURRENT_SOURCE_DIR}/EigenTools/include
   ${CMAKE_CURRENT_SOURCE_DIR}/Distributions/include 
   ${CMAKE_CURRENT_SOURCE_DIR}/TimeSeries/include

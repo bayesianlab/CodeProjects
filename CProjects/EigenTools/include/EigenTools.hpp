@@ -6,7 +6,7 @@
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <chrono>
-#include <eigen3/unsupported/Eigen/KroneckerProduct>
+#include <Eigen/KroneckerProduct>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>

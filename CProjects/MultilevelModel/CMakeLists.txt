@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Top level cmake 
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
@@ -15,11 +14,9 @@ if(CCACHE_FOUND)
   set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache) 
   set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 endif(CCACHE_FOUND)
-=======
 set(mlsrc src/MultilevelModelFunctions.cpp src/GenerateFactorData.cpp )
 add_library(ml STATIC ${mlsrc})
 target_link_libraries(ml PUBLIC Dist ettools)
->>>>>>> ba54b8bd8f3d59df81621edd37d4754a64fcfdfc
 
 add_executable(test_fullconditionals src/test_fullconditionals.cpp)
 target_link_libraries(test_fullconditionals PUBLIC optim ettools plot Dist ml)

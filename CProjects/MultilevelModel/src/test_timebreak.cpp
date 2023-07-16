@@ -12,6 +12,7 @@
 using namespace std;
 using namespace Eigen;
 int main() {
+int i = 10;
   int T = 100;
   int K = 20;
   int sims = 10;
@@ -27,5 +28,6 @@ int main() {
   int nXs = 2;
   mldata.breakPointGenData(T, K, InfoMat, 50, 1.);
   MatrixXd Xt = mldata.Xt;
+
   return 0;
 }
