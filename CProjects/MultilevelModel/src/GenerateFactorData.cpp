@@ -122,7 +122,7 @@ void GenerateFactorData::breakPointGenData(
   Xbeta = surX * allBetas;
   Xbeta.resize(nEqns, Time);
   nFactors = InfoMat.rows();
-  MatrixXd A = loadingMag*MatrixXd::Ones(K, nFactors);
+  MatrixXd A = loadingMag*MatrixXd::Ones(nEqns, nFactors);
   for (int i = 0; i < A.rows(); ++i) {
     for (int j = 0; j < nFactors; ++j) {
       if (j > i) {
@@ -144,11 +144,9 @@ void GenerateFactorData::breakPointGenData(
   Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
   Factors.resize(nFactors, Time);
   MatrixXd AFactors = MatrixXd::Zero(nEqns, Time);
-  cout << Factors << endl; 
   MatrixXd Factorbreak1 = Factors.block(0,0, nFactors, breakpoint);
-  Factors.block(0, breakpoint+1, nFactors, breakpoint); 
-  AF = Loadings * Factors;
-  mu = AF + Xbeta;
+  AFactors.block(0,breakpoint, nEqns, breakpoint) = A*Factors.block(0, breakpoint, nFactors, breakpoint);
+  mu = AFactors + Xbeta;
   MatrixXd nu = normrnd(0, 1, nEqns, Time);
   yt = mu + nu;
 }

@@ -3,7 +3,7 @@
 #define GENARDATA_H
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
-#include <eigen3/unsupported/Eigen/KroneckerProduct>
+#include <unsupported/Eigen/KroneckerProduct>
 #include "MultilevelModelFunctions.hpp"
 #include "TimeSeriesTools.hpp"
 #include "Plotter.hpp"

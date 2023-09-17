@@ -355,6 +355,7 @@ class FullConditionalsNoAr : public FullConditionals {
           if (loadingselect(i) != -1) {
             temp.push_back(betaStar(k, loadingselect(i) + nXs));
           }
+          cout << loadingselect(i) << endl; 
           for (int j = 0; j < T; ++j) {
             fx.push_back(Factors(loadingselect(i), j));
           }
