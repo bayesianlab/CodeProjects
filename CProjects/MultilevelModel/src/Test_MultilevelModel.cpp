@@ -82,7 +82,6 @@ int main()
         cout << makeStateSpace(gammas4) << endl;
     }
 
-<<<<<<< HEAD
     int otrokwhitemantest = 0;
     int chanandj = 1;
     int comparemethods = 0;
@@ -125,13 +124,6 @@ int main()
 
         mlotrok.setModel(dfae.yt, Xt, dfae.Factors, dfae.gammas, dfae.deltas, InfoMat,
                          dfae.b0, dfae.B0, r0, R0, d0, D0, g0, G0, g0, G0, id);
-=======
-    int chanandj = 0;
-    int comparemethods = 0;
-    int realdata_kow = 0;
-    int realdata_intlike = 0;
-    int other = 0;
->>>>>>> ba54b8bd8f3d59df81621edd37d4754a64fcfdfc
 
     if (chanandj)
     {

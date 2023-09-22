@@ -66,7 +66,7 @@ class FullConditionals : public LoadingsFactorTools,
   MatrixXd Del0;
   string fname;
 
-  FullConditionals(const Ref<const MatrixXd> &_yt,
+  void easySetModel(const Ref<const MatrixXd> &_yt,
                    const Ref<const MatrixXd> &_Xt, const int _factorLagLen,
                    const int _observationLagLen,
                    const Matrix<int, Dynamic, 2> &_InfoMat) {
@@ -95,6 +95,8 @@ class FullConditionals : public LoadingsFactorTools,
     // 1 is not estimating factor variances
     id = 1;
   }
+
+
 
   MatrixXd createArPriorCovMat(double startvar, size_t sz) {
     vector<double> rho;

@@ -3,7 +3,7 @@
 #define armodel_h
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
-#include <eigen3/unsupported/Eigen/KroneckerProduct>
+#include <unsupported/Eigen/KroneckerProduct>
 #include <iostream>
 #include <stdexcept>
 
