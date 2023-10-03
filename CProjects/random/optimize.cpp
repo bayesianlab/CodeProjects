@@ -1,4 +1,4 @@
-#include "/home/dillon/CodeProjects/CProjects/Distributions/include/Distributions.hpp"
+#include "Distributions.hpp"
 #include "stats.hpp"
 #include <Eigen/Dense>
 #include <iostream>
