@@ -30,10 +30,14 @@ include_directories(SYSTEM
 #  /home/dillon/eigen/
 #  /home/dillon/eigen/unsupported
    #D:\\Users\\dflanner\\include/boost_1_83_0/ 
-   "D:\\Users\\dflanner\\include\\eigen_3.4.0"
-   "D:\\Users\\dflanner\\include\\eigen_3.4.0\\unsupported"
-   "D:\\Users\\dflanner\\include\\gcem-master\\include"
-   "D:\\Users\\dflanner\\include\\stats-master\\include"
+#   "D:\\Users\\dflanner\\include\\eigen_3.4.0"
+#   "D:\\Users\\dflanner\\include\\eigen_3.4.0\\unsupported"
+#   "D:\\Users\\dflanner\\include\\gcem-master\\include"
+#   "D:\\Users\\dflanner\\include\\stats-master\\include"
+   "C:\\Users\\dflanner\\include\\eigen_3.4.0"
+   "C:\\Users\\dflanner\\include\\eigen_3.4.0\\unsupported"
+   "C:\\Users\\dflanner\\include\\gcem-master\\include"
+   "C:\\Users\\dflanner\\include\\stats-master\\include"
 
    
   ../EigenTools/include
