@@ -1,1 +1,0 @@
-/usr/bin/c++  -g  -rdynamic CMakeFiles/deg.dir/src/degree_audit.cpp.o  -o deg  -lsqlite3 

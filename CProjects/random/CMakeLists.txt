@@ -15,6 +15,8 @@ if(CCACHE_FOUND)
   set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 endif(CCACHE_FOUND)
 
+set(BOOST_ROOT "D:\\Users\\dflanner\\include\\boost_1_83_0")
+
 find_package(Boost)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
@@ -22,21 +24,27 @@ if(Boost_FOUND)
 endif(Boost_FOUND)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
-include_directories(
-  /home/dillon/gcem/include/
-  /home/dillon/stats/include/
-  /home/dillon/eigen/
-  /home/dillon/eigen/unsupported
+include_directories(SYSTEM
+#  /home/dillon/gcem/include/
+#  /home/dillon/stats/include/
+#  /home/dillon/eigen/
+#  /home/dillon/eigen/unsupported
+   #D:\\Users\\dflanner\\include/boost_1_83_0/ 
+   "D:\\Users\\dflanner\\include\\eigen_3.4.0"
+   "D:\\Users\\dflanner\\include\\eigen_3.4.0\\unsupported"
+   "D:\\Users\\dflanner\\include\\gcem-master\\include"
+   "D:\\Users\\dflanner\\include\\stats-master\\include"
+
+   
   ../EigenTools/include
-  ../Distributions/include 
-  ../TimeSeries/include
+  #../TimeSeries/include
   ../Distributions/include
-  ../GnuPlotting/include
-  ../MultilevelModel/include
-  ../OptimizationTools/include
-  ../MVProbit/include
-  "/usr/local/include/stats-master/include"
-  "/usr/local/include/gcem/include"
+  #../GnuPlotting/include
+  #../MultilevelModel/include
+  #../OptimizationTools/include
+  #../MVProbit/include
+#  "/usr/local/include/stats-master/include"
+#  "/usr/local/include/gcem/include"
   )
 
 
