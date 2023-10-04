@@ -106,3 +106,4 @@ TbsOutput/
 
 build/
 venv/
+*/.vs/*
