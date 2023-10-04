@@ -114,3 +114,6 @@ venv/
 *.vcxproj
 *.filters
 *.user
+CMakeFiles/*
+CMakeCache.txt
+
