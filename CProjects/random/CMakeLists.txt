@@ -22,24 +22,21 @@ if(Boost_FOUND)
 endif(Boost_FOUND)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+
 include_directories(
-  /home/dillon/gcem/include/
-  /home/dillon/stats/include/
-  /home/dillon/eigen/
-  /home/dillon/eigen/unsupported
+  /usr/local/include/stats-master/include
+  /usr/local/include/gcem-master/include
+  /usr/local/include/eigen-3.4.0/unsupported
+  /usr/local/include/eigen-3.4.0
   ../EigenTools/include
-  ../Distributions/include 
-  ../TimeSeries/include
   ../Distributions/include
-  ../GnuPlotting/include
-  ../MultilevelModel/include
-  ../OptimizationTools/include
-  ../MVProbit/include
-  "/usr/local/include/stats-master/include"
-  "/usr/local/include/gcem/include"
-  )
+)
+
+add_library(Dist ../Distributions/src/Distributions.cpp)
+add_library(et ../EigenTools/src/EigenTools.cpp)
+target_link_libraries(et PUBLIC Dist)
+
+add_executable(op optimize.cpp)
+target_link_libraries(op Dist)
 
 
-  add_library(Dist ../Distributions/src/Distributions.cpp)
-  add_executable(op optimize.cpp)
-  target_link_libraries(op Dist)

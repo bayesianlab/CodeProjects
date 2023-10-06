@@ -1,9 +1,12 @@
-#include "/home/dillon/CodeProjects/CProjects/Distributions/include/Distributions.hpp"
-#include "stats.hpp"
-#include <Eigen/Dense>
+#ifndef opt
+#define opt
+// #include <Eigen/Dense>
 #include <iostream>
 #include <random>
 #include <vector>
+
+#include "Distributions.hpp"
+#include "stats.hpp"
 
 using namespace std;
 using namespace Eigen;
@@ -66,46 +69,59 @@ class SimluatedAnnealer
 {
   public:
     MatrixXd SimSet;
+    VectorXi rows; 
     SimluatedAnnealer(Simulations S)
     {
         SimSet = S.ExpRev;
+        rows = VectorXi::Zero(SimSet.cols());
     }
 
-    vector<int> choose_path()
+    void choose_path()
     {
         cout << SimSet.rows() << " " << SimSet.cols() << endl;
         std::random_device rd;
         std::mt19937 eng(rd());
         std::uniform_int_distribution<> distr(0, SimSet.rows() - 1);
-        vector<int> rows(SimSet.rows());
         for (int c = 0; c < SimSet.cols(); ++c)
         {
-            rows.push_back(distr(eng));
+            rows(c) = distr(eng);
         }
-        return rows;
     }
 
-    double rev_path(vector<int> selected_path)
+    double rev_path()
     {
         double rev = 0;
         for (int c = 0; c < SimSet.cols(); ++c)
         {
-            cout <<SimSet(selected_path[c], c) << endl;  
-            rev += SimSet(selected_path[c], c);
+            
+            rev += (double)SimSet(rows[c], c);
         }
         return rev;
     }
+
+    void best_ex(){
+        
+        for(int i =0;i<SimSet.cols(); ++i)
+        {
+            // SimSet.col
+        }
+    }
 };
+#endif 
 
 int main()
 {
     cout << "set up practice matrix" << endl;
-    Simulations S(10, 10);
+    Simulations S(2, 3);
     S.set_up_sims();
-
+    
     cout << S.ExpRev << endl;
 
     SimluatedAnnealer A(S);
     A.choose_path();
+    
+    cout << A.rev_path() << endl;
+    cout << A.rows << endl; 
+    A.best_ex();
     cout << "done" << endl;
 }
