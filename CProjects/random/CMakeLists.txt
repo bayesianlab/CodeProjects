@@ -15,6 +15,8 @@ if(CCACHE_FOUND)
   set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 endif(CCACHE_FOUND)
 
+set(BOOST_ROOT "D:\\Users\\dflanner\\include\\boost_1_83_0")
+
 find_package(Boost)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
@@ -22,21 +24,31 @@ if(Boost_FOUND)
 endif(Boost_FOUND)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
+include_directories(SYSTEM
+#  /home/dillon/gcem/include/
+#  /home/dillon/stats/include/
+#  /home/dillon/eigen/
+#  /home/dillon/eigen/unsupported
+   #D:\\Users\\dflanner\\include/boost_1_83_0/ 
+#   "D:\\Users\\dflanner\\include\\eigen_3.4.0"
+#   "D:\\Users\\dflanner\\include\\eigen_3.4.0\\unsupported"
+#   "D:\\Users\\dflanner\\include\\gcem-master\\include"
+#   "D:\\Users\\dflanner\\include\\stats-master\\include"
+   "C:\\Users\\dflanner\\include\\eigen_3.4.0"
+   "C:\\Users\\dflanner\\include\\eigen_3.4.0\\unsupported"
+   "C:\\Users\\dflanner\\include\\gcem-master\\include"
+   "C:\\Users\\dflanner\\include\\stats-master\\include"
 
-include_directories(
-  /usr/local/include/stats-master/include
-  /usr/local/include/gcem-master/include
-  /usr/local/include/eigen-3.4.0/unsupported
-  /usr/local/include/eigen-3.4.0
+   
   ../EigenTools/include
+  #../TimeSeries/include
   ../Distributions/include
-)
-
-add_library(Dist ../Distributions/src/Distributions.cpp)
-add_library(et ../EigenTools/src/EigenTools.cpp)
-target_link_libraries(et PUBLIC Dist)
-
-add_executable(op optimize.cpp)
-target_link_libraries(op Dist)
+  #../GnuPlotting/include
+  #../MultilevelModel/include
+  #../OptimizationTools/include
+  #../MVProbit/include
+#  "/usr/local/include/stats-master/include"
+#  "/usr/local/include/gcem/include"
+  )
 
 

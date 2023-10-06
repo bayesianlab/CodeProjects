@@ -1,12 +1,9 @@
-#ifndef opt
-#define opt
-// #include <Eigen/Dense>
+#include "Distributions.hpp"
+#include "stats.hpp"
+#include <Eigen/Dense>
 #include <iostream>
 #include <random>
 #include <vector>
-
-#include "Distributions.hpp"
-#include "stats.hpp"
 
 using namespace std;
 using namespace Eigen;
@@ -69,36 +66,64 @@ class SimluatedAnnealer
 {
   public:
     MatrixXd SimSet;
-    VectorXi rows; 
     SimluatedAnnealer(Simulations S)
     {
         SimSet = S.ExpRev;
-        rows = VectorXi::Zero(SimSet.cols());
     }
 
-    void choose_path()
+    vector<int> simple_max()
     {
-        cout << SimSet.rows() << " " << SimSet.cols() << endl;
+        vector<int> max_indices(SimSet.cols());
+        for (int i = 0; i < SimSet.cols(); ++i) {
+            double m = SimSet(0,i); 
+            max_indices[i] = 0;
+            for (int r = 0; r < SimSet.rows(); ++r) {
+                if (SimSet(r, i) > m) {
+                    m = SimSet(r,i);
+                    max_indices[i] = r; 
+                }
+            }
+        }
+        return max_indices; 
+    }
+
+    vector<int> choose_random_path()
+    {
         std::random_device rd;
         std::mt19937 eng(rd());
         std::uniform_int_distribution<> distr(0, SimSet.rows() - 1);
+        vector<int> path;
         for (int c = 0; c < SimSet.cols(); ++c)
         {
-            rows(c) = distr(eng);
+            path.push_back(distr(eng));
+            
         }
+=======
+        vector<int> path;
+        for (int c = 0; c < SimSet.cols(); ++c)
+        {
+            path.push_back(distr(eng));
+            
+        }
+        return path;
     }
 
-    double rev_path()
+    double rev_path(vector<int> selected_path)
     {
         double rev = 0;
         for (int c = 0; c < SimSet.cols(); ++c)
         {
+<<<<<<< HEAD
             
             rev += (double)SimSet(rows[c], c);
+=======
+            rev += SimSet(selected_path[c], c);
+>>>>>>> 73138d4c0620b9bd8b73ce774ebf2c7a197e904d
         }
         return rev;
     }
 
+<<<<<<< HEAD
     void best_ex(){
         
         for(int i =0;i<SimSet.cols(); ++i)
@@ -106,6 +131,66 @@ class SimluatedAnnealer
             // SimSet.col
         }
     }
+=======
+    void max_annealer() {
+        vector<int> sm = simple_max();
+        double max = 0;
+        cout << "Solution " << endl; 
+
+        for (int i = 0; i < sm.size(); ++i)
+        {
+            cout << sm[i] << " ";
+            max += SimSet(sm[i],i);
+        }
+        cout << endl << max << endl; 
+        double Temp = .5; 
+        vector<int> path0(SimSet.cols());
+        double E0 = -rev_path(path0); 
+        int reps = 0; 
+        int Mk = 10000;
+        double E = 0; 
+        double Delta = E - E0; 
+        double stop = 1e-4;
+        while (Temp > stop)
+        {
+            int energy_drops = 0;
+            while ((reps < Mk) && (energy_drops < 10))
+            {
+                vector<int> path = choose_random_path();
+                E = -rev_path(path);
+                Delta = E - E0;
+                if (Delta < 0)
+                {
+                    path0 = path;
+                    E0 = E;
+                    energy_drops++; 
+                }
+                else
+                {
+                    double lp = -Delta / Temp;
+                    double alpha = log(unifrnd());
+                    if (alpha < lp)
+                    {
+                        path0 = path;
+                        E0 = E;
+                    }
+                }
+                ++reps;
+            }
+            Temp = Temp * 0.99;
+            reps = 0;
+            if (abs(Delta) < stop)
+            {
+                break; 
+            }
+        }
+        cout << "Maximum revenue " << -E0 << endl; 
+        for (int i = 0; i < path0.size(); ++i) {
+            cout << path0[i] << " ";
+        }
+        cout << endl; 
+     }
+>>>>>>> 73138d4c0620b9bd8b73ce774ebf2c7a197e904d
 };
 #endif 
 
@@ -118,10 +203,21 @@ int main()
     cout << S.ExpRev << endl;
 
     SimluatedAnnealer A(S);
+<<<<<<< HEAD
     A.choose_path();
     
     cout << A.rev_path() << endl;
     cout << A.rows << endl; 
     A.best_ex();
+=======
+
+    A.max_annealer();
+    //vector<int> x = A.choose_random_path();
+    //for (int i = 0; i < x.size(); ++i) {
+    //    cout << x[i] << endl; 
+    //}
+    //
+
+>>>>>>> 73138d4c0620b9bd8b73ce774ebf2c7a197e904d
     cout << "done" << endl;
 }
