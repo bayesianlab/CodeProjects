@@ -116,4 +116,6 @@ venv/
 *.user
 CMakeFiles/*
 CMakeCache.txt
+*.h5
+*.pkl
 *.swp 

@@ -52,3 +52,6 @@ include_directories(SYSTEM
   )
 
 
+  add_library(Dist ../Distributions/src/Distributions.cpp)
+  add_executable(op optimize.cpp)
+  target_link_libraries(op Dist)

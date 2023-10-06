@@ -98,6 +98,13 @@ class SimluatedAnnealer
             path.push_back(distr(eng));
             
         }
+=======
+        vector<int> path;
+        for (int c = 0; c < SimSet.cols(); ++c)
+        {
+            path.push_back(distr(eng));
+            
+        }
         return path;
     }
 
@@ -106,11 +113,25 @@ class SimluatedAnnealer
         double rev = 0;
         for (int c = 0; c < SimSet.cols(); ++c)
         {
+<<<<<<< HEAD
+            
+            rev += (double)SimSet(rows[c], c);
+=======
             rev += SimSet(selected_path[c], c);
+>>>>>>> 73138d4c0620b9bd8b73ce774ebf2c7a197e904d
         }
         return rev;
     }
 
+<<<<<<< HEAD
+    void best_ex(){
+        
+        for(int i =0;i<SimSet.cols(); ++i)
+        {
+            // SimSet.col
+        }
+    }
+=======
     void max_annealer() {
         vector<int> sm = simple_max();
         double max = 0;
@@ -169,17 +190,26 @@ class SimluatedAnnealer
         }
         cout << endl; 
      }
+>>>>>>> 73138d4c0620b9bd8b73ce774ebf2c7a197e904d
 };
+#endif 
 
 int main()
 {
     cout << "set up practice matrix" << endl;
-    Simulations S(10, 10);
+    Simulations S(2, 3);
     S.set_up_sims();
-
+    
     cout << S.ExpRev << endl;
 
     SimluatedAnnealer A(S);
+<<<<<<< HEAD
+    A.choose_path();
+    
+    cout << A.rev_path() << endl;
+    cout << A.rows << endl; 
+    A.best_ex();
+=======
 
     A.max_annealer();
     //vector<int> x = A.choose_random_path();
@@ -188,5 +218,6 @@ int main()
     //}
     //
 
+>>>>>>> 73138d4c0620b9bd8b73ce774ebf2c7a197e904d
     cout << "done" << endl;
 }
