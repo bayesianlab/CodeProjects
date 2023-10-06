@@ -126,7 +126,7 @@ class SimluatedAnnealer
         vector<int> path0(SimSet.cols());
         double E0 = -rev_path(path0); 
         int reps = 0; 
-        int Mk = 10000;
+        int Mk = 100;
         double E = 0; 
         double Delta = E - E0; 
         double stop = 1e-4;

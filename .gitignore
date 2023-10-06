@@ -1,8 +1,8 @@
 # Compiled source #
 ###################
 *.com
-*.class
-*.dll
+*.class 
+*.dll 
 *.exe
 *.o
 *.so
@@ -116,4 +116,4 @@ venv/
 *.user
 CMakeFiles/*
 CMakeCache.txt
-
+*.swp 
