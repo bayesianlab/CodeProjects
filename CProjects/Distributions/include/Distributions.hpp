@@ -2,7 +2,7 @@
 #define DIST_H
 #define _USE_MATH_DEFINES
 #include <cmath> 
-#include <D:/Users/dflanner/include/eigen_3.4.0/Eigen/Dense>
+#include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <boost/math/distributions/exponential.hpp>

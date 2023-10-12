@@ -15,7 +15,7 @@ if(CCACHE_FOUND)
   set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 endif(CCACHE_FOUND)
 
-set(BOOST_ROOT "D:\\Users\\dflanner\\include\\boost_1_83_0")
+# set(BOOST_ROOT "D:\\Users\\dflanner\\include\\boost_1_83_0")
 
 find_package(Boost)
 if(Boost_FOUND)
@@ -24,21 +24,20 @@ if(Boost_FOUND)
 endif(Boost_FOUND)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
-include_directories(SYSTEM
-#  /home/dillon/gcem/include/
-#  /home/dillon/stats/include/
-#  /home/dillon/eigen/
-#  /home/dillon/eigen/unsupported
+include_directories(
+ /usr/local/include/gcem-master/include/
+ /usr/local/include/stats-master/include/
+ /usr/local/include/eigen-3.4.0/
+ /usr/local/include/eigen-3.4.0/unsupported
    #D:\\Users\\dflanner\\include/boost_1_83_0/ 
 #   "D:\\Users\\dflanner\\include\\eigen_3.4.0"
 #   "D:\\Users\\dflanner\\include\\eigen_3.4.0\\unsupported"
 #   "D:\\Users\\dflanner\\include\\gcem-master\\include"
 #   "D:\\Users\\dflanner\\include\\stats-master\\include"
-   "C:\\Users\\dflanner\\include\\eigen_3.4.0"
-   "C:\\Users\\dflanner\\include\\eigen_3.4.0\\unsupported"
-   "C:\\Users\\dflanner\\include\\gcem-master\\include"
-   "C:\\Users\\dflanner\\include\\stats-master\\include"
-
+  #  "C:\\Users\\dflanner\\include\\eigen_3.4.0"
+  #  "C:\\Users\\dflanner\\include\\eigen_3.4.0\\unsupported"
+  #  "C:\\Users\\dflanner\\include\\gcem-master\\include"
+  #  "C:\\Users\\dflanner\\include\\stats-master\\include"
    
   ../EigenTools/include
   #../TimeSeries/include
@@ -51,4 +50,7 @@ include_directories(SYSTEM
 #  "/usr/local/include/gcem/include"
   )
 
+add_library(dist ../Distributions/src/Distributions.cpp)
 
+add_executable(tab tableau.cpp)
+target_link_libraries(tab dist)
