@@ -105,15 +105,15 @@ TbsOutput/
 
 build/
 venv/
-*/.vs/*
-*/x64/*
+.vs/
+x64/
 *.sln
 *.vcxproj
 *.sln
 *.vcxproj
 *.filters
 *.user
-CMakeFiles/*
+CMakeFiles/
 CMakeCache.txt
 *.h5
 *.pkl

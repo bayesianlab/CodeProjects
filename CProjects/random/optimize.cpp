@@ -92,13 +92,7 @@ class SimluatedAnnealer
         std::random_device rd;
         std::mt19937 eng(rd());
         std::uniform_int_distribution<> distr(0, SimSet.rows() - 1);
-        vector<int> path;
-        for (int c = 0; c < SimSet.cols(); ++c)
-        {
-            path.push_back(distr(eng));
-            
-        }
-=======
+
         vector<int> path;
         for (int c = 0; c < SimSet.cols(); ++c)
         {
@@ -113,25 +107,12 @@ class SimluatedAnnealer
         double rev = 0;
         for (int c = 0; c < SimSet.cols(); ++c)
         {
-<<<<<<< HEAD
-            
-            rev += (double)SimSet(rows[c], c);
-=======
+
             rev += SimSet(selected_path[c], c);
->>>>>>> 73138d4c0620b9bd8b73ce774ebf2c7a197e904d
         }
         return rev;
     }
 
-<<<<<<< HEAD
-    void best_ex(){
-        
-        for(int i =0;i<SimSet.cols(); ++i)
-        {
-            // SimSet.col
-        }
-    }
-=======
     void max_annealer() {
         vector<int> sm = simple_max();
         double max = 0;
@@ -190,9 +171,7 @@ class SimluatedAnnealer
         }
         cout << endl; 
      }
->>>>>>> 73138d4c0620b9bd8b73ce774ebf2c7a197e904d
 };
-#endif 
 
 int main()
 {
@@ -203,13 +182,11 @@ int main()
     cout << S.ExpRev << endl;
 
     SimluatedAnnealer A(S);
-<<<<<<< HEAD
-    A.choose_path();
-    
-    cout << A.rev_path() << endl;
-    cout << A.rows << endl; 
-    A.best_ex();
-=======
+    //A.choose_path();
+    //
+    //cout << A.rev_path() << endl;
+    //cout << A.rows << endl; 
+    //A.best_ex();
 
     A.max_annealer();
     //vector<int> x = A.choose_random_path();
@@ -218,6 +195,5 @@ int main()
     //}
     //
 
->>>>>>> 73138d4c0620b9bd8b73ce774ebf2c7a197e904d
     cout << "done" << endl;
 }
