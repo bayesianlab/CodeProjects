@@ -37,7 +37,7 @@
 \usepackage{hyperref} 
 
 \usepackage{tikz}
-
+\usetikzlibrary{shapes, arrows.meta, positioning}
 \begin{document}
 	
 \tikzset{%
@@ -84,7 +84,26 @@ node [above, midway] {$I_\l$};
 \node [align=center, above] at (\x*2,2) {\l \\ layer};
 
 \end{tikzpicture}
-
-
+\newpage 
+\begin{tikzpicture}[
+	node distance=4ex and 0em,
+	block/.style={rectangle, draw, fill=white!20, 
+		text width=7.5em, text centered, rounded corners, minimum height=4em},
+	line/.style={draw, -latex},
+	]
+	
+	\node [block] (0) {Previous bidding data};
+	\node [block, below= of 0] (1) {Begin/Continue Calibration of model};
+	\node [block, below right= of 1] (2) {Data is broken up into random batches};
+	\node [block, below left= of 2] (3) {Model weights are calibrated for each attribute of the data};
+	\node [block, above left= of 3] (4) {Model is validated to see if it should stop calibrating};
+	\draw [->] (0) -- (1) ;
+	\node [block, left = 1cm of 4] (break) {If validation improvement is not decreasing, STOP};
+	\draw [->] (4) -- (break) ;  
+	\path [line] (1.east) to[out=0, in=90] (2.60);
+	\path [line] (2.-60) to[out=-90, in=0] (3.east);
+	\path [line] (3.west) to[out=180, in=-90] (4.-120);
+	\path [line] (4.120) to[out=90, in=180] (1.west);
+\end{tikzpicture}
 	
 \end{document}
