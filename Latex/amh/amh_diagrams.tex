@@ -85,6 +85,7 @@ node [above, midway] {$I_\l$};
 
 \end{tikzpicture}
 \newpage 
+
 \begin{tikzpicture}[
 	node distance=4ex and 0em,
 	block/.style={rectangle, draw, fill=white!20, 
@@ -105,5 +106,20 @@ node [above, midway] {$I_\l$};
 	\path [line] (3.west) to[out=180, in=-90] (4.-120);
 	\path [line] (4.120) to[out=90, in=180] (1.west);
 \end{tikzpicture}
+	\newpage 
 	
+\begin{tikzpicture}[
+	node distance=4ex and 0em,
+	MyNode/.style={circle, draw, fill=white!20, 
+		text width=7.5em, text centered,  minimum height=4em}
+	]
+	
+\node [MyNode] (main) at (0,0) {Binary Outcome}; 
+\node [MyNode] (win) at (-3,-3) {Win - 1} ; 
+\node [MyNode] (loss) at (3,-3) {Loss - 0} ; 
+\draw [->] (main) -- (win);
+\draw [->] (main) -- (loss);
+
+
+\end{tikzpicture}	
 \end{document}
