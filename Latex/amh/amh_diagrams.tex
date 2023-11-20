@@ -35,9 +35,18 @@
 \usepackage{rotating}
 
 \usepackage{hyperref} 
-
+\usepackage{fullpage} 
 \usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
 \usetikzlibrary{shapes, arrows.meta, positioning}
+\usetikzlibrary{arrows.meta,
+                chains,
+                positioning,
+                shapes.geometric,
+                decorations.pathreplacing
+                }
+
 \begin{document}
 	
 \tikzset{%
@@ -129,5 +138,109 @@ node [above, midway] {$I_\l$};
 	& x \geq 0. 
 \end{align*}
 
+\newpage 
+\begin{tikzpicture}[
+    node distance = 3.5cm,
+    disc/.style = {shape=cylinder, draw, shape aspect=0.3,
+                shape border rotate=90,
+                text width=17mm, align=center, 
+                font=\linespread{0.8}\selectfont,
+                minimum height=2cm},
+    mdl/.style = {shape=ellipse, aspect=2.2, draw},
+    alg/.style = {draw, align=center, font=\linespread{0.8}\selectfont}
+                    ]
+
+\node (n1) [disc] {Training\\ data};
+\node (n2) [alg, right of=n1]  {Untrained\\ model};
+\draw[->] (n1) -- (n2) ;
+
+%\node (n3) [mdl]  {Model};
+%\node (n4) [disc] {Test\\ data};
+%\node (n3) [mdl]  {Model\\ Validation};
+%\node (n3) [mdl]  {Model\\ Shifts};
+
+\node[below=of n1, text width=2.5cm] {Step 1: Large amount of previous bidding data is fed to the model.};
+\node[below=of n2, text width = 2.5cm]  {Step 2: The model learns the optimal weights from the data.};
+
+
+%\path[draw,->] (n1) edge (n2)
+ %(n2) edge (n3)
+               %(n3) edge (n4)
+                    %(otsu.east) -| (right) -- (left) |- (gchannel)
+                    %(gchannel) edge (closing)
+                    %(closing) edge (NN)
+                    %(NN) edge (limit)
+                    
+    \end{tikzpicture}
+    
+\newpage 
+\begin{align*}
+	\min \ & c^\top x \\ 
+	s.t. \ & Ax = b \\
+	& x \geq 0. 
+\end{align*}
+
+
+\newpage
+\begin{tikzpicture}[node distance=3.5cm]
+    \draw[shift={(0,0)}, color=black] (0pt,3pt) -- (0pt,-3pt);    
+    \draw[shift={(4,0)}, color=red] (0,6pt) -- (0pt, -6pt);
+    \draw[shift={(8,0)}, color=green] (0,6pt) -- (0pt, -6pt);
+    \draw[shift={(12,0)}, color=black] (0pt,3pt) -- (0pt,-3pt);
+    \draw[->, color=green] (8,0) -- (16,0);
+    \draw[<-, color=red] (-2,0) -- (4,0);
+    \draw[-, color=blue] (4,0)--(8,0);
+    \draw (8,-.5) node[below] {100.50}; 
+    \node[align=left] at (8,-2) {Winning\\ bid price}; 
+    \node[align=left] at (4,2) {Next best\\ bid price};
+    \draw (4,.65) node[above] {100.25};
+    \draw[decorate, decoration={brace, amplitude=10pt}] (4, 3)--(8,3)
+     node[black,midway,yshift=1cm, align=center] {Unrealized gain\\(if winner of auction)};
+    \draw[decorate, decoration={brace, amplitude=10pt}] (8,.5)--(16,.5)
+     node[black,midway,yshift=1cm, align=center] {Winning\\ bids};  
+    \draw[decorate, decoration={brace, amplitude=10pt}] (-2,.5)--(4,.5)
+     node[black,midway,yshift=1cm, align=center] {Losing\\ bids};   
+    
+    % \draw (0,-.5) node[below] {$\ldots$};
+    % \draw (2,-.5) node[below] {100.00}; 
+    % \draw (6,-.5) node[below] {101.00};
+    
+    % \draw (8,-.5) node[below] {$\ldots$};
+\end{tikzpicture}
+
+\newpage 
+
+
+\begin{tikzpicture}[domain=0:8]
+  \draw[very thin,color=gray, step=2cm] (-0.2,-2.1) grid (7.9,7.9);
+  \draw[->] (-0.2,0) -- (8.2,0) node[right] {Actual win rate};
+  \draw[->] (0,-2.2) -- (0,8.2) node[above] {Estimated win rate};
+  \node[color=black] at (2.0, 2.3) {\Large \textbullet};
+  \node[color=black] at (4.0, 3.9) {\Large \textbullet};
+  \node[color=black] at (6.0, 4.5) {\Large \textbullet};
+  \node[color=red] at (2.0, 2.9) {\Large \textbullet};
+  \node[color=red] at (4.0, 3.2) {\Large \textbullet};
+  \node[color=red] at (6.0, 2.9) {\Large \textbullet};
+  
+\draw[decorate, decoration={brace, mirror, amplitude=10pt}] (6,2.9)--(6,4.5)
+     node[black,midway,xshift=1cm, align=right] {Gap};   
+
+\end{tikzpicture}
+
+\begin{tikzpicture}[domain=0:8]
+  \draw[very thin,color=gray, step=2cm] (-0.2,-2.1) grid (7.9,7.9);
+  \draw[->] (-0.2,0) -- (8.2,0) node[right] {Actual win rate};
+  \draw[->] (0,-2.2) -- (0,8.2) node[above] {Estimated win rate};
+  \node[color=black] at (2.0, 2.3) {\Large \textbullet};
+  \node[color=black] at (4.0, 3.9) {\Large \textbullet};
+  \node[color=black] at (6.0, 4.5) {\Large \textbullet};
+  \node[color=red] at (2.0, 2.5) {\Large \textbullet};
+  \node[color=red] at (4.0, 3.7) {\Large \textbullet};
+  \node[color=red] at (6.0, 4.7) {\Large \textbullet};
+  
+\draw[decorate, decoration={brace, mirror, amplitude=10pt}] (6,2.9)--(6,4.5)
+     node[black,midway,xshift=1cm, align=right] {Gap};   
+
+\end{tikzpicture}
 
 \end{document}
