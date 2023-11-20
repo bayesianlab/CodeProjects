@@ -13,6 +13,8 @@ int main()
     VectorXd xb = VectorXd::Ones(n_objective_x); 
     VectorXd c(3);
     c << 3,1,1;
+    VectorXd b(2);
+    b << 2, -1; 
     cout << "Initial obj" << endl;  
     cout << c.transpose() * xb << endl;  
 
@@ -49,6 +51,13 @@ int main()
     cout << "cost coefs" << endl; 
     cout << rD << endl; 
 
+    Index col;
+    double max = rD.minCoeff(&col);
+    cout << col << endl;  
+
+    cout << "aq in terms of the current basis" << endl; 
+    cout << B*AI.col(0) << endl; 
+    
 
 	return 0; 
 }
