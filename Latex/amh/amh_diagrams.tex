@@ -39,19 +39,10 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
-<<<<<<< HEAD
 \usetikzlibrary{shapes, arrows.meta, positioning,arrows.meta,
                 chains,
                 shapes.geometric,
                 decorations.pathreplacing, datavisualization.formats.functions
-=======
-\usetikzlibrary{shapes, arrows.meta, positioning}
-\usetikzlibrary{arrows.meta,
-                chains,
-                positioning,
-                shapes.geometric,
-                decorations.pathreplacing
->>>>>>> afb126d81694c508b7ab53b627336e261eb3e359
                 }
 
 \begin{document}
@@ -222,13 +213,8 @@ data/.style={shape=cylinder, draw, shape aspect=0.3,
     \draw[<-, color=red] (-2,0) -- (4,0);
     \draw[-, color=blue] (4,0)--(8,0);
     \draw (8,-.5) node[below] {100.50}; 
-<<<<<<< HEAD
     \node[align=center] at (8,-2) {Winning\\ bid price}; 
     \node[align=center] at (4,2) {Next best\\ bid price \\(Boundary Margin)};
-=======
-    \node[align=left] at (8,-2) {Winning\\ bid price}; 
-    \node[align=left] at (4,2) {Next best\\ bid price};
->>>>>>> afb126d81694c508b7ab53b627336e261eb3e359
     \draw (4,.65) node[above] {100.25};
     \draw[decorate, decoration={brace, amplitude=10pt}] (4, 3)--(8,3)
      node[black,midway,yshift=1cm, align=center] {Unrealized gain\\(if winner of auction)};
@@ -274,7 +260,6 @@ data/.style={shape=cylinder, draw, shape aspect=0.3,
   \node[color=red] at (4.0, 3.7) {\Large \textbullet};
   \node[color=red] at (6.0, 4.7) {\Large \textbullet};
   
-<<<<<<< HEAD
 \end{tikzpicture}
  \newpage 
  \begin{landscape}
@@ -377,11 +362,5 @@ model/.style={trapezium, draw=black,
 
     
 
-=======
-\draw[decorate, decoration={brace, mirror, amplitude=10pt}] (6,2.9)--(6,4.5)
-     node[black,midway,xshift=1cm, align=right] {Gap};   
-
-\end{tikzpicture}
->>>>>>> afb126d81694c508b7ab53b627336e261eb3e359
 
 \end{document}
