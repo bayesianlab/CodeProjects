@@ -26,7 +26,7 @@
 \usepackage{setspace}
 \usepackage[round]{natbib}
 \usepackage[titletoc]{appendix}
-
+\usepackage{lscape}
 
 \usepackage{longtable}
 \usepackage{totcount}
@@ -35,55 +35,86 @@
 \usepackage{rotating}
 
 \usepackage{hyperref} 
-
+\usepackage{fullpage} 
 \usepackage{tikz}
-\usetikzlibrary{shapes, arrows.meta, positioning}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usetikzlibrary{shapes, arrows.meta, positioning,arrows.meta,
+                chains,
+                shapes.geometric,
+                decorations.pathreplacing, datavisualization.formats.functions
+                }
+
 \begin{document}
 	
-\tikzset{%
+
+
+\begin{tikzpicture}[x=1.5cm, y=1.5cm, >=stealth,
 every neuron/.style={
 circle,
 draw,
-minimum size=1cm
+minimum size=2cm,
+fill=red!25
 },
-neuron missing/.style={
-draw=none,
-scale=4,
-text height=0.333cm,
-execute at begin node=\color{black}$\vdots$
-},
-}
+hidden neuron/.style={
+circle,
+draw,
+minimum size=2cm,
+fill=blue!25
+}, 
+data/.style={shape=cylinder, draw, shape aspect=0.3,
+                shape border rotate=90, minimum height=5cm, text width = 4cm,
+                fill=black!25}
+                ]
 
-\begin{tikzpicture}[x=1.5cm, y=1.5cm, >=stealth]
 
-\foreach \m [count=\y] in {1,2,3,missing,4}
-\node [every neuron/.try, neuron \m/.try] (input-\m) at (0,2.5-\y) {};
+\node[every neuron] (n1) at (0,10){$I_1$};
+\node[every neuron] (n2) [below=of n1] {$I_2$};
+\node[every neuron] (n3) [below=of n2] {$I_3$};
+\node[auto=false] (ell) [below=of n3,]{\Large$\vdots$};
+\node[every neuron] (n4) [below=of ell,]{$I_4$};
 
-\foreach \m [count=\y] in {1,missing,2}
-\node [every neuron/.try, neuron \m/.try ] (hidden-\m) at (2,2-\y*1.25) {};
+\node[] (text node) [above= of n1] {Input Layer};
+\node[data] (d) [below left=3cm and 2.5cm of n1, align=center] {Data};
+\node[] (text node0) [left=3cm of text node] {Input Data};
 
-\node[every neuron] (outp) at (4, -.5) {};
+\node[hidden neuron] (n5) [below right=.5cm and 2.5cm of n1] {$H_1$};
+\node[hidden neuron] (n6) [below=of n5] {$H_2$};
+\node[auto=false] (ell2) [below=of n6] {\Large$\vdots$};
+\node[hidden neuron] (n7) [below=of ell2] {$H_3$};
 
-\draw[->] (outp) -- ++(1,0) node [above, midway] {$O$};
+\node[] (text node2) [right= of text node] {Hidden Layer};
 
-\foreach \l [count=\i] in {1,2,3,n}
-\draw [<-] (input-\i) -- ++(-1,0)
-node [above, midway] {$I_\l$};
+\node[circle, draw, minimum size=2cm, fill=green!25] (n8) [below right=.05cm and 2.5cm of n6] {$O$};
 
-\foreach \l [count=\i] in {1,n}
-\node [above] at (hidden-\i.north) {$H_\l$};
+\node[] (text node3) [right= of text node2] {Output Layer};
 
-\foreach \i in {1,...,4}
-\foreach \j in {1,...,2}
-\draw [->] (input-\i) -- (hidden-\j);
+\draw[->] (n1) -- (n5);
+\draw[->] (n2) -- (n5);
+\draw[->] (n3) -- (n5);
+\draw[->] (n4) -- (n5);
 
-\foreach \i in {1,...,2}
-\draw [->] (hidden-\i) -- (outp);
+\draw[->] (n1) -- (n6);
+\draw[->] (n2) -- (n6);
+\draw[->] (n3) -- (n6);
+\draw[->] (n4) -- (n6);
 
-\foreach \l [count=\x from 0] in {Input, Hidden, Output}
-\node [align=center, above] at (\x*2,2) {\l \\ layer};
+\draw[->] (n1) -- (n7);
+\draw[->] (n2) -- (n7);
+\draw[->] (n3) -- (n7);
+\draw[->] (n4) -- (n7);
+
+\draw[->] (n5) -- (n8);
+\draw[->] (n6) -- (n8);
+\draw[->] (n7) -- (n8);
+
+\draw[->] (d) -- (n1);
+\draw[->] (d) -- (n2);
+\draw[->] (d) -- (n3);
+\draw[->] (d) -- (n4);
 
 \end{tikzpicture}
+
 \newpage 
 
 \begin{tikzpicture}[
@@ -93,13 +124,13 @@ node [above, midway] {$I_\l$};
 	line/.style={draw, -latex},
 	]
 	
-	\node [block] (0) {Previous bidding data};
-	\node [block, below= of 0] (1) {Begin/Continue Calibration of model};
-	\node [block, below right= of 1] (2) {Data is broken up into random batches};
-	\node [block, below left= of 2] (3) {Model weights are calibrated for each attribute of the data};
-	\node [block, above left= of 3] (4) {Model is validated to see if it should stop calibrating};
+	\node [block, fill=green!25] (0) {Previous bidding data};
+	\node [block, below= of 0, fill=blue!25] (1) {Begin/Continue Calibration of model};
+	\node [block, below right= of 1,fill=blue!25] (2) {Data is broken up into random batches};
+	\node [block, below left= of 2,fill=blue!25] (3) {Model weights are calibrated for each attribute of the data};
+	\node [block, above left= of 3,fill=blue!25] (4) {Model is validated to see if it should stop calibrating};
 	\draw [->] (0) -- (1) ;
-	\node [block, left = 1cm of 4] (break) {If validation improvement is not decreasing, STOP};
+	\node [block, left = 1cm of 4,fill=red!25] (break) {If validation improvement is not decreasing, STOP};
 	\draw [->] (4) -- (break) ;  
 	\path [line] (1.east) to[out=0, in=90] (2.60);
 	\path [line] (2.-60) to[out=-90, in=0] (3.east);
@@ -114,9 +145,9 @@ node [above, midway] {$I_\l$};
 		text width=7.5em, text centered,  minimum height=4em}
 	]
 	
-\node [MyNode] (main) at (0,0) {Binary Outcome}; 
-\node [MyNode] (win) at (-3,-3) {Win - 1} ; 
-\node [MyNode] (loss) at (3,-3) {Loss - 0} ; 
+\node [MyNode, fill=blue!25] (main) at (0,0) {Binary Outcome}; 
+\node [MyNode, fill=green!25] (win) at (-3,-3) {Win - 1} ; 
+\node [MyNode, fill=red!25] (loss) at (3,-3) {Loss - 0} ; 
 \draw [->] (main) -- (win);
 \draw [->] (main) -- (loss);
 
@@ -128,6 +159,208 @@ node [above, midway] {$I_\l$};
 	s.t. \ & Ax = b \\
 	& x \geq 0. 
 \end{align*}
+
+\newpage 
+\begin{tikzpicture}[
+    node distance = 3.5cm,
+    disc/.style = {shape=cylinder, draw, shape aspect=0.3,
+                shape border rotate=90,
+                text width=17mm, align=center, 
+                font=\linespread{0.8}\selectfont,
+                minimum height=2cm},
+    mdl/.style = {shape=ellipse, aspect=2.2, draw},
+    alg/.style = {draw, align=center, font=\linespread{0.8}\selectfont}
+                    ]
+
+\node (n1) [disc] {Training\\ data};
+\node (n2) [alg, right of=n1]  {Untrained\\ model};
+\draw[->] (n1) -- (n2) ;
+
+%\node (n3) [mdl]  {Model};
+%\node (n4) [disc] {Test\\ data};
+%\node (n3) [mdl]  {Model\\ Validation};
+%\node (n3) [mdl]  {Model\\ Shifts};
+
+\node[below=of n1, text width=2.5cm] {Step 1: Large amount of previous bidding data is fed to the model.};
+\node[below=of n2, text width = 2.5cm]  {Step 2: The model learns the optimal weights from the data.};
+
+
+%\path[draw,->] (n1) edge (n2)
+ %(n2) edge (n3)
+               %(n3) edge (n4)
+                    %(otsu.east) -| (right) -- (left) |- (gchannel)
+                    %(gchannel) edge (closing)
+                    %(closing) edge (NN)
+                    %(NN) edge (limit)
+                    
+    \end{tikzpicture}
+    
+\newpage 
+\begin{align*}
+	\min \ & c^\top x \\ 
+	s.t. \ & Ax = b \\
+	& x \geq 0. 
+\end{align*}
+
+
+\newpage
+\begin{tikzpicture}[node distance=3.5cm]
+    \draw[shift={(0,0)}, color=black] (0pt,3pt) -- (0pt,-3pt);    
+    \draw[shift={(4,0)}, color=red] (0,6pt) -- (0pt, -6pt);
+    \draw[shift={(8,0)}, color=green] (0,6pt) -- (0pt, -6pt);
+    \draw[shift={(12,0)}, color=black] (0pt,3pt) -- (0pt,-3pt);
+    \draw[->, color=green] (8,0) -- (16,0);
+    \draw[<-, color=red] (-2,0) -- (4,0);
+    \draw[-, color=blue] (4,0)--(8,0);
+    \draw (8,-.5) node[below] {100.50}; 
+    \node[align=center] at (8,-2) {Winning\\ bid price}; 
+    \node[align=center] at (4,2) {Next best\\ bid price \\(Boundary Margin)};
+    \draw (4,.65) node[above] {100.25};
+    \draw[decorate, decoration={brace, amplitude=10pt}] (4, 3)--(8,3)
+     node[black,midway,yshift=1cm, align=center] {Unrealized gain\\(if winner of auction)};
+    \draw[decorate, decoration={brace, amplitude=10pt}] (8,.5)--(16,.5)
+     node[black,midway,yshift=1cm, align=center] {Winning\\ bids};  
+    \draw[decorate, decoration={brace, amplitude=10pt}] (-2,.5)--(4,.5)
+     node[black,midway,yshift=1cm, align=center] {Losing\\ bids};   
+    
+    % \draw (0,-.5) node[below] {$\ldots$};
+    % \draw (2,-.5) node[below] {100.00}; 
+    % \draw (6,-.5) node[below] {101.00};
+    
+    % \draw (8,-.5) node[below] {$\ldots$};
+\end{tikzpicture}
+
+\newpage 
+
+
+\begin{tikzpicture}[domain=0:8]
+  \draw[very thin,color=gray, step=2cm] (-0.2,-2.1) grid (7.9,7.9);
+  \draw[->] (-0.2,0) -- (8.2,0) node[right] {Actual win rate};
+  \draw[->] (0,-2.2) -- (0,8.2) node[above] {Estimated win rate};
+  \node[color=black] at (2.0, 2.3) {\Large \textbullet};
+  \node[color=black] at (4.0, 3.9) {\Large \textbullet};
+  \node[color=black] at (6.0, 4.5) {\Large \textbullet};
+  \node[color=red] at (2.0, 2.9) {\Large \textbullet};
+  \node[color=red] at (4.0, 3.2) {\Large \textbullet};
+  \node[color=red] at (6.0, 2.9) {\Large \textbullet};
+  
+\draw[decorate, decoration={brace, mirror, amplitude=10pt}] (6,2.9)--(6,4.5)
+     node[black,midway,xshift=1cm, align=right] {Gap};   
+
+\end{tikzpicture}
+
+\begin{tikzpicture}[domain=0:8]
+  \draw[very thin,color=gray, step=2cm] (-0.2,-2.1) grid (7.9,7.9);
+  \draw[->] (-0.2,0) -- (8.2,0) node[right] {Actual win rate};
+  \draw[->] (0,-2.2) -- (0,8.2) node[above] {Estimated win rate};
+  \node[color=black] at (2.0, 2.3) {\Large \textbullet};
+  \node[color=black] at (4.0, 3.9) {\Large \textbullet};
+  \node[color=black] at (6.0, 4.5) {\Large \textbullet};
+  \node[color=red] at (2.0, 2.5) {\Large \textbullet};
+  \node[color=red] at (4.0, 3.7) {\Large \textbullet};
+  \node[color=red] at (6.0, 4.7) {\Large \textbullet};
+  
+\end{tikzpicture}
+ \newpage 
+ \begin{landscape}
+\begin{tikzpicture}
+[
+MizerNode/.style={rectangle, draw=black, thick,
+text width = 2.5cm, align=center, fill=blue!20},
+OptionalNode/.style={trapezium,   trapezium left angle=70, 
+  trapezium right angle=110, draw=black, thick, 
+text width = 2cm, align=center, fill=orange!25},
+DataNode/.style={cylinder, draw=black, thick,  
+text width = 3cm, align=center, shape border rotate=90, shape aspect=0.3, fill=black!20},
+TargetNode/.style={diamond, draw=black, thick, align=center,text width = 3cm,
+fill=teal!20}
+]
+
+\node[MizerNode] (Training)  {\footnotesize Mizer begins training};
+\node[MizerNode] (Trained) [right=of Training]{\footnotesize Trained Mizer model is examined for goodness of fit};
+%\node at (12,0) [MizerNode] {Results are analyzed}; 
+
+\node[MizerNode] (Optimizer) [right=of Trained]{\footnotesize The Mizer optimizer is applied to incoming data}; 
+\node[OptionalNode] (Uniform) [right=of Optimizer]{\footnotesize Uniform shift is applied};
+\node[OptionalNode] (Geometric) [below=of Uniform]{\footnotesize Geometric shift is applied};
+\node[OptionalNode] (Linear)[above=of Uniform]{\footnotesize Linear shift is applied}; 
+\node[MizerNode] (Results) [right=of Uniform] {\footnotesize Results are sent out and analyzed}; 
+\node[DataNode](TrainingData)[below=of Training] {\footnotesize Previous bidding data is sent to untrained Mizer model};
+\node[DataNode](EvalData) [below=of Optimizer] {\footnotesize New bidding data is sent to the optimizer};
+\node[TargetNode] (Targets) [above=of Optimizer]{\footnotesize Target constraints are set, $Ax=b$};
+\node[TargetNode] (Forecasts) [left=of Targets]{\footnotesize Forecasts are made for incoming look count for constraints, $\hat{N}$};
+\node[](null)[right=of Results]{};
+
+\draw[->] (Forecasts) -- (Targets);
+\draw[->] (Targets) -- (Optimizer);
+\draw[->] (Trained) -- (Optimizer);
+\draw[->] (Optimizer) -- (Uniform);
+\draw[->] (Optimizer) -- (Linear);
+\draw[->] (Optimizer) -- (Geometric);
+
+\draw[->] (Geometric) -- (Results);
+\draw[->] (Uniform) -- (Results);
+\draw[->] (Linear) -- (Results);
+
+\draw[->] (Training) -- (Trained);
+\draw[->] (TrainingData) -- (Training);
+\draw[->] (EvalData) -- (Optimizer);
+\draw[->] (Results)--(null);
+\end{tikzpicture} 
+\end{landscape}
+
+\newpage 
+
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines = center,
+    xlabel = \(x\),
+    ylabel = {\(f(x)\)},
+]
+\addplot [
+    domain=-.1:2,
+    samples=100, 
+    color=red
+]
+{-ln(x)};
+\addlegendentry{$y=-\log(x)$}
+\end{axis}
+\end{tikzpicture}
+
+
+
+\newpage
+
+
+\begin{landscape}
+\begin{tikzpicture}
+[
+flow/.style={trapezium, draw=black,
+             fill=orange!50, thick, trapezium left angle=70, 
+             trapezium right angle=110, text width=5.5cm, align=center},
+model/.style={trapezium, draw=black,
+              fill=blue!30, thick, trapezium left angle=70, 
+              trapezium right angle=110, text width=5.5cm, align=center}
+]
+
+    \draw[shift={(4,0)}, color=black] (0pt,10pt) -- (0pt,-10pt);    
+    \draw[<->, color=black] (0,0) -- (8,0);
+    \node[flow] (bench) at (-4,4) {Daily the BenchMarginPrice is predicted from an average of other
+    bidding data where these price exist,\\ $BenchMarginPrice = w_0 p_0 + w_1 p_1 + \dots $};
+    \node[] (null) at (4,.5) {$BenchMarginPrice$};
+    \draw[->] (bench) to [bend left=45] (null);
+    \node[xshift=-2.5cm] (adj1) at (0,0) {$-BenchMarginPrice$} ;
+    \node[xshift=2.5cm] (adj2) at (8,0) {$+BenchMarginPrice$} ;
+    \node[model] (negative) [below=of adj1] {Model makes adjustment of $BenchMarginPrice$};
+    \node[model] (positive) [below=of adj2] {Model makes adjustment of $BenchMarginPrice$};
+    \draw[->] (negative) -- (adj1);
+    \draw[->] (positive)-- (adj2);
+    \draw[decorate, decoration={brace, mirror, amplitude=10pt}] (-3,-4)--(10,-4)
+     node[black,midway, below, align=center, yshift=-.5cm] {AdjustedBoundaryMarginPrice};   
+\end{tikzpicture}
+\end{landscape} 
+
+    
 
 
 \end{document}
