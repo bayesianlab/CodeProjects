@@ -146,22 +146,69 @@ def get_missing_indices(features, missing_names):
         missing_indices.append(features[features[i]==1].index)
     return [j for i in missing_indices for j in i]    
 
-def make_missing_predictions(features, missing_indices, ohe_root_name):
+def make_missing_predictions(features, missing_indices, model, scaler, ohe_root_name):
     col_nums = []
     for i, name in enumerate(features.columns):
         if name.startswith(ohe_root_name):
             col_nums.append(i)
 
     n_cols = len(col_nums)
+    names = features.columns
+    missing_results = {'S':[], 'M':[], 'W':[]}
     for i in missing_indices:
-        i=4
+        y = [] 
         row = features.iloc[i,:].to_numpy()
         row = np.reshape(row, (-1, features.shape[1]))
         for j in col_nums:
             row[0, j] = 1
-            print(row)
+            x = {} 
+            for i,k in zip(names,row.tolist()[0]):
+                x[i] = k
+            y.append(x)
+            row[0, j] = 0
+        y = pd.DataFrame(y)
+        y = scaler.transform(y)
+        y = np.asarray(y).astype(np.float32)
+
+        S = K.function([model.layers[0].input], [
+                            model.get_layer('S').output])([y])[0]
+
+        try:
+            M = K.function([model.layers[0].input], [
+                    model.get_layer('dM').output])([y])[0]
+        except:
+            M = K.function([model.layers[0].input], [
+                    model.get_layer('M').output])([y])[0]
+
+        W = K.function([model.layers[0].input], [
+                model.get_layer('W').output])([y])[0]
+        tmp = pd.DataFrame({'S':np.ravel(S), 'M':np.ravel(M), 'W':np.ravel(W)})
+        missing_results['S'].append(tmp.mean()['S'])
+        missing_results['M'].append(tmp.mean()['M'])
+        missing_results['W'].append(tmp.mean()['W'])
+    missing_results = pd.DataFrame(missing_results, index=missing_indices)
+    newdf = scaler.transform(features)
+    newdf = np.asarray(newdf).astype(np.float32)
         
+    S = K.function([model.layers[0].input], [
+            model.get_layer('S').output])([newdf])[0]
+    try:
+        M = K.function([model.layers[0].input], [
+                model.get_layer('dM').output])([newdf])[0]
+    except:
+        M = K.function([model.layers[0].input], [
+                model.get_layer('M').output])([newdf])[0]
+
+    W = K.function([model.layers[0].input], [
+            model.get_layer('W').output])([newdf])[0]
+    results = pd.DataFrame({'S':np.ravel(S), 'M':np.ravel(M), 'W':np.ravel(W)})
+    results.iloc[missing_indices] = missing_results
+    return results
+
+
+
         
+# pd.set_option('display.max_columns', None)     
 
 def run_model(args, proc):
     
@@ -181,12 +228,14 @@ def run_model(args, proc):
     #     data = pd.read_csv('avgseller1.csv')
     # except:
     #     print('error with data')
-    data = pd.read_csv('AvgSeller/avgseller1.csv')
+    data = pd.read_csv('avgseller1.csv')
 
     data_copy = data.copy()
-    model_path = SQLAction(args, proc, 'GetEvalParams')['ModelPath'][0]+'\\'
+    # model_path = SQLAction(args, proc, 'GetEvalParams')['ModelPath'][0]+'\\'
+    model_path = ''
     P = pathlib.Path(model_path)
     model = load_model(P/'Model.h5', compile=False)
+    
 
     scaler_path = P/'Scaler.pkl'
     with open(scaler_path, 'rb') as f:
@@ -205,102 +254,8 @@ def run_model(args, proc):
     
     features = features[scaler.feature_names_in_]
 
-    make_missing_predictions(features, missing_indices, 'SellerName')
-
-
-
-
-    # try:
-    #     seller_name_indx = [] 
-    #     seller_names = [] 
-
-        
-    #     results = pd.DataFrame({'S':[],
-    #                         'M':[],
-    #                         'W':[]})
-        
-        
-        
-        # for i in range(features.shape[0]):
-        #     if features.iloc[i, seller_name_indx].sum() == 0:
-        #         print(features.iloc[i, seller_name_indx])
-        #         seller_iden = pd.DataFrame(np.identity(len(seller_name_indx)), columns=features.columns[seller_name_indx])
-        #         repeated_row = np.repeat(features.iloc[i, not_seller_cols], len(seller_name_indx))
-        #         other_repeated_rows = pd.DataFrame(np.reshape(repeated_row, (len(seller_name_indx),len(not_seller_cols)), order='F'), 
-        #                                             columns=features.columns[not_seller_cols])
-        #         newdf = pd.concat([seller_iden, other_repeated_rows], axis=1)
-        #         newdf=newdf[scaler.feature_names_in_]
-        #         newdf = scaler.transform(newdf)
-        #         newdf = np.asarray(newdf).astype(np.float32)
-                # try:
-                #     S = K.function([model.layers[0].input], [
-                #             model.get_layer('S').output])([newdf])[0]
-
-                #     try:
-                #         M = K.function([model.layers[0].input], [
-                #                 model.get_layer('dM').output])([newdf])[0]
-                #     except:
-                #         M = K.function([model.layers[0].input], [
-                #                 model.get_layer('M').output])([newdf])[0]
-
-                #     W = K.function([model.layers[0].input], [
-                #             model.get_layer('W').output])([newdf])[0]
-                # except:
-                #     print('error with s m w prediction')
-                # temp['S'] = np.ravel(S)
-                # temp['M'] = np.ravel(M)
-                # temp['W'] = np.ravel(W)
-                
-                # bmp = data_copy.iloc[i]['BenchMarginPrice']
-                # temp['M'] = temp['M'] + bmp
-                # temp = pd.DataFrame(temp).median()
-                
-                
-                
-            # else:
-            #     try:
-            #         S = K.function([model.layers[0].input], [
-            #                 model.get_layer('S').output])([newdf])[0]
-
-            #         try:
-            #             M = K.function([model.layers[0].input], [
-            #                     model.get_layer('dM').output])([newdf])[0]
-            #         except:
-            #             M = K.function([model.layers[0].input], [
-            #                     model.get_layer('M').output])([newdf])[0]
-
-            #         W = K.function([model.layers[0].input], [
-            #                 model.get_layer('W').output])([newdf])[0]
-            #     except:
-            #         print('error with s m w prediction')
-                    
-                    
-    #     features = scaler.transform(features)
-    #     features = np.asarray(features).astype(np.float32)
-    # except:
-    #     print('couldnt standardize')
-    
-    # try:
-    #     S = K.function([model.layers[0].input], [
-    #             model.get_layer('S').output])([features])[0]
-
-    #     try:
-    #         M = K.function([model.layers[0].input], [
-    #                 model.get_layer('dM').output])([features])[0]
-    #     except:
-    #         M = K.function([model.layers[0].input], [
-    #                 model.get_layer('M').output])([features])[0]
-
-    #     W = K.function([model.layers[0].input], [
-    #             model.get_layer('W').output])([features])[0]
-    # except:
-    #     print('error with s m w prediction')
-    
-    # results = pd.DataFrame({'LookId':data['LookId'],
-    #                         'S':np.ravel(S),
-    #                         'M':np.ravel(M),
-    #                         'W':np.ravel(W)})
-    # results['M'] = results['M'] + data_copy['BenchMarginPrice']
+    results = make_missing_predictions(features, missing_indices, model, scaler, 'SellerName')
+    results['LookId'] = data['LookId']
 
     # try:
     #     push_output(args, proc, results)
@@ -324,8 +279,6 @@ def ProcessArguments():
     
     opts, args = getopt.getopt(sys.argv,"","")    
     return args
-
-    return data
 
 #%%
 if __name__ == '__main__':
