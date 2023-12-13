@@ -23,7 +23,7 @@ import sys
 import pathlib 
 
 #%%
-args = ['', 'Awsdevsql013', 'Market', 82370213]
+args = ['', 'Awsdevsql013', 'Market', 84419752]
 proc = 'MizerEvalAction'
 
 #%%
@@ -133,12 +133,13 @@ def load_model_features(data, scaler):
     return data
 
 
-def make_ohe_name_list(column_names,feature_name):
+def get_new_feature_names(feature_col_names, scaler_names,feature_name):
     x = []
-    for c in column_names:
+    for c in feature_col_names:
         if c.startswith(feature_name):
             x.append(c)
-    return x    
+    new_names = set(x) - set(scaler_names)
+    return new_names  
 
 def get_missing_indices(features, missing_names):
     missing_indices = [] 
@@ -183,9 +184,9 @@ def make_missing_predictions(features, missing_indices, model, scaler, ohe_root_
         W = K.function([model.layers[0].input], [
                 model.get_layer('W').output])([y])[0]
         tmp = pd.DataFrame({'S':np.ravel(S), 'M':np.ravel(M), 'W':np.ravel(W)})
-        missing_results['S'].append(tmp.mean()['S'])
-        missing_results['M'].append(tmp.mean()['M'])
-        missing_results['W'].append(tmp.mean()['W'])
+        missing_results['S'].append(tmp.median()['S'])
+        missing_results['M'].append(tmp.median()['M'])
+        missing_results['W'].append(tmp.median()['W'])
     missing_results = pd.DataFrame(missing_results, index=missing_indices)
     newdf = scaler.transform(features)
     newdf = np.asarray(newdf).astype(np.float32)
@@ -223,16 +224,16 @@ def run_model(args, proc):
 
     """
     print("Processing MizerEval for OutputId:"+ f"{args[3]}", flush = True)
-    # try:
-    #     # data = SQLAction(args, proc, 'GetLooks')
-    #     data = pd.read_csv('avgseller1.csv')
-    # except:
-    #     print('error with data')
-    data = pd.read_csv('avgseller1.csv')
+    try:
+        data = SQLAction(args, proc, 'GetLooks')
+        # data = pd.read_csv('avgseller1.csv')
+    except:
+        print('error with data')
+    # data = pd.read_csv('avgseller1.csv')
 
     data_copy = data.copy()
-    # model_path = SQLAction(args, proc, 'GetEvalParams')['ModelPath'][0]+'\\'
-    model_path = ''
+    model_path = SQLAction(args, proc, 'GetEvalParams')['ModelPath'][0]+'\\'
+    # model_path = ''
     P = pathlib.Path(model_path)
     model = load_model(P/'Model.h5', compile=False)
     
@@ -246,16 +247,17 @@ def run_model(args, proc):
     except:
         print('error with model features')
 
-
-    new_names = make_ohe_name_list(features.columns, 'SellerName')
-    scaler_names = make_ohe_name_list(scaler.feature_names_in_, 'SellerName')
-    missing_names = set(new_names) - set(scaler_names)
+    missing_names = get_new_feature_names(features.columns, scaler.feature_names_in_, 'SellerName')
+    print(missing_names)
     missing_indices = get_missing_indices(features, missing_names)
-    
+    print(missing_indices)
+    print(data.iloc[missing_indices][['LookId', 'SellerName']])
     features = features[scaler.feature_names_in_]
-
     results = make_missing_predictions(features, missing_indices, model, scaler, 'SellerName')
     results['LookId'] = data['LookId']
+    print()
+    
+  
 
     # try:
     #     push_output(args, proc, results)
