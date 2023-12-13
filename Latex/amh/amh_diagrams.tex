@@ -42,7 +42,7 @@
 \usetikzlibrary{shapes, arrows.meta, positioning,arrows.meta,
                 chains,
                 shapes.geometric,
-                decorations.pathreplacing
+                decorations.pathreplacing, datavisualization.formats.functions
                 }
 
 \begin{document}
@@ -315,21 +315,36 @@ fill=teal!20}
 \begin{axis}[
     axis lines = center,
     xlabel = \(x\),
-    ylabel = {\(f(x)\)}
+    ylabel = {\(f(x)\)},
 ]
-
 \addplot [
     domain=-.1:2,
-    samples=1000, 
+    samples=100, 
     color=red
 ]
 {-ln(x)};
 \addlegendentry{$y=-\log(x)$}
-
-
-
-
 \end{axis}
+\end{tikzpicture}
+
+
+
+\newpage
+
+    \draw[shift={(4,0)}, color=black] (0pt,10pt) -- (0pt,-10pt);    
+    \draw[<->, color=black] (0,0) -- (8,0);
+    \node[flow] (bench) at (-4,4) {Daily the BenchMarginPrice is predicted from an average of other
+    bidding data where these price exist,\\ $BenchMarginPrice = w_0 p_0 + w_1 p_1 + \dots $};
+    \node[] (null) at (4,.5) {$BenchMarginPrice$};
+    \draw[->] (bench) to [bend left=45] (null);
+    \node[xshift=-2.5cm] (adj1) at (0,0) {$-BenchMarginPrice$} ;
+    \node[xshift=2.5cm] (adj2) at (8,0) {$+BenchMarginPrice$} ;
+    \node[model] (negative) [below=of adj1] {Model makes adjustment of $BenchMarginPrice$};
+    \node[model] (positive) [below=of adj2] {Model makes adjustment of $BenchMarginPrice$};
+    \draw[->] (negative) -- (adj1);
+    \draw[->] (positive)-- (adj2);
+    \draw[decorate, decoration={brace, mirror, amplitude=10pt}] (-3,-4)--(10,-4)
+     node[black,midway, below, align=center, yshift=-.5cm] {AdjustedBoundaryMarginPrice};   
 \end{tikzpicture}
 
 
