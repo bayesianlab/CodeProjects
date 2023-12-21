@@ -6,57 +6,45 @@ using namespace Eigen;
 int main()
 {
     cout << "tableau" << endl; 
-
-    int n_objective_x = 3; 
-    int n_constraints = 7;
-    int n_constraint_x = 5;  
-    VectorXd xb = VectorXd::Ones(n_objective_x); 
-    VectorXd c(3);
-    c << 3,1,1;
-    VectorXd b(2);
-    b << 2, -1; 
-    cout << "Initial obj" << endl;  
-    cout << c.transpose() * xb << endl;  
-
-
-    MatrixXd A(n_constraints, n_constraint_x); 
-    A<< 2,1,1,1,0, 
-        1,-1,-1,0,1,
-        1,0,0,0,0,
-        0,1,0,0,0,
-        0,0,1,0,0,
-        0,0,0,1,0,
-        0,0,0,0,1;
-    
-    cout << "A" << endl; 
+    cout << "Problem" << endl; 
+    cout << "min -x1 + x2" << endl;
+    cout << "s.t. x1 -x2 <= 2" << endl; 
+    cout << "     x1 + x2 <= 6" << endl; 
+    VectorXd c(2);
+        c << -1, 1;
+    MatrixXd A(2, 2);
+        A << 1, -1, 1, 1;
+    cout << "Costs " << endl; 
+    cout << c << endl; 
+    cout << "Constraints" << endl;
     cout << A << endl; 
+    VectorXd b(2);
+    b << 2, 6;
+    cout << "Aux problem" << endl << endl; 
+    cout << "min qu"
+         << " q = (1,...,1)T" << endl; 
+    cout << "s.t. Ax + u = b" << endl << endl;
+     
+    cout << "Initial Basis is identity dim(2,2)" << endl; 
+    MatrixXd B = MatrixXd::Identity(2,2);
+    cout << B << endl; 
 
-    MatrixXd Slack = MatrixXd::Identity(n_constraints, n_constraints);
+    VectorXd cd(2);
+    cd << -1, 1; 
+    VectorXd cb(2);
+    cb << 1, 1; 
 
-    MatrixXd AI(n_constraints, n_constraint_x + n_constraints);
-    AI<<A, Slack; 
-    cout << AI << endl; 
-    cout << "Phase I" << endl; 
-    VectorXd c_slack = VectorXd::Ones(n_constraints);
-    MatrixXd B = Slack; 
+    cout << "solve linear system for B-1" << endl;
+    VectorXd y = B.lu().solve(cb); 
+    cout << y << endl; 
+    cout << "Matrix D" << endl; 
+    MatrixXd D(2,2);
+    D << -1, 1, -1, -1;
+    VectorXd costs = cd.transpose() - y.transpose() * D;
+    cout << "costs" << endl;
+    cout << costs << endl; 
+
     
-
-    VectorXd y = c_slack.transpose()*B; 
-    VectorXd cD = VectorXd::Zero(n_constraint_x);
-    cout << y.size() << endl; 
-    cout << A.rows() << " " << A.cols() << endl; 
-    cout << cD.size() << endl; 
-    cout << y.transpose()*A << endl; 
-    VectorXd rD = cD.transpose() - y.transpose()*A; 
-    cout << "cost coefs" << endl; 
-    cout << rD << endl; 
-
-    Index col;
-    double max = rD.minCoeff(&col);
-    cout << col << endl;  
-
-    cout << "aq in terms of the current basis" << endl; 
-    cout << B*AI.col(0) << endl; 
     
 
 	return 0; 
