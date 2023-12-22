@@ -331,18 +331,6 @@ fill=teal!20}
 
 \newpage
 
-
-\begin{landscape}
-\begin{tikzpicture}
-[
-flow/.style={trapezium, draw=black,
-             fill=orange!50, thick, trapezium left angle=70, 
-             trapezium right angle=110, text width=5.5cm, align=center},
-model/.style={trapezium, draw=black,
-              fill=blue!30, thick, trapezium left angle=70, 
-              trapezium right angle=110, text width=5.5cm, align=center}
-]
-
     \draw[shift={(4,0)}, color=black] (0pt,10pt) -- (0pt,-10pt);    
     \draw[<->, color=black] (0,0) -- (8,0);
     \node[flow] (bench) at (-4,4) {Daily the BenchMarginPrice is predicted from an average of other
@@ -358,37 +346,6 @@ model/.style={trapezium, draw=black,
     \draw[decorate, decoration={brace, mirror, amplitude=10pt}] (-3,-4)--(10,-4)
      node[black,midway, below, align=center, yshift=-.5cm] {AdjustedBoundaryMarginPrice};   
 \end{tikzpicture}
-\end{landscape} 
-
- \newpage 
- 
- \begin{tikzpicture}
- 	  [circ/.style={circle,draw=blue!50,fill=green!20,thick},
- 	transition/.style={rectangle,draw=black!50,fill=black!20,thick}]
- 	
- 	\node[circ](s) at (0,0) {+}; 
- 	\node[circ](s1) at (1.5,2) {+}; 
- 	\node[circ, fill=red!50] at (-1,1) {$-$}; 
- 	\node[circ](s2) at (3,-2) {+}; 
- 	\node[circ,fill=red!50] at (1.1,.3) {$-$}; 
- 	\node[circ,fill=red!50] at (-1,-.3) {$-$}; 
- 	\node[circ,fill=red!50] at (-1.5,-1.1) {$-$}; 
- 	\node[circ,fill=red!50] at (.4,-.8) {$-$}; 
- 	\node[circ,fill=red!50] at (-.8,-2) {$-$}; 
- 	\node[circ,fill=red!50] at (2,-1) {$-$}; 
- 	\node[circ,fill=red!50] at (.3,-2.3) {$-$}; 
- 	\node[circ,fill=red!50] at (-1,-.3) {$-$}; 
- 	\node[circ,fill=red!50] at (-1.5,-1.1) {$-$}; 
- 	\node[ellipse, draw] (null) at (12,0) {Postive revenue contributions}
- 	edge[<-, bend right=25] (s)
- 	edge[<-, bend right=25] (s1)
- 	edge[<-, bend right=25] (s2);  	  	
- 	 \draw[decorate, decoration={brace,  amplitude=10pt}] (4,3)--(4,-3)
- 	node[black,midway, below, align=center, xshift=1.75cm, yshift=.25cm] {Random looks};
- 	
-
- 	
- \end{tikzpicture}   
 
 \newpage
 \begin{tikzpicture}

@@ -3,19 +3,9 @@
 
 using namespace std; 
 using namespace Eigen; 
-
-void simplex(VectorXd &costs, MatrixXd &A){
-    cout << "starting simplex algorithm" << endl; 
-    
-}
-
-
 int main()
 {
     cout << "tableau" << endl; 
-<<<<<<< HEAD
-
-=======
     cout << "Problem" << endl; 
     cout << "min -x1 + x2" << endl;
     cout << "s.t. x1 -x2 <= 2" << endl; 
@@ -55,7 +45,6 @@ int main()
     cout << costs << endl; 
 
     
->>>>>>> 250e06069879860b28fcd19d9b3438fce6ff2924
     
 
 	return 0; 
