@@ -4,8 +4,23 @@
 using namespace std; 
 using namespace Eigen; 
 
-void simplex(VectorXd &costs, MatrixXd &A){
+void simplex(VectorXd &costs, MatrixXd &A, VectorXd &b){
     cout << "starting simplex algorithm" << endl; 
+    int n_vars = costs.size(); 
+    int n_constraints = A.rows();
+    VectorXd cb = VectorXd::Zero(n_constraints);
+    VectorXd cd = VectorXd::Zero(n_constraints); 
+    
+    MatrixXd B = MatrixXd::Identity(n_constraints,n_constraints); 
+    MatrixXd D = B; 
+    VectorXd reduced_costs(n_constraints);
+    for (int iter =0; iter < 10; iter++){
+        VectorXd y = B.lu().solve(cb); 
+        reduced_costs = cd.transpose() - y.transpose()*D; 
+        // cout << reduced_costs << endl; 
+
+
+    }
     
 }
 
@@ -13,16 +28,13 @@ void simplex(VectorXd &costs, MatrixXd &A){
 int main()
 {
     cout << "tableau" << endl; 
-<<<<<<< HEAD
-
-=======
     cout << "Problem" << endl; 
     cout << "min -x1 + x2" << endl;
     cout << "s.t. x1 -x2 <= 2" << endl; 
     cout << "     x1 + x2 <= 6" << endl; 
     VectorXd c(2);
         c << -1, 1;
-    MatrixXd A(2, 2);
+    MatrixXd A(2, 2); 
         A << 1, -1, 1, 1;
     cout << "Costs " << endl; 
     cout << c << endl; 
@@ -54,8 +66,7 @@ int main()
     cout << "costs" << endl;
     cout << costs << endl; 
 
-    
->>>>>>> 250e06069879860b28fcd19d9b3438fce6ff2924
+    simplex(c, A, b);
     
 
 	return 0; 
