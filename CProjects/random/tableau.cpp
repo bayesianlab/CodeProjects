@@ -69,8 +69,7 @@ void simplex(VectorXd &costs, MatrixXd &A, VectorXd &b)
             }
         }
         cout << "exiting vector= " << exiting_col << endl; 
-        swap_col(CurrentBasis, NonBasicBasis, entering_col, exiting_col);
-        swap_col(basic_costs, non_basic_costs, entering_col, exiting_col);
+        
         cout << "CurrentBasis" << endl; 
         cout << CurrentBasis << endl; 
         cout << "NonBasicBasis" << endl;
