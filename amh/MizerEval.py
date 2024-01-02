@@ -205,11 +205,6 @@ def make_missing_predictions(features, missing_indices, model, scaler, ohe_root_
     results.iloc[missing_indices] = missing_results
     return results
 
-
-
-        
-# pd.set_option('display.max_columns', None)     
-
 def run_model(args, proc):
     
     """

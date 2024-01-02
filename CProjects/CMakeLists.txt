@@ -23,10 +23,7 @@ endif(Boost_FOUND)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
 include_directories(
-  /home/dillon/gcem/include/
-  /home/dillon/stats/include/
-  /home/dillon/eigen/
-  /home/dillon/eigen/unsupported
+
   ${CMAKE_CURRENT_SOURCE_DIR}/EigenTools/include
   ${CMAKE_CURRENT_SOURCE_DIR}/Distributions/include 
   ${CMAKE_CURRENT_SOURCE_DIR}/TimeSeries/include
@@ -35,8 +32,10 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/MultilevelModel/include
   ${CMAKE_CURRENT_SOURCE_DIR}/OptimizationTools/include
   ${CMAKE_CURRENT_SOURCE_DIR}/MVProbit/include
-  "/usr/local/include/stats-master/include"
-  "/usr/local/include/gcem/include"
+  /usr/local/include/stats-master/include
+  /usr/local/include/gcem/include 
+  /usr/local/include/gcem/eigen-3.4.0 
+  /usr/local/include/gcem/eigen-3.4.0/unsupported
   )
 
 add_subdirectory(GnuPlotting)
