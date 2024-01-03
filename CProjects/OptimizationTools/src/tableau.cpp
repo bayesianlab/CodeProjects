@@ -173,7 +173,7 @@ int main()
     //     cout << it->first << " " << it->second << endl;
     // }
 
-    cout << "Problem 3" << endl;
+    cout << "Problem 3 Luenberger & Ye" << endl;
     cout << "min 4x1 + x2 + x3" << endl;
     cout << "s.t. 2x1 + 1x2 + 2x3 = 4" << endl;
     cout << "s.t. 3x1 + 3x2 + 1x3 = 3" << endl;
@@ -185,7 +185,8 @@ int main()
     VectorXd b3(2);
     b3 << 4, 3;
 
-    S.phase1(c3, A3, b3);
+    S.Simplex2(c3, A3, b3);
+    
     S.print_solution(); 
     return 0;
 }
