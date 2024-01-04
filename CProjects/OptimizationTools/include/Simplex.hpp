@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include <vector> 
+#include <math.h>
 
 using namespace std;
 using namespace Eigen;
@@ -20,8 +21,8 @@ public:
         
         if(optimization_status=="successful")
         {
-            int n = costs.size(); 
-            int m = b.size(); 
+            int n = (int)costs.size(); 
+            int m = (int)b.size(); 
             int artificial_in_basis_flag = 0;
             vector<string> artificials; 
             for(int i = n; i < (n + m); ++i)
@@ -43,11 +44,21 @@ public:
         }
     }
 
-    void phase1(const VectorXd &costs, const MatrixXd &A, const VectorXd &b)
+    void phase1(const MatrixXd &A, const VectorXd &b, const vector<string> &constraint_type)
     {
         cout << "Starting Phase-I To Determine Basic Feasible Solution" << endl; 
-        int m = A.rows();
-        int n = costs.size();
+        int slack_count = 0;
+        for (int i = 0; i < constraint_type.size(); ++i)
+        {
+            if (constraint_type[i] == "leq")
+            {
+                slack_count++;
+            }
+
+        }
+        int m = (int)A.rows();
+        VectorXd basic_costs = VectorXd::Ones(m);
+        int n = (int)A.cols(); 
         CurrentBasis = MatrixXd::Identity(m, m);
         Solution.clear();
         optimization_status = "unallocated";
@@ -70,7 +81,6 @@ public:
             X_labels[i] = x;
         }
         VectorXd non_basic_costs = VectorXd::Zero(n);
-        VectorXd basic_costs = VectorXd::Ones(m);
         VectorXd reduced_costs(m);
         MatrixXd NonBasicBasis = A;
         VectorXd current_sol = CurrentBasis.lu().solve(b);
@@ -80,6 +90,7 @@ public:
             Solution[X_labels[it->second]] = current_sol[k];
         }
         int entering_col = -1;
+        cout << "Solving with " << slack_count << " slack variables and with " << m << " choice variables" << endl; 
         for (int i = 0; i < max_iterations; ++i)
         {
             // cout << "Current Sol" << endl;
@@ -91,7 +102,7 @@ public:
             reduced_costs = non_basic_costs.transpose() - (y.transpose() * NonBasicBasis);
             cout << "\treduced costs" << endl;
             cout << "\t" << reduced_costs.transpose() << endl;
-            int continue_bool = reduced_costs.minCoeff();
+            double continue_bool = reduced_costs.minCoeff();
             if ((0 <= continue_bool) && (F_val <= 0)) 
             {
                 cout << "Found basic feasible solution" << endl; 
@@ -129,11 +140,11 @@ public:
                 optimization_status = "unbounded";
                 return;
             }
-            double min_ratio = current_sol(0) / denominator(0);
+            double min_ratio = fabs(current_sol.maxCoeff()) / fabs(denominator.minCoeff());
             int exiting_col = 0;
-
             for (int j = 0; j < aq.size(); ++j)
             {
+                double can = (current_sol(j) / denominator(j));
                 if (denominator(j) > 0)
                 {
                     double can = (current_sol(j) / denominator(j));
@@ -157,6 +168,12 @@ public:
             int ti = Basic_indxs[exiting_col];
             Basic_indxs[exiting_col] = entering_col;
             NonBasic_indxs[entering_col] = ti;
+            for (auto it = Basic_indxs.begin(); it != Basic_indxs.end(); ++it)
+            {
+                cout << it->first << " " << it->second << endl; 
+            }
+            cout << basic_costs << endl; 
+            cout << non_basic_costs << endl; 
         }
     }
 
@@ -166,7 +183,7 @@ public:
         CurrentBasis = _CurrentBasis; 
         Solution.clear();
         optimization_status = "unallocated";
-        int m = A.rows();
+        int m = (int)A.rows();
         map<int, int> Basic_indxs;
         map<int, int> NonBasic_indxs;
         map<int, string> X_labels;
@@ -207,7 +224,7 @@ public:
             reduced_costs = non_basic_costs.transpose() - y.transpose() * NonBasicBasis;
             cout << "\treduced costs" << endl;
             cout << "\t" << reduced_costs.transpose() << endl;
-            int continue_bool = reduced_costs.minCoeff();
+            double continue_bool = reduced_costs.minCoeff();
             if (0 <= continue_bool)
             {
                 cout << "\tcurrent solution is optimal" << endl;
@@ -276,10 +293,11 @@ public:
         optimization_status = "exceeded max iterations";
     }
 
-    void Simplex2(const VectorXd &costs, const MatrixXd &A, const VectorXd &b)
+    void Simplex2(const VectorXd &costs, const MatrixXd &A, const VectorXd &b, const vector<string> &constraint_type)
     {
         cout << "Two phase simplex" << endl; 
-        phase1(costs, A, b); 
+
+        phase1(A, b, constraint_type); 
         drive_out_artificials(costs, A, b);
         return ;
         if ((optimization_status=="infeasible") || (optimization_status=="unbounded")){
@@ -287,7 +305,7 @@ public:
         }
         Solution.clear();
         optimization_status = "unallocated";
-        int m = A.rows();
+        int m = (int)A.rows();
         map<int, int> Basic_indxs;
         map<int, int> NonBasic_indxs;
         map<int, string> X_labels;
@@ -328,7 +346,7 @@ public:
             reduced_costs = non_basic_costs.transpose() - y.transpose() * NonBasicBasis;
             cout << "\treduced costs" << endl;
             cout << "\t" << reduced_costs.transpose() << endl;
-            int continue_bool = reduced_costs.minCoeff();
+            double continue_bool = reduced_costs.minCoeff();
             if (0 <= continue_bool)
             {
                 cout << "\tcurrent solution is optimal" << endl;
@@ -400,6 +418,7 @@ public:
     void print_solution()
     {
         cout << "Solution" << endl;
+        cout << optimization_status << endl; 
         for (auto it = Solution.begin(); it != Solution.end(); it++)
         {
             cout << it->first << " " << it->second << endl;
