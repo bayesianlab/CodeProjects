@@ -57,17 +57,17 @@ public:
 
         }
         int m = (int)A.rows();
-        VectorXd basic_costs = VectorXd::Ones(m);
-        int n = (int)A.cols(); 
+        int n = A.cols() + slack_count;
+        VectorXd basic_costs = VectorXd::Ones(m); 
         CurrentBasis = MatrixXd::Identity(m, m);
         Solution.clear();
         optimization_status = "unallocated";
         map<int, int> Basic_indxs;
         map<int, int> NonBasic_indxs;
         map<int, string> X_labels;
-
+        
         int c = 0;
-        for (int i = 0; i < m + n; ++i)
+        for (int i = 0; i < n + m; ++i)
         {
             if (i < n)
             {
@@ -82,7 +82,8 @@ public:
         }
         VectorXd non_basic_costs = VectorXd::Zero(n);
         VectorXd reduced_costs(m);
-        MatrixXd NonBasicBasis = A;
+        MatrixXd NonBasicBasis(m, n);
+        NonBasicBasis << A, MatrixXd::Identity(m, m);
         VectorXd current_sol = CurrentBasis.lu().solve(b);
         int k = 0;
         for (auto it = Basic_indxs.begin(); it != Basic_indxs.end(); ++it)
@@ -417,11 +418,15 @@ public:
 
     void print_solution()
     {
-        cout << "Solution" << endl;
-        cout << optimization_status << endl; 
+        cout << endl; 
+        cout << "Solution:" << endl;
+        cout << "Optimization ending status " << optimization_status << endl;
         for (auto it = Solution.begin(); it != Solution.end(); it++)
         {
             cout << it->first << " " << it->second << endl;
         }
+        cout << "Current Basis" << endl;
+        cout << CurrentBasis << endl;
     }
+    
 };

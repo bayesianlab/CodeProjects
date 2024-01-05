@@ -41,22 +41,22 @@ int main()
     //     cout << it->first << " " << it->second << endl;
     // }
 
-     cout << "Problem 2" << endl;
-     cout << "min -10x1 - 12x2 -12x3" << endl;
-     cout << "s.t. x1 + 2x2 + 2x3 <= 20" << endl;
-     cout << "s.t. 2x1 + 1x2 + 2x3 <= 20" << endl;
-     cout << "s.t. 2x1 + 2x2 + 1x3 <= 20" << endl;
+     //cout << "Problem 2" << endl;
+     //cout << "min -10x1 - 12x2 -12x3" << endl;
+     //cout << "s.t. x1 + 2x2 + 2x3 <= 20" << endl;
+     //cout << "s.t. 2x1 + 1x2 + 2x3 <= 20" << endl;
+     //cout << "s.t. 2x1 + 2x2 + 1x3 <= 20" << endl;
 
-     VectorXd c2(3);
-     c2 << -10, -12, -12;
-     MatrixXd A2(3, 3);
-     A2 << 1, 2, 2, 2, 1, 2, 2, 2, 1;
-     VectorXd b2(3);
-     b2 << 20, 20, 20;
-     vector<string> constraint_type = { "leq", "leq", "leq"};
+     //VectorXd c2(3);
+     //c2 << -10, -12, -12;
+     //MatrixXd A2(3, 3);
+     //A2 << 1, 2, 2, 2, 1, 2, 2, 2, 1;
+     //VectorXd b2(3);
+     //b2 << 20, 20, 20;
+     //vector<string> constraint_type = { "leq", "leq", "leq"};
 
-     S.Simplex2(c2, A2, b2, constraint_type);
-     S.print_solution();
+     //S.Simplex2(c2, A2, b2, constraint_type);
+     //S.print_solution();
     // for (auto it = S.Solution.begin(); it != S.Solution.end(); ++it)
     // {
     //     cout << it->first << " " << it->second << endl;
@@ -86,18 +86,19 @@ int main()
 
 	VectorXd c4(2);
 	c4 << -5, 2;
-	MatrixXd A4(2, 2);
-	A4 << 
+	MatrixXd A4(3, 2);
+	A4 << -1,2,
 	    3, 2, 
-        1, 3;
-	VectorXd b4(2);
-	b4 <<  19, -9;
+        -1, -3;
+	VectorXd b4(3);
+	b4 <<  5, 19, -9;
 
-    vector<string> constraint_type4 = { "leq", "leq" };
+    vector<string> constraint_type4 = { "leq", "leq", "leq"};
 
 	S.Simplex2(c4, A4, b4, constraint_type4);
 
 	S.print_solution();
+    cout << "True solution to phase-I x0=5.571, x1=1.143" << endl; 
 
     return 0;
 }
