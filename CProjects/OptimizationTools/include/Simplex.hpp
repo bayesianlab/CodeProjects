@@ -1,52 +1,54 @@
 #include <Eigen/Dense>
 #include <iostream>
 #include <map>
-#include <vector> 
+#include <vector>
 #include <math.h>
+
+#include "SimplexCore.hpp"
 
 using namespace std;
 using namespace Eigen;
 
-class Simplex
+class Simplex : public SimplexCore
 {
-public:
-    MatrixXd CurrentBasis;
-    map<string, double> Solution;
-    string optimization_status;
-    double F_val;
-    int max_iterations = 100;
-
-    void drive_out_artificials(const VectorXd &costs, const MatrixXd &A, const VectorXd &b)
+private:
+    void write_solution(const VectorXd &solution, const map<int, int> &BasicIndices,
+                        const map<int, int> &NonBasicIndices, map<int, tuple<string, string, double>> &DetailedSolution)
     {
-        
-        if(optimization_status=="successful")
+        int k = 0;
+        pair<string, string> label = make_pair("error", "error");
+        for (auto it = BasicIndices.begin(); it != BasicIndices.end(); ++it)
         {
-            int n = (int)costs.size(); 
-            int m = (int)b.size(); 
-            int artificial_in_basis_flag = 0;
-            vector<string> artificials; 
-            for(int i = n; i < (n + m); ++i)
+            if (DetailedSolution.find(it->second) != DetailedSolution.end())
             {
-                if(Solution.find("x_"+i) != Solution.end())
-                {
-                    artificial_in_basis_flag=1;
-                    cout << "drive out" << endl; 
-                    artificials.push_back("x_"+i);
-                }
+                get<2>(DetailedSolution.find(it->second)->second) = solution[k];
             }
-            if(artificial_in_basis_flag==1)
-            {   
-                cout << "Artificial variables found in basis" << endl; 
+            else
+            {
+                cout << "Error in setup of problem, X_labels does not have a key in the basic index" << endl;
+                return;
             }
+
+            ++k;
         }
-        else{
-            return; 
+        for (auto it = NonBasicIndices.begin(); it != NonBasicIndices.end(); ++it)
+        {
+            if (DetailedSolution.find(it->second) != DetailedSolution.end())
+            {
+                get<2>(DetailedSolution.find(it->second)->second) = 0;
+            }
+            else
+            {
+                cout << "Error in setup of problem, X_labels does not have a key in the basic index" << endl;
+                return;
+            }
+
+            ++k;
         }
     }
 
-    void phase1(const MatrixXd &A, const VectorXd &b, const vector<string> &constraint_type)
+    int get_slack_variable_cnt(const vector<string> &constraint_type)
     {
-        cout << "Starting Phase-I To Determine Basic Feasible Solution" << endl; 
         int slack_count = 0;
         for (int i = 0; i < constraint_type.size(); ++i)
         {
@@ -54,379 +56,207 @@ public:
             {
                 slack_count++;
             }
-
         }
-        int m = (int)A.rows();
-        int n = A.cols() + slack_count;
-        VectorXd basic_costs = VectorXd::Ones(m); 
-        CurrentBasis = MatrixXd::Identity(m, m);
-        Solution.clear();
-        optimization_status = "unallocated";
-        map<int, int> Basic_indxs;
-        map<int, int> NonBasic_indxs;
-        map<int, string> X_labels;
-        
-        int c = 0;
-        for (int i = 0; i < n + m; ++i)
+        return slack_count;
+    }
+
+public:
+    int max_iterations = 100;
+
+    void add_choice_variables(map<string, double> &costs)
+    {
+    }
+
+    void presolve_1pos_incol(MatrixXd &B, VectorXd &soln_vec, map<int, int> &BasicIndices,
+                             int col, int total_cols)
+    {
+        if (col >= total_cols)
         {
-            if (i < n)
+            return;
+        }
+        int rows = B.rows();
+        int non_zero = 0;
+        int delete_row = 0;
+        for (int k = 0; k < rows; ++k)
+        {
+            if (B(k, col) != 0)
             {
-                NonBasic_indxs[i] = i;
+                non_zero++;
+                delete_row = k;
+            }
+        }
+        if (non_zero == 1)
+        {
+            not_index_j(B, delete_row, col);
+            not_index_j(soln_vec, delete_row);
+            BasicIndices.erase(delete_row); 
+            total_cols = B.cols();
+            presolve_1pos_incol(B, soln_vec, BasicIndices, col, total_cols);
+        }
+        else
+        {
+            presolve_1pos_incol(B, soln_vec, BasicIndices, col + 1, total_cols);
+        }
+    }
+
+    void Presolve(MatrixXd &CurrentBasis, VectorXd &current_solution, map<int, int> &BasicIndices)
+    {
+        presolve_1pos_incol(CurrentBasis, current_solution, BasicIndices, 0, CurrentBasis.cols());
+    }
+
+    void not_index_j(VectorXd &X, int j)
+    {
+        int n = 0;
+        VectorXd Xcopy(X.rows() - 1);
+        for (int i = 0; i < X.rows(); ++i)
+        {
+            if (i == j)
+            {
+                continue;
             }
             else
             {
-                Basic_indxs[i - n] = i;
+                Xcopy(n) = X(i);
+                ++n;
             }
-            string x = "x_" + to_string(i);
-            X_labels[i] = x;
         }
-        VectorXd non_basic_costs = VectorXd::Zero(n);
-        VectorXd reduced_costs(m);
-        MatrixXd NonBasicBasis(m, n);
-        NonBasicBasis << A, MatrixXd::Identity(m, m);
-        VectorXd current_sol = CurrentBasis.lu().solve(b);
-        int k = 0;
-        for (auto it = Basic_indxs.begin(); it != Basic_indxs.end(); ++it)
-        {
-            Solution[X_labels[it->second]] = current_sol[k];
-        }
-        int entering_col = -1;
-        cout << "Solving with " << slack_count << " slack variables and with " << m << " choice variables" << endl; 
-        for (int i = 0; i < max_iterations; ++i)
-        {
-            // cout << "Current Sol" << endl;
-            // cout << current_sol.transpose() << endl;
-            cout << "Iteration " << i + 1 << endl;
-            F_val = basic_costs.transpose() * current_sol;
-            cout << "\tCurrent F - Val= " << F_val << endl;
-            VectorXd y = CurrentBasis.transpose().lu().solve(basic_costs);
-            reduced_costs = non_basic_costs.transpose() - (y.transpose() * NonBasicBasis);
-            cout << "\treduced costs" << endl;
-            cout << "\t" << reduced_costs.transpose() << endl;
-            double continue_bool = reduced_costs.minCoeff();
-            if ((0 <= continue_bool) && (F_val <= 0)) 
-            {
-                cout << "Found basic feasible solution" << endl; 
-                int k = 0;
-                for (auto it = Basic_indxs.begin(); it != Basic_indxs.end(); ++it)
-                {
-                    Solution[X_labels[it->second]] = current_sol[k];
-                    ++k;
-                }
-                for (auto it = NonBasic_indxs.begin(); it != NonBasic_indxs.end(); ++it)
-                {
-                    Solution[X_labels[it->second]] = 0;
-                }
-                optimization_status = "successful";
-                return;
-            }
-            else if((0 <= continue_bool) && (F_val > 0))
-            {
-                optimization_status = "infeasible"; 
-                return;
-            }
-            for (int j = 0; j < reduced_costs.size(); ++j)
-            {
-                if (reduced_costs(j) < 0)
-                {
-                    entering_col = j;
-                    break;
-                }
-            }
-            cout << "\tentering vector= " << entering_col << " x" << NonBasic_indxs[entering_col] << endl;
-            VectorXd aq = NonBasicBasis.col(entering_col);
-            VectorXd denominator = CurrentBasis.lu().solve(aq);
-            if (denominator.maxCoeff() < 0)
-            {
-                optimization_status = "unbounded";
-                return;
-            }
-            double min_ratio = fabs(current_sol.maxCoeff()) / fabs(denominator.minCoeff());
-            int exiting_col = 0;
-            for (int j = 0; j < aq.size(); ++j)
-            {
-                double can = (current_sol(j) / denominator(j));
-                if (denominator(j) > 0)
-                {
-                    double can = (current_sol(j) / denominator(j));
-                    if (can < min_ratio)
-                    {
-                        min_ratio = can;
-                        exiting_col = j;
-                    }
-                }
-            }
+        X.resize(X.rows() - 1);
+        X = Xcopy;
+        return;
+    }
 
-            cout << "\texiting vector= " << exiting_col << " x" << Basic_indxs[exiting_col] << endl;
-            VectorXd t = CurrentBasis.col(exiting_col);
-            CurrentBasis.col(exiting_col) = NonBasicBasis.col(entering_col);
-            NonBasicBasis.col(entering_col) = t;
-            current_sol = CurrentBasis.lu().solve(b);
-            double tt = basic_costs(exiting_col);
-            basic_costs(exiting_col) = non_basic_costs(entering_col);
-            non_basic_costs(entering_col) = tt;
-
-            int ti = Basic_indxs[exiting_col];
-            Basic_indxs[exiting_col] = entering_col;
-            NonBasic_indxs[entering_col] = ti;
-            for (auto it = Basic_indxs.begin(); it != Basic_indxs.end(); ++it)
+    void not_index_j(MatrixXd &X, int i, int j)
+    {
+        int n = 0;
+        MatrixXd Xcopy(X.cols() - 1, X.rows() - 1);
+        for (int u = 0; u < X.rows(); ++u)
+        {
+            int m = 0;
+            if (u == i)
             {
-                cout << it->first << " " << it->second << endl; 
+                continue;
             }
-            cout << basic_costs << endl; 
-            cout << non_basic_costs << endl; 
+            for (int k = 0; k < X.cols(); ++k)
+            {
+                if (k == j)
+                {
+                    continue;
+                }
+                else
+                {
+                    Xcopy(n, m) = X(u, k);
+                    ++m;
+                }
+            }
+            ++n;
         }
+        X.resize(X.cols() - 1, X.rows() - 1);
+        X = Xcopy;
+
+        return;
+    }
+
+    void drive_out_artificials(const VectorXd &costs, const MatrixXd &A, const VectorXd &b)
+    {
+
+        // if (optimization_status == "successful")
+        // {
+        //     int n = (int)costs.size();
+        //     int m = (int)b.size();
+        //     int artificial_in_basis_flag = 0;
+        //     vector<string> artificials;
+        //     for (int i = n; i < (n + m); ++i)
+        //     {
+        //         if (Solution.find("x_" + i) != Solution.end())
+        //         {
+        //             artificial_in_basis_flag = 1;
+        //             cout << "drive out" << endl;
+        //             artificials.push_back("x_" + i);
+        //         }
+        //     }
+        //     if (artificial_in_basis_flag == 1)
+        //     {
+        //         cout << "Artificial variables found in basis" << endl;
+        //     }
+        // }
+        // else
+        // {
+        //     return;
+        // }
+    }
+
+    int phase1precheck(const VectorXd &b)
+    {
+        if (b.minCoeff() < 0)
+        {
+            cout << "All b elements must be positive" << endl;
+            return -1;
+        }
+        return 0;
+    }
+
+    Solution phase1(const MatrixXd &A, const VectorXd &b, const vector<string> &constraint_type)
+    {
+        Solution phase1;
+        if (phase1precheck(b) < 0)
+        {
+            return phase1;
+        }
+        cout << "Starting Phase-I To Determine Basic Feasible Solution" << endl;
+        int slack_count = get_slack_variable_cnt(constraint_type);
+        int choice_count = (int)A.cols();
+        int artificial_count = (int)A.rows();
+        int non_basic_var_count = choice_count + slack_count;
+        map<int, tuple<string, string, double>> DetailedSolution;
+        for (int i = 0; i < non_basic_var_count + artificial_count; ++i)
+        {
+            string label = "x_" + to_string(i);
+            string type;
+            if (i < choice_count)
+            {
+                type = "choice";
+            }
+            else if (i >= choice_count && i < choice_count + slack_count)
+            {
+                type = "slack";
+            }
+            else
+            {
+                type = "artificial";
+            }
+            DetailedSolution[i] = make_tuple(label, type, 0);
+        }
+        MatrixXd CB = MatrixXd::Identity(artificial_count, artificial_count);
+        MatrixXd NonBasicBasis(artificial_count, non_basic_var_count);
+        NonBasicBasis << A, MatrixXd::Identity(artificial_count, artificial_count);
+        VectorXd basic_costs = VectorXd::Ones(artificial_count);
+        VectorXd non_basic_costs = VectorXd::Zero(non_basic_var_count);
+        phase1 = simplex(CB, NonBasicBasis, basic_costs, non_basic_costs, b, max_iterations);
+        write_solution(phase1.current_solution, phase1.BasicIndices, phase1.NonBasicIndices, DetailedSolution);
+        printDetailedSolution(DetailedSolution);
+        return phase1;
     }
 
     void Simplex1(VectorXd &costs, MatrixXd &A, VectorXd &b, MatrixXd &_CurrentBasis)
     {
-        cout << "Simplex with known starting basis" << endl; 
-        CurrentBasis = _CurrentBasis; 
-        Solution.clear();
-        optimization_status = "unallocated";
-        int m = (int)A.rows();
-        map<int, int> Basic_indxs;
-        map<int, int> NonBasic_indxs;
-        map<int, string> X_labels;
-
-        int c = 0;
-        for (int i = 0; i < (2 * m); ++i)
-        {
-            if (i < m)
-            {
-                NonBasic_indxs[i] = i;
-            }
-            else
-            {
-                Basic_indxs[i - m] = i;
-            }
-            string x = "x_" + to_string(i);
-            X_labels[i] = x;
-        }
-        VectorXd non_basic_costs = costs;
-        VectorXd basic_costs = VectorXd::Zero(m);
-        VectorXd reduced_costs(m);
-        MatrixXd NonBasicBasis = A;
-        VectorXd current_sol = CurrentBasis.lu().solve(b);
-        int k = 0;
-        for (auto it = Basic_indxs.begin(); it != Basic_indxs.end(); ++it)
-        {
-            Solution[X_labels[it->second]] = current_sol[k];
-        }
-        int entering_col = -1;
-        for (int i = 0; i < 10; ++i)
-        {
-            // cout << "Current Sol" << endl;
-            // cout << current_sol.transpose() << endl;
-            cout << "Iteration " << i << endl;
-            F_val = basic_costs.transpose() * current_sol;
-            cout << "\tCurrent F - Val= " << F_val << endl;
-            VectorXd y = CurrentBasis.transpose().lu().solve(basic_costs);
-            reduced_costs = non_basic_costs.transpose() - y.transpose() * NonBasicBasis;
-            cout << "\treduced costs" << endl;
-            cout << "\t" << reduced_costs.transpose() << endl;
-            double continue_bool = reduced_costs.minCoeff();
-            if (0 <= continue_bool)
-            {
-                cout << "\tcurrent solution is optimal" << endl;
-                optimization_status = "successful";
-                return;
-            }
-            for (int j = 0; j < reduced_costs.size(); ++j)
-            {
-                if (reduced_costs(j) < 0)
-                {
-                    entering_col = j;
-                    break;
-                }
-            }
-            cout << "\tentering vector= " << entering_col << " " << NonBasic_indxs[entering_col] << endl;
-            VectorXd aq = NonBasicBasis.col(entering_col);
-            VectorXd denominator = CurrentBasis.lu().solve(aq);
-            if (denominator.maxCoeff() < 0)
-            {
-                optimization_status = "Problem is unbounded";
-                return;
-            }
-            double min_ratio = current_sol(0) / denominator(0);
-            int exiting_col = 0;
-
-            for (int j = 0; j < aq.size(); ++j)
-            {
-                if (denominator(j) > 0)
-                {
-                    double can = (current_sol(j) / denominator(j));
-                    if (can < min_ratio)
-                    {
-                        min_ratio = can;
-                        exiting_col = j;
-                    }
-                }
-            }
-
-            cout << "\texiting vector= " << exiting_col << " " << Basic_indxs[exiting_col] << endl;
-
-            VectorXd t = CurrentBasis.col(exiting_col);
-            CurrentBasis.col(exiting_col) = NonBasicBasis.col(entering_col);
-            NonBasicBasis.col(entering_col) = t;
-            current_sol = CurrentBasis.lu().solve(b);
-            double tt = basic_costs(exiting_col);
-            basic_costs(exiting_col) = non_basic_costs(entering_col);
-            non_basic_costs(entering_col) = tt;
-
-            int ti = Basic_indxs[exiting_col];
-            Basic_indxs[exiting_col] = entering_col;
-            NonBasic_indxs[entering_col] = ti;
-
-            int k = 0;
-            for (auto it = Basic_indxs.begin(); it != Basic_indxs.end(); ++it)
-            {
-                Solution[X_labels[it->second]] = current_sol[k];
-                ++k;
-            }
-            for (auto it = NonBasic_indxs.begin(); it != NonBasic_indxs.end(); ++it)
-            {
-                Solution[X_labels[it->second]] = 0;
-
-                ++k;
-            }
-        }
-        optimization_status = "exceeded max iterations";
     }
 
     void Simplex2(const VectorXd &costs, const MatrixXd &A, const VectorXd &b, const vector<string> &constraint_type)
     {
-        cout << "Two phase simplex" << endl; 
-
-        phase1(A, b, constraint_type); 
-        drive_out_artificials(costs, A, b);
-        return ;
-        if ((optimization_status=="infeasible") || (optimization_status=="unbounded")){
-            return ;
-        }
-        Solution.clear();
-        optimization_status = "unallocated";
-        int m = (int)A.rows();
-        map<int, int> Basic_indxs;
-        map<int, int> NonBasic_indxs;
-        map<int, string> X_labels;
-
-        int c = 0;
-        for (int i = 0; i < (2 * m); ++i)
-        {
-            if (i < m)
-            {
-                NonBasic_indxs[i] = i;
-            }
-            else
-            {
-                Basic_indxs[i - m] = i;
-            }
-            string x = "x_" + to_string(i);
-            X_labels[i] = x;
-        }
-        VectorXd non_basic_costs = costs;
-        VectorXd basic_costs = VectorXd::Zero(m);
-        VectorXd reduced_costs(m);
-        MatrixXd NonBasicBasis = A;
-        VectorXd current_sol = CurrentBasis.lu().solve(b);
-        int k = 0;
-        for (auto it = Basic_indxs.begin(); it != Basic_indxs.end(); ++it)
-        {
-            Solution[X_labels[it->second]] = current_sol[k];
-        }
-        int entering_col = -1;
-        for (int i = 0; i < 10; ++i)
-        {
-            // cout << "Current Sol" << endl;
-            // cout << current_sol.transpose() << endl;
-            cout << "Iteration " << i << endl;
-            F_val = basic_costs.transpose() * current_sol;
-            cout << "\tCurrent F - Val= " << F_val << endl;
-            VectorXd y = CurrentBasis.transpose().lu().solve(basic_costs);
-            reduced_costs = non_basic_costs.transpose() - y.transpose() * NonBasicBasis;
-            cout << "\treduced costs" << endl;
-            cout << "\t" << reduced_costs.transpose() << endl;
-            double continue_bool = reduced_costs.minCoeff();
-            if (0 <= continue_bool)
-            {
-                cout << "\tcurrent solution is optimal" << endl;
-                optimization_status = "successful";
-                return;
-            }
-            for (int j = 0; j < reduced_costs.size(); ++j)
-            {
-                if (reduced_costs(j) < 0)
-                {
-                    entering_col = j;
-                    break;
-                }
-            }
-            cout << "\tentering vector= " << entering_col << " " << NonBasic_indxs[entering_col] << endl;
-            VectorXd aq = NonBasicBasis.col(entering_col);
-            VectorXd denominator = CurrentBasis.lu().solve(aq);
-            if (denominator.maxCoeff() < 0)
-            {
-                optimization_status = "Problem is unbounded";
-                return;
-            }
-            double min_ratio = current_sol(0) / denominator(0);
-            int exiting_col = 0;
-
-            for (int j = 0; j < aq.size(); ++j)
-            {
-                if (denominator(j) > 0)
-                {
-                    double can = (current_sol(j) / denominator(j));
-                    if (can < min_ratio)
-                    {
-                        min_ratio = can;
-                        exiting_col = j;
-                    }
-                }
-            }
-
-            cout << "\texiting vector= " << exiting_col << " " << Basic_indxs[exiting_col] << endl;
-
-            VectorXd t = CurrentBasis.col(exiting_col);
-            CurrentBasis.col(exiting_col) = NonBasicBasis.col(entering_col);
-            NonBasicBasis.col(entering_col) = t;
-            current_sol = CurrentBasis.lu().solve(b);
-            double tt = basic_costs(exiting_col);
-            basic_costs(exiting_col) = non_basic_costs(entering_col);
-            non_basic_costs(entering_col) = tt;
-
-            int ti = Basic_indxs[exiting_col];
-            Basic_indxs[exiting_col] = entering_col;
-            NonBasic_indxs[entering_col] = ti;
-
-            int k = 0;
-            for (auto it = Basic_indxs.begin(); it != Basic_indxs.end(); ++it)
-            {
-                Solution[X_labels[it->second]] = current_sol[k];
-                ++k;
-            }
-            for (auto it = NonBasic_indxs.begin(); it != NonBasic_indxs.end(); ++it)
-            {
-                Solution[X_labels[it->second]] = 0;
-
-                ++k;
-            }
-        }
-        optimization_status = "exceeded max iterations";
+        cout << "Two phase simplex" << endl;
+        Solution phase1_solution = phase1(A, b, constraint_type);
+        MatrixXd CurrentBasis = phase1_solution.CurrentBasis;
+        VectorXd current_solution = phase1_solution.current_solution;
+        Presolve(CurrentBasis, current_solution, phase1_solution.BasicIndices);
+        // Solution phase2 = simplex(CurrentBasis, )
     }
 
-    void print_solution()
+    void printDetailedSolution(map<int, tuple<string, string, double>> &DetailedSolution)
     {
-        cout << endl; 
-        cout << "Solution:" << endl;
-        cout << "Optimization ending status " << optimization_status << endl;
-        for (auto it = Solution.begin(); it != Solution.end(); it++)
+        cout << endl;
+        for (auto it = DetailedSolution.begin(); it != DetailedSolution.end(); it++)
         {
-            cout << it->first << " " << it->second << endl;
+            cout << it->first << " " << get<0>(it->second) << " " << get<1>(it->second) << " " << get<2>(it->second) << endl;
         }
-        cout << "Current Basis" << endl;
-        cout << CurrentBasis << endl;
     }
-    
 };
