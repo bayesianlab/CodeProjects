@@ -95,14 +95,14 @@ int main()
     //
     // S.print_solution();
 
-    cout << "Problem 4 Chen Baston & D" << endl;
+    cout << "Problem 4 Chen Baston & Dang" << endl;
     cout << "max 5x1 - 2x2" << endl;
     cout << "-x1 + 2x2 <= 5" << endl;
     cout << "3x1 + 2x2 <= 19" << endl;
     cout << "x1 + 3x2 >= 9" << endl;
 
     VectorXd c4(2);
-    c4 << -5, 2;
+    c4 << 5, -2;
     MatrixXd A4(3, 2);
     A4 << -1,2,
         3, 2,

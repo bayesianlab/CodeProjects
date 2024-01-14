@@ -12,9 +12,12 @@ using namespace Eigen;
 class Simplex : public SimplexCore
 {
 private:
-    void write_solution(const VectorXd &solution, const map<int, int> &BasicIndices,
-                        const map<int, int> &NonBasicIndices, map<int, tuple<string, string, double>> &DetailedSolution)
+    map<int, tuple<string, string, double>> write_solution(const VectorXd &solution, const map<int, int> &BasicIndices,
+                        const map<int, int> &NonBasicIndices, int choice_count, int non_basic_var_count,
+                        int slack_count, int artificial_count)
     {
+        map<int, tuple<string, string, double>> DetailedSolution = fill_detailed_solution(choice_count, non_basic_var_count,
+                                                                                          slack_count, artificial_count);
         int k = 0;
         pair<string, string> label = make_pair("error", "error");
         for (auto it = BasicIndices.begin(); it != BasicIndices.end(); ++it)
@@ -26,7 +29,7 @@ private:
             else
             {
                 cout << "Error in setup of problem, X_labels does not have a key in the basic index" << endl;
-                return;
+                return DetailedSolution;
             }
 
             ++k;
@@ -40,11 +43,12 @@ private:
             else
             {
                 cout << "Error in setup of problem, X_labels does not have a key in the basic index" << endl;
-                return;
+                return DetailedSolution;
             }
 
             ++k;
         }
+        return DetailedSolution;
     }
 
     int get_slack_variable_cnt(const vector<string> &constraint_type)
@@ -60,6 +64,19 @@ private:
         return slack_count;
     }
 
+    double solve(RowVectorXd basic_row, VectorXd x_values, double solution, int solve_indx)
+    {
+        double v = 0;
+        for (int i = 0; i < basic_row.size(); i++)
+        {
+            if (i != solve_indx)
+            {
+                v += basic_row(i) * x_values(i);
+            }
+        }
+        return solution - v;
+    }
+
 public:
     int max_iterations = 100;
 
@@ -68,7 +85,8 @@ public:
     }
 
     void presolve_1pos_incol(MatrixXd &B, VectorXd &soln_vec, map<int, int> &BasicIndices,
-                             int col, int total_cols)
+                             int col, int total_cols, VectorXd &b, map<int, double> &solved_solutions,
+                             vector<string> &constraint_type)
     {
         if (col >= total_cols)
         {
@@ -87,21 +105,27 @@ public:
         }
         if (non_zero == 1)
         {
+            double sln = solve(B.row(delete_row), soln_vec, b(delete_row), delete_row);
+            solved_solutions[BasicIndices[delete_row]] = sln;
+            constraint_type.erase(constraint_type.begin() + delete_row);
             not_index_j(B, delete_row, col);
             not_index_j(soln_vec, delete_row);
-            BasicIndices.erase(delete_row); 
+            not_index_j(b, delete_row);
+            BasicIndices.erase(delete_row);
             total_cols = B.cols();
-            presolve_1pos_incol(B, soln_vec, BasicIndices, col, total_cols);
+            presolve_1pos_incol(B, soln_vec, BasicIndices, col, total_cols, b, solved_solutions, constraint_type);
         }
         else
         {
-            presolve_1pos_incol(B, soln_vec, BasicIndices, col + 1, total_cols);
+            presolve_1pos_incol(B, soln_vec, BasicIndices, col + 1, total_cols, b, solved_solutions, constraint_type);
         }
     }
 
-    void Presolve(MatrixXd &CurrentBasis, VectorXd &current_solution, map<int, int> &BasicIndices)
+    void Presolve(MatrixXd &CurrentBasis, VectorXd &current_solution, map<int, int> &BasicIndices, VectorXd &b,
+                  map<int, double> &other_solutions, vector<string> &constraint_type)
     {
-        presolve_1pos_incol(CurrentBasis, current_solution, BasicIndices, 0, CurrentBasis.cols());
+        presolve_1pos_incol(CurrentBasis, current_solution, BasicIndices, 0, CurrentBasis.cols(), b, other_solutions,
+                            constraint_type);
     }
 
     void not_index_j(VectorXd &X, int j)
@@ -195,18 +219,9 @@ public:
         return 0;
     }
 
-    Solution phase1(const MatrixXd &A, const VectorXd &b, const vector<string> &constraint_type)
+    map<int, tuple<string, string, double>> fill_detailed_solution(int choice_count,
+                                                                   int non_basic_var_count, int slack_count, int artificial_count)
     {
-        Solution phase1;
-        if (phase1precheck(b) < 0)
-        {
-            return phase1;
-        }
-        cout << "Starting Phase-I To Determine Basic Feasible Solution" << endl;
-        int slack_count = get_slack_variable_cnt(constraint_type);
-        int choice_count = (int)A.cols();
-        int artificial_count = (int)A.rows();
-        int non_basic_var_count = choice_count + slack_count;
         map<int, tuple<string, string, double>> DetailedSolution;
         for (int i = 0; i < non_basic_var_count + artificial_count; ++i)
         {
@@ -226,13 +241,29 @@ public:
             }
             DetailedSolution[i] = make_tuple(label, type, 0);
         }
+        return DetailedSolution;
+    }
+
+    Solution phase1(const MatrixXd &A, const VectorXd &b, vector<string> &constraint_type)
+    {
+        Solution phase1;
+        if (phase1precheck(b) < 0)
+        {
+            return phase1;
+        }
+        cout << "Starting Phase-I To Determine Basic Feasible Solution" << endl;
+        int slack_count = get_slack_variable_cnt(constraint_type);
+        int choice_count = (int)A.cols();
+        int artificial_count = (int)A.rows();
+        int non_basic_var_count = choice_count + slack_count;
         MatrixXd CB = MatrixXd::Identity(artificial_count, artificial_count);
         MatrixXd NonBasicBasis(artificial_count, non_basic_var_count);
         NonBasicBasis << A, MatrixXd::Identity(artificial_count, artificial_count);
         VectorXd basic_costs = VectorXd::Ones(artificial_count);
         VectorXd non_basic_costs = VectorXd::Zero(non_basic_var_count);
         phase1 = simplex(CB, NonBasicBasis, basic_costs, non_basic_costs, b, max_iterations);
-        write_solution(phase1.current_solution, phase1.BasicIndices, phase1.NonBasicIndices, DetailedSolution);
+        map<int, tuple<string, string, double>> DetailedSolution = write_solution(phase1.current_solution, phase1.BasicIndices, phase1.NonBasicIndices, choice_count,
+                       non_basic_var_count, slack_count, artificial_count);
         printDetailedSolution(DetailedSolution);
         return phase1;
     }
@@ -241,14 +272,23 @@ public:
     {
     }
 
-    void Simplex2(const VectorXd &costs, const MatrixXd &A, const VectorXd &b, const vector<string> &constraint_type)
+    void Simplex2(VectorXd &costs, MatrixXd &A, VectorXd &b, vector<string> &constraint_type)
     {
         cout << "Two phase simplex" << endl;
+        int choice_count = (int)A.cols();
         Solution phase1_solution = phase1(A, b, constraint_type);
-        MatrixXd CurrentBasis = phase1_solution.CurrentBasis;
-        VectorXd current_solution = phase1_solution.current_solution;
-        Presolve(CurrentBasis, current_solution, phase1_solution.BasicIndices);
-        // Solution phase2 = simplex(CurrentBasis, )
+        // VectorXd current_solution = phase1_solution.current_solution;
+        // map<int, double> other_solutions;
+        // Presolve(phase1_solution.CurrentBasis, phase1_solution.current_solution, phase1_solution.BasicIndices, b, other_solutions, constraint_type);
+        // MatrixXd D = MatrixXd::Identity(phase1_solution.CurrentBasis.rows(), phase1_solution.CurrentBasis.rows());
+        // VectorXd c_D = VectorXd::Zero(b.size());
+        // Solution phase2 = simplex(phase1_solution.current_solution, phase1_solution.CurrentBasis, D, costs, c_D, b, 10);
+        // map<int, tuple<string, string, double>> DetailedSolution;
+        // int slack_count = phase1_solution.CurrentBasis.rows();
+        // int non_basic_var_count = phase1_solution.CurrentBasis.rows();
+        // fill_detailed_solution(DetailedSolution, choice_count, non_basic_var_count, slack_count, 0);
+        // write_solution(phase1_solution.current_solution, phase1_solution.BasicIndices, phase1_solution.NonBasicIndices, DetailedSolution);
+        // printDetailedSolution(DetailedSolution);
     }
 
     void printDetailedSolution(map<int, tuple<string, string, double>> &DetailedSolution)
