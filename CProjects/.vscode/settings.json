@@ -82,7 +82,9 @@
         "dense": "cpp",
         "*.expression": "cpp",
         "alignedvector3": "cpp",
-        "fft": "cpp"
+        "fft": "cpp",
+        "ranges": "cpp",
+        "span": "cpp"
     },
     "cmake.configureOnOpen": false,
     "C_Cpp.errorSquiggles": "Disabled",

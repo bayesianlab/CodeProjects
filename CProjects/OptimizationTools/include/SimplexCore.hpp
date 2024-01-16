@@ -33,18 +33,22 @@ class SimplexCore
 {
 
 public:
-    void set_basic_nonbasic_indxs(map<int, int> &BasicIndices, map<int, int> &NonBasicIndices, int basic_cnt, int non_basic_cnt)
+    void set_basic_nonbasic_indxs(map<int, int> &BasicIndices, map<int, int> &NonBasicIndices,
+                                  map<int, tuple<bool, string, double>> &ModelVariables)
     {
-        int N = basic_cnt + non_basic_cnt;
-        for (int i = 0; i < N; ++i)
+        int k = 0;
+        int m = 0;
+        for (auto it = ModelVariables.begin(); it != ModelVariables.end(); ++it)
         {
-            if (i < non_basic_cnt)
+            if (get<0>(it->second) == true)
             {
-                NonBasicIndices[i] = i;
+                BasicIndices[k] = it->first;
+                ++k;
             }
             else
             {
-                BasicIndices[i - non_basic_cnt] = i;
+                NonBasicIndices[m] = it->first;
+                ++m;
             }
         }
     }
@@ -83,67 +87,10 @@ public:
         return exiting_col;
     }
 
-    Solution simplex(MatrixXd &B, MatrixXd &D, VectorXd &c_B, VectorXd &c_D, const VectorXd &b, int max_iterations)
-    {
-        /*
-            Calculate a starting point for x_B
-        */
-        int basic_var_count = (int)B.cols();
-        int non_basic_var_count = (int)D.cols();
-        map<int, int> BasicIndices;
-        map<int, int> NonBasicIndices;
-        set_basic_nonbasic_indxs(BasicIndices, NonBasicIndices, basic_var_count, non_basic_var_count);
-        VectorXd x_D = VectorXd::Zero(c_D.size());
-        VectorXd reduced_costs(c_D.size());
-        double F_val;
-        VectorXd x_B = B.lu().solve(b);
-        Solution Sol;
-        Sol.set_solution("unallocated", B, D, x_B, BasicIndices, NonBasicIndices, Infinity);
-        for (int i = 0; i < max_iterations; ++i)
-        {
-            cout << "Iteration " << i + 1 << endl;
-            Sol.F_val = c_B.transpose() * x_B;
-            cout << "\tCurrent F-Val= " << Sol.F_val << endl;
-            VectorXd y = B.transpose().lu().solve(c_B);
-            reduced_costs = c_D.transpose() - (y.transpose() * D);
-            double reduced_cost_min_val = reduced_costs.minCoeff();
-            if ((0 <= reduced_cost_min_val) && (Sol.F_val <= 0))
-            {
-                Sol.set_solution("success", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
-                return Sol;
-            }
-            else if ((0 <= reduced_cost_min_val) && (Sol.F_val > 0))
-            {
-                Sol.set_solution("infeasible", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
-                return Sol;
-            }
-            int entering_col = determine_entering_col(reduced_costs);
+   
 
-            VectorXd aq = D.col(entering_col);
-            VectorXd denominator = B.lu().solve(aq);
-            int exiting_col = determine_exiting_col(x_B, denominator, aq);
-            if (exiting_col == -1)
-            {
-                Sol.set_solution("error", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
-                return Sol;
-            }
-            VectorXd t = B.col(exiting_col);
-            B.col(exiting_col) = D.col(entering_col);
-            D.col(entering_col) = t;
-            x_B = B.lu().solve(b);
-            double tt = c_B(exiting_col);
-            c_B(exiting_col) = c_D(entering_col);
-            c_D(entering_col) = tt;
-            /* Housekeeping for basic and non-basic indices */
-            int ti = BasicIndices[exiting_col];
-            BasicIndices[exiting_col] = entering_col;
-            NonBasicIndices[entering_col] = ti;
-        }
-        Sol.set_solution("unfinished", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
-        return Sol;
-    }
-
-    Solution simplex(VectorXd &x_B, MatrixXd &B, MatrixXd &D, VectorXd &c_B, VectorXd &c_D, const VectorXd &b, int max_iterations)
+    Solution simplex(VectorXd &x_B, MatrixXd &B, MatrixXd &D, VectorXd &c_B, VectorXd &c_D, const VectorXd &b,
+                     map<int, tuple<bool, string, double>> &ModelVariables, int max_iterations)
     {
         /*
             Current basis and x_B are known
@@ -152,7 +99,7 @@ public:
         int non_basic_var_count = (int)D.cols();
         map<int, int> BasicIndices;
         map<int, int> NonBasicIndices;
-        set_basic_nonbasic_indxs(BasicIndices, NonBasicIndices, basic_var_count, non_basic_var_count);
+        set_basic_nonbasic_indxs(BasicIndices, NonBasicIndices, ModelVariables);
         VectorXd x_D = VectorXd::Zero(c_D.size());
         VectorXd reduced_costs(c_D.size());
         double F_val;
@@ -195,7 +142,7 @@ public:
             c_D(entering_col) = tt;
             /* Housekeeping for basic and non-basic indices */
             int ti = BasicIndices[exiting_col];
-            BasicIndices[exiting_col] = entering_col;
+            BasicIndices[exiting_col] = NonBasicIndices[entering_col];
             NonBasicIndices[entering_col] = ti;
         }
         Sol.set_solution("unfinished", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
