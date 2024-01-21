@@ -1,11 +1,25 @@
+#pragma once
+#ifndef SIMPLEX_CORE
+#define SIMPLEX_CORE
+
 #include <Eigen/Dense>
 #include <iostream>
 #include <map>
 #include <vector>
 #include <math.h>
+#include <boost/format.hpp>
 
 using namespace std;
 using namespace Eigen;
+using namespace boost;
+
+const vector<string> OPT_STATUSES = {"simple", "unallocated", "unfinished", "success", "failed", "infeasible"};
+
+
+enum InModel
+{
+    no, yes, na
+};
 
 struct Solution
 {
@@ -19,6 +33,10 @@ struct Solution
 
     void set_solution(string opt_status, MatrixXd B, MatrixXd D, VectorXd xb, map<int, int> indx, map<int, int> nonbindx, double F)
     {
+        if(find(OPT_STATUSES.begin(), OPT_STATUSES.end(), opt_status) == OPT_STATUSES.end())
+        {
+            throw std::invalid_argument("Invalid opt_status");
+        }
         optimization_status = opt_status;
         CurrentBasis = B;
         NonBasicBasis = D;
@@ -34,18 +52,18 @@ class SimplexCore
 
 public:
     void set_basic_nonbasic_indxs(map<int, int> &BasicIndices, map<int, int> &NonBasicIndices,
-                                  map<int, tuple<bool, string, double>> &ModelVariables)
+                                  map<int, tuple<InModel, string, double>> &ModelVariables)
     {
         int k = 0;
         int m = 0;
         for (auto it = ModelVariables.begin(); it != ModelVariables.end(); ++it)
         {
-            if (get<0>(it->second) == true)
+            if (get<0>(it->second) == yes)
             {
                 BasicIndices[k] = it->first;
                 ++k;
             }
-            else
+            else if(get<0>(it->second) == no)
             {
                 NonBasicIndices[m] = it->first;
                 ++m;
@@ -56,28 +74,32 @@ public:
     int determine_entering_col(const VectorXd &reduced_costs)
     {
         int entering_col = 0;
-        while (reduced_costs(entering_col) > 0)
+        double min = reduced_costs.maxCoeff()+1;
+        for(int i = 0; i < reduced_costs.size(); ++i)
         {
-            ++entering_col;
+            if(reduced_costs(i) <= min)
+            {
+                entering_col=i; 
+            }
         }
         return entering_col;
     }
 
-    int determine_exiting_col(const VectorXd &x_B, const VectorXd &denominator, const VectorXd &aq)
+    int determine_exiting_col(const VectorXd &x_B, const VectorXd &aq)
     {
         int exiting_col = 0;
-        if (denominator.maxCoeff() < 0)
+        if (aq.maxCoeff() < 0)
         {
             return -1;
         }
-        double min_ratio = fabs(x_B.maxCoeff()) / fabs(denominator.minCoeff());
+        double min_ratio = (fabs(x_B.maxCoeff()) / fabs(aq.minCoeff())) + 1;
         for (int j = 0; j < aq.size(); ++j)
         {
-            double can = (x_B(j) / denominator(j));
-            if (denominator(j) > 0)
+            cout << aq(j) << " " << j << endl; 
+            if (aq(j) > 0)
             {
-                double can = (x_B(j) / denominator(j));
-                if (can < min_ratio)
+                double can = (x_B(j) / aq(j));
+                if (can <= min_ratio)
                 {
                     min_ratio = can;
                     exiting_col = j;
@@ -90,7 +112,7 @@ public:
    
 
     Solution simplex(VectorXd &x_B, MatrixXd &B, MatrixXd &D, VectorXd &c_B, VectorXd &c_D, const VectorXd &b,
-                     map<int, tuple<bool, string, double>> &ModelVariables, int max_iterations)
+                     map<int, tuple<InModel, string, double>> &ModelVariables, int max_iterations)
     {
         /*
             Current basis and x_B are known
@@ -113,6 +135,7 @@ public:
             VectorXd y = B.transpose().lu().solve(c_B);
             reduced_costs = c_D.transpose() - (y.transpose() * D);
             double reduced_cost_min_val = reduced_costs.minCoeff();
+            cout << reduced_costs << endl; 
             if ((0 <= reduced_cost_min_val) && (Sol.F_val <= 0))
             {
                 Sol.set_solution("success", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
@@ -124,13 +147,14 @@ public:
                 return Sol;
             }
             int entering_col = determine_entering_col(reduced_costs);
-
-            VectorXd aq = D.col(entering_col);
-            VectorXd denominator = B.lu().solve(aq);
-            int exiting_col = determine_exiting_col(x_B, denominator, aq);
+            cout << "enter col " << entering_col << endl; 
+            VectorXd dj = D.col(entering_col);
+            VectorXd aq = B.lu().solve(dj);  
+            int exiting_col = determine_exiting_col(x_B, aq);
+            cout << "exit col " << exiting_col << endl; 
             if (exiting_col == -1)
             {
-                Sol.set_solution("error", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
+                Sol.set_solution("failed", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
                 return Sol;
             }
             VectorXd t = B.col(exiting_col);
@@ -149,3 +173,4 @@ public:
         return Sol;
     }
 };
+#endif 

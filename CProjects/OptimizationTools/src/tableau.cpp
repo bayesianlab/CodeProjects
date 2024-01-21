@@ -2,6 +2,7 @@
 #include <iostream>
 #include <map>
 #include "Simplex.hpp"
+#include "SimplexCore.hpp"
 
 using namespace std;
 using namespace Eigen;
@@ -77,19 +78,19 @@ int main()
     // S.Simplex2(c2, A2, b2, constraint_type);
     // cout << "Correct solution F-Val -136, x1,x2,x3 = (4,4,4)" << endl; 
     
-    cout << "Problem 3 Luenberger & Ye" << endl;
-    cout << "min 4x1 + x2 + x3" << endl;
-    cout << "s.t. 2x1 + 1x2 + 2x3 = 4" << endl;
-    cout << "s.t. 3x1 + 3x2 + 1x3 = 3" << endl;
-    VectorXd c3(3);
-    c3 << 4, 1, 1;
-    MatrixXd A3(2, 3);
-    A3 << 2, 1, 2,
-          3, 3, 1;
-    VectorXd b3(2);
-    b3 << 4, 3;
-    vector<string> constraint_type3 = {"eq", "eq"};
-    S.Simplex2(c3, A3, b3, constraint_type3);
+    // cout << "Problem 3 Luenberger & Ye" << endl;
+    // cout << "min 4x1 + x2 + x3" << endl;
+    // cout << "s.t. 2x1 + 1x2 + 2x3 = 4" << endl;
+    // cout << "s.t. 3x1 + 3x2 + 1x3 = 3" << endl;
+    // VectorXd c3(3);
+    // c3 << 4, 1, 1;
+    // MatrixXd A3(2, 3);
+    // A3 << 2, 1, 2,
+    //       3, 3, 1;
+    // VectorXd b3(2);
+    // b3 << 4, 3;
+    // vector<string> constraint_type3 = {"eq", "eq"};
+    // S.Simplex2(c3, A3, b3, constraint_type3);
     
     
 
@@ -113,6 +114,27 @@ int main()
     // S.Simplex2(c4, A4, b4, constraint_type4);
 
     // cout << "True solution to phase-I x0=5.571, x1=1.143" << endl;
+
+
+    cout << "max x2" << endl;
+    cout << "-x1 + x2 <= 0" << endl;
+    cout << "x1 <= 2" << endl; 
+
+
+
+    VectorXd c5(2);
+    c5 << 0,-1;
+    MatrixXd A5(2, 2);
+    A5 << -1,1,
+        1, 0;
+    VectorXd b5(2);
+    b5 <<  0, 2;
+
+    
+
+    vector<string> constraint_type5 = { "leq", "leq"};
+
+    S.Simplex2(c5, A5, b5, constraint_type5);
 
     return 0;
 }
