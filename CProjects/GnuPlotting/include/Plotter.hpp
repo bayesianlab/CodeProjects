@@ -5,8 +5,6 @@
 #include <fstream>
 #include <string> 
 #include <boost/format.hpp>
-
-
 #include <Eigen/Dense>
 
 using namespace std; 

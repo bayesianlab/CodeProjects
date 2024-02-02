@@ -17,6 +17,7 @@
 #include <random>
 #include <stdexcept>
 #include "stats.hpp"
+#include "gcem.hpp"
 #include "EigenTools.hpp"
 
 using namespace Eigen;

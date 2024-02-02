@@ -307,6 +307,7 @@ class FullConditionalsNoAr : public FullConditionals {
     MatrixXd piPosterior(K, rr);
     VectorXd priorBetaStar(K);
     MatrixXi FactorInfo = createFactorInfo(InfoMat, K);
+    cout << FactorInfo << endl; 
     vector<MatrixXd> Xtk = groupByTime(Xt, K);
     map<int, vector<int>> indexMap = createIndexMap(InfoMat, K);
     cout << "Beta Reduced Runs" << endl;
@@ -320,6 +321,7 @@ class FullConditionalsNoAr : public FullConditionals {
       vector<double> temp;
       int nrows = 0;
       RowVectorXi loadingselect = FactorInfo.row(k);
+
       for (int i = 0; i < loadingselect.size(); ++i) {
         if (loadingselect(i) != -1) {
           temp.push_back(betaStar(k, loadingselect(i) + nXs));
@@ -347,6 +349,7 @@ class FullConditionalsNoAr : public FullConditionals {
       for (int k = 0; k < K; ++k) {
         s2 = omVariance(k);
         RowVectorXi loadingselect = FactorInfo.row(k);
+        cout << loadingselect << endl; 
         vector<double> temp;
         vector<double> fx;
         int nrows = 0;
@@ -355,7 +358,6 @@ class FullConditionalsNoAr : public FullConditionals {
           if (loadingselect(i) != -1) {
             temp.push_back(betaStar(k, loadingselect(i) + nXs));
           }
-          cout << loadingselect(i) << endl; 
           for (int j = 0; j < T; ++j) {
             fx.push_back(Factors(loadingselect(i), j));
           }

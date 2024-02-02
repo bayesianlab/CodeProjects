@@ -22,7 +22,7 @@ target_link_libraries(ml PUBLIC Dist ettools)
 # target_link_libraries(test_fullconditionals PUBLIC optim ettools plot Dist ml)
 
 add_executable(test_timebreak src/test_timebreak.cpp)
-target_link_libraries(test_timebreak PUBLIC optim ettools plot Dist ml)
+target_link_libraries(test_timebreak PUBLIC optlib ettools plot Dist ml)
 
 # add_executable(test_fullconditionalsnoar src/test_fullconditionalsnoar.cpp)
 # target_link_libraries(test_fullconditionalsnoar PUBLIC optim ettools plot Dist ml)

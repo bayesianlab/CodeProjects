@@ -13,7 +13,7 @@ using namespace std;
 using namespace Eigen;
 int main() {
   int i = 10;
-  int T = 20;
+  int T = 100;
   int K = 20;
   int sims = 10;
   int burnin = 2;
@@ -25,13 +25,19 @@ int main() {
   GenerateFactorData mldata;
   double betaVal = 1;
   int nXs = 2;
-  mldata.breakPointGenData(T, K, InfoMat, 10, 1.);
+  mldata.breakPointGenData(T, K, InfoMat, 50, 1.);
   MatrixXd Xt = mldata.Xt;
   MatrixXd yt = mldata.yt;
   FullConditionalsNoAr fcar;
   fcar.easySetModel(yt, Xt, phi, InfoMat);
   fcar.runModel(sims,burnin);
   fcar.ml();
+
+  MatrixXd ytbeg = yt.leftCols(50);
+  MatrixXd ytend = yt.rightCols(50);
+  cout << ytbeg << endl; 
+  cout << endl; 
+  cout << ytend << endl; 
 
   return 0;
 }

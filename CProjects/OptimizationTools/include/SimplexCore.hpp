@@ -45,6 +45,12 @@ struct Solution
         NonBasicIndices = nonbindx;
         F_val = F;
     }
+
+    void print_solution()
+    {
+        cout << "Optimization status: " << optimization_status << endl; 
+        cout << "F-Value: " << F_val << endl; 
+    }
 };
 
 class SimplexCore
@@ -95,7 +101,6 @@ public:
         double min_ratio = (fabs(x_B.maxCoeff()) / fabs(aq.minCoeff())) + 1;
         for (int j = 0; j < aq.size(); ++j)
         {
-            cout << aq(j) << " " << j << endl; 
             if (aq(j) > 0)
             {
                 double can = (x_B(j) / aq(j));
@@ -112,7 +117,7 @@ public:
    
 
     Solution simplex(VectorXd &x_B, MatrixXd &B, MatrixXd &D, VectorXd &c_B, VectorXd &c_D, const VectorXd &b,
-                     map<int, tuple<InModel, string, double>> &ModelVariables, int max_iterations)
+                     int max_iterations, map<int, tuple<InModel, string, double>> &ModelVariables)
     {
         /*
             Current basis and x_B are known
@@ -121,11 +126,11 @@ public:
         int non_basic_var_count = (int)D.cols();
         map<int, int> BasicIndices;
         map<int, int> NonBasicIndices;
-        set_basic_nonbasic_indxs(BasicIndices, NonBasicIndices, ModelVariables);
         VectorXd x_D = VectorXd::Zero(c_D.size());
         VectorXd reduced_costs(c_D.size());
         double F_val;
         Solution Sol;
+        set_basic_nonbasic_indxs(BasicIndices, NonBasicIndices, ModelVariables);
         Sol.set_solution("unallocated", B, D, x_B, BasicIndices, NonBasicIndices, Infinity);
         for (int i = 0; i < max_iterations; ++i)
         {
@@ -135,7 +140,6 @@ public:
             VectorXd y = B.transpose().lu().solve(c_B);
             reduced_costs = c_D.transpose() - (y.transpose() * D);
             double reduced_cost_min_val = reduced_costs.minCoeff();
-            cout << reduced_costs << endl; 
             if ((0 <= reduced_cost_min_val) && (Sol.F_val <= 0))
             {
                 Sol.set_solution("success", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
@@ -147,11 +151,9 @@ public:
                 return Sol;
             }
             int entering_col = determine_entering_col(reduced_costs);
-            cout << "enter col " << entering_col << endl; 
             VectorXd dj = D.col(entering_col);
             VectorXd aq = B.lu().solve(dj);  
             int exiting_col = determine_exiting_col(x_B, aq);
-            cout << "exit col " << exiting_col << endl; 
             if (exiting_col == -1)
             {
                 Sol.set_solution("failed", B, D, x_B, BasicIndices, NonBasicIndices, F_val);

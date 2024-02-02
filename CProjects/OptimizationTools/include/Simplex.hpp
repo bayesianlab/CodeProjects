@@ -14,7 +14,6 @@ using namespace std;
 using namespace Eigen;
 using namespace boost;
 
-
 class Simplex : public SimplexCore
 {
 private:
@@ -80,7 +79,7 @@ private:
         }
     }
 
-    void update_current_solution(map<int, tuple<InModel, string, double>> &ModelVariables, const map<int, int> BasicIndices,
+    void update_ModelVariables(map<int, tuple<InModel, string, double>> &ModelVariables, const map<int, int> BasicIndices,
                                  const map<int, int> NonBasicIndices, const VectorXd &solution)
     {
         int i = 0;
@@ -88,12 +87,28 @@ private:
         {
             get<0>(ModelVariables[it->second]) = yes;
             get<2>(ModelVariables[it->second]) = solution(i);
+            cout << "var num " << it->second << " sol " << solution(i) << endl; 
             ++i;
         }
         for (auto it = NonBasicIndices.begin(); it != NonBasicIndices.end(); ++it)
         {
             get<0>(ModelVariables[it->second]) = no;
             get<2>(ModelVariables[it->second]) = 0;
+        }
+    }
+
+    void set_phase2_variables()
+    {
+        for(auto it = Phase1ModelVariables.begin(); it != Phase1ModelVariables.end(); ++it)
+        {
+            if( (get<0>(it->second)==yes))
+            {
+                Phase2ModelVariables[it->first] = Phase1ModelVariables[it->first];
+            }
+            else if(get<0>(it->second)==no)
+            {
+                Phase2ModelVariables[it->first] = Phase1ModelVariables[it->first];
+            }
         }
     }
 
@@ -114,7 +129,6 @@ public:
     int max_iterations = 5;
     map<int, tuple<InModel, string, double>> Phase1ModelVariables;
     map<int, tuple<InModel, string, double>> Phase2ModelVariables;
-
 
     void add_vars(map<int, tuple<InModel, string, double>> &ModelVariables, string label, int cnt)
     {
@@ -213,7 +227,7 @@ public:
             if (k != -1)
             {
                 double v = b(row) / A(row, k);
-                get<0>(ModelVariables[k + deleted_rows]) = na; 
+                get<0>(ModelVariables[k + deleted_rows]) = na;
                 get<2>(ModelVariables[k + deleted_rows]) = v;
                 solved_cost += v * costs(k);
                 for (int i = 0; i < A.rows(); ++i)
@@ -393,7 +407,6 @@ public:
         int choice_count = A.cols();
         add_vars(Phase1ModelVariables, "choice", choice_count);
         double solved_cost = PresolveRowSingletons(costs, A, b, Phase1ModelVariables, constraint_type);
-        printDetailedSolution(Phase1ModelVariables);
         int constraint_count = (int)A.rows();
         int slack_surplus_count = get_slack_variable_cnt(constraint_type);
         add_slack_surplus_vars(Phase1ModelVariables, constraint_type);
@@ -407,35 +420,38 @@ public:
             map<int, int> BasicIndices;
             map<int, int> NonBasicIndices;
             set_basic_nonbasic_indxs(BasicIndices, NonBasicIndices, Phase1ModelVariables);
-            update_current_solution(Phase1ModelVariables, BasicIndices, NonBasicIndices, b);
-            p1_soln.set_solution("simple", CurrentBasis, A, b, BasicIndices, NonBasicIndices, (double)(costs.transpose() * b));
+            update_ModelVariables(Phase1ModelVariables, BasicIndices, NonBasicIndices, b);
+            p1_soln.set_solution("simple", CurrentBasis, A, b, BasicIndices, NonBasicIndices,
+                                 (double)(costs.transpose() * b) + solved_cost);
             printDetailedSolution(Phase1ModelVariables);
+            p1_soln.print_solution(); 
             return p1_soln;
         }
-        // else
-        // {
-        //     if (slack_surplus_count > 0)
-        //     {
-        //         non_basic_var_count = choice_count + slack_surplus_count;
-        //         SlackMat = make_SlackMat(slack_surplus_count, constraint_type);
-        //         NonBasicBasis.resize(constraint_count, non_basic_var_count);
-        //         NonBasicBasis << A, SlackMat;
-        //     }
-        //     else
-        //     {
-        //         non_basic_var_count = choice_count;
-        //         NonBasicBasis.resize(constraint_count, non_basic_var_count);
-        //         NonBasicBasis << A;
-        //     }
-        //     add_vars(Phase1ModelVariables, "artificial", constraint_count);
-        //     set_basis_vars(Phase1ModelVariables, "artificial");
-        //     CurrentBasis = MatrixXd::Identity(constraint_count, constraint_count);
-        //     guess = CurrentBasis.lu().solve(b);
-        // }
-        // VectorXd non_basic_costs = VectorXd::Zero(non_basic_var_count);
-
-        // p1_soln = simplex(guess, CurrentBasis, NonBasicBasis, basic_costs, non_basic_costs, b,
-        //                   Phase1ModelVariables, max_iterations);
+        else
+        {
+            if (slack_surplus_count > 0)
+            {
+                non_basic_var_count = choice_count + slack_surplus_count;
+                SlackMat = make_SlackMat(slack_surplus_count, constraint_type);
+                NonBasicBasis.resize(constraint_count, non_basic_var_count);
+                NonBasicBasis << A, SlackMat;
+            }
+            else
+            {
+                non_basic_var_count = choice_count;
+                NonBasicBasis.resize(constraint_count, non_basic_var_count);
+                NonBasicBasis << A;
+            }
+            add_vars(Phase1ModelVariables, "artificial", constraint_count);
+            set_basis_vars(Phase1ModelVariables, "artificial");
+            CurrentBasis = MatrixXd::Identity(constraint_count, constraint_count);
+            guess = CurrentBasis.lu().solve(b);
+        }
+        VectorXd non_basic_costs = VectorXd::Zero(non_basic_var_count);
+        VectorXd basic_costs = VectorXd::Ones(choice_count);
+        p1_soln = simplex(guess, CurrentBasis, NonBasicBasis, basic_costs, non_basic_costs, b,
+                          max_iterations, Phase1ModelVariables);
+        p1_soln.F_val = p1_soln.F_val+solved_cost;
         // update_model_vars(Phase1ModelVariables, p1_soln.BasicIndices, p1_soln.NonBasicIndices, p1_soln.current_solution);
         // cout << "Phase-I Solution" << endl;
         // printDetailedSolution(Phase1ModelVariables);
@@ -449,15 +465,12 @@ public:
     void Simplex2(VectorXd &costs, MatrixXd &A, VectorXd &b, vector<string> &constraint_type)
     {
         cout << "Two phase simplex" << endl;
-        if (!Phase2ModelVariables.empty())
-        {
-            Phase2ModelVariables.clear();
-        }
+
         MatrixXd D;
         VectorXd c_D;
         VectorXd c_B;
-        int choice_count = (int)A.cols();
         Solution phase1_solution = phase1(costs, A, b, constraint_type);
+        int choice_count = (int)A.cols();
         VectorXd current_solution = phase1_solution.current_solution;
         int slack_surplus_count = get_slack_variable_cnt(constraint_type);
         if (phase1_solution.optimization_status == "simple")
@@ -465,34 +478,39 @@ public:
             D = A;
             c_D = costs;
             c_B = VectorXd::Zero(slack_surplus_count);
+            set_phase2_variables();
             printDetailedSolution(Phase2ModelVariables);
+            printBasis(phase1_solution.BasicIndices);
             Solution phase2_solution = simplex(phase1_solution.current_solution, phase1_solution.CurrentBasis, D,
-                                               c_B, c_D, b, Phase2ModelVariables, max_iterations);
+                                               c_B, c_D, b, max_iterations, Phase2ModelVariables);
+            update_ModelVariables(Phase2ModelVariables, phase2_solution.BasicIndices, 
+                                    phase2_solution.NonBasicIndices,
+                                    phase2_solution.current_solution);
             cout << "Optimization status: " << phase2_solution.optimization_status << endl;
             printDetailedSolution(Phase2ModelVariables);
         }
-        // else
-        // {
-        //     D = make_SlackMat(slack_surplus_count, constraint_type);
-        //     c_D = VectorXd::Zero(D.rows());
-        // Presolve(phase1_solution.CurrentBasis, phase1_solution.current_solution,
-        //          phase1_solution.BasicIndices, b, constraint_type);
-        // int slack_surplus_count = get_slack_variable_cnt(constraint_type);
-        // int constraint_count = phase1_solution.CurrentBasis.rows();
-        // add_vars(Phase2ModelVariables, "choice", choice_count);
-        // setup_basis_vars(Phase2ModelVariables, phase1_solution.BasicIndices,
-        //                  phase1_solution.current_solution);
-        // printDetailedSolution(Phase2ModelVariables);
-        // add_slack_surplus_vars(Phase2ModelVariables, constraint_type);
-        // set_basis_vars(Phase2ModelVariables, phase1_solution.BasicIndices);
-        // write_soln(Phase2ModelVariables, phase1_solution.current_solution, phase1_solution.BasicIndices);
-        // cout << "Starting Phase-II" << endl;
-        // Solution phase2_solution = simplex(phase1_solution.current_solution, phase1_solution.CurrentBasis, D,
-        //                                    costs, c_D, b, Phase2ModelVariables, max_iterations);
-        // write_soln(Phase2ModelVariables, phase2_solution.current_solution, phase2_solution.BasicIndices);
-        // printDetailedSolution(Phase2ModelVariables);
-        // cout << phase2_solution.optimization_status << endl;
-        // }
+        else
+        {
+            // D = make_SlackMat(slack_surplus_count, constraint_type);
+            // c_D = VectorXd::Zero(D.rows());
+            // Presolve(phase1_solution.CurrentBasis, phase1_solution.current_solution,
+            //         phase1_solution.BasicIndices, b, constraint_type);
+            // int slack_surplus_count = get_slack_variable_cnt(constraint_type);
+            // int constraint_count = phase1_solution.CurrentBasis.rows();
+            // add_vars(Phase2ModelVariables, "choice", choice_count);
+            // setup_basis_vars(Phase2ModelVariables, phase1_solution.BasicIndices,
+            //                 phase1_solution.current_solution);
+            // printDetailedSolution(Phase2ModelVariables);
+            // add_slack_surplus_vars(Phase2ModelVariables, constraint_type);
+            // set_basis_vars(Phase2ModelVariables, phase1_solution.BasicIndices);
+            // write_soln(Phase2ModelVariables, phase1_solution.current_solution, phase1_solution.BasicIndices);
+            // cout << "Starting Phase-II" << endl;
+            // Solution phase2_solution = simplex(phase1_solution.current_solution, phase1_solution.CurrentBasis, D,
+            //                                 costs, c_D, b, Phase2ModelVariables, max_iterations);
+            // write_soln(Phase2ModelVariables, phase2_solution.current_solution, phase2_solution.BasicIndices);
+            // printDetailedSolution(Phase2ModelVariables);
+            // cout << phase2_solution.optimization_status << endl;
+        }
     }
 
     void printDetailedSolution(map<int, tuple<InModel, string, double>> ModelVariables)
@@ -502,6 +520,16 @@ public:
         {
 
             cout << format("%1% %|9t| %2% %|19t| %3% %|27t| %4$d") % it->first % get<0>(it->second) % get<1>(it->second) % get<2>(it->second) << endl;
+        }
+        
+    }
+
+    void printBasis(const map<int, int> &Basis)
+    {
+        cout << "Print Basis" << endl; 
+        for(auto it = Basis.begin(); it != Basis.end(); ++it)
+        {
+            cout << it->first << " " << it->second << endl; 
         }
     }
 };

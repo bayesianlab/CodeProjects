@@ -136,6 +136,22 @@ def load_model_features(data, scaler):
     data = knn_imputation(data)
     return data
 
+def ProcessArguments():
+    """
+   Processes the Arguments according to the file path.
+
+   Returns:
+       args - Processed Arguments
+
+    """
+
+    abspath = os.path.abspath(__file__)
+    dname = os.path.dirname(abspath)
+    os.chdir(dname)
+
+    opts, args = getopt.getopt(sys.argv, "", "")
+    return args
+
 def get_new_feature_names(feature_col_names, scaler_names, feature_name):
     x = []
     for c in feature_col_names:
@@ -150,7 +166,8 @@ def get_missing_indices(features, missing_names):
         missing_indices.append(features[features[i] == 1].index)
     return [j for i in missing_indices for j in i]
 
-def make_missing_predictions_average(features, missing_indices, model, scaler, ohe_root_name):
+def make_missing_predictions_average(features, missing_indices, model, 
+                                     scaler, seller_weights, ohe_root_name):
     col_nums = []
     for i, name in enumerate(features.columns):
         if name.startswith(ohe_root_name):
@@ -211,6 +228,67 @@ def make_missing_predictions_average(features, missing_indices, model, scaler, o
     results.iloc[missing_indices] = missing_results
     return results
 
+def make_missing_predictions_weighted_average(features, missing_indices, model, 
+                                     scaler, seller_weights, ohe_root_name):
+    name_to_number = {} 
+    for i, name in enumerate(features.columns):
+        if name.startswith(ohe_root_name):
+            name_to_number[name] = i 
+    seller_dictionary = dict(zip(seller_weights['SellerName'], seller_weights['SellerPct']))
+    names = features.columns
+    missing_results = {'S': [], 'M': [], 'W': []}
+    for i in missing_indices:
+        print(i)
+        y = []
+        row = features.iloc[i, :].to_numpy()
+        row = np.reshape(row, (-1, features.shape[1]))
+        for name,number in name_to_number.items():
+            row[0, number] = seller_dictionary[name]
+            x = {}
+            for m, k in zip(names, row.tolist()[0]):
+                x[m] = k
+            y.append(x)
+            row[0, number] = 0
+        y = pd.DataFrame(y)
+        y = scaler.transform(y)
+        y = np.asarray(y).astype(np.float32)
+
+        S = K.function([model.layers[0].input], [
+            model.get_layer('S').output])([y])[0]
+
+        try:
+            M = K.function([model.layers[0].input], [
+                model.get_layer('dM').output])([y])[0]
+        except:
+            M = K.function([model.layers[0].input], [
+                model.get_layer('M').output])([y])[0]
+
+        W = K.function([model.layers[0].input], [
+            model.get_layer('W').output])([y])[0]
+        tmp = pd.DataFrame(
+            {'S': np.ravel(S), 'M': np.ravel(M), 'W': np.ravel(W)})
+        missing_results['S'].append(tmp.median()['S'])
+        missing_results['M'].append(tmp.median()['M'])
+        missing_results['W'].append(tmp.median()['W'])
+    missing_results = pd.DataFrame(missing_results, index=missing_indices)
+    newdf = scaler.transform(features)
+    newdf = np.asarray(newdf).astype(np.float32)
+    S = K.function([model.layers[0].input], [
+        model.get_layer('S').output])([newdf])[0]
+    try:
+        M = K.function([model.layers[0].input], [
+            model.get_layer('dM').output])([newdf])[0]
+    except:
+        M = K.function([model.layers[0].input], [
+            model.get_layer('M').output])([newdf])[0]
+
+    W = K.function([model.layers[0].input], [
+        model.get_layer('W').output])([newdf])[0]
+    results = pd.DataFrame(
+        {'S': np.ravel(S), 'M': np.ravel(M), 'W': np.ravel(W)})
+    results.iloc[missing_indices] = missing_results
+    return results
+
 def merge_results(results, missing_data, data, output_path):
     try:
         temp_results = pd.merge(
@@ -228,6 +306,7 @@ def merge_results(results, missing_data, data, output_path):
         temp_results['Missing'] = temp_results['Missing'].astype('bool')        
         temp_results = temp_results[['LookId', 'SellerName', 'Missing', 'S',
                                         'M', 'W']]
+    os.makedirs(output_path[:output_path.rindex(os.path.sep)], exist_ok=True)
     temp_results.to_csv(output_path, index=False)
     return temp_results
 
@@ -470,6 +549,59 @@ def run_model_average_predictions(args, proc, data, model_path, log_file=None):
         return merge_results(results, missing_data, data_copy, log_file)
     else:
         return results
+    
+def run_model_weighted_average_predictions(data, model_path, seller_weights, log_file=None):
+    """
+    This is the file where majority of the work is done, everytime a client connects and sends a message(The Output Id)
+    the Output Id is used is added to the arguments and the results(S,M,W) are stored in the SQL database
+
+    Parameters:
+    message - The Output Id that the Eval file sends.
+    client - The Eval File that is connected to the server.
+    args - The arguments received by the MizerEvalServer file
+
+    """
+    # print("Processing MizerEval for OutputId:"+ f"{args[3]}", flush = True)
+    try:
+        pass
+        # data = SQLAction(args, proc, 'GetLooks')
+        # data = pd.read_csv('time_test.csv')
+        # data=pd.read_csv('bad_sellers.csv')
+        # data = pd.to_csv('time_test.csv')
+        # data = pd.read_csv('time_test.csv')
+        # data = pd.read_csv('avgseller1.csv')
+    except:
+        print('error with data')
+    # data = pd.read_csv('avgseller1.csv')
+
+    data_copy = data.copy()
+    # model_path = SQLAction(args, proc, 'GetEvalParams')['ModelPath'][0]+'\\'
+    model_path = pathlib.Path(model_path)
+    model = load_model(model_path/'Model.h5', compile=False)
+    scaler_path = model_path/'Scaler.pkl'
+    with open(scaler_path, 'rb') as f:
+        scaler = pickle.load(f)
+    try:
+        features = load_model_features(data, scaler)
+    except:
+        print('error with model features')
+
+    missing_names = get_new_feature_names(
+        features.columns, scaler.feature_names_in_, 'SellerName')
+    print(missing_names)
+    missing_indices = get_missing_indices(features, missing_names)
+    miss_col = np.zeros(features.shape[0])
+    miss_col[missing_indices] = 1
+    missing_data = pd.DataFrame({'LookId':data_copy['LookId'], 'Missing':miss_col})
+    features = features[scaler.feature_names_in_]
+    results = make_missing_predictions_weighted_average(
+        features, missing_indices, model, scaler, seller_weights, 'SellerName')
+    results['LookId'] = data['LookId']
+    results['M'] = results['M'] + data_copy['BenchMarginPrice']
+    if log_file is not None:
+        return merge_results(results, missing_data, data_copy, log_file)
+    else:
+        return results
 
 def run_model_average_weights(args, proc, data, model_path, log_file=None):
     """
@@ -705,21 +837,19 @@ def run_model_all1_subset(args, proc, data, model_path, seller_subset, log_file=
     else:
         return results
 
-def ProcessArguments():
-    """
-   Processes the Arguments according to the file path.
 
-   Returns:
-       args - Processed Arguments
+def run_model_experiments(data, model_path, log_file=None):
+    data_copy = data.copy()
+    # model_path = SQLAction(args, proc, 'GetEvalParams')['ModelPath'][0]+'\\'
+    # model_path = '84668229'
+    model = load_model('\\'.join([model_path, 'Model.h5']), compile=False)
+    scaler_path = '\\'.join([model_path, 'Scaler.pkl'])
+    with open(scaler_path, 'rb') as f:
+        scaler = pickle.load(f)
 
-    """
-
-    abspath = os.path.abspath(__file__)
-    dname = os.path.dirname(abspath)
-    os.chdir(dname)
-
-    opts, args = getopt.getopt(sys.argv, "", "")
-    return args
+    features = load_model_features(data, scaler)
+    col_nums = get_missing_col_indices(features, 'SellerName')
+    features[:, col_nums] = 0 
 
 
 # %%

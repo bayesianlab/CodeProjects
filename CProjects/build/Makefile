@@ -195,17 +195,17 @@ test_armodel/fast:
 .PHONY : test_armodel/fast
 
 #=============================================================================
-# Target rules for targets named optim
+# Target rules for targets named optlib
 
 # Build rule for target.
-optim: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 optim
-.PHONY : optim
+optlib: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 optlib
+.PHONY : optlib
 
 # fast build rule for target.
-optim/fast:
-	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optim.dir/build.make OptimizationTools/CMakeFiles/optim.dir/build
-.PHONY : optim/fast
+optlib/fast:
+	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optlib.dir/build.make OptimizationTools/CMakeFiles/optlib.dir/build
+.PHONY : optlib/fast
 
 #=============================================================================
 # Target rules for targets named optimtest
@@ -219,6 +219,19 @@ optimtest: cmake_check_build_system
 optimtest/fast:
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/build
 .PHONY : optimtest/fast
+
+#=============================================================================
+# Target rules for targets named tab
+
+# Build rule for target.
+tab: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 tab
+.PHONY : tab
+
+# fast build rule for target.
+tab/fast:
+	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/tab.dir/build.make OptimizationTools/CMakeFiles/tab.dir/build
+.PHONY : tab/fast
 
 #=============================================================================
 # Target rules for targets named ml
@@ -259,9 +272,10 @@ help:
 	@echo "... ettest"
 	@echo "... ettools"
 	@echo "... ml"
-	@echo "... optim"
 	@echo "... optimtest"
+	@echo "... optlib"
 	@echo "... plot"
+	@echo "... tab"
 	@echo "... test_armodel"
 	@echo "... test_timebreak"
 .PHONY : help
