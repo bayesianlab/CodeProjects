@@ -347,5 +347,22 @@ fill=teal!20}
      node[black,midway, below, align=center, yshift=-.5cm] {AdjustedBoundaryMarginPrice};   
 \end{tikzpicture}
 
+\newpage
+\begin{tikzpicture}
+\begin{axis}[
+	axis lines = center,
+	xlabel = \(m\),
+	ylabel = {\(p(m)\)},
+	]
+	\addplot [
+	domain=-10:10,
+	range=-.1:1.2
+	samples=500, 
+	color=red
+	]
+	{1/(1+exp(x))};
+
+\end{axis}
+\end{tikzpicture}
 
 \end{document}
