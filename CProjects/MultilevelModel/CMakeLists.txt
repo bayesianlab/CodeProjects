@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 project(multilevel)
 # set(CMAKE_CXX_STANDARD 11)
-# set(CMAKE_BUILD_TYPE DEBUG)
+set(CMAKE_BUILD_TYPE DEBUG)
 #  set(CMAKE_BUILD_TYPE RELEASE)
 #  set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops -fopenmp -DNDEBUG -ffast-math -j")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
