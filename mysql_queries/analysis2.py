@@ -25,6 +25,7 @@ class ModelFramework:
 class StockSimulation(ModelFramework):
 
     def __init__(self, stock_data):
+        super().__init__()
         self.stock_data = stock_data.copy()
         dprice = self.stock_data['adj_close'] - self.stock_data['adj_close'].shift(1)
         self.stock_data['dprice'] = dprice 
@@ -33,18 +34,22 @@ class StockSimulation(ModelFramework):
         self.price_stats['vol'] = [self.stock_data['dprice'].std()] 
         self.price_stats = pd.DataFrame.from_dict(self.price_stats)
     
-    def simulate_price_states(self, sims, periods):
-        start_price = self.stock_data['adj_close'].iloc[-1]
+    def simulate_price_states(self, p0, sims, periods):
         simulation_container = np.zeros((periods + 1, sims))
+        start_price = p0 
+        col_names = [] 
         for j in range(sims):
+            start_price = p0 
+            col_names.append('col' + str(j))
             pricef =[] 
-            p0 = start_price
-            pricef.append(p0)
+            pricef.append(start_price)
             for i in range(periods):
-                p0 += self.price_stats['mu'] + self.price_stats['vol']*np.random.standard_normal()                
-                pricef.append(p0[0])
+                start_price += (self.price_stats['mu'] + self.price_stats['vol']*np.random.standard_normal())[0]
+                pricef.append(start_price)
             simulation_container[:, j] = pricef
+        
         frame = pd.DataFrame.from_records(simulation_container)
+        frame.columns = col_names
         return frame
     
     def get_dates_out(self, date, periods_out):
