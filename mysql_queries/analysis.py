@@ -10,7 +10,7 @@ import pandas_market_calendars as pmc
 from datetime import datetime, timedelta
 from sklearn.linear_model import LinearRegression
 import pandas_market_calendars as mcal 
-
+from scipy.stats import norm 
 class InterpolateData:
 
     def __init__(self):
@@ -91,12 +91,14 @@ sql5 = '''
         SELECT *
         FROM Securities.nber_recessions;
         '''
+sql6 = "SELECT * FROM Securities.spy;"
     
 stock_data = pd.read_sql(text(sql1), c.conn)
 ttspread = pd.read_sql(text(sql2), c.conn)
 tons = pd.read_sql(text(sql3), c.conn)
 ff = pd.read_sql(text(sql4), c.conn)
 recessions = pd.read_sql(text(sql5), c.conn)
+spy = pd.read_sql(text(sql6), c.conn)
 #%%
 ttspread['dt'] = pd.to_datetime(ttspread['dt'])
 ttspread[~ttspread['sprd'].isna()]
@@ -178,21 +180,9 @@ ttspread['monthnum'] = ttspread['dt'].dt.month
 ttspread['yearnum'] = ttspread['dt'].dt.year
 merged_data = daily_stock_data.merge(ttspread[['daynum', 'monthnum', 'yearnum', 'sprd']], on=['daynum', 'monthnum', 'yearnum'])
 merged_data = merged_data[['dt', 'adj_close', 'sprd']]
-merged_data['sprd'] = merged_data['sprd'].shift(1)
-merged_data['stock_lag1'] = merged_data['adj_close'].shift(1)
-merged_data = merged_data.iloc[1:]
 merged_data = merged_data[~merged_data['sprd'].isna()]
-y = merged_data['adj_close']
-x = merged_data[['sprd', 'stock_lag1']]
-x['const'] = 1
-lr = LinearRegression(fit_intercept=False)
-lr.fit(x, y)
 
 # %%
-plt.plot(merged_data['dt'], lr.predict(x))
-plt.plot(merged_data['dt'], y)
-# %%
-
 class ModelFramework:
 
     def __init__(self):
@@ -202,7 +192,29 @@ class ModelFramework:
         self.calendar = pd.DataFrame({'dt_nyse':self.calendar})
         self.calendar['dt_nyse'] = self.calendar['dt_nyse'].dt.date
         self.calendar['dt_nyse'] = pd.to_datetime(self.calendar['dt_nyse'])
+#%%
 
+def create_lags(data_series,name, lags, fit_intercept=True):
+    if lags < 1:
+        raise Exception('lags must be greater than 1')
+    else:
+        L = [] 
+        names = []
+        for i in range(1,lags+1):
+            names.append(''.join([name,'_lag_',str(i)]))
+            L.append(data_series.shift(i))
+        if len(L) < 2:
+            lag_frames= pd.DataFrame.from_dict(dict(zip(names,L)))
+        else:
+            lag_frames = pd.concat(L, axis=1)
+            lag_frames.columns = names 
+        data = pd.concat([data_series, lag_frames],axis=1)
+        data = data.iloc[lags:]
+        data['const'] = 1
+        return data 
+sprd_lags = create_lags(merged_data['sprd'], 'sprd', 1)
+stock_lags = create_lags(merged_data['adj_close'], 'stock', 1)
+#%%    
 class SpreadModel(ModelFramework):
 
     def __init__(self, spread_data) -> None:
@@ -210,65 +222,178 @@ class SpreadModel(ModelFramework):
         self.ttspread= spread_data
         self.ttspread['dt'] = pd.to_datetime(self.ttspread['dt'])
         self.ttspread['dt'] = pd.to_datetime(self.ttspread['dt'].dt.date)
-        self.y_column_name = 'sprd'
-        self.ttspread = self.ttspread[~self.ttspread[self.y_column_name].isna()]
+        self.ttspread = self.ttspread[~self.ttspread['sprd'].isna()]
         self.model = None 
+        self.insample_dates = self.ttspread['dt']
         
-    def model_spread(self, ar_order=1):
+    def model_spread(self, lags=1):
         model_data = self.ttspread.copy()
         feature_cols = [] 
-        model_data['const'] =1
-        data = pd.concat([model_data['const'], 
-                          self.ttspread['sprd'], 
-                          self.ttspread['sprd'].shift(1)], axis=1)
-        data.columns = ['const', 'sprd', 'sprd_lag1']
-        data = data.iloc[1:]
-        X = data[['const', 'sprd_lag1']]
+        lagmat = create_lags(self.ttspread['sprd'], 'sprd', lags)   
+        X = lagmat.iloc[:,1:] 
+        y = lagmat.iloc[:,0]     
         self.model = LinearRegression(fit_intercept=False)
-        self.model.fit(X, np.reshape(data['sprd'].to_numpy(), (-1,1)))
+        self.model.fit(X, y)
+        self.insample_dates = self.ttspread['dt']
+        self.insample_dates = self.insample_dates.iloc[lags:]
+        
     
     def forecast(self, periods, sigma=1, start_date=None):
         if start_date is None:
-            start_date = self.ttspread['dt'].iloc[-1]
-        x = self.ttspread[self.ttspread['dt']<=start_date]        
-        X = np.reshape(np.array([1, x['sprd'].iloc[-1]]), (1,-1))
+            start_date = self.insample_dates.iloc[-1]
         yf = []
+        start_index = int(self.calendar[self.calendar['dt_nyse']==start_date].index.to_list()[0])
+        osindx = [] 
+        sprd_lags = self.ttspread.tail(len(self.model.coef_) - 1)['sprd']
+        x = sprd_lags.to_numpy()
+        x = np.concatenate((x,[1]))
         p = 0
-        dt_index = self.calendar[self.calendar['dt_nyse']==start_date].index.item()
-        dt_index_list = [] 
         while p < periods:
-            Xb = np.matmul(X, self.model.coef_.T)
-            yt = np.squeeze(Xb + np.sqrt(sigma)*np.random.standard_normal(1))
-            yf.append(yt)
-            dt_index += 1
+            Xb = np.matmul(x.T, self.model.coef_.T)
+            yf.append(Xb)
+            x[0:(len(x)-2)] = x[1:(len(x)-1)]
+            x[len(x)-2] = Xb            
             p+=1
-            dt_index_list.append(dt_index)
-        self.spread_forecast = pd.DataFrame({'dt':np.squeeze(self.calendar.iloc[dt_index_list].to_numpy()),
-                                             'sprd':yf})
+            start_index+=1
+            osindx.append(start_index)
+        osdates = self.calendar[self.calendar.index.isin(osindx)]
+        osdates.reset_index(inplace=True, drop=True)
+        osdata = pd.concat([osdates, pd.Series(yf)], axis=1) 
+        osdata.columns = ['dt', 'sprd']
+        return osdata 
         
-        self.spread_forecast = pd.concat([x[['dt', 'sprd']], self.spread_forecast], axis=0)
-
-            
 sm = SpreadModel(ttspread)
 nyse = mcal.get_calendar('NYSE')
-sm.model_spread()
-sm.forecast(10, .1*ttspread['sprd'].std())
+sm.model_spread(lags=1)
+sprdf = sm.forecast(100, .0001)
+print(sprdf)
 
-class SimulateStockPrice:
+#%%
 
-    def __init__(self, X, y) -> None:
-        self.data = X.merge(y, on='dt', how='left')
-        self.data = self.data[self.data['dt'] >= y['dt'].min()]
-        ycnames = set(y.columns.to_list())
-        self.price = list(ycnames - set('dt'))[0] 
-        self.data[]
-        
+def train_stock_model(X, y):
+    model = LinearRegression(fit_intercept=False)
+    model.fit(X,y)
+    return model 
 
-    def simulate(self, y_lags):
-        pass 
+class StockModel(ModelFramework):
+
+    def __init__(self) -> None:
+        super().__init__()
+    
+    def predict_stock(self, model, Xf, stock_prices, lags):
+        tmp = stock_prices.tail(lags)
+        tmp.reset_index(inplace=True, drop=True)
+        i = 0
+        tmpx = np.reshape(Xf.to_numpy(), (-1,1))
+        tmpy = np.reshape(tmp.to_numpy(), (1,-1))
+        yf = [] 
+        while i < Xf.shape[0]:
+            tx = np.atleast_2d(tmpx[i,:])
+            ty = tmpy
+            x = np.concatenate((tx, ty, [[1]]), axis=1)
+            yhat = model.predict(x).tolist()[0]
+            ty[0:(len(ty)-2)] = ty[1:(len(ty)-1)]
+            ty[len(ty)-2] = yhat
+            yf.append(yhat)
+            i+=1
+        return pd.Series(yf)
+
+    def get_dates_out(self, date, periods_out):
+        indx = self.calendar[self.calendar['dt_nyse']==date].index.to_list()[0] + 1
+        dates = self.calendar.iloc[indx:(indx+periods_out)]
+        dates.reset_index(inplace=True, drop=True)
+        return dates 
+    
+    def simulate(self, model, Xf, stock_prices, lags, simulations, sigma):
+        tmp = stock_prices.tail(lags)
+        tmp.reset_index(inplace=True, drop=True)
+        tmpx = np.reshape(Xf.to_numpy(), (-1,1))
+        sims = []  
+        for j in range(simulations):
+            yf = []
+            tmpy = np.reshape(tmp.to_numpy(), (1,-1))
+            i = 0
+            while i < Xf.shape[0]:
+                tx = np.atleast_2d(tmpx[i,:])
+                ty = tmpy
+                x = np.concatenate((tx, ty, [[1]]), axis=1)
+                yhat = model.predict(x) + sigma*np.random.normal(0,1,(1,1))
+                yhat = np.squeeze(yhat)
+                ty[0:(len(ty)-2)] = ty[1:(len(ty)-1)]
+                ty[len(ty)-2] = yhat
+                yf.append(yhat)
+                i+=1
+            sims.append(yf)
+        return pd.DataFrame(sims).T
+
+         
+sm = StockModel()
+
+Xstock = pd.concat([sprd_lags['sprd_lag_1'],stock_lags.iloc[:,1:]], axis=1)
+ystock = stock_lags.iloc[:,0]
 
 
 
+model = train_stock_model(Xstock.to_numpy(), ystock)
+yf = sm.predict_stock(model, sprdf['sprd'], ystock, 1)
+out_dates = sm.get_dates_out(stock_data.iloc[-1]['dt'], len(yf))
+out_frame = pd.concat([out_dates, yf], axis=1)
+out_frame.columns = ['dt', 'adj_close']
+sigma = spy['adj_close'].tail(100).std()
+frame = sm.simulate(model, sprdf['sprd'], ystock, 1, 4, sigma)
+frame = pd.concat([out_dates, frame], axis=1)
 # %%
-ssp = SimulateStockPrice(sm.spread_forecast, daily_stock_data[['dt', 'adj_close']])
+plot_data = daily_stock_data[daily_stock_data['dt'] > '2024-01-01']
+sns.lineplot(data=plot_data, x='dt', y='adj_close')
+plt.xticks(rotation=45)
+longform = pd.melt(frame, id_vars='dt_nyse')
+longform['value'] = longform['value'].astype(np.float32)
+sns.lineplot(longform, x='dt_nyse', y='value', hue='variable')
+#%%
+#%%
+
+price = daily_stock_data[['dt', 'adj_close']]
+
+price.loc[:, 'dprice'] = (price['adj_close'] - price['adj_close'].shift(1))
+price.mean()
+sigmas = price.std()
+N = 21
+n_sims = 10000
+sims = np.zeros((N + 1, n_sims))
+for j in range(n_sims):
+    pricef =[] 
+    p = price['adj_close'].iloc[-1]
+    pricef.append(p)
+    for i in range(N):
+        p += 0.06 + sigmas['dprice']*np.random.standard_normal()
+        pricef.append(p)
+    sims[:, j] = pricef
+frame = pd.DataFrame.from_records(sims)
+out_dates = sm.get_dates_out(stock_data.iloc[-1]['dt'], N+1)
+frame['dt'] = out_dates
+
+longform = pd.melt(frame, id_vars='dt')
+frame = frame.set_index('dt')
+frame.iloc[-1]
+# %%
+# plot_data = daily_stock_data[daily_stock_data['dt'] > '2024-01-01']
+# sns.lineplot(data=plot_data, x='dt', y='adj_close')
+# sns.lineplot(longform, x='dt', y='value', hue='variable')
+# %%
+
+def call_option_price(p0, strike, periods, mu, sigma, price_states, irate):
+    tmu = p0 + periods*mu
+    tsig = periods*sigma
+    probs = norm.cdf(price_states, loc=tmu, scale=tsig)
+    profit = price_states - strike
+    profit[profit<0] = 0    
+    discount_factor = irate/365.0
+    discount_factor = pow(1+discount_factor, -periods)
+    ev = (discount_factor*np.matmul(probs, profit))/100.0
+    return ev
+    
+
+call_option_price(145.56, 160, 21, .06, sigmas['dprice'], frame.iloc[-1], .05)
+
+
 # %%

@@ -100,7 +100,7 @@ class YahooHistorical(SNP500):
         self.last_added_date = pd.DataFrame()
 
     def CreateDatabaseTable(self, _days_ago):
-        T  = pd.read_sql('SELECT * FROM stock_prices limit 10', self.conn)
+        T  = pd.read_sql(text('SELECT * FROM stock_prices limit 10'), self.conn)
         if T.empty: 
             frame = self.get_historical_data(days_ago=_days_ago)
             self.insert_historical_data_to_sql(frame)
@@ -126,7 +126,7 @@ class YahooHistorical(SNP500):
         else:
             print('table exists')
             self.start_time = existing['dt']
-        frame = yfinance.download('SPY', interval='1h', start=self.start_time)
+        frame = yfinance.download('SPY', interval='1h', start=self.start_time.item())
         frame['ticker'] = 'SPY'
         frame.reset_index(inplace=True)
         frame.rename({'Ticker': 'ticker', 'Datetime': 'dt', 'Adj Close': 'adj_close',
@@ -156,11 +156,13 @@ class YahooHistorical(SNP500):
               ORDER BY dt 
               DESC LIMIT 1;
               ''')
-        self.last_added_date = pd.read_sql(sql,
-                    self.conn)
+        self.last_added_date = pd.read_sql(sql,self.conn)
         if self.last_added_date.empty:
             raise YahooHistoricalError('stock_prices database does not exist. Create first.')
         self.start_time = self.last_added_date.iloc[0] 
+        t = self.start_time['dt'] 
+        self.start_time = t + datetime.timedelta(days=1)
+
     
     def insert_historical_data_to_sql(self, frame):
         if frame.empty:
@@ -195,11 +197,23 @@ class FredData:
         self.engine = engine 
     
     def upload_fred(self, fred_name, table_name, fred_col_names, new_col_names):
-        # get the last date, select data from fred, go greater than that date, put that in to table.
+        sql = text('''
+              SELECT DISTINCT dt 
+              FROM Securities.{} 
+              ORDER BY dt 
+              DESC LIMIT 1;
+              '''.format(table_name))
         data = pf.get_series(fred_name, api_key=self.fred_api_key)
         data = data[fred_col_names]
         data.columns = new_col_names
-        data.to_sql(table_name, self.engine, if_exists='append', index=False)
+        try:
+            data.to_sql(table_name, self.engine, if_exists='fail', index=False, schema='Securities')
+        except ValueError as e:
+            with self.engine.connect() as conn:
+                print('dropping table')
+                conn.execute(text("drop table tentwo_sprd;").execution_options(autocommit=True))
+            data.to_sql(table_name, self.engine, index=False, schema='Securities')
+            print('recommited table')
 
 
 
@@ -209,12 +223,12 @@ if __name__ == "__main__":
     # snp = SNP500(db_host, db_user, db_pass, db_name)
     # snp.obtain_parse_wiki_snp500()
     yh = YahooHistorical(db_host, db_user, db_pass, db_name)
-    # yh.CreateDatabaseTable(700)
-    # yh.UpdateDatabaseTable(1)
-    yh.get_spy(700)
+    # yh.CreateDatabaseTable(7)
+    yh.UpdateDatabaseTable(7)
+    yh.get_spy(7)
     
     # fd = FredData(c.engine)
-    # fd.upload_fred('T10Y2Y', 'tentwo_srpd', ['date', 'T10Y2Y'], ['dt', 'sprd'])
+    # fd.upload_fred('T10Y2Y', 'tentwo_sprd', ['date', 'value'], ['dt', 'sprd'])
     # fd.upload_fred('TRUCKD11', 'truck_ton', ['date', 'value'], ['dt', 'tons'])
     # fd.upload_fred('DFF', 'fed_funds', ['date', 'value'], ['dt', 'rate'])
     # fd.upload_fred('USREC', 'nber_recessions', ['date', 'value'], ['dt', 'recession_indicator'])
