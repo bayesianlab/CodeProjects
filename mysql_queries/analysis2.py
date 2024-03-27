@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from sklearn.linear_model import LinearRegression
 import pandas_market_calendars as mcal 
 from scipy.stats import norm 
+
 #%%
 db_host = 'localhost'
 db_user = 'dillon'
