@@ -6,76 +6,11 @@ import matplotlib.pyplot as plt
 import seaborn as sns 
 from sklearn.preprocessing import StandardScaler
 from sqlalchemy import text
-import pandas_market_calendars as pmc 
 from datetime import datetime, timedelta
 from sklearn.linear_model import LinearRegression
 import pandas_market_calendars as mcal 
 from scipy.stats import norm 
 
-#%%
-db_host = 'localhost'
-db_user = 'dillon'
-db_pass = 'Zelzah12'
-db_name = 'Securities'
-c = Connection(db_host, db_user, db_pass, db_name)
-#%%
-sql1 = '''
-        SELECT p.*, s.Sector
-        FROM Securities.stock_prices p
-        join snp500 as s 
-        on p.ticker=s.Symbol
-        where p.ticker='AAPL';
-        '''
-sql2 = '''
-        SELECT *
-        FROM Securities.tentwo_sprd tt;
-        '''
-sql3 = '''
-        SELECT *
-        FROM Securities.truck_ton;
-        '''
-sql4 = '''SELECT *
-          From Securities.fed_funds;
-          '''
-sql5 = '''
-        SELECT *
-        FROM Securities.nber_recessions;
-        '''
-sql6 = "SELECT * FROM Securities.spy;"
-sql7=    '''
-        select p.*, daynum, monthnum, yearnum
-        from 
-            (
-                select max(dt) dt, 
-                    max(Sector) Sector,
-                    daynum,
-                    monthnum,
-                    yearnum
-                from 
-                    (select *,
-                        row_number() over(partition by X.daynum, X.monthnum, X.yearnum) as dt_rank
-                    from 
-                        (SELECT p.*, 
-                            s.Sector, 
-                            s.Security, 
-                            day(p.dt) daynum, 
-                            month(p.dt) monthnum,
-                            year(p.dt) yearnum
-                        FROM Securities.stock_prices p
-                        join snp500 as s 
-                        on p.ticker=s.Symbol
-                        where p.ticker='A') as X) as Y 
-                group by Y.daynum, Y.monthnum, Y.yearnum
-            ) as Z 
-        join Securities.stock_prices p 
-        on Z.dt=p.dt
-        where p.ticker='QCOM';
-        '''
-#%%
-spy = pd.read_sql(text(sql6), c.conn)
-
-daily_stock_data = pd.read_sql(text(sql7), c.conn)
-stock_data = daily_stock_data[['dt', 'ticker', 'adj_close']]
 # %%
 class ModelFramework:
 
@@ -121,8 +56,7 @@ class StockSimulation(ModelFramework):
     def call_option_price(self, p0, strike, periods, mu, sigma, prices_at_exp, rate):
         tmu = p0 
         tsig = periods*sigma
-        probs = norm.cdf(prices_at_exp, loc=tmu, scale=tsig)
-        print(probs)
+        probs = norm.pdf(prices_at_exp, loc=tmu, scale=tsig)
         profit = prices_at_exp - strike
         profit[profit<0] = 0    
         discount_factor = rate/365.0
@@ -133,8 +67,7 @@ class StockSimulation(ModelFramework):
     def put_option_price(self, p0, strike, periods, mu, sigma, prices_at_exp, rate):
         tmu = p0 
         tsig = periods*sigma
-        probs = norm.cdf(prices_at_exp, loc=tmu, scale=tsig)
-        print(probs)
+        probs = norm.pdf(prices_at_exp, loc=tmu, scale=tsig)
         profit = strike - prices_at_exp
         profit[profit<0] = 0    
         discount_factor = rate/365.0
@@ -142,20 +75,80 @@ class StockSimulation(ModelFramework):
         ev = (discount_factor*np.matmul(probs, profit))/100.0
         return ev
 
-
-
-ss = StockSimulation(stock_data.tail(10))
-ss.price_stats
-frame = ss.simulate_price_states(1000, 12)
-
 # %%
-p0 = 167.07
-x = 182.50
-call = ss.call_option_price(p0, x, 12, ss.price_stats['mu'], 
-                     ss.price_stats['vol'], frame.iloc[-1], 0.05)
+if __name__=='__main__':
+    #%%
+    sql1 = '''
+            SELECT p.*, s.Sector
+            FROM Securities.stock_prices p
+            join snp500 as s 
+            on p.ticker=s.Symbol
+            where p.ticker='AAPL';
+            '''
+    sql2 = '''
+            SELECT *
+            FROM Securities.tentwo_sprd tt;
+            '''
+    sql3 = '''
+            SELECT *
+            FROM Securities.truck_ton;
+            '''
+    sql4 = '''SELECT *
+            From Securities.fed_funds;
+            '''
+    sql5 = '''
+            SELECT *
+            FROM Securities.nber_recessions;
+            '''
+    sql6 = "SELECT * FROM Securities.spy;"
+    sql7=    '''
+            select p.*, daynum, monthnum, yearnum
+            from 
+                (
+                    select max(dt) dt, 
+                        max(Sector) Sector,
+                        daynum,
+                        monthnum,
+                        yearnum
+                    from 
+                        (select *,
+                            row_number() over(partition by X.daynum, X.monthnum, X.yearnum) as dt_rank
+                        from 
+                            (SELECT p.*, 
+                                s.Sector, 
+                                s.Security, 
+                                day(p.dt) daynum, 
+                                month(p.dt) monthnum,
+                                year(p.dt) yearnum
+                            FROM Securities.stock_prices p
+                            join snp500 as s 
+                            on p.ticker=s.Symbol
+                            where p.ticker='A') as X) as Y 
+                    group by Y.daynum, Y.monthnum, Y.yearnum
+                ) as Z 
+            join Securities.stock_prices p 
+            on Z.dt=p.dt
+            where p.ticker='QCOM';
+            '''
+    db_host = 'localhost'
+    db_user = 'dillon'
+    db_pass = 'Zelzah12'
+    db_name = 'Securities'
+    c = Connection(db_host, db_user, db_pass, db_name)
+    spy = pd.read_sql(text(sql6), c.conn)
+    daily_stock_data = pd.read_sql(text(sql7), c.conn)
+    stock_data = daily_stock_data[['dt', 'ticker', 'adj_close']]
+    ss = StockSimulation(stock_data.tail(10))
+    ss.price_stats
+    frame = ss.simulate_price_states(1000, 12)
 
-put = ss.put_option_price(p0, x, 12, ss.price_stats['mu'],
-                          ss.price_stats['vol'], frame.iloc[-1], 0.05)
-print(call)
-print(put)
-# %%
+    # %%
+    p0 = 167.07
+    x = 182.50
+    call = ss.call_option_price(p0, x, 12, ss.price_stats['mu'], 
+                        ss.price_stats['vol'], frame.iloc[-1], 0.05)
+
+    put = ss.put_option_price(p0, x, 12, ss.price_stats['mu'],
+                            ss.price_stats['vol'], frame.iloc[-1], 0.05)
+    print(call)
+    print(put)
