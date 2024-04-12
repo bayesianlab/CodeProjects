@@ -85,8 +85,6 @@ class SNP500:
         symbols_list[['Symbol', 'Security', 'Sector', 'Sub-Industry']].to_sql('snp500', self.conn,
                                                                               if_exists='replace')
 
-
-
 # %%
 
 class YahooHistoricalError(Exception):
@@ -124,7 +122,6 @@ class YahooHistorical(SNP500):
             print('table does not exist')
             self.start_time = datetime.datetime.today() - datetime.timedelta(days=700)
         else:
-            print('table exists')
             self.start_time = existing['dt']
         frame = yfinance.download('SPY', interval='1h', start=self.start_time.item())
         frame['ticker'] = 'SPY'
@@ -224,8 +221,8 @@ if __name__ == "__main__":
     # snp.obtain_parse_wiki_snp500()
     yh = YahooHistorical(db_host, db_user, db_pass, db_name)
     # yh.CreateDatabaseTable(7)
-    yh.UpdateDatabaseTable(7)
-    yh.get_spy(7)
+    yh.UpdateDatabaseTable(5)
+    yh.get_spy(3)
     
     # fd = FredData(c.engine)
     # fd.upload_fred('T10Y2Y', 'tentwo_sprd', ['date', 'value'], ['dt', 'sprd'])
