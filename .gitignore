@@ -103,8 +103,8 @@ TbsOutput/
 
 *.idea/*
 
-build/
 venv/
+out/
 .vs/
 x64/
 *.sln
