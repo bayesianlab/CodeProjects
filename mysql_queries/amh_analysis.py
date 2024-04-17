@@ -1,5 +1,5 @@
 # %%
-from get_data import Connection
+from get_data import SNP500, Connection
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,6 +15,10 @@ import warnings
 import yfinance
 import matplotlib.pyplot as plt 
 import seaborn as sns 
+import requests 
+from bs4 import BeautifulSoup as bs 
+import yfinance
+
 pd.options.mode.chained_assignment = None
 sql7 = '''
         select p.*
@@ -46,6 +50,41 @@ db_host = 'localhost'
 db_user = 'dillon'
 db_pass = 'Zelzah12'
 db_name = 'Securities'
+#%%
+
+# def get_snp_companies():
+#     link = 'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
+#     resp = requests.get(link).text
+#     soup = bs(resp, 'html.parser')
+#     table = soup.find('table')
+#     tb = table.find('tbody')
+#     tr = tb.find_all('tr')
+#     rows = {}
+#     i = 0
+#     for r in tr:
+#         col = []
+#         data = r.find_all('td')
+#         for ele in data:
+#             if not isinstance(ele, str):
+#                 e = ele.text.strip()
+#                 col.append(e)
+#             else:
+#                 col.append(ele)
+#             if len(col) == 8:
+#                 rows[i] = col
+#         i += 1
+#     frame = pd.DataFrame.from_dict(rows, orient='index')
+#     frame.columns = ['Symbol', 'Security', 'Sector', 'Sub-Industry',
+#                         'Headquarters', 'DateAdded', 'CIK', 'Founded']
+#     return frame 
+
+# cos = get_snp_companies()
+# stocks = yfinance.download(list(cos['Symbol']), interval='d')
+        
+
+    
+
+#%%
 c = Connection(db_host, db_user, db_pass, db_name)
 daily_stock_data = pd.read_sql(text(sql7), c.conn)
 test_dataset = daily_stock_data[daily_stock_data.ticker.isin(['A', 'AAPL', 'AAL', 'WBD', 'XRAY'])]
@@ -55,7 +94,7 @@ recent = daily_stock_data[daily_stock_data['dt'] > '2024-01-01']
 stock_sim2 = StockSimulation(recent)
 sims = stock_sim2.simulate_all_stock_price_states(5,5000)
 chains = stock_sim2.create_chain(sims, 5, 5, .04)
-stock_sim2.RankOptions(chains, '2024-04-12')
+stock_sim2.RankOptions(chains, '2024-04-19')
 #%%
 stock_sim2.best_calls[stock_sim2.best_calls.lastPrice < 2.5]
 stock_sim2.best_puts[stock_sim2.best_puts.lastPrice < 2.5]

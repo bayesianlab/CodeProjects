@@ -79,10 +79,10 @@ class SNP500:
                 if len(col) == 8:
                     rows[i] = col
             i += 1
-        symbols_list = pd.DataFrame.from_dict(rows, orient='index')
-        symbols_list.columns = ['Symbol', 'Security', 'Sector', 'Sub-Industry',
+        self.symbols_list = pd.DataFrame.from_dict(rows, orient='index')
+        self.symbols_list.columns = ['Symbol', 'Security', 'Sector', 'Sub-Industry',
                                 'Headquarters', 'DateAdded', 'CIK', 'Founded']
-        symbols_list[['Symbol', 'Security', 'Sector', 'Sub-Industry']].to_sql('snp500', self.conn,
+        self.symbols_list[['Symbol', 'Security', 'Sector', 'Sub-Industry']].to_sql('snp500', self.conn,
                                                                               if_exists='replace')
 
 # %%
