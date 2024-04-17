@@ -15,6 +15,7 @@ import warnings
 import yfinance
 import matplotlib.pyplot as plt 
 import seaborn as sns 
+import pickle 
 pd.options.mode.chained_assignment = None
 sql7 = '''
         select p.*
@@ -48,18 +49,33 @@ db_pass = 'Zelzah12'
 db_name = 'Securities'
 c = Connection(db_host, db_user, db_pass, db_name)
 daily_stock_data = pd.read_sql(text(sql7), c.conn)
-test_dataset = daily_stock_data[daily_stock_data.ticker.isin(['A', 'AAPL', 'AAL', 'WBD', 'XRAY'])]
+
 
 #%%
 recent = daily_stock_data[daily_stock_data['dt'] > '2024-01-01']
 stock_sim2 = StockSimulation(recent)
 sims = stock_sim2.simulate_all_stock_price_states(5,5000)
 chains = stock_sim2.create_chain(sims, 5, 5, .04)
-stock_sim2.RankOptions(chains, '2024-04-12')
+stock_sim2.RankOptions(chains, '2024-04-19')
+with open('stocksim.pkl', 'wb') as f:
+    pickle.dump(stock_sim2, f)
 #%%
-stock_sim2.best_calls[stock_sim2.best_calls.lastPrice < 2.5]
-stock_sim2.best_puts[stock_sim2.best_puts.lastPrice < 2.5]
+sims[sims['ticker']=='ADM']
+v = stock_sim2.price_stats[stock_sim2.price_stats.ticker=='ADM']['vol']
+stock_sim2.put_option_price(60.27, 55, 3, sims[sims['ticker']=='ADM'].iloc[:,0:(-2)], 
+                            .45*v,  .05)
 
+pctg = stock_sim2.price_stats[stock_sim2.price_stats.ticker=='ADM']['xbar'].item()
+vol = stock_sim2.price_stats[stock_sim2.price_stats.ticker=='ADM']['vol'].item()
+stock_sim2.put_option_prices2(60.27, 55, 3, )
+
+stock_sim2.best_calls[stock_sim2.best_calls.lastPrice < 2.5]
+p = stock_sim2.best_puts[(stock_sim2.best_puts.lastPrice < 2.5)]
+
+stock_sim2.EVOptions(p, sims)
+
+stock_sim2.ProbGreaterThanX(sims[sims['ticker']=='ADM'], 58)
+#%%
 ax = sns.scatterplot(data=stock_sim2.best_puts[(stock_sim2.best_puts.value > .5) &
                                           (stock_sim2.best_puts.lastPrice < stock_sim2.best_puts.value)&
                                           (stock_sim2.best_puts.inTheMoney==True) &
@@ -72,13 +88,7 @@ stock_sim2.best_calls[(stock_sim2.best_calls.value > .5) &
 
 #%%
 
-select_stocks_c = daily_stock_data[daily_stock_data.ticker.isin(['AFL', 'WMB','GNRC', 'BBWI'])]
-select_stocks_p = daily_stock_data[daily_stock_data.ticker.isin(['ENPH', 'ALB','BIIB', 'FDX'])]
-
+stock_sim2.best_puts.sort_values(by='vr', ascending=False)
 # %%
-recent = daily_stock_data[daily_stock_data['dt'] > '2024-03-01']
-test = StockSimulation(recent[recent['ticker']=='VLO'])
-sims = test.simulate_all_stock_price_states(5,2500)
-chains = test.create_chain(sims, 5,5,.04)
-test.RankOptions(chains, '2024-04-12')
+stock_sim2.best_calls.sort_values(by='vr', ascending=False)
 # %%
