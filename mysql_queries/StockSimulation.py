@@ -9,9 +9,8 @@ from sqlalchemy import text
 from datetime import datetime, timedelta
 from sklearn.linear_model import LinearRegression
 import pandas_market_calendars as mcal 
-from scipy.stats import norm 
+from scipy.stats import norm, uniform 
 import yfinance
-
 # %%
 class ModelFramework:
 
@@ -88,6 +87,26 @@ class StockSimulation(ModelFramework):
             do = self.get_dates_out(self.stock_data['dt'].max(), 11, True)
             simulations = simulations.join(do)
             return simulations
+        
+    def EVOptions(self, put_options, stocksims):
+        options_stats = put_options.merge(self.price_stats, on='ticker')
+        list_of_names = list(options_stats.ticker.unique())
+        ticker_frame = {} 
+        probs = [] 
+        for i in list_of_names:
+            ticker_frame[i] = stocksims[stocksims.ticker==i]
+        for i in range(options_stats.shape[0]):
+            f = ticker_frame[options_stats.iloc[i].ticker]
+            probs.append(1 - self.ProbGreaterThanX(f, options_stats.iloc[i].strike))
+        options_stats['prob'] = probs
+        return options_stats
+        
+
+    def ProbGreaterThanX(self, stock_sims, x):
+        name = stock_sims.ticker.unique().item()
+        m = stock_sims.mean(axis=1, numeric_only=True).iloc[-1]
+        s = self.price_stats.loc[self.price_stats.ticker==name, 'vol'].item()
+        return 1 - norm.cdf(x, m, s)
     
     def create_chain(self, simulations, lower, upper, rate):
         simsframe = simulations.drop('dt', axis=1)
@@ -105,9 +124,9 @@ class StockSimulation(ModelFramework):
 
             while x < ub:
                 p = self.put_option_price(p0, x, period,
-                                          stock_frame.iloc[-1, 0:(-1)], rate)
+                                          stock_frame.iloc[-1, 0:(-2)], rate)
                 c = self.call_option_price(p0, x, period,
-                                           stock_frame.iloc[-1, 0:(-1)], rate)
+                                           stock_frame.iloc[-1, 0:(-2)], rate)
                 chain.append((t, x, p, c, period))
                 x += .5
         return pd.DataFrame(chain, columns=['ticker', 'strike', 'put', 'call', 'dte'])
@@ -120,13 +139,32 @@ class StockSimulation(ModelFramework):
         dates = self.calendar.iloc[indx:(indx+periods_out)]
         dates.reset_index(inplace=True, drop=True)
         return dates
+    
+    def put_option_prices2(self, p0, strike, periods, pct_growth, avg_vol):
+        m_at_expiry = pct_growth*periods + p0 
+        b = (strike - m_at_expiry)/avg_vol
+        if abs(b) > 8:
+            return 0
+        z = -m_at_expiry/avg_vol
+        y = np.random.uniform(z, b, (50000,))
+        updf = 1.0/(b-z)
+        importance_weight = y*(norm.pdf(y)/updf)
+        tnorm = importance_weight.sum()/len(importance_weight)
+        ey = norm.cdf(b) - norm.cdf(-m_at_expiry/avg_vol)
+        return 100*(ey - tnorm )
 
-    def put_option_price(self, p0, strike, periods, prices_at_exp, rate):
-        probs = np.ones((len(prices_at_exp), ))
-        profit = strike - prices_at_exp
+        
+
+
+    def put_option_price(self, p0, strike, periods, prices_at_exp, 
+                         sigma, rate):
+        mu = prices_at_exp.iloc[-1].mean()
+        probs = norm.pdf(prices_at_exp.iloc[-1], loc=mu, scale=sigma)
+        # probs = np.ones((len(prices_at_exp), ))
+        profit = strike - prices_at_exp.iloc[-1]
         profit[profit<0] = 0    
         discount_factor =pow(1+(rate/365.0), -periods)
-        adjustment = discount_factor * (1/len(prices_at_exp))
+        adjustment = discount_factor 
         return (adjustment*np.matmul(probs, profit))
  
     def call_option_price(self, p0, strike, periods, prices_at_exp, rate):        
