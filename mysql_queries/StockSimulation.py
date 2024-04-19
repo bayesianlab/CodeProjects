@@ -33,6 +33,7 @@ class StockSimulation(ModelFramework):
         self.all_p0 = self.stock_data[self.stock_data['dt'] == self.stock_data['dt'].max()][['ticker', 'adj_close']]
         self.best_calls = pd.DataFrame()
         self.best_puts = pd.DataFrame() 
+        self.simulation_size = 10000
 
     def _get_price_stats(self, stock_data):    
         dprice= []
@@ -88,48 +89,33 @@ class StockSimulation(ModelFramework):
             simulations = simulations.join(do)
             return simulations
         
-    def EVOptions(self, put_options, stocksims):
-        options_stats = put_options.merge(self.price_stats, on='ticker')
-        list_of_names = list(options_stats.ticker.unique())
-        ticker_frame = {} 
-        probs = [] 
-        for i in list_of_names:
-            ticker_frame[i] = stocksims[stocksims.ticker==i]
-        for i in range(options_stats.shape[0]):
-            f = ticker_frame[options_stats.iloc[i].ticker]
-            probs.append(1 - self.ProbGreaterThanX(f, options_stats.iloc[i].strike))
-        options_stats['prob'] = probs
-        return options_stats
-        
+    def get_ticker_xbar(self, ticker):
+        return self.price_stats[self.price_stats.ticker==ticker]['xbar'].item()
 
-    def ProbGreaterThanX(self, stock_sims, x):
-        name = stock_sims.ticker.unique().item()
-        m = stock_sims.mean(axis=1, numeric_only=True).iloc[-1]
-        s = self.price_stats.loc[self.price_stats.ticker==name, 'vol'].item()
-        return 1 - norm.cdf(x, m, s)
+    def get_ticker_vol(self, ticker):
+        return self.price_stats[self.price_stats.ticker==ticker]['vol'].item()
     
-    def create_chain(self, simulations, lower, upper, rate):
-        simsframe = simulations.drop('dt', axis=1)
+    def create_chain(self, lower, upper, period):
         chain = []
-        tckr_list = simulations.ticker.unique().tolist() 
         print('Status: ')
-        for i, t in enumerate(tckr_list):
+        for i, t in enumerate(self.all_stock_tickers):
             print('ticker {}'.format(t))
-            stock_frame = simsframe[simsframe.ticker == t]
-            avgs = stock_frame.mean(axis=1, numeric_only=True)
-            p0 = int(avgs[0])
-            ub = int(avgs[0]) + upper
-            x = p0 - lower
-            period = stock_frame.shape[0] - 1
-
+            stock_history = self.stock_data[self.stock_data.ticker==t]
+            p0 = stock_history['adj_close'].iloc[-1]
+            ub = int(p0) + upper
+            x = int(p0) - lower
+            m = self.price_stats[self.price_stats.ticker==t]['xbar'].item()
+            v = self.price_stats[self.price_stats.ticker==t]['vol'].item()
             while x < ub:
-                p = self.put_option_price(p0, x, period,
-                                          stock_frame.iloc[-1, 0:(-2)], rate)
-                c = self.call_option_price(p0, x, period,
-                                           stock_frame.iloc[-1, 0:(-2)], rate)
-                chain.append((t, x, p, c, period))
+                p = self.put_option_price(p0, x, period,m, v)
+                c = self.call_option_price(p0, x, period, m, v)
+                if x < p0:
+                    itm = 1
+                else:
+                    itm = 0
+                chain.append((t, x, p, c, period, itm))
                 x += .5
-        return pd.DataFrame(chain, columns=['ticker', 'strike', 'put', 'call', 'dte'])
+        return pd.DataFrame(chain, columns=['ticker', 'strike', 'put', 'call', 'dte', 'itm'])
 
     def get_dates_out(self, date, periods_out, inclusive=False):
         if inclusive==True:
@@ -140,40 +126,32 @@ class StockSimulation(ModelFramework):
         dates.reset_index(inplace=True, drop=True)
         return dates
     
-    def put_option_prices2(self, p0, strike, periods, pct_growth, avg_vol):
+    def shifted_exponential(self, x, shift):
+            return np.exp(-x + shift)
+    
+    def put_option_price(self, p0, strike, periods, pct_growth, avg_vol):
         m_at_expiry = pct_growth*periods + p0 
         b = (strike - m_at_expiry)/avg_vol
-        if abs(b) > 8:
-            return 0
         z = -m_at_expiry/avg_vol
-        y = np.random.uniform(z, b, (50000,))
-        updf = 1.0/(b-z)
-        importance_weight = y*(norm.pdf(y)/updf)
-        tnorm = importance_weight.sum()/len(importance_weight)
-        ey = norm.cdf(b) - norm.cdf(-m_at_expiry/avg_vol)
-        return 100*(ey - tnorm )
+        y = np.random.uniform(0, strike, size= (self.simulation_size,))
+        y = (y - m_at_expiry)/avg_vol
+        updf = 1/(strike)
+        tpdf = 1
+        pdfy = norm.pdf(y)*(1/tpdf)
+        pdfy[pdfy<1e-8] = 0  
+        importance_weight = (b-y)*(pdfy/updf)
+        return importance_weight.sum()/len(importance_weight)
 
+    def call_option_price(self, p0, strike, periods, pct_growth, avg_vol):        
+        m_at_expiry = pct_growth*periods + p0 
+        a = (strike - m_at_expiry)/avg_vol
+        y = np.random.exponential(size=(self.simulation_size,)) + a
+        exp_pdf = self.shifted_exponential(y, a)
+        pdfy = norm.pdf((y-m_at_expiry)/avg_vol)
+        pdfy[pdfy>.99999] = 1
+        importance_weight = (y-a)*(pdfy/exp_pdf)
+        return importance_weight.sum()/len(importance_weight)
         
-
-
-    def put_option_price(self, p0, strike, periods, prices_at_exp, 
-                         sigma, rate):
-        mu = prices_at_exp.iloc[-1].mean()
-        probs = norm.pdf(prices_at_exp.iloc[-1], loc=mu, scale=sigma)
-        # probs = np.ones((len(prices_at_exp), ))
-        profit = strike - prices_at_exp.iloc[-1]
-        profit[profit<0] = 0    
-        discount_factor =pow(1+(rate/365.0), -periods)
-        adjustment = discount_factor 
-        return (adjustment*np.matmul(probs, profit))
- 
-    def call_option_price(self, p0, strike, periods, prices_at_exp, rate):        
-        probs = np.ones((len(prices_at_exp,)))
-        profit = (prices_at_exp - strike)
-        profit[profit<0] = 0  
-        discount_factor =pow(1+(rate/365.0), -periods)
-        adjustment = discount_factor * (1/len(prices_at_exp))
-        return  (adjustment*np.matmul(probs, profit))
     
     def RankOptions(self, chains, expiry_date):
         calls = []
@@ -197,6 +175,7 @@ class StockSimulation(ModelFramework):
                 pass 
         if len(calls) > 0:
             calls = pd.concat(calls, axis=0)
+            calls.inTheMoney = calls.inTheMoney.astype(bool)
             calls = calls.merge(chains[['ticker', 'strike', 'call']], on=['ticker', 'strike'])
             calls['value'] = calls['call'] - calls['lastPrice'] 
             calls['vr'] = calls['call']/calls['lastPrice']
@@ -204,6 +183,7 @@ class StockSimulation(ModelFramework):
             self.best_calls = calls 
         if len(puts) > 0:
             puts = pd.concat(puts, axis=0)
+            puts.inTheMoney = puts.inTheMoney.astype(bool)
             puts = puts.merge(chains[['ticker', 'strike', 'put']], on=['ticker', 'strike'])
             puts['value'] = puts['put'] - puts['lastPrice'] 
             puts['vr'] = puts['put']/puts['lastPrice']
