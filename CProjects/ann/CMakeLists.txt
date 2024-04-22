@@ -35,5 +35,5 @@ include_directories(
 add_library(Dist /home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp)
 add_library(et ${MYINCLUDES}/EigenTools/src/EigenTools.cpp)
 
-add_executable(ann ann.cpp)
+add_executable(ann src/ann.cpp)
 target_link_libraries(ann PUBLIC Dist et)
