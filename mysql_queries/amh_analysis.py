@@ -16,6 +16,8 @@ import yfinance
 import matplotlib.pyplot as plt 
 import seaborn as sns 
 import pickle 
+import requests
+from bs4 import BeautifulSoup as bs 
 pd.options.mode.chained_assignment = None
 sql7 = '''
         select p.*
@@ -49,42 +51,14 @@ db_pass = 'Zelzah12'
 db_name = 'Securities'
 #%%
 
-# def get_snp_companies():
-#     link = 'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-#     resp = requests.get(link).text
-#     soup = bs(resp, 'html.parser')
-#     table = soup.find('table')
-#     tb = table.find('tbody')
-#     tr = tb.find_all('tr')
-#     rows = {}
-#     i = 0
-#     for r in tr:
-#         col = []
-#         data = r.find_all('td')
-#         for ele in data:
-#             if not isinstance(ele, str):
-#                 e = ele.text.strip()
-#                 col.append(e)
-#             else:
-#                 col.append(ele)
-#             if len(col) == 8:
-#                 rows[i] = col
-#         i += 1
-#     frame = pd.DataFrame.from_dict(rows, orient='index')
-#     frame.columns = ['Symbol', 'Security', 'Sector', 'Sub-Industry',
-#                         'Headquarters', 'DateAdded', 'CIK', 'Founded']
-#     return frame 
-
-# cos = get_snp_companies()
-# stocks = yfinance.download(list(cos['Symbol']), interval='d')
-        
-
-    
-
+daily_stock_data = pd.read_csv('ADM.csv')  
+daily_stock_data.rename({'Date':'dt', 'Adj Close': "adj_close"}, axis=1, inplace=True)
+daily_stock_data['ticker'] = 'ADM'
+daily_stock_data.reset_index(drop=True, inplace=True)
 #%%
 c = Connection(db_host, db_user, db_pass, db_name)
 daily_stock_data = pd.read_sql(text(sql7), c.conn)
-
+daily_stock_data['ticker'] = 'ADM'
 
 #%%
 recent = daily_stock_data[daily_stock_data['dt'] > '2024-01-01']
@@ -102,7 +76,7 @@ stock_sim2.put_option_price(60.27, 55, 3, sims[sims['ticker']=='ADM'].iloc[:,0:(
 
 pctg = stock_sim2.price_stats[stock_sim2.price_stats.ticker=='ADM']['xbar'].item()
 vol = stock_sim2.price_stats[stock_sim2.price_stats.ticker=='ADM']['vol'].item()
-stock_sim2.put_option_prices2(60.27, 55, 3, )
+stock_sim2.put_option_price(60.4, 58, 3, pctg, vol, .05)
 
 stock_sim2.best_calls[stock_sim2.best_calls.lastPrice < 2.5]
 p = stock_sim2.best_puts[(stock_sim2.best_puts.lastPrice < 2.5)]

@@ -101,12 +101,6 @@ class StockSimulation(ModelFramework):
         options_stats['prob'] = probs
         return options_stats
         
-
-    def ProbGreaterThanX(self, stock_sims, x):
-        name = stock_sims.ticker.unique().item()
-        m = stock_sims.mean(axis=1, numeric_only=True).iloc[-1]
-        s = self.price_stats.loc[self.price_stats.ticker==name, 'vol'].item()
-        return 1 - norm.cdf(x, m, s)
     
     def create_chain(self, simulations, lower, upper, rate):
         simsframe = simulations.drop('dt', axis=1)
@@ -123,10 +117,10 @@ class StockSimulation(ModelFramework):
             period = stock_frame.shape[0] - 1
 
             while x < ub:
-                p = self.put_option_price(p0, x, period,
-                                          stock_frame.iloc[-1, 0:(-2)], rate)
-                c = self.call_option_price(p0, x, period,
-                                           stock_frame.iloc[-1, 0:(-2)], rate)
+                m = self.price_stats[self.price_stats.ticker==t]['xbar']
+                s = self.price_stats[self.price_stats.ticker==t]['vol']
+                p = self.put_option_price(p0, x, period, m, s, rate)
+                c = self.call_option_price(p0, x, period, m, s, rate)
                 chain.append((t, x, p, c, period))
                 x += .5
         return pd.DataFrame(chain, columns=['ticker', 'strike', 'put', 'call', 'dte'])
@@ -140,40 +134,36 @@ class StockSimulation(ModelFramework):
         dates.reset_index(inplace=True, drop=True)
         return dates
     
-    def put_option_prices2(self, p0, strike, periods, pct_growth, avg_vol):
-        m_at_expiry = pct_growth*periods + p0 
-        b = (strike - m_at_expiry)/avg_vol
+    def shifted_exponential_pdf(self, y, shift):
+        return np.exp(-(y-shift))
+    
+    def put_option_price(self, p0, strike, periods, avg_growth, avg_vol, rate):
+        m_at_expiry = avg_growth*periods + p0 
+        b = (strike - m_at_expiry)/avg_vol        
         if abs(b) > 8:
             return 0
         z = -m_at_expiry/avg_vol
-        y = np.random.uniform(z, b, (50000,))
-        updf = 1.0/(b-z)
-        importance_weight = y*(norm.pdf(y)/updf)
-        tnorm = importance_weight.sum()/len(importance_weight)
-        ey = norm.cdf(b) - norm.cdf(-m_at_expiry/avg_vol)
-        return 100*(ey - tnorm )
-
-        
-
-
-    def put_option_price(self, p0, strike, periods, prices_at_exp, 
-                         sigma, rate):
-        mu = prices_at_exp.iloc[-1].mean()
-        probs = norm.pdf(prices_at_exp.iloc[-1], loc=mu, scale=sigma)
-        # probs = np.ones((len(prices_at_exp), ))
-        profit = strike - prices_at_exp.iloc[-1]
-        profit[profit<0] = 0    
-        discount_factor =pow(1+(rate/365.0), -periods)
-        adjustment = discount_factor 
-        return (adjustment*np.matmul(probs, profit))
- 
-    def call_option_price(self, p0, strike, periods, prices_at_exp, rate):        
-        probs = np.ones((len(prices_at_exp,)))
-        profit = (prices_at_exp - strike)
-        profit[profit<0] = 0  
-        discount_factor =pow(1+(rate/365.0), -periods)
-        adjustment = discount_factor * (1/len(prices_at_exp))
-        return  (adjustment*np.matmul(probs, profit))
+        y = -(np.random.exponential(size=(50000,)) - b)
+        epdf = self.shifted_exponential_pdf(-y, -b) 
+        tnormpdf = norm.pdf(y)/(norm.cdf(b) - norm.cdf(z))
+        tnormpdf[tnormpdf<1e-8] = 0 
+        importance_weight = (b-y)*(tnormpdf/epdf)
+        discount_factor = pow(1+(rate/365.0), -periods)
+        return discount_factor*importance_weight.sum()/len(importance_weight)
+         
+    def call_option_price(self, p0, strike, periods, avg_growth, avg_vol, rate):        
+        m_at_expiry = avg_growth*periods + p0 
+        b = (strike - m_at_expiry)/avg_vol        
+        if abs(b) > 8:
+            return 0
+        z = -m_at_expiry/avg_vol
+        y = np.random.exponential(size=(50000,)) + b 
+        updf = self.shifted_exponential_pdf(y, b)
+        tnormpdf = norm.pdf(y)/(norm.cdf(b) - norm.cdf(z))
+        tnormpdf[tnormpdf<1e-8] = 0 
+        importance_weight = (y-b)*(tnormpdf/updf)
+        discount_factor = pow(1+(rate/365.0), -periods)
+        return discount_factor*importance_weight.sum()/len(importance_weight)
     
     def RankOptions(self, chains, expiry_date):
         calls = []
