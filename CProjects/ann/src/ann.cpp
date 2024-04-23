@@ -7,17 +7,25 @@
 using namespace std;
 using namespace Eigen;
 
-double logistic_activation(VectorXd layer_states, VectorXd weights)
+class LogisticActivation
 {
-	double x = layer_states.transpose() * weights;
-	return 1.0 / (1 + exp(-x));
-}
+	public:
+	VectorXd activation(const MatrixXd &Weights, const VectorXd &layer_states) const 
+	{
+		VectorXd x =  Weights * layer_states;
+		for(int i =0; i < x.size();++i)
+		{
+			x(i)= 1.0/(1.0 + exp(x(i))); 
+		}
+		return x; 
+	}
 
-double logistic_derivative(VectorXd layer_states, VectorXd weights)
-{
-	double fx = logistic_activation(layer_states, weights);
-	return fx * (1 - fx);
-}
+	VectorXd derivative(const VectorXd &layer_states) const 
+	{
+		return layer_states.array()*(1-layer_states.array());
+	}
+};
+
 
 // class Node
 // {
@@ -62,12 +70,10 @@ public:
 
 	double threshold = 0.5;
 	VectorXd zl; 	 
-	function<double(VectorXd, VectorXd)> activation;
 	MatrixXd Weights; 
 
-	void create_layer(int n_nodes, const Layer &ConnectedLayer, const function<double(VectorXd, VectorXd)> &func)
+	void create_layer(int n_nodes, const Layer &ConnectedLayer)
 	{
-		activation = func; 
 		Weights = unifrnd(0,1,n_nodes, ConnectedLayer.zl.size());
 		zl.resize(n_nodes);
 	}
@@ -77,9 +83,10 @@ public:
 		zl.resize(n_nodes); 
 	}
 
-	void compute_self(Layer &ConnectedLayer)
+	template<typename T>
+	void compute_self(Layer &ConnectedLayer, const T &ActivationClass) 
 	{
-		zl = Weights * ConnectedLayer.zl; 
+		zl = ActivationClass.activation(Weights, ConnectedLayer.zl); 
 	}
 
 	void compute_self(VectorXd &x)
@@ -97,7 +104,8 @@ class Network
 		layers.push_back(L);
 	}
 
-	VectorXd compute_net(const MatrixXd &X)
+	template<typename T> 
+	VectorXd compute_net(const MatrixXd &X, const T &ActivationClass) 
 	{
 		VectorXd yhat(X.rows());
 		for (int i = 0; i < X.rows(); ++i)
@@ -109,21 +117,18 @@ class Network
 					VectorXd z0 = X.row(i);
 					layers[0].compute_self(z0);
 				}
-				else if (k == layers.size() - 1)
-				{
-					layers[k].compute_self(layers[k - 1]);
-					yhat(i) = layers[k].zl.value();
-				}
 				else
 				{
-					layers[k].compute_self(layers[k - 1]);
+					layers[k].compute_self(layers[k - 1], ActivationClass);
 				}
 			}
+			yhat(i) = layers[layers.size()-1].zl.value();
 		}
 		return yhat;
 	}
 
-	void compute_net(const MatrixXd &X, int start_layer)
+	template<typename T>
+	void compute_net(const MatrixXd &X, int start_layer, const T &ActivationClass)
 	{
 		VectorXd yhat(X.rows());
 		for (int i = 0; i < X.rows(); ++i)
@@ -137,62 +142,96 @@ class Network
 				}
 				else if (k == layers.size() - 1)
 				{
-					layers[k].compute_self(layers[k - 1]);
+					layers[k].compute_self(layers[k - 1], ActivationClass);
 					yhat(i) = layers[k].zl.value();
 				}
 				else
 				{
-					layers[k].compute_self(layers[k - 1]);
+					layers[k].compute_self(layers[k - 1], ActivationClass);
 				}
 			}
 		}
 	}
 
-	void compute_error_grad(const MatrixXd &X, const VectorXd &targets)
+	template<typename T> 
+	void compute_error_grad(const MatrixXd &X, const VectorXd &targets, const T &ActivationClass, double learning_rate)
 	{
-		VectorXd yhat = compute_net(X); 
-		
-		for(int i = layers.size()-1; i >=0; --i)
+		VectorXd yhat = compute_net(X, ActivationClass); 
+		VectorXd grad_z_E; 
+		MatrixXd grad_w_E;
+		double error = 0; 
+		double delta= learning_rate;
+		for(int i = layers.size()-1; i >=1; --i)
 		{
 			if(i==layers.size()-1)
 			{
-				VectorXd error = yhat - targets; 
+				grad_z_E.resize(1);
+				grad_z_E << (yhat - targets).array().sum();
+				error = grad_z_E.transpose()*grad_z_E;
+				grad_w_E = (grad_z_E.array()*ActivationClass.derivative(layers[i].zl).array()).matrix() * layers[i-1].zl.transpose();
+				layers[i].Weights = layers[i].Weights - delta*grad_w_E;
+				cout << error << endl; 
 			}
 			else
 			{
-				
+				grad_z_E = layers[i+1].Weights.transpose() *(grad_z_E.array()*ActivationClass.derivative(layers[i+1].zl).array()).matrix(); 
+				grad_w_E = (grad_z_E.array()*ActivationClass.derivative(layers[i].zl).array()).matrix() * layers[i-1].zl.transpose();
+				layers[i].Weights = layers[i].Weights - delta*grad_w_E;
+				cout << layers[i].Weights << endl; 
 			}
+			cout << endl; 
 		}
 
 	}
 
-	// double compute_dcost(VectorXd &targets, MatrixXd &X, 
-	// 				   function<double(VectorXd, VectorXd)> ActivationFunc,
-	// 			   	   int layer_index, int i, int j)
-	// {
-	// 	double cost = 0;
-	// 	for(int i = 0; i < targets.size(); ++i)
-	// 	{
-			
-	// 	}
-	// 	return cost;
-	// }
-
-	// void backpropagation(MatrixXd &Samples, VectorXd &target)
-	// {
-	// }
+	template<typename T> 
+	void run_model(const MatrixXd &X, const VectorXd&targets, const T &ActivationClass, double learning_rate, int iterations)
+	{
+		for(int i = 1; i <= iterations; i++)
+		{
+			cout << i << endl; 
+			compute_error_grad(X, targets, ActivationClass, learning_rate);
+		}
+	}
+	
 };
+
+class MaxMinScaler
+{
+	public:
+	double min_coef;
+	double max_coef;
+	double slope; 
+	double intercept; 
+	VectorXd scaler(const VectorXd &x)
+	{
+		max_coef = x.maxCoeff();
+		min_coef = x.minCoeff();
+		slope = 1.0/(max_coef-min_coef);
+		intercept = -slope*min_coef; 
+		return slope*x.array() + intercept; 
+		
+	}
+
+	VectorXd inverse_transform(const VectorXd&z)
+	{
+		return (z.array() - intercept)/slope; 
+	}
+};
+
 
 
 int main()
 {
 
 	cout << "ann" << endl; 
-	int N = 2;
+	int N = 150;
 	MatrixXd X = normrnd(0,1,N,10);
-	cout << X << endl; 
 	VectorXd w = unifrnd(-1,1, 10);
 	VectorXd y = X*w + normrnd(0,1,N,1);
+	MaxMinScaler mms; 
+	VectorXd z = mms.scaler(y); 
+	cout << z.transpose() << endl; 
 	
 
 	Layer L0; 
@@ -202,15 +241,14 @@ int main()
 	Network Net; 
 	L0.create_input_layer(X.cols());
 	Net.add_layer(L0);
-	L1.create_layer(10, L0, logistic_activation);
+	L1.create_layer(10, L0);
 	Net.add_layer(L1);
-	L2.create_layer(5, L1, logistic_activation);
+	L2.create_layer(5, L1);
 	Net.add_layer(L2);
-	LL.create_layer(1, L2, logistic_activation);
+	LL.create_layer(1, L2);
 	Net.add_layer(LL);
-
-	cout << Net.compute_net(X) << endl;
-	Net.compute_error_grad(X, y) ; 
+	LogisticActivation la; 
+	Net.run_model(X, z, la, 1e-4, 10);
 
 
 }
