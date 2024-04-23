@@ -16,8 +16,6 @@ import yfinance
 import matplotlib.pyplot as plt 
 import seaborn as sns 
 import pickle 
-import requests
-from bs4 import BeautifulSoup as bs 
 pd.options.mode.chained_assignment = None
 sql7 = '''
         select p.*
@@ -49,55 +47,24 @@ db_host = 'localhost'
 db_user = 'dillon'
 db_pass = 'Zelzah12'
 db_name = 'Securities'
-#%%
-
-daily_stock_data = pd.read_csv('ADM.csv')  
-daily_stock_data.rename({'Date':'dt', 'Adj Close': "adj_close"}, axis=1, inplace=True)
-daily_stock_data['ticker'] = 'ADM'
-daily_stock_data.reset_index(drop=True, inplace=True)
-#%%
 c = Connection(db_host, db_user, db_pass, db_name)
 daily_stock_data = pd.read_sql(text(sql7), c.conn)
-daily_stock_data['ticker'] = 'ADM'
+
 
 #%%
 recent = daily_stock_data[daily_stock_data['dt'] > '2024-01-01']
+small = recent[recent.ticker=='AAL']
 stock_sim2 = StockSimulation(recent)
-sims = stock_sim2.simulate_all_stock_price_states(5,5000)
-chains = stock_sim2.create_chain(sims, 5, 5, .04)
-stock_sim2.RankOptions(chains, '2024-04-19')
-with open('stocksim.pkl', 'wb') as f:
-    pickle.dump(stock_sim2, f)
-#%%
-sims[sims['ticker']=='ADM']
-v = stock_sim2.price_stats[stock_sim2.price_stats.ticker=='ADM']['vol']
-stock_sim2.put_option_price(60.27, 55, 3, sims[sims['ticker']=='ADM'].iloc[:,0:(-2)], 
-                            .45*v,  .05)
 
-pctg = stock_sim2.price_stats[stock_sim2.price_stats.ticker=='ADM']['xbar'].item()
-vol = stock_sim2.price_stats[stock_sim2.price_stats.ticker=='ADM']['vol'].item()
-stock_sim2.put_option_price(60.4, 58, 3, pctg, vol, .05)
+chain = stock_sim2.create_chain(5,5, 6)
+stock_sim2.RankOptions(chain, '2024-04-26')
+stock_sim2.best_puts.round(3).sort_values(by='strike')
 
-stock_sim2.best_calls[stock_sim2.best_calls.lastPrice < 2.5]
-p = stock_sim2.best_puts[(stock_sim2.best_puts.lastPrice < 2.5)]
-
-stock_sim2.EVOptions(p, sims)
-
-stock_sim2.ProbGreaterThanX(sims[sims['ticker']=='ADM'], 58)
-#%%
-ax = sns.scatterplot(data=stock_sim2.best_puts[(stock_sim2.best_puts.value > .5) &
-                                          (stock_sim2.best_puts.lastPrice < stock_sim2.best_puts.value)&
-                                          (stock_sim2.best_puts.inTheMoney==True) &
-                                          (stock_sim2.best_puts.lastPrice<1)], 
-                x='lastPrice', y='value', hue='ticker')
-sns.move_legend(ax, 'upper left', bbox_to_anchor=(1,1))
-stock_sim2.best_calls[(stock_sim2.best_calls.value > .5) &
-                                          (stock_sim2.best_calls.lastPrice < stock_sim2.best_calls.value)&
-                                          (stock_sim2.best_calls.lastPrice<1)].head(50)
-
-#%%
-
-stock_sim2.best_puts.sort_values(by='vr', ascending=False)
 # %%
-stock_sim2.best_calls.sort_values(by='vr', ascending=False)
+best_puts = stock_sim2.best_puts.sort_values(by='vr', ascending=False).round(3)
+
 # %%
+
+g = sns.scatterplot(best_puts[(best_puts['lastPrice']<1)&(best_puts['vr']>1)], 
+                x='lastPrice', y='vr', hue='ticker')
+g.legend(loc='center left', bbox_to_anchor=(1., 0), ncol=1)
