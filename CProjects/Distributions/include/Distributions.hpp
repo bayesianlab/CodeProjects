@@ -23,6 +23,8 @@
 using namespace Eigen;
 using namespace std;
 
+
+
 VectorXd gammarnd(const double &shape, const double &scale, const int &N);
 
 double gammarnd(const double &shape, const double &scale);
