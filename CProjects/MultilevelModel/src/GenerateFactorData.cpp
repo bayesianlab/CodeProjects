@@ -115,8 +115,8 @@ void GenerateFactorData::breakPointGenData(
     Xt.rightCols(betas.size() - 1) =
         normrnd(0, 1, Time * nEqns, betas.size() - 1);
   }
-  surX = surForm(Xt, nEqns);
 
+  surX = surForm(Xt, nEqns);
   nEqnsP = surX.cols();
   VectorXd allBetas = betas.replicate(nEqns, 1);
   Xbeta = surX * allBetas;
@@ -131,7 +131,7 @@ void GenerateFactorData::breakPointGenData(
     }
   }
   
-  gammas = .25*VectorXd::Ones(nFactors);
+  gammas = .55*VectorXd::Ones(nFactors);
   int factorLags = gammas.cols();
 
   factorVariances = facVar * VectorXd::Ones(nFactors, 1);
@@ -145,7 +145,8 @@ void GenerateFactorData::breakPointGenData(
   Factors.resize(nFactors, Time);
   MatrixXd AFactors = MatrixXd::Zero(nEqns, Time);
   MatrixXd Factorbreak1 = Factors.block(0,0, nFactors, breakpoint);
-  AFactors.block(0,breakpoint, nEqns, breakpoint) = A*Factors.block(0, breakpoint, nFactors, breakpoint);
+  AFactors.block(0,breakpoint-1, nEqns, breakpoint) = A*Factors.block(0, breakpoint-1, nFactors, breakpoint);
+  AFactors.block(0,0, nEqns, breakpoint) = .25*A*Factors.block(0, 0, nFactors, breakpoint);
   mu = AFactors + Xbeta;
   MatrixXd nu = normrnd(0, 1, nEqns, Time);
   yt = mu + nu;

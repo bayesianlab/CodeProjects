@@ -30,7 +30,7 @@ data=data.astype(dt)
 data_copy = data.copy()
 args=[]
 proc=[]
-out_file = 'Experiments/dseller.csv'
+out_file = 'Experiments/.csv'
 seller_weight_file_name = pathlib.Path('/home/dillon/CodeProjects/amh/Average Seller Presentation/Data/seller_weights.csv')
 seller_weight_frame = pd.read_csv(seller_weight_file_name)
 run_model_weighted_average_predictions(data, model_path, seller_weight_frame, out_file)

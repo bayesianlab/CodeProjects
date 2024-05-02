@@ -103,8 +103,8 @@ TbsOutput/
 
 *.idea/*
 
-build/
 venv/
+out/
 .vs/
 x64/
 *.sln
@@ -118,3 +118,5 @@ CMakeCache.txt
 *.h5
 *.pkl
 *.swp 
+Debug/*
+build/

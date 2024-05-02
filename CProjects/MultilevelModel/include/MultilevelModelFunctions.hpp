@@ -418,7 +418,7 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
     ++colCount;
     CovarSum = CovarSum.ldlt().solve(MatrixXd::Identity(T, T));
     MeanSum = CovarSum * MeanSum;
-    rrvals(n) = logmvnpdf(MeanSum, MeanSum, CovarSum);
+    rrvals(n) = logmvnpdf(Factorstar.row(n), MeanSum, CovarSum);
   }
   return rrvals;
 }
