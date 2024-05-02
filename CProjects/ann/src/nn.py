@@ -12,7 +12,7 @@ w = np.random.uniform(-1,1,size=(p,1))
 X = np.random.normal(0,1, size=(N, p))
 y = np.matmul(X,w) + np.random.normal(0,1,size=(N,1))
 #%%
-
+tf.keras.utils.set_random_seed(102)
 I = keras.layers.Input(shape=(X.shape[1],))
 L = keras.layers.Dense(units=10, use_bias=False)(I)
 out = keras.layers.Dense(units=1, use_bias=False)(L)

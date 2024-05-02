@@ -291,14 +291,13 @@ public:
 		}
 	}
 
-	template <typename T>
-	VectorXd run_model(const MatrixXd &X, const VectorXd &targets, const T &ActivationObj)
+	template <typename T1, typename T2>
+	VectorXd run_model(const MatrixXd &X, const VectorXd &targets, const T1 &ActivationObj, const T2 &Loss)
 	{
 		double delta = learning_rate;
 		VectorXd grad_z_E;
 		MatrixXd grad_w_E;
 		double avg_error = 0;
-		double running_error = 0;
 		double error; 
 		batch_data(X, targets, permute);
 		int Batches = y_batches.size();
@@ -315,9 +314,8 @@ public:
 					int n_nodes = layers[L].zl.size();
 					if (L == layers.size() - 1)
 					{
-						grad_z_E = (yhat - y_batches[B]);
-						batch_error += (grad_z_E.transpose() * grad_z_E).value()/batch_size;
-						double s = grad_z_E.array().sum()/batch_size;
+						batch_error += Loss.loss(yhat, y_batches[B]);
+						double s = Loss.gradient(yhat, y_batches[B]);
 						grad_z_E.resize(1);
 						grad_z_E << s;
 					}
@@ -344,6 +342,20 @@ public:
 	}
 };
 
+class MeanSquaredError
+{
+	public:
+	double loss(const VectorXd &yhat, const VectorXd &ytrue) const 
+	{
+		return (yhat - ytrue).array().pow(2).sum()/ytrue.size(); 
+	}
+
+	double gradient(const VectorXd &yhat, const VectorXd &ytrue) const 
+	{
+		return (yhat - ytrue).array().sum(); 
+	}
+};
+
 
 
 int main()
@@ -351,7 +363,7 @@ int main()
 
 	cout << "ann" << endl;
 	int N = 30;
-	int epochs = 40;
+	int epochs = 10;
 	MatrixXd X = normrnd(0, 1, N, 10);
 	VectorXd w = unifrnd(-1, 1, 10);
 	VectorXd y = X * w + normrnd(0, 1, N, 1);
@@ -360,10 +372,10 @@ int main()
 	Layer L0;
 	Layer L1;
 	Layer LL;
-	double learning_rate = 1e-2;
+	double learning_rate = 5e-3;
 	double Fx_diff_tol = 1e-2;
 	double abs_err_tol = 1e-2;
-	int batch_size = 1;
+	int batch_size = 30;
 	Network Net(epochs, batch_size, learning_rate, Fx_diff_tol, abs_err_tol, false);
 	L0.create_input_layer(X.cols());
 	Net.add_layer(L0);
@@ -372,6 +384,7 @@ int main()
 	LL.create_layer(1, L1);
 	Net.add_layer(LL);
 	LinearActivation la;
-	VectorXd yhat = Net.run_model(X, y, la);
+	MeanSquaredError mse; 
+	VectorXd yhat = Net.run_model(X, y, la, mse);
 	plotter("fname.p", y, yhat);
 }
