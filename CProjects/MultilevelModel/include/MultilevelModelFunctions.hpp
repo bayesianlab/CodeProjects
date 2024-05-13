@@ -25,7 +25,8 @@ MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings,
                       const MatrixXd &FactorPrecision,
                       const VectorXd &precision, int T);
 
-MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &InfoMat, const int eqns);
+MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &InfoMat,
+                              const int eqns);
 
 template <typename D>
 MatrixXd zeroOutColumn(const MatrixBase<D> &Id, int level) {
@@ -291,13 +292,17 @@ void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
   }
 }
 
-template <typename T1,  typename T3, typename T4, typename T5,
-          typename T6, typename T7>
-VectorXd factorReducedRun(
-    MatrixXd &Factorstar, const MatrixBase<T1> &yt, const std::vector<MatrixXd> &Xtk,
-    const Matrix<int, Dynamic, 2> &InfoMat, const MatrixBase<T3> &betaParams,
-    const MatrixBase<T4> &omVariance, const MatrixBase<T5> &factorVariance,
-    const MatrixBase<T6> &deltas, const MatrixBase<T7> &gammas) {
+
+template <typename T1, typename T3, typename T4, typename T5, typename T6,
+          typename T7>
+VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
+                          const std::vector<MatrixXd> &Xtk,
+                          const Matrix<int, Dynamic, 2> &InfoMat,
+                          const MatrixBase<T3> &betaParams,
+                          const MatrixBase<T4> &omVariance,
+                          const MatrixBase<T5> &factorVariance,
+                          const MatrixBase<T6> &deltas,
+                          const MatrixBase<T7> &gammas) {
   // deltas and gammas
   int nFactors = InfoMat.rows();
   int K = yt.rows();
@@ -330,7 +335,7 @@ VectorXd factorReducedRun(
       RowVectorXd loadings = betaParams.row(k).tail(nFactors);
       btemp = betaParams.row(k).head(nXs);
       loadings(colCount) = 0;
-      epsilons = yt.row(k) - btemp * Xtemp.transpose() - loadings*Factorstar;
+      epsilons = yt.row(k) - btemp * Xtemp.transpose() - loadings * Factorstar;
       if (k == InfoMat.row(n).head(1).value()) {
         f2 = factorVariance(n);
         H1 = MakePrecision(gammas.row(n), f2, T);
@@ -358,8 +363,7 @@ VectorXd factorReducedRun(
   return rrvals;
 }
 
-template <typename T1,  typename T3, typename T4, typename T5,
-          typename T6>
+template <typename T1, typename T3, typename T4, typename T5, typename T6>
 VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
                           const vector<MatrixXd> &Xtk,
                           const Matrix<int, Dynamic, 2> &InfoMat,
@@ -398,7 +402,8 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
       btemp = betaParams.row(k).head(nXs);
       loadings(colCount) = 0;
       // break up x and factors
-      epsilons = yt.row(k) - (btemp * Xthat.transpose() + loadings * Factorstar);
+      epsilons =
+          yt.row(k) - (btemp * Xthat.transpose() + loadings * Factorstar);
       if (k == InfoMat.row(n).head(1).value()) {
         f2 = factorVariance(n);
         H1 = MakePrecision(gammas.row(n), f2, T);
