@@ -346,9 +346,9 @@ class FullConditionalsNoAr : public FullConditionals {
       MatrixXd factor_break1 = Factors.block(0, 0, nFactors, timebreak);
       MatrixXd factor_break2 = Factors.block(0, timebreak, nFactors, T - timebreak);
 
-      updateFactor2(factor_break1, yt, Xtk1, InfoMat, betaParams, omVariance,
+      updateFactor2(factor_break1, yt1, Xtk1, InfoMat, betaParams, omVariance,
                     factorVariance, gammas);
-      updateFactor2(factor_break2, yt, Xtk2, InfoMat, betaParams, omVariance,
+      updateFactor2(factor_break2, yt2, Xtk2, InfoMat, betaParams, omVariance,
                     factorVariance, gammas);
       Factors << factor_break1, factor_break2;
       for (int n = 0; n < nFactors; ++n) {
@@ -779,9 +779,9 @@ class FullConditionalsNoAr : public FullConditionals {
       MatrixXd factor_break1 = Factors.block(0, 0, nFactors, timebreak);
       MatrixXd factor_break2 = Factors.block(0, timebreak, nFactors, T - timebreak);
 
-      updateFactor2(factor_break1, yt, Xtk1, InfoMat, betaStar, omVariance,
+      updateFactor2(factor_break1, yt1, Xtk1, InfoMat, betaStar, omVariance,
                     factorVariance, gammas);
-      updateFactor2(factor_break2, yt, Xtk2, InfoMat, betaStar, omVariance,
+      updateFactor2(factor_break2, yt2, Xtk2, InfoMat, betaStar, omVariance,
                     factorVariance, gammas);
       for (int n = 0; n < nFactors; ++n) {
         gammas.row(n) = updateArParameters(Factors.row(n), gammas.row(n),
@@ -832,9 +832,9 @@ class FullConditionalsNoAr : public FullConditionals {
       MatrixXd factor_break1 = Factors.block(0, 0, nFactors, timebreak);
       MatrixXd factor_break2 = Factors.block(0, timebreak, nFactors, T - timebreak);
 
-      updateFactor2(factor_break1, yt, Xtk1, InfoMat, betaStar, omVariance,
+      updateFactor2(factor_break1, yt1, Xtk1, InfoMat, betaStar, omVariance,
                     factorVariance, gammas);
-      updateFactor2(factor_break2, yt, Xtk2, InfoMat, betaStar, omVariance,
+      updateFactor2(factor_break2, yt2, Xtk2, InfoMat, betaStar, omVariance,
                     factorVariance, gammas);
       for (int n = 0; n < nFactors; ++n) {
         f2 = factorVariance(n);
@@ -888,9 +888,9 @@ class FullConditionalsNoAr : public FullConditionals {
       MatrixXd factor_break1 = Factors.block(0, 0, nFactors, timebreak);
       MatrixXd factor_break2 = Factors.block(0, timebreak, nFactors, T - timebreak);
 
-      updateFactor2(factor_break1, yt, Xtk1, InfoMat, betaStar, omVariance,
+      updateFactor2(factor_break1, yt1, Xtk1, InfoMat, betaStar, omVariance,
                     factorVariance, gammas);
-      updateFactor2(factor_break2, yt, Xtk2, InfoMat, betaStar, omVariance,
+      updateFactor2(factor_break2, yt2, Xtk2, InfoMat, betaStar, omVariance,
                     factorVariance, gammas);
       for (int n = 0; n < nFactors; ++n) {
         if (id == 2) {
@@ -924,9 +924,9 @@ class FullConditionalsNoAr : public FullConditionals {
         MatrixXd factor_break1 = Factors.block(0, 0, nFactors, timebreak);
         MatrixXd factor_break2 = Factors.block(0, timebreak, nFactors, T - timebreak);
 
-        updateFactor2(factor_break1, yt, Xtk1, InfoMat, betaStar, omVariance,
+        updateFactor2(factor_break1, yt1, Xtk1, InfoMat, betaStar, omVariance,
                       factorVariance, gammas);
-        updateFactor2(factor_break2, yt, Xtk2, InfoMat, betaStar, omVariance,
+        updateFactor2(factor_break2, yt2, Xtk2, InfoMat, betaStar, omVariance,
                       factorVariance, gammas);
         for (int n = 0; n < nFactors; ++n) {
           H = StoreH[n];

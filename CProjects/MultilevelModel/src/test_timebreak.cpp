@@ -38,6 +38,9 @@ int main(int argc, char* argv[]) {
   fc.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, 0, 1);
   fc.runTimeBreakModel(sims, burnin, tb, "tbmodel");
   fc.mlTimeBreak(tb);
+  FullConditionalsNoAr fcfull;
+  fcfull.runModel(sims,burnin, "fullmodel");
+  fcfull.ml() ;
   // string name; 
   // map<int, pair<double,double>> mls; 
   // vector<FullConditionalsNoAr> hold;
