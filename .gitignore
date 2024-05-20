@@ -118,5 +118,6 @@ CMakeCache.txt
 *.h5
 *.pkl
 *.swp 
-Debug/*
+**/Release/*
+**/Debug/*
 build/

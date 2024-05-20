@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <filesystem>
+#include <cstdlib>
 
 #include "ARMA.hpp"
 #include "BayesianUpdates.hpp"
@@ -45,7 +47,7 @@ class FullConditionalsNoAr : public FullConditionals {
   double D0;
   double marginal_likelihood;
   double factorPriorMagnitude = 1;
-  double betaPriorMagnitude = 100;
+  double betaPriorMagnitude = 10;
   RowVectorXd b0;
   RowVectorXd g0;
   VectorXd omVariance;
@@ -255,25 +257,25 @@ class FullConditionalsNoAr : public FullConditionals {
     R[0] = residuals;
     this->Sims = Sims;
     this->burnin = burnin;
-    int p = std::system("mkdir -p mllogfiles");
+    
     string date = dateString();
     string version = "full_conditionals_";
     string ext = ".txt";
-    string path = "mllogfiles/";
-    string file_name_prefix = path + file_name + "_" + version + date;
-    fname = file_name_prefix + ext;
+    string path = "mllogfiles_" + file_name + "_" + date + "/";
+    std::filesystem::create_directories(path);
+    fname = path + file_name  + ext;
     std::ofstream file;
     file.open(fname);
     if (file.is_open()) {
-      storePosterior(file_name_prefix + "_beta.csv", BetaPosteriorDraws);
-      storePosterior(file_name_prefix + "_gammas.csv", GammasPosteriorDraws);
-      storePosterior(file_name_prefix + "_factors.csv", FactorPosteriorDraws);
-      storePosterior(file_name_prefix + "_factorVariance.csv",
+      storePosterior(path + "beta.csv", BetaPosteriorDraws);
+      storePosterior(path + "gammas.csv", GammasPosteriorDraws);
+      storePosterior(path + "factors.csv", FactorPosteriorDraws);
+      storePosterior(path + "factorVariance.csv",
                      FactorVariancePosteriorDraws);
-      storePosterior(file_name_prefix + "_omVariance.csv",
+      storePosterior(path + "omVariance.csv",
                      OmVariancePosteriorDraws);
-      storePosterior(file_name_prefix + "_residuals.csv", R);
-      storePosterior(file_name_prefix + "_fittedModel.csv", Fit);
+      storePosterior(path + "residuals.csv", R);
+      storePosterior(path + "fittedModel.csv", Fit);
       file << "Full Conditional Version run with: " << Sims << " " << "burnin "
            << burnin << endl;
       file << "Beta avg" << endl;
