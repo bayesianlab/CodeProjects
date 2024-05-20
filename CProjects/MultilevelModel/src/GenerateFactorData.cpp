@@ -130,23 +130,17 @@ void GenerateFactorData::breakPointGenData(
       }
     }
   }
-  
   gammas = .55*VectorXd::Ones(nFactors);
   int factorLags = gammas.cols();
-
   factorVariances = facVar * VectorXd::Ones(nFactors, 1);
-
   FactorPrecision = MakePrecision(gammas, factorVariances, Time);
-
   MatrixXd FactorCovar = FactorPrecision.householderQr().solve(
       MatrixXd::Identity(FactorPrecision.rows(), FactorPrecision.rows()));
-
   Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
   Factors.resize(nFactors, Time);
   MatrixXd AFactors = MatrixXd::Zero(nEqns, Time);
   MatrixXd Factorbreak1 = Factors.block(0,0, nFactors, breakpoint);
-  AFactors.block(0,breakpoint-1, nEqns, breakpoint) = A*Factors.block(0, breakpoint-1, nFactors, breakpoint);
-  AFactors.block(0,0, nEqns, breakpoint) = .25*A*Factors.block(0, 0, nFactors, breakpoint);
+  AFactors.block(0,breakpoint-1, nEqns, Time-breakpoint) = A*Factors.block(0, breakpoint-1, nFactors, Time-breakpoint);
   mu = AFactors + Xbeta;
   MatrixXd nu = normrnd(0, 1, nEqns, Time);
   yt = mu + nu;

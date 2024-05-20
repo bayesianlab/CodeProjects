@@ -38,6 +38,7 @@ class FullConditionalsNoAr : public FullConditionals {
   int noAr;
   int id;
   int nXs;
+  int timebreak; 
   double r0;
   double R0;
   double d0;
@@ -67,8 +68,8 @@ class FullConditionalsNoAr : public FullConditionals {
   void easySetModel(const Ref<const MatrixXd> &_yt,
                     const Ref<const MatrixXd> &_Xt,
                     const Ref<const MatrixXd> &_gammas,
-                    const Matrix<int, Dynamic, 2> &_InfoMat, double mean_shift,
-                    double scale_shift) {
+                    const Matrix<int, Dynamic, 2> &_InfoMat, double prior_mean_shift,
+                    double prior_scale_shift) {
     yt = _yt;
     Xt = _Xt;
     gammas = _gammas.replicate(_InfoMat.rows(), 1);
@@ -76,8 +77,8 @@ class FullConditionalsNoAr : public FullConditionals {
     int nFactors = InfoMat.rows();
     nXs = Xt.cols();
     Factors = MatrixXd::Zero(InfoMat.rows(), yt.cols());
-    b0 = RowVectorXd::Zero(nFactors + nXs).array() + mean_shift;
-    B0 = MatrixXd::Identity(nFactors + nXs, nFactors + nXs) * scale_shift;
+    b0 = RowVectorXd::Zero(nFactors + nXs).array() + prior_mean_shift;
+    B0 = MatrixXd::Identity(nFactors + nXs, nFactors + nXs) * prior_scale_shift;
     g0 = RowVectorXd::Zero(gammas.cols()).array();
     G0 = createArPriorCovMat(1, gammas.cols());
     r0 = 6;
@@ -171,6 +172,10 @@ class FullConditionalsNoAr : public FullConditionals {
     FactorVariancePosteriorDraws.clear();
     int K = yt.rows();
     int T = yt.cols();
+    if((K==0) || (T==0))
+    {
+      throw std::invalid_argument("Model not set"); 
+    }
     int nFactors = InfoMat.rows();
     int levels = calcLevels(InfoMat, K);
     double s2;
@@ -285,9 +290,10 @@ class FullConditionalsNoAr : public FullConditionals {
     }
   }
 
-  void runTimeBreakModel(const int &Sims, const int &burnin, int timebreak,
+  void runTimeBreakModel(const int &Sims, const int &burnin, int _timebreak,
                          string file_name) {
     // Assumes there are Xs in the estimation
+    timebreak = _timebreak; 
     BetaPosteriorDraws.clear();
     FactorPosteriorDraws.clear();
     GammasPosteriorDraws.clear();
@@ -687,10 +693,14 @@ class FullConditionalsNoAr : public FullConditionals {
     ml_breakdown["likelihood"] = likelihood.sum();
     ml_breakdown["posteriorFactorStar"] = posteriorFactorStar.sum();
     ml_breakdown["posterior"] = posteriorStar;
+    for(auto it = ml_breakdown.begin(); it!=ml_breakdown.end();++it)
+    {
+      cout << it->first << " " << it->second << endl; 
+    }
     return marginal_likelihood;
   }
 
-  double mlTimeBreak(int timebreak) {
+  double mlTimeBreak() {
     /*
      Marginal likelihood.
      Reduced runs for betas, OM Ar parameters, Factors, Factor Variance,
@@ -833,9 +843,9 @@ class FullConditionalsNoAr : public FullConditionals {
       MatrixXd factor_break2 = Factors.block(0, timebreak, nFactors, T - timebreak);
 
       updateFactor2(factor_break1, yt1, Xtk1, InfoMat, betaStar, omVariance,
-                    factorVariance, gammas);
+                    factorVariance, gammastar);
       updateFactor2(factor_break2, yt2, Xtk2, InfoMat, betaStar, omVariance,
-                    factorVariance, gammas);
+                    factorVariance, gammastar);
       for (int n = 0; n < nFactors; ++n) {
         f2 = factorVariance(n);
         Numerator(n, j) =
@@ -888,9 +898,9 @@ class FullConditionalsNoAr : public FullConditionals {
       MatrixXd factor_break1 = Factors.block(0, 0, nFactors, timebreak);
       MatrixXd factor_break2 = Factors.block(0, timebreak, nFactors, T - timebreak);
 
-      updateFactor2(factor_break1, yt1, Xtk1, InfoMat, betaStar, omVariance,
+      updateFactor2(factor_break1, yt1, Xtk1, InfoMat, betaStar, omVariancestar,
                     factorVariance, gammas);
-      updateFactor2(factor_break2, yt2, Xtk2, InfoMat, betaStar, omVariance,
+      updateFactor2(factor_break2, yt2, Xtk2, InfoMat, betaStar, omVariancestar,
                     factorVariance, gammas);
       for (int n = 0; n < nFactors; ++n) {
         if (id == 2) {
@@ -925,9 +935,9 @@ class FullConditionalsNoAr : public FullConditionals {
         MatrixXd factor_break2 = Factors.block(0, timebreak, nFactors, T - timebreak);
 
         updateFactor2(factor_break1, yt1, Xtk1, InfoMat, betaStar, omVariance,
-                      factorVariance, gammas);
+                      factorVariancestar, gammas);
         updateFactor2(factor_break2, yt2, Xtk2, InfoMat, betaStar, omVariance,
-                      factorVariance, gammas);
+                      factorVariancestar, gammas);
         for (int n = 0; n < nFactors; ++n) {
           H = StoreH[n];
           nu = (H * Factors.row(n).transpose()).transpose();
@@ -947,13 +957,14 @@ class FullConditionalsNoAr : public FullConditionals {
     MatrixXd yt2 = yt.block(0, timebreak, K, T - timebreak);
     MatrixXd factor_break1 = Factors.block(0, 0, nFactors, timebreak);
     MatrixXd factor_break2 = Factors.block(0, timebreak, nFactors, T - timebreak);
-    VectorXd priorFactorStar1 = evalFactorPriors(factor_break1, InfoMat, factorVariance,
+    VectorXd priorFactorStar1 = evalFactorPriors(Factorstar, InfoMat, factorVariance,
+                                                 g0.replicate(nFactors, 1));
+    VectorXd priorFactorStar2 = evalFactorPriors(factor_break2, InfoMat, factorVariance,
                                                  g0.replicate(nFactors, 1));
     VectorXd posteriorFactorStar1 =
         factorReducedRun(factor_break1, yt1, Xtk1, InfoMat, betaStar, omVariancestar,
                          factorVariancestar, gammastar);
-    VectorXd priorFactorStar2 = evalFactorPriors(factor_break2, InfoMat, factorVariance,
-                                                 g0.replicate(nFactors, 1));
+
     VectorXd posteriorFactorStar2 =
         factorReducedRun(factor_break2, yt2, Xtk2, InfoMat, betaStar, omVariancestar,
                          factorVariancestar, gammastar);
@@ -970,7 +981,7 @@ class FullConditionalsNoAr : public FullConditionals {
     }
 
     double conditionalOfFactors =
-        likelihood.sum() + priorFactorStar1.sum() + priorFactorStar2.sum() -
+        likelihood.sum() + priorFactorStar1.sum() +-
         posteriorFactorStar1.sum() - posteriorFactorStar2.sum();
     priorSum =
         priorGammaStar.sum() + priorBetaStar.sum() + priorOmVarianceStar.sum();
@@ -999,6 +1010,10 @@ class FullConditionalsNoAr : public FullConditionals {
     ml_breakdown["likelihood"] = likelihood.sum();
     ml_breakdown["posteriorFactorStar"] = posteriorFactorStar1.sum() + posteriorFactorStar2.sum();
     ml_breakdown["posterior"] = posteriorStar;
+    for(auto it = ml_breakdown.begin(); it!=ml_breakdown.end();++it)
+    {
+      cout << it->first << " " << it->second << endl; 
+    }
     return marginal_likelihood;
   }
 
