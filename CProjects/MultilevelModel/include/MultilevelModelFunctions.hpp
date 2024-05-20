@@ -266,6 +266,7 @@ void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
       btemp = betaParams.row(k).head(nXs);
       loadings(colCount) = 0;
       // break up x and factors
+
       epsilons = yt.row(k) - btemp * Xtk[k].transpose() - loadings * Factors;
       if (k == start) {
         f2 = factorVariance(n);

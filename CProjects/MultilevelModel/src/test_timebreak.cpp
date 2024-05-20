@@ -17,14 +17,15 @@ int main(int argc, char* argv[]) {
   // int sims = atoi(argv[3]);
   // int burnin = (int)(.1*sims);
   // double mu = atof(argv[4]);
-  // double sig = atof(argv[5]); 
-  int T = 20;
-  int K = 10;
-  int sims = 10;
-  int burnin = (int)(.1*sims);
+  // double sig = atof(argv[5]);
+  int T = 100;
+  int K = 50;
+  int sims = 500;
+  int burnin = (int)(.1 * sims);
   double mu = 0;
   double sig = 1;
-  cout << "T " << T << " K " << K << " sims " << sims << " bn " << burnin << endl; 
+  cout << "T " << T << " K " << K << " sims " << sims << " bn " << burnin
+       << endl;
   Matrix<int, Dynamic, 2> InfoMat(1, 2);
   InfoMat << 0, K - 1;
   RowVectorXd phi(1);
@@ -32,56 +33,44 @@ int main(int argc, char* argv[]) {
   GenerateFactorData mldata;
   double betaVal = 1;
   int nXs = 2;
-  int tb = .5*T; 
+  int tb = (int)(.5 * T);
+  cout << tb << endl; 
   mldata.breakPointGenData(T, K, InfoMat, tb, 1.);
-  FullConditionalsNoAr fc; 
-  fc.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, 0, 1);
-  fc.runTimeBreakModel(sims, burnin, tb, "tbmodel");
-  fc.mlTimeBreak(tb);
-  // string name; 
-  // map<int, pair<double,double>> mls; 
-  // vector<FullConditionalsNoAr> hold;
-  // for (int j = 50; j < 51; ++j) {
-  //   FullConditionalsNoAr fcar;
+  FullConditionalsNoAr fcfull;
+  fcfull.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, mu, sig);
+  fcfull.runModel(sims, burnin, "fullmodel");
+  fcfull.ml();
+  int begin_sim = 15; 
+  int end_sim = 16;
+  VectorXd marginal_likelihoods(end_sim-begin_sim);
+  FullConditionalsNoAr fc1;
+  fc1.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, mu, sig);
+  fc1.runTimeBreakModel(sims, burnin, tb+25, "break");
+  fc1.mlTimeBreak();
 
-  //   MatrixXd Xtbeg = mldata.Xt.topRows(K * j);
-  //   MatrixXd ytbeg = mldata.yt.leftCols(j);
-  //   MatrixXd Xtend = mldata.Xt.bottomRows(K * j);
-  //   MatrixXd ytend = mldata.yt.rightCols(j);
-  //   name = "beg" + to_string(j);
-  //   fcar.easySetModel(ytbeg, Xtbeg, phi, InfoMat, mu, sig);
-  //   fcar.runModel(sims, burnin, name);
-  //   double mlbeg = fcar.ml();
-  //   name = "end" + to_string(j);
-  //   hold.push_back(fcar); 
-  //   FullConditionalsNoAr fcar2;
-  //   fcar2.easySetModel(ytend, Xtend, phi, InfoMat, mu, sig);
-  //   fcar2.runModel(sims, burnin, name);
-  //   double mlend = fcar2.ml();
-  //   mls[j] = make_pair(mlbeg, mlend); 
-  //   hold.push_back(fcar2);
+  FullConditionalsNoAr fc2;
+  fc2.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, mu, sig);
+  fc2.runTimeBreakModel(sims, burnin, tb, "perfect");
+  fc2.mlTimeBreak();
+  // MatrixXd yt1 = mldata.yt.block(0,0,K, tb);
+  // MatrixXd yt2 = mldata.yt.block(0,tb-1, K, tb);
+  // MatrixXd Xt1 = mldata.Xt.block(0,0, K*tb, nXs);
+  // MatrixXd Xt2 = mldata.Xt.block(K*(tb-1), 0, K*tb, nXs); 
+  // fc1.easySetModel(yt1, Xt1, phi, InfoMat, 0, 1);
+  // fc1.runModel(sims, burnin, "break1");
+  // fc1.ml();
+  // FullConditionalsNoAr fc2;
+  // fc2.easySetModel(yt2, Xt2, phi, InfoMat, 0, 1);
+  // fc2.runModel(sims, burnin, "break2");
+  // fc2.ml(); 
+  // for (int t = begin_sim; t < end_sim; ++t) {
+    
+  //   fc.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, 0, 1);
+  //   fc.runTimeBreakModel(sims, burnin, tb, "tbmodel");
+  //   fc.mlTimeBreak(tb);
+  //   marginal_likelihoods(t-begin_sim) = fc.marginal_likelihood; 
   // }
-  // FullConditionalsNoAr fcar3;
-  // fcar3.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, mu, sig);
-  // name = "all";
-  // fcar3.runModel(sims, burnin, name);
-  // double mlall = fcar3.ml();
-  // hold.push_back(fcar3); 
-  // for(auto it = mls.begin(); it != mls.end(); ++it){
-  //   cout << it->first << " " << it->second.first + it->second.second << endl; 
-  // }
-  // cout << mlall << endl; 
+  // writeToCSVfile("mllogfiles/marginal_likelihoods.csv", marginal_likelihoods);
 
-  // for(auto it = hold.begin(); it != hold.end(); ++it)
-  // {
-  //   cout << "beta " << it->ml_breakdown["beta"] << endl; 
-  //   cout << "gamma " << it->ml_breakdown["gamma"] << endl;
-  //   cout << "sigma " << it->ml_breakdown["sigma"] << endl; 
-  //   cout << "factor " << it->ml_breakdown["factor"] << endl; 
-  //   cout << "likelihood " << it->ml_breakdown["likelihood"] << endl; 
-  //   cout << "posterior factor " <<it->ml_breakdown["posteriorFactorStar"] << endl; 
-  //   cout << "posterior " <<it->ml_breakdown["posterior"] << endl; 
-  //   cout << endl; 
-  // }
   return 0;
 }
