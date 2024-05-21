@@ -140,7 +140,7 @@ void GenerateFactorData::breakPointGenData(
   Factors.resize(nFactors, Time);
   MatrixXd AFactors = MatrixXd::Zero(nEqns, Time);
   MatrixXd Factorbreak1 = Factors.block(0,0, nFactors, breakpoint);
-  AFactors.block(0,breakpoint-1, nEqns, Time-breakpoint) = A*Factors.block(0, breakpoint-1, nFactors, Time-breakpoint);
+  AFactors.block(0,breakpoint, nEqns, Time-breakpoint) = A*Factors.block(0, breakpoint, nFactors, Time-breakpoint);
   mu = AFactors + Xbeta;
   MatrixXd nu = normrnd(0, 1, nEqns, Time);
   yt = mu + nu;
