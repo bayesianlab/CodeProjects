@@ -44,7 +44,7 @@ class BayesBetaUpdater {
     bmean =
         (B * (B0inv * b0.transpose() + (Xt.transpose() * yt.transpose()) / s2))
             .transpose();
-    return logmvnpdf(betaStar, bmean, B);
+    return logmvnpdf(bmean, bmean, B);
   }
 };
 

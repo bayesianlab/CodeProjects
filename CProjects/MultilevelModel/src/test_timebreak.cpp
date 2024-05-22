@@ -18,9 +18,9 @@ int main(int argc, char* argv[]) {
   // int burnin = (int)(.1*sims);
   // double mu = atof(argv[4]);
   // double sig = atof(argv[5]);
-  int T = 100;
+  int T = 200;
   int K = 20;
-  int sims = 100;
+  int sims = 500;
   int burnin = (int)(.1 * sims);
   double mu = 0;
   double sig = 1;
@@ -32,10 +32,8 @@ int main(int argc, char* argv[]) {
   phi << .25;
   GenerateFactorData mldata;
   double betaVal = 1;
-  int nXs = 2;
   int tb = (int)(.5 * T);
-  cout << tb << endl; 
-  mldata.breakPointGenData(T, K, InfoMat, tb, 1.);
+  mldata.breakPointGenData(T, K, 0, InfoMat, tb, 1.);
   FullConditionalsNoAr fcfull;
   fcfull.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, mu, sig);
   fcfull.runModel(sims, burnin, "fullmodel");
@@ -44,21 +42,21 @@ int main(int argc, char* argv[]) {
   int end_sim = 16;
   VectorXd marginal_likelihoods(end_sim-begin_sim);*/
 
-  //FullConditionalsNoAr fc1;
-  //fc1.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, mu, sig);
-  //fc1.runTimeBreakModel(sims, burnin, tb+25, "break");
-  //fc1.mlTimeBreak();
+  // FullConditionalsNoAr fc1;
+  // fc1.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, mu, sig);
+  // fc1.runTimeBreakModel(sims, burnin, tb+25, "break");
+  // fc1.mlTimeBreak();
 
-  //FullConditionalsNoAr fc2;
-  //fc2.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, mu, sig);
-  //fc2.runTimeBreakModel(sims, burnin, tb, "perfect");
-  //fc2.mlTimeBreak();
+  // FullConditionalsNoAr fc2;
+  // fc2.easySetModel(mldata.yt, mldata.Xt, phi, InfoMat, mu, sig);
+  // fc2.runTimeBreakModel(sims, burnin, tb, "perfect");
+  // fc2.mlTimeBreak();
 
 
    MatrixXd yt1 = mldata.yt.block(0,0,K, tb);
-   MatrixXd yt2 = mldata.yt.block(0,tb-1, K, tb);
-   MatrixXd Xt1 = mldata.Xt.block(0,0, K*tb, nXs);
-   MatrixXd Xt2 = mldata.Xt.block(K*(tb-1), 0, K*tb, nXs); 
+   MatrixXd yt2 = mldata.yt.block(0,tb, K, tb);
+   MatrixXd Xt1;
+   MatrixXd Xt2; 
    FullConditionalsNoAr fc1;
    fc1.easySetModel(yt1, Xt1, phi, InfoMat, 0, 1);
    fc1.runModel(sims, burnin, "break1");

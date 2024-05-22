@@ -105,12 +105,39 @@ void GenerateFactorData::genData(int _nObs, int _nEqns,
 }
 
 void GenerateFactorData::breakPointGenData(
-    int Time, int nEqns, const Matrix<int, Dynamic, 2> &InfoMat, int breakpoint, double loadingMag) {
+    int Time, int nEqns, int nbetas, const Matrix<int, Dynamic, 2> &InfoMat, int breakpoint, double loadingMag) {
   double facVar = 1;
-  betas = VectorXd::Ones(2);
-  if (betas.size() == 1) {
+
+  if (nbetas == 0) {
+    nFactors = InfoMat.rows();
+    MatrixXd A = loadingMag * MatrixXd::Ones(nEqns, nFactors);
+    for (int i = 0; i < A.rows(); ++i) {
+      for (int j = 0; j < nFactors; ++j) {
+        if (j > i) {
+          A(i, j) = 0;
+        }
+      }
+    }
+    gammas = .55 * VectorXd::Ones(nFactors);
+    int factorLags = gammas.cols();
+    factorVariances = facVar * VectorXd::Ones(nFactors, 1);
+    FactorPrecision = MakePrecision(gammas, factorVariances, Time);
+    MatrixXd FactorCovar = FactorPrecision.householderQr().solve(
+        MatrixXd::Identity(FactorPrecision.rows(), FactorPrecision.rows()));
+    Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
+    Factors.resize(nFactors, Time);
+    MatrixXd AFactors = MatrixXd::Zero(nEqns, Time);
+    MatrixXd Factorbreak1 = Factors.block(0, 0, nFactors, breakpoint);
+    AFactors.block(0, breakpoint, nEqns, Time - breakpoint) =
+        A * Factors.block(0, breakpoint, nFactors, Time - breakpoint);
+    mu = AFactors;
+    MatrixXd nu = normrnd(0, 1, nEqns, Time);
+    yt = mu + nu;
+    return;
+  } else if (nbetas == 1) {
     Xt = MatrixXd::Ones(Time * nEqns, betas.size());
   } else {
+    betas = VectorXd::Ones(nbetas);
     Xt = MatrixXd::Ones(Time * nEqns, betas.size());
     Xt.rightCols(betas.size() - 1) =
         normrnd(0, 1, Time * nEqns, betas.size() - 1);

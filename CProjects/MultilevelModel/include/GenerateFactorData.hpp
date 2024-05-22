@@ -71,7 +71,7 @@ class GenerateFactorData {
     }
     Loadings = Identity.array() * Loadings.array();
   }
-  void breakPointGenData(int Time, int nEqns,
+  void breakPointGenData(int Time, int nEqns, int nbetas, 
                          const Matrix<int, Dynamic, 2> &InfoMat, int breakpoint,
                          double loadingMag);
 };
