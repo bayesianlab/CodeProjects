@@ -230,7 +230,7 @@ class FullConditionalsNoAr : public FullConditionals {
     if (nXs > 0) {
       b02 = b0.segment(0, nXs);
       B02 = betaPriorMagnitude * B0.block(0, 0, nXs, nXs);
-      RowVectorXd b0F = b0.segment(b0.size() - nFactors - 1, nFactors).array();
+      b0F = b0.segment(b0.size() - nFactors - 1, nFactors).array();
       B0F = B0.block(B0.rows() - nFactors - 1, B0.cols() - nFactors - 1,
                             nFactors, nFactors);
       betaParams.leftCols(nXs) = MatrixXd::Ones(K, nXs);

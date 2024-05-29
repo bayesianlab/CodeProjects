@@ -107,7 +107,10 @@ void GenerateFactorData::genData(int _nObs, int _nEqns,
 void GenerateFactorData::breakPointGenData(
     int Time, int nEqns, int nbetas, const Matrix<int, Dynamic, 2> &InfoMat, int breakpoint, double loadingMag) {
   double facVar = 1;
-
+  if(breakpoint > Time)
+  {
+    throw invalid_argument("breakpoint > Time in breakPointGenData"); 
+  }
   if (nbetas == 0) {
     nFactors = InfoMat.rows();
     MatrixXd A = loadingMag * MatrixXd::Ones(nEqns, nFactors);
@@ -135,6 +138,7 @@ void GenerateFactorData::breakPointGenData(
     yt = mu + nu;
     return;
   } else if (nbetas == 1) {
+    betas = VectorXd::Ones(nbetas);
     Xt = MatrixXd::Ones(Time * nEqns, betas.size());
   } else {
     betas = VectorXd::Ones(nbetas);
