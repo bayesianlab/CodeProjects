@@ -571,5 +571,21 @@ VectorXd evalFactorPriors(const Ref<MatrixXd> &Factorstar,
   return priorFactorStar;
 }
 
+template <typename T>
+void savePosterior(string fname, std::vector<T> &M) {
+  const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision,
+                                          Eigen::DontAlignCols, ", ", "\n");
+  int size = M.size();
+  std::ofstream file(fname.c_str());
+  if (file.is_open()) {
+    for (int i = 0; i < size; ++i) {
+      file << M[i].format(CSVFormat) << endl;
+    }
+    file.close();
+  }
+}
+
+
+
 string dateString();
 #endif

@@ -71,7 +71,7 @@ class FullConditionalsNoAr : public FullConditionals {
                     const Ref<const MatrixXd> &_Xt,
                     const Ref<const MatrixXd> &_gammas,
                     const Matrix<int, Dynamic, 2> &_InfoMat, double prior_mean_shift,
-                    double prior_scale_shift) {
+                    double prior_variance) {
     yt = _yt;
     Xt = _Xt;
     gammas = _gammas.replicate(_InfoMat.rows(), 1);
@@ -80,7 +80,7 @@ class FullConditionalsNoAr : public FullConditionals {
     nXs = Xt.cols();
     Factors = MatrixXd::Zero(InfoMat.rows(), yt.cols());
     b0 = RowVectorXd::Zero(nFactors + nXs).array() + prior_mean_shift;
-    B0 = MatrixXd::Identity(nFactors + nXs, nFactors + nXs) * prior_scale_shift;
+    B0 = MatrixXd::Identity(nFactors + nXs, nFactors + nXs) * prior_variance;
     g0 = RowVectorXd::Zero(gammas.cols()).array();
     G0 = createArPriorCovMat(1, gammas.cols());
     r0 = 6;
@@ -229,10 +229,9 @@ class FullConditionalsNoAr : public FullConditionals {
     MatrixXd B0F;
     if (nXs > 0) {
       b02 = b0.segment(0, nXs);
-      B02 = betaPriorMagnitude * B0.block(0, 0, nXs, nXs);
-      b0F = b0.segment(b0.size() - nFactors - 1, nFactors).array();
-      B0F = B0.block(B0.rows() - nFactors - 1, B0.cols() - nFactors - 1,
-                            nFactors, nFactors);
+      B02 = B0.block(0, 0, nXs, nXs);
+      b0F = RowVectorXd::Zero(nFactors);
+      B0F = MatrixXd::Identity(nFactors, nFactors);
       betaParams.leftCols(nXs) = MatrixXd::Ones(K, nXs);
     }
     betaParams.rightCols(nFactors) = MakeObsModelIdentity(InfoMat, K);
@@ -382,11 +381,10 @@ class FullConditionalsNoAr : public FullConditionals {
     }
     MatrixXi FactorInfo = createFactorInfo(InfoMat, K);
     MatrixXd factorLoadings(K, nFactors);
-    RowVectorXd b0F = b0.segment(b0.size() - nFactors - 1, nFactors).array();
-    MatrixXd B0F = B0.block(B0.rows() - nFactors - 1, B0.cols() - nFactors - 1,
-                            nFactors, nFactors);
+    RowVectorXd b0F = RowVectorXd::Zero(nFactors);
+    MatrixXd B0F = MatrixXd::Identity(nFactors,nFactors);
     RowVectorXd b02 = b0.segment(0, nXs);
-    MatrixXd B02 = betaPriorMagnitude * B0.block(0, 0, nXs, nXs);
+    MatrixXd B02 = B0.block(0, 0, nXs, nXs);
     betaParams.leftCols(nXs) = MatrixXd::Ones(K, nXs);
     betaParams.rightCols(nFactors) = MakeObsModelIdentity(InfoMat, K);
 
@@ -530,10 +528,9 @@ class FullConditionalsNoAr : public FullConditionals {
     MatrixXd B0F;
     if (nXs > 0) {
       b02 = b0.segment(0, nXs);
-      B02 = betaPriorMagnitude * B0.block(0, 0, nXs, nXs);
-      b0F = b0.segment(b0.size() - nFactors - 1, nFactors).array();
-      B0F = B0.block(B0.rows() - nFactors - 1, B0.cols() - nFactors - 1,
-                            nFactors, nFactors);
+      B02 = B0.block(0, 0, nXs, nXs);
+      b0F = RowVectorXd::Zero(nFactors);
+      B0F = MatrixXd::Identity(nFactors, nFactors);
     }
     factorVariance = mean(FactorVariancePosteriorDraws);
     for (int k = 0; k < K; ++k) {
@@ -866,7 +863,7 @@ class FullConditionalsNoAr : public FullConditionals {
     MatrixXd betaStar = mean(BetaPosteriorDraws);
     MatrixXd factorLoadingsStar = betaStar.rightCols(nFactors);
     RowVectorXd b02 = b0.segment(0, nXs);
-    MatrixXd B02 = betaPriorMagnitude * B0.block(0, 0, nXs, nXs);
+    MatrixXd B02 = B0.block(0, 0, nXs, nXs);
     factorVariance = mean(FactorVariancePosteriorDraws);
     for (int k = 0; k < K; ++k) {
       vector<double> temp;

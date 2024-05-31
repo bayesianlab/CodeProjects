@@ -105,11 +105,11 @@ void GenerateFactorData::genData(int _nObs, int _nEqns,
 }
 
 void GenerateFactorData::breakPointGenData(
-    int Time, int nEqns, int nbetas, const Matrix<int, Dynamic, 2> &InfoMat, int breakpoint, double loadingMag) {
+    int Time, int nEqns, int nbetas, const Matrix<int, Dynamic, 2> &InfoMat,
+    int breakpoint, double loadingMag) {
   double facVar = 1;
-  if(breakpoint > Time)
-  {
-    throw invalid_argument("breakpoint > Time in breakPointGenData"); 
+  if (breakpoint > Time) {
+    throw invalid_argument("breakpoint > Time in breakPointGenData");
   }
   if (nbetas == 0) {
     nFactors = InfoMat.rows();
@@ -153,7 +153,7 @@ void GenerateFactorData::breakPointGenData(
   Xbeta = surX * allBetas;
   Xbeta.resize(nEqns, Time);
   nFactors = InfoMat.rows();
-  MatrixXd A = loadingMag*MatrixXd::Ones(nEqns, nFactors);
+  MatrixXd A = loadingMag * MatrixXd::Ones(nEqns, nFactors);
   for (int i = 0; i < A.rows(); ++i) {
     for (int j = 0; j < nFactors; ++j) {
       if (j > i) {
@@ -161,7 +161,7 @@ void GenerateFactorData::breakPointGenData(
       }
     }
   }
-  gammas = .55*VectorXd::Ones(nFactors);
+  gammas = .55 * VectorXd::Ones(nFactors);
   int factorLags = gammas.cols();
   factorVariances = facVar * VectorXd::Ones(nFactors, 1);
   FactorPrecision = MakePrecision(gammas, factorVariances, Time);
@@ -170,8 +170,9 @@ void GenerateFactorData::breakPointGenData(
   Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
   Factors.resize(nFactors, Time);
   MatrixXd AFactors = MatrixXd::Zero(nEqns, Time);
-  MatrixXd Factorbreak1 = Factors.block(0,0, nFactors, breakpoint);
-  AFactors.block(0,breakpoint, nEqns, Time-breakpoint) = A*Factors.block(0, breakpoint, nFactors, Time-breakpoint);
+  MatrixXd Factorbreak1 = Factors.block(0, 0, nFactors, breakpoint);
+  AFactors.block(0, breakpoint, nEqns, Time - breakpoint) =
+      A * Factors.block(0, breakpoint, nFactors, Time - breakpoint);
   mu = AFactors + Xbeta;
   MatrixXd nu = normrnd(0, 1, nEqns, Time);
   yt = mu + nu;

@@ -7,6 +7,9 @@
 #include "FullConditionals.hpp"
 #include "IntegratedLikelihood.hpp"
 #include "Optimization.hpp"
+#include "MultilevelModelFunctions.hpp"
+#include "TimeSeriesTools.hpp"
+
 using namespace Eigen;
 using namespace std;
 
@@ -57,8 +60,25 @@ class MVP : public BetaParameterTools,
   double tune1 = 1.;
   Matrix<int, Dynamic, 2> InfoMat;
   std::vector<MatrixXd> Xtk;
-
   int sigmaAcceptance = 0;
+
+  pair<vector<VectorXd>, vector<MatrixXd>> setPriorBlocks(int K) {
+    int blocks = K - 1;
+    std::vector<VectorXd> s0;
+    std::vector<MatrixXd> S0;
+    s0.resize(blocks);
+    S0.resize(blocks);
+    int dim;
+    for (int i = 0; i < K - 1; ++i) {
+      dim = (K - 1) - i;
+      s0[i] = VectorXd::Zero(dim);
+      S0[i] = MatrixXd::Identity(dim, dim);
+    }
+    pair<vector<VectorXd>, vector<MatrixXd>> p;
+    p.first = s0; 
+    p.second = S0;  
+    return p; 
+  }
 
   void setModel(const MatrixXd &yt, const MatrixXd &zt, const MatrixXd &Xt,
                 const VectorXd &beta, const RowVectorXd &b0, const MatrixXd &B0,
@@ -125,6 +145,7 @@ class MVP : public BetaParameterTools,
         SigmaPosterior[i - burnin] = Sigma;
       }
     }
+    savePosterior("test.csv", BetaPosterior);
     cout << mean(BetaPosterior) << endl;
     cout << mean(SigmaPosterior) << endl;
     cout << "Sigma Acceptance Rate " << sigmaAcceptance / (double)Sims << endl;
@@ -137,27 +158,35 @@ class MVP : public BetaParameterTools,
     int K = yt.rows();
     int T = yt.cols();
     int nXs = Xt.cols();
-    // int nFactors = InfoMat.rows();
-    // MatrixXd Xtfull(K * T, nXs + nFactors);
-    // Xtfull.rightCols(levels) = packageFactorsInXt(InfoMat, Ft, K);
-    // surX = surForm(Xtfull, K);
-    // MatrixXd Sigma = MatrixXd::Identity(K, K);
-    //   for (int i = 0; i < Sims; ++i) {
-    //     cout << "Sim " << i + 1 << endl;
-    //     for (int t = 0; t < T; ++t) {
-    //       zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
-    //                           Xbeta.col(t).transpose(), Sigma, 1, 0);
-    //     }
-    //     updateSurBeta(zt, surX, Sigma, b0, B0);
-    //     Xbeta = surX * bnew.transpose();
-    //     Xbeta.resize(K, T);
-    //     MatrixXd btemp = bnew;
-    //     btemp.resize(K, nFactors + nXs);
-    //     Ft = updateFactor2(Ft, zt, Xtfull, InfoMat, btemp, 1, 1, gammas);
+    int nFactors = InfoMat.rows();
+    MatrixXd Xtfull(K * T, nXs + nFactors);
+    int levels = calcLevels(InfoMat, K);
+    Xtfull.rightCols(levels) = packageFactorsInXt(InfoMat, Ft, K);
+    surX = surForm(Xtfull, K);
+    MatrixXd Xbeta = surX*beta; 
+    MatrixXd Sigma = .5*MatrixXd::Identity(K, K);
+      for (int i = 0; i < Sims; ++i) {
+        cout << "Sim " << i + 1 << endl;
+        for (int t = 0; t < T; ++t) {
+          zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
+                              Xbeta.col(t).transpose(), Sigma, 1, 0);
+        }
+        updateSurBeta(zt, surX, Sigma, b0, B0);
+        Xbeta = surX * bnew.transpose();
+        Xbeta.resize(K, T);
+        MatrixXd btemp = bnew;
+        btemp.resize(K, nFactors + nXs);
+        VectorXd omV(1);
+        omV <<1 ; 
+        VectorXd fv(1);
+        fv <<1;  
+        Xtk = groupByTime(Xtfull, K);
+        updateFactor2(Ft, zt, Xtk, InfoMat, btemp, omV, fv, gammas);
 
-    //     if (i >= burnin) {
-    //     }
-    //   }
+        Xtfull.rightCols(levels) = packageFactorsInXt(InfoMat, Ft, K);    
+        if (i >= burnin) {
+        }
+      }
   }
 
   template <typename T1, typename T2, typename T3>
@@ -201,7 +230,7 @@ class MVP : public BetaParameterTools,
       S.row(column).tail(proposal.size()) = proposal.transpose();
     }
     VectorXd sigPrior = VectorXd::Zero(S.rows() * (S.rows() - 1) / 2);
-    MatrixXd SigPrior = .5 * MatrixXd::Identity(S.rows() * (S.rows() - 1) / 2,
+    MatrixXd SigPrior = MatrixXd::Identity(S.rows() * (S.rows() - 1) / 2,
                                                 S.rows() * (S.rows() - 1) / 2);
     if (isPD(S)) {
       proposal = vech(S);

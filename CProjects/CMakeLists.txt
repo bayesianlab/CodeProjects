@@ -2,9 +2,9 @@
 cmake_minimum_required(VERSION 3.22) 
 project(multilevel)
 set(CMAKE_CXX_STANDARD 17)
-# set(CMAKE_BUILD_TYPE DEBUG)
- set(CMAKE_BUILD_TYPE RELEASE)
- set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops -fopenmp -DNDEBUG -ffast-math -j")
+set(CMAKE_BUILD_TYPE DEBUG)
+#  set(CMAKE_BUILD_TYPE RELEASE)
+#  set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops -fopenmp -DNDEBUG -ffast-math -j")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 #add_compile_options(-Wall -Wextra -pedantic)
 find_program(CCACHE_FOUND ccache)
@@ -29,6 +29,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/Distributions/include
   ${CMAKE_CURRENT_SOURCE_DIR}/GnuPlotting/include
   ${CMAKE_CURRENT_SOURCE_DIR}/MultilevelModel/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/MVProbit/include
   ${CMAKE_CURRENT_SOURCE_DIR}/OptimizationTools/include
   # ${CMAKE_CURRENT_SOURCE_DIR}/MVProbit/include
   /usr/local/include/stats-master/include
@@ -43,5 +44,5 @@ add_subdirectory(EigenTools)
 add_subdirectory(TimeSeries)
 add_subdirectory(OptimizationTools)
 add_subdirectory(MultilevelModel)
-# add_subdirectory(MVProbit)
+add_subdirectory(MVProbit)
 

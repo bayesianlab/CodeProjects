@@ -14,7 +14,7 @@ int main() {
   MatrixXd xt = normrnd(0, 1, T * K, p);
   MatrixXd Xt(K * T, p + 1);
   Xt << VectorXd::Ones(K * T), xt;
-  VectorXd beta = VectorXd::Ones(p+1);
+  VectorXd beta = VectorXd::Ones(p + 1);
   MatrixXd S = CreateSigma(.5, K);
   cout << vech(S) << endl;
   MatrixXd Lower = S.llt().matrixL();
@@ -34,13 +34,10 @@ int main() {
   }
 
   MVP mv;
-  auto priors = mv.setPriorBlocks(K); 
-  auto s0 = priors.first;
-  auto S0 = priors.second; 
-  double optim_options[5] = {1e-6, 1e-6, 1e-6, 1e-6, 20};
-  Optimize optim(optim_options);
-  double tune1 = 1.05;
-  mv.setModel(yt, zt, Xt, beta.replicate(K, 1), b0, B0, s0, S0, optim, tune1);
-  mv.runModel(40, 10);
-
+  Matrix<int, Dynamic, 2> InfoMat(1, 2);
+  InfoMat << 0, K - 1;
+  RowVectorXd phi(1);
+  phi << .25;
+  mv.setModel(yt, zt, Xt, beta.replicate(K, 1), phi, b0, B0, InfoMat);
+  mv.runFactorModel(40, 10);
 }

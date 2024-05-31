@@ -1,7 +1,7 @@
 #ifndef DIST_H
 #define DIST_H
 #define _USE_MATH_DEFINES
-#include <cmath> 
+#include <cmath>
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 #include <unsupported/Eigen/KroneckerProduct>
@@ -22,8 +22,6 @@
 
 using namespace Eigen;
 using namespace std;
-
-
 
 VectorXd gammarnd(const double &shape, const double &scale, const int &N);
 
@@ -116,12 +114,42 @@ VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2, const i
 
 double normalCDF(double value);
 
-double normalpdflog(double value, double mean, double variance); 
+double normalpdflog(double value, double mean, double variance);
 
 double inverseCDFTruncatedNormal(const double &lowercut);
 
 MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints, const RowVectorXd &mu,
                  const MatrixXd &Sigma, const int N, const int bn);
+
+class StandardScaler
+{
+public:
+  VectorXd Mu;
+  VectorXd Sigma;
+
+  void fit(const MatrixXd &X)
+  {
+    Mu = X.rowwise().mean(); 
+    MatrixXd Centered = X.colwise() - Mu; 
+    Centered = Centered.array()*Centered.array(); 
+    Sigma.resize(Centered.rows()); 
+    for(int i = 0; i < Centered.rows();++i)
+    {
+      double rowsum = 0; 
+      for(int j = 0; j < Centered.cols(); ++j)
+      {
+        rowsum += Centered(i,j);
+      }
+      Sigma(i) = rowsum/Centered.cols(); 
+    }
+    Sigma = Sigma.array().sqrt(); 
+  }
+
+  MatrixXd transform(const MatrixXd &X)
+  {
+    return (X.colwise() - Mu).array().colwise()/Sigma.array(); 
+  }
+};
 
 /*
 class Dist {

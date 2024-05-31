@@ -259,6 +259,19 @@ test_timebreak/fast:
 	$(MAKE) $(MAKESILENT) -f MultilevelModel/CMakeFiles/test_timebreak.dir/build.make MultilevelModel/CMakeFiles/test_timebreak.dir/build
 .PHONY : test_timebreak/fast
 
+#=============================================================================
+# Target rules for targets named mvp
+
+# Build rule for target.
+mvp: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mvp
+.PHONY : mvp
+
+# fast build rule for target.
+mvp/fast:
+	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/build
+.PHONY : mvp/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -272,6 +285,7 @@ help:
 	@echo "... ettest"
 	@echo "... ettools"
 	@echo "... ml"
+	@echo "... mvp"
 	@echo "... optimtest"
 	@echo "... optlib"
 	@echo "... plot"
