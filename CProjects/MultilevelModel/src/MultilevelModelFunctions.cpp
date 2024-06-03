@@ -151,8 +151,7 @@ string dateString() {
   string l = "yhms";
   string s = l + "_" + to_string(1900 + ltm->tm_year) + "_" +
              to_string(ltm->tm_mon) + "_" + to_string(ltm->tm_mday) +
-             "_" + 
-             to_string(ltm->tm_hour) + "_" + to_string(ltm->tm_min) + "_" +
+             "_" + to_string(ltm->tm_hour) + "_" + to_string(ltm->tm_min) + "_" +
              to_string(ltm->tm_sec);
   return s;
 }

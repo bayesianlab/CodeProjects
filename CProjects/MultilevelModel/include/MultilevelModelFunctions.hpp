@@ -239,6 +239,7 @@ void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
                    const MatrixBase<T5> &factorVariance,
                    const MatrixBase<T6> &gammas) {
   // only gammas
+  // No Xtk
   int nFactors = InfoMat.rows();
   int K = yt.rows();
   int T = yt.cols();
@@ -262,8 +263,8 @@ void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
     for (int k = InfoMat.row(n).head(1).value();
          k <= InfoMat.row(n).tail(1).value(); ++k) {
       s2 = omVariance(k);
-      loadings = betaParams.row(k).tail(nFactors);
       btemp = betaParams.row(k).head(nXs);
+      loadings = betaParams.row(k).tail(nFactors);
       loadings(colCount) = 0;
       // break up x and factors
 
@@ -327,7 +328,7 @@ void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
       loadings(colCount) = 0;
       // break up x and factors
 
-      epsilons = yt.row(k)- loadings * Factors;
+      epsilons = yt.row(k) - loadings * Factors;
       if (k == start) {
         f2 = factorVariance(n);
         H1 = MakePrecision(gammas.row(n), f2, T);
@@ -338,9 +339,7 @@ void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
       } else {
         s2 = omVariance(k);
         H1 = (1.0 / s2) * IT;
-        CovarSum +=
-            (betaParams(k, colCount) * betaParams(k, colCount)) *
-            H1;
+        CovarSum += (betaParams(k, colCount) * betaParams(k, colCount)) * H1;
         MeanSum += betaParams(k, colCount) * (H1 * epsilons.transpose());
       }
     }
@@ -523,8 +522,7 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
       loadings = betaParams.row(k);
       loadings(colCount) = 0;
       // break up x and factors
-      epsilons =
-          yt.row(k)  + loadings * Factorstar;
+      epsilons = yt.row(k) + loadings * Factorstar;
       if (k == InfoMat.row(n).head(1).value()) {
         f2 = factorVariance(n);
         H1 = MakePrecision(gammas.row(n), f2, T);
@@ -535,9 +533,7 @@ VectorXd factorReducedRun(MatrixXd &Factorstar, const MatrixBase<T1> &yt,
       } else {
         s2 = omVariance(k);
         H1 = (1 / s2) * IT;
-        CovarSum +=
-            (betaParams(k, colCount) * betaParams(k, colCount)) *
-            H1;
+        CovarSum += (betaParams(k, colCount) * betaParams(k, colCount)) * H1;
         MeanSum += betaParams(k, colCount) * (H1 * epsilons.transpose());
       }
     }
@@ -574,7 +570,7 @@ VectorXd evalFactorPriors(const Ref<MatrixXd> &Factorstar,
 template <typename T>
 void savePosterior(string fname, std::vector<T> &M) {
   const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision,
-                                          Eigen::DontAlignCols, ", ", "\n");
+                                         Eigen::DontAlignCols, ", ", "\n");
   int size = M.size();
   std::ofstream file(fname.c_str());
   if (file.is_open()) {
@@ -584,8 +580,6 @@ void savePosterior(string fname, std::vector<T> &M) {
     file.close();
   }
 }
-
-
 
 string dateString();
 #endif

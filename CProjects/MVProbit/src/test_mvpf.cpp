@@ -36,8 +36,9 @@ int main() {
   MVP mv;
   Matrix<int, Dynamic, 2> InfoMat(1, 2);
   InfoMat << 0, K - 1;
-  RowVectorXd phi(1);
-  phi << .25;
-  mv.setModel(yt, zt, Xt, beta.replicate(K, 1), phi, b0, B0, InfoMat);
-  mv.runFactorModel(40, 10);
+  VectorXd phi(1);
+  phi << .25; 
+
+  mv.setModel(yt, Xt, beta.replicate(K, 1), phi, b0, B0, InfoMat, "factor");
+  mv.runFactorModel(5, 1);
 }

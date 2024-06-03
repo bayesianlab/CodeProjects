@@ -136,11 +136,11 @@ class FullConditionalsNoAr : public FullConditionals {
                                       MatrixXd &Factors, const RowVectorXd &b0L,
                                       const MatrixXd &B0L) {
     /// Updates loadings conditional on factors ///
-
     int K = yt.rows();
     int nextColumn = 0;
     int nFactors = Factors.rows();
     MatrixXd factorLoadings = betaParams.rightCols(nFactors);
+    cout << factorLoadings << endl; 
     int nXs = Xtk[0].cols();
     for (int i = 0; i < nFactors; ++i) {
       int b = InfoMat(i, 0);
