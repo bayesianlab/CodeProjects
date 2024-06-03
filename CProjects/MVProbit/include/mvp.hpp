@@ -34,6 +34,13 @@ void drawLatentData(MatrixBase<Tz>& zt, const MatrixBase<Ty>& yt,
 	}
 }
 
+MatrixXd CorrelationMatrix(const MatrixXd& X)
+{
+	VectorXd d = X.diagonal().array().pow(-.5); 
+	MatrixXd D = d.asDiagonal(); 
+	return D * X * D; 
+}
+
 class MVP : public BetaParameterTools,
 	public SurBetaUpdater,
 	public FullConditionalsNoAr {
@@ -115,7 +122,7 @@ public:
 		this->beta = beta;
 		this->InfoMat = InfoMat;
 		Xtk.resize(yt.rows());
-		this->gammas = gammas;
+		this->gammas = gammas.replicate(InfoMat.rows(), 1);
 		g0 = RowVectorXd::Zero(gammas.cols());
 		G0 = createArPriorCovMat(1, gammas.cols());
 		file_name = _file_name; 
@@ -166,24 +173,40 @@ public:
 		int nFactors = InfoMat.rows();
 		int levels = calcLevels(InfoMat, K);
 		MatrixXd A = MatrixXd::Ones(K, nFactors);
+		VectorXd omVariance = .5*VectorXd::Ones(K);
+		MatrixXd Sigma = omVariance.asDiagonal();
 		for (int i = 0; i < A.cols(); ++i) {
 			for (int j = i; j < A.cols(); ++j){
 				if (i == j){
-					A(i, j) = 1.0/sqrt(2.0);
+					A(i, j) = 1.0;
 				}
 				else {
 					A(i, j) = 0;
 				}
 			}
 		}
+		cout << A << endl; 
+		MatrixXd AAT = A * A.transpose();
+		cout << AAT<< endl; 
+		 
+		MatrixXd P = AAT + Sigma; 
+		VectorXd D = P.diagonal().array().pow(.5); 
+		MatrixXd Corr = CorrelationMatrix(P); 
+		MatrixXd check = D * Corr * D - Sigma;
+		cout << check << endl; 
+			
+
+
+		
+		cout << omVariance << endl; 
+
+		
 		surX = surForm(Xt, K);
 		MatrixXd Xbeta = surX * beta;
 		Xbeta.resize(K, T); 
 		MatrixXd Af = A * Ft; 
 		MatrixXd yhat = Xbeta + Af; 
-		VectorXd omVariance = sqrt(2.0)*VectorXd::Ones(K);  
 		VectorXd factorVariance = VectorXd::Ones(nFactors); 
-		MatrixXd Sigma = .5 * MatrixXd::Identity(K, K);
 		zt.resize(K, T); 
 		for (int t = 0; t < T; ++t) {
 			zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
@@ -203,7 +226,7 @@ public:
 			Xtk = groupByTime(Xt, K);
 			updateLoadingsFullConditionals(Beta, zt, omVariance, InfoMat, Xtk, Ft, b0, B0);
 			A = Beta.rightCols(nFactors); 
-			for (int i = 0; i < A.cols(); ++i) {
+			for (int i = 0; i < A.rows(); ++i) {
 				for (int j = i; j < A.cols(); ++j) {
 					if (i == j) {
 						A(i, j) = 1. / sqrt(2.);
@@ -213,6 +236,9 @@ public:
 					}
 				}
 			}
+			cout << A << endl; 
+			cout << A * A.transpose() << endl; 
+			Beta.rightCols(nFactors) = A; 
 			Xbeta = surX * bnew.transpose();
 			Xbeta.resize(K, T);
 			updateFactor2(Ft, zt, Xtk, InfoMat, Beta, omVariance, factorVariance, gammas);
@@ -222,12 +248,16 @@ public:
 					factorVariance(n), g0, G0);
 			}
 			if (i >= burnin) {
-				Beta.resize(K * Xt.cols(), 1); 
+				Beta.resize(K * (Xt.cols()+nFactors), 1); 
 				BetaPosterior.push_back(Beta); 
 				FactorPosterior.push_back(Ft); 
 				gammaPosterior.push_back(gammas); 
 			}
 			zt = Xbeta + A * Ft; 
+			MatrixXd TempCorrelation = A * A.transpose();
+			for(int i = 0; i < TempCorrelation.rows(); ++i){
+				omVariance(i) = 1 - TempCorrelation(i, i); 
+			}
 		}
 		string date = dateString();
 		string ext = ".txt";
