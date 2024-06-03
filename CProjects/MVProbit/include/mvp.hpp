@@ -185,20 +185,19 @@ public:
 				}
 			}
 		}
-		cout << A << endl; 
+
 		MatrixXd AAT = A * A.transpose();
 		cout << AAT<< endl; 
 		 
 		MatrixXd P = AAT + Sigma; 
-		VectorXd D = P.diagonal().array().pow(.5); 
+		VectorXd d = P.diagonal().array().pow(.5); 
+		MatrixXd D = d.asDiagonal(); 
 		MatrixXd Corr = CorrelationMatrix(P); 
-		MatrixXd check = D * Corr * D - Sigma;
-		cout << check << endl; 
+		MatrixXd check = (D * Corr * D - Sigma).llt().solve(A.transpose());
+
+
 			
 
-
-		
-		cout << omVariance << endl; 
 
 		
 		surX = surForm(Xt, K);
