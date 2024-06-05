@@ -15,6 +15,8 @@ int main() {
 	Matrix<int, Dynamic, 2> InfoMat(2, 2);
 	InfoMat << 0, K - 1,
 		0, K - 1;
+	VectorXd phi(2);
+	phi << .25, .5;
 	gfp.genProbitData(K, T, 1, 1, InfoMat);
 	MatrixXd yt(K, T);
 	for (int i = 0; i < T; ++i) {
@@ -56,8 +58,7 @@ int main() {
 	// }
 
 	MVP mv;
-	VectorXd phi(1);
-	phi << .25;
+
 	MatrixXd B0 = MatrixXd::Identity(gfp.b0.rows(),gfp.b0.rows());
 	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, gfp.b0, gfp.B0, InfoMat, "factor");
 	mv.runFactorModel(100, 10);
