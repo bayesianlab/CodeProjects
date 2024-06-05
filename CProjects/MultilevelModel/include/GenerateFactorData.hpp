@@ -54,10 +54,10 @@ class GenerateFactorData {
                        const RowVectorXd &gammas, const RowVectorXd &omArTerms,
                        const double &omVar);
 
-  void genData(int nObs, int nEqns, const VectorXd &coeffValues,
-               const Matrix<int, Dynamic, 2> &InfoMap,
-               const RowVectorXd &gammas, const MatrixXd &_Loadings,
-               const double &omVar);
+  pair<MatrixXd, MatrixXd> AstarLstar(const MatrixXd &A, const MatrixXd &Sigma);
+
+  void genData(int _nEqns, int _nObs, int nbetas, int ngammas,
+               const Matrix<int, Dynamic, 2> &InfoMat);
 
   void setLoadings(const Ref<const MatrixXd> &A,
                    const Matrix<int, Dynamic, 2> &InfoMat, MatrixXd &Identity,
@@ -71,8 +71,13 @@ class GenerateFactorData {
     }
     Loadings = Identity.array() * Loadings.array();
   }
-  void breakPointGenData(int Time, int nEqns, int nbetas, 
+
+  void breakPointGenData(int Time, int nEqns, int nbetas,
                          const Matrix<int, Dynamic, 2> &InfoMat, int breakpoint,
                          double loadingMag);
+
+  void genProbitData(int _K, int _T, int nbetas, int ngammas,
+                     const Matrix<int, Dynamic, 2> &InfoMat);
+
 };
 #endif

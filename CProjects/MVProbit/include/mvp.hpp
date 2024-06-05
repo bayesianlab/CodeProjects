@@ -41,6 +41,18 @@ MatrixXd CorrelationMatrix(const MatrixXd& X)
 	return D * X * D; 
 }
 
+pair<MatrixXd, MatrixXd> AstarLstar(const MatrixXd &A, const MatrixXd &Sigma){
+		MatrixXd AAT = A * A.transpose();		 
+		MatrixXd P = AAT + Sigma; 
+		VectorXd d = P.diagonal().array().pow(-.5); 
+		MatrixXd D = d.asDiagonal(); 
+		MatrixXd L = Sigma.llt().matrixL();
+		pair<MatrixXd, MatrixXd> M;  
+		M.first = D*A; 
+		M.second = D*L; 
+		return M; 
+}
+
 class MVP : public BetaParameterTools,
 	public SurBetaUpdater,
 	public FullConditionalsNoAr {
@@ -49,6 +61,7 @@ public:
 	std::vector<MatrixXd> SigmaPosterior;
 	std::vector<MatrixXd> FactorPosterior;
 	std::vector<VectorXd> gammaPosterior; 
+	std::vector<MatrixXd> CorrelationPosterior; 
 	std::vector<VectorXd> s0;
 	std::vector<MatrixXd> S0;
 	std::vector<VectorXd> BetaJ;
@@ -173,7 +186,7 @@ public:
 		int nFactors = InfoMat.rows();
 		int levels = calcLevels(InfoMat, K);
 		MatrixXd A = MatrixXd::Ones(K, nFactors);
-		VectorXd omVariance = .5*VectorXd::Ones(K);
+		VectorXd omVariance = VectorXd::Ones(K);
 		MatrixXd Sigma = omVariance.asDiagonal();
 		for (int i = 0; i < A.cols(); ++i) {
 			for (int j = i; j < A.cols(); ++j){
@@ -185,21 +198,11 @@ public:
 				}
 			}
 		}
-
-		MatrixXd AAT = A * A.transpose();
-		cout << AAT<< endl; 
-		 
-		MatrixXd P = AAT + Sigma; 
-		VectorXd d = P.diagonal().array().pow(.5); 
-		MatrixXd D = d.asDiagonal(); 
-		MatrixXd Corr = CorrelationMatrix(P); 
-		MatrixXd check = (D * Corr * D - Sigma).llt().solve(A.transpose());
-
-
-			
-
-
-		
+		auto AL = AstarLstar(A, Sigma); 
+		MatrixXd Astar = AL.first; 
+		MatrixXd SigmaStar = AL.second*AL.second.transpose(); 
+		omVariance = SigmaStar.diagonal(); 
+		MatrixXd Correlation = AL.first*AL.first.transpose() + AL.second*AL.second.transpose(); 
 		surX = surForm(Xt, K);
 		MatrixXd Xbeta = surX * beta;
 		Xbeta.resize(K, T); 
@@ -209,38 +212,41 @@ public:
 		zt.resize(K, T); 
 		for (int t = 0; t < T; ++t) {
 			zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
-				yhat.col(t).transpose(), Sigma, 1, 0);
+				yhat.col(t).transpose(), Correlation, 1, 0);
 		}
+
 		for (int i = 0; i < Sims; ++i) {
 			cout << "Sim " << i + 1 << endl;
 			for (int t = 0; t < T; ++t) {
-				zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
-					yhat.col(t).transpose(), Sigma, 1, 0);
+				zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
+					yhat.col(t).transpose(), Correlation, 1, 0);
 			}
-			updateSurBeta(zt, surX, Sigma, b0, B0);
+			updateSurBeta(zt, surX, Correlation, b0, B0);
 			MatrixXd btemp = bnew; 
 			btemp.resize(K, Xt.cols()); 
 			MatrixXd Beta(K, Xt.cols() + nFactors); 
-			Beta << btemp, A;
+			Beta << btemp, Astar;
 			Xtk = groupByTime(Xt, K);
-			updateLoadingsFullConditionals(Beta, zt, omVariance, InfoMat, Xtk, Ft, b0, B0);
+			updateLoadingsFullConditionals(Beta, zt, SigmaStar.diagonal(), InfoMat, Xtk, Ft, b0, B0);
 			A = Beta.rightCols(nFactors); 
 			for (int i = 0; i < A.rows(); ++i) {
 				for (int j = i; j < A.cols(); ++j) {
 					if (i == j) {
-						A(i, j) = 1. / sqrt(2.);
+						A(i, j) = 1.;
 					}
 					else {
 						A(i, j) = 0;
 					}
 				}
 			}
-			cout << A << endl; 
-			cout << A * A.transpose() << endl; 
-			Beta.rightCols(nFactors) = A; 
+			auto AL = AstarLstar(A, Sigma);
+			MatrixXd Astar = AL.first; 
+			MatrixXd SigmaStar = AL.second; 
+			Correlation = Astar*Astar.transpose() + SigmaStar*SigmaStar.transpose(); 
+			Beta.rightCols(nFactors) = Astar; 
 			Xbeta = surX * bnew.transpose();
 			Xbeta.resize(K, T);
-			updateFactor2(Ft, zt, Xtk, InfoMat, Beta, omVariance, factorVariance, gammas);
+			updateFactor2(Ft, zt, Xtk, InfoMat, Beta, SigmaStar.diagonal(), factorVariance, gammas);
 			for (int n = 0; n < nFactors; ++n) {
 				// Factor dynamic multipliers update
 				gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
@@ -251,13 +257,13 @@ public:
 				BetaPosterior.push_back(Beta); 
 				FactorPosterior.push_back(Ft); 
 				gammaPosterior.push_back(gammas); 
+				CorrelationPosterior.push_back(Correlation); 
 			}
-			zt = Xbeta + A * Ft; 
-			MatrixXd TempCorrelation = A * A.transpose();
-			for(int i = 0; i < TempCorrelation.rows(); ++i){
-				omVariance(i) = 1 - TempCorrelation(i, i); 
-			}
+			zt = Xbeta + Astar * Ft; 
 		}
+		cout << mean(CorrelationPosterior) << endl; 
+		cout << mean(BetaPosterior) << endl; 
+
 		string date = dateString();
 		string ext = ".txt";
 		string path = "mvprobit_" + file_name + "_" + date + "/";

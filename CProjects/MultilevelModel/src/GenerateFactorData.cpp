@@ -52,16 +52,13 @@ void GenerateFactorData::genDataArErrors(const int &nObs, const int &nEqns,
   }
 }
 
-void GenerateFactorData::genData(int _nObs, int _nEqns,
-                                 const VectorXd &coeffValues,
-                                 const Matrix<int, Dynamic, 2> &InfoMat,
-                                 const RowVectorXd &factorCoeff,
-                                 const MatrixXd &_Loadings,
-                                 const double &omVar) {
-  T = _nObs;
-  K = _nEqns;
+void GenerateFactorData::genData(int _K,int _T,  int nbetas, int ngammas,
+                                 const Matrix<int, Dynamic, 2> &InfoMat) {
+  T = _T;
+  K = _K;
+  double omVar = 1; 
   double facVar = omVar;
-  betas = coeffValues;
+  betas = VectorXd::Ones(nbetas);
   if (betas.size() == 1) {
     Xt = MatrixXd::Ones(T * K, betas.size());
   } else {
@@ -69,40 +66,132 @@ void GenerateFactorData::genData(int _nObs, int _nEqns,
     Xt.rightCols(betas.size() - 1) = normrnd(0, 1, T * K, betas.size() - 1);
   }
   surX = surForm(Xt, K);
-
   nEqnsP = surX.cols();
   VectorXd allBetas = betas.replicate(K, 1);
   Xbeta = surX * allBetas;
   Xbeta.resize(K, T);
   Identity = MakeObsModelIdentity(InfoMat, K);
   nFactors = InfoMat.rows();
-  gammas = factorCoeff.replicate(nFactors, 1);
+  MatrixXd gammas(nFactors, ngammas);
+  for (int i = 0; i < nFactors; ++i) {
+    for (int j = 0; j < ngammas; ++j) {
+      if (j = 0) {
+        gammas(i, j) = .25;
+      } else {
+        gammas(i, j) = gammas(i, j) * gammas(i, j);
+      }
+    }
+  }
   int factorLags = gammas.cols();
-
   factorVariances = facVar * VectorXd::Ones(nFactors, 1);
-
-  setLoadings(_Loadings, InfoMat, Identity, 1.);
+  MatrixXd A = MatrixXd::Ones(K, nFactors);
+  for (int i = 0; i < A.cols(); ++i) {
+    for (int j = i; j < A.cols(); ++j) {
+      if (i == j) {
+        A(i, j) = 1.0;
+      } else {
+        A(i, j) = 0;
+      }
+    }
+  }
 
   FactorPrecision = MakePrecision(gammas, factorVariances, T);
-
-  MatrixXd FactorCovar = FactorPrecision.householderQr().solve(
+  MatrixXd FactorCovar = FactorPrecision.llt().solve(
       MatrixXd::Identity(FactorPrecision.rows(), FactorPrecision.rows()));
-
   Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
   Factors.resize(nFactors, T);
-  AF = Loadings * Factors;
+  AF = A * Factors;
   mu = AF + Xbeta;
   MatrixXd nu = normrnd(0, sqrt(omVar), K, T);
   yt = mu + nu;
-
   resids = yt - mu;
   om_variance = omVar * VectorXd::Ones(K);
   om_precision = 1. / om_variance.array();
   b0 = RowVectorXd::Zero(1, nEqnsP);
-  B0 = 100 * MatrixXd::Identity(nEqnsP, nEqnsP);
+  B0 = MatrixXd::Identity(nEqnsP, nEqnsP);
   g0 = RowVectorXd::Zero(factorLags);
   G0 = MatrixXd::Identity(factorLags, factorLags);
 }
+
+pair<MatrixXd, MatrixXd> GenerateFactorData::AstarLstar(const MatrixXd &A, const MatrixXd &Sigma){
+		MatrixXd AAT = A * A.transpose();		 
+		MatrixXd P = AAT + Sigma; 
+		VectorXd d = P.diagonal().array().pow(-.5); 
+		MatrixXd D = d.asDiagonal(); 
+		MatrixXd L = Sigma.llt().matrixL();
+		pair<MatrixXd, MatrixXd> M;  
+		M.first = D*A; 
+		M.second = D*L; 
+		return M; 
+}
+
+void GenerateFactorData::genProbitData(int _K,int _T,  int nbetas, int ngammas,
+                                 const Matrix<int, Dynamic, 2> &InfoMat) {
+  T = _T;
+  K = _K;
+  double omVar = 1; 
+  double facVar = omVar;
+  betas = VectorXd::Ones(nbetas);
+  if (betas.size() == 1) {
+    Xt = MatrixXd::Ones(T * K, betas.size());
+  } else {
+    Xt = MatrixXd::Ones(T * K, betas.size());
+    Xt.rightCols(betas.size() - 1) = normrnd(0, 1, T * K, betas.size() - 1);
+  }
+  surX = surForm(Xt, K);
+  nEqnsP = surX.cols();
+  VectorXd allBetas = betas.replicate(K, 1);
+  Xbeta = surX * allBetas;
+  Xbeta.resize(K, T);
+  Identity = MakeObsModelIdentity(InfoMat, K);
+  nFactors = InfoMat.rows();
+  MatrixXd gammas(nFactors, ngammas);
+  for (int i = 0; i < nFactors; ++i) {
+    for (int j = 0; j < ngammas; ++j) {
+      if (j = 0) {
+        gammas(i, j) = .25;
+      } else {
+        gammas(i, j) = gammas(i, j) * gammas(i, j);
+      }
+    }
+  }
+  int factorLags = gammas.cols();
+  factorVariances = facVar * VectorXd::Ones(nFactors, 1);
+  MatrixXd A = MatrixXd::Ones(K, nFactors);
+  MatrixXd Sigma = MatrixXd::Identity(K,K);
+  for (int i = 0; i < A.cols(); ++i) {
+    for (int j = i; j < A.cols(); ++j) {
+      if (i == j) {
+        A(i, j) = 1.0;
+      } else {
+        A(i, j) = 0;
+      }
+    }
+  }
+
+  auto AL = AstarLstar(A, Sigma);
+  cout << "True Astar" << endl; 
+  cout << AL.first << endl; 
+  cout << "True Corr" << endl; 
+  cout << AL.first*AL.first.transpose() + AL.second*AL.second.transpose() << endl; 
+  FactorPrecision = MakePrecision(gammas, factorVariances, T);
+  MatrixXd FactorCovar = FactorPrecision.llt().solve(
+      MatrixXd::Identity(FactorPrecision.rows(), FactorPrecision.rows()));
+  Factors = FactorCovar.llt().matrixL() * normrnd(0, 1, FactorCovar.rows());
+  Factors.resize(nFactors, T);
+  AF = AL.first * Factors;
+  mu = AF + Xbeta;
+  MatrixXd nu = normrnd(0, sqrt(omVar), K, T);
+  yt = mu + nu;
+  resids = yt - mu;
+  om_variance = omVar * VectorXd::Ones(K);
+  om_precision = 1. / om_variance.array();
+  b0 = RowVectorXd::Zero(1, nEqnsP);
+  B0 = MatrixXd::Identity(nEqnsP, nEqnsP);
+  g0 = RowVectorXd::Zero(factorLags);
+  G0 = MatrixXd::Identity(factorLags, factorLags);
+}
+
 
 void GenerateFactorData::breakPointGenData(
     int Time, int nEqns, int nbetas, const Matrix<int, Dynamic, 2> &InfoMat,

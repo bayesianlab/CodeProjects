@@ -260,17 +260,17 @@ test_timebreak/fast:
 .PHONY : test_timebreak/fast
 
 #=============================================================================
-# Target rules for targets named mvp
+# Target rules for targets named mvpf
 
 # Build rule for target.
-mvp: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mvp
-.PHONY : mvp
+mvpf: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mvpf
+.PHONY : mvpf
 
 # fast build rule for target.
-mvp/fast:
-	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/mvp.dir/build.make MVProbit/CMakeFiles/mvp.dir/build
-.PHONY : mvp/fast
+mvpf/fast:
+	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/mvpf.dir/build.make MVProbit/CMakeFiles/mvpf.dir/build
+.PHONY : mvpf/fast
 
 # Help Target
 help:
@@ -285,7 +285,7 @@ help:
 	@echo "... ettest"
 	@echo "... ettools"
 	@echo "... ml"
-	@echo "... mvp"
+	@echo "... mvpf"
 	@echo "... optimtest"
 	@echo "... optlib"
 	@echo "... plot"
