@@ -126,10 +126,11 @@ public:
 	void setModel(const MatrixXd& yt, const MatrixXd& Xt, const VectorXd& beta,
 		const MatrixXd gammas, const RowVectorXd& b0,
 		const MatrixXd& B0, const Matrix<int, Dynamic, 2>& InfoMat,
-		string _file_name) {
+		string _file_name, MatrixXd &F) {
 		this->b0 = b0;
 		this->B0 = B0;
-		this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
+		// this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
+		Ft = F; 
 		this->yt = yt;
 		this->Xt = Xt;
 		this->beta = beta;
@@ -206,15 +207,11 @@ public:
 		surX = surForm(Xt, K);
 		MatrixXd Xbeta = surX * beta;
 		Xbeta.resize(K, T); 
-		MatrixXd Af = A * Ft; 
+		MatrixXd Af = Astar * Ft; 
 		MatrixXd yhat = Xbeta + Af; 
 		VectorXd factorVariance = VectorXd::Ones(nFactors); 
 		zt.resize(K, T); 
-		for (int t = 0; t < T; ++t) {
-			zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
-				yhat.col(t).transpose(), Correlation, 1, 0);
-		}
-
+		Xtk = groupByTime(Xt, K);
 		for (int i = 0; i < Sims; ++i) {
 			cout << "Sim " << i + 1 << endl;
 			for (int t = 0; t < T; ++t) {
@@ -225,8 +222,7 @@ public:
 			MatrixXd btemp = bnew; 
 			btemp.resize(K, Xt.cols()); 
 			MatrixXd Beta(K, Xt.cols() + nFactors); 
-			Beta << btemp, Astar;
-			Xtk = groupByTime(Xt, K);
+			Beta << btemp, A;
 			updateLoadingsFullConditionals(Beta, zt, SigmaStar.diagonal(), InfoMat, Xtk, Ft, b0, B0);
 			A = Beta.rightCols(nFactors); 
 			for (int i = 0; i < A.rows(); ++i) {
@@ -243,14 +239,14 @@ public:
 			MatrixXd Astar = AL.first; 
 			MatrixXd SigmaStar = AL.second; 
 			Correlation = Astar*Astar.transpose() + SigmaStar*SigmaStar.transpose(); 
-			Beta.rightCols(nFactors) = Astar; 
+			Beta.rightCols(nFactors) = A; 
 			Xbeta = surX * bnew.transpose();
 			Xbeta.resize(K, T);
-			updateFactor2(Ft, zt, Xtk, InfoMat, Beta, SigmaStar.diagonal(), factorVariance, gammas);
+			// updateFactor2(Ft, zt, Xtk, InfoMat, Beta, MatrixXd::Ones(K,K), factorVariance, gammas);
 			for (int n = 0; n < nFactors; ++n) {
 				// Factor dynamic multipliers update
-				gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
-					factorVariance(n), g0, G0);
+				// gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
+				// 	factorVariance(n), g0, G0);
 			}
 			if (i >= burnin) {
 				Beta.resize(K * (Xt.cols()+nFactors), 1); 
@@ -259,7 +255,9 @@ public:
 				gammaPosterior.push_back(gammas); 
 				CorrelationPosterior.push_back(Correlation); 
 			}
-			zt = Xbeta + Astar * Ft; 
+			cout << A << endl; 
+			cout << gammas << endl; 
+			zt = Xbeta + A * Ft; 
 		}
 		cout << mean(CorrelationPosterior) << endl; 
 		cout << mean(BetaPosterior) << endl; 
