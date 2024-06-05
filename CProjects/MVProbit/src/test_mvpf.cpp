@@ -13,7 +13,10 @@ int main() {
 
 	GenerateFactorData gfp;
 	Matrix<int, Dynamic, 2> InfoMat(2, 2);
-	InfoMat << 0, K - 1, 1, K-1;
+	InfoMat << 0, K - 1,
+		0, K - 1;
+	VectorXd phi(2);
+	phi << .25, .5;
 	gfp.genProbitData(K, T, 1, 1, InfoMat);
 	MatrixXd yt(K, T);
 	for (int i = 0; i < T; ++i) {
@@ -55,11 +58,9 @@ int main() {
 	// }
 
 	MVP mv;
-	VectorXd phi(1);
-	phi << .25;
+
 	MatrixXd B0 = MatrixXd::Identity(gfp.b0.rows(),gfp.b0.rows());
-	cout << gfp.b0 << endl; 
-	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, RowVectorXd::Ones(gfp.b0.cols()), gfp.B0, InfoMat, "factor", gfp.Factors);
+	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, gfp.b0, gfp.B0, InfoMat, "factor");
 	mv.runFactorModel(100, 10);
 
 	MatrixXd Fbar = mean(mv.FactorPosterior);
@@ -68,6 +69,5 @@ int main() {
 	MatrixXd A = Betabar.rightCols(Fbar.rows());
 	MatrixXd AF = A*Fbar;
 
-	plotter("af.csv", Fbar.row(1), gfp.Factors.row(1));
-	plotter("af.csv", Fbar.row(0), gfp.Factors.row(0));
+	plotter("af.csv", AF.row(1), gfp.Factors.row(1));
 }

@@ -66,7 +66,7 @@ public:
 	std::vector<MatrixXd> S0;
 	std::vector<VectorXd> BetaJ;
 
-	MatrixXd surX;
+	
 	RowVectorXd b0;
 	MatrixXd B0;
 	MatrixXd Ft;
@@ -110,7 +110,6 @@ public:
 		const std::vector<MatrixXd>& S0, Optimize& optim,
 		double tune1) {
 		int K = yt.rows();
-		surX = surForm(Xt, K);
 		this->Xt = Xt;
 		this->yt = yt;
 		this->zt = zt;
@@ -124,21 +123,20 @@ public:
 	}
 
 	void setModel(const MatrixXd& yt, const MatrixXd& Xt, const VectorXd& beta,
-		const MatrixXd gammas, const RowVectorXd& b0,
+		const MatrixXd _gammas, const RowVectorXd& b0,
 		const MatrixXd& B0, const Matrix<int, Dynamic, 2>& InfoMat,
-		string _file_name, MatrixXd &F) {
+		string _file_name) {
 		this->b0 = b0;
 		this->B0 = B0;
-		// this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
-		Ft = F; 
+		this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
 		this->yt = yt;
 		this->Xt = Xt;
 		this->beta = beta;
 		this->InfoMat = InfoMat;
 		Xtk.resize(yt.rows());
-		this->gammas = gammas.replicate(InfoMat.rows(), 1);
-		g0 = RowVectorXd::Zero(gammas.cols());
-		G0 = createArPriorCovMat(1, gammas.cols());
+		this->gammas = _gammas; 
+		g0 = RowVectorXd::Zero(_gammas.cols());
+		G0 = createArPriorCovMat(1, _gammas.cols());
 		file_name = _file_name; 
 	}
 
@@ -154,6 +152,7 @@ public:
 		MatrixXd Sigma = MatrixXd::Identity(K, K);
 		Sigma = CreateSigma(0, K);
 		VectorXd guess(K - 1);
+		MatrixXd surX = surForm(Xt, K);
 		MatrixXd Xbeta = surX * beta;
 		Xbeta.resize(K, T);
 		for (int i = 0; i < Sims; ++i) {
@@ -183,12 +182,11 @@ public:
 		this->burnin = burnin;
 		int K = yt.rows();
 		int T = yt.cols();
-		int nXs = Xt.cols();
 		int nFactors = InfoMat.rows();
 		int levels = calcLevels(InfoMat, K);
 		MatrixXd A = MatrixXd::Ones(K, nFactors);
-		VectorXd omVariance = VectorXd::Ones(K);
-		MatrixXd Sigma = omVariance.asDiagonal();
+		MatrixXd Sigma = MatrixXd::Identity(K,K);
+		VectorXd Ik = VectorXd::Ones(K);
 		for (int i = 0; i < A.cols(); ++i) {
 			for (int j = i; j < A.cols(); ++j){
 				if (i == j){
@@ -202,16 +200,13 @@ public:
 		auto AL = AstarLstar(A, Sigma); 
 		MatrixXd Astar = AL.first; 
 		MatrixXd SigmaStar = AL.second*AL.second.transpose(); 
-		omVariance = SigmaStar.diagonal(); 
 		MatrixXd Correlation = AL.first*AL.first.transpose() + AL.second*AL.second.transpose(); 
-		surX = surForm(Xt, K);
+		MatrixXd surX = surForm(Xt, K);
 		MatrixXd Xbeta = surX * beta;
 		Xbeta.resize(K, T); 
-		MatrixXd Af = Astar * Ft; 
-		MatrixXd yhat = Xbeta + Af; 
+		MatrixXd yhat = Xbeta + Astar * Ft;
 		VectorXd factorVariance = VectorXd::Ones(nFactors); 
 		zt.resize(K, T); 
-		Xtk = groupByTime(Xt, K);
 		for (int i = 0; i < Sims; ++i) {
 			cout << "Sim " << i + 1 << endl;
 			for (int t = 0; t < T; ++t) {
@@ -222,7 +217,8 @@ public:
 			MatrixXd btemp = bnew; 
 			btemp.resize(K, Xt.cols()); 
 			MatrixXd Beta(K, Xt.cols() + nFactors); 
-			Beta << btemp, A;
+			Beta << btemp, Astar;
+			Xtk = groupByTime(Xt, K);
 			updateLoadingsFullConditionals(Beta, zt, SigmaStar.diagonal(), InfoMat, Xtk, Ft, b0, B0);
 			A = Beta.rightCols(nFactors); 
 			for (int i = 0; i < A.rows(); ++i) {
@@ -237,16 +233,16 @@ public:
 			}
 			auto AL = AstarLstar(A, Sigma);
 			MatrixXd Astar = AL.first; 
-			MatrixXd SigmaStar = AL.second; 
-			Correlation = Astar*Astar.transpose() + SigmaStar*SigmaStar.transpose(); 
-			Beta.rightCols(nFactors) = A; 
+			MatrixXd SigmaStar = AL.second*AL.second.transpose(); 
+			Correlation = Astar*Astar.transpose() + SigmaStar; 
+			Beta.rightCols(nFactors) = Astar; 
 			Xbeta = surX * bnew.transpose();
 			Xbeta.resize(K, T);
-			// updateFactor2(Ft, zt, Xtk, InfoMat, Beta, MatrixXd::Ones(K,K), factorVariance, gammas);
+			updateFactor2(Ft, zt, Xtk, InfoMat, Beta, SigmaStar.diagonal(), factorVariance, gammas);
 			for (int n = 0; n < nFactors; ++n) {
 				// Factor dynamic multipliers update
-				// gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
-				// 	factorVariance(n), g0, G0);
+				gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
+					factorVariance(n), g0, G0);
 			}
 			if (i >= burnin) {
 				Beta.resize(K * (Xt.cols()+nFactors), 1); 
@@ -255,9 +251,7 @@ public:
 				gammaPosterior.push_back(gammas); 
 				CorrelationPosterior.push_back(Correlation); 
 			}
-			cout << A << endl; 
-			cout << gammas << endl; 
-			zt = Xbeta + A * Ft; 
+			zt = Xbeta + Astar * Ft; 
 		}
 		cout << mean(CorrelationPosterior) << endl; 
 		cout << mean(BetaPosterior) << endl; 
@@ -439,6 +433,7 @@ public:
 		int c = 0;
 		MatrixXd SigmaStar = mean(SigmaPosterior);
 		VectorXd BetaStar = mean(BetaPosterior);
+		MatrixXd surX = surForm(Xt, K);
 		MatrixXd Xbeta = surX * BetaStar;
 		Xbeta.resize(K, T);
 		MatrixXd H;
@@ -510,6 +505,7 @@ public:
 		zt.setZero();
 		MatrixXd SigmaStar = mean(SigmaPosterior);
 		VectorXd BetaStar = mean(BetaPosterior);
+		MatrixXd surX = surForm(Xt, K);
 		MatrixXd Xbeta = surX * BetaStar;
 		Xbeta.resize(K, T);
 		int df = 12;
@@ -585,10 +581,9 @@ public:
 		int K = yt.rows();
 		int T = yt.cols();
 		MatrixXd Xbeta(K * T, 1);
-
 		VectorXd betaStar = mean(BetaPosterior);
 		MatrixXd SigmaStar = mean(SigmaPosterior);
-
+		MatrixXd surX = surForm(Xt, K);
 		Xbeta = surX * betaStar;
 		Xbeta.resize(K, T);
 		MatrixXd zt(K, T);
