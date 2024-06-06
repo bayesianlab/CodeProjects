@@ -218,6 +218,19 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Overwrite cached values read from Python library (classic search).
+// Turn off if cross-compiling and manually setting these values.
+PYBIND11_PYTHONLIBS_OVERWRITE:BOOL=ON
+
+//Python version to use for compiling modules
+PYBIND11_PYTHON_VERSION:STRING=
+
+//Path to a program.
+PYTHON_EXECUTABLE:FILEPATH=/home/dillon/miniconda3/envs/amh/bin/python
+
+//Path to a library.
+PYTHON_LIBRARY:FILEPATH=/home/dillon/miniconda3/envs/amh/lib/libpython3.10.so
+
 //Dependencies for the target
 ml_LIB_DEPENDS:STATIC=general;Dist;general;ettools;
 
@@ -229,6 +242,9 @@ multilevel_IS_TOP_LEVEL:STATIC=OFF
 
 //Value Computed by CMake
 multilevel_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/MultilevelModel
+
+//The directory containing a CMake configuration file for pybind11.
+pybind11_DIR:PATH=/home/dillon/miniconda3/envs/amh/share/cmake/pybind11
 
 //Value Computed by CMake
 simplex_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/OptimizationTools
@@ -393,6 +409,26 @@ CMAKE_UNAME:INTERNAL=/usr/bin/uname
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Boost
 FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/usr/local/include/boost_1_66_0][c ][v1.66.0()]
+//Details about finding PYTHON
+FIND_PACKAGE_MESSAGE_DETAILS_PYTHON:INTERNAL=/home/dillon/miniconda3/envs/amh/bin/python3.10.12
+//Details about finding PythonInterp
+FIND_PACKAGE_MESSAGE_DETAILS_PythonInterp:INTERNAL=[/home/dillon/miniconda3/envs/amh/bin/python][v3.10.12(3.6)]
+//Test HAS_FLTO
+HAS_FLTO:INTERNAL=1
+//ADVANCED property for variable: PYTHON_EXECUTABLE
+PYTHON_EXECUTABLE-ADVANCED:INTERNAL=1
+PYTHON_INCLUDE_DIRS:INTERNAL=/home/dillon/miniconda3/envs/amh/include/python3.10
+PYTHON_IS_DEBUG:INTERNAL=0
+PYTHON_LIBRARIES:INTERNAL=/home/dillon/miniconda3/envs/amh/lib/libpython3.10.so
+//ADVANCED property for variable: PYTHON_LIBRARY
+PYTHON_LIBRARY-ADVANCED:INTERNAL=1
+PYTHON_MODULE_DEBUG_POSTFIX:INTERNAL=
+PYTHON_MODULE_EXTENSION:INTERNAL=.cpython-310-x86_64-linux-gnu.so
+PYTHON_MODULE_PREFIX:INTERNAL=
+PYTHON_VERSION:INTERNAL=3.10.12
+PYTHON_VERSION_MAJOR:INTERNAL=3
+PYTHON_VERSION_MINOR:INTERNAL=10
+Python_ADDITIONAL_VERSIONS:INTERNAL=3.12;3.11;3.10;3.9;3.8;3.7;3.6
 //Components requested for this build tree.
 _Boost_COMPONENTS_SEARCHED:INTERNAL=
 //Last used Boost_INCLUDE_DIR value.
@@ -401,4 +437,7 @@ _Boost_INCLUDE_DIR_LAST:INTERNAL=/usr/local/include/boost_1_66_0
 _Boost_NAMESPACE_LAST:INTERNAL=boost
 //Last used Boost_USE_MULTITHREADED value.
 _Boost_USE_MULTITHREADED_LAST:INTERNAL=TRUE
+_Python:INTERNAL=PYTHON
+//Directories where pybind11 and possibly Python headers are located
+pybind11_INCLUDE_DIRS:INTERNAL=/home/dillon/miniconda3/envs/amh/include;/home/dillon/miniconda3/envs/amh/include/python3.10
 

@@ -19,7 +19,11 @@ find_package(Boost)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
   message(STATUS "Found boost headers")
+
 endif(Boost_FOUND)
+
+
+find_package(pybind11)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
 include_directories(
@@ -36,6 +40,9 @@ include_directories(
   /usr/local/include/gcem-master/include 
   /usr/local/include/eigen-3.4.0 
   /usr/local/include/eigen-3.4.0/unsupported
+  
+  /home/dillon/miniconda3/envs/amh/include/python3.10/
+  /home/dillon/miniconda3/envs/amh/include/
   )
 
 add_subdirectory(GnuPlotting)
