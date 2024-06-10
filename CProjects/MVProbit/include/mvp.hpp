@@ -211,15 +211,15 @@ public:
 			cout << "Sim " << i + 1 << endl;
 			for (int t = 0; t < T; ++t) {
 				zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
-					yhat.col(t).transpose(), Correlation, 1, 0);
+					yhat.col(t).transpose(), Sigma, 1, 0);
 			}
-			updateSurBeta(zt, surX, Correlation, b0, B0);
+			updateSurBeta(zt, surX, Sigma, b0, B0);
 			MatrixXd btemp = bnew; 
 			btemp.resize(K, Xt.cols()); 
 			MatrixXd Beta(K, Xt.cols() + nFactors); 
-			Beta << btemp, Astar;
+			Beta << btemp, Astar; 
 			Xtk = groupByTime(Xt, K);
-			updateLoadingsFullConditionals(Beta, zt, SigmaStar.diagonal(), InfoMat, Xtk, Ft, b0, B0);
+			updateLoadingsFullConditionals(Beta, zt, Sigma, InfoMat, Xtk, Ft, b0, B0);
 			A = Beta.rightCols(nFactors); 
 			for (int i = 0; i < A.rows(); ++i) {
 				for (int j = i; j < A.cols(); ++j) {
