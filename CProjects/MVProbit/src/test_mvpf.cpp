@@ -3,7 +3,7 @@
 #include "mvp.hpp"
 #include "GenerateFactorData.hpp"
 #include "Plotter.hpp"
-#include <pybind11/pybind11.h>
+
 
 using namespace std;
 using namespace Eigen;
@@ -16,7 +16,7 @@ int main() {
 	Matrix<int, Dynamic, 2> InfoMat(1, 2);
 	InfoMat << 0, K - 1;
 	VectorXd phi(1);
-	phi << .25;
+	phi << .05;
 	gfp.genProbitData(K, T, 1, 1, InfoMat);
 	MatrixXd yt(K, T);
 	for (int i = 0; i < T; ++i) {
@@ -69,5 +69,10 @@ int main() {
 	MatrixXd A = Betabar.rightCols(Fbar.rows());
 	MatrixXd AF = A*Fbar;
 
-	plotter("af.csv", AF.row(0), gfp.Factors.row(0));
+	//plotter("af.csv", AF.row(0), gfp.Factors.row(0));
+	vector<MatrixXd> z; 
+	z.push_back(gfp.Factors); 
+	mv.storePosterior("true.csv", z);
+
+
 }

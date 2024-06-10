@@ -148,7 +148,7 @@ void GenerateFactorData::genProbitData(int _K,int _T,  int nbetas, int ngammas,
   MatrixXd gammas(nFactors, ngammas);
   for (int i = 0; i < nFactors; ++i) {
     for (int j = 0; j < ngammas; ++j) {
-      if (j = 0) {
+      if (j == 0) {
         gammas(i, j) = .25;
       } else {
         gammas(i, j) = gammas(i, j) * gammas(i, j);

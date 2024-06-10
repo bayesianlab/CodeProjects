@@ -36,21 +36,26 @@ void drawLatentData(MatrixBase<Tz>& zt, const MatrixBase<Ty>& yt,
 
 MatrixXd CorrelationMatrix(const MatrixXd& X)
 {
-	VectorXd d = X.diagonal().array().pow(-.5); 
-	MatrixXd D = d.asDiagonal(); 
-	return D * X * D; 
+	VectorXd d = X.diagonal().array().pow(-.5);
+	MatrixXd D = d.asDiagonal();
+	return D * X * D;
 }
 
-pair<MatrixXd, MatrixXd> AstarLstar(const MatrixXd &A, const MatrixXd &Sigma){
-		MatrixXd AAT = A * A.transpose();		 
-		MatrixXd P = AAT + Sigma; 
-		VectorXd d = P.diagonal().array().pow(-.5); 
-		MatrixXd D = d.asDiagonal(); 
-		MatrixXd L = Sigma.llt().matrixL();
-		pair<MatrixXd, MatrixXd> M;  
-		M.first = D*A; 
-		M.second = D*L; 
-		return M; 
+MatrixXd AstarLstar(MatrixXd& A, const MatrixXd& Sigma) {
+	for (int i = 0; i < A.rows(); ++i) {
+		for (int j = i; j < A.cols(); ++j) {
+			if (i == j) {
+				A(i, j) = sqrt(1. / 2);
+			}
+			else {
+				A(i, j) = 0;
+			}
+		}
+	}
+	MatrixXd AAT = A * A.transpose();
+	MatrixXd Corr = AAT + Sigma;
+	MatrixXd AL = AAT.ldlt().matrixL();
+	return AL;
 }
 
 class MVP : public BetaParameterTools,
@@ -60,13 +65,14 @@ public:
 	std::vector<VectorXd> BetaPosterior;
 	std::vector<MatrixXd> SigmaPosterior;
 	std::vector<MatrixXd> FactorPosterior;
-	std::vector<VectorXd> gammaPosterior; 
-	std::vector<MatrixXd> CorrelationPosterior; 
+	std::vector<VectorXd> gammaPosterior;
+	std::vector<MatrixXd> CorrelationPosterior;
+	std::vector<VectorXd> FactorVariancePosterior;
 	std::vector<VectorXd> s0;
 	std::vector<MatrixXd> S0;
 	std::vector<VectorXd> BetaJ;
 
-	
+
 	RowVectorXd b0;
 	MatrixXd B0;
 	MatrixXd Ft;
@@ -74,8 +80,8 @@ public:
 	MatrixXd zt;
 	MatrixXd Xt;
 	MatrixXd gammas;
-	RowVectorXd g0; 
-	MatrixXd G0; 
+	RowVectorXd g0;
+	MatrixXd G0;
 	VectorXd beta;
 	int Sims;
 	int burnin;
@@ -84,7 +90,7 @@ public:
 	Matrix<int, Dynamic, 2> InfoMat;
 	std::vector<MatrixXd> Xtk;
 	int sigmaAcceptance = 0;
-	string file_name; 
+	string file_name;
 
 	pair<vector<VectorXd>, vector<MatrixXd>> setPriorBlocks(int K) {
 		int blocks = K - 1;
@@ -134,10 +140,10 @@ public:
 		this->beta = beta;
 		this->InfoMat = InfoMat;
 		Xtk.resize(yt.rows());
-		this->gammas = _gammas; 
+		this->gammas = _gammas;
 		g0 = RowVectorXd::Zero(_gammas.cols());
 		G0 = createArPriorCovMat(1, _gammas.cols());
-		file_name = _file_name; 
+		file_name = _file_name;
 	}
 
 	void runModel(int Sims, int burnin) {
@@ -185,95 +191,86 @@ public:
 		int nFactors = InfoMat.rows();
 		int levels = calcLevels(InfoMat, K);
 		MatrixXd A = MatrixXd::Ones(K, nFactors);
-		MatrixXd Sigma = MatrixXd::Identity(K,K);
+		MatrixXd Sigma = .5 * MatrixXd::Identity(K, K);
 		VectorXd Ik = VectorXd::Ones(K);
 		for (int i = 0; i < A.cols(); ++i) {
-			for (int j = i; j < A.cols(); ++j){
-				if (i == j){
-					A(i, j) = 1.0;
+			for (int j = i; j < A.cols(); ++j) {
+				if (i == j) {
+					A(i, j) = sqrt(1.0 / 2);
 				}
 				else {
 					A(i, j) = 0;
 				}
 			}
 		}
-		auto AL = AstarLstar(A, Sigma); 
-		MatrixXd Astar = AL.first; 
-		MatrixXd SigmaStar = AL.second*AL.second.transpose(); 
-		MatrixXd Correlation = AL.first*AL.first.transpose() + AL.second*AL.second.transpose(); 
+		MatrixXd Astar = AstarLstar(A, Sigma);
+		MatrixXd Correlation = Astar*Astar.transpose() + Sigma;
 		MatrixXd surX = surForm(Xt, K);
 		MatrixXd Xbeta = surX * beta;
-		Xbeta.resize(K, T); 
+		Xbeta.resize(K, T);
 		MatrixXd yhat = Xbeta + Astar * Ft;
-		VectorXd factorVariance = VectorXd::Ones(nFactors); 
-		zt.resize(K, T); 
+		VectorXd factorVariance = VectorXd::Ones(nFactors);
+		double d0 = 6;
+		double D0 = 12;
+		zt.resize(K, T);
 		for (int i = 0; i < Sims; ++i) {
 			cout << "Sim " << i + 1 << endl;
 			for (int t = 0; t < T; ++t) {
 				zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
-					yhat.col(t).transpose(), Correlation, 1, 0);
+					yhat.col(t).transpose(), Sigma, 1, 0);
 			}
-			updateSurBeta(zt, surX, Correlation, b0, B0);
-			MatrixXd btemp = bnew; 
-			btemp.resize(K, Xt.cols()); 
-			MatrixXd Beta(K, Xt.cols() + nFactors); 
+			updateSurBeta(zt, surX, Sigma, b0, B0);
+			MatrixXd btemp = bnew;
+			btemp.resize(K, Xt.cols());
+			MatrixXd Beta(K, Xt.cols() + nFactors);
 			Beta << btemp, Astar;
 			Xtk = groupByTime(Xt, K);
-			updateLoadingsFullConditionals(Beta, zt, SigmaStar.diagonal(), InfoMat, Xtk, Ft, b0, B0);
-			A = Beta.rightCols(nFactors); 
-			for (int i = 0; i < A.rows(); ++i) {
-				for (int j = i; j < A.cols(); ++j) {
-					if (i == j) {
-						A(i, j) = 1.;
-					}
-					else {
-						A(i, j) = 0;
-					}
-				}
-			}
-			auto AL = AstarLstar(A, Sigma);
-			MatrixXd Astar = AL.first; 
-			MatrixXd SigmaStar = AL.second*AL.second.transpose(); 
-			Correlation = Astar*Astar.transpose() + SigmaStar; 
-			Beta.rightCols(nFactors) = Astar; 
+			updateLoadingsFullConditionals(Beta, zt, Sigma.diagonal(), InfoMat, Xtk, Ft, b0, B0);
+			A = Beta.rightCols(nFactors);
+			MatrixXd Astar = AstarLstar(A, Sigma);
+			Correlation = Astar * Astar.transpose() + Sigma;
+			Beta.rightCols(nFactors) = Astar;
 			Xbeta = surX * bnew.transpose();
 			Xbeta.resize(K, T);
-			updateFactor2(Ft, zt, Xtk, InfoMat, Beta, SigmaStar.diagonal(), factorVariance, gammas);
+			updateFactor2(Ft, zt, Xtk, InfoMat, Beta, Sigma.diagonal(), factorVariance, gammas);
 			for (int n = 0; n < nFactors; ++n) {
 				// Factor dynamic multipliers update
 				gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
 					factorVariance(n), g0, G0);
 			}
+
 			if (i >= burnin) {
-				Beta.resize(K * (Xt.cols()+nFactors), 1); 
-				BetaPosterior.push_back(Beta); 
-				FactorPosterior.push_back(Ft); 
-				gammaPosterior.push_back(gammas); 
-				CorrelationPosterior.push_back(Correlation); 
+				Beta.resize(K * (Xt.cols() + nFactors), 1);
+				BetaPosterior.push_back(Beta);
+				FactorPosterior.push_back(Ft);
+				gammaPosterior.push_back(gammas);
+				FactorVariancePosterior.push_back(factorVariance);
+				CorrelationPosterior.push_back(Correlation);
 			}
-			zt = Xbeta + Astar * Ft; 
+			zt = Xbeta + Astar * Ft;
 		}
-		cout << mean(CorrelationPosterior) << endl; 
-		cout << mean(BetaPosterior) << endl; 
+		cout << mean(CorrelationPosterior) << endl;
+		cout << mean(BetaPosterior) << endl;
 
 		string date = dateString();
 		string ext = ".txt";
 		string path = "mvprobit_" + file_name + "_" + date + "/";
 		std::filesystem::create_directories(path);
-		fname = path + file_name + ext;
+		fname = path + file_name + "_" + to_string(T) + "_" + to_string(K) + ext;
 		std::ofstream file;
 		file.open(fname);
 		if (file.is_open()) {
 			storePosterior(path + "beta.csv", BetaPosterior);
 			storePosterior(path + "gammas.csv", gammaPosterior);
 			storePosterior(path + "factors.csv", FactorPosterior);
+			storePosterior(path + "factorVariance.csv", FactorVariancePosterior);
 			file << "Full Conditional Version run with: " << Sims << " " << "burnin "
-				<< burnin << endl;
+				<< burnin << " " << T << " " << K << endl;
 			file << "Beta avg" << endl;
 			file << mean(BetaPosterior) << endl;
 			file << "Gamma avg" << endl;
 			file << mean(gammaPosterior) << endl;
-			file << "Factor Variance" << endl;
+			file << "Factors avg" << endl;
 			file << mean(FactorPosterior).transpose() << endl;
 			file.close();
 		}
