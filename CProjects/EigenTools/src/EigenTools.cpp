@@ -12,6 +12,23 @@ double timeit(high_resolution_clock::time_point &start) {
   return sec;
 }
 
+MatrixXd TriangularSolver(const MatrixXd &AAT, int cols) {
+  MatrixXd B= MatrixXd::Zero(AAT.rows(), cols);
+  for (int j = 0; j < cols; ++j) {
+    RowVectorXd r1 = B.row(j).segment(0, j);
+    for (int i = j; i < AAT.rows(); ++i) {
+      RowVectorXd r2 = B.row(i).segment(0, j);
+      double inner_prod = (r1.array() * r2.array()).sum();
+      if (i == j) {
+        B(i, j) = sqrt(AAT(i, j) - inner_prod);
+      } else {
+        B(i, j) = (AAT(i, j) - inner_prod)/B(j,j);
+      }
+    }
+  }
+  return B; 
+}
+
 VectorXi sequence(int b, int e) {
   if (e < b) {
     throw invalid_argument("Error in sequence, end point less than beginning.");

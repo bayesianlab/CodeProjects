@@ -5,7 +5,7 @@
 using namespace Eigen;
 using namespace std;
 
-void TriangularSolver(const MatrixXd &AAT, int cols) {
+MatrixXd TriangularSolver(const MatrixXd &AAT, int cols) {
   MatrixXd B= MatrixXd::Zero(AAT.rows(), cols);
   for (int j = 0; j < cols; ++j) {
     RowVectorXd r1 = B.row(j).segment(0, j);
@@ -19,41 +19,35 @@ void TriangularSolver(const MatrixXd &AAT, int cols) {
       }
     }
   }
-  cout << B << endl; 
+  return B; 
 }
 
 int main() {
   cout << "scratch" << endl;
-  MatrixXd A = MatrixXd::Ones(10, 3);
+
+
+  MatrixXd Sigma = .5*MatrixXd::Identity(4,4);
+  MatrixXd A = .25*MatrixXd::Ones(4, 2);
   A.col(1) = .5 * A.col(0);
-  A.col(2) = .5 * A.col(1);
   for (int i = 0; i < A.rows(); ++i) {
     for (int j = 0; j < A.cols(); ++j) {
+      if(j==i){
+        A(i,j) = sqrt(1./2.0); 
+      }
       if (j > i) {
         A(i, j) = 0;
       }
     }
   }
-  cout << A << endl;
+  cout << A << endl; 
+  MatrixXd C = A*A.transpose() + Sigma; 
+  MatrixXd D = C.diagonal().array().pow(-.5);
+  MatrixXd Z = D.asDiagonal(); 
+  C = Z*C*Z; 
+  C = C - Sigma; 
+  MatrixXd AAT = A*A.transpose(); 
+  MatrixXd Y = TriangularSolver(C, A.cols());
+  MatrixXd U = Z*Y; 
+  cout << U*U.transpose() + Sigma << endl; 
 
-  MatrixXd AAT = A * A.transpose();
-  MatrixXd M = A * A.transpose();
-  cout << M << endl;
-  TriangularSolver(AAT, 3);
-
-  MatrixXd H = normrnd(0, 1, 10, 2);
-  for (int i = 0; i < H.rows(); ++i) {
-    for (int j = 0; j < H.cols(); ++j) {
-      if (j > i) {
-        H(i, j) = 0;
-      }
-      if(i==j){
-        H(i,j) = H(i,j)*H(i,j);
-      }
-    }
-  }
-  MatrixXd HHT = H * H.transpose();
-
-  cout << H << endl;
-  TriangularSolver(HHT, 2);
 }

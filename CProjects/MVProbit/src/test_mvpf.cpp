@@ -13,10 +13,10 @@ int main() {
 	int K = 8;
 
 	GenerateFactorData gfp;
-	Matrix<int, Dynamic, 2> InfoMat(1, 2);
-	InfoMat << 0, K - 1;
-	VectorXd phi(1);
-	phi << .05;
+	Matrix<int, Dynamic, 2> InfoMat(2, 2);
+	InfoMat << 0, K - 1, 0, K-1;
+	VectorXd phi(2);
+	phi << .05, .10;
 	gfp.genProbitData(K, T, 1, 1, InfoMat);
 	MatrixXd yt(K, T);
 	for (int i = 0; i < T; ++i) {
@@ -69,7 +69,8 @@ int main() {
 	MatrixXd A = Betabar.rightCols(Fbar.rows());
 	MatrixXd AF = A*Fbar;
 
-	//plotter("af.csv", AF.row(0), gfp.Factors.row(0));
+	plotter("af1.csv", Fbar.row(0), gfp.Factors.row(0));
+	plotter("af2.csv", Fbar.row(1), gfp.Factors.row(1));
 	vector<MatrixXd> z; 
 	z.push_back(gfp.Factors); 
 	mv.storePosterior("true.csv", z);
