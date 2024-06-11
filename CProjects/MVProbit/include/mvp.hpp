@@ -183,44 +183,37 @@ public:
     int T = yt.cols();
     int nFactors = InfoMat.rows();
     int levels = calcLevels(InfoMat, K);
-    MatrixXd A = .5 * MatrixXd::Ones(K, nFactors);
+    MatrixXd A =  MatrixXd::Ones(K, nFactors);
 	Identification1(A); 
-    MatrixXd Sigma = .5*MatrixXd::Identity(K, K);
-	auto Astar_SigmaL = AstarLstar(A, Sigma);
-	MatrixXd Astar = Astar_SigmaL.first;
-	MatrixXd SigmaStar = Astar_SigmaL.second; 
-	MatrixXd Correlation = Astar*Astar.transpose() + SigmaStar*SigmaStar.transpose(); 
+    MatrixXd Sigma = MatrixXd::Identity(K, K);
     VectorXd Ik = VectorXd::Ones(K);
     MatrixXd surX = surForm(Xt, K);
     MatrixXd Xbeta = surX * beta;
     Xbeta.resize(K, T);
-    MatrixXd yhat = Xbeta + Astar * Ft;
+    MatrixXd yhat = Xbeta + A * Ft;
     VectorXd factorVariance = VectorXd::Ones(nFactors);
     double d0 = 6;
     double D0 = 12;
     zt.resize(K, T);
     for (int i = 0; i < Sims; ++i) {
       cout << "Sim " << i + 1 << endl;
-      for (int t = 0; t < T; ++t) {
-        zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
-                            yhat.col(t).transpose(), Correlation, 1, 0);
-      }
-      updateSurBeta(zt, surX, Sigma, b0, B0);
-      MatrixXd btemp = bnew;
+    //   for (int t = 0; t < T; ++t) {
+    //     zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
+    //                         yhat.col(t).transpose(), Sigma, 1, 0);
+    //   }
+    //   updateSurBeta(zt, surX, Sigma, b0, B0);
+    //   MatrixXd btemp = bnew;
+	MatrixXd bnew = MatrixXd::Ones(Xt.cols()*K, 1); 
+	  MatrixXd btemp = bnew; 
       btemp.resize(K, Xt.cols());
       MatrixXd Beta(K, Xt.cols() + nFactors);
-      Beta << btemp, Astar;
+      Beta << btemp, A;
       Xtk = groupByTime(Xt, K);
       updateLoadingsFullConditionals(Beta, zt, Sigma.diagonal(), InfoMat, Xtk,
                                      Ft, b0, B0);
       A = Beta.rightCols(nFactors);
       Identification1(A);
-      auto Astar_SigmaL = AstarLstar(A, Sigma);
-      MatrixXd Astar = Astar_SigmaL.first;
-      MatrixXd SigmaStar = Astar_SigmaL.second;
-      MatrixXd Correlation =
-          Astar * Astar.transpose() + SigmaStar * SigmaStar.transpose();
-      Beta.rightCols(nFactors) = Astar;
+      Beta.rightCols(nFactors) = A;
       Xbeta = surX * bnew.transpose();
       Xbeta.resize(K, T);
       updateFactor2(Ft, zt, Xtk, InfoMat, Beta, Sigma.diagonal(),
@@ -239,7 +232,7 @@ public:
         FactorVariancePosterior.push_back(factorVariance);
         CorrelationPosterior.push_back(Correlation);
       }
-      zt = Xbeta + Astar * Ft;
+      yhat = Xbeta + A * Ft;
     }
     cout << mean(CorrelationPosterior) << endl;
     cout << mean(BetaPosterior) << endl;
@@ -275,7 +268,10 @@ public:
 		for(int j = 0; j < A.cols(); ++j){
 			if(j>i){
 				A(i,j) = 0.0;
+			}else if(i==j){
+				A(i,j) = 1.0; 
 			}
+			
 		}
 	}
   }
