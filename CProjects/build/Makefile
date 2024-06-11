@@ -272,6 +272,19 @@ mvpf/fast:
 	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/mvpf.dir/build.make MVProbit/CMakeFiles/mvpf.dir/build
 .PHONY : mvpf/fast
 
+#=============================================================================
+# Target rules for targets named scr
+
+# Build rule for target.
+scr: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 scr
+.PHONY : scr
+
+# fast build rule for target.
+scr/fast:
+	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/scr.dir/build.make MVProbit/CMakeFiles/scr.dir/build
+.PHONY : scr/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -289,6 +302,7 @@ help:
 	@echo "... optimtest"
 	@echo "... optlib"
 	@echo "... plot"
+	@echo "... scr"
 	@echo "... tab"
 	@echo "... test_armodel"
 	@echo "... test_timebreak"
