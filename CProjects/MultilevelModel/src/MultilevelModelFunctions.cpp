@@ -84,25 +84,31 @@ MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &InfoMat,
   return X;
 }
 
-MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings,
-                      const MatrixXd &FactorPrecision,
-                      const VectorXd &precision, int T) {
-  int nFactors = Loadings.cols();
-  int nFactorsT = nFactors * T;
-  MatrixXd AtO = Loadings.transpose() * precision.asDiagonal();
-  MatrixXd FplusAtOinv =
-      FactorPrecision +
-      kroneckerProduct(MatrixXd::Identity(T, T), AtO * Loadings);
-  FplusAtOinv = FplusAtOinv.llt().solve(
-      MatrixXd::Identity(FplusAtOinv.rows(), FplusAtOinv.rows()));
-  MatrixXd lower = FplusAtOinv.llt().matrixL();
-  MatrixXd musum = AtO * residuals;
-  Map<VectorXd> vecmu(musum.data(), musum.size());
-  VectorXd mu = FplusAtOinv * vecmu;
-  FplusAtOinv = mu + lower * normrnd(0, 1, nFactorsT, 1);
-  FplusAtOinv.resize(nFactors, T);
-  return FplusAtOinv;
-}
+// template <typename D1, typename D2, typename D3, typename D4>
+// MatrixXd updateFactor(const MatrixBase<D1> &residuals, const MatrixBase<D2> &Loadings,
+//                       const MatrixBase<D3> &FactorPrecision,
+//                       const MatrixBase<D4> &Precision){
+//   int nFactors = Loadings.cols();
+//   if(not (residuals.rows() % Loadings.rows()))
+//   {
+//     throw std::invalid_argument("Rows of resids not divisilble by K. Input error.");
+//   }
+//   int T = residuals.rows()/Loadings.rows(); 
+//   int nFactorsT = nFactors * T;
+//   MatrixXd AtO = Loadings.transpose() * Precision;
+//   MatrixXd FplusAtOinv =
+//       FactorPrecision +
+//       kroneckerProduct(MatrixXd::Identity(T, T), AtO * Loadings);
+//   FplusAtOinv = FplusAtOinv.llt().solve(
+//       MatrixXd::Identity(FplusAtOinv.rows(), FplusAtOinv.rows()));
+//   MatrixXd lower = FplusAtOinv.llt().matrixL();
+//   MatrixXd musum = AtO * residuals;
+//   Map<VectorXd> vecmu(musum.data(), musum.size());
+//   VectorXd mu = FplusAtOinv * vecmu;
+//   FplusAtOinv = mu + lower * normrnd(0, 1, nFactorsT, 1);
+//   FplusAtOinv.resize(nFactors, T);
+//   return FplusAtOinv;
+// }
 
 double factorReducecdRun(const RowVectorXd &factorStar,
                          const MatrixXd &residuals, const MatrixXd &Loadings,

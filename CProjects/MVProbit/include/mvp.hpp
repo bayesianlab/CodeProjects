@@ -124,7 +124,7 @@ public:
   void setModel(const MatrixXd &yt, const MatrixXd &Xt, const VectorXd &beta,
                 const MatrixXd _gammas, const RowVectorXd &b0,
                 const MatrixXd &B0, const Matrix<int, Dynamic, 2> &InfoMat,
-                string _file_name) {
+                string _file_name, const MatrixXd &_zt) {
     this->b0 = b0;
     this->B0 = B0;
     this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
@@ -137,6 +137,7 @@ public:
     g0 = RowVectorXd::Zero(_gammas.cols());
     G0 = createArPriorCovMat(1, _gammas.cols());
     file_name = _file_name;
+	this->zt = _zt; 
   }
 
   void runModel(int Sims, int burnin) {
@@ -209,19 +210,24 @@ public:
       MatrixXd Beta(K, Xt.cols() + nFactors);
       Beta << btemp, A;
       Xtk = groupByTime(Xt, K);
-      updateLoadingsFullConditionals(Beta, zt, Sigma.diagonal(), InfoMat, Xtk,
-                                     Ft, b0, B0);
+    //   updateLoadingsFullConditionals(Beta, zt, Sigma.diagonal(), InfoMat, Xtk,
+    //                                  Ft, b0, B0);
       A = Beta.rightCols(nFactors);
       Identification1(A);
       Beta.rightCols(nFactors) = A;
-      Xbeta = surX * bnew.transpose();
+      Xbeta = surX * bnew;
       Xbeta.resize(K, T);
-      updateFactor2(Ft, zt, Xtk, InfoMat, Beta, Sigma.diagonal(),
-                    factorVariance, gammas);
+
       for (int n = 0; n < nFactors; ++n) {
+		MatrixXd Acopy = A; 
+		Acopy.col(n) = VectorXd::Zero(K); 
+		MatrixXd resids = zt - Xbeta - Acopy*Ft; 
+		MatrixXd Sinv = MakePrecision(gammas.row(n), factorVariance(n), T);
+		resids.resize(K*T, 1);
+		updateFactor(resids, A.col(n), Sinv, Sigma);
         // Factor dynamic multipliers update
-        gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
-                                           factorVariance(n), g0, G0);
+        // gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
+        //                                    factorVariance(n), g0, G0);
       }
 
       if (i >= burnin) {
@@ -230,11 +236,11 @@ public:
         FactorPosterior.push_back(Ft);
         gammaPosterior.push_back(gammas);
         FactorVariancePosterior.push_back(factorVariance);
-        CorrelationPosterior.push_back(Correlation);
+        // CorrelationPosterior.push_back(Correlation);
       }
       yhat = Xbeta + A * Ft;
     }
-    cout << mean(CorrelationPosterior) << endl;
+    // cout << mean(CorrelationPosterior) << endl;
     cout << mean(BetaPosterior) << endl;
 
     string date = dateString();

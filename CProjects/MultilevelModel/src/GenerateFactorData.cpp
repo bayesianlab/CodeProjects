@@ -183,6 +183,7 @@ void GenerateFactorData::genProbitData(int _K,int _T,  int nbetas, int ngammas,
   mu = AF + Xbeta;
   MatrixXd nu = normrnd(0, sqrt(omVar), K, T);
   yt = mu + nu;
+ 
   resids = yt - mu;
   om_variance = omVar * VectorXd::Ones(K);
   om_precision = 1. / om_variance.array();

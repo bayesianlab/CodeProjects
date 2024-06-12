@@ -337,7 +337,8 @@ public:
                 subA(0) = 1;
                 Loadings.col(i).segment(start, nrows) = subA;
             }
-            Factors.row(i) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
+            MatrixXd omP = subomPrecision.asDiagonal(); 
+            Factors.row(i) = updateFactor(subytdemeaned, subA, subFp, omP);
         }
     }
 };
@@ -788,8 +789,8 @@ public:
                      CLLstar(subAstar) - logmvtpdf(subA.transpose(), jmean.transpose(), jCovar, df);
             lalpha = min(0., lalpha);
             denominator(i) = lalpha;
-
-            Factors.row(i) = updateFactor(subytdemeanedstar, subAstar, subFp, subomPrecision, T);
+            MatrixXd omP = subomPrecision.asDiagonal(); 
+            Factors.row(i) = updateFactor(subytdemeanedstar, subAstar, subFp, omP);
         }
         return denominator;
     }
@@ -921,8 +922,8 @@ public:
                 subfv = factorVariance.row(n);
                 subFp = MakePrecision(subgammas, subfv, T);
                 subytdemeaned = ytdemeaned.middleRows(start, nrows);
-                subomPrecision = omPrecision.segment(start, nrows);
-                Factors.row(n) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
+                MatrixXd omP = omPrecisionstar.segment(start, nrows).asDiagonal();
+                Factors.row(n) = updateFactor(subytdemeaned, subA, subFp, omP);
                 f2 = factorVariance(n);
                 apt.updateArParameters(Factors.row(n), gammas.row(n), f2, g0, G0);
                 gammas.row(n) = apt.phinew;
@@ -974,8 +975,8 @@ public:
                 subfv = factorVariance.row(n);
                 subFp = MakePrecision(subgammas, subfv, T);
                 subytdemeaned = ytdemeaned.middleRows(start, nrows);
-                subomPrecision = omPrecision.segment(start, nrows);
-                Factors.row(n) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
+                MatrixXd omP = omPrecisionstar.segment(start, nrows).asDiagonal();
+                Factors.row(n) = updateFactor(subytdemeaned, subA, subFp, omP);
                 Denominator(n, j) = apt.alphaj(gammastar.row(n), Factors.row(n), f2, g0, G0);
             }
             resids = yt - (Astar * Factors) - xbt;
@@ -1013,8 +1014,8 @@ public:
                 subfv = factorVariance.row(n);
                 subFp = MakePrecision(subgammas, subfv, T);
                 subytdemeaned = ytdemeaned.middleRows(start, nrows);
-                subomPrecision = omPrecisionstar.segment(start, nrows);
-                Factors.row(n) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
+                MatrixXd omP = omPrecisionstar.segment(start, nrows).asDiagonal();
+                Factors.row(n) = updateFactor(subytdemeaned, subA, subFp, omP);
                 H = ReturnH(gammastar.row(n), T);
                 Hf = H * Factors.row(n).transpose();
                 paramb = (.5 * (R0 + Hf.transpose() * Hf));
@@ -1054,8 +1055,8 @@ public:
                 subfv = factorVariancestar.row(n);
                 subFp = MakePrecision(subgammas, subfv, T);
                 subytdemeaned = ytdemeaned.middleRows(start, nrows);
-                subomPrecision = omPrecisionstar.segment(start, nrows);
-                Factors.row(n) = updateFactor(subytdemeaned, subA, subFp, subomPrecision, T);
+                MatrixXd omP = omPrecisionstar.segment(start, nrows).asDiagonal();
+                Factors.row(n) = updateFactor(subytdemeaned, subA, subFp, omP);
                 H = ReturnH(gammastar.row(n), T);
                 Hf = H * Factors.row(n).transpose();
                 paramb = (.5 * (R0 + Hf.transpose() * Hf));

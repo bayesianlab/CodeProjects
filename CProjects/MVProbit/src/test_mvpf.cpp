@@ -60,7 +60,7 @@ int main() {
 	MVP mv;
 
 	MatrixXd B0 = MatrixXd::Identity(gfp.b0.rows(),gfp.b0.rows());
-	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, gfp.b0, gfp.B0, InfoMat, "factor");
+	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, gfp.b0, gfp.B0, InfoMat, "factor", gfp.yt);
 	mv.runFactorModel(100, 10);
 
 	MatrixXd Fbar = mean(mv.FactorPosterior);
