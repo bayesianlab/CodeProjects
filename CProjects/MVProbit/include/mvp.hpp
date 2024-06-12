@@ -226,7 +226,7 @@ public:
 				MatrixXd resids = zt - Xbeta - Acopy * Ft;
 				MatrixXd Sinv = MakePrecision(gammas.row(n), factorVariance(n), T);
 				resids.resize(KT, 1);
-				Ft = updateFactor(resids, A.col(n), Sinv, Sigma);
+				Ft.row(n) = updateFactor(resids, A.col(n), Sinv, Sigma);
 				// Factor dynamic multipliers update
 				// gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
 				//                                    factorVariance(n), g0, G0);
