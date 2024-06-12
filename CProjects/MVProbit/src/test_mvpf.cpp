@@ -13,10 +13,10 @@ int main() {
 	int K = 8;
 
 	GenerateFactorData gfp;
-	Matrix<int, Dynamic, 2> InfoMat(1, 2);
-	InfoMat << 0, K - 1;
-	VectorXd phi(1);
-	phi << .25;
+	Matrix<int, Dynamic, 2> InfoMat(2, 2);
+	InfoMat << 0, K - 1, 0, K-1;
+	VectorXd phi(2);
+	phi << .25, .25;
 	gfp.genProbitData(K, T, 1, 1, InfoMat);
 	MatrixXd yt(K, T);
 	for (int i = 0; i < T; ++i) {
@@ -60,7 +60,7 @@ int main() {
 	MVP mv;
 
 	MatrixXd B0 = MatrixXd::Identity(gfp.b0.rows(),gfp.b0.rows());
-	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, gfp.b0, gfp.B0, InfoMat, "factor", gfp.yt);
+	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, gfp.b0, gfp.B0, InfoMat, "factor");
 	mv.runFactorModel(100, 10);
 
 	MatrixXd Fbar = mean(mv.FactorPosterior);
@@ -72,8 +72,10 @@ int main() {
 	//plotter("af1.csv", Fbar.row(0), gfp.Factors.row(0));
 	//plotter("af2.csv", Fbar.row(1), gfp.Factors.row(1));
 	vector<MatrixXd> z; 
+	vector<MatrixXd> f; 
 	z.push_back(gfp.Factors); 
+	f.push_back(Fbar); 
 	mv.storePosterior("true.csv", z);
-
+	mv.storePosterior("factors.csv", f);
 
 }

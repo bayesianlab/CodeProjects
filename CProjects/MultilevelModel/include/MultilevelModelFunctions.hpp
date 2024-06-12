@@ -35,17 +35,16 @@ MatrixXd updateFactor(const MatrixBase<D1> &residuals,
   int nFactorsT = nFactors * T;
   MatrixXd IT = MatrixXd::Identity(T, T);
   MatrixXd AtO = Loadings.transpose() * Precision;
-  MatrixXd FplusAtOinv =
+  MatrixXd V =
       FactorPrecision +
       kroneckerProduct(IT, AtO * Loadings);
-  FplusAtOinv = FplusAtOinv.llt().solve(
-      MatrixXd::Identity(FplusAtOinv.rows(), FplusAtOinv.rows()));
-  MatrixXd lower = FplusAtOinv.llt().matrixL();
-  MatrixXd musum = kroneckerProduct(IT, AtO) * residuals;
-  VectorXd mu = FplusAtOinv * musum;
-  FplusAtOinv = mu + lower * normrnd(0, 1, nFactorsT, 1);
-  FplusAtOinv.resize(nFactors, T);
-  return FplusAtOinv;
+  V = V.llt().solve(
+      MatrixXd::Identity(V.rows(), V.rows()));
+  MatrixXd lower = V.llt().matrixL();
+  MatrixXd mu = V* kroneckerProduct(IT, AtO) * residuals;
+  MatrixXd Factors = mu + lower * normrnd(0, 1, nFactorsT, 1);
+  Factors.resize(nFactors, T);
+  return Factors; 
 }
 
 MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &InfoMat,
