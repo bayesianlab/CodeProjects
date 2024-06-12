@@ -21,9 +21,32 @@ using namespace std;
 MatrixXd packageFactorsInXt(const Matrix<int, Dynamic, 2> &InfoMat,
                             const Ref<MatrixXd> &Factors, const int &K);
 
-MatrixXd updateFactor(const MatrixXd &residuals, const MatrixXd &Loadings,
-                      const MatrixXd &FactorPrecision,
-                      const VectorXd &precision, int T);
+template <typename D1, typename D2, typename D3, typename D4>
+MatrixXd updateFactor(const MatrixBase<D1> &residuals,
+                      const MatrixBase<D2> &Loadings,
+                      const MatrixBase<D3> &FactorPrecision,
+                      const MatrixBase<D4> &Precision) {
+  int nFactors = Loadings.cols();
+  if (residuals.rows() % Loadings.rows()) {
+    throw std::invalid_argument(
+        "Rows of resids not divisilble by K. Input error.");
+  }
+  int T = residuals.rows() / Loadings.rows();
+  int nFactorsT = nFactors * T;
+  MatrixXd IT = MatrixXd::Identity(T, T);
+  MatrixXd AtO = Loadings.transpose() * Precision;
+  MatrixXd FplusAtOinv =
+      FactorPrecision +
+      kroneckerProduct(IT, AtO * Loadings);
+  FplusAtOinv = FplusAtOinv.llt().solve(
+      MatrixXd::Identity(FplusAtOinv.rows(), FplusAtOinv.rows()));
+  MatrixXd lower = FplusAtOinv.llt().matrixL();
+  MatrixXd musum = kroneckerProduct(IT, AtO) * residuals;
+  VectorXd mu = FplusAtOinv * musum;
+  FplusAtOinv = mu + lower * normrnd(0, 1, nFactorsT, 1);
+  FplusAtOinv.resize(nFactors, T);
+  return FplusAtOinv;
+}
 
 MatrixXd MakeObsModelIdentity(const Matrix<int, Dynamic, 2> &InfoMat,
                               const int eqns);
@@ -229,6 +252,7 @@ void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
   }
 }
 
+
 template <typename T0, typename T1, typename T3, typename T4, typename T5,
           typename T6>
 void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
@@ -239,7 +263,6 @@ void updateFactor2(MatrixBase<T0> &Factors, const MatrixBase<T1> &yt,
                    const MatrixBase<T5> &factorVariance,
                    const MatrixBase<T6> &gammas) {
   // only gammas
-  // No Xtk
   int nFactors = InfoMat.rows();
   int K = yt.rows();
   int T = yt.cols();
