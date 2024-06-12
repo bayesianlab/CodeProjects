@@ -125,10 +125,11 @@ public:
 	void setModel(const MatrixXd& yt, const MatrixXd& Xt, const VectorXd& beta,
 		const MatrixXd _gammas, const RowVectorXd& b0,
 		const MatrixXd& B0, const Matrix<int, Dynamic, 2>& InfoMat,
-		string _file_name, const MatrixXd& _zt) {
+		string _file_name, const MatrixXd &_Ft) {
 		this->b0 = b0;
 		this->B0 = B0;
-		this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
+		//this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
+		this->Ft = _Ft;
 		this->yt = yt;
 		this->Xt = Xt;
 		this->beta = beta;
@@ -138,7 +139,6 @@ public:
 		g0 = RowVectorXd::Zero(_gammas.cols());
 		G0 = createArPriorCovMat(1, _gammas.cols());
 		file_name = _file_name;
-		this->zt = _zt;
 	}
 
 	void runModel(int Sims, int burnin) {
@@ -177,6 +177,9 @@ public:
 		cout << "Sigma Acceptance Rate " << sigmaAcceptance / (double)Sims << endl;
 	}
 
+
+
+
 	void runFactorModel(int Sims, int burnin) {
 		// New method
 		this->Sims = Sims;
@@ -194,52 +197,44 @@ public:
 		MatrixXd surX = surForm(Xt, K);
 		MatrixXd Xbeta = surX * beta;
 		Xbeta.resize(K, T);
-		MatrixXd yhat;
+		MatrixXd yhat = Xbeta + A*Ft;
+		zt.resize(K, T); 
+		for (int t = 0; t < T; ++t) {
+			zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
+				yhat.col(t).transpose(), Sigma, 1, 0);
+		}
 		VectorXd factorVariance = VectorXd::Ones(nFactors);
 		double d0 = 6;
 		double D0 = 12;
-		Xtk = groupByTime(Xt, K);
 		for (int i = 0; i < Sims; ++i) {
 			cout << "Sim " << i + 1 << endl;
 			yhat = Xbeta + A * Ft;
-			//   for (int t = 0; t < T; ++t) {
-			//     zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
-			//                         yhat.col(t).transpose(), Sigma, 1, 0);
-			//   }
-			//   updateSurBeta(zt, surX, Sigma, b0, B0);
-			//   MatrixXd btemp = bnew;
-			MatrixXd bnew = MatrixXd::Ones(Xt.cols() * K, 1);
-			MatrixXd btemp = bnew;
-			btemp.resize(K, Xt.cols());
-			MatrixXd Beta(K, Xt.cols() + nFactors);
-			Beta << btemp, A;
-			//updateLoadingsFullConditionals(Beta, zt, Sigma.diagonal(), InfoMat, Xtk,
-			//                               Ft, b0, B0);
-			A = Beta.rightCols(nFactors);
-			Identification1(A);
-			Beta.rightCols(nFactors) = A;
-			Xbeta = surX * bnew;
-			Xbeta.resize(K, T);
-			for (int n = 0; n < nFactors; ++n) {
-				MatrixXd Acopy = A;
-				Acopy.col(n) = VectorXd::Zero(K);
-				MatrixXd resids = zt - Xbeta - Acopy * Ft;
-				MatrixXd Sinv = MakePrecision(gammas.row(n), factorVariance(n), T);
-				resids.resize(KT, 1);
-				Ft.row(n) = updateFactor(resids, A.col(n), Sinv, Sigma);
-				// Factor dynamic multipliers update
-				// gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
-				//                                    factorVariance(n), g0, G0);
+			for (int t = 0; t < T; ++t) {
+				zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
+					yhat.col(t).transpose(), Sigma, 1, 0);
 			}
 
-			if (i >= burnin) {
-				Beta.resize(nBetas, 1);
-				BetaPosterior.push_back(Beta);
-				FactorPosterior.push_back(Ft);
-				gammaPosterior.push_back(gammas);
-				FactorVariancePosterior.push_back(factorVariance);
-				// CorrelationPosterior.push_back(Correlation);
-			}
+			//Xbeta.resize(K, T);
+			//for (int n = 0; n < nFactors; ++n) {
+			//	MatrixXd Acopy = A;
+			//	Acopy.col(n) = VectorXd::Zero(K);
+			//	MatrixXd resids = zt - Xbeta - Acopy * Ft;
+			//	MatrixXd Sinv = MakePrecision(gammas.row(n), factorVariance(n), T);
+			//	resids.resize(KT, 1);
+			//	Ft.row(n) = updateFactor(resids, A.col(n), Sinv, Sigma);
+			//	// Factor dynamic multipliers update
+			//	// gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
+			//	//                                    factorVariance(n), g0, G0);
+			//}
+
+			//if (i >= burnin) {
+			//	Beta.resize(nBetas, 1);
+			//	BetaPosterior.push_back(Beta);
+			//	FactorPosterior.push_back(Ft);
+			//	gammaPosterior.push_back(gammas);
+			//	FactorVariancePosterior.push_back(factorVariance);
+			//	// CorrelationPosterior.push_back(Correlation);
+			//}
 		}
 		// cout << mean(CorrelationPosterior) << endl;
 		cout << mean(BetaPosterior) << endl;
