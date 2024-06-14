@@ -50,4 +50,10 @@ int main() {
   MatrixXd U = Z*Y; 
   cout << U*U.transpose() + Sigma << endl; 
 
+  MatrixXd P = normrnd(0,1, 10, 1);
+  cout << endl; 
+  cout << P << endl; 
+  P.transpose().resize(5,2);
+  cout << P << endl;   
+
 }
