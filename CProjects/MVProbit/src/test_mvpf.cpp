@@ -60,22 +60,23 @@ int main() {
 	MVP mv;
 
 	MatrixXd B0 = MatrixXd::Identity(gfp.b0.rows(),gfp.b0.rows());
-	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, gfp.b0, gfp.B0, InfoMat, "factor");
+	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, gfp.b0, gfp.B0, 
+	            InfoMat, "factor", gfp.Factors);
 	mv.runFactorModel(100, 10);
 
 	MatrixXd Fbar = mean(mv.FactorPosterior);
-	MatrixXd Betabar = mean(mv.BetaPosterior);
-	Betabar.resize(K, gfp.Xt.cols() + InfoMat.rows());
-	MatrixXd A = Betabar.rightCols(Fbar.rows());
-	MatrixXd AF = A*Fbar;
+	// MatrixXd Betabar = mean(mv.BetaPosterior);
+	// Betabar.resize(K, gfp.Xt.cols() + InfoMat.rows());
+	// MatrixXd A = Betabar.rightCols(Fbar.rows());
+	// MatrixXd AF = A*Fbar;
 
-	//plotter("af1.csv", Fbar.row(0), gfp.Factors.row(0));
-	//plotter("af2.csv", Fbar.row(1), gfp.Factors.row(1));
-	vector<MatrixXd> z; 
-	vector<MatrixXd> f; 
-	z.push_back(gfp.Factors); 
-	f.push_back(Fbar); 
-	mv.storePosterior("true.csv", z);
-	mv.storePosterior("factors.csv", f);
+	plotter("af1.csv", Fbar.row(0), gfp.Factors.row(0));
+	plotter("af2.csv", Fbar.row(1), gfp.Factors.row(1));
+	// vector<MatrixXd> z; 
+	// vector<MatrixXd> f; 
+	// z.push_back(gfp.Factors); 
+	// f.push_back(Fbar); 
+	// mv.storePosterior("true.csv", z);
+	// mv.storePosterior("factors.csv", f);
 
 }
