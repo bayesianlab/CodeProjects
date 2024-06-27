@@ -261,8 +261,8 @@ Distributions/CMakeFiles/Dist.dir/clean:
 # Target rules for target Distributions/CMakeFiles/disttest.dir
 
 # All Build rule for target.
-Distributions/CMakeFiles/disttest.dir/all: Distributions/CMakeFiles/Dist.dir/all
 Distributions/CMakeFiles/disttest.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
+Distributions/CMakeFiles/disttest.dir/all: Distributions/CMakeFiles/Dist.dir/all
 	$(MAKE) $(MAKESILENT) -f Distributions/CMakeFiles/disttest.dir/build.make Distributions/CMakeFiles/disttest.dir/depend
 	$(MAKE) $(MAKESILENT) -f Distributions/CMakeFiles/disttest.dir/build.make Distributions/CMakeFiles/disttest.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=3,4 "Built target disttest"
@@ -340,8 +340,8 @@ EigenTools/CMakeFiles/ettest.dir/clean:
 # Target rules for target TimeSeries/CMakeFiles/test_armodel.dir
 
 # All Build rule for target.
-TimeSeries/CMakeFiles/test_armodel.dir/all: Distributions/CMakeFiles/Dist.dir/all
 TimeSeries/CMakeFiles/test_armodel.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
+TimeSeries/CMakeFiles/test_armodel.dir/all: Distributions/CMakeFiles/Dist.dir/all
 TimeSeries/CMakeFiles/test_armodel.dir/all: EigenTools/CMakeFiles/ettools.dir/all
 	$(MAKE) $(MAKESILENT) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/depend
 	$(MAKE) $(MAKESILENT) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/build
@@ -473,8 +473,8 @@ MultilevelModel/CMakeFiles/ml.dir/clean:
 # Target rules for target MVProbit/CMakeFiles/mvpf.dir
 
 # All Build rule for target.
-MVProbit/CMakeFiles/mvpf.dir/all: Distributions/CMakeFiles/Dist.dir/all
 MVProbit/CMakeFiles/mvpf.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
+MVProbit/CMakeFiles/mvpf.dir/all: Distributions/CMakeFiles/Dist.dir/all
 MVProbit/CMakeFiles/mvpf.dir/all: EigenTools/CMakeFiles/ettools.dir/all
 MVProbit/CMakeFiles/mvpf.dir/all: OptimizationTools/CMakeFiles/optlib.dir/all
 MVProbit/CMakeFiles/mvpf.dir/all: MultilevelModel/CMakeFiles/ml.dir/all

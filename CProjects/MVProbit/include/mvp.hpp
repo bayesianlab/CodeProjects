@@ -125,11 +125,11 @@ public:
   void setModel(const MatrixXd &yt, const MatrixXd &Xt, const VectorXd &beta,
                 const MatrixXd _gammas, const RowVectorXd &b0,
                 const MatrixXd &B0, const Matrix<int, Dynamic, 2> &InfoMat,
-                string _file_name, const MatrixXd &_Ft) {
+                string _file_name) {
     this->b0 = b0;
     this->B0 = B0;
-    // this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
-    this->Ft = _Ft;
+    this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
+    // this->Ft = Factors; 
     this->yt = yt;
     this->Xt = Xt;
     this->beta = beta;
@@ -189,24 +189,23 @@ public:
     int nBetas = K * (Xt.cols() + nFactors);
     int levels = calcLevels(InfoMat, K);
     MatrixXd A = MatrixXd::Ones(K, nFactors);
-    Identification1(A);
+    Identification2(A);
     MatrixXd Sigma = MatrixXd::Identity(K, K);
     VectorXd Ik = VectorXd::Ones(K);
     MatrixXd surX = surForm(Xt, K);
     MatrixXd Xbeta = surX * beta;
     Xbeta.resize(K, T);
     MatrixXd yhat = Xbeta + A * Ft;
-	zt = yhat; 
-    // zt.resize(K, T);
-    // for (int t = 0; t < T; ++t) {
-    //   zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
-    //                       yhat.col(t).transpose(), Sigma, 1, 0);
-    // }
+    zt.resize(K, T);
+    for (int t = 0; t < T; ++t) {
+      zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
+                          yhat.col(t).transpose(), Sigma, 1, 0);
+    }
     VectorXd factorVariance = VectorXd::Ones(nFactors);
-    double d0 = 6;
+    double d0 = 12;
     double D0 = 12;
     RowVectorXd OneK = RowVectorXd::Ones(K);
-    RowVectorXd a0 = RowVectorXd::Zero(QK);
+    RowVectorXd a0 = RowVectorXd::Ones(QK);
     MatrixXd A0 = MatrixXd::Identity(QK, QK);
     for (int i = 0; i < Sims; ++i) {
       cout << "Sim " << i + 1 << endl;
@@ -218,7 +217,7 @@ public:
       }
       zt = zt - AF;
       updateSurBeta(zt, surX, Sigma, b0, B0);
-	  beta = bnew.transpose(); 
+      beta = bnew.transpose();
       Xbeta = surX * bnew.transpose();
       Xbeta.resize(K, T);
       MatrixXd Ftstacked = kroneckerProduct(Ft, OneK);
@@ -229,36 +228,34 @@ public:
       A = bnew;
       A.transpose().resize(K, nFactors);
       A.transposeInPlace();
-      Identification1(A);
-	  zt += Xbeta;
+      Identification2(A);
       for (int n = 0; n < nFactors; ++n) {
         MatrixXd Acopy = A;
         Acopy.col(n) = VectorXd::Zero(K);
-        MatrixXd resids = zt - Xbeta - Acopy * Ft;
+        MatrixXd resids = zt  - Acopy * Ft;
         MatrixXd Sinv = MakePrecision(gammas.row(n), factorVariance(n), T);
         resids.resize(KT, 1);
         Ft.row(n) = updateFactor(resids, A.col(n), Sinv, Sigma);
         // Factor dynamic multipliers update
         gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
                                            factorVariance(n), g0, G0);
-        MatrixXd H = ReturnH(gammas.row(n), T);
-        MatrixXd nu = (H * Ft.row(n).transpose()).transpose();
+        // MatrixXd H = ReturnH(gammas.row(n), T);
+        // MatrixXd nu = (H * Ft.row(n).transpose()).transpose();
         // factor variance update
-        factorVariance(n) = updateSigma2(nu, d0, D0).value();
+        // factorVariance(n) = updateSigma2(nu, d0, D0).value();
       }
+          zt += Xbeta;
+
 
       if (i >= burnin) {
-      	BetaPosterior.push_back(beta);
-		LoadingPosterior.push_back(A); 
-      	FactorPosterior.push_back(Ft);
-      	gammaPosterior.push_back(gammas);
-      	FactorVariancePosterior.push_back(factorVariance);
-      	// CorrelationPosterior.push_back(Correlation);
+        BetaPosterior.push_back(beta);
+        LoadingPosterior.push_back(A);
+        FactorPosterior.push_back(Ft);
+        gammaPosterior.push_back(gammas);
+        FactorVariancePosterior.push_back(factorVariance);
+        // CorrelationPosterior.push_back(Correlation);
       }
     }
-    cout << mean(BetaPosterior) << endl;
-	cout << mean(LoadingPosterior) << endl; 
-
     string date = dateString();
     string ext = ".txt";
     string path = "mvprobit_" + file_name + "_" + date + "/";
@@ -268,6 +265,7 @@ public:
     file.open(fname);
     if (file.is_open()) {
       storePosterior(path + "beta.csv", BetaPosterior);
+      storePosterior(path + "loadings.csv", LoadingPosterior);
       storePosterior(path + "gammas.csv", gammaPosterior);
       storePosterior(path + "factors.csv", FactorPosterior);
       storePosterior(path + "factorVariance.csv", FactorVariancePosterior);
@@ -275,10 +273,14 @@ public:
            << "burnin " << burnin << " " << T << " " << K << endl;
       file << "Beta avg" << endl;
       file << mean(BetaPosterior) << endl;
+      cout << "Loading Avg" << endl; 
+      file << mean(LoadingPosterior) << endl; 
       file << "Gamma avg" << endl;
       file << mean(gammaPosterior) << endl;
       file << "Factors avg" << endl;
       file << mean(FactorPosterior).transpose() << endl;
+      file << "Factor variance avg" << endl; 
+      file << mean(FactorVariancePosterior) << endl; 
       file.close();
     } else {
       cout << "Error, file not written" << endl;
@@ -293,6 +295,16 @@ public:
         } else if (i == j) {
           A(i, j) = 1.0;
         }
+      }
+    }
+  }
+
+  void Identification2(MatrixXd &A) {
+    for (int i = 0; i < A.cols(); ++i) {
+      for (int j = 0; j < A.cols(); ++j) {
+        if (j > i) {
+          A(i, j) = 0.0;
+        } 
       }
     }
   }

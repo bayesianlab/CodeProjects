@@ -10,13 +10,13 @@ using namespace Eigen;
 int main() {
 	cout << " Test mvp" << endl;
 	int T = 100;
-	int K = 8;
+	int K = 64;
 
 	GenerateFactorData gfp;
 	Matrix<int, Dynamic, 2> InfoMat(2, 2);
 	InfoMat << 0, K - 1, 0, K-1;
 	VectorXd phi(2);
-	phi << .25, .25;
+	phi << .10, .10;
 	gfp.genProbitData(K, T, 1, 1, InfoMat);
 	MatrixXd yt(K, T);
 	for (int i = 0; i < T; ++i) {
@@ -58,20 +58,21 @@ int main() {
 	// }
 
 	MVP mv;
-
-	MatrixXd B0 = MatrixXd::Identity(gfp.b0.rows(),gfp.b0.rows());
-	mv.setModel(yt, gfp.Xt, gfp.betas.replicate(K, 1), phi, gfp.b0, gfp.B0, 
+	VectorXd b = unifrnd(0,1, K);
+	mv.setModel(yt, gfp.Xt, b, phi, gfp.b0, 10*gfp.B0, 
 	            InfoMat, "factor", gfp.Factors);
 	mv.runFactorModel(100, 10);
 
 	MatrixXd Fbar = mean(mv.FactorPosterior);
-	// MatrixXd Betabar = mean(mv.BetaPosterior);
+	MatrixXd Betabar = mean(mv.BetaPosterior);
+	cout << Betabar << endl; 
 	// Betabar.resize(K, gfp.Xt.cols() + InfoMat.rows());
 	// MatrixXd A = Betabar.rightCols(Fbar.rows());
 	// MatrixXd AF = A*Fbar;
 
 	plotter("af1.csv", Fbar.row(0), gfp.Factors.row(0));
 	plotter("af2.csv", Fbar.row(1), gfp.Factors.row(1));
+
 	// vector<MatrixXd> z; 
 	// vector<MatrixXd> f; 
 	// z.push_back(gfp.Factors); 
