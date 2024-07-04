@@ -1,10 +1,11 @@
 #ifndef DIST_H
 #define DIST_H
 #define _USE_MATH_DEFINES
-#include <cmath>
+#include "EigenTools.hpp"
+#include "gcem.hpp"
+#include "stats.hpp"
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
-#include <unsupported/Eigen/KroneckerProduct>
 #include <boost/math/distributions/exponential.hpp>
 #include <boost/math/distributions/normal.hpp>
 #include <boost/random/gamma_distribution.hpp>
@@ -12,13 +13,12 @@
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/uniform_01.hpp>
 #include <boost/random/variate_generator.hpp>
+#include <cmath>
 #include <limits>
 #include <math.h>
 #include <random>
 #include <stdexcept>
-#include "stats.hpp"
-#include "gcem.hpp"
-#include "EigenTools.hpp"
+#include <unsupported/Eigen/KroneckerProduct>
 
 using namespace Eigen;
 using namespace std;
@@ -40,11 +40,9 @@ VectorXd normrnd(double mu, double sig, int N);
 MatrixXd normrnd(double, double, int, int);
 
 template <typename A, typename B>
-MatrixXd mvnrnd(const MatrixBase<A> &mu, const MatrixBase<B> &sig, int N)
-{
+MatrixXd mvnrnd(const MatrixBase<A> &mu, const MatrixBase<B> &sig, int N) {
   int J = sig.cols();
-  if (J != mu.cols())
-  {
+  if (J != mu.cols()) {
     invalid_argument("Columns and rows must be equal in mvnrnd");
   }
   MatrixXd Z = normrnd(0., 1., N, J);
@@ -55,9 +53,7 @@ MatrixXd mvnrnd(const MatrixBase<A> &mu, const MatrixBase<B> &sig, int N)
   return Z;
 }
 
-template <typename Derived1>
-double logdet(const MatrixBase<Derived1> &sig)
-{
+template <typename Derived1> double logdet(const MatrixBase<Derived1> &sig) {
   MatrixXd x = sig.llt().matrixL();
   return 2 * x.diagonal().array().log().sum();
 }
@@ -67,8 +63,7 @@ double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
 
 template <typename D>
 double logmvnpdfCentered(const RowVectorXd &x,
-                         const MatrixBase<D> &SigLowerInvDiag)
-{
+                         const MatrixBase<D> &SigLowerInvDiag) {
   // Takes the centered and scaled data and also the
   // diagonal of the cholesky of the precision
   int p = SigLowerInvDiag.size();
@@ -99,18 +94,20 @@ MatrixXd chi2rnd(int df, int N, int J);
 
 MatrixXd CreateSigma(double rho, int size);
 
-double logmvtpdf(const RowVectorXd &x, const RowVectorXd &mu, const MatrixXd &Variance,
-                 double df);
+double logmvtpdf(const RowVectorXd &x, const RowVectorXd &mu,
+                 const MatrixXd &Variance, double df);
 
 double logavg(const Ref<const VectorXd> &logpdf);
 
 MatrixXd logavg(const Ref<const MatrixXd> &logpdf, const int &dim);
 
-VectorXd shiftedExponential(const double &shift, const double &alpha, const int &n);
+VectorXd shiftedExponential(const double &shift, const double &alpha,
+                            const int &n);
 
 double drawTruncatedNormal(const double &lowercut);
 
-VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2, const int &n);
+VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2,
+                                 const int &n);
 
 double normalCDF(double value);
 
@@ -118,38 +115,62 @@ double normalpdflog(double value, double mean, double variance);
 
 double inverseCDFTruncatedNormal(const double &lowercut);
 
-MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints, const RowVectorXd &mu,
-                 const MatrixXd &Sigma, const int N, const int bn);
+MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints,
+                 const RowVectorXd &mu, const MatrixXd &Sigma, const int N,
+                 const int bn);
 
-class StandardScaler
-{
+class StandardScaler {
 public:
   VectorXd Mu;
   VectorXd Sigma;
 
-  void fit(const MatrixXd &X)
-  {
-    Mu = X.rowwise().mean(); 
-    MatrixXd Centered = X.colwise() - Mu; 
-    Centered = Centered.array()*Centered.array(); 
-    Sigma.resize(Centered.rows()); 
-    for(int i = 0; i < Centered.rows();++i)
-    {
-      double rowsum = 0; 
-      for(int j = 0; j < Centered.cols(); ++j)
-      {
-        rowsum += Centered(i,j);
+  void fit(const MatrixXd &X) {
+    Mu = X.rowwise().mean();
+    MatrixXd Centered = X.colwise() - Mu;
+    Centered = Centered.array() * Centered.array();
+    Sigma.resize(Centered.rows());
+    for (int i = 0; i < Centered.rows(); ++i) {
+      double rowsum = 0;
+      for (int j = 0; j < Centered.cols(); ++j) {
+        rowsum += Centered(i, j);
       }
-      Sigma(i) = rowsum/Centered.cols(); 
+      Sigma(i) = rowsum / Centered.cols();
     }
-    Sigma = Sigma.array().sqrt(); 
+    Sigma = Sigma.array().sqrt();
   }
 
-  MatrixXd transform(const MatrixXd &X)
-  {
-    return (X.colwise() - Mu).array().colwise()/Sigma.array(); 
+  MatrixXd transform(const MatrixXd &X) {
+    return (X.colwise() - Mu).array().colwise() / Sigma.array();
   }
 };
+
+MatrixXd mvtnrnd_freeze(const int freeze_up_to, const RowVectorXd &init,
+                        const RowVectorXd &mu, const MatrixXd &Sigma,
+                        const RowVectorXd &constraints, const int N,
+                        const int bn);
+
+double normalpdf(double x, double mu, double sigma2);
+
+double tnormpdf_onesided(double x, double left_constraint, double mu,
+                         double sigma2);
+
+void mvtn_conditional_pdf(const VectorXd &x, const RowVectorXd &mu,
+                          const MatrixXd &Sigma,
+                          const RowVectorXd &constraints);
+
+double lognormalpdf(double x, double mu, double sigma2);
+
+double tnormpdf(double a, double b, double mu, double sigma2, double x);
+
+double logtnormpdf_onesided(double x, double left_constraint, double mu,
+                            double sigma2);
+
+double logmvtn_conditional_pdf_freeze(const MatrixXd &X, const int freeze,
+                                      const RowVectorXd &mu,
+                                      const MatrixXd &Sigma,
+                                      const RowVectorXd &constraints);
+
+                       
 
 /*
 class Dist {

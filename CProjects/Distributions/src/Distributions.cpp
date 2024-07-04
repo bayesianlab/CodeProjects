@@ -10,7 +10,7 @@ double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
 {
 
   int p = Sig.cols();
-  double c = -.5 * p * log(2 * M_PI) - .5 * logdet(Sig);
+  double c = -.5 * (p * log(2 * M_PI) + logdet(Sig));
   double v = -.5 * ((x - mu) * Sig.llt().solve((x - mu).transpose())).value() + c;
   return v;
 }
@@ -363,28 +363,158 @@ MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints, const 
   RowVectorXd Hknk(K);
   double condmean;
   double condvar;
-  MatrixXd sample(K, N);
-  sample.setZero();
-  sample.col(0) = init;
+  MatrixXd Sample(K, N);
+  Sample.setZero();
+  Sample.col(0) = init;
   for (int n = 0; n < N; ++n)
   {
     for (int k = 0; k < K; ++k)
     {
       Hknk = NotK.row(k);
       condvar = 1.0 / Precision(k, k);
-      condmean = mu(k) - condvar * Hknk * (sample.col(0) - mu.transpose());
+      condmean = mu(k) - condvar * Hknk * (Sample.col(0) - mu.transpose());
       if (constraints(k) == 1)
       {
-        sample(k, n) = NormalTruncatedPositive(condmean, condvar, 1).value();
+        Sample(k, n) = NormalTruncatedPositive(condmean, condvar, 1).value();
       }
       else
       {
-        sample(k, n) = -NormalTruncatedPositive(-condmean, condvar, 1).value();
+        Sample(k, n) = -NormalTruncatedPositive(-condmean, condvar, 1).value();
       }
     }
   }
-  return sample.rightCols(N - bn);
+  return Sample.rightCols(N - bn);
 }
+
+MatrixXd mvtnrnd_freeze(const int freeze_up_to, const RowVectorXd &init,
+                        const RowVectorXd &mu, const MatrixXd &Sigma,
+                        const RowVectorXd &constraints, const int N,
+                        const int bn) {
+  
+  int K = Sigma.rows();
+  if(freeze_up_to > K-1){
+    throw invalid_argument("Error in mvtnrnd_freeze. Freeze not correct."); 
+  }
+  MatrixXd Precision = Sigma.llt().solve(MatrixXd::Identity(K, K));
+  MatrixXd NotK = Precision;
+  for (int i = 0; i < K; ++i) {
+    NotK(i, i) = 0;
+  }
+  RowVectorXd Hknk(K);
+  double condmean;
+  double condvar;
+  MatrixXd Sample(K, N);
+  Sample = init.replicate(N, 1).transpose(); 
+  for (int n = 0; n < N; ++n) {
+    for (int k = freeze_up_to + 1; k < K; ++k) {
+      Hknk = NotK.row(k);
+      condvar = 1.0 / Precision(k, k);
+      condmean = mu(k) - condvar * Hknk * (Sample.col(0) - mu.transpose());
+      if (constraints(k) == 1) {
+        Sample(k, n) = NormalTruncatedPositive(condmean, condvar, 1).value();
+      } else {
+        Sample(k, n) = -NormalTruncatedPositive(-condmean, condvar, 1).value();
+      }
+    }
+  }
+  return Sample.rightCols(N - bn);
+}
+
+double normalpdf(double x, double mu, double sigma2) {
+  double sigma = sqrt(sigma2);
+  double constant = 1. / (sigma * sqrt(2 * M_PI));
+  return constant * exp(-.5 * pow(x - mu, 2) / sigma2);
+}
+
+double tnormpdf_onesided(double x, double left_constraint, double mu,
+                         double sigma2) {
+  double sigma = sqrt(sigma2);
+  double alpha = (left_constraint - mu) / sigma;
+  double sigmaZ = sigma * (1 - normalCDF(alpha));
+  return normalpdf((x - mu) / sigma, 0, 1) / sigmaZ;
+}
+
+void logmvtn_conditional_pdf(const VectorXd &x, const RowVectorXd &mu, const MatrixXd &Sigma, 
+                          const RowVectorXd &constraints){
+  int K = Sigma.rows();
+  MatrixXd Precision = Sigma.llt().solve(MatrixXd::Identity(K, K));
+  MatrixXd NotK = Precision;
+  for (int i = 0; i < K; ++i)
+  {
+    NotK(i, i) = 0;
+  }
+  RowVectorXd Hknk(K);
+  double condmean;
+  double condvar;
+  double result = 0; 
+  for (int k = 0; k < K; ++k){
+    Hknk = NotK.row(k);
+    condvar = 1.0 / Precision(k, k);
+    condmean = mu(k) - condvar * Hknk * (x - mu.transpose());
+    double xi = x(k); 
+    if (constraints(k) == 1)
+    {
+      result += logtnormpdf_onesided(xi, 0, condmean, condvar);
+    }
+    else
+    {
+      result += logtnormpdf_onesided(-xi, 0, -condmean, condvar);
+    }
+  }
+}
+
+double logmvtn_conditional_pdf_freeze(const MatrixXd &X, const int freeze,
+                                    const RowVectorXd &mu,
+                                    const MatrixXd &Sigma,
+                                    const RowVectorXd &constraints) {
+  int K = Sigma.rows();
+  MatrixXd Precision = Sigma.llt().solve(MatrixXd::Identity(K, K));
+  MatrixXd NotK = Precision;
+  for (int i = 0; i < K; ++i) {
+    NotK(i, i) = 0;
+  }
+  RowVectorXd Hknk(K);
+  double condmean;
+  double condvar;
+  VectorXd result(X.cols());
+  for (int i = 0; i < X.cols(); ++i) {
+    Hknk = NotK.row(freeze);
+    condvar = 1.0 / Precision(freeze, freeze);
+    condmean = mu(freeze) - condvar * Hknk * (X.col(i) - mu.transpose());
+    double xi = X(freeze, i);
+    if (constraints(freeze) == 1) {
+      result(i) = logtnormpdf_onesided(xi, 0, condmean, condvar);
+    } else {
+      result(i) = logtnormpdf_onesided(-xi, 0, -condmean, condvar);
+    }
+  }
+  return logavg(result);
+}
+
+double lognormalpdf(double x, double mu, double sigma2) {
+  return -0.5 * log(2 * M_PI * sigma2) - (pow(x - mu, 2) / (2 * sigma2));
+}
+
+
+
+double tnormpdf(double a, double b, double mu, double sigma2, double x) {
+  double sigma = sqrt(sigma);
+  double alpha = (a - mu) / sigma;
+  double beta = (b - mu) / sigma;
+  double sigmaZ = sigma * (normalCDF(beta) - normalCDF(alpha));
+  return normalpdf((x - mu) / sigma, 0, 1) / sigmaZ;
+}
+
+
+
+double logtnormpdf_onesided(double x, double left_constraint, double mu,
+                             double sigma2) {
+  double sigma = sqrt(sigma2);
+  double alpha = (left_constraint- mu) / sigma;
+  double logsigmaZ = log(sigma * (1 - normalCDF(alpha)));
+  return lognormalpdf((x-mu)/sigma, 0 ,1) - logsigmaZ;
+}
+
 
 /* VectorXd generateChiSquaredVec(double df, int rows) {
   std::mt19937 gen(rd());
