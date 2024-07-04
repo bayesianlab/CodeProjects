@@ -84,7 +84,8 @@
         "alignedvector3": "cpp",
         "fft": "cpp",
         "ranges": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "numbers": "cpp"
     },
     "cmake.configureOnOpen": false,
     "C_Cpp.errorSquiggles": "Disabled",
