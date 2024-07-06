@@ -31,3 +31,11 @@ dmvnorm(x, mu, Sig, log=TRUE)
 
 exp(-3.074)
 exp(-3.12)
+exp(-6)
+exp(0)
+
+
+ptruncnorm(1, a=0, b=Inf, 0, 1)
+ptruncnorm(1, a=0, b=Inf, 1, 1)
+ptruncnorm(-1, a=-Inf, b=0, -.5, 1)
+
