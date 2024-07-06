@@ -386,13 +386,13 @@ MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints, const 
   return Sample.rightCols(N - bn);
 }
 
-MatrixXd mvtnrnd_freeze(const int freeze_up_to, const RowVectorXd &init,
+MatrixXd mvtnrnd_freeze(const int freeze_row, const RowVectorXd &init,
                         const RowVectorXd &mu, const MatrixXd &Sigma,
                         const RowVectorXd &constraints, const int N,
                         const int bn) {
   
   int K = Sigma.rows();
-  if(freeze_up_to > K-1){
+  if(freeze_row > K-1){
     throw invalid_argument("Error in mvtnrnd_freeze. Freeze not correct."); 
   }
   MatrixXd Precision = Sigma.llt().solve(MatrixXd::Identity(K, K));
@@ -406,7 +406,7 @@ MatrixXd mvtnrnd_freeze(const int freeze_up_to, const RowVectorXd &init,
   MatrixXd Sample(K, N);
   Sample = init.replicate(N, 1).transpose(); 
   for (int n = 0; n < N; ++n) {
-    for (int k = freeze_up_to + 1; k < K; ++k) {
+    for (int k = freeze_row + 1; k < K; ++k) {
       Hknk = NotK.row(k);
       condvar = 1.0 / Precision(k, k);
       condmean = mu(k) - condvar * Hknk * (Sample.col(0) - mu.transpose());
@@ -515,6 +515,77 @@ double logtnormpdf_onesided(double x, double left_constraint, double mu,
   return lognormalpdf((x-mu)/sigma, 0 ,1) - logsigmaZ;
 }
 
+double tnormcdf_onesided(double x, double left_constraint, double mu,
+                             double sigma2){
+  double sigma = sqrt(sigma2);
+  double xi = (x - mu) / sigma;
+  double alpha = (left_constraint - mu) / sigma; 
+  return (normalCDF(xi) - normalCDF(alpha)) / (1 - normalCDF(alpha));
+}
+
+double accuracy(const MatrixXd &Sample, const MatrixXd &Actuals){
+  int K = Sample.rows() ; 
+  int T = Sample .cols(); 
+  int correct_labels = 0;
+  for(int i = 0; i < T; ++i){
+    for (int j = 0; j < K; ++j){
+      if((Sample(j,i) > 0) and (Actuals(j,i)>0)){
+        correct_labels++; 
+      }
+      else if((Sample(j,i) < 0) and (Actuals(j,i)<0)){
+        correct_labels++; 
+      }
+    }
+  }
+  return (double)correct_labels/Sample.size();
+}
+
+MatrixXd simple_probit_probs(const MatrixXd &Zt){
+  int K = Zt.rows(); 
+  int T = Zt .cols(); 
+  MatrixXd Result(K,T); 
+  for(int i = 0; i < T; ++i){
+    for (int j = 0; j < K; ++j){
+      if(Zt(j,i) > 0){
+        Result(j,i) = normalCDF(Zt(j,i)); 
+      }
+      else{
+        Result(j,i) =1-normalCDF(Zt(j,i)); 
+      }
+    }
+  }
+  return Result; 
+}
+
+double log_loss(const MatrixXd &Predictions, const MatrixXd &Actuals) {
+  int K = Actuals.rows() ; 
+  int T = Actuals.cols(); 
+  double logloss = 0;
+  double x; 
+  for(int i = 0; i < T; ++i){
+    for (int j = 0; j < K; ++j){
+      if(Actuals(j,i)==1){
+        if(Predictions(j,i) < 1e-5){
+          x = 1e-5;
+        }
+        else{
+          x = Predictions(j,i);
+        }
+        logloss += log(x);
+      }
+      else{
+        if(Predictions(j,i) > .99999){
+          x = .99999;
+        }
+        else{
+          x = Predictions(j,i); 
+        }
+        logloss+=log(1 - x);
+      }
+    }
+  }
+  return -(1./Actuals.size())*logloss;
+}
 
 /* VectorXd generateChiSquaredVec(double df, int rows) {
   std::mt19937 gen(rd());

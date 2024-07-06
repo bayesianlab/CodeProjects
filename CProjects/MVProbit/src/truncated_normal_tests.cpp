@@ -78,5 +78,30 @@ int main(){
     else{
         cout << "Test MVN passed" << endl; 
     }
+
+    if(abs(tnormcdf_onesided(1, 0, 0, 1) - 0.6826895)>1e-7){
+        cout << "Test failed" << endl; 
+    }
+    else{
+        cout << "Test tnormcdf x=1, m=0, v=1, left = 0 passed. " << endl; 
+    }
+
+    if(abs(tnormcdf_onesided(1, 0, 1, 1) - 0.4057133)>1e-7){
+        cout << "Test failed" << endl; 
+        cout << tnormcdf_onesided(1, 0, 1, 1) << endl; 
+    }
+    else{
+        cout << "Test tnormcdf x=-1, m=1, v=1, left = 0 passed. " << endl; 
+    }
+
+    double prob = 1-tnormcdf_onesided(1, 0, .5, 1);
+    if(abs(prob - 0.4462101)>1e-7){
+        cout << "Test failed" << endl; 
+        cout << prob << endl; 
+    }
+    else{
+        cout << "Test tnormcdf x=-1, m=.5, v=1, right = 0 passed. " << endl; 
+    }
 }
+
 

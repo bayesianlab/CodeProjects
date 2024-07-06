@@ -10,6 +10,7 @@
 #include "Optimization.hpp"
 #include "TimeSeriesTools.hpp"
 
+
 using namespace Eigen;
 using namespace std;
 
@@ -207,9 +208,10 @@ public:
     RowVectorXd OneK = RowVectorXd::Ones(K);
     RowVectorXd a0 = RowVectorXd::Ones(QK);
     MatrixXd A0 = MatrixXd::Identity(QK, QK);
+    MatrixXd AF;
     for (int i = 0; i < Sims; ++i) {
       cout << "Sim " << i + 1 << endl;
-      MatrixXd AF = A * Ft;
+      AF = A * Ft;
       yhat = Xbeta + AF;
       for (int t = 0; t < T; ++t) {
         zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
@@ -218,7 +220,7 @@ public:
       zt = zt - AF;
       updateSurBeta(zt, surX, Sigma, b0, B0);
       beta = bnew.transpose();
-      Xbeta = surX * bnew.transpose();
+      Xbeta = surX * beta;
       Xbeta.resize(K, T);
       MatrixXd Ftstacked = kroneckerProduct(Ft, OneK);
       MatrixXd surF = surForm(Ftstacked.transpose(), K);
@@ -245,8 +247,6 @@ public:
         // factorVariance(n) = updateSigma2(nu, d0, D0).value();
       }
           zt += Xbeta;
-
-
       if (i >= burnin) {
         BetaPosterior.push_back(beta);
         LoadingPosterior.push_back(A);
@@ -256,6 +256,8 @@ public:
         // CorrelationPosterior.push_back(Correlation);
       }
     }
+
+
     string date = dateString();
     string ext = ".txt";
     string path = "mvprobit_" + file_name + "_" + date + "/";
@@ -285,6 +287,41 @@ public:
     } else {
       cout << "Error, file not written" << endl;
     }
+  }
+
+  void ValidationRun(const MatrixXd &Xt, const MatrixXd &yt){
+    MVTNProbs mvtn; 
+    int K = yt.rows(); 
+    int T = yt.cols();
+    double acc = 0; 
+    double running_acc = 0; 
+    double running_ll = 0; 
+    double ll = 0; 
+    MatrixXd surX = surForm(Xt, K); 
+    for(int i = 0; i < 1; ++i){
+      cout << i << endl; 
+      beta = BetaPosterior[i];
+      MatrixXd Xbeta = surX*beta;
+      Xbeta.resize(K,T);
+      MatrixXd A = LoadingPosterior[i];
+      MatrixXd Ft = FactorPosterior[i];
+      MatrixXd AF = A*Ft ;
+      MatrixXd zt = Xbeta + AF; 
+      acc += accuracy(zt, yt);
+      running_acc = acc/(i+1);
+      cout << "Acc. " << running_acc << endl; 
+      MatrixXd Pij = simple_probit_probs(zt);   
+      ll += log_loss(Pij, yt); 
+      running_ll = ll/(i+1); 
+      cout << "Log-loss " << running_ll << endl; 
+      // for(int j = 0; j < zt.cols(); ++j){
+      //   mvtn.batch_chib(zt.col(j).transpose(), Sigma, yt.col(j).transpose(), 110, 10, 50);
+      // }
+
+    }
+    
+      cout << "Average accuracy " << running_acc << endl; 
+      cout << "Average log-loss " << running_ll << endl; 
   }
 
   void Identification1(MatrixXd &A) {

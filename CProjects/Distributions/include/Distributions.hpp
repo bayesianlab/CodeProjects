@@ -170,7 +170,54 @@ double logmvtn_conditional_pdf_freeze(const MatrixXd &X, const int freeze,
                                       const MatrixXd &Sigma,
                                       const RowVectorXd &constraints);
 
-                       
+double tnormcdf_onesided(double x, double left_constraint, double mu,
+                             double sigma2);                     
+
+class MVTNProbs {
+public:
+  double batch_prob=0; 
+  double batch_var=0; 
+  double crb(const RowVectorXd &mu, const MatrixXd &Sigma,
+             const RowVectorXd &constraints, const int G, const int bn) {
+    MatrixXd Sample;
+    int K = Sigma.rows();
+    // Main MCMC
+    Sample = mvtnrnd(mu, constraints, mu, Sigma, G, bn);
+    VectorXd zstar = Sample.rowwise().mean();
+    double ordinate =
+        logmvtn_conditional_pdf_freeze(Sample, 0, mu, Sigma, constraints);
+    int ReducedRuns = mu.size() - 2;
+    for (int r = 1; r <= ReducedRuns; ++r) {
+      Sample =
+          mvtnrnd_freeze(r, zstar.transpose(), mu, Sigma, constraints, G, bn);
+      zstar = Sample.rowwise().mean();
+      ordinate +=
+          logmvtn_conditional_pdf_freeze(Sample, r, mu, Sigma, constraints);
+    }
+    MatrixXd zstar_end = zstar;
+    ordinate += logmvtn_conditional_pdf_freeze(zstar_end, K - 1, mu, Sigma,
+                                               constraints);
+    return logmvnpdf(zstar_end.transpose(), mu, Sigma) - ordinate;
+  }
+
+  void batch_chib(const RowVectorXd &mu, const MatrixXd &Sigma,
+                   const RowVectorXd &constraints, const int G, const int bn,
+                   int batches) {
+    VectorXd batch_results(batches);
+    for (int b = 0; b < batches; ++b) {
+      batch_results(b) = crb(mu, Sigma, constraints, G, bn);
+    }
+    batch_prob = batch_results.mean();
+    batch_var = variance(batch_results, 1).value();
+  }                           
+};
+
+
+MatrixXd simple_probit_probs(const MatrixXd &Zt);
+
+double accuracy(const MatrixXd &Sample, const MatrixXd &yt);
+
+double log_loss(const MatrixXd &Predictions, const MatrixXd &Actuals);      
 
 /*
 class Dist {
