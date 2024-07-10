@@ -85,7 +85,7 @@ public:
   Matrix<int, Dynamic, 2> InfoMat;
   std::vector<MatrixXd> Xtk;
   int sigmaAcceptance = 0;
-  string file_name;
+  string path_name; 
 
   pair<vector<VectorXd>, vector<MatrixXd>> setPriorBlocks(int K) {
     int blocks = K - 1;
@@ -126,7 +126,7 @@ public:
   void setModel(const MatrixXd &yt, const MatrixXd &Xt, const VectorXd &beta,
                 const MatrixXd _gammas, const RowVectorXd &b0,
                 const MatrixXd &B0, const Matrix<int, Dynamic, 2> &InfoMat,
-                string _file_name) {
+                string _path_name) {
     this->b0 = b0;
     this->B0 = B0;
     this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
@@ -139,7 +139,7 @@ public:
     this->gammas = _gammas;
     g0 = RowVectorXd::Zero(_gammas.cols());
     G0 = createArPriorCovMat(1, _gammas.cols());
-    file_name = _file_name;
+    path_name = _path_name;
   }
 
   void runModel(int Sims, int burnin) {
@@ -257,20 +257,16 @@ public:
       }
     }
 
-
-    string date = dateString();
-    string ext = ".txt";
-    string path = "mvprobit_" + file_name + "_" + date + "/";
-    std::filesystem::create_directories(path);
-    fname = path + file_name + "_" + to_string(T) + "_" + to_string(K) + ext;
+    std::filesystem::create_directories(path_name);
+    fname = path_name + "/main_MCMC_run"+ ".txt";
     std::ofstream file;
     file.open(fname);
     if (file.is_open()) {
-      storePosterior(path + "beta.csv", BetaPosterior);
-      storePosterior(path + "loadings.csv", LoadingPosterior);
-      storePosterior(path + "gammas.csv", gammaPosterior);
-      storePosterior(path + "factors.csv", FactorPosterior);
-      storePosterior(path + "factorVariance.csv", FactorVariancePosterior);
+      storePosterior(path_name + "/beta.csv", BetaPosterior);
+      storePosterior(path_name + "/loadings.csv", LoadingPosterior);
+      storePosterior(path_name + "/gammas.csv", gammaPosterior);
+      storePosterior(path_name + "/factors.csv", FactorPosterior);
+      storePosterior(path_name + "/factorVariance.csv", FactorVariancePosterior);
       file << "Full Conditional Version run with: " << Sims << " "
            << "burnin " << burnin << " " << T << " " << K << endl;
       file << "Beta avg" << endl;
@@ -289,17 +285,16 @@ public:
     }
   }
 
-  void ValidationRun(const MatrixXd &Xt, const MatrixXd &yt){
+  void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest){
     MVTNProbs mvtn; 
-    int K = yt.rows(); 
-    int T = yt.cols();
+    int K = ytest.rows(); 
+    int T = ytest.cols();
     double acc = 0; 
     double running_acc = 0; 
     double running_ll = 0; 
     double ll = 0; 
-    MatrixXd surX = surForm(Xt, K); 
+    MatrixXd surX = surForm(Xtest, K); 
     for(int i = 0; i < 1; ++i){
-      cout << i << endl; 
       beta = BetaPosterior[i];
       MatrixXd Xbeta = surX*beta;
       Xbeta.resize(K,T);
@@ -307,21 +302,61 @@ public:
       MatrixXd Ft = FactorPosterior[i];
       MatrixXd AF = A*Ft ;
       MatrixXd zt = Xbeta + AF; 
-      acc += accuracy(zt, yt);
+      acc += accuracy(zt, ytest);
       running_acc = acc/(i+1);
       cout << "Acc. " << running_acc << endl; 
       MatrixXd Pij = simple_probit_probs(zt);   
-      ll += log_loss(Pij, yt); 
+      ll += log_loss(Pij, ytest); 
       running_ll = ll/(i+1); 
       cout << "Log-loss " << running_ll << endl; 
-      // for(int j = 0; j < zt.cols(); ++j){
-      //   mvtn.batch_chib(zt.col(j).transpose(), Sigma, yt.col(j).transpose(), 110, 10, 50);
-      // }
 
     }
-    
+    beta = mean(BetaPosterior);
+    MatrixXd Xbeta = surX*beta;
+    Xbeta.resize(K,T);
+    MatrixXd A = mean(LoadingPosterior);
+    MatrixXd Ft = mean(FactorPosterior);
+    MatrixXd AF = A*Ft ;
+    MatrixXd zt = Xbeta + AF; 
+    vector<double> probs; 
+    vector<double> prob_var; 
+    MatrixXd Sigma = MatrixXd::Identity(K,K);
+    for(int j = 0; j < zt.cols(); ++j){
+      cout << "Orthan num " << j << endl; 
+      double p = mvtn.crb(zt.col(j).transpose(), Sigma, ytest.col(j).transpose(), 11, 1);
+      // probs.push_back(mvtn.batch_prob);
+      // prob_var.push_back(mvtn.batch_var);
+      probs.push_back(p);
+    }
       cout << "Average accuracy " << running_acc << endl; 
       cout << "Average log-loss " << running_ll << endl; 
+
+    std::filesystem::create_directories(path_name);
+    std::ofstream file;
+    string summary_fname = path_name + "/vaidation_summary"+ ".txt";
+    file.open(summary_fname);
+    if(file.is_open()){
+      file << "Average accuracy " << running_acc << endl; 
+      file << "Average log-loss " << running_ll << endl;    
+    }
+    file.close();
+
+    file.open(path_name+"/orthant_probs.csv");
+    file <<"OrthantProbabilities," << endl; 
+    if(file.is_open()){
+      for(int i = 0; i < probs.size(); ++i){
+        file << probs[i] << "," << endl; 
+      }
+    }
+    file.close();
+    // file.open(path_name+"/orthant_probs_vars.csv");
+    // file <<"OrthantProbabilitiesVars," << endl; 
+    // if(file.is_open()){
+    //   for(int i = 0; i < prob_var.size(); ++i){
+    //     file << prob_var[i] << "," << endl; 
+    //   }
+    // }
+    // file.close(); 
   }
 
   void Identification1(MatrixXd &A) {

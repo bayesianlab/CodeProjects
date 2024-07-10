@@ -57,19 +57,25 @@ int main() {
   // P.transpose().resize(5,2);
   // cout << P << endl;
 
-  int J = 6;
-  MatrixXd Sig1 = CreateSigma(-.7, J);
-  RowVectorXd mu = RowVectorXd::Zero(J);
+  int J = 8;
+  // MatrixXd Sig1 = CreateSigma(-.7, J);
+  MatrixXd Sig1 = MatrixXd::Identity(J,J);
+  RowVectorXd mu = RowVectorXd::Ones(J).array() + 1;
   RowVectorXd orthant = RowVectorXd::Ones(J);
-  mu(0) = 0;
-  mu(1) = 0.5;
-  mu(2) = 1;
-  mu(3) = 0;
-  mu(4) = .5;
-  mu(5) = 1; 
+  
   // cout << crb(mu, Sig1, orthant, 100, 10) << endl;
   MVTNProbs probs; 
-  probs.batch_chib(mu, Sig1, orthant, 100, 10, 100);
-  cout << probs.batch_prob << endl; 
-  cout << probs.batch_var << endl; 
+  double a = probs.crb(mu, Sig1, orthant, 10, 1);
+  cout << a << endl; 
+
+  cout << "Test logavg" << endl; 
+  VectorXd la(4);
+  la(0) = log(4);
+  la(1) = log(5.2);
+  la(2) = log(1); 
+  la(3) = log(10);
+  cout << logavg(la) << endl;
+ 
+  // cout << probs.batch_prob << endl; 
+  // cout << probs.batch_var << endl; 
 }

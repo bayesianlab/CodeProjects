@@ -58,9 +58,11 @@ int main() {
 	// }
 
 	MVP mv;
+	string date = dateString();
+	string path_name = "mvprobit_factor_" + date;
 	VectorXd b = unifrnd(0,1, K);
 	mv.setModel(yt, gfp.Xt, b, phi, gfp.b0, 10*gfp.B0, 
-	            InfoMat, "factor");
+	            InfoMat, path_name);
 	mv.runFactorModel(100, 10);
 
 	MatrixXd Fbar = mean(mv.FactorPosterior);
