@@ -102,6 +102,8 @@ int main(){
     else{
         cout << "Test tnormcdf x=-1, m=.5, v=1, right = 0 passed. " << endl; 
     }
+
+    
 }
 
 

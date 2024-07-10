@@ -329,7 +329,7 @@ double inverseCDFTruncatedNormal(const double &lowercut)
   double Fa, q1;
   Fa = normalCDF(lowercut);
   q1 = 1 - Fa;
-  return stats::qnorm(Fa + unifrnd(0, 1) * q1);
+  return stats::qnorm(Fa + (unifrnd(0, 1) * q1));
 }
 
 VectorXd NormalTruncatedPositive(const double &mu, const double &sigma2, const int &n)
@@ -481,7 +481,7 @@ double logmvtn_conditional_pdf_freeze(const MatrixXd &X, const int freeze,
     Hknk = NotK.row(freeze);
     condvar = 1.0 / Precision(freeze, freeze);
     condmean = mu(freeze) - condvar * Hknk * (X.col(i) - mu.transpose());
-    double xi = X(freeze, i);
+      double xi = X(freeze, i);
     if (constraints(freeze) == 1) {
       result(i) = logtnormpdf_onesided(xi, 0, condmean, condvar);
     } else {
@@ -492,10 +492,8 @@ double logmvtn_conditional_pdf_freeze(const MatrixXd &X, const int freeze,
 }
 
 double lognormalpdf(double x, double mu, double sigma2) {
-  return -0.5 * log(2 * M_PI * sigma2) - (pow(x - mu, 2) / (2 * sigma2));
+  return -0.5 * (log(2 * M_PI * sigma2) + (pow(x - mu, 2) / sigma2));
 }
-
-
 
 double tnormpdf(double a, double b, double mu, double sigma2, double x) {
   double sigma = sqrt(sigma);
@@ -505,14 +503,13 @@ double tnormpdf(double a, double b, double mu, double sigma2, double x) {
   return normalpdf((x - mu) / sigma, 0, 1) / sigmaZ;
 }
 
-
-
 double logtnormpdf_onesided(double x, double left_constraint, double mu,
-                             double sigma2) {
+                            double sigma2) {
   double sigma = sqrt(sigma2);
-  double alpha = (left_constraint- mu) / sigma;
+  double alpha = (left_constraint - mu) / sigma;
   double logsigmaZ = log(sigma * (1 - normalCDF(alpha)));
-  return lognormalpdf((x-mu)/sigma, 0 ,1) - logsigmaZ;
+  double z = (x - mu) / sigma;
+  return lognormalpdf(z, 0, 1) - logsigmaZ;
 }
 
 double tnormcdf_onesided(double x, double left_constraint, double mu,
