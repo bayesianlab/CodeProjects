@@ -520,16 +520,13 @@ double tnormcdf_onesided(double x, double left_constraint, double mu,
   return (normalCDF(xi) - normalCDF(alpha)) / (1 - normalCDF(alpha));
 }
 
-double accuracy(const MatrixXd &Sample, const MatrixXd &Actuals){
+double accuracy(const MatrixXi &Sample, const MatrixXi &Actuals){
   int K = Sample.rows() ; 
   int T = Sample .cols(); 
   int correct_labels = 0;
   for(int i = 0; i < T; ++i){
     for (int j = 0; j < K; ++j){
-      if((Sample(j,i) > 0) and (Actuals(j,i)>0)){
-        correct_labels++; 
-      }
-      else if((Sample(j,i) < 0) and (Actuals(j,i)<0)){
+      if(Sample(j,i)==Actuals(j,i)){
         correct_labels++; 
       }
     }

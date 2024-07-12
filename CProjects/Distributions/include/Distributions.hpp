@@ -213,7 +213,7 @@ public:
 
 MatrixXd simple_probit_probs(const MatrixXd &Zt);
 
-double accuracy(const MatrixXd &Sample, const MatrixXd &yt);
+double accuracy(const MatrixXi &Sample, const MatrixXi &yt);
 
 double log_loss(const MatrixXd &Predictions, const MatrixXd &Actuals);
 

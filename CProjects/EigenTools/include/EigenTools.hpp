@@ -4,9 +4,9 @@
 #include <math.h>
 
 #include <Eigen/Dense>
+#include <Eigen/KroneckerProduct>
 #include <Eigen/Sparse>
 #include <chrono>
-#include <Eigen/KroneckerProduct>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -17,15 +17,21 @@ using namespace Eigen;
 high_resolution_clock::time_point timeit();
 typedef SparseMatrix<double> SparseDouble;
 
-
-void writeCsv(string name, const MatrixXd &matrix);
+template <typename T> void writeCsv(string name, const MatrixBase<T> &matrix) {
+  ofstream file(name.c_str());
+  if (file.is_open()) {
+    file << matrix << '\n';
+    file.close();
+  } else {
+    cout << "error" << endl;
+  }
+}
 
 MatrixXd TriangularSolver(const MatrixXd &AAT, int cols);
 
 double timeit(high_resolution_clock::time_point &start);
 
-template <typename D>
-void dim(const EigenBase<D> &M) {
+template <typename D> void dim(const EigenBase<D> &M) {
   cout << M.rows() << " x " << M.cols() << endl;
 }
 
@@ -126,8 +132,7 @@ SparseDouble CreateBigDiag(const MatrixBase<Derived1> &diagonalMat,
   return EmptyD;
 }
 
-template <typename D>
-MatrixXd surForm(const MatrixBase<D> &stackedx, int K) {
+template <typename D> MatrixXd surForm(const MatrixBase<D> &stackedx, int K) {
   int KT = stackedx.rows();
   int cols = stackedx.cols();
   int T = KT / K;
@@ -137,8 +142,7 @@ MatrixXd surForm(const MatrixBase<D> &stackedx, int K) {
   return KronIone.array() * stackedx.replicate(1, K).array();
 }
 
-template <typename D>
-bool isPD(const MatrixBase<D> &x) {
+template <typename D> bool isPD(const MatrixBase<D> &x) {
   if (x.llt().info() == NumericalIssue) {
     return false;
   } else {
@@ -228,8 +232,7 @@ void bigBlockDiag(SparseMatrix<D> &BigSparseBlock,
   }
 }
 
-template <typename T>
-MatrixXd mean(const std::vector<T> &X) {
+template <typename T> MatrixXd mean(const std::vector<T> &X) {
   MatrixXd avg;
   avg.setZero(X[0].rows(), X[0].cols());
   for (T i : X) {

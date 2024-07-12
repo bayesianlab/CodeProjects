@@ -294,6 +294,8 @@ public:
     double running_ll = 0;
     double ll = 0;
     MatrixXd surX = surForm(Xtest, K);
+    MatrixXd AvgZ(K,T);
+    AvgZ.setZero(); 
     for (int i = 0; i < 1; ++i) {
       beta = BetaPosterior[i];
       MatrixXd Xbeta = surX * beta;
@@ -302,14 +304,81 @@ public:
       MatrixXd Ft = FactorPosterior[i];
       MatrixXd AF = A * Ft;
       MatrixXd zt = Xbeta + AF;
-      acc += accuracy(zt, ytest);
-      running_acc = acc / (i + 1);
-      cout << "Acc. " << running_acc << endl;
       MatrixXd Pij = simple_probit_probs(zt);
       ll += log_loss(Pij, ytest);
       running_ll = ll / (i + 1);
       cout << "Log-loss " << running_ll << endl;
     }
+    MatrixXi ypred = label_data(AvgZ);
+    string ypred_fname = path_name + "/ypred.csv";
+    writeCsv(ypred_fname, ypred); 
+    string yactual_fname = path_name + "/ytest.csv";
+    writeCsv(yactual_fname, ytest); 
+    MatrixXi ytest_labeled = label_data(ytest); 
+    double post_acc = accuracy(ypred, ytest_labeled); 
+    MatrixXd Pij = simple_probit_probs(AvgZ); 
+    double post_ll = log_loss(Pij, ytest); 
+    cout << "Average accuracy " << running_acc << endl;
+    cout << "Average log-loss " << running_ll << endl;
+    std::filesystem::create_directories(path_name);
+    std::ofstream file;
+    string summary_fname = path_name + "/vaidation_summary" + ".txt";
+    file.open(summary_fname);
+    if (file.is_open()) {
+      file << "Running log-loss (all posterior samples averaged) " << running_ll << endl;
+      file << "Posterior mean accuracy " << post_acc << endl; 
+      file << "Posterior mean log loss " << post_ll << endl; 
+    }
+    file.close();
+  }
+
+void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int bng, int batches) {
+    MVTNProbs mvtn;
+    int K = ytest.rows();
+    int T = ytest.cols();
+    double acc = 0;
+    double running_acc = 0;
+    double running_ll = 0;
+    double ll = 0;
+    MatrixXd surX = surForm(Xtest, K);
+    MatrixXd AvgZ(K,T);
+    AvgZ.setZero(); 
+    for (int i = 0; i < 1; ++i) {
+      beta = BetaPosterior[i];
+      MatrixXd Xbeta = surX * beta;
+      Xbeta.resize(K, T);
+      MatrixXd A = LoadingPosterior[i];
+      MatrixXd Ft = FactorPosterior[i];
+      MatrixXd AF = A * Ft;
+      MatrixXd zt = Xbeta + AF;
+      AvgZ += zt;
+      AvgZ = AvgZ/(i+1);  
+      MatrixXd Pij = simple_probit_probs(zt);
+      ll += log_loss(Pij, ytest);
+      running_ll = ll / (i + 1);
+      cout << "Log-loss " << running_ll << endl;
+    }
+    MatrixXi ypred = label_data(AvgZ);
+    string ypred_fname = path_name + "/ypred.csv";
+    writeCsv(ypred_fname, ypred); 
+    string yactual_fname = path_name + "/ytest.csv";
+    writeCsv(yactual_fname, ytest); 
+    MatrixXi ytest_labeled = label_data(ytest); 
+    double post_acc = accuracy(ypred, ytest_labeled); 
+    MatrixXd Pij = simple_probit_probs(AvgZ); 
+    double post_ll = log_loss(Pij, ytest); 
+    cout << "Average log-loss " << running_ll << endl;
+    std::filesystem::create_directories(path_name);
+    std::ofstream file;
+    string summary_fname = path_name + "/vaidation_summary" + ".txt";
+    file.open(summary_fname);
+    if (file.is_open()) {
+      file << "Running log-loss (all posterior samples averaged) " << running_ll << endl;
+      file << "Posterior mean accuracy " << post_acc << endl; 
+      file << "Posterior mean log loss " << post_ll << endl; 
+    }
+    file.close();
+
     beta = mean(BetaPosterior);
     MatrixXd Xbeta = surX * beta;
     Xbeta.resize(K, T);
@@ -320,31 +389,55 @@ public:
     vector<double> probs;
     vector<double> prob_var;
     MatrixXd Sigma = MatrixXd::Identity(K, K);
-    int G = 1000;
-    int bng = 100; 
-    int batches = 10; 
     MatrixXd OrthantProbs(batches, zt.cols());
     for (int j = 0; j < zt.cols(); ++j) {
-      cout << "Orthan num " << j << endl;
+      cout << "Orthant num " << j << endl;
       OrthantProbs.col(j) =
           mvtn.batch_crb(zt.col(j).transpose(), Sigma, ytest.col(j).transpose(),
                          G, bng, batches);
     }
     string orthant_fname = path_name + "/orthant_probs.csv"; 
-    writeCsv(orthant_fname, OrthantProbs);
-    cout << "Average accuracy " << running_acc << endl;
-    cout << "Average log-loss " << running_ll << endl;
+    writeCsv(orthant_fname, OrthantProbs); 
+  }
 
-    std::filesystem::create_directories(path_name);
-    std::ofstream file;
-    string summary_fname = path_name + "/vaidation_summary" + ".txt";
-    file.open(summary_fname);
-    if (file.is_open()) {
-      file << "Average accuracy " << running_acc << endl;
-      file << "Average log-loss " << running_ll << endl;
+  MatrixXi label_data(const MatrixXd &latent_data) {
+    int K = latent_data.rows();
+    int T = latent_data.cols();
+    MatrixXi LabeledData(K,T); 
+    for (int t = 0; t < T; ++t) {
+      for (int k = 0; k < K; ++k) {
+        if(latent_data(k,t) > 0){
+          LabeledData(k,t) = 1;
+        }
+        else{
+          LabeledData(k,t) = 0; 
+        }
+      }
     }
-    file.close();
+    return LabeledData; 
+  }
 
+  void Forecast(const MatrixXd &Xfuture) {
+    int K = LoadingPosterior[0].rows();
+    int T = Xfuture.rows()/K; 
+    if(not (Xfuture.rows()%K)){
+      throw invalid_argument("Xfuture rows is not multiple of K (equations in yt).");
+    }
+    MatrixXd surX = surForm(Xfuture, K);
+    MatrixXd AvgZ(K,T);
+    AvgZ.setZero(); 
+    for (int i = 0; i < 1; ++i) {
+      beta = BetaPosterior[i];
+      MatrixXd Xbeta = surX * beta;
+      Xbeta.resize(K, T);
+      MatrixXd A = LoadingPosterior[i];
+      MatrixXd Ft = FactorPosterior[i];
+      MatrixXd AF = A * Ft;
+      MatrixXd zt = Xbeta + AF;
+      AvgZ += zt;
+      AvgZ = AvgZ/(i+1);  
+    }
+    cout << AvgZ << endl; 
   }
 
   void Identification1(MatrixXd &A) {
