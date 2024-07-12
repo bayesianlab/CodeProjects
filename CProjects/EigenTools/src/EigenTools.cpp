@@ -12,20 +12,6 @@ double timeit(high_resolution_clock::time_point &start) {
   return sec;
 }
 
-void writeCsv(string name, const MatrixXd &matrix)
-{
-    ofstream file(name.c_str());
-    if (file.is_open())
-    {
-        file << matrix << '\n';
-        file.close();
-    }
-    else
-    {
-        cout << "error" << endl;
-    }
-}
-
 MatrixXd TriangularSolver(const MatrixXd &AAT, int cols) {
   MatrixXd B= MatrixXd::Zero(AAT.rows(), cols);
   for (int j = 0; j < cols; ++j) {

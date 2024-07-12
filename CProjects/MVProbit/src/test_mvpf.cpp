@@ -9,7 +9,7 @@ using namespace std;
 using namespace Eigen;
 int main() {
 	cout << " Test mvp" << endl;
-	int T = 10;
+	int T = 150;
 	int K = 8;
 
 	GenerateFactorData gfp;
@@ -61,14 +61,18 @@ int main() {
 	string date = dateString();
 	string path_name = "mvprobit_factor_" + date;
 	VectorXd b = unifrnd(0,1, K);
-	mv.setModel(yt, gfp.Xt, b, phi, gfp.b0, 10*gfp.B0, 
+	MatrixXd ytrain = yt.block(0,0,K, 100); 
+	MatrixXd Xtrain = gfp.Xt.block(0,0, K*100, gfp.Xt.cols()); 
+	MatrixXd ytest = yt.block(0, 100, K, yt.cols()- 100); 
+	MatrixXd Xtest = gfp.Xt.block(K*100, 0, gfp.Xt.rows() - (K*100), gfp.Xt.cols()); 
+	mv.setModel(ytrain, Xtrain, b, phi, gfp.b0, 10*gfp.B0, 
 	            InfoMat, path_name);
 	mv.runFactorModel(100, 10);
 
 	MatrixXd Fbar = mean(mv.FactorPosterior);
 	MatrixXd Betabar = mean(mv.BetaPosterior);
 	
-	mv.ValidationRun(gfp.Xt, yt);
+	mv.ValidationRun(Xtrain, ytrain, 100, 10, 10);
 
 	// Betabar.resize(K, gfp.Xt.cols() + InfoMat.rows());
 	// MatrixXd A = Betabar.rightCols(Fbar.rows());
