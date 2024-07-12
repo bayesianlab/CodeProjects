@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
     }
   }
 
-  // writeToCSVfile("mllogfiles/marginal_likelihoods.csv",
+  // writeCsv("mllogfiles/marginal_likelihoods.csv",
   // marginal_likelihoods);
 
   return 0;

@@ -6,12 +6,13 @@
 #include <string> 
 #include <boost/format.hpp>
 #include <Eigen/Dense>
+#include "EigenTools.hpp"
 
 using namespace std; 
 using namespace Eigen; 
 using namespace boost;
 
-void writeToCSVfile(string name, const MatrixXd &matrix);
+
 
 int plotter(string filename, const VectorXd &A);
 

@@ -57,13 +57,15 @@ int main() {
   // P.transpose().resize(5,2);
   // cout << P << endl;
 
-  int J = 8;
-  // MatrixXd Sig1 = CreateSigma(-.7, J);
-  MatrixXd Sig1 = MatrixXd::Identity(J,J);
-  RowVectorXd mu = RowVectorXd::Ones(J).array() + 1;
+  int J = 3;
+  MatrixXd Sig1 = CreateSigma(-.7, J);
+  // MatrixXd Sig1 = MatrixXd::Identity(J,J);
+  RowVectorXd mu(3);
+  mu << 0, .5, 1;
+
   RowVectorXd orthant = RowVectorXd::Ones(J);
   
-  // cout << crb(mu, Sig1, orthant, 100, 10) << endl;
+  // // cout << crb(mu, Sig1, orthant, 100, 10) << endl;
   MVTNProbs probs; 
   double a = probs.crb(mu, Sig1, orthant, 10, 1);
   cout << a << endl; 

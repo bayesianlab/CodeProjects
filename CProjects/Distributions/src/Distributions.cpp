@@ -11,7 +11,7 @@ double logmvnpdf(const RowVectorXd &x, const RowVectorXd &mu,
 
   int p = Sig.cols();
   double c = -.5 * (p * log(2 * M_PI) + logdet(Sig));
-  double v = -.5 * ((x - mu) * Sig.llt().solve((x - mu).transpose())).value() + c;
+  double v = -.5 * ((x - mu) * (Sig.llt().solve((x - mu).transpose()))).value() + c;
   return v;
 }
 
@@ -372,7 +372,7 @@ MatrixXd mvtnrnd(const RowVectorXd &init, const RowVectorXd &constraints, const 
     {
       Hknk = NotK.row(k);
       condvar = 1.0 / Precision(k, k);
-      condmean = mu(k) - condvar * Hknk * (Sample.col(0) - mu.transpose());
+      condmean = mu(k) - condvar * Hknk * (Sample.col(n) - mu.transpose());
       if (constraints(k) == 1)
       {
         Sample(k, n) = NormalTruncatedPositive(condmean, condvar, 1).value();
@@ -409,7 +409,7 @@ MatrixXd mvtnrnd_freeze(const int freeze_row, const RowVectorXd &init,
     for (int k = freeze_row + 1; k < K; ++k) {
       Hknk = NotK.row(k);
       condvar = 1.0 / Precision(k, k);
-      condmean = mu(k) - condvar * Hknk * (Sample.col(0) - mu.transpose());
+      condmean = mu(k) - condvar * Hknk * (Sample.col(n) - mu.transpose());
       if (constraints(k) == 1) {
         Sample(k, n) = NormalTruncatedPositive(condmean, condvar, 1).value();
       } else {
@@ -452,7 +452,7 @@ void logmvtn_conditional_pdf(const VectorXd &x, const RowVectorXd &mu, const Mat
     condvar = 1.0 / Precision(k, k);
     condmean = mu(k) - condvar * Hknk * (x - mu.transpose());
     double xi = x(k); 
-    if (constraints(k) == 1)
+    if (constraints(k) > 1)
     {
       result += logtnormpdf_onesided(xi, 0, condmean, condvar);
     }
@@ -464,9 +464,9 @@ void logmvtn_conditional_pdf(const VectorXd &x, const RowVectorXd &mu, const Mat
 }
 
 double logmvtn_conditional_pdf_freeze(const MatrixXd &X, const int freeze,
-                                    const RowVectorXd &mu,
-                                    const MatrixXd &Sigma,
-                                    const RowVectorXd &constraints) {
+                                      const RowVectorXd &mu,
+                                      const MatrixXd &Sigma,
+                                      const RowVectorXd &constraints) {
   int K = Sigma.rows();
   MatrixXd Precision = Sigma.llt().solve(MatrixXd::Identity(K, K));
   MatrixXd NotK = Precision;
@@ -481,8 +481,8 @@ double logmvtn_conditional_pdf_freeze(const MatrixXd &X, const int freeze,
     Hknk = NotK.row(freeze);
     condvar = 1.0 / Precision(freeze, freeze);
     condmean = mu(freeze) - condvar * Hknk * (X.col(i) - mu.transpose());
-      double xi = X(freeze, i);
-    if (constraints(freeze) == 1) {
+    double xi = X(freeze, i);
+    if (constraints(freeze) > 0) {
       result(i) = logtnormpdf_onesided(xi, 0, condmean, condvar);
     } else {
       result(i) = logtnormpdf_onesided(-xi, 0, -condmean, condvar);
