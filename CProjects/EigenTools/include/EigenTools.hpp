@@ -18,6 +18,8 @@ high_resolution_clock::time_point timeit();
 typedef SparseMatrix<double> SparseDouble;
 
 
+void writeCsv(string name, const MatrixXd &matrix);
+
 MatrixXd TriangularSolver(const MatrixXd &AAT, int cols);
 
 double timeit(high_resolution_clock::time_point &start);

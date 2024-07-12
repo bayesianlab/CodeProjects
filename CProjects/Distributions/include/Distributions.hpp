@@ -171,13 +171,10 @@ double logmvtn_conditional_pdf_freeze(const MatrixXd &X, const int freeze,
                                       const RowVectorXd &constraints);
 
 double tnormcdf_onesided(double x, double left_constraint, double mu,
-                             double sigma2);
+                         double sigma2);
 
 class MVTNProbs {
 public:
-  double batch_prob = 0;
-  double batch_var = 0;
-
   double crb(const RowVectorXd &mu, const MatrixXd &Sigma,
              const RowVectorXd &constraints, const int G, const int bn) {
     MatrixXd Sample;
@@ -185,46 +182,32 @@ public:
     // Main MCMC
     Sample = mvtnrnd(mu, constraints, mu, Sigma, G, bn);
     VectorXd zstar = Sample.rowwise().mean();
-    Sample.row(0) = zstar(0) * RowVectorXd::Ones(Sample.cols()); 
-    cout << Sample << endl; 
+    double fzstar = logmvnpdf(zstar.transpose(), mu, Sigma);
+    Sample.row(0) = zstar(0) * RowVectorXd::Ones(Sample.cols());
     double ordinate =
         logmvtn_conditional_pdf_freeze(Sample, 0, mu, Sigma, constraints);
-    cout << ordinate << endl; 
     int ReducedRuns = mu.size() - 2;
     for (int r = 1; r <= ReducedRuns; ++r) {
-      cout << "rr " << r << endl; 
       Sample =
           mvtnrnd_freeze(r, zstar.transpose(), mu, Sigma, constraints, G, bn);
-      zstar = Sample.rowwise().mean();
       ordinate +=
           logmvtn_conditional_pdf_freeze(Sample, r, mu, Sigma, constraints);
-      cout << ordinate << endl; 
+      zstar = Sample.rowwise().mean();
     }
     MatrixXd zstar_end = zstar;
     ordinate += logmvtn_conditional_pdf_freeze(zstar_end, K - 1, mu, Sigma,
                                                constraints);
-    cout << ordinate << endl;                                             
-    double fzstar = logmvnpdf(zstar_end.transpose(), mu, Sigma);
-    if (fzstar > ordinate) {
-      cout << ordinate << endl;
-      cout << fzstar << endl;
-      cout << endl;
-      cout << zstar.transpose() << endl;
-      cout << mu << endl;
-      cout << constraints << endl;
-    }
     return fzstar - ordinate;
   }
 
-  void batch_crb(const RowVectorXd &mu, const MatrixXd &Sigma,
-                   const RowVectorXd &constraints, const int G, const int bn,
-                   int batches) {
+  VectorXd batch_crb(const RowVectorXd &mu, const MatrixXd &Sigma,
+                     const RowVectorXd &constraints, const int G, const int bn,
+                     int batches) {
     VectorXd batch_results(batches);
     for (int b = 0; b < batches; ++b) {
       batch_results(b) = crb(mu, Sigma, constraints, G, bn);
     }
-    batch_prob = batch_results.mean();
-    batch_var = variance(batch_results, 1).value();
+    return batch_results;
   }
 };
 
@@ -232,7 +215,7 @@ MatrixXd simple_probit_probs(const MatrixXd &Zt);
 
 double accuracy(const MatrixXd &Sample, const MatrixXd &yt);
 
-double log_loss(const MatrixXd &Predictions, const MatrixXd &Actuals);      
+double log_loss(const MatrixXd &Predictions, const MatrixXd &Actuals);
 
 /*
 class Dist {

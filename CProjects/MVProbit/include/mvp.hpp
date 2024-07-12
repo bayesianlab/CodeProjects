@@ -285,78 +285,66 @@ public:
     }
   }
 
-  void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest){
-    MVTNProbs mvtn; 
-    int K = ytest.rows(); 
+  void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest) {
+    MVTNProbs mvtn;
+    int K = ytest.rows();
     int T = ytest.cols();
-    double acc = 0; 
-    double running_acc = 0; 
-    double running_ll = 0; 
-    double ll = 0; 
-    MatrixXd surX = surForm(Xtest, K); 
-    for(int i = 0; i < 1; ++i){
+    double acc = 0;
+    double running_acc = 0;
+    double running_ll = 0;
+    double ll = 0;
+    MatrixXd surX = surForm(Xtest, K);
+    for (int i = 0; i < 1; ++i) {
       beta = BetaPosterior[i];
-      MatrixXd Xbeta = surX*beta;
-      Xbeta.resize(K,T);
+      MatrixXd Xbeta = surX * beta;
+      Xbeta.resize(K, T);
       MatrixXd A = LoadingPosterior[i];
       MatrixXd Ft = FactorPosterior[i];
-      MatrixXd AF = A*Ft ;
-      MatrixXd zt = Xbeta + AF; 
+      MatrixXd AF = A * Ft;
+      MatrixXd zt = Xbeta + AF;
       acc += accuracy(zt, ytest);
-      running_acc = acc/(i+1);
-      cout << "Acc. " << running_acc << endl; 
-      MatrixXd Pij = simple_probit_probs(zt);   
-      ll += log_loss(Pij, ytest); 
-      running_ll = ll/(i+1); 
-      cout << "Log-loss " << running_ll << endl; 
-
+      running_acc = acc / (i + 1);
+      cout << "Acc. " << running_acc << endl;
+      MatrixXd Pij = simple_probit_probs(zt);
+      ll += log_loss(Pij, ytest);
+      running_ll = ll / (i + 1);
+      cout << "Log-loss " << running_ll << endl;
     }
     beta = mean(BetaPosterior);
-    MatrixXd Xbeta = surX*beta;
-    Xbeta.resize(K,T);
+    MatrixXd Xbeta = surX * beta;
+    Xbeta.resize(K, T);
     MatrixXd A = mean(LoadingPosterior);
     MatrixXd Ft = mean(FactorPosterior);
-    MatrixXd AF = A*Ft ;
-    MatrixXd zt = Xbeta + AF; 
-    vector<double> probs; 
-    vector<double> prob_var; 
-    MatrixXd Sigma = MatrixXd::Identity(K,K);
-    for(int j = 0; j < zt.cols(); ++j){
-      cout << "Orthan num " << j << endl; 
-      double p = mvtn.crb(zt.col(j).transpose(), Sigma, ytest.col(j).transpose(), 11, 1);
-      // probs.push_back(mvtn.batch_prob);
-      // prob_var.push_back(mvtn.batch_var);
-      probs.push_back(p);
+    MatrixXd AF = A * Ft;
+    MatrixXd zt = Xbeta + AF;
+    vector<double> probs;
+    vector<double> prob_var;
+    MatrixXd Sigma = MatrixXd::Identity(K, K);
+    int G = 1000;
+    int bng = 100; 
+    int batches = 10; 
+    MatrixXd OrthantProbs(batches, zt.cols());
+    for (int j = 0; j < zt.cols(); ++j) {
+      cout << "Orthan num " << j << endl;
+      OrthantProbs.col(j) =
+          mvtn.batch_crb(zt.col(j).transpose(), Sigma, ytest.col(j).transpose(),
+                         G, bng, batches);
     }
-      cout << "Average accuracy " << running_acc << endl; 
-      cout << "Average log-loss " << running_ll << endl; 
+    string orthant_fname = path_name + "/orthant_probs.csv"; 
+    writeCsv(orthant_fname, OrthantProbs);
+    cout << "Average accuracy " << running_acc << endl;
+    cout << "Average log-loss " << running_ll << endl;
 
     std::filesystem::create_directories(path_name);
     std::ofstream file;
-    string summary_fname = path_name + "/vaidation_summary"+ ".txt";
+    string summary_fname = path_name + "/vaidation_summary" + ".txt";
     file.open(summary_fname);
-    if(file.is_open()){
-      file << "Average accuracy " << running_acc << endl; 
-      file << "Average log-loss " << running_ll << endl;    
+    if (file.is_open()) {
+      file << "Average accuracy " << running_acc << endl;
+      file << "Average log-loss " << running_ll << endl;
     }
     file.close();
 
-    file.open(path_name+"/orthant_probs.csv");
-    file <<"OrthantProbabilities," << endl; 
-    if(file.is_open()){
-      for(int i = 0; i < probs.size(); ++i){
-        file << probs[i] << "," << endl; 
-      }
-    }
-    file.close();
-    // file.open(path_name+"/orthant_probs_vars.csv");
-    // file <<"OrthantProbabilitiesVars," << endl; 
-    // if(file.is_open()){
-    //   for(int i = 0; i < prob_var.size(); ++i){
-    //     file << prob_var[i] << "," << endl; 
-    //   }
-    // }
-    // file.close(); 
   }
 
   void Identification1(MatrixXd &A) {
