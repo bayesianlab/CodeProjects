@@ -4,14 +4,11 @@
 /home/dillon/CodeProjects/CProjects/build/GnuPlotting/CMakeFiles/edit_cache.dir
 /home/dillon/CodeProjects/CProjects/build/GnuPlotting/CMakeFiles/rebuild_cache.dir
 /home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/Dist.dir
-/home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/disttest.dir
 /home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/edit_cache.dir
 /home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/rebuild_cache.dir
 /home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/ettools.dir
-/home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/ettest.dir
 /home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/edit_cache.dir
 /home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/rebuild_cache.dir
-/home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/test_armodel.dir
 /home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/edit_cache.dir
 /home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/rebuild_cache.dir
 /home/dillon/CodeProjects/CProjects/build/OptimizationTools/CMakeFiles/optlib.dir

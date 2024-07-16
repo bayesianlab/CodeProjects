@@ -1,24 +1,12 @@
 #include "Plotter.hpp"
 const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", "\n");
 
-void writeToCSVfile(string name, const MatrixXd &matrix)
-{
-    ofstream file(name.c_str());
-    if (file.is_open())
-    {
-        file << matrix << '\n';
-        file.close();
-    }
-    else
-    {
-        cout << "error" << endl;
-    }
-}
+
 
 int plotter(string filename, const VectorXd &A, const VectorXd &B)
 {
-    writeToCSVfile("a.csv", A);
-    writeToCSVfile("b.csv", B);
+    writeCsv("a.csv", A);
+    writeCsv("b.csv", B);
     ofstream file(filename);
     if (file.is_open())
     {
@@ -45,7 +33,7 @@ int plotter(string filename, const VectorXd &A, const VectorXd &B)
 
 int plotter(string filename, const VectorXd &A)
 {
-    writeToCSVfile("a.csv", A);
+    writeCsv("a.csv", A);
     ofstream file(filename);
     if (file.is_open())
     {
@@ -73,8 +61,8 @@ int plotter(string filename, const VectorXd &A)
 
 int plotter(string filename, const VectorXd &A, const VectorXd &B, string labelA, string labelB)
 {
-    writeToCSVfile("a.csv", A);
-    writeToCSVfile("b.csv", B);
+    writeCsv("a.csv", A);
+    writeCsv("b.csv", B);
     ofstream file(filename);
     if (file.is_open())
     {

@@ -36,7 +36,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/MVProbit/include
   ${CMAKE_CURRENT_SOURCE_DIR}/OptimizationTools/include
   # ${CMAKE_CURRENT_SOURCE_DIR}/MVProbit/include
-  /usr/local/include/stats-master/include
+  /usr/local/include/stats/include
   /usr/local/include/gcem-master/include 
   /usr/local/include/eigen-3.4.0 
   /usr/local/include/eigen-3.4.0/unsupported

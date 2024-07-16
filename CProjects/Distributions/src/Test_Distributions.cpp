@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     if(shiftedexponential)
     {
         VectorXd V = shiftedExponential(-2, 1, 1000);
-        writeToCSVfile("V.csv", V);
+        writeCsv("V.csv", V);
         cout << normalCDF(0) << endl;
         cout << normalCDF(1) << endl; 
         cout << normalCDF(-1) << endl; 
@@ -102,7 +102,7 @@ int main(int argc, char *argv[])
     if(truncnorm)
     {
         VectorXd Y = NormalTruncatedPositive(1,1,10000);
-        writeToCSVfile("Y.csv", Y);
+        writeCsv("Y.csv", Y);
     }
     if(tmvn)
     {

@@ -97,7 +97,6 @@ clean: MVProbit/clean
 
 # Recursive "all" directory target.
 Distributions/all: Distributions/CMakeFiles/Dist.dir/all
-Distributions/all: Distributions/CMakeFiles/disttest.dir/all
 .PHONY : Distributions/all
 
 # Recursive "preinstall" directory target.
@@ -106,7 +105,6 @@ Distributions/preinstall:
 
 # Recursive "clean" directory target.
 Distributions/clean: Distributions/CMakeFiles/Dist.dir/clean
-Distributions/clean: Distributions/CMakeFiles/disttest.dir/clean
 .PHONY : Distributions/clean
 
 #=============================================================================
@@ -114,7 +112,6 @@ Distributions/clean: Distributions/CMakeFiles/disttest.dir/clean
 
 # Recursive "all" directory target.
 EigenTools/all: EigenTools/CMakeFiles/ettools.dir/all
-EigenTools/all: EigenTools/CMakeFiles/ettest.dir/all
 .PHONY : EigenTools/all
 
 # Recursive "preinstall" directory target.
@@ -123,7 +120,6 @@ EigenTools/preinstall:
 
 # Recursive "clean" directory target.
 EigenTools/clean: EigenTools/CMakeFiles/ettools.dir/clean
-EigenTools/clean: EigenTools/CMakeFiles/ettest.dir/clean
 .PHONY : EigenTools/clean
 
 #=============================================================================
@@ -194,7 +190,7 @@ OptimizationTools/clean: OptimizationTools/CMakeFiles/tab.dir/clean
 # Directory level rules for directory TimeSeries
 
 # Recursive "all" directory target.
-TimeSeries/all: TimeSeries/CMakeFiles/test_armodel.dir/all
+TimeSeries/all:
 .PHONY : TimeSeries/all
 
 # Recursive "preinstall" directory target.
@@ -202,22 +198,22 @@ TimeSeries/preinstall:
 .PHONY : TimeSeries/preinstall
 
 # Recursive "clean" directory target.
-TimeSeries/clean: TimeSeries/CMakeFiles/test_armodel.dir/clean
+TimeSeries/clean:
 .PHONY : TimeSeries/clean
 
 #=============================================================================
 # Target rules for target GnuPlotting/CMakeFiles/plot.dir
 
 # All Build rule for target.
-GnuPlotting/CMakeFiles/plot.dir/all:
+GnuPlotting/CMakeFiles/plot.dir/all: EigenTools/CMakeFiles/ettools.dir/all
 	$(MAKE) $(MAKESILENT) -f GnuPlotting/CMakeFiles/plot.dir/build.make GnuPlotting/CMakeFiles/plot.dir/depend
 	$(MAKE) $(MAKESILENT) -f GnuPlotting/CMakeFiles/plot.dir/build.make GnuPlotting/CMakeFiles/plot.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=20,21 "Built target plot"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=16,17 "Built target plot"
 .PHONY : GnuPlotting/CMakeFiles/plot.dir/all
 
 # Build rule for subdir invocation for target.
 GnuPlotting/CMakeFiles/plot.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 4
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 GnuPlotting/CMakeFiles/plot.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
 .PHONY : GnuPlotting/CMakeFiles/plot.dir/rule
@@ -258,40 +254,13 @@ Distributions/CMakeFiles/Dist.dir/clean:
 .PHONY : Distributions/CMakeFiles/Dist.dir/clean
 
 #=============================================================================
-# Target rules for target Distributions/CMakeFiles/disttest.dir
-
-# All Build rule for target.
-Distributions/CMakeFiles/disttest.dir/all: Distributions/CMakeFiles/Dist.dir/all
-Distributions/CMakeFiles/disttest.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
-	$(MAKE) $(MAKESILENT) -f Distributions/CMakeFiles/disttest.dir/build.make Distributions/CMakeFiles/disttest.dir/depend
-	$(MAKE) $(MAKESILENT) -f Distributions/CMakeFiles/disttest.dir/build.make Distributions/CMakeFiles/disttest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=3,4 "Built target disttest"
-.PHONY : Distributions/CMakeFiles/disttest.dir/all
-
-# Build rule for subdir invocation for target.
-Distributions/CMakeFiles/disttest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 6
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Distributions/CMakeFiles/disttest.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : Distributions/CMakeFiles/disttest.dir/rule
-
-# Convenience name for target.
-disttest: Distributions/CMakeFiles/disttest.dir/rule
-.PHONY : disttest
-
-# clean rule for target.
-Distributions/CMakeFiles/disttest.dir/clean:
-	$(MAKE) $(MAKESILENT) -f Distributions/CMakeFiles/disttest.dir/build.make Distributions/CMakeFiles/disttest.dir/clean
-.PHONY : Distributions/CMakeFiles/disttest.dir/clean
-
-#=============================================================================
 # Target rules for target EigenTools/CMakeFiles/ettools.dir
 
 # All Build rule for target.
 EigenTools/CMakeFiles/ettools.dir/all:
 	$(MAKE) $(MAKESILENT) -f EigenTools/CMakeFiles/ettools.dir/build.make EigenTools/CMakeFiles/ettools.dir/depend
 	$(MAKE) $(MAKESILENT) -f EigenTools/CMakeFiles/ettools.dir/build.make EigenTools/CMakeFiles/ettools.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=7,8 "Built target ettools"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=3,4 "Built target ettools"
 .PHONY : EigenTools/CMakeFiles/ettools.dir/all
 
 # Build rule for subdir invocation for target.
@@ -311,67 +280,13 @@ EigenTools/CMakeFiles/ettools.dir/clean:
 .PHONY : EigenTools/CMakeFiles/ettools.dir/clean
 
 #=============================================================================
-# Target rules for target EigenTools/CMakeFiles/ettest.dir
-
-# All Build rule for target.
-EigenTools/CMakeFiles/ettest.dir/all: EigenTools/CMakeFiles/ettools.dir/all
-	$(MAKE) $(MAKESILENT) -f EigenTools/CMakeFiles/ettest.dir/build.make EigenTools/CMakeFiles/ettest.dir/depend
-	$(MAKE) $(MAKESILENT) -f EigenTools/CMakeFiles/ettest.dir/build.make EigenTools/CMakeFiles/ettest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=5,6 "Built target ettest"
-.PHONY : EigenTools/CMakeFiles/ettest.dir/all
-
-# Build rule for subdir invocation for target.
-EigenTools/CMakeFiles/ettest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 4
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 EigenTools/CMakeFiles/ettest.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : EigenTools/CMakeFiles/ettest.dir/rule
-
-# Convenience name for target.
-ettest: EigenTools/CMakeFiles/ettest.dir/rule
-.PHONY : ettest
-
-# clean rule for target.
-EigenTools/CMakeFiles/ettest.dir/clean:
-	$(MAKE) $(MAKESILENT) -f EigenTools/CMakeFiles/ettest.dir/build.make EigenTools/CMakeFiles/ettest.dir/clean
-.PHONY : EigenTools/CMakeFiles/ettest.dir/clean
-
-#=============================================================================
-# Target rules for target TimeSeries/CMakeFiles/test_armodel.dir
-
-# All Build rule for target.
-TimeSeries/CMakeFiles/test_armodel.dir/all: Distributions/CMakeFiles/Dist.dir/all
-TimeSeries/CMakeFiles/test_armodel.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
-TimeSeries/CMakeFiles/test_armodel.dir/all: EigenTools/CMakeFiles/ettools.dir/all
-	$(MAKE) $(MAKESILENT) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/depend
-	$(MAKE) $(MAKESILENT) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=24,25,26 "Built target test_armodel"
-.PHONY : TimeSeries/CMakeFiles/test_armodel.dir/all
-
-# Build rule for subdir invocation for target.
-TimeSeries/CMakeFiles/test_armodel.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 9
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 TimeSeries/CMakeFiles/test_armodel.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : TimeSeries/CMakeFiles/test_armodel.dir/rule
-
-# Convenience name for target.
-test_armodel: TimeSeries/CMakeFiles/test_armodel.dir/rule
-.PHONY : test_armodel
-
-# clean rule for target.
-TimeSeries/CMakeFiles/test_armodel.dir/clean:
-	$(MAKE) $(MAKESILENT) -f TimeSeries/CMakeFiles/test_armodel.dir/build.make TimeSeries/CMakeFiles/test_armodel.dir/clean
-.PHONY : TimeSeries/CMakeFiles/test_armodel.dir/clean
-
-#=============================================================================
 # Target rules for target OptimizationTools/CMakeFiles/optlib.dir
 
 # All Build rule for target.
 OptimizationTools/CMakeFiles/optlib.dir/all:
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optlib.dir/build.make OptimizationTools/CMakeFiles/optlib.dir/depend
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optlib.dir/build.make OptimizationTools/CMakeFiles/optlib.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=16,17,18,19 "Built target optlib"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=12,13,14,15 "Built target optlib"
 .PHONY : OptimizationTools/CMakeFiles/optlib.dir/all
 
 # Build rule for subdir invocation for target.
@@ -397,7 +312,7 @@ OptimizationTools/CMakeFiles/optlib.dir/clean:
 OptimizationTools/CMakeFiles/optimtest.dir/all: OptimizationTools/CMakeFiles/optlib.dir/all
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/depend
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=14,15 "Built target optimtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=10,11 "Built target optimtest"
 .PHONY : OptimizationTools/CMakeFiles/optimtest.dir/all
 
 # Build rule for subdir invocation for target.
@@ -423,7 +338,7 @@ OptimizationTools/CMakeFiles/optimtest.dir/clean:
 OptimizationTools/CMakeFiles/tab.dir/all:
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/tab.dir/build.make OptimizationTools/CMakeFiles/tab.dir/depend
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/tab.dir/build.make OptimizationTools/CMakeFiles/tab.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=22,23 "Built target tab"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=18,19 "Built target tab"
 .PHONY : OptimizationTools/CMakeFiles/tab.dir/all
 
 # Build rule for subdir invocation for target.
@@ -450,7 +365,7 @@ MultilevelModel/CMakeFiles/ml.dir/all: Distributions/CMakeFiles/Dist.dir/all
 MultilevelModel/CMakeFiles/ml.dir/all: EigenTools/CMakeFiles/ettools.dir/all
 	$(MAKE) $(MAKESILENT) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/depend
 	$(MAKE) $(MAKESILENT) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=9,10,11 "Built target ml"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=5,6,7 "Built target ml"
 .PHONY : MultilevelModel/CMakeFiles/ml.dir/all
 
 # Build rule for subdir invocation for target.
@@ -473,14 +388,14 @@ MultilevelModel/CMakeFiles/ml.dir/clean:
 # Target rules for target MVProbit/CMakeFiles/mvpf.dir
 
 # All Build rule for target.
-MVProbit/CMakeFiles/mvpf.dir/all: Distributions/CMakeFiles/Dist.dir/all
 MVProbit/CMakeFiles/mvpf.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
+MVProbit/CMakeFiles/mvpf.dir/all: Distributions/CMakeFiles/Dist.dir/all
 MVProbit/CMakeFiles/mvpf.dir/all: EigenTools/CMakeFiles/ettools.dir/all
 MVProbit/CMakeFiles/mvpf.dir/all: OptimizationTools/CMakeFiles/optlib.dir/all
 MVProbit/CMakeFiles/mvpf.dir/all: MultilevelModel/CMakeFiles/ml.dir/all
 	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/mvpf.dir/build.make MVProbit/CMakeFiles/mvpf.dir/depend
 	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/mvpf.dir/build.make MVProbit/CMakeFiles/mvpf.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=12,13 "Built target mvpf"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=8,9 "Built target mvpf"
 .PHONY : MVProbit/CMakeFiles/mvpf.dir/all
 
 # Build rule for subdir invocation for target.
