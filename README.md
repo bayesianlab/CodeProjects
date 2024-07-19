@@ -1,1 +1,2 @@
 # CodeProjects
+Edited readme. 
