@@ -60,7 +60,7 @@ int main() { /* Run the standard otrok whiteman model, 1 factor*/
 
   mlotrok.runModel(sims, burnin);
 
-  MatrixXd Factorbar = mean(mlotrok.FactorPosteriorDraws);
+  MatrixXd Factorbar = mean(mlotrok.FactorPosterior);
   
 
   plotter("plot.p", Factorbar.row(0).transpose(),

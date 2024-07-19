@@ -22,8 +22,8 @@ class FullConditionals : public LoadingsFactorTools,
                          public BayesBetaUpdater,
                          public ARMA {
  public:
-  std::vector<MatrixXd> BetaPosteriorDraws;
-  std::vector<MatrixXd> FactorPosteriorDraws;
+  std::vector<MatrixXd> BetaPosterior;
+  std::vector<MatrixXd> FactorPosterior;
   std::vector<MatrixXd> GammasPosteriorDraws;
   std::vector<MatrixXd> DeltasPosteriorDraws;
   std::vector<VectorXd> OmVariancePosteriorDraws;
@@ -318,8 +318,8 @@ class FullConditionals : public LoadingsFactorTools,
       }
 
       if (i >= burnin) {
-        BetaPosteriorDraws[i - burnin] = betaParams;
-        FactorPosteriorDraws[i - burnin] = Factors;
+        BetaPosterior[i - burnin] = betaParams;
+        FactorPosterior[i - burnin] = Factors;
         DeltasPosteriorDraws[i - burnin] = deltas;
         GammasPosteriorDraws[i - burnin] = gammas;
         OmVariancePosteriorDraws[i - burnin] = omVariance;
@@ -327,8 +327,8 @@ class FullConditionals : public LoadingsFactorTools,
       }
     }
 
-    MatrixXd betastar = mean(BetaPosteriorDraws);
-    MatrixXd fstar = mean(FactorPosteriorDraws);
+    MatrixXd betastar = mean(BetaPosterior);
+    MatrixXd fstar = mean(FactorPosterior);
     Xtk = groupByTime(Xt, K);
     residuals.resize(K, T);
     MatrixXd fittedModel(K, T);
@@ -348,11 +348,11 @@ class FullConditionals : public LoadingsFactorTools,
     string ext = ".txt";
     string path = "mllogfiles/";
     fname = path + version + date + ext;
-    storePosterior(path + version + date + "_beta.csv", BetaPosteriorDraws);
+    storePosterior(path + version + date + "_beta.csv", BetaPosterior);
     storePosterior(path + version + date + "_deltas.csv", DeltasPosteriorDraws);
     storePosterior(path + version + date + "_gammas.csv", GammasPosteriorDraws);
     storePosterior(path + version + date + "_factors.csv",
-                   FactorPosteriorDraws);
+                   FactorPosterior);
     storePosterior(path + version + date + "_factorVariance.csv",
                    FactorVariancePosteriorDraws);
     storePosterior(path + version + date + "_omVariance.csv",
@@ -363,7 +363,7 @@ class FullConditionals : public LoadingsFactorTools,
       file << "Full Conditional Version run with: " << Sims << " "
            << "burnin " << burnin << endl;
       file << "Beta avg" << endl;
-      file << mean(BetaPosteriorDraws) << endl;
+      file << mean(BetaPosterior) << endl;
       file << "Deltas avg" << endl;
       file << mean(DeltasPosteriorDraws) << endl;
       file << "Gamma avg" << endl;
@@ -411,7 +411,7 @@ class FullConditionals : public LoadingsFactorTools,
     std::vector<MatrixXd> Xtk = groupByTime(Xt, K);
     cout << "Beta Reduced Runs" << endl;
     MatrixXi FactorInfo = createFactorInfo(InfoMat, K);
-    MatrixXd betaStar = mean(BetaPosteriorDraws);
+    MatrixXd betaStar = mean(BetaPosterior);
     MatrixXd factorLoadings = betaStar.rightCols(nFactors);
     map<int, vector<int>> indexMap = createIndexMap(InfoMat, K);
 
@@ -437,7 +437,7 @@ class FullConditionals : public LoadingsFactorTools,
     }
     for (int j = 0; j < rr; ++j) {
       cout << "RR = " << j + 1 << endl;
-      Factors = FactorPosteriorDraws[j];
+      Factors = FactorPosterior[j];
       deltas = DeltasPosteriorDraws[j];
       gammas = GammasPosteriorDraws[j];
       omVariance = OmVariancePosteriorDraws[j];
@@ -594,7 +594,7 @@ class FullConditionals : public LoadingsFactorTools,
     }
     for (int j = 0; j < rr; ++j) {
       cout << "RR = " << j + 1 << endl;
-      Factors = FactorPosteriorDraws[j];
+      Factors = FactorPosterior[j];
       omVariance = OmVariancePosteriorDrawsj[j];
       gammas = GammasPosteriorDrawsj[j];
       factorVariance = FactorVariancePosteriorDrawsj[j];
@@ -658,7 +658,7 @@ class FullConditionals : public LoadingsFactorTools,
     for (int j = 0; j < rr; ++j) {
       cout << "RR = " << j + 1 << endl;
       factorVariance = FactorVariancePosteriorDrawsj[j];
-      Factors = FactorPosteriorDraws[j];
+      Factors = FactorPosterior[j];
       MatrixXd ytmaf = yt - factorLoadings * Factors;
       for (int k = 0; k < K; ++k) {
         s2 = omVariancestar(k);
@@ -799,10 +799,10 @@ class FullConditionals : public LoadingsFactorTools,
 
   void summary() {
     // Variance decompositions
-    MatrixXd betaBar = mean(BetaPosteriorDraws);
+    MatrixXd betaBar = mean(BetaPosterior);
     int K = yt.rows();
 
-    MatrixXd factorBar = mean(FactorPosteriorDraws);
+    MatrixXd factorBar = mean(FactorPosterior);
     int nFactors = factorBar.rows();
     VectorXd factorVariances = variance(factorBar, 0);
     int levels = calcLevels(InfoMat, K);
@@ -830,8 +830,8 @@ class FullConditionals : public LoadingsFactorTools,
 
  private:
   void setPosteriorSizes(int Sims, int burnin) {
-    BetaPosteriorDraws.resize(Sims - burnin);
-    FactorPosteriorDraws.resize(Sims - burnin);
+    BetaPosterior.resize(Sims - burnin);
+    FactorPosterior.resize(Sims - burnin);
     DeltasPosteriorDraws.resize(Sims - burnin);
     GammasPosteriorDraws.resize(Sims - burnin);
     OmVariancePosteriorDraws.resize(Sims - burnin);

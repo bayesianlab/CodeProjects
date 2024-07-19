@@ -61,7 +61,7 @@ public:
   std::vector<MatrixXd> LoadingPosterior;
   std::vector<MatrixXd> SigmaPosterior;
   std::vector<MatrixXd> FactorPosterior;
-  std::vector<VectorXd> gammaPosterior;
+  std::vector<VectorXd> GammasPosterior;
   std::vector<MatrixXd> CorrelationPosterior;
   std::vector<VectorXd> FactorVariancePosterior;
   std::vector<VectorXd> s0;
@@ -241,6 +241,7 @@ public:
         // Factor dynamic multipliers update
         gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
                                            factorVariance(n), g0, G0);
+                                           
         // MatrixXd H = ReturnH(gammas.row(n), T);
         // MatrixXd nu = (H * Ft.row(n).transpose()).transpose();
         // factor variance update
@@ -251,7 +252,7 @@ public:
         BetaPosterior.push_back(beta);
         LoadingPosterior.push_back(A);
         FactorPosterior.push_back(Ft);
-        gammaPosterior.push_back(gammas);
+        GammasPosterior.push_back(gammas);
         FactorVariancePosterior.push_back(factorVariance);
         // CorrelationPosterior.push_back(Correlation);
       }
@@ -264,7 +265,7 @@ public:
     if (file.is_open()) {
       storePosterior(path_name + "/beta.csv", BetaPosterior);
       storePosterior(path_name + "/loadings.csv", LoadingPosterior);
-      storePosterior(path_name + "/gammas.csv", gammaPosterior);
+      storePosterior(path_name + "/gammas.csv", GammasPosterior);
       storePosterior(path_name + "/factors.csv", FactorPosterior);
       storePosterior(path_name + "/factorVariance.csv", FactorVariancePosterior);
       file << "Full Conditional Version run with: " << Sims << " "
@@ -274,7 +275,7 @@ public:
       cout << "Loading Avg" << endl; 
       file << mean(LoadingPosterior) << endl; 
       file << "Gamma avg" << endl;
-      file << mean(gammaPosterior) << endl;
+      file << mean(GammasPosterior) << endl;
       file << "Factors avg" << endl;
       file << mean(FactorPosterior).transpose() << endl;
       file << "Factor variance avg" << endl; 
@@ -289,25 +290,108 @@ public:
     MVTNProbs mvtn;
     int K = ytest.rows();
     int T = ytest.cols();
+    int KT = K*T; 
+    int nFactors = FactorPosterior[0].rows(); 
     double acc = 0;
     double running_acc = 0;
     double running_ll = 0;
     double ll = 0;
     MatrixXd surX = surForm(Xtest, K);
-    MatrixXd AvgZ(K,T);
-    AvgZ.setZero(); 
-    for (int i = 0; i < 1; ++i) {
+    MatrixXd Fhat = mean(FactorPosterior); 
+    MatrixXd zhat = MatrixXd::Zero(K,T); 
+    MatrixXd Sigma = MatrixXd::Identity(K,K);
+    MatrixXd gammashat = mean(GammasPosterior); 
+    MatrixXd zt = MatrixXd::Zero(K,T); 
+
+    vector<MatrixXd> Zposterior;
+
+    for (int i = 0; i < BetaPosterior.size(); ++i) {
       beta = BetaPosterior[i];
       MatrixXd Xbeta = surX * beta;
       Xbeta.resize(K, T);
       MatrixXd A = LoadingPosterior[i];
-      MatrixXd Ft = FactorPosterior[i];
-      MatrixXd AF = A * Ft;
-      MatrixXd zt = Xbeta + AF;
-      MatrixXd Pij = simple_probit_probs(zt);
-      ll += log_loss(Pij, ytest);
-      running_ll = ll / (i + 1);
-      cout << "Log-loss " << running_ll << endl;
+      MatrixXd ft = Fhat.col(T-1);
+      VectorXd factorVariance = FactorVariancePosterior[i];
+      gammas = GammasPosterior[i];
+      for (int n = 0; n < nFactors; ++n) {
+        ft(n) = (gammas.row(n) * ft(n)).value();
+      }
+      for (int t = 0; t < T; ++t) {
+        zt.col(t) = Xbeta.col(t) + A * ft;
+        for (int n = 0; n < nFactors; ++n) {
+          MatrixXd Acopy = A;
+          Acopy.col(n) = VectorXd::Zero(K);
+          MatrixXd resids = zt.col(t) - Xbeta.col(t) - (Acopy * ft);
+          MatrixXd Sinv = MakePrecision(gammas.row(n), factorVariance(n), 1);
+          ft.row(n) = updateFactor(resids, A.col(n), Sinv, Sigma);
+        }
+      }
+      Zposterior.push_back(zt); 
+    }
+    string zpath = path_name + "/Zposterior.csv"; 
+    storePosterior(zpath, Zposterior);
+    MatrixXd AvgZ = mean(Zposterior);
+    MatrixXi ypred = label_data(AvgZ);
+    string ypred_fname = path_name + "/ypred.csv";
+    writeCsv(ypred_fname, ypred); 
+    string yactual_fname = path_name + "/ytest.csv";
+    writeCsv(yactual_fname, ytest); 
+    MatrixXi ytest_labeled = label_data(ytest); 
+    double post_acc = accuracy(ypred, ytest_labeled); 
+    MatrixXd Pij = simple_probit_probs(AvgZ); 
+    double post_ll = log_loss(Pij, ytest); 
+    std::filesystem::create_directories(path_name);
+    std::ofstream file;
+    string summary_fname = path_name + "/vaidation_summary" + ".txt";
+    file.open(summary_fname);
+    if (file.is_open()) {
+      file << "Posterior mean accuracy " << post_acc << endl; 
+      file << "Posterior mean log loss " << post_ll << endl; 
+    }
+    file.close();
+  }
+
+void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int bng, int batches) {
+    MVTNProbs mvtn;
+    int K = ytest.rows();
+    int T = ytest.cols();
+    int KT = K*T; 
+    int nFactors = FactorPosterior[0].rows(); 
+    double acc = 0;
+    double running_acc = 0;
+    double running_ll = 0;
+    double ll = 0;
+    MatrixXd surX = surForm(Xtest, K);
+    MatrixXd Fhat = mean(FactorPosterior); 
+    MatrixXd zhat = MatrixXd::Zero(K,T); 
+    MatrixXd Sigma = MatrixXd::Identity(K,K);
+    MatrixXd gammashat = mean(GammasPosterior); 
+    MatrixXd zt = MatrixXd::Zero(K,T); 
+
+    vector<MatrixXd> Zposterior;
+
+    for (int i = 0; i < BetaPosterior.size(); ++i) {
+      beta = BetaPosterior[i];
+      MatrixXd Xbeta = surX * beta;
+      Xbeta.resize(K, T);
+      MatrixXd A = LoadingPosterior[i];
+      MatrixXd ft = Fhat.col(T-1);
+      VectorXd factorVariance = FactorVariancePosterior[i];
+      gammas = GammasPosterior[i];
+      for (int n = 0; n < nFactors; ++n) {
+        ft(n) = (gammas.row(n) * ft(n)).value();
+      }
+      for (int t = 0; t < T; ++t) {
+        zt.col(t) = Xbeta.col(t) + A * ft;
+        for (int n = 0; n < nFactors; ++n) {
+          MatrixXd Acopy = A;
+          Acopy.col(n) = VectorXd::Zero(K);
+          MatrixXd resids = zt.col(t) - Xbeta.col(t) - (Acopy * ft);
+          MatrixXd Sinv = MakePrecision(gammas.row(n), factorVariance(n), 1);
+          ft.row(n) = updateFactor(resids, A.col(n), Sinv, Sigma);
+        }
+      }
+      Zposterior.push_back(zt); 
     }
     MatrixXi ypred = label_data(AvgZ);
     string ypred_fname = path_name + "/ypred.csv";
@@ -318,21 +402,39 @@ public:
     double post_acc = accuracy(ypred, ytest_labeled); 
     MatrixXd Pij = simple_probit_probs(AvgZ); 
     double post_ll = log_loss(Pij, ytest); 
-    cout << "Average accuracy " << running_acc << endl;
     cout << "Average log-loss " << running_ll << endl;
     std::filesystem::create_directories(path_name);
     std::ofstream file;
     string summary_fname = path_name + "/vaidation_summary" + ".txt";
     file.open(summary_fname);
     if (file.is_open()) {
-      file << "Running log-loss (all posterior samples averaged) " << running_ll << endl;
       file << "Posterior mean accuracy " << post_acc << endl; 
       file << "Posterior mean log loss " << post_ll << endl; 
     }
     file.close();
+
+    beta = mean(BetaPosterior);
+    MatrixXd Xbeta = surX * beta;
+    Xbeta.resize(K, T);
+    MatrixXd A = mean(LoadingPosterior);
+    MatrixXd Ft = mean(FactorPosterior);
+    MatrixXd AF = A * Ft;
+    MatrixXd zt = Xbeta + AF;
+    vector<double> probs;
+    vector<double> prob_var;
+    MatrixXd Sigma = MatrixXd::Identity(K, K);
+    MatrixXd OrthantProbs(batches, zt.cols());
+    for (int j = 0; j < zt.cols(); ++j) {
+      cout << "Orthant num " << j << endl;
+      OrthantProbs.col(j) =
+          mvtn.batch_crb(zt.col(j).transpose(), Sigma, ytest.col(j).transpose(),
+                         G, bng, batches);
+    }
+    string orthant_fname = path_name + "/orthant_probs.csv"; 
+    writeCsv(orthant_fname, OrthantProbs); 
   }
 
-void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int bng, int batches) {
+void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int bng, int batches) {
     MVTNProbs mvtn;
     int K = ytest.rows();
     int T = ytest.cols();
@@ -417,27 +519,37 @@ void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int bng,
     return LabeledData; 
   }
 
-  void Forecast(const MatrixXd &Xfuture) {
-    int K = LoadingPosterior[0].rows();
+  void Forecast(const MatrixXd &Xfuture, int K) {
+    
     int T = Xfuture.rows()/K; 
-    if(not (Xfuture.rows()%K)){
+    int nFactors = FactorPosterior[0].rows();
+    int KT = K*T; 
+    MatrixXd Sigma = MatrixXd::Identity(K,K);
+    if(Xfuture.rows()%K){
       throw invalid_argument("Xfuture rows is not multiple of K (equations in yt).");
     }
     MatrixXd surX = surForm(Xfuture, K);
     MatrixXd AvgZ(K,T);
-    AvgZ.setZero(); 
-    for (int i = 0; i < 1; ++i) {
-      beta = BetaPosterior[i];
-      MatrixXd Xbeta = surX * beta;
-      Xbeta.resize(K, T);
-      MatrixXd A = LoadingPosterior[i];
-      MatrixXd Ft = FactorPosterior[i];
-      MatrixXd AF = A * Ft;
-      MatrixXd zt = Xbeta + AF;
-      AvgZ += zt;
-      AvgZ = AvgZ/(i+1);  
+    VectorXd betahat = mean(BetaPosterior); 
+    MatrixXd Xbetahat = surX*betahat; 
+    Xbetahat.resize(K,T); 
+    MatrixXd Ahat = mean(LoadingPosterior); 
+    MatrixXd Fhat = mean(FactorPosterior); 
+    MatrixXd zhat = MatrixXd::Zero(K,T); 
+    VectorXd ft = Fhat.col(T-1);
+    MatrixXd gammashat = mean(GammasPosterior); 
+
+    for(int n = 0; n < nFactors; ++n){
+        ft(n) = (gammashat.row(n)*ft(n)).value(); 
+    }  
+    for(int t = 0; t < T; ++t){
+      zhat.col(t) = Xbetahat.col(t) + Ahat*ft; 
+      for(int n = 0; n < nFactors; ++n){
+        ft(n) = (gammashat.row(n)*ft(n)).value(); 
+      }  
     }
-    cout << AvgZ << endl; 
+    string fn = path_name + "/zhat.csv"; 
+    writeCsv(fn, zhat); 
   }
 
   void Identification1(MatrixXd &A) {
