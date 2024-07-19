@@ -158,7 +158,7 @@ int main()
         ml.runModel(sims, burnin);
         // ml.ml();
         // cout << "Beta avg" << endl;
-        // cout << mean(ml.BetaPosteriorDraws) << endl;
+        // cout << mean(ml.BetaPosterior) << endl;
         // cout << "Loading avg" << endl;
         // cout << mean(ml.LoadingsPosteriorDraws) << endl;
         // cout << "Gamma avg" << endl;
@@ -168,7 +168,7 @@ int main()
         // cout << "OM Variance" << endl;
         // cout << 1. / mean(ml.ObsPrecisionPosteriorDraws).array() << endl;
 
-        MatrixXd Ftbar = mean(ml.FactorPosteriorDraws);
+        MatrixXd Ftbar = mean(ml.FactorPosterior);
         plotter("plot.p", Ftbar.row(0).transpose(),
                 mldata.Factors.row(0).transpose(), "fest", "ftrue");
     }

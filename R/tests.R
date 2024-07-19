@@ -57,7 +57,9 @@ s <- matrix(c(1, -.7, .49,
 
 dmvnorm(v, mean=mu, sigma=s, log=TRUE)
 
-dmvnorm(v, mean=mu, sigma=s, log=TRUE)-dtmvnorm(v, mean=mu, sigma=s,lower=rep(0,3), upper=rep(Inf, 3), log=TRUE)
+dmvnorm(v, mean=mu, sigma=s, log=TRUE)-
+dtmvnorm(v, mean=mu, sigma=s,lower=rep(0,3), upper=rep(Inf, 3), log=TRUE)
+log(ptmvnorm(mean=mu, sigma=s,lowerx=rep(0,3), upperx=rep(Inf, 3), maxpts=10000))
 
 v <- c(0,.5,1)
 mu <- c(0,0,0)
@@ -66,3 +68,15 @@ ptmvnorm(rep(0,8), rep(Inf, 8),mean=mu, sigma=s)
 
 exp(-1.58)
 exp(-1.557)
+
+z <- c(-8.80411,-8.77264,
+-8.77227,
+-8.8012,
+-8.83201,
+-8.78102,
+-8.80849,
+-8.82589,
+-8.77538,
+-8.76784)
+
+sd(z)

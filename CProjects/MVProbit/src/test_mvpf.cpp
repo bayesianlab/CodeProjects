@@ -72,7 +72,8 @@ int main() {
 	MatrixXd Fbar = mean(mv.FactorPosterior);
 	MatrixXd Betabar = mean(mv.BetaPosterior);
 	
-	mv.ValidationRun(Xtrain, ytrain, 100, 10, 10);
+	mv.ValidationRun(Xtest, ytest);
+	// mv.Forecast(Xtest, K); 
 
 	// Betabar.resize(K, gfp.Xt.cols() + InfoMat.rows());
 	// MatrixXd A = Betabar.rightCols(Fbar.rows());

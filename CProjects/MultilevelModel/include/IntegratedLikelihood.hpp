@@ -347,8 +347,8 @@ class MultilevelModel : public BetaParameterTools, public LoadingsFactorTools, p
 {
 public:
     std::vector<MatrixXd> LoadingsPosteriorDraws;
-    std::vector<MatrixXd> BetaPosteriorDraws;
-    std::vector<MatrixXd> FactorPosteriorDraws;
+    std::vector<MatrixXd> BetaPosterior;
+    std::vector<MatrixXd> FactorPosterior;
     std::vector<MatrixXd> GammasPosteriorDraws;
     std::vector<MatrixXd> DeltasPosteriorDraws;
     std::vector<VectorXd> ObsPrecisionPosteriorDraws;
@@ -502,9 +502,9 @@ public:
         MatrixXd omidentity = MakeObsModelIdentity(InfoMat, K);
 
         LoadingsPosteriorDraws.resize(stationarySims);
-        FactorPosteriorDraws.resize(stationarySims);
-        BetaPosteriorDraws.resize(stationarySims);
-        FactorPosteriorDraws.resize(stationarySims);
+        FactorPosterior.resize(stationarySims);
+        BetaPosterior.resize(stationarySims);
+        FactorPosterior.resize(stationarySims);
         GammasPosteriorDraws.resize(stationarySims);
         ObsPrecisionPosteriorDraws.resize(stationarySims);
         FactorVariancePosteriorDraws.resize(stationarySims);
@@ -538,8 +538,8 @@ public:
             FactorPrecision = MakePrecisionBig(gammas, factorVariance, T);
             if (i >= burnin)
             {
-                BetaPosteriorDraws[i - (burnin)] = betanew;
-                FactorPosteriorDraws[i - (burnin)] = Factors;
+                BetaPosterior[i - (burnin)] = betanew;
+                FactorPosterior[i - (burnin)] = Factors;
                 LoadingsPosteriorDraws[i - (burnin)] = Loadings;
                 GammasPosteriorDraws[i - (burnin)] = gammas;
                 ObsPrecisionPosteriorDraws[i - (burnin)] = omPrecision;
@@ -558,16 +558,16 @@ public:
         file.open(fname);
         if (file.is_open())
         {
-            storePosterior(path + version + date + "_beta.csv", BetaPosteriorDraws);
+            storePosterior(path + version + date + "_beta.csv", BetaPosterior);
             storePosterior(path + version + date + "_loadings.csv", LoadingsPosteriorDraws);
             storePosterior(path + version + date + "_gammas.csv", GammasPosteriorDraws);
-            storePosterior(path + version + date + "_factors.csv", FactorPosteriorDraws);
+            storePosterior(path + version + date + "_factors.csv", FactorPosterior);
             storePosterior(path + version + date + "_factorVariance.csv", FactorVariancePosteriorDraws);
             storePosterior(path + version + date + "_omPrecision.csv", ObsPrecisionPosteriorDraws);
             file << "Integrated Likelihood Version run with: " << Sims << " "
                  << "burnin " << burnin << endl;
             file << "Beta avg" << endl;
-            file << mean(BetaPosteriorDraws).transpose() << endl;
+            file << mean(BetaPosterior).transpose() << endl;
             file << "Loadings avg" << endl;
             file << mean(LoadingsPosteriorDraws) << endl;
             file << "Gamma avg" << endl;
@@ -632,12 +632,12 @@ public:
         int start;
         for (int i = 0; i < rr; ++i)
         {
-            betag = BetaPosteriorDraws[i];
+            betag = BetaPosterior[i];
             Ag = LoadingsPosteriorDraws[i];
             gammag = GammasPosteriorDraws[i];
             obsPrecisiong = ObsPrecisionPosteriorDraws[i];
             factorVarianceg = FactorVariancePosteriorDraws[i];
-            Factorg = FactorPosteriorDraws[i];
+            Factorg = FactorPosterior[i];
             Xbetag = surX * betag;
             Xbetag.resize(K, T);
 
@@ -815,9 +815,9 @@ public:
         double parama = .5 * (T + r0);
         double paramb;
         Optimize optim(optim_options);
-        MatrixXd FactorStar = mean(FactorPosteriorDraws);
+        MatrixXd FactorStar = mean(FactorPosterior);
         MatrixXd Astar = mean(LoadingsPosteriorDraws);
-        MatrixXd betastar = mean(BetaPosteriorDraws);
+        MatrixXd betastar = mean(BetaPosterior);
         MatrixXd gammastar = mean(GammasPosteriorDraws);
         MatrixXd gammas = gammastar;
         MatrixXd surX = surForm(Xt, K);
