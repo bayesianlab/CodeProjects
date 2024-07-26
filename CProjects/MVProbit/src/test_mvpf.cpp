@@ -72,7 +72,7 @@ int main() {
 	MatrixXd Fbar = mean(mv.FactorPosterior);
 	MatrixXd Betabar = mean(mv.BetaPosterior);
 	
-	mv.ValidationRun(Xtest, ytest);
+	mv.BayesianPrediction(Xtest, ytest);
 	// mv.Forecast(Xtest, K); 
 
 	// Betabar.resize(K, gfp.Xt.cols() + InfoMat.rows());
