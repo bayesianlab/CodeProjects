@@ -1,10 +1,8 @@
 use Securities;
 
 
-select * 
-from (
-select max(dt)
+select dt, ticker, adj_close
 from stock_prices
-)
-where z.rn = 1
+where dt=(select max(dt) from stock_prices)
+order by adj_close
 
