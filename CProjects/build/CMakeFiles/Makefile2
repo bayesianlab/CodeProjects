@@ -141,7 +141,7 @@ GnuPlotting/clean: GnuPlotting/CMakeFiles/plot.dir/clean
 # Directory level rules for directory MVProbit
 
 # Recursive "all" directory target.
-MVProbit/all: MVProbit/CMakeFiles/mvpf.dir/all
+MVProbit/all:
 .PHONY : MVProbit/all
 
 # Recursive "preinstall" directory target.
@@ -149,7 +149,7 @@ MVProbit/preinstall:
 .PHONY : MVProbit/preinstall
 
 # Recursive "clean" directory target.
-MVProbit/clean: MVProbit/CMakeFiles/mvpf.dir/clean
+MVProbit/clean:
 .PHONY : MVProbit/clean
 
 #=============================================================================
@@ -190,7 +190,7 @@ OptimizationTools/clean: OptimizationTools/CMakeFiles/tab.dir/clean
 # Directory level rules for directory TimeSeries
 
 # Recursive "all" directory target.
-TimeSeries/all:
+TimeSeries/all: TimeSeries/CMakeFiles/tv.dir/all
 .PHONY : TimeSeries/all
 
 # Recursive "preinstall" directory target.
@@ -198,7 +198,7 @@ TimeSeries/preinstall:
 .PHONY : TimeSeries/preinstall
 
 # Recursive "clean" directory target.
-TimeSeries/clean:
+TimeSeries/clean: TimeSeries/CMakeFiles/tv.dir/clean
 .PHONY : TimeSeries/clean
 
 #=============================================================================
@@ -208,7 +208,7 @@ TimeSeries/clean:
 GnuPlotting/CMakeFiles/plot.dir/all: EigenTools/CMakeFiles/ettools.dir/all
 	$(MAKE) $(MAKESILENT) -f GnuPlotting/CMakeFiles/plot.dir/build.make GnuPlotting/CMakeFiles/plot.dir/depend
 	$(MAKE) $(MAKESILENT) -f GnuPlotting/CMakeFiles/plot.dir/build.make GnuPlotting/CMakeFiles/plot.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=16,17 "Built target plot"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=14,15 "Built target plot"
 .PHONY : GnuPlotting/CMakeFiles/plot.dir/all
 
 # Build rule for subdir invocation for target.
@@ -280,13 +280,39 @@ EigenTools/CMakeFiles/ettools.dir/clean:
 .PHONY : EigenTools/CMakeFiles/ettools.dir/clean
 
 #=============================================================================
+# Target rules for target TimeSeries/CMakeFiles/tv.dir
+
+# All Build rule for target.
+TimeSeries/CMakeFiles/tv.dir/all: Distributions/CMakeFiles/Dist.dir/all
+	$(MAKE) $(MAKESILENT) -f TimeSeries/CMakeFiles/tv.dir/build.make TimeSeries/CMakeFiles/tv.dir/depend
+	$(MAKE) $(MAKESILENT) -f TimeSeries/CMakeFiles/tv.dir/build.make TimeSeries/CMakeFiles/tv.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=18,19 "Built target tv"
+.PHONY : TimeSeries/CMakeFiles/tv.dir/all
+
+# Build rule for subdir invocation for target.
+TimeSeries/CMakeFiles/tv.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 TimeSeries/CMakeFiles/tv.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
+.PHONY : TimeSeries/CMakeFiles/tv.dir/rule
+
+# Convenience name for target.
+tv: TimeSeries/CMakeFiles/tv.dir/rule
+.PHONY : tv
+
+# clean rule for target.
+TimeSeries/CMakeFiles/tv.dir/clean:
+	$(MAKE) $(MAKESILENT) -f TimeSeries/CMakeFiles/tv.dir/build.make TimeSeries/CMakeFiles/tv.dir/clean
+.PHONY : TimeSeries/CMakeFiles/tv.dir/clean
+
+#=============================================================================
 # Target rules for target OptimizationTools/CMakeFiles/optlib.dir
 
 # All Build rule for target.
 OptimizationTools/CMakeFiles/optlib.dir/all:
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optlib.dir/build.make OptimizationTools/CMakeFiles/optlib.dir/depend
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optlib.dir/build.make OptimizationTools/CMakeFiles/optlib.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=12,13,14,15 "Built target optlib"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=10,11,12,13 "Built target optlib"
 .PHONY : OptimizationTools/CMakeFiles/optlib.dir/all
 
 # Build rule for subdir invocation for target.
@@ -312,7 +338,7 @@ OptimizationTools/CMakeFiles/optlib.dir/clean:
 OptimizationTools/CMakeFiles/optimtest.dir/all: OptimizationTools/CMakeFiles/optlib.dir/all
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/depend
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/optimtest.dir/build.make OptimizationTools/CMakeFiles/optimtest.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=10,11 "Built target optimtest"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=8,9 "Built target optimtest"
 .PHONY : OptimizationTools/CMakeFiles/optimtest.dir/all
 
 # Build rule for subdir invocation for target.
@@ -338,7 +364,7 @@ OptimizationTools/CMakeFiles/optimtest.dir/clean:
 OptimizationTools/CMakeFiles/tab.dir/all:
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/tab.dir/build.make OptimizationTools/CMakeFiles/tab.dir/depend
 	$(MAKE) $(MAKESILENT) -f OptimizationTools/CMakeFiles/tab.dir/build.make OptimizationTools/CMakeFiles/tab.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=18,19 "Built target tab"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=16,17 "Built target tab"
 .PHONY : OptimizationTools/CMakeFiles/tab.dir/all
 
 # Build rule for subdir invocation for target.
@@ -361,8 +387,8 @@ OptimizationTools/CMakeFiles/tab.dir/clean:
 # Target rules for target MultilevelModel/CMakeFiles/ml.dir
 
 # All Build rule for target.
-MultilevelModel/CMakeFiles/ml.dir/all: Distributions/CMakeFiles/Dist.dir/all
 MultilevelModel/CMakeFiles/ml.dir/all: EigenTools/CMakeFiles/ettools.dir/all
+MultilevelModel/CMakeFiles/ml.dir/all: Distributions/CMakeFiles/Dist.dir/all
 	$(MAKE) $(MAKESILENT) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/depend
 	$(MAKE) $(MAKESILENT) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=5,6,7 "Built target ml"
@@ -383,36 +409,6 @@ ml: MultilevelModel/CMakeFiles/ml.dir/rule
 MultilevelModel/CMakeFiles/ml.dir/clean:
 	$(MAKE) $(MAKESILENT) -f MultilevelModel/CMakeFiles/ml.dir/build.make MultilevelModel/CMakeFiles/ml.dir/clean
 .PHONY : MultilevelModel/CMakeFiles/ml.dir/clean
-
-#=============================================================================
-# Target rules for target MVProbit/CMakeFiles/mvpf.dir
-
-# All Build rule for target.
-MVProbit/CMakeFiles/mvpf.dir/all: Distributions/CMakeFiles/Dist.dir/all
-MVProbit/CMakeFiles/mvpf.dir/all: EigenTools/CMakeFiles/ettools.dir/all
-MVProbit/CMakeFiles/mvpf.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
-MVProbit/CMakeFiles/mvpf.dir/all: OptimizationTools/CMakeFiles/optlib.dir/all
-MVProbit/CMakeFiles/mvpf.dir/all: MultilevelModel/CMakeFiles/ml.dir/all
-	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/mvpf.dir/build.make MVProbit/CMakeFiles/mvpf.dir/depend
-	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/mvpf.dir/build.make MVProbit/CMakeFiles/mvpf.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/dillon/CodeProjects/CProjects/build/CMakeFiles --progress-num=8,9 "Built target mvpf"
-.PHONY : MVProbit/CMakeFiles/mvpf.dir/all
-
-# Build rule for subdir invocation for target.
-MVProbit/CMakeFiles/mvpf.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 15
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MVProbit/CMakeFiles/mvpf.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/dillon/CodeProjects/CProjects/build/CMakeFiles 0
-.PHONY : MVProbit/CMakeFiles/mvpf.dir/rule
-
-# Convenience name for target.
-mvpf: MVProbit/CMakeFiles/mvpf.dir/rule
-.PHONY : mvpf
-
-# clean rule for target.
-MVProbit/CMakeFiles/mvpf.dir/clean:
-	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/mvpf.dir/build.make MVProbit/CMakeFiles/mvpf.dir/clean
-.PHONY : MVProbit/CMakeFiles/mvpf.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

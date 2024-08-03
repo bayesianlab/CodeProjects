@@ -1,4 +1,4 @@
-
+use Securities; 
 select *
 from (
 	SELECT Country, min(Yr), count(*) Obs
@@ -25,6 +25,9 @@ join Countries c
 	on c.Country=r.Country
 where Mon=3 or Mon=6 or Mon=9 or Mon=12); 
 
+select *
+from gdp
+
 -- The earliest year and month to select for the beginning 
 select max(Yr), max(Mon)
 from (
@@ -34,50 +37,42 @@ from (
 	group by Country
 ) as q;
 
-select *
-from gdp 
-where Yr > 2001 and Yr < 2005 
-	and Country = 'India';
-
 -- The last possible end date to use for the end 
-
-select  min(Yr), min(Mon)
-from
-(
-	select Country, max(y.Yr) Yr, max(Mon) Mon 
-	from 
-		(
-		select min(Yr) Yr
-		from (
-			select Country, 
-				   max(Yr) Yr
-			from gdp 
-			where GDP is not null
-			group by Country) as q
-		) as y 
-	join gdp as g
-		on g.Yr=y.Yr
-	where GDP is not null
-	group by Country
-) as z 
-group by Yr;
-
-
-select *
-from gdp
-where Yr<2024 and Yr>2003
-	  
-
-
-select *
-from gdp 
-where Yr >= 2023 and Mon < 12 and Mon > 1 
-	and Country = 'United Kingdom';
-
-select *
-from (
-SELECT Country, min(Yr), count(*) Cnt 
-FROM Securities.recessions
+select Country, max(y.Yr) Yr, max(Mon) Mon 
+from 
+	(
+	select min(Yr) Yr
+	from (
+		select Country, 
+			   max(Yr) Yr
+		from gdp 
+		where GDP is not null
+		group by Country) as q
+	) as y 
+join gdp as g
+	on g.Yr=y.Yr
 where GDP is not null
-group by Country ) as Q
-where Q.Cnt > 100;
+group by Country;
+
+-- drop table gdp2
+create table if not exists gdp2
+(
+select *, row_number() over (partition by Country order by Yr, mon) rn
+from gdp
+where Yr>=2004 
+and Yr<=2023 
+and Country <>'Mexico' 
+);
+
+select Country, rn
+from gdp2
+where GDP is null;
+
+select *
+from gdp2 
+where rn > 1 and rn < 79
+
+
+
+ 
+

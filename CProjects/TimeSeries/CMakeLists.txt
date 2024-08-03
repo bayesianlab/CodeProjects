@@ -8,5 +8,8 @@
 # add_executable(test_mamodel src/Test_MAmodel.cpp)
 # target_link_libraries(test_mamodel PUBLIC ettools Dist plot)
 
+add_executable(tv src/testvar.cpp)
+target_link_libraries(tv PUBLIC Dist) 
+
 
  

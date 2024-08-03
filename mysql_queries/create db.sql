@@ -64,3 +64,10 @@ create table spy
   adj_close decimal(19,4) NULL,
   volume bigint NULL	
 )Engine=InnoDB AUTO_INCREMENT=1 Default charset=utf8mb4;
+
+-- 
+create table GlobalRecessions (
+	Dt datetime,
+    RecessionIndicator int, 
+    Name varchar(1024)
+)Engine=InnoDB AUTO_INCREMENT=1 Default charset=utf8mb4;

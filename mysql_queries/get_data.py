@@ -28,12 +28,7 @@ class Connection:
         self.connstring = ''.join(['mysql+pymysql://', self.user, ':',
                                    self.passwd, '@', self.host, '/', self.db_name])
         self.engine = create_engine(self.connstring, echo=False)
-        with self.engine.connect() as conn:
-            try:
-                conn.execute(text('select 1;'))
-                print('Connection successful.')
-            except Exception as e:
-                print('Connection unsuccessful')
+        
 
 class SNP500:
 
