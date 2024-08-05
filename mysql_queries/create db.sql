@@ -65,9 +65,11 @@ create table spy
   volume bigint NULL	
 )Engine=InnoDB AUTO_INCREMENT=1 Default charset=utf8mb4;
 
--- 
+-- drop table GlobalRecessions
 create table GlobalRecessions (
 	Dt datetime,
-    RecessionIndicator int, 
-    Name varchar(1024)
+    RecessionIndicator int,
+    CountryCode varchar(3) not null,
+    SeriesId varchar(8) not null,
+    Country varchar(64) not null
 )Engine=InnoDB AUTO_INCREMENT=1 Default charset=utf8mb4;

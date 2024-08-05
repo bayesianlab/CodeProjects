@@ -1,7 +1,7 @@
 #%%
 import pandas as pd
 import numpy as np
-from get_data import Connection
+from Python.AssetPrice.get_data import Connection
 import matplotlib.pyplot as plt 
 import seaborn as sns 
 from sklearn.preprocessing import StandardScaler

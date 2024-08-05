@@ -70,9 +70,14 @@ where GDP is null;
 
 select *
 from gdp2 
-where rn > 1 and rn < 79
+where rn > 1 and rn < 79;
+
+select *
+from GlobalRecessions;
 
 
 
- 
+
+ select distinct CountryCode, Country
+ from recessions;
 

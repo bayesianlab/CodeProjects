@@ -127,6 +127,7 @@ public:
                 const MatrixXd _gammas, const RowVectorXd &b0,
                 const MatrixXd &B0, const Matrix<int, Dynamic, 2> &InfoMat,
                 string _path_name) {
+    // check dimensions of B0, b0, to Xt 
     this->b0 = b0;
     this->B0 = B0;
     this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());

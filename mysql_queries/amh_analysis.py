@@ -1,5 +1,5 @@
 # %%
-from get_data import Connection
+from Python.AssetPrice.get_data import Connection
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt

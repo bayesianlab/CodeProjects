@@ -9,7 +9,7 @@ for(i in 1:dim(worldgdp)[2]){
   # i <-7
   tsgdp <- ts(worldgdp[,i], frequency = 4, start=c(2004,2))
   # plot(tsgdp)
-  bq <- BBQ(tsgdp, name='GDP', mincycle=4)  
+  bq <- BBQ(tsgdp, name='GDP', mincycle=5, minphase=2)  
   s <- show(bq)
   y <- matrix(nrow=20, ncol=4)
   y <- as.data.frame(y)
