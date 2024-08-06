@@ -77,13 +77,37 @@ select  Country, count(*) - count(GDP) NumNullsGDP,
 from ProbitData
 group by Country ;
 
+-- drop table GrowthRateProbitData;
+create table if not exists GrowthRateProbitData as(
+select lag1.Dt,
+	   lag1.Yr,
+       lag1.Mon,
+	   lag1.Country, 
+       log(lag1.GDP/lag2.GDP) as GDPGrowth, 
+       log(lag1.StockIndex/lag2.StockIndex) as ExpRet,
+       lag1.Ri
+from(select Dt, Country, Yr, Mon, GDP, StockIndex, Ri, 
+			row_number() over(partition by Country order by Dt) rn
+	from ProbitData
+	where Dt > '1999-03-01') lag1
+join (select Dt, Country, Yr, Mon, GDP, StockIndex, Ri, 
+		     row_number() over(partition by Country order by Dt) rn
+	from ProbitData
+	where Dt < '2022-03-01') lag2
+    on lag1.rn=lag2.rn
+    and lag1.Country=lag2.Country);
+
+select *
+from GrowthRateProbitData
+order by Yr, Mon, Country;
+
 select *
 from ProbitData
-order by Yr, Mon, Country 
+group by Country
 
 
 
-
+select 93*32
 
 
 

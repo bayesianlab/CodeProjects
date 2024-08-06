@@ -77,24 +77,20 @@ c = Connection(db_host, db_user, db_pass, db_name)
 
 #%%
 with c.engine.connect() as b:
-    probit_data_y = pd.read_sql(text('select * from Securities.ProbitData;'), con=b)
-    probit_data_x = pd.read_sql(text('select * from Securities.ProbitData order by Yr,Mon,Country;'), con=b)
-    probit_data_y.to_csv('/home/dillon/gdrivelocal/Datasets/Probitdata/GlobalData/probit_data.csv', index=False)
+    probit_data_y = pd.read_sql(text('select * from Securities.GrowthRateProbitData;'), con=b)
+    probit_data_x = pd.read_sql(text('select * from Securities.GrowthRateProbitData order by Yr,Mon,Country;'), con=b)
 # %%
 
-data_y = probit_data_y 
-
-#%%
-dts = data_y[['Dt']]
-data_y = data_y[['Country', 'Ri']]
+dts = probit_data_y[['Dt']]
+probit_data_y = probit_data_y[['Country', 'Ri']]
 
 # %%
-countries = pd.unique(data_y.Country.values)
+countries = pd.unique(probit_data_y.Country.values)
 
 cdata = {} 
 ydata = {} 
 for i in countries:
-    x = data_y[data_y.Country==i ].copy()
+    x = probit_data_y[probit_data_y.Country==i ].copy()
     i = i.replace(' ', '')
     ynames = 'Ri_' + i 
     y = x['Ri']
@@ -106,14 +102,14 @@ y = pd.concat(ydata, axis=1)
 # %%
 y.to_csv('RecessionIndicatorY.csv', index=False)
 # %%
-data_x = probit_data_x[['GDP', 'StockIndex']].copy()
+data_x = probit_data_x[['GDPGrowth', 'ExpRet']].copy()
 
-ss = StandardScaler()
-ss.fit(data_x)
-scaled = ss.transform(data_x)
-data_x['GDP'] = scaled[:,0]
-data_x['StockIndex'] = scaled[:,1]
+# ss = StandardScaler()
+# ss.fit(data_x)
+# scaled = ss.transform(data_x)
+
+#%%
 data_x['c'] = 1
-data_x = data_x[['c', 'GDP', 'StockIndex']]
+data_x = data_x[['c', 'GDPGrowth', 'ExpRet']]
 data_x.to_csv('RecessionIndicatorX.csv', index=False)
 # %%
