@@ -11,8 +11,6 @@ using namespace Eigen;
 int main(){
     MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/build/RecessionIndicatorY.csv");
     MatrixXd Xt = readCSV("/home/dillon/CodeProjects/CProjects/build/RecessionIndicatorX.csv");
-    cout << yt << endl; 
-    cout << Xt << endl; 
     yt.transposeInPlace(); 
     int K = yt.rows();
     int T = yt.cols(); 
@@ -30,4 +28,5 @@ int main(){
 	mv.setModel(yt, Xt, b, phi, b0, B0, 
 	            InfoMat, path_name);
 	mv.runFactorModel(100, 10);
+    mv.InSampleValidation(Xt, yt, 500, 50, 50);
 }

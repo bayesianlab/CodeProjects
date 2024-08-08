@@ -352,7 +352,8 @@ public:
     file.close();
   }
 
-void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int bng, int batches) {
+void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest, 
+                  int G, int bng, int batches) {
     MVTNProbs mvtn;
     int K = ytest.rows();
     int T = ytest.cols();
@@ -413,7 +414,8 @@ void ValidationRun(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int bng,
     writeCsv(orthant_fname, OrthantProbs); 
   }
 
-void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int bng, int batches) {
+void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest, 
+                        int G, int bng, int batches) {
     MVTNProbs mvtn;
     int K = ytest.rows();
     int T = ytest.cols();
@@ -435,9 +437,6 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int
       AvgZ += zt;
       AvgZ = AvgZ/(i+1);  
       MatrixXd Pij = simple_probit_probs(zt);
-      ll += log_loss(Pij, ytest);
-      running_ll = ll / (i + 1);
-      cout << "Log-loss " << running_ll << endl;
     }
     MatrixXi ypred = label_data(AvgZ);
     string ypred_fname = path_name + "/ypred.csv";
@@ -448,7 +447,6 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest, int G, int
     double post_acc = accuracy(ypred, ytest_labeled); 
     MatrixXd Pij = simple_probit_probs(AvgZ); 
     double post_ll = log_loss(Pij, ytest); 
-    cout << "Average log-loss " << running_ll << endl;
     std::filesystem::create_directories(path_name);
     std::ofstream file;
     string summary_fname = path_name + "/vaidation_summary" + ".txt";

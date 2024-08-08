@@ -8,7 +8,10 @@ import pickle
 import os.path
 from os import path
 import sys
+import seaborn as sns 
+import matplotlib.pyplot as plt 
 import subprocess
+import datetime
 from sklearn.preprocessing import StandardScaler
 # Obtain a database connection to the MySQL instance
 db_host = 'localhost'
@@ -70,12 +73,7 @@ datacopy = pd.concat(datacopy, axis=0)
 
 #%%
 c = Connection(db_host, db_user, db_pass, db_name)
-#%%
-# datacopy.to_sql(name='GlobalRecessions', con=c.engine, index=False, if_exists='replace')
 
-#%%
-
-#%%
 with c.engine.connect() as b:
     probit_data_y = pd.read_sql(text('select * from Securities.GrowthRateProbitData;'), con=b)
     probit_data_x = pd.read_sql(text('select * from Securities.GrowthRateProbitData order by Yr,Mon,Country;'), con=b)
@@ -112,4 +110,34 @@ data_x = probit_data_x[['GDPGrowth', 'ExpRet']].copy()
 data_x['c'] = 1
 data_x = data_x[['c', 'GDPGrowth', 'ExpRet']]
 data_x.to_csv('RecessionIndicatorX.csv', index=False)
+# %%
+
+factors = pd.read_csv('/home/dillon/CodeProjects/CProjects/build/recession_factor_yhms_2024_7_5_21_28_21/factors.csv', header=None)
+
+factorbar = factors.mean(axis=0)
+# %%
+usRecess = pd.DataFrame({'Global Factor':factorbar, 'US Recessions':y['Ri_USA']})
+usRecess['Dt'] = pd.Series(dts.iloc[0:92].to_numpy().squeeze())
+#%%
+sns.lineplot(usRecess['Global Factor'])
+ax2 = plt.twinx()
+sns.lineplot(usRecess['US Recessions'], color='red', linestyle='dashed', ax=ax2)
+plt.savefig('/home/dillon/gdrivelocal/LatexDocuments/probit/global_factor.png')
+# %%
+b = 0 
+e = 1 
+recessions = [] 
+for i in usRecess.itertuples():
+    if i[2] == 1 and b == 0:
+        start = i[3]
+        b = 1
+        e = 0
+    if i[2] ==0 and e==0:
+        end = j[3]
+        e = 1
+        b = 0
+        recessions.append((start , end ))
+    j = i  
+    
+
 # %%

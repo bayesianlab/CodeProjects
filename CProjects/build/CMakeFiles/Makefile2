@@ -414,9 +414,9 @@ MultilevelModel/CMakeFiles/ml.dir/clean:
 # Target rules for target MVProbit/CMakeFiles/rp.dir
 
 # All Build rule for target.
-MVProbit/CMakeFiles/rp.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
 MVProbit/CMakeFiles/rp.dir/all: Distributions/CMakeFiles/Dist.dir/all
 MVProbit/CMakeFiles/rp.dir/all: EigenTools/CMakeFiles/ettools.dir/all
+MVProbit/CMakeFiles/rp.dir/all: GnuPlotting/CMakeFiles/plot.dir/all
 MVProbit/CMakeFiles/rp.dir/all: OptimizationTools/CMakeFiles/optlib.dir/all
 MVProbit/CMakeFiles/rp.dir/all: MultilevelModel/CMakeFiles/ml.dir/all
 	$(MAKE) $(MAKESILENT) -f MVProbit/CMakeFiles/rp.dir/build.make MVProbit/CMakeFiles/rp.dir/depend
