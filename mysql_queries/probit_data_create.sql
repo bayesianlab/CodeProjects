@@ -1,114 +1,202 @@
 use Securities; 
 
--- drop table GlobalRecessions
-select max(mindt) 
-from (
-select Country, min(Dt) mindt
-from GlobalRecessions
-where RecessionIndicator is not null
-group by Country) q;
-
--- 1996-05-01 max min dt 
-select *
-from (
-select Country, max(Dt) as maxdt 
-from GlobalRecessions 
-where RecessionIndicator is not null 
-group by Country) a
-join (select min(maxdt) minimax
-from (
-select Country, max(Dt) as maxdt 
-from GlobalRecessions 
-where RecessionIndicator is not null 
-group by Country) b
-where maxdt='2017-11-01') c 
-on c.minimax=a.maxdt;
--- Exclude New Zealand 
-
-select min(maxdt)
-from (
-select Country, max(Dt) as maxdt 
-from GlobalRecessions 
-where RecessionIndicator is not null and Country<>'New Zealand' 
-group by Country) b
-where maxdt > '2022-01-01';
-
--- '2022-05-01'
-
--- drop table RecessionData
-create temporary table if not exists RecessionData as (
-select *
-from GlobalRecessions 
-where Dt>='1996-05-01' and Dt <= '2022-05-01'
-	and Country<>'New Zealand' 
-    and Country<>'Russia'
-    and Country<>'Luxembourg'
-    and Country<> 'Turkey'
-    and Country<>'India'
-    and Country<>'Indonesia'); 
-
-select Country ,count(*), min(Dt), max(Dt)
-from RecessionData
-where RecessionIndicator is not null
-group by Country;
-
--- data is good 
 -- drop table ProbitData
-create table if not exists ProbitData as (
-select Dt, RecessionIndicator as Ri, Country, CountryCode, GDP, StockIndex, Qrtr, Yr, Mon
-from (
-	select Dt, RecessionIndicator, a.Country, a.CountryCode, GDP, IndustrialProd, StockIndex,
-           case when a.Mon = 3 then 1
-				when a.Mon = 6 then 2
-				when a.Mon = 9 then 3
-				when a.Mon = 12 then 4
-			 end as Qrtr, 
-             a.Yr, 
-             a.Mon
-	from (select *, year(Dt) as Yr, month(Dt) as Mon
-		  from RecessionData d) a 
-	join recessions r on r.Country=a.Country 
-		and r.Yr=a.Yr and r.Mon=a.Mon ) b 
-where Qrtr is not null
-	and Dt > '1998-12-01');
+-- drop table gdp
+-- drop table recessions
+create  table if not exists gdp(
+	Country varchar(64),
+	CountryCode varchar(8),
+	Yr int,
+	Mon int,
+	GDP decimal(14,5),
+	IndustrialProd decimal(14,5),
+	Investment decimal (14,5),
+	Employment	decimal(14,5),
+    StockIndex decimal(14,5));
+    
+SET SQL_SAFE_UPDATES = 0;
+update gdp 
+set GDP = 7588.0404 
+where Yr=2023 and Mon=6
+	and Country='Mexico';
+    
+    
+update gdp
+set GDP=7671.508
+	where Yr=2023 and Mon=9
+    and Country='Mexico';
+    
+update gdp
+set GDP=7679.18
+	where Yr=2023 and Mon=12
+    and Country='Mexico';
+    
+update gdp
+set GDP=667.062
+	where Yr=2023 and Mon=9
+    and Country='United Kingdom';
 
-select  Country, count(*) - count(GDP) NumNullsGDP,
-	   count(*) - count(StockIndex) NumNullsStocks
-from ProbitData
-group by Country ;
+update gdp
+set GDP=665.06
+	where Yr=2023 and Mon=12
+    and Country='United Kingdom';
+
+
+    
+-- drop table qrtgdp
+create temporary table if not exists qrtgdp as (
+select *, convert(concat(concat(Yr, '-', Mon), '-', '01'), date) as Dt
+from gdp 
+where Mon in (3,6,9,12)
+);
+
+
+-- drop table GlobalRecessions
+create table if not exists GlobalRecessions(
+	Dt date null,
+    RecessionIndicator int null,
+    CountryCode varchar(8),
+    SeriesId varchar(16),
+    Country varchar(128)
+);
+-- select * from GlobalRecessions
+
+-- drop table Countries
+create temporary table if not exists Countries as (
+select row_number() over(order by Country) as CountryId,  Country,  max(CountryCode) CountryCode
+from GlobalRecessions q
+where q.CountryCode <> 'IND' 
+    and q.CountryCode <> 'NZL'
+    and q.CountryCode <> 'LUX'
+    and q.CountryCode <> 'ZAF'
+    and q.CountryCode <> 'IDN'
+group by Country); 
+
+
+-- drop table QuarterlyGdp
+create temporary table if not exists QuarterlyGdp as (
+select q.Country, q.CountryCode, q.Dt, q.GDP, q.StockIndex
+from qrtgdp q
+join Countries g
+	on g.CountryCode=q.CountryCode
+where q.Dt > '1997-01-03'
+order by q.Country, q.Dt);
+
+
+-- drop table gdp 
+-- drop table gdp2
+-- drop table GlobalRecessions
+
+
+-- drop table QuarterlyRecessionData
+create temporary table if not exists QuarterlyRecessionData as(
+select *
+from (select *, year(Dt) as Yr, month(Dt) as Mon
+	from GlobalRecessions) q
+where Mon in (3,6,9, 12));
+
+-- drop table InSample
+create temporary table if not exists TempInSample as (
+select q.Dt, q.RecessionIndicator, 
+	q.CountryCode, q.Country, q.Yr, q.Mon,
+    g.GDP, g.StockIndex, row_number() over (partition by q.Country order by Dt)
+from QuarterlyRecessionData q
+join qrtgdp g
+	on g.Yr=q.Yr and g.Mon=q.Mon and g.Country=q.Country
+    and q.CountryCode <> 'IND' 
+    and q.CountryCode <> 'NZL'
+    and q.CountryCode <> 'LUX'
+    and q.CountryCode <> 'ZAF'
+    and q.CountryCode <> 'IDN' 
+    and q.CountryCode <> 'RUS'
+where q.Yr > 1997 and 
+	q.Dt <= '2022-06-01'); 
+    
+create temporary table if not exists TempInSample2 as(
+select * from TempInSample
+); 
 
 -- drop table GrowthRateProbitData;
-create table if not exists GrowthRateProbitData as(
-select lag1.Dt,
-	   lag1.Yr,
-       lag1.Mon,
-	   lag1.Country, 
-       log(lag1.GDP/lag2.GDP) as GDPGrowth, 
-       log(lag1.StockIndex/lag2.StockIndex) as ExpRet,
-       lag1.Ri
-from(select Dt, Country, Yr, Mon, GDP, StockIndex, Ri, 
-			row_number() over(partition by Country order by Dt) rn
-	from ProbitData
-	where Dt > '1999-03-01') lag1
-join (select Dt, Country, Yr, Mon, GDP, StockIndex, Ri, 
+create temporary table if not exists TempGrateInSample as(
+select cur.Dt,
+	   cur.Yr,
+       cur.Mon,
+	   cur.Country,
+       log(cur.GDP/lag1.GDP) as GDPGrowth, 
+       log(cur.StockIndex/lag1.StockIndex) as ExpRet,
+       cur.RecessionIndicator
+from(select Dt, Country, Yr, Mon, GDP, StockIndex, RecessionIndicator, 
+			row_number() over(partition by Country order by Dt) +1 as rn
+	from TempInSample
+	where Dt >= '1998-03-01') lag1
+join (select Dt, Country, Yr, Mon, GDP, StockIndex, RecessionIndicator, 
 		     row_number() over(partition by Country order by Dt) rn
-	from ProbitData
-	where Dt < '2022-03-01') lag2
-    on lag1.rn=lag2.rn
-    and lag1.Country=lag2.Country);
+	  from TempInSample2
+	  where Dt <= '2022-06-01') cur
+on lag1.rn=cur.rn
+and lag1.Country=cur.Country
+);
+
+create temporary table if not exists TempGrateInSample2 (
+	select *
+	from TempGrateInSample
+);
+
+-- drop table DataLagged
+create table if not exists Insample as (
+select b.Dt, b.Country, b.RecessionIndicator, b.GDPGrowth, b.ExpRet
+from (
+	  select *, row_number() over (partition by Country order by Dt) + 1 rn
+	  from TempGrateInSample
+      ) q
+join (select *, row_number() over(partition by Country order by Dt) rn from TempGrateInSample2) b 
+	on b.rn=q.rn
+		and b.Country=q.Country
+order by q.Country, q.Dt); 
+   
+-- drop table grdate   
+create temporary table if not exists grdate as (
+select *, convert(concat(concat(Yr, '-', Mon), '-', '01'), date) as Dt
+from gdp
+where Yr > 1997
+);
+
+-- drop table g1
+create temporary table if not exists g1 as (
+select g.Country, g.CountryCode, Dt, GDP, StockIndex,
+		row_number() over(partition by Country order by Dt) + 1 rn 
+from grdate g
+join Countries c on c.Country=g.Country
+where Mon in (3,6,9,12) 
+); 
+
+-- drop table g2
+create temporary table if not exists g2 as (
+select g.Country, g.CountryCode, Dt, GDP, StockIndex,
+		row_number() over(partition by Country order by Dt) rn
+from grdate g
+join Countries c on c.Country=g.Country
+where Mon in (3,6,9,12) 
+); 
+
+
+create table if not exists OutSample as (
+select g2.Country, g2.CountryCode, g2.Dt, log(g2.GDP/g1.GDP) as GDPGrowth, 
+		log(g2.StockIndex/g1.StockIndex) as ExpRet
+from g1 
+join g2 on g1.rn=g2.rn and g1.Country=g2.Country
+where g2.Dt<'2024-01-01' 
+); 
+
 
 select *
-from GrowthRateProbitData
-order by Yr, Mon, Country;
+from OutSample
+where Dt>'2022-12-01'
 
+use Securities;
 select *
-from ProbitData
-group by Country
-
-
-
-select 93*32
-
+from GlobalRecessions
+where CountryCode='USA';
 
 
 

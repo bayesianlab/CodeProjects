@@ -90,5 +90,20 @@
     "cmake.configureOnOpen": false,
     "clang-format.executable": "/usr/bin/clang-format-12",
     "clang-format.style": "google",
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default",
+                "enableSsl": "Disabled"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "dill",
+            "database": "Securities",
+            "username": "dillon"
+        }
+    ],
 
 }

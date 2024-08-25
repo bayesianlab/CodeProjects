@@ -11,6 +11,7 @@ using namespace Eigen;
 int main(){
     MatrixXd yt = readCSV("/home/dillon/CodeProjects/CProjects/build/RecessionIndicatorY.csv");
     MatrixXd Xt = readCSV("/home/dillon/CodeProjects/CProjects/build/RecessionIndicatorX.csv");
+    MatrixXd Xt_Outsample = readCSV("/home/dillon/CodeProjects/CProjects/build/RecessionIndicatorX_Outsample.csv");
     yt.transposeInPlace(); 
     int K = yt.rows();
     int T = yt.cols(); 
@@ -21,12 +22,13 @@ int main(){
 	VectorXd phi(1);
 	phi << unifrnd(.1,.2);
 	string date = dateString();
-	string path_name = "recession_factor_" + date;
+	string path_name = "test_" + date;
     VectorXd b = unifrnd(0,1, Xt.cols()*K);	
     RowVectorXd b0 = VectorXd::Zero(Xt.cols()*K);
     MatrixXd  B0 = 10*MatrixXd::Identity(Xt.cols()*K,Xt.cols()*K);
 	mv.setModel(yt, Xt, b, phi, b0, B0, 
 	            InfoMat, path_name);
-	mv.runFactorModel(100, 10);
-    mv.InSampleValidation(Xt, yt, 500, 50, 50);
+	mv.runFactorModel(10000, 1000);
+    // mv.InSampleValidation(Xt, yt, 500, 50, 50);
+    mv.BayesianPrediction(Xt_Outsample, K);
 }

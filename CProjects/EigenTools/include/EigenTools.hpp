@@ -17,10 +17,12 @@ using namespace Eigen;
 high_resolution_clock::time_point timeit();
 typedef SparseMatrix<double> SparseDouble;
 
+const static IOFormat CSVFormat(StreamPrecision, DontAlignCols, ", ", "\n");
+
 template <typename T> void writeCsv(string name, const MatrixBase<T> &matrix) {
   ofstream file(name.c_str());
   if (file.is_open()) {
-    file << matrix << '\n';
+    file << matrix.format(CSVFormat) << '\n';
     file.close();
   } else {
     cout << "error" << endl;

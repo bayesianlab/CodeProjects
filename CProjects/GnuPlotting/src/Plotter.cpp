@@ -1,7 +1,4 @@
 #include "Plotter.hpp"
-const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", "\n");
-
-
 
 int plotter(string filename, const VectorXd &A, const VectorXd &B)
 {

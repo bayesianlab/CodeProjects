@@ -2,6 +2,7 @@
 from fredapi import Fred
 import requests as req
 import pandas as pd
+import numpy as np 
 from sqlalchemy import create_engine, text
 import csv
 import pickle
@@ -49,8 +50,7 @@ search_codes = pd.DataFrame(codes, columns=['Key', 'CountryCode', 'SeriesId'])
 
 # %%
 country_keys = search_codes.merge(country_codes, on='CountryCode')
-# country_keys.to_csv('country_keys.csv', index=False)
-# %%
+country_keys.to_csv('country_keys.csv', index=False)
 ids = country_keys['SeriesId']
 # %%
 data = [] 
@@ -65,8 +65,11 @@ for i in ids:
     series.reset_index(inplace=True)
     series.rename({'index':'Dt'}, inplace=True, axis=1)
     data.append(series)
-
-
+c = Connection(db_host, db_user, db_pass, db_name)
+datacopy = pd.concat(data, axis=0)
+#%%
+with c.engine.begin() as conn:
+    datacopy.to_sql('GlobalRecessions', con=conn, if_exists='replace', index=False)
 # %%
 datacopy = data
 datacopy = pd.concat(datacopy, axis=0)
@@ -75,23 +78,23 @@ datacopy = pd.concat(datacopy, axis=0)
 c = Connection(db_host, db_user, db_pass, db_name)
 
 with c.engine.connect() as b:
-    probit_data_y = pd.read_sql(text('select * from Securities.GrowthRateProbitData;'), con=b)
-    probit_data_x = pd.read_sql(text('select * from Securities.GrowthRateProbitData order by Yr,Mon,Country;'), con=b)
+    probit_data = pd.read_sql(text('select * from Securities.Insample;'), con=b)
+    
 # %%
 
-dts = probit_data_y[['Dt']]
-probit_data_y = probit_data_y[['Country', 'Ri']]
+dts = probit_data[['Dt']]
+probit_data_y = probit_data[['Country', 'RecessionIndicator']]
 
 # %%
 countries = pd.unique(probit_data_y.Country.values)
-
+print(len(countries))
 cdata = {} 
 ydata = {} 
 for i in countries:
     x = probit_data_y[probit_data_y.Country==i ].copy()
     i = i.replace(' ', '')
     ynames = 'Ri_' + i 
-    y = x['Ri']
+    y = x['RecessionIndicator']
     y.columns = ynames 
     y.reset_index(inplace=True, drop=True)
     ydata[ynames] = y 
@@ -100,7 +103,7 @@ y = pd.concat(ydata, axis=1)
 # %%
 y.to_csv('RecessionIndicatorY.csv', index=False)
 # %%
-data_x = probit_data_x[['GDPGrowth', 'ExpRet']].copy()
+data_x = probit_data[['GDPGrowth', 'ExpRet']].copy()
 
 # ss = StandardScaler()
 # ss.fit(data_x)
@@ -111,33 +114,22 @@ data_x['c'] = 1
 data_x = data_x[['c', 'GDPGrowth', 'ExpRet']]
 data_x.to_csv('RecessionIndicatorX.csv', index=False)
 # %%
+c = Connection(db_host, db_user, db_pass, db_name)
 
-factors = pd.read_csv('/home/dillon/CodeProjects/CProjects/build/recession_factor_yhms_2024_7_5_21_28_21/factors.csv', header=None)
+with c.engine.connect() as b:
+    probit_data_outsample = pd.read_sql(text('select * from Securities.OutSample;'), con=b)
 
-factorbar = factors.mean(axis=0)
-# %%
-usRecess = pd.DataFrame({'Global Factor':factorbar, 'US Recessions':y['Ri_USA']})
-usRecess['Dt'] = pd.Series(dts.iloc[0:92].to_numpy().squeeze())
+probit_data_outsample['Dt']=pd.to_datetime(probit_data_outsample['Dt'])
+probit_data_outsample= probit_data_outsample[probit_data_outsample['Dt']>pd.to_datetime('2022-06-01')]
 #%%
-sns.lineplot(usRecess['Global Factor'])
-ax2 = plt.twinx()
-sns.lineplot(usRecess['US Recessions'], color='red', linestyle='dashed', ax=ax2)
-plt.savefig('/home/dillon/gdrivelocal/LatexDocuments/probit/global_factor.png')
+country_frame = pd.DataFrame(countries, columns=['Country'])
+probit_data_outsample=probit_data_outsample.merge(country_frame)
+print(len(probit_data_outsample.Country.unique()))
+#%%
+data_x = probit_data_outsample[['GDPGrowth', 'ExpRet']].copy()
+data_x['c'] = 1
+data_x = data_x[['c', 'GDPGrowth', 'ExpRet']]
+data_x.to_csv('RecessionIndicatorX_Outsample.csv', index=False)
 # %%
-b = 0 
-e = 1 
-recessions = [] 
-for i in usRecess.itertuples():
-    if i[2] == 1 and b == 0:
-        start = i[3]
-        b = 1
-        e = 0
-    if i[2] ==0 and e==0:
-        end = j[3]
-        e = 1
-        b = 0
-        recessions.append((start , end ))
-    j = i  
-    
 
 # %%
