@@ -10,37 +10,44 @@
 #include "Optimization.hpp"
 #include "TimeSeriesTools.hpp"
 
-
 using namespace Eigen;
 using namespace std;
 
 template <typename Tz, typename Ty, typename Tm>
 void drawLatentData(MatrixBase<Tz> &zt, const MatrixBase<Ty> &yt,
-                    const MatrixBase<Tm> &mut) {
+                    const MatrixBase<Tm> &mut)
+{
   int K = zt.rows();
   int T = zt.cols();
   VectorXd ytt(K), mutt(K);
   double condmean;
-  for (int t = 0; t < T; ++t) {
+  for (int t = 0; t < T; ++t)
+  {
     ytt = yt.col(t);
     mutt = mutt.col(t);
-    for (int k = 0; k < K; ++k) {
-      if (ytt(k) > 0) {
+    for (int k = 0; k < K; ++k)
+    {
+      if (ytt(k) > 0)
+      {
         zt(k, t) = NormalTruncatedPositive(mutt(k), 1, 1).value();
-      } else {
+      }
+      else
+      {
         zt(k, t) = -NormalTruncatedPositive(-mutt(k), 1, 1).value();
       }
     }
   }
 }
 
-MatrixXd CorrelationMatrix(const MatrixXd &X) {
+MatrixXd CorrelationMatrix(const MatrixXd &X)
+{
   VectorXd d = X.diagonal().array().pow(-.5);
   MatrixXd D = d.asDiagonal();
   return D * X * D;
 }
 
-pair<MatrixXd, MatrixXd> AstarLstar(MatrixXd &A, const MatrixXd &Sigma) {
+pair<MatrixXd, MatrixXd> AstarLstar(MatrixXd &A, const MatrixXd &Sigma)
+{
 
   MatrixXd AAT = A * A.transpose();
   MatrixXd P = AAT + Sigma;
@@ -55,7 +62,8 @@ pair<MatrixXd, MatrixXd> AstarLstar(MatrixXd &A, const MatrixXd &Sigma) {
 
 class MVP : public BetaParameterTools,
             public SurBetaUpdater,
-            public FullConditionalsNoAr {
+            public FullConditionalsNoAr
+{
 public:
   std::vector<VectorXd> BetaPosterior;
   std::vector<MatrixXd> LoadingPosterior;
@@ -85,16 +93,18 @@ public:
   Matrix<int, Dynamic, 2> InfoMat;
   std::vector<MatrixXd> Xtk;
   int sigmaAcceptance = 0;
-  string path_name; 
+  string path_name;
 
-  pair<vector<VectorXd>, vector<MatrixXd>> setPriorBlocks(int K) {
+  pair<vector<VectorXd>, vector<MatrixXd>> setPriorBlocks(int K)
+  {
     int blocks = K - 1;
     std::vector<VectorXd> s0;
     std::vector<MatrixXd> S0;
     s0.resize(blocks);
     S0.resize(blocks);
     int dim;
-    for (int i = 0; i < K - 1; ++i) {
+    for (int i = 0; i < K - 1; ++i)
+    {
       dim = (K - 1) - i;
       s0[i] = VectorXd::Zero(dim);
       S0[i] = MatrixXd::Identity(dim, dim);
@@ -109,7 +119,8 @@ public:
                 const VectorXd &beta, const RowVectorXd &b0, const MatrixXd &B0,
                 const std::vector<VectorXd> &s0,
                 const std::vector<MatrixXd> &S0, Optimize &optim,
-                double tune1) {
+                double tune1)
+  {
     int K = yt.rows();
     this->Xt = Xt;
     this->yt = yt;
@@ -126,12 +137,13 @@ public:
   void setModel(const MatrixXd &yt, const MatrixXd &Xt, const VectorXd &beta,
                 const MatrixXd _gammas, const RowVectorXd &b0,
                 const MatrixXd &B0, const Matrix<int, Dynamic, 2> &InfoMat,
-                string _path_name) {
-    // check dimensions of B0, b0, to Xt 
+                string _path_name)
+  {
+    // check dimensions of B0, b0, to Xt
     this->b0 = b0;
     this->B0 = B0;
     this->Ft = normrnd(0, 1, InfoMat.rows(), yt.cols());
-    // this->Ft = Factors; 
+    // this->Ft = Factors;
     this->yt = yt;
     this->Xt = Xt;
     this->beta = beta;
@@ -143,7 +155,8 @@ public:
     path_name = _path_name;
   }
 
-  void runModel(int Sims, int burnin) {
+  void runModel(int Sims, int burnin)
+  {
     // Chib Greenberg method
     this->Sims = Sims;
     this->burnin = burnin;
@@ -158,9 +171,11 @@ public:
     MatrixXd surX = surForm(Xt, K);
     MatrixXd Xbeta = surX * beta;
     Xbeta.resize(K, T);
-    for (int i = 0; i < Sims; ++i) {
+    for (int i = 0; i < Sims; ++i)
+    {
       cout << "Sim " << i + 1 << endl;
-      for (int t = 0; t < T; ++t) {
+      for (int t = 0; t < T; ++t)
+      {
         zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
                             Xbeta.col(t).transpose(), Sigma, 1, 0);
       }
@@ -168,7 +183,8 @@ public:
       Xbeta = surX * bnew.transpose();
       Xbeta.resize(K, T);
       updateSigma(zt, Xbeta, Sigma, optim);
-      if (i >= burnin) {
+      if (i >= burnin)
+      {
         BetaPosterior[i - burnin] = bnew.transpose();
         SigmaPosterior[i - burnin] = Sigma;
       }
@@ -179,7 +195,8 @@ public:
     cout << "Sigma Acceptance Rate " << sigmaAcceptance / (double)Sims << endl;
   }
 
-  void runFactorModel(int Sims, int burnin) {
+  void runFactorModel(int Sims, int burnin)
+  {
     // New method
     this->Sims = Sims;
     this->burnin = burnin;
@@ -199,7 +216,8 @@ public:
     Xbeta.resize(K, T);
     MatrixXd yhat = Xbeta + A * Ft;
     zt.resize(K, T);
-    for (int t = 0; t < T; ++t) {
+    for (int t = 0; t < T; ++t)
+    {
       zt.col(t) = mvtnrnd(yhat.col(t).transpose(), yt.col(t).transpose(),
                           yhat.col(t).transpose(), Sigma, 1, 0);
     }
@@ -210,11 +228,13 @@ public:
     RowVectorXd a0 = RowVectorXd::Ones(QK);
     MatrixXd A0 = MatrixXd::Identity(QK, QK);
     MatrixXd AF;
-    for (int i = 0; i < Sims; ++i) {
+    for (int i = 0; i < Sims; ++i)
+    {
       cout << "Sim " << i + 1 << endl;
       AF = A * Ft;
       yhat = Xbeta + AF;
-      for (int t = 0; t < T; ++t) {
+      for (int t = 0; t < T; ++t)
+      {
         zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
                             yhat.col(t).transpose(), Sigma, 1, 0);
       }
@@ -232,24 +252,26 @@ public:
       A.transpose().resize(K, nFactors);
       A.transposeInPlace();
       Identification2(A);
-      for (int n = 0; n < nFactors; ++n) {
+      for (int n = 0; n < nFactors; ++n)
+      {
         MatrixXd Acopy = A;
         Acopy.col(n) = VectorXd::Zero(K);
-        MatrixXd resids = zt  - Acopy * Ft;
+        MatrixXd resids = zt - Acopy * Ft;
         MatrixXd Sinv = MakePrecision(gammas.row(n), factorVariance(n), T);
         resids.resize(KT, 1);
         Ft.row(n) = updateFactor(resids, A.col(n), Sinv, Sigma);
         // Factor dynamic multipliers update
         gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
                                            factorVariance(n), g0, G0);
-                                           
-        // MatrixXd H = ReturnH(gammas.row(n), T);
-        // MatrixXd nu = (H * Ft.row(n).transpose()).transpose();
+
+        MatrixXd H = ReturnH(gammas.row(n), T);
+        MatrixXd nu = (H * Ft.row(n).transpose()).transpose();
         // factor variance update
         // factorVariance(n) = updateSigma2(nu, d0, D0).value();
       }
-          zt += Xbeta;
-      if (i >= burnin) {
+      zt += Xbeta;
+      if (i >= burnin)
+      {
         BetaPosterior.push_back(beta);
         LoadingPosterior.push_back(A);
         FactorPosterior.push_back(Ft);
@@ -260,10 +282,11 @@ public:
     }
 
     std::filesystem::create_directories(path_name);
-    fname = path_name + "/main_MCMC_run"+ ".txt";
+    fname = path_name + "/main_MCMC_run" + ".txt";
     std::ofstream file;
     file.open(fname);
-    if (file.is_open()) {
+    if (file.is_open())
+    {
       storePosterior(path_name + "/beta.csv", BetaPosterior);
       storePosterior(path_name + "/loadings.csv", LoadingPosterior);
       storePosterior(path_name + "/gammas.csv", GammasPosterior);
@@ -273,48 +296,56 @@ public:
            << "burnin " << burnin << " " << T << " " << K << endl;
       file << "Beta avg" << endl;
       file << mean(BetaPosterior) << endl;
-      cout << "Loading Avg" << endl; 
-      file << mean(LoadingPosterior) << endl; 
+      cout << "Loading Avg" << endl;
+      file << mean(LoadingPosterior) << endl;
       file << "Gamma avg" << endl;
       file << mean(GammasPosterior) << endl;
       file << "Factors avg" << endl;
       file << mean(FactorPosterior).transpose() << endl;
-      file << "Factor variance avg" << endl; 
-      file << mean(FactorVariancePosterior) << endl; 
+      file << "Factor variance avg" << endl;
+      file << mean(FactorVariancePosterior) << endl;
       file.close();
-    } else {
+    }
+    else
+    {
       cout << "Error, file not written" << endl;
     }
   }
 
-  void BayesianPrediction(const MatrixXd &Xtest, int K) {
-    int T = Xtest.rows()/K;
-    int KT = K*T; 
-    int nFactors = FactorPosterior[0].rows(); 
+  void BayesianPrediction(const MatrixXd &Xtest, int K, int prob_sims, int prob_burnin,
+                          int prob_reps)
+  {
+    int T = Xtest.rows() / K;
+    int KT = K * T;
+    int nFactors = FactorPosterior[0].rows();
 
     MatrixXd surX = surForm(Xtest, K);
-    MatrixXd Fhat = mean(FactorPosterior); 
-    MatrixXd zhat = MatrixXd::Zero(K,T); 
-    MatrixXd Sigma = MatrixXd::Identity(K,K);
-    MatrixXd gammashat = mean(GammasPosterior); 
-    MatrixXd zt = MatrixXd::Zero(K,T); 
+    MatrixXd Fhat = mean(FactorPosterior);
+    MatrixXd zhat = MatrixXd::Zero(K, T);
+    MatrixXd Sigma = MatrixXd::Identity(K, K);
+    MatrixXd gammashat = mean(GammasPosterior);
+    MatrixXd zt = MatrixXd::Zero(K, T);
 
     vector<MatrixXd> Zposterior;
 
-    for (int i = 0; i < BetaPosterior.size(); ++i) {
+    for (int i = 0; i < BetaPosterior.size(); ++i)
+    {
       beta = BetaPosterior[i];
       MatrixXd Xbeta = surX * beta;
       Xbeta.resize(K, T);
       MatrixXd A = LoadingPosterior[i];
-      MatrixXd ft = Fhat.col(T-1);
+      MatrixXd ft = Fhat.col(T - 1);
       VectorXd factorVariance = FactorVariancePosterior[i];
       gammas = GammasPosterior[i];
-      for (int n = 0; n < nFactors; ++n) {
+      for (int n = 0; n < nFactors; ++n)
+      {
         ft(n) = (gammas.row(n) * ft(n)).value();
       }
-      for (int t = 0; t < T; ++t) {
+      for (int t = 0; t < T; ++t)
+      {
         zt.col(t) = Xbeta.col(t) + A * ft;
-        for (int n = 0; n < nFactors; ++n) {
+        for (int n = 0; n < nFactors; ++n)
+        {
           MatrixXd Acopy = A;
           Acopy.col(n) = VectorXd::Zero(K);
           MatrixXd resids = zt.col(t) - Xbeta.col(t) - (Acopy * ft);
@@ -322,18 +353,32 @@ public:
           ft.row(n) = updateFactor(resids, A.col(n), Sinv, Sigma);
         }
       }
-      Zposterior.push_back(zt); 
+      Zposterior.push_back(zt);
     }
-    string zpath = path_name + "/Zposterior.csv"; 
+    string zpath = path_name + "/Zposterior.csv";
     storePosterior(zpath, Zposterior);
     MatrixXd AvgZ = mean(Zposterior);
     MatrixXi ypred = label_data(AvgZ);
     string ypred_fname = path_name + "/ypred.csv";
-    writeCsv(ypred_fname, ypred); 
+    writeCsv(ypred_fname, ypred);
+
+    MatrixXd OrthantProbs(prob_reps, zt.cols());
+    MVTNProbs mvtn;
+    MatrixXd ypred_double = ypred.cast<double>(); 
+    for (int j = 0; j < zt.cols(); ++j)
+    {
+      cout << "Orthant-Sim " << j +1 << endl;
+      OrthantProbs.col(j) =
+          mvtn.batch_crb(AvgZ.col(j).transpose(), Sigma, ypred_double.col(j).transpose(),
+                         prob_sims, prob_burnin, prob_reps);
+    }
+    string orthant_fname = path_name + "/prediction_orthant_probs.csv";
+    writeCsv(orthant_fname, OrthantProbs);
   }
 
-void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest, 
-                        int G, int bng, int batches) {
+  void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
+                          int G, int bng, int batches)
+  {
     MVTNProbs mvtn;
     int K = ytest.rows();
     int T = ytest.cols();
@@ -342,9 +387,10 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     double running_ll = 0;
     double ll = 0;
     MatrixXd surX = surForm(Xtest, K);
-    MatrixXd AvgZ(K,T);
-    AvgZ.setZero(); 
-    for (int i = 0; i < 1; ++i) {
+    MatrixXd AvgZ(K, T);
+    AvgZ.setZero();
+    for (int i = 0; i < 1; ++i)
+    {
       beta = BetaPosterior[i];
       MatrixXd Xbeta = surX * beta;
       Xbeta.resize(K, T);
@@ -353,26 +399,27 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
       MatrixXd AF = A * Ft;
       MatrixXd zt = Xbeta + AF;
       AvgZ += zt;
-      AvgZ = AvgZ/(i+1);  
+      AvgZ = AvgZ / (i + 1);
       MatrixXd Pij = simple_probit_probs(zt);
     }
     MatrixXi ypred = label_data(AvgZ);
     string ypred_fname = path_name + "/ypred.csv";
-    writeCsv(ypred_fname, ypred); 
+    writeCsv(ypred_fname, ypred);
     string yactual_fname = path_name + "/ytest.csv";
-    writeCsv(yactual_fname, ytest); 
-    MatrixXi ytest_labeled = label_data(ytest); 
-    double post_acc = accuracy(ypred, ytest_labeled); 
-    MatrixXd Pij = simple_probit_probs(AvgZ); 
-    double post_ll = log_loss(Pij, ytest); 
+    writeCsv(yactual_fname, ytest);
+    MatrixXi ytest_labeled = label_data(ytest);
+    double post_acc = accuracy(ypred, ytest_labeled);
+    MatrixXd Pij = simple_probit_probs(AvgZ);
+    double post_ll = log_loss(Pij, ytest);
     std::filesystem::create_directories(path_name);
     std::ofstream file;
     string summary_fname = path_name + "/vaidation_summary" + ".txt";
     file.open(summary_fname);
-    if (file.is_open()) {
+    if (file.is_open())
+    {
       file << "Running log-loss (all posterior samples averaged) " << running_ll << endl;
-      file << "Posterior mean accuracy " << post_acc << endl; 
-      file << "Posterior mean log loss " << post_ll << endl; 
+      file << "Posterior mean accuracy " << post_acc << endl;
+      file << "Posterior mean log loss " << post_ll << endl;
     }
     file.close();
 
@@ -383,63 +430,77 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     MatrixXd Ft = mean(FactorPosterior);
     MatrixXd AF = A * Ft;
     MatrixXd zt = Xbeta + AF;
-    vector<double> probs;
-    vector<double> prob_var;
     MatrixXd Sigma = MatrixXd::Identity(K, K);
     MatrixXd OrthantProbs(batches, zt.cols());
-    for (int j = 0; j < zt.cols(); ++j) {
+    for (int j = 0; j < zt.cols(); ++j)
+    {
       cout << "Orthant num " << j << endl;
       OrthantProbs.col(j) =
           mvtn.batch_crb(zt.col(j).transpose(), Sigma, ytest.col(j).transpose(),
                          G, bng, batches);
     }
-    string orthant_fname = path_name + "/orthant_probs.csv"; 
-    writeCsv(orthant_fname, OrthantProbs); 
+    string orthant_fname = path_name + "/orthant_probs.csv";
+    writeCsv(orthant_fname, OrthantProbs);
   }
 
-  MatrixXi label_data(const MatrixXd &latent_data) {
+  MatrixXi label_data(const MatrixXd &latent_data)
+  {
     int K = latent_data.rows();
     int T = latent_data.cols();
-    MatrixXi LabeledData(K,T); 
-    for (int t = 0; t < T; ++t) {
-      for (int k = 0; k < K; ++k) {
-        if(latent_data(k,t) > 0){
-          LabeledData(k,t) = 1;
+    MatrixXi LabeledData(K, T);
+    for (int t = 0; t < T; ++t)
+    {
+      for (int k = 0; k < K; ++k)
+      {
+        if (latent_data(k, t) > 0)
+        {
+          LabeledData(k, t) = 1;
         }
-        else{
-          LabeledData(k,t) = 0; 
+        else
+        {
+          LabeledData(k, t) = 0;
         }
       }
     }
-    return LabeledData; 
+    return LabeledData;
   }
 
-
-  void Identification1(MatrixXd &A) {
-    for (int i = 0; i < A.cols(); ++i) {
-      for (int j = 0; j < A.cols(); ++j) {
-        if (j > i) {
+  void Identification1(MatrixXd &A)
+  {
+    for (int i = 0; i < A.cols(); ++i)
+    {
+      for (int j = 0; j < A.cols(); ++j)
+      {
+        if (j > i)
+        {
           A(i, j) = 0.0;
-        } else if (i == j) {
+        }
+        else if (i == j)
+        {
           A(i, j) = 1.0;
         }
       }
     }
   }
 
-  void Identification2(MatrixXd &A) {
-    for (int i = 0; i < A.cols(); ++i) {
-      for (int j = 0; j < A.cols(); ++j) {
-        if (j > i) {
+  void Identification2(MatrixXd &A)
+  {
+    for (int i = 0; i < A.cols(); ++i)
+    {
+      for (int j = 0; j < A.cols(); ++j)
+      {
+        if (j > i)
+        {
           A(i, j) = 0.0;
-        } 
+        }
       }
     }
   }
 
   template <typename T1, typename T2, typename T3>
   void updateSigma(const MatrixBase<T1> &zt, const MatrixBase<T2> &Xbeta,
-                   MatrixBase<T3> &Sigma, Optimize &optim) {
+                   MatrixBase<T3> &Sigma, Optimize &optim)
+  {
     int K = zt.rows();
     int T = zt.cols();
     int df = 12;
@@ -453,17 +514,20 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     VectorXd proposalMean;
     vector<VectorXd> storeProposalMeans(K - 1);
     vector<MatrixXd> storeH(K - 1);
-    for (int column = 0; column < (K - 1); ++column) {
+    for (int column = 0; column < (K - 1); ++column)
+    {
       w = chi2rnd(df);
       w = sqrt(w / df);
       guess = Sigma.col(column).tail(K - (column + 1));
       proposalMean = guess;
-      auto SLL = [&column, &mu, &Sigma, this](const VectorXd &x0) {
+      auto SLL = [&column, &mu, &Sigma, this](const VectorXd &x0)
+      {
         return -SigmaLogLikelihood(x0, column, mu, Sigma, s0[column],
                                    S0[column]);
       };
       optim.BFGS(proposalMean, SLL, 0);
-      if (optim.flag == 1) {
+      if (optim.flag == 1)
+      {
         optim.flag = 0;
         proposalMean.setZero();
         optim.BFGS(proposalMean, SLL, 0);
@@ -480,7 +544,8 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     VectorXd sigPrior = VectorXd::Zero(S.rows() * (S.rows() - 1) / 2);
     MatrixXd SigPrior = MatrixXd::Identity(S.rows() * (S.rows() - 1) / 2,
                                            S.rows() * (S.rows() - 1) / 2);
-    if (isPD(S)) {
+    if (isPD(S))
+    {
       proposal = vech(S);
       VectorXd guessvech = vech(Sigma);
       VectorXd pmeans = flattenVectorVector(storeProposalMeans);
@@ -490,19 +555,23 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
       den = -SigmaLogLikelihood(guessvech, mu, Sigma, sigPrior, SigPrior) +
             logmvtpdf(proposal.transpose(), pmeans.transpose(), pcovars, df);
       alpha = min(0.0, num - den);
-      if (log(unifrnd(0, 1)) < alpha) {
+      if (log(unifrnd(0, 1)) < alpha)
+      {
         sigmaAcceptance++;
         Sigma = S;
       }
     }
   }
 
-  VectorXd flattenVectorVector(const std::vector<VectorXd> &Y) {
+  VectorXd flattenVectorVector(const std::vector<VectorXd> &Y)
+  {
     int k = ((Y[0].size() + 1) * Y[0].size()) / 2;
     VectorXd flat(k);
     int h = 0;
-    for (auto it = Y.begin(); it != Y.end(); ++it) {
-      for (int i = 0; i < it->size(); ++i) {
+    for (auto it = Y.begin(); it != Y.end(); ++it)
+    {
+      for (int i = 0; i < it->size(); ++i)
+      {
         flat(h) = (*it)(i);
         ++h;
       }
@@ -510,15 +579,18 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     return flat;
   }
 
-  MatrixXd flattenVectorMatrix(const std::vector<MatrixXd> &Y) {
+  MatrixXd flattenVectorMatrix(const std::vector<MatrixXd> &Y)
+  {
     int s = 0;
-    for (auto it = Y.begin(); it != Y.end(); ++it) {
+    for (auto it = Y.begin(); it != Y.end(); ++it)
+    {
       s += it->rows();
     }
     MatrixXd flat = MatrixXd::Zero(s, s);
     int r = 0;
     int c = 0;
-    for (auto it = Y.begin(); it != Y.end(); ++it) {
+    for (auto it = Y.begin(); it != Y.end(); ++it)
+    {
       flat.block(r, c, it->rows(), it->cols()) = *it;
       r += it->rows();
       c += it->cols();
@@ -529,7 +601,8 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
   double SigmaLogLikelihood(const VectorXd &guess, const int column,
                             const MatrixXd &mu, const MatrixXd &Sigma,
                             const VectorXd &guesspriorMean,
-                            const MatrixXd &guesspriorVar) {
+                            const MatrixXd &guesspriorVar)
+  {
     MatrixXd S = Sigma;
     S.col(column).tail(guess.size()) = guess;
     S.row(column).tail(guess.size()) = guess.transpose();
@@ -543,10 +616,14 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
                         (guess - guesspriorMean))
                            .value();
     tmu += (-.5 * T) * logdet(S);
-    if (isnan(tmu)) {
+    if (isnan(tmu))
+    {
       return -1e14;
-    } else {
-      for (int t = 0; t < T; ++t) {
+    }
+    else
+    {
+      for (int t = 0; t < T; ++t)
+      {
         tmu += -.5 * (mu.col(t).transpose() * Precision * mu.col(t)).value();
       }
       return tmu;
@@ -556,7 +633,8 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
   double SigmaLogLikelihood(const VectorXd &guess, const MatrixXd &mu,
                             const MatrixXd &Sigma,
                             const VectorXd &guesspriorMean,
-                            const MatrixXd &guesspriorVar) {
+                            const MatrixXd &guesspriorVar)
+  {
     MatrixXd S0inv = guesspriorVar.llt().solve(
         MatrixXd::Identity(guesspriorVar.rows(), guesspriorVar.cols()));
     int K = mu.rows();
@@ -567,17 +645,22 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
                         (guess - guesspriorMean))
                            .value();
     tmu += (-.5 * T) * logdet(Sigma);
-    if (isnan(tmu)) {
+    if (isnan(tmu))
+    {
       return -1e14;
-    } else {
-      for (int t = 0; t < T; ++t) {
+    }
+    else
+    {
+      for (int t = 0; t < T; ++t)
+      {
         tmu += -.5 * (mu.col(t).transpose() * Precision * mu.col(t)).value();
       }
       return tmu;
     }
   }
 
-  double alphaG() {
+  double alphaG()
+  {
     int K = yt.rows();
     int T = yt.cols();
     MatrixXd zt(K, T);
@@ -599,29 +682,34 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     vector<MatrixXd> storeH(K - 1);
     int df = 12;
     double w, num, den, alpha;
-    for (int r = 0; r < (Sims - burnin); ++r) {
+    for (int r = 0; r < (Sims - burnin); ++r)
+    {
       cout << "G runs " << r + 1 << endl;
       Sigma = SigmaPosterior[r];
       mu = zt - Xbeta;
-      for (int t = 0; t < T; ++t) {
+      for (int t = 0; t < T; ++t)
+      {
         zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
                             Xbeta.col(t).transpose(), Sigma, 1, 0);
       }
       Xbeta = surX * BetaPosterior[r];
       Xbeta.resize(K, T);
-      for (int column = 0; column < (K - 1); ++column) {
+      for (int column = 0; column < (K - 1); ++column)
+      {
         w = chi2rnd(df);
         w = sqrt(w / df);
         guess = Sigma.col(column).tail(K - (column + 1));
         proposalMean = guess;
         proposal = SigmaStar.col(column).tail(K - (column + 1));
-        auto SLL = [&column, &mu, &Sigma, this](const VectorXd &x0) {
+        auto SLL = [&column, &mu, &Sigma, this](const VectorXd &x0)
+        {
           return -SigmaLogLikelihood(x0, column, mu, Sigma, s0[column],
                                      S0[column]);
         };
         optim.BFGS(proposalMean, SLL, 0);
         storeProposalMeans[column] = proposalMean;
-        if (optim.flag == 1) {
+        if (optim.flag == 1)
+        {
           optim.flag = 0;
           proposalMean.setZero();
           optim.BFGS(proposalMean, SLL, 0);
@@ -651,7 +739,8 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     return logavg(gdraws);
   }
 
-  double alphaJ() {
+  double alphaJ()
+  {
     int K = yt.rows();
     int T = yt.cols();
     MatrixXd zt(K, T);
@@ -676,10 +765,12 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     std::vector<MatrixXd> Sstarvar;
     sstarmean.resize(K - 1);
     Sstarvar.resize(K - 1);
-    for (int column = 0; column < K - 1; ++column) {
+    for (int column = 0; column < K - 1; ++column)
+    {
       sstar = SigmaStar.col(column).tail(K - (column + 1));
       proposal = sstar;
-      auto SLL = [&column, &mu, &SigmaStar, this](const VectorXd &x0) {
+      auto SLL = [&column, &mu, &SigmaStar, this](const VectorXd &x0)
+      {
         return -SigmaLogLikelihood(x0, column, mu, SigmaStar, s0[column],
                                    S0[column]);
       };
@@ -689,9 +780,11 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
       sstarmean[column] = proposal;
       Sstarvar[column] = H;
     }
-    for (int r = 0; r < (Sims - burnin); ++r) {
+    for (int r = 0; r < (Sims - burnin); ++r)
+    {
       cout << "J runs " << r + 1 << endl;
-      for (int t = 0; t < T; ++t) {
+      for (int t = 0; t < T; ++t)
+      {
         zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
                             Xbeta.col(t).transpose(), SigmaStar, 1, 0);
       }
@@ -699,7 +792,8 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
       BetaJ[r] = bnew.transpose();
       Xbeta = surX * BetaJ[r];
       Xbeta.resize(K, T);
-      for (int column = 0; column < (K - 1); ++column) {
+      for (int column = 0; column < (K - 1); ++column)
+      {
         w = chi2rnd(df);
         w = sqrt(w / df);
         S = SigmaStar;
@@ -729,7 +823,8 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     return logavg(jdraws);
   }
 
-  double ml() {
+  double ml()
+  {
     BetaJ.resize(Sims - burnin);
     int K = yt.rows();
     int T = yt.cols();
@@ -744,8 +839,10 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     double pstar = alphaG() - alphaJ();
     VectorXd pibeta(Sims - burnin);
     MatrixXd ztstar(K, T);
-    for (int r = 0; r < (Sims - burnin); ++r) {
-      for (int t = 0; t < T; ++t) {
+    for (int r = 0; r < (Sims - burnin); ++r)
+    {
+      for (int t = 0; t < T; ++t)
+      {
         zt.col(t) = mvtnrnd(zt.col(t).transpose(), yt.col(t).transpose(),
                             Xbeta.col(t).transpose(), SigmaStar, 1, 0);
       }
@@ -759,7 +856,8 @@ void InSampleValidation(const MatrixXd &Xtest, const MatrixXd &ytest,
     double betaprior = logmvnpdf(betaStar.transpose(), b0, B0);
     double sigmaprior = 0;
     VectorXd sstar;
-    for (int column = 0; column < K - 1; ++column) {
+    for (int column = 0; column < K - 1; ++column)
+    {
       sstar = SigmaStar.col(column).tail(K - (column + 1));
       sigmaprior += logmvnpdf(sstar.transpose(), s0[column].transpose(),
                               S0[column].transpose());

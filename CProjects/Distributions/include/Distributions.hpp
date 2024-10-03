@@ -201,7 +201,7 @@ public:
   }
 
   VectorXd batch_crb(const RowVectorXd &mu, const MatrixXd &Sigma,
-                     const RowVectorXd &constraints, const int G, const int bn,
+                     const RowVectorXd &constraints, int G,  int bn,
                      int batches) {
     VectorXd batch_results(batches);
     for (int b = 0; b < batches; ++b) {

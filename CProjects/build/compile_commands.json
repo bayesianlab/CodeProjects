@@ -56,6 +56,11 @@
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/MVProbit",
+  "command": "/usr/bin/c++  -I/usr/local/include/boost_1_66_0 -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/usr/local/include/stats/include -I/usr/local/include/gcem-master/include -I/usr/local/include/eigen-3.4.0 -I/usr/local/include/eigen-3.4.0/unsupported -I/home/dillon/miniconda3/envs/amh/include/python3.10 -I/home/dillon/miniconda3/envs/amh/include -O3 -DNDEBUG -o CMakeFiles/fps.dir/src/factor_probit_sims.cpp.o -c /home/dillon/CodeProjects/CProjects/MVProbit/src/factor_probit_sims.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/MVProbit/src/factor_probit_sims.cpp"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/MVProbit",
   "command": "/usr/bin/c++  -I/usr/local/include/boost_1_66_0 -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/usr/local/include/stats/include -I/usr/local/include/gcem-master/include -I/usr/local/include/eigen-3.4.0 -I/usr/local/include/eigen-3.4.0/unsupported -I/home/dillon/miniconda3/envs/amh/include/python3.10 -I/home/dillon/miniconda3/envs/amh/include -O3 -DNDEBUG -o CMakeFiles/rp.dir/src/recession_prob.cpp.o -c /home/dillon/CodeProjects/CProjects/MVProbit/src/recession_prob.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MVProbit/src/recession_prob.cpp"
 }

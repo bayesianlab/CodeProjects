@@ -22,13 +22,13 @@ int main(){
 	VectorXd phi(1);
 	phi << unifrnd(.1,.2);
 	string date = dateString();
-	string path_name = "test_" + date;
+	string path_name = "identification_" + date;
     VectorXd b = unifrnd(0,1, Xt.cols()*K);	
     RowVectorXd b0 = VectorXd::Zero(Xt.cols()*K);
     MatrixXd  B0 = 10*MatrixXd::Identity(Xt.cols()*K,Xt.cols()*K);
 	mv.setModel(yt, Xt, b, phi, b0, B0, 
 	            InfoMat, path_name);
 	mv.runFactorModel(10000, 1000);
-    // mv.InSampleValidation(Xt, yt, 500, 50, 50);
-    mv.BayesianPrediction(Xt_Outsample, K);
+    mv.InSampleValidation(Xt, yt, 100, 10, 25);
+    mv.BayesianPrediction(Xt_Outsample, K, 100, 10, 25);
 }

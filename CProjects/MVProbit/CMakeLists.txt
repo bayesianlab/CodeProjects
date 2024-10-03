@@ -15,5 +15,8 @@
 # add_executable(tnorm src/truncated_normal_tests.cpp)
 # target_link_libraries(tnorm PUBLIC Dist ettools ml plot)
 
+add_executable(fps src/factor_probit_sims.cpp)
+target_link_libraries(fps PUBLIC Dist ettools ml plot optlib)
+
 add_executable(rp src/recession_prob.cpp)
 target_link_libraries(rp PUBLIC Dist ettools ml plot optlib)

@@ -117,7 +117,7 @@ select * from TempInSample
 ); 
 
 -- drop table GrowthRateProbitData;
-create temporary table if not exists TempGrateInSample as(
+create table if not exists GrowthRateData as(
 select cur.Dt,
 	   cur.Yr,
        cur.Mon,
@@ -139,7 +139,7 @@ and lag1.Country=cur.Country
 
 create temporary table if not exists TempGrateInSample2 (
 	select *
-	from TempGrateInSample
+	from GrowthRateData
 );
 
 -- drop table DataLagged
@@ -147,7 +147,7 @@ create table if not exists Insample as (
 select b.Dt, b.Country, b.RecessionIndicator, b.GDPGrowth, b.ExpRet
 from (
 	  select *, row_number() over (partition by Country order by Dt) + 1 rn
-	  from TempGrateInSample
+	  from GrowthRateData
       ) q
 join (select *, row_number() over(partition by Country order by Dt) rn from TempGrateInSample2) b 
 	on b.rn=q.rn
@@ -191,7 +191,7 @@ where g2.Dt<'2024-01-01'
 
 select *
 from OutSample
-where Dt>'2022-12-01'
+where Dt>'2022-12-01';
 
 use Securities;
 select *

@@ -87,6 +87,8 @@ probit_data_y = probit_data[['Country', 'RecessionIndicator']]
 
 # %%
 countries = pd.unique(probit_data_y.Country.values)
+countries_frame = pd.DataFrame(countries, columns=['Countries'])
+countries_frame.to_csv('countries.csv')
 print(len(countries))
 cdata = {} 
 ydata = {} 
