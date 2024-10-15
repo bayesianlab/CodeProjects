@@ -94,47 +94,43 @@ int main()
     
     
 
-    // cout << "Problem 4 Chen Baston & Dang" << endl;
-    // cout << "max 5x1 - 2x2" << endl;
-    // cout << "-x1 + 2x2 <= 5" << endl;
-    // cout << "3x1 + 2x2 <= 19" << endl;
-    // cout << "x1 + 3x2 >= 9" << endl;
+    cout << "Example 9.2 Chen Baston & Dang" << endl;
+    cout << "max 4x1 + 3x2" << endl;
+    cout << "x1 + x2 <= 5" << endl;
+    cout << "2x1 + x2 <= 8" << endl;
+    
 
-    // VectorXd c4(2);
-    // c4 << -5, 2;
-    // MatrixXd A4(3, 2);
-    // A4 << -1,2,
-    //     3, 2,
-    //     1, 3;
-    // VectorXd b4(3);
-    // b4 <<  5, 19, 9;
+    VectorXd c4(2);
+    c4 << -4, -3;
+    MatrixXd A4(2, 2);
+    A4 << -1,-1,
+        -2, -1;
+        
+    VectorXd b4(2);
+    b4 <<  -5, -8;
 
-    // vector<string> constraint_type4 = { "leq", "leq", "geq"};
+    vector<string> constraint_type4 = { "geq", "geq"};
 
-    // S.Simplex2(c4, A4, b4, constraint_type4);
+    S.Simplex2(c4, A4, b4, constraint_type4);
 
     // cout << "True solution to phase-I x0=5.571, x1=1.143" << endl;
 
 
-    cout << "max x2" << endl;
-    cout << "-x1 + x2 <= 0" << endl;
-    cout << "x1 <= 2" << endl; 
+    // cout << "max x2" << endl;
+    // cout << "-x1 + x2 <= 0" << endl;
+    // cout << "x1 <= 2" << endl; 
 
+    // VectorXd c5(2);
+    // c5 << 0,-1;
+    // MatrixXd A5(2, 2);
+    // A5 << -1,1,
+    //     1, 0;
+    // VectorXd b5(2);
+    // b5 <<  0, 2;
 
+    // vector<string> constraint_type5 = { "leq", "leq"};
 
-    VectorXd c5(2);
-    c5 << 0,-1;
-    MatrixXd A5(2, 2);
-    A5 << -1,1,
-        1, 0;
-    VectorXd b5(2);
-    b5 <<  0, 2;
-
-    
-
-    vector<string> constraint_type5 = { "leq", "leq"};
-
-    S.Simplex2(c5, A5, b5, constraint_type5);
+    // S.Simplex2(c5, A5, b5, constraint_type5);
 
     return 0;
 }

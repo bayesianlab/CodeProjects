@@ -13,12 +13,202 @@ using namespace std;
 using namespace Eigen;
 using namespace boost;
 
-const vector<string> OPT_STATUSES = {"simple", "unallocated", "unfinished", "success", "failed", "infeasible"};
+const vector<string> OPT_STATUSES = {"simple", "unallocated", "unfinished", "success", "Unbounded", "infeasible"};
 
-
-enum InModel
+class VariableTypes
 {
-    no, yes, na
+public:
+    int Num;
+    string Type;
+    int InBasis;
+    double Value;
+
+    void setNum(int n)
+    {
+        if (n >= 0)
+        {
+            Num = n;
+        }
+        else
+        {
+            throw invalid_argument("Num must be positive or 0.");
+        }
+    }
+    void setType(string type)
+    {
+        if (type == "Choice" || type == "Artificial" || type == "Slack" || type == "Surplus")
+        {
+            Type = type;
+        }
+        else
+        {
+            throw invalid_argument("Var type not valid.");
+        }
+    }
+
+    void setInBasis(int b)
+    {
+        if (b == 0 || b == 1 || b == -1)
+        {
+            InBasis = b;
+        }
+        else
+        {
+            throw "Must either be in basis, not in basis, or set to -1 as na.";
+        }
+    }
+    void setValue(double v)
+    {
+        Value = v;
+    }
+    void initializeVar(int b, double value, string type)
+    {
+        setInBasis(b);
+        setValue(value);
+        setType(type);
+    }
+};
+
+class LPVariableMap
+{
+public:
+    map<int, VariableTypes> VariableMap;
+    int SlackCnt = 0;
+    int SurplusCnt = 0;
+    int ChoiceCnt = 0;
+
+    void setUpBasics(int b, string type)
+    {
+        for (auto it = VariableMap.begin(); it != VariableMap.end(); ++it)
+        {
+            if ((it->second).Type == type)
+            {
+                (it->second).setInBasis(1);
+            }
+        }
+    }
+
+    void setUpNonBasics(int b, string type)
+    {
+        for (auto it = VariableMap.begin(); it != VariableMap.end(); ++it)
+        {
+            if ((it->second).Type == type)
+            {
+                (it->second).setInBasis(0);
+            }
+        }
+    }
+
+    void add_slack_surplus_vars(const vector<string> &constraint_type)
+    {
+        if (VariableMap.empty())
+        {
+            for (int i = 0; i < constraint_type.size(); ++i)
+            {
+                if (constraint_type[i] == "leq")
+                {
+                    VariableTypes v;
+                    v.initializeVar(-1, 0.0, "Slack");
+                    VariableMap[i] = v;
+                    SlackCnt++;
+                }
+                else if (constraint_type[i] == "geq")
+                {
+                    VariableTypes v;
+                    v.initializeVar(-1, 0.0, "Surplus");
+                    VariableMap[i] = v;
+                    SurplusCnt++;
+                }
+            }
+        }
+        else
+        {
+            int last = VariableMap.rbegin()->first;
+            int u = last + 1;
+            for (int i = 0; i < constraint_type.size(); ++i)
+            {
+                if (constraint_type[i] == "leq")
+                {
+                    VariableTypes v;
+                    v.initializeVar(-1, 0.0, "Slack");
+                    VariableMap[u] = v;
+                    SlackCnt++;
+                    ++u;
+                }
+                else if (constraint_type[i] == "geq")
+                {
+                    VariableTypes v;
+                    v.initializeVar(-1, 0.0, "Surplus");
+                    VariableMap[u] = v;
+                    SurplusCnt++;
+                    ++u;
+                }
+            }
+        }
+    }
+
+    void add_choice_vars(int cnt)
+    {
+        if (VariableMap.empty())
+        {
+            int i = 0;
+            while (i < cnt)
+            {
+                VariableTypes v;
+                v.initializeVar(-1, 0, "Choice");
+                VariableMap[i] = v;
+                ChoiceCnt++;
+                ++i;
+            }
+        }
+        else
+        {
+            int last = VariableMap.rbegin()->first;
+            int i = last + 1;
+            while (i < last + cnt + 1)
+            {
+                VariableTypes v;
+                v.initializeVar(-1, 0, "Choice");
+                VariableMap[i] = v;
+                ChoiceCnt++;
+                ++i;
+            }
+        }
+    }
+
+    void deleteFromMap(int key)
+    {
+        if (VariableMap[key].Type == "Choice")
+        {
+            --ChoiceCnt;
+        }
+        if (VariableMap[key].Type == "Slack")
+        {
+            --SlackCnt;
+        }
+        if (VariableMap[key].Type == "Surplus")
+        {
+            --SurplusCnt;
+        }
+        VariableMap.erase(key);
+    }
+
+    void update(const map<int, int> BasicIndices,
+                const map<int, int> NonBasicIndices, const VectorXd &solution)
+    {
+        int i = 0;
+        for (auto it = BasicIndices.begin(); it != BasicIndices.end(); ++it)
+        {
+            VariableMap[it->second].setInBasis(1);
+            VariableMap[it->second].setValue(solution(i));
+            ++i;
+        }
+        for (auto it = NonBasicIndices.begin(); it != NonBasicIndices.end(); ++it)
+        {
+            VariableMap[it->second].setInBasis(1);
+            VariableMap[it->second].setValue(0);
+        }
+    }
 };
 
 struct Solution
@@ -33,7 +223,7 @@ struct Solution
 
     void set_solution(string opt_status, MatrixXd B, MatrixXd D, VectorXd xb, map<int, int> indx, map<int, int> nonbindx, double F)
     {
-        if(find(OPT_STATUSES.begin(), OPT_STATUSES.end(), opt_status) == OPT_STATUSES.end())
+        if (find(OPT_STATUSES.begin(), OPT_STATUSES.end(), opt_status) == OPT_STATUSES.end())
         {
             throw std::invalid_argument("Invalid opt_status");
         }
@@ -48,8 +238,8 @@ struct Solution
 
     void print_solution()
     {
-        cout << "Optimization status: " << optimization_status << endl; 
-        cout << "F-Value: " << F_val << endl; 
+        cout << "Optimization status: " << optimization_status << endl;
+        cout << "F-Value: " << F_val << endl;
     }
 };
 
@@ -58,18 +248,18 @@ class SimplexCore
 
 public:
     void set_basic_nonbasic_indxs(map<int, int> &BasicIndices, map<int, int> &NonBasicIndices,
-                                  map<int, tuple<InModel, string, double>> &ModelVariables)
+                                  LPVariableMap &ModelVariables)
     {
         int k = 0;
         int m = 0;
-        for (auto it = ModelVariables.begin(); it != ModelVariables.end(); ++it)
+        for (auto it = ModelVariables.VariableMap.begin(); it != ModelVariables.VariableMap.end(); ++it)
         {
-            if (get<0>(it->second) == yes)
+            if ((it->second).InBasis == 1)
             {
                 BasicIndices[k] = it->first;
                 ++k;
             }
-            else if(get<0>(it->second) == no)
+            else if ((it->second).InBasis == 0)
             {
                 NonBasicIndices[m] = it->first;
                 ++m;
@@ -77,19 +267,7 @@ public:
         }
     }
 
-    int determine_entering_col(const VectorXd &reduced_costs)
-    {
-        int entering_col = 0;
-        double min = reduced_costs.maxCoeff()+1;
-        for(int i = 0; i < reduced_costs.size(); ++i)
-        {
-            if(reduced_costs(i) <= min)
-            {
-                entering_col=i; 
-            }
-        }
-        return entering_col;
-    }
+
 
     int determine_exiting_col(const VectorXd &x_B, const VectorXd &aq)
     {
@@ -114,10 +292,8 @@ public:
         return exiting_col;
     }
 
-   
-
     Solution simplex(VectorXd &x_B, MatrixXd &B, MatrixXd &D, VectorXd &c_B, VectorXd &c_D, const VectorXd &b,
-                     int max_iterations, map<int, tuple<InModel, string, double>> &ModelVariables)
+                     int max_iterations, LPVariableMap &ModelVariables)
     {
         /*
             Current basis and x_B are known
@@ -139,25 +315,29 @@ public:
             cout << "\tCurrent F-Val= " << Sol.F_val << endl;
             VectorXd y = B.transpose().lu().solve(c_B);
             reduced_costs = c_D.transpose() - (y.transpose() * D);
-            double reduced_cost_min_val = reduced_costs.minCoeff();
+            Index entering_col; 
+            double reduced_cost_min_val = reduced_costs.minCoeff(&entering_col);
             if ((0 <= reduced_cost_min_val) && (Sol.F_val <= 0))
             {
                 Sol.set_solution("success", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
-                return Sol;
+                break;
             }
             else if ((0 <= reduced_cost_min_val) && (Sol.F_val > 0))
             {
                 Sol.set_solution("infeasible", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
-                return Sol;
+                break;
             }
-            int entering_col = determine_entering_col(reduced_costs);
+            
+
+            cout << entering_col << endl; 
             VectorXd dj = D.col(entering_col);
-            VectorXd aq = B.lu().solve(dj);  
+            VectorXd aq = B.lu().solve(dj);
+            cout << aq << endl; 
             int exiting_col = determine_exiting_col(x_B, aq);
             if (exiting_col == -1)
             {
-                Sol.set_solution("failed", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
-                return Sol;
+                Sol.set_solution("Unbounded", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
+                break;
             }
             VectorXd t = B.col(exiting_col);
             B.col(exiting_col) = D.col(entering_col);
@@ -171,8 +351,9 @@ public:
             BasicIndices[exiting_col] = NonBasicIndices[entering_col];
             NonBasicIndices[entering_col] = ti;
         }
-        Sol.set_solution("unfinished", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
+        ModelVariables.update(BasicIndices, NonBasicIndices, x_B);
+        // Sol.set_solution("unfinished", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
         return Sol;
     }
 };
-#endif 
+#endif
