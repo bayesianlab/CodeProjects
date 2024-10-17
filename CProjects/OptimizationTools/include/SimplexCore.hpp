@@ -22,6 +22,7 @@ public:
     string Type;
     int InBasis;
     double Value;
+    double Cost;
 
     void setNum(int n)
     {
@@ -57,25 +58,41 @@ public:
             throw "Must either be in basis, not in basis, or set to -1 as na.";
         }
     }
+
     void setValue(double v)
     {
         Value = v;
     }
-    void initializeVar(int b, double value, string type)
+
+    void setCost(double c)
+    {
+        Cost = c;
+    }
+
+    void initializeVar(int b, double value, double cost, string type)
     {
         setInBasis(b);
         setValue(value);
         setType(type);
+        setCost(cost);
     }
 };
 
 class LPVariableMap
 {
+private:
+    void add_var(const VariableTypes &v)
+    {
+        int next = VariableMap.size();
+        VariableMap[next] = v;
+    }
+
 public:
     map<int, VariableTypes> VariableMap;
     int SlackCnt = 0;
     int SurplusCnt = 0;
     int ChoiceCnt = 0;
+    int ArtificialCnt = 0;
 
     void setUpBasics(int b, string type)
     {
@@ -99,80 +116,47 @@ public:
         }
     }
 
-    void add_slack_surplus_vars(const vector<string> &constraint_type)
+    void add_artificials(int R)
     {
-        if (VariableMap.empty())
+        for (int i = 0; i < R; ++i)
         {
-            for (int i = 0; i < constraint_type.size(); ++i)
-            {
-                if (constraint_type[i] == "leq")
-                {
-                    VariableTypes v;
-                    v.initializeVar(-1, 0.0, "Slack");
-                    VariableMap[i] = v;
-                    SlackCnt++;
-                }
-                else if (constraint_type[i] == "geq")
-                {
-                    VariableTypes v;
-                    v.initializeVar(-1, 0.0, "Surplus");
-                    VariableMap[i] = v;
-                    SurplusCnt++;
-                }
-            }
+            VariableTypes v;
+            v.initializeVar(-1, 0.0, 0, "Artificial");
+            add_var(v);
+            ++ArtificialCnt;
         }
-        else
+    }
+
+    void add_slack_surplus_vars(const vector<string> &constraint_types)
+    {
+
+        for (int i = 0; i < constraint_types.size(); ++i)
         {
-            int last = VariableMap.rbegin()->first;
-            int u = last + 1;
-            for (int i = 0; i < constraint_type.size(); ++i)
+            if (constraint_types[i] == "leq")
             {
-                if (constraint_type[i] == "leq")
-                {
-                    VariableTypes v;
-                    v.initializeVar(-1, 0.0, "Slack");
-                    VariableMap[u] = v;
-                    SlackCnt++;
-                    ++u;
-                }
-                else if (constraint_type[i] == "geq")
-                {
-                    VariableTypes v;
-                    v.initializeVar(-1, 0.0, "Surplus");
-                    VariableMap[u] = v;
-                    SurplusCnt++;
-                    ++u;
-                }
+                VariableTypes v;
+                v.initializeVar(-1, 0.0, 0., "Slack");
+                add_var(v);
+                SlackCnt++;
+            }
+            else if (constraint_types[i] == "geq")
+            {
+                VariableTypes v;
+                v.initializeVar(-1, 0.0, 0., "Surplus");
+                add_var(v);
+                SurplusCnt++;
             }
         }
     }
 
-    void add_choice_vars(int cnt)
+    void add_choice_vars(const VectorXd &costs)
     {
-        if (VariableMap.empty())
+        for (int i = 0; i < costs.size(); ++i)
         {
-            int i = 0;
-            while (i < cnt)
-            {
-                VariableTypes v;
-                v.initializeVar(-1, 0, "Choice");
-                VariableMap[i] = v;
-                ChoiceCnt++;
-                ++i;
-            }
-        }
-        else
-        {
-            int last = VariableMap.rbegin()->first;
-            int i = last + 1;
-            while (i < last + cnt + 1)
-            {
-                VariableTypes v;
-                v.initializeVar(-1, 0, "Choice");
-                VariableMap[i] = v;
-                ChoiceCnt++;
-                ++i;
-            }
+            VariableTypes v;
+            v.initializeVar(-1, 0, costs[i], "Choice");
+            add_var(v);
+            ChoiceCnt++;
         }
     }
 
@@ -205,8 +189,19 @@ public:
         }
         for (auto it = NonBasicIndices.begin(); it != NonBasicIndices.end(); ++it)
         {
-            VariableMap[it->second].setInBasis(1);
+            VariableMap[it->second].setInBasis(0);
             VariableMap[it->second].setValue(0);
+        }
+    }
+
+
+    void printDetailedSolution(LPVariableMap ModelVariables)
+    {
+        cout << format("%1%  %2%  %3%  %4%") % "Variable" % "In Basis" % "Label" % " Value" << endl;
+        for (auto it = ModelVariables.VariableMap.begin(); it != ModelVariables.VariableMap.end(); it++)
+        {
+
+            cout << format("%1% %|9t| %2% %|19t| %3% %|35t| %4$d") % it->first % it->second.InBasis % it->second.Type % it->second.Value << endl;
         }
     }
 };
@@ -267,8 +262,6 @@ public:
         }
     }
 
-
-
     int determine_exiting_col(const VectorXd &x_B, const VectorXd &aq)
     {
         int exiting_col = 0;
@@ -311,34 +304,36 @@ public:
         for (int i = 0; i < max_iterations; ++i)
         {
             cout << "Iteration " << i + 1 << endl;
-            Sol.F_val = c_B.transpose() * x_B;
-            cout << "\tCurrent F-Val= " << Sol.F_val << endl;
+            F_val = c_B.transpose() * x_B;
+            cout << "\tCurrent F-Val= " << F_val << endl;
             VectorXd y = B.transpose().lu().solve(c_B);
             reduced_costs = c_D.transpose() - (y.transpose() * D);
-            Index entering_col; 
+            Index entering_col;
             double reduced_cost_min_val = reduced_costs.minCoeff(&entering_col);
-            if ((0 <= reduced_cost_min_val) && (Sol.F_val <= 0))
+            cout << reduced_cost_min_val << endl;
+            if ((0 <= reduced_cost_min_val) && (F_val <= 0))
             {
                 Sol.set_solution("success", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
                 break;
             }
-            else if ((0 <= reduced_cost_min_val) && (Sol.F_val > 0))
+            else if ((0 <= reduced_cost_min_val) && (F_val > 0))
             {
                 Sol.set_solution("infeasible", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
                 break;
             }
-            
 
-            cout << entering_col << endl; 
-            VectorXd dj = D.col(entering_col);
-            VectorXd aq = B.lu().solve(dj);
-            cout << aq << endl; 
-            int exiting_col = determine_exiting_col(x_B, aq);
-            if (exiting_col == -1)
+            VectorXd aq = B.lu().solve(D.col(entering_col));
+            if (aq.maxCoeff() < 0)
             {
                 Sol.set_solution("Unbounded", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
                 break;
             }
+            int exiting_col = determine_exiting_col(x_B, aq);
+            cout << "entering" << endl;
+            cout << entering_col << endl;
+            cout << "exiting" << endl;
+            cout << exiting_col << endl;
+
             VectorXd t = B.col(exiting_col);
             B.col(exiting_col) = D.col(entering_col);
             D.col(entering_col) = t;
@@ -351,8 +346,15 @@ public:
             BasicIndices[exiting_col] = NonBasicIndices[entering_col];
             NonBasicIndices[entering_col] = ti;
         }
+        for (auto it = BasicIndices.begin(); it != BasicIndices.end(); ++it)
+        {
+            cout << it->first << " " << it->second << endl;
+        }
+        for (auto it = NonBasicIndices.begin(); it != NonBasicIndices.end(); ++it)
+        {
+            cout << it->first << " " << it->second << endl;
+        }
         ModelVariables.update(BasicIndices, NonBasicIndices, x_B);
-        // Sol.set_solution("unfinished", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
         return Sol;
     }
 };

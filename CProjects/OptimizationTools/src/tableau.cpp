@@ -113,6 +113,25 @@ int main()
 
     S.Simplex2(c4, A4, b4, constraint_type4);
 
+    cout << "Example Two variable Problem" << endl;
+    cout << "max 40x1 + 30x2" << endl;
+    cout << "x1 + x2 <= 12" << endl;
+    cout << "2x1 + x2 <= 16" << endl;
+    
+
+    VectorXd c5(2);
+    c5 << -40, -30;
+    MatrixXd A5(2, 2);
+    A5 << 1,1,
+        2, 1;
+        
+    VectorXd b5(2);
+    b5 <<  12, 16;
+
+    vector<string> constraint_type5 = { "leq", "leq"};
+
+    S.Simplex2(c5, A5, b5, constraint_type5);
+
     // cout << "True solution to phase-I x0=5.571, x1=1.143" << endl;
 
 

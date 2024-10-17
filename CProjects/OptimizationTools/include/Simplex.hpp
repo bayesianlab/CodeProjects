@@ -63,12 +63,8 @@ private:
 
 public:
     int max_iterations = 5;
-    map<int, tuple<int, string, double>> Phase1Variables;
+
     map<int, tuple<int, string, double>> Phase2Variables;
-
-    LPVariableMap VarMap; 
-    map<int, VariableTypes> OtherVars;
-
 
 
     void presolve_1pos_incol(MatrixXd &B, VectorXd &soln_vec, map<int, int> &BasicIndices,
@@ -277,10 +273,27 @@ public:
         // }
     }
 
-    void check_basis(MatrixXd &Basis){
-        for(auto it = OtherVars.begin(); it!=OtherVars.end(); ++it){
-            
+    void make_leq_constraints(MatrixXd &A, vector<string> &constraints){  
+        cout << "check constraints" << endl; 
+        for(auto it = 0; it<constraints.size(); ++it){
+            if(constraints[it]=="geq"){
+                A.row(it) = -A.row(it);
+                constraints[it] = "leq";
+            }
         }
+    }
+
+    MatrixXd make_slack_basis(const vector<string> &constraints, int slack_cnt){
+        MatrixXd SlackBasis = MatrixXd::Identity(slack_cnt, slack_cnt);
+        for (int i = 0; i < constraints.size(); ++i){
+            if(constraints[i]=="Eq"){
+                SlackBasis(i,i) = 0; 
+            }
+            if(constraints[i]=="Geq"){
+                SlackBasis(i,i) = -1;
+            }
+        }
+        return SlackBasis;
     }
 
     bool check_simple_solution(MatrixXd &A, VectorXd &b, vector<string> &constraint_type)
@@ -326,11 +339,7 @@ public:
     Solution phase1(VectorXd &costs, MatrixXd &A, VectorXd &b, vector<string> &constraint_type)
     {
         cout << "Starting Phase-I To Determine Basic Feasible Solution" << endl;
-        
-        if (!Phase1Variables.empty())
-        {
-            Phase1Variables.clear();
-        }
+        LPVariableMap VarMap;         
         Solution p1_soln;
         MatrixXd NonBasicBasis;
         MatrixXd CurrentBasis;
@@ -343,31 +352,46 @@ public:
         // double solved_cost = presolve_row_singletons(costs, A, b, Phase1Variables, constraint_type);
 
         if(check_simple_solution(A, b, constraint_type)){
+            // Can Assume Identity Current Basis 
             cout << "Simple solution exists" << endl;
+            make_leq_constraints(A, constraint_type);
+
+            for(int i = 0; i < constraint_type.size(); ++i){
+                cout << constraint_type[i] << endl; 
+            }
+
+
+
             VarMap.add_choice_vars(costs.size());
             VarMap.add_slack_surplus_vars(constraint_type);
-            
-            int u = VarMap.SlackCnt + VarMap.SurplusCnt;
+            VarMap.add_artificials(A.rows());
+
+            MatrixXd SlackBasis = make_slack_basis(constraint_type, VarMap.SlackCnt);
+
+            int u = VarMap.ArtificialCnt;
             CurrentBasis = MatrixXd::Identity(u, u);
-            NonBasicBasis = A; 
+            NonBasicBasis.resize(A.rows(), A.cols() + SlackBasis.cols());
+            NonBasicBasis << A, SlackBasis; 
+
             map<int, int> BasicIndices;
             map<int, int> NonBasicIndices;
-            VarMap.setUpBasics(1, "Slack");
-            VarMap.setUpBasics(1, "Surplus");
+            VarMap.setUpBasics(1, "Artificial");
+            VarMap.setUpNonBasics(1, "Slack");
             VarMap.setUpNonBasics(0, "Choice");
             set_basic_nonbasic_indxs(BasicIndices, NonBasicIndices, VarMap);
             VectorXd basic_costs = VectorXd::Zero(u);
             VectorXd non_basic_costs = costs;
 
             guess = b; 
-
-            p1_soln = simplex(guess, CurrentBasis, NonBasicBasis, basic_costs, non_basic_costs, b,
-                              max_iterations, VarMap);
-
-            p1_soln.print_solution();
-            p1_soln.set_solution("simple", CurrentBasis, A, b, BasicIndices, NonBasicIndices,
-                                 (double)(costs.transpose() * b) + solved_cost);
             printDetailedSolution(VarMap);
+
+            // p1_soln = simplex(guess, CurrentBasis, NonBasicBasis, basic_costs, non_basic_costs, b,
+            //                   max_iterations, VarMap);
+
+            // p1_soln.print_solution();
+            // p1_soln.set_solution("simple", CurrentBasis, A, b, BasicIndices, NonBasicIndices,
+            //                      (double)(costs.transpose() * b) + solved_cost);
+            // printDetailedSolution(VarMap);
 
         }
 
@@ -483,11 +507,11 @@ public:
 
     void printDetailedSolution(LPVariableMap ModelVariables)
     {
-        cout << format("%1%  %2%  %3%  %4%") % "Variable" % "In Basis" % "Label" % " Value" << endl;
+        cout << format("%1%  %2%  %3%          %4%") % "Variable" % "In Basis" % "Label" % " Value" << endl;
         for (auto it = ModelVariables.VariableMap.begin(); it != ModelVariables.VariableMap.end(); it++)
         {
 
-            cout << format("%1% %|9t| %2% %|19t| %3% %|27t| %4$d") % it->first % it->second.InBasis % it->second.Type % it->second.Value << endl;
+            cout << format("%1% %|9t| %2% %|19t| %3% %|35t| %4$d") % it->first % it->second.InBasis % it->second.Type % it->second.Value << endl;
         }
     }
 
