@@ -9,6 +9,7 @@
 #include <math.h>
 #include <boost/format.hpp>
 
+#include "fort.hpp"
 using namespace std;
 using namespace Eigen;
 using namespace boost;
@@ -73,8 +74,8 @@ public:
     {
         setInBasis(b);
         setValue(value);
-        setType(type);
         setCost(cost);
+        setType(type);
     }
 };
 
@@ -94,7 +95,7 @@ public:
     int ChoiceCnt = 0;
     int ArtificialCnt = 0;
 
-    void setUpBasics(int b, string type)
+    void setUpBasics(const VectorXd& basic_costs, string type)
     {
         for (auto it = VariableMap.begin(); it != VariableMap.end(); ++it)
         {
@@ -116,12 +117,13 @@ public:
         }
     }
 
-    void add_artificials(int R)
+    void add_artificials(const VectorXd &costs)
     {
-        for (int i = 0; i < R; ++i)
+        for (int i = 0; i < costs.size(); ++i)
         {
             VariableTypes v;
-            v.initializeVar(-1, 0.0, 0, "Artificial");
+            cout << costs[i] << endl; 
+            v.initializeVar(-1, 0, costs[i], "Artificial");
             add_var(v);
             ++ArtificialCnt;
         }
@@ -160,21 +162,78 @@ public:
         }
     }
 
-    void deleteFromMap(int key)
+    VectorXd get_basic_costs()
+    {
+        vector<double> _c_B;
+        for (int i = 0; i < VariableMap.size(); ++i)
+        {
+            if (VariableMap[i].InBasis == 1)
+            {
+                _c_B.push_back(VariableMap[i].Cost);
+            }
+        }
+        Map<VectorXd> c_B(_c_B.data(), _c_B.size());
+        return c_B;
+    }
+
+    VectorXd get_nonbasic_costs()
+    {
+        vector<double> _c_D;
+        for (int i = 0; i < VariableMap.size(); ++i)
+        {
+            if (VariableMap[i].InBasis == 0)
+            {
+                _c_D.push_back(VariableMap[i].Cost);
+            }
+        }
+        Map<VectorXd> c_D(_c_D.data(), _c_D.size());
+        return c_D;
+    }
+
+    int artificials_in_basis(){
+        int c = 0;
+        for(int i = 0; i < VariableMap.size(); ++i){
+            if((VariableMap[i].Type=="Artificial") && (VariableMap[i].InBasis==1)){
+                ++c; 
+            }
+        }
+        return c; 
+    }
+
+    void delete_from_map(int key)
     {
         if (VariableMap[key].Type == "Choice")
         {
             --ChoiceCnt;
+            VariableMap.erase(key);
         }
         if (VariableMap[key].Type == "Slack")
         {
             --SlackCnt;
+            VariableMap.erase(key);
         }
         if (VariableMap[key].Type == "Surplus")
         {
             --SurplusCnt;
+            VariableMap.erase(key);
         }
-        VariableMap.erase(key);
+        if (VariableMap[key].Type == "Artificial")
+        {
+            --ArtificialCnt;
+            VariableMap.erase(key);
+        }
+    }
+
+    void delete_by_type(string type){
+        vector<int> to_delete;
+        for(auto it = VariableMap.begin(); it != VariableMap.end(); ++it){
+            if (VariableMap[it->first].Type==type){
+                to_delete.push_back(it->first);
+            }
+        }
+        for(auto it = to_delete.begin(); it!=to_delete.end(); ++it){
+            VariableMap.erase(*it);
+        }
     }
 
     void update(const map<int, int> BasicIndices,
@@ -195,14 +254,19 @@ public:
     }
 
 
-    void printDetailedSolution(LPVariableMap ModelVariables)
+    void printVariables()
     {
-        cout << format("%1%  %2%  %3%  %4%") % "Variable" % "In Basis" % "Label" % " Value" << endl;
-        for (auto it = ModelVariables.VariableMap.begin(); it != ModelVariables.VariableMap.end(); it++)
-        {
-
-            cout << format("%1% %|9t| %2% %|19t| %3% %|35t| %4$d") % it->first % it->second.InBasis % it->second.Type % it->second.Value << endl;
+        fort::char_table table; 
+        table << fort::header 
+            << "Variable No." << "Cost" << "Value" << "In Basis" << "Label" << fort::endr;
+        int p = 3;
+        for(auto it = VariableMap.begin(); it != VariableMap.end();++it){
+            string c = to_string((it->second).Cost);
+            string v = to_string((it->second).Value);
+            table.write_ln(to_string(it->first), c, v, to_string((it->second).InBasis), (it->second).Type);
         }
+
+        cout << table.to_string() << endl; 
     }
 };
 
@@ -285,6 +349,24 @@ public:
         return exiting_col;
     }
 
+    void pivot(int entering_col, int exiting_col, VectorXd &x_B, MatrixXd &B, MatrixXd &D, 
+               VectorXd &c_B, VectorXd &c_D, const VectorXd &b,
+               map<int, int> &BasicIndices,
+               map<int, int> &NonBasicIndices)
+    {
+        VectorXd t = B.col(exiting_col);
+        B.col(exiting_col) = D.col(entering_col);
+        D.col(entering_col) = t;
+        x_B = B.lu().solve(b);
+        double tt = c_B(exiting_col);
+        c_B(exiting_col) = c_D(entering_col);
+        c_D(entering_col) = tt;
+        /* Housekeeping for basic and non-basic indices */
+        int ti = BasicIndices[exiting_col];
+        BasicIndices[exiting_col] = NonBasicIndices[entering_col];
+        NonBasicIndices[entering_col] = ti;
+    }
+
     Solution simplex(VectorXd &x_B, MatrixXd &B, MatrixXd &D, VectorXd &c_B, VectorXd &c_D, const VectorXd &b,
                      int max_iterations, LPVariableMap &ModelVariables)
     {
@@ -310,7 +392,6 @@ public:
             reduced_costs = c_D.transpose() - (y.transpose() * D);
             Index entering_col;
             double reduced_cost_min_val = reduced_costs.minCoeff(&entering_col);
-            cout << reduced_cost_min_val << endl;
             if ((0 <= reduced_cost_min_val) && (F_val <= 0))
             {
                 Sol.set_solution("success", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
@@ -329,33 +410,28 @@ public:
                 break;
             }
             int exiting_col = determine_exiting_col(x_B, aq);
-            cout << "entering" << endl;
-            cout << entering_col << endl;
-            cout << "exiting" << endl;
-            cout << exiting_col << endl;
 
-            VectorXd t = B.col(exiting_col);
-            B.col(exiting_col) = D.col(entering_col);
-            D.col(entering_col) = t;
-            x_B = B.lu().solve(b);
-            double tt = c_B(exiting_col);
-            c_B(exiting_col) = c_D(entering_col);
-            c_D(entering_col) = tt;
-            /* Housekeeping for basic and non-basic indices */
-            int ti = BasicIndices[exiting_col];
-            BasicIndices[exiting_col] = NonBasicIndices[entering_col];
-            NonBasicIndices[entering_col] = ti;
-        }
-        for (auto it = BasicIndices.begin(); it != BasicIndices.end(); ++it)
-        {
-            cout << it->first << " " << it->second << endl;
-        }
-        for (auto it = NonBasicIndices.begin(); it != NonBasicIndices.end(); ++it)
-        {
-            cout << it->first << " " << it->second << endl;
+            pivot(entering_col, exiting_col, x_B, B, D, c_B, c_D, b, BasicIndices, NonBasicIndices);
+
         }
         ModelVariables.update(BasicIndices, NonBasicIndices, x_B);
+        for(auto it = BasicIndices.begin(); it != BasicIndices.end(); ++it){
+            cout << it->first << " " << it->second << endl; 
+        }
+        for(auto it = NonBasicIndices.begin(); it != NonBasicIndices.end(); ++it){
+            cout << it->first << " " << it->second << endl; 
+        }
+
+
         return Sol;
     }
+
+    // void drop_redundant_constraints(VectorXd &x_B, MatrixXd &B, MatrixXd &D, VectorXd &c_B, VectorXd &c_D,
+    //                          const VectorXd &b, LPVariableMap &ModelVariables, int rowL){
+    //     for(int j = 0; j < D.cols(); ++j){
+    //         VectorXd djl =  B.transpose().lu().solve(D.col(j));
+    //         cout << djl(rowL) << endl; 
+    //     }
+    // }
 };
 #endif

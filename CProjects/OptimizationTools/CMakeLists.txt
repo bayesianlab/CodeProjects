@@ -15,6 +15,8 @@ add_executable(optimtest src/Test_Optimization.cpp)
 target_link_libraries(optimtest PUBLIC optlib)
 
 
+add_subdirectory(libfort)
 
 add_executable(tab src/tableau.cpp)
 target_include_directories(tab PUBLIC include/ /usr/local/include/eigen-3.4.0)
+target_link_libraries(tab PUBLIC fort)

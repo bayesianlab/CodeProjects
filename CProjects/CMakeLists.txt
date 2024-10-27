@@ -52,4 +52,5 @@ add_subdirectory(TimeSeries)
 add_subdirectory(OptimizationTools)
 add_subdirectory(MultilevelModel)
 add_subdirectory(MVProbit)
+add_subdirectory(libfort)
 
