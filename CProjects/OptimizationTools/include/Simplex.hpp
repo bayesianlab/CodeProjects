@@ -266,34 +266,7 @@ public:
         return;
     }
 
-    void drive_out_artificials(const VectorXd &costs, const MatrixXd &A, const VectorXd &b)
-    {
 
-        // if (optimization_status == "successful")
-        // {
-        //     int n = (int)costs.size();
-        //     int m = (int)b.size();
-        //     int artificial_in_basis_flag = 0;
-        //     vector<string> artificials;
-        //     for (int i = n; i < (n + m); ++i)
-        //     {
-        //         if (Solution.find("x_" + i) != Solution.end())
-        //         {
-        //             artificial_in_basis_flag = 1;
-        //             cout << "drive out" << endl;
-        //             artificials.push_back("x_" + i);
-        //         }
-        //     }
-        //     if (artificial_in_basis_flag == 1)
-        //     {
-        //         cout << "Artificial variables found in basis" << endl;
-        //     }
-        // }
-        // else
-        // {
-        //     return;
-        // }
-    }
 
     void make_b_pos(MatrixXd &A, VectorXd &b, vector<string> &constraints){  
         cout << "check constraints" << endl; 
@@ -440,121 +413,74 @@ public:
         }
         else
         {
-
-            // Check if an artificials is in the basis
-            int art = 0;
-            VectorXi zeros = VectorXi::Zero(p1_soln.BasicIndices.size());
-            vector<int> variables_to_delete;
-            for (auto it = p1_soln.BasicIndices.begin(); it != p1_soln.BasicIndices.end(); ++it)
-            {
-                if (VarMap.VariableMap[it->second].Type == "Artificial")
-                {
-                    // Found an artificial in the basis, check for a column to pivot in
-                    for (int d = 0; d < NonBasicBasis.cols(); ++d)
-                    {
-                        VectorXd dlj = CurrentBasis.transpose().lu().solve(NonBasicBasis.col(d));
-                        if (abs(dlj(it->first)) > EPSILON)
-                        {
-                            // Drive out the artificial variables of the basis. 
-                            while (VarMap.VariableMap[it->second].InBasis)
-                            {
-                                int entering_col = 0;
-                                for (int j = 0; j < dlj.size(); ++j)
-                                {
-                                    if (abs(dlj(j)) > EPSILON)
-                                    {   
-                                        entering_col=j;
-                                        break;
-                                    }
-                                }
-                                pivot(entering_col, it->first, p1_soln.current_solution, CurrentBasis, NonBasicBasis,
-                                      basic_costs, non_basic_costs, b, BasicIndices, NonBasicIndices);
-                                VarMap.update(BasicIndices, NonBasicIndices, p1_soln.current_solution);
-                            }
-                        }
-                        else
-                        {
-                            ++zeros(it->first);
-                        }
-                    }
-                }
-
-                // Remove redundant linearly dependent rows
-                if(zeros(it->first)==zeros.size()){
-                    variables_to_delete.push_back(it->second);
-                    remove_row(CurrentBasis, it->first);
-                    remove_row(NonBasicBasis, it->first);
-                    remove_vector_row(b, it->first);
-                    constraint_type.erase(constraint_type.begin() + it->first);
-                }
-            }
-            for(auto d = variables_to_delete.begin(); d != variables_to_delete.end();++d){
-                VarMap.VariableMap.erase(*d);
-            }
+            // Force out artificials in Basis 
+            force_out(p1_soln, VarMap, NonBasicBasis, CurrentBasis, basic_costs, non_basic_costs,
+             b, BasicIndices, NonBasicIndices, constraint_type);
         }
         VarMap.printVariables();
-        // p1_soln.print_solution();
-        // p1_soln.set_solution("simple", CurrentBasis, A, b, BasicIndices, NonBasicIndices,
-        //                      (double)(costs.transpose() * b) + solved_cost);
-        // printDetailedSolution(VarMap);
-
-        
-
-        // int constraint_count = (int)A.rows();
-
-        // int slack_surplus_count = get_slack_variable_cnt(constraint_type);
-
-        
-        // printDetailedSolution(Phase1Variables);
-        // if (convert_standard_form(A, b, constraint_type))
-        // {
-        //     cout << "Simple solution exists" << endl;
-        //     add_slack_surplus_vars(Phase1Variables, constraint_type);
-        //     set_basis_vars(Phase1Variables, "slack");
-        //     non_basic_var_count = choice_count;
-        //     CurrentBasis = MatrixXd::Identity(slack_surplus_count, slack_surplus_count);
-        //     map<int, int> BasicIndices;
-        //     map<int, int> NonBasicIndices;
-        //     set_basic_nonbasic_indxs(BasicIndices, NonBasicIndices, Phase1Variables);
-        //     update_model_variables(Phase1Variables, BasicIndices, NonBasicIndices, b);
-        //     p1_soln.set_solution("simple", CurrentBasis, A, b, BasicIndices, NonBasicIndices,
-        //                          (double)(costs.transpose() * b) + solved_cost);
-        // }
-        // else
-        // {
-        //     if (slack_surplus_count==A.rows())
-        //     {
-        //         cout << "case 1" << endl;
-        //         cout << "some equality constraints" << endl;
-        //         non_basic_var_count = choice_count + slack_surplus_count;
-        //         SlackMat = make_slack_mat(slack_surplus_count, constraint_type);
-        //         NonBasicBasis.resize(constraint_count, non_basic_var_count);
-        //         NonBasicBasis << A, SlackMat;
-        //     }
-        //     else
-        //     {
-        //         //     non_basic_var_count = choice_count;
-        //         //     NonBasicBasis.resize(constraint_count, non_basic_var_count);
-        //         //     NonBasicBasis << A;
-        //     }
-        //     add_choice_vars(Phase1Variables, "artificial", constraint_count);
-        //     add_slack_surplus_vars(Phase1Variables, constraint_type);
-        //     set_basis_vars(Phase1Variables, "artificial");
-        //     printDetailedSolution(Phase1Variables);
-        //     CurrentBasis = MatrixXd::Identity(constraint_count, constraint_count);
-        //     guess = CurrentBasis.lu().solve(b);
-        //     choice_count = A.cols();
-        //     VectorXd non_basic_costs = VectorXd::Zero(NonBasicBasis.cols());
-        //     VectorXd basic_costs = VectorXd::Ones(constraint_count);
-        //     p1_soln = simplex(guess, CurrentBasis, NonBasicBasis, basic_costs, non_basic_costs, b,
-        //                       max_iterations, Phase1Variables);
-        //     p1_soln.F_val = p1_soln.F_val + solved_cost;
-        //     update_model_variables(Phase1Variables, p1_soln.BasicIndices, p1_soln.NonBasicIndices, p1_soln.current_solution);
-        // }
-        // cout << "Phase-I Solution" << endl;
-        // printDetailedSolution(Phase1Variables);
+      
 
         return p1_soln;
+    }
+
+    void force_out(Solution &p1_soln, LPVariableMap &VarMap, Eigen::MatrixXd &NonBasicBasis,
+                   Eigen::MatrixXd &CurrentBasis, Eigen::VectorXd &basic_costs, Eigen::VectorXd &non_basic_costs,
+                   Eigen::VectorXd &b, std::map<int, int> &BasicIndices, std::map<int, int> &NonBasicIndices,
+                   std::vector<std::string> &constraint_type)
+    {
+        // Check if an artificials is in the basis
+        VectorXi zeros = VectorXi::Zero(p1_soln.BasicIndices.size());
+        vector<int> variables_to_delete;
+        for (auto it = p1_soln.BasicIndices.begin(); it != p1_soln.BasicIndices.end(); ++it)
+        {
+            if (VarMap.VariableMap[it->second].Type == "Artificial")
+            {
+                // Found an artificial in the basis, check for a column to pivot in
+                for (int d = 0; d < NonBasicBasis.cols(); ++d)
+                {
+                    VectorXd dlj = CurrentBasis.transpose().lu().solve(NonBasicBasis.col(d));
+                    if (abs(dlj(it->first)) > EPSILON)
+                    {
+                        // Drive out the artificial variables of the basis.
+
+                        // TEST THIS PART
+                        while (VarMap.VariableMap[it->second].InBasis)
+                        {
+                            int entering_col = 0;
+                            for (int j = 0; j < dlj.size(); ++j)
+                            {
+                                if (abs(dlj(j)) > EPSILON)
+                                {
+                                    entering_col = j;
+                                    break;
+                                }
+                            }
+                            pivot(entering_col, it->first, p1_soln.current_solution, CurrentBasis, NonBasicBasis,
+                                  basic_costs, non_basic_costs, b, BasicIndices, NonBasicIndices);
+                            VarMap.update(BasicIndices, NonBasicIndices, p1_soln.current_solution);
+                        }
+                    }
+                    else
+                    {
+                        ++zeros(it->first);
+                    }
+                }
+            }
+
+            // Remove redundant linearly dependent rows
+            if (zeros(it->first) == zeros.size())
+            {
+                variables_to_delete.push_back(it->second);
+                remove_row(CurrentBasis, it->first);
+                remove_row(NonBasicBasis, it->first);
+                remove_vector_row(b, it->first);
+                constraint_type.erase(constraint_type.begin() + it->first);
+            }
+        }
+        for (auto d = variables_to_delete.begin(); d != variables_to_delete.end(); ++d)
+        {
+            VarMap.VariableMap.erase(*d);
+        }
     }
 
     void Simplex1(VectorXd &costs, MatrixXd &A, VectorXd &b, MatrixXd &_CurrentBasis)
