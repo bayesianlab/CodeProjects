@@ -383,7 +383,7 @@ public:
             NonBasicBasis << A, SlackBasis;
         }
         else{
-            NonBasicBasis.resize(A.rows(), A.rows());
+            NonBasicBasis.resize(A.rows(), A.cols());
             NonBasicBasis << A; 
         }
         
@@ -401,6 +401,7 @@ public:
         p1_soln = simplex(guess, CurrentBasis, NonBasicBasis, basic_costs, non_basic_costs, b,
                             max_iterations, VarMap);
 
+        VarMap.printVariables();
 
         
         if (p1_soln.F_val>EPSILON){

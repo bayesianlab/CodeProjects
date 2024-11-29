@@ -326,12 +326,12 @@ public:
         }
     }
 
-    int determine_exiting_col(const VectorXd &x_B, const VectorXd &aq)
+    int blands_exit(const VectorXd &x_B, const VectorXd &aq)
     {
-        int exiting_col = 0;
+        int exiting_col = -1;
         if (aq.maxCoeff() < 0)
         {
-            return -1;
+            return exiting_col;
         }
         double min_ratio = (fabs(x_B.maxCoeff()) / fabs(aq.minCoeff())) + 1;
         for (int j = 0; j < aq.size(); ++j)
@@ -339,7 +339,7 @@ public:
             if (aq(j) > 0)
             {
                 double can = (x_B(j) / aq(j));
-                if (can <= min_ratio)
+                if (can < min_ratio)
                 {
                     min_ratio = can;
                     exiting_col = j;
@@ -347,6 +347,17 @@ public:
             }
         }
         return exiting_col;
+    }
+
+    int blands_enter(const VectorXd &reduced_costs){
+        int col = -1;
+        for (int i = 0; i < reduced_costs.size();++i){
+            if(reduced_costs[i]<0){
+                col=i;
+                return col; 
+            }
+        }
+        return col; 
     }
 
     void pivot(int entering_col, int exiting_col, VectorXd &x_B, MatrixXd &B, MatrixXd &D, 
@@ -390,8 +401,8 @@ public:
             cout << "\tCurrent F-Val= " << F_val << endl;
             VectorXd y = B.transpose().lu().solve(c_B);
             reduced_costs = c_D.transpose() - (y.transpose() * D);
-            Index entering_col;
-            double reduced_cost_min_val = reduced_costs.minCoeff(&entering_col);
+            int entering_col = blands_enter(reduced_costs);
+            double reduced_cost_min_val = reduced_costs.minCoeff();
             if ((0 <= reduced_cost_min_val) && (F_val <= 0))
             {
                 Sol.set_solution("success", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
@@ -409,7 +420,7 @@ public:
                 Sol.set_solution("Unbounded", B, D, x_B, BasicIndices, NonBasicIndices, F_val);
                 break;
             }
-            int exiting_col = determine_exiting_col(x_B, aq);
+            int exiting_col = blands_exit(x_B, aq);
 
             pivot(entering_col, exiting_col, x_B, B, D, c_B, c_D, b, BasicIndices, NonBasicIndices);
 

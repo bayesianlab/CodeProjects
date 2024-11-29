@@ -154,27 +154,48 @@ int main()
     // S.Simplex2(c6, A6, b6, constraint_type6);
 
 
+    // cout << "Example Aritificals in Basis" << endl; 
+    // cout << "min x1 + x2 + x3" << endl; 
+    // cout << "s.t x1 + 2x2 + 3x3 = 3 " << endl;
+    // cout << "-x1 + 2x2 + 6x3 = 2" << endl; 
+    // cout << "4x2 + 9x3 = 5" << endl; 
+    // cout << "3x3 + x4 = 1" << endl; 
+
+    // VectorXd c7 = VectorXd::Ones(4);
+    // c7(3) = 0;
+    // MatrixXd A7(4,4);
+    // A7 << 1,2,3, 0,
+    // -1,2,6,0,
+    // 0,4,9,0,
+    // 0,0,3,1; 
+
+    // VectorXd b7(4);
+    // b7 << 3,2,5,1;
+
+    // vector<string> constraint_type7 = {"eq", "eq", "eq", "eq"};
+
+    // S.Simplex2(c7, A7, b7, constraint_type7);
+
     cout << "Example Aritificals in Basis" << endl; 
-    cout << "min x1 + x2 + x3" << endl; 
-    cout << "s.t x1 + 2x2 + 3x3 = 3 " << endl;
-    cout << "-x1 + 2x2 + 6x3 = 2" << endl; 
-    cout << "4x2 + 9x3 = 5" << endl; 
-    cout << "3x3 + x4 = 1" << endl; 
+    cout << "min 2x1 + x2 + 3x3 + x4" << endl; 
+    cout << "s.t x1 + 2x2 + x3 + x4 =3 " << endl;
+    cout << "-x1 + 2x3 + x4 = 0" << endl; 
+    cout << "-x1 + x2 = 3/2" << endl; 
+    
 
-    VectorXd c7 = VectorXd::Ones(4);
-    c7(3) = 0;
-    MatrixXd A7(4,4);
-    A7 << 1,2,3, 0,
-    -1,2,6,0,
-    0,4,9,0,
-    0,0,3,1; 
+    VectorXd c8(4);
+    c8 << 2,1,3,1;
+    MatrixXd A8(3,4);
+    A8 << 1,2,1, 1,
+    -1,0,2,1,
+    -1,1,0,0; 
 
-    VectorXd b7(4);
-    b7 << 3,2,5,1;
+    VectorXd b8(3);
+    b8 << 3,0,1.5;
 
-    vector<string> constraint_type7 = {"eq", "eq", "eq", "eq"};
+    vector<string> constraint_type8 = {"eq", "eq", "eq"};
 
-    S.Simplex2(c7, A7, b7, constraint_type7);
+    S.Simplex2(c8, A8, b8, constraint_type8);
 
     return 0;
 }
