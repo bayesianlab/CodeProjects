@@ -1,0 +1,286 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit; /* Keeps link color consistent */
+}
+
+/* Header */
+header {
+    background-color: #0c0f11;
+    color: white;
+    padding: 20px 0;
+}
+
+.header-container {
+    display: flex; /* Use Flexbox for horizontal alignment */
+    align-items: center; /* Vertically align items */
+    justify-content: space-between; /* Space between logo and nav links */
+    padding: 0 20px; /* Add padding to the sides */
+    background-color: #0c0f11; /* Optional: Background color for the header */
+}
+
+.logo {
+    height: 50px; /* Adjust the height of the logo */
+    width: auto; /* Maintain aspect ratio */
+    margin-right: auto; /* Push the logo to the far left */
+}
+
+nav {
+    position: absolute; /* Position the nav links absolutely */
+    left: 50%; /* Move the nav links to the center horizontally */
+    transform: translateX(-50%); /* Center the nav links */
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex; /* Align nav links horizontally */
+    gap: 20px; /* Add space between links */
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Hero Section */
+#hero {
+    background-image: url("../images/earth2.jpg");
+    background-size: cover;
+    background-position: 50% 14%;
+    height: 400px;
+    padding-top: 150px;
+    text-align: center;
+    color: white;
+    position: relative;
+}
+
+#hero h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    font-weight: bold; /* Increase font weight */
+}
+
+#hero p {
+    font-size: 1.2rem;
+    font-weight: bold; /* Increase font weight */
+}
+
+/* Main Content */
+main {
+    padding: 10px;
+    padding-bottom: 100px;
+}
+
+#about {
+    background-color: #ecf0f1;
+    padding: 10px 10px;
+    text-align: left;
+    border-radius: 10px; /* Add rounded corners */
+}
+
+#about h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+#about p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+#newest {
+    background-color: #ecf0f1;
+    padding: 20px 20px;
+    text-align: left;
+    display: flex; /* Use Flexbox */
+    flex-wrap: wrap; /* Allow articles to wrap to the next line if necessary */
+    gap: 20px; /* Add space between articles */
+}
+
+.article-box {
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: calc(33.333% - 20px);  /* Set article box width, accounting for gap */
+    box-sizing: border-box;  /* Include padding and border in the width */
+    display: flex;
+    border-radius: 10px; /* Add rounded corners */
+    flex-direction: column;
+}
+
+.article {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(33.333% - 40px); /* Adjust the width of each article */
+    box-sizing: border-box;
+}
+
+.article h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.article p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.article img {
+    max-width: 100%; /* Ensures the image does not exceed the width of its container */
+    max-height: 300px; /* Sets a maximum height for the image */
+    height: auto; /* Maintains the aspect ratio */
+}
+
+#article-content {
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    overflow: auto; /* Handle overflow */
+    border-radius: 10px; /* Add rounded corners */
+    background-color: #fff; /* Optional: Add a background color for better visibility */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+}
+
+#article-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+#article-author, #article-date, #article-conclusion {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+#article-body section {
+    margin-bottom: 20px;
+}
+
+#article-body h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+#article-body p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+/* Footer */
+footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    height: 120px;
+    width: 100%;
+    background-color: #0c0f11;
+    color: white;
+    text-align: center;
+    padding: 30px;
+    font-size: 0.9rem;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 28px;
+    background:#ffffff;
+}
+
+.search-input {
+    display: flex;
+    color: #333333;
+    margin-left: 15px;
+    outline: none;
+    border: none;
+    background:transparent;
+}
+
+.email {
+    font-family: inherit;
+    height: 30px;
+    padding: 10px;
+}
+
+
+
+/* CSS */
+.button-14 {
+  background-image: linear-gradient(#f7f8fa ,#e7e9ec);
+  border-color: #adb1b8 #a2a6ac #8d9096;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  box-shadow: rgba(255,255,255,.6) 0 1px 0 inset;
+  box-sizing: border-box;
+  color: #0f1111;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Amazon Ember",Arial,sans-serif;
+  font-size: 14px;
+  height: 25px;
+  font-size: 13px;
+  outline: 0;
+  overflow: hidden;
+  padding: 0 11px;
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.button-14:active {
+  border-bottom-color: #a2a6ac;
+}
+
+.button-14:active:hover {
+  border-bottom-color: #a2a6ac;
+}
+
+.button-14:hover {
+  border-color: #a2a6ac #979aa1 #82858a;
+}
+
+.button-14:focus {
+  border-color: #e77600;
+  box-shadow: rgba(228, 121, 17, .5) 0 0 3px 2px;
+  outline: 0;
+}

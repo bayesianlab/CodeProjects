@@ -1,0 +1,64 @@
+{
+  "articles": [
+    {
+      "id": 1,
+      "title": "The Rise of Artificial Intelligence",
+      "author": "Adventinomics",
+      "authorid": 1,
+      "date": "2025-03-16",
+      "category": "Technology",
+      "tags": ["AI", "Machine Learning", "Innovation"],
+      "content": {
+        "body": [
+          {
+            "title": "What is Artificial Intelligence?",
+            "content": "AI refers to the simulation of human intelligence in machines programmed to think and learn like humans. It involves technologies such as machine learning, neural networks, and deep learning."
+          },
+          {
+            "title": "The Impact of AI on Various Industries",
+            "content": "From healthcare to finance, AI is revolutionizing industries by automating tasks, improving decision-making, and creating new possibilities for innovation. For example, AI algorithms can analyze medical data to assist in diagnosing diseases."
+          },
+          {
+            "title": "The Future of AI",
+            "content": "The future of AI looks promising, with advancements in natural language processing, robotics, and autonomous systems. However, ethical concerns and job displacement due to automation must be addressed."
+          }
+        ]
+      },
+      "metadata": {
+        "word_count": 532,
+        "reading_time_minutes": 3,
+        "published": true
+      }
+    },
+    {
+      "id": 2,
+      "title": "The Benefits of Remote Work",
+      "author": "Emily K. Johnson",
+      "authorid": 2,
+      "date": "2025-03-18",
+      "category": "Business",
+      "tags": ["Remote Work", "Productivity", "Work-Life Balance"],
+      "content": {
+        "body": [
+          {
+            "title": "What is Remote Work?",
+            "content": "Remote work refers to working outside of a traditional office setting, often from home or a co-working space. It allows employees to work flexibly and avoid commuting to an office."
+          },
+          {
+            "title": "Advantages of Remote Work",
+            "content": "Remote work offers benefits such as increased productivity, cost savings for employers, improved work-life balance, and access to a global talent pool. It also reduces environmental impact by decreasing the need for commuting."
+          },
+          {
+            "title": "Challenges of Remote Work",
+            "content": "While remote work has many advantages, it also presents challenges such as communication barriers, feelings of isolation, and difficulties in separating work and personal life. Employers must address these challenges to ensure remote work success."
+          }
+        ]
+      },
+      "metadata": {
+        "word_count": 420,
+        "reading_time_minutes": 2,
+        "published": true
+      }
+    }
+  ]
+}
