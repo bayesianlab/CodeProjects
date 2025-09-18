@@ -153,8 +153,6 @@ public:
         }
     }
 
-
-
     void presolve_1nonzero_inrow(VectorXd &costs, MatrixXd &A, VectorXd &b, vector<string> &constraint_type,
                                  map<int, tuple<int, string, double>> &ModelVariables, int &row, int &last_row,
                                  int &var_cnt, int &deleted_rows, double &solved_cost)
@@ -234,8 +232,6 @@ public:
         return sc;
     }
 
-
-
     void not_index_j(MatrixXd &X, int i, int j)
     {
         int n = 0;
@@ -265,8 +261,6 @@ public:
         X = Xcopy;
         return;
     }
-
-
 
     void make_b_pos(MatrixXd &A, VectorXd &b, vector<string> &constraints){  
         cout << "check constraints" << endl; 

@@ -1,22 +1,18 @@
 
-cmake_minimum_required(VERSION 3.22) 
-project(simplex)
-set(CMAKE_BUILD_TYPE DEBUG)
-find_package(Boost)
-if(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})
-  message(STATUS "Found boost headers")
-endif(Boost_FOUND)
+add_library(fort STATIC src/fort.c)
+target_include_directories(fort PRIVATE
+    include/
+)
 
 set(optimsrc src/LineSearchRoutines.cpp src/NumericalDifferentiation.cpp src/Optimization.cpp)
 add_library(optlib STATIC ${optimsrc})
-target_include_directories(optlib PUBLIC include/ /usr/local/include/eigen-3.4.0)
+target_include_directories(optlib PRIVATE include/
+    ${EIGEN_INCLUDE_DIR}
+    ${BOOST_INCLUDEDIR})
 add_executable(optimtest src/Test_Optimization.cpp)
-target_link_libraries(optimtest PUBLIC optlib)
-
-
-add_subdirectory(libfort)
+target_link_libraries(optimtest PRIVATE optlib)
 
 add_executable(tab src/tableau.cpp)
-target_include_directories(tab PUBLIC include/ /usr/local/include/eigen-3.4.0)
-target_link_libraries(tab PUBLIC fort)
+target_include_directories(tab PRIVATE include/ 
+    ${EIGEN_INCLUDE_DIR} ${BOOST_INCLUDEDIR})
+target_link_libraries(tab PRIVATE fort)

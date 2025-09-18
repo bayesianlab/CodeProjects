@@ -1,3 +1,9 @@
-set(plot ${CMAKE_CURRENT_SOURCE_DIR}/src/Plotter.cpp)
-add_library(plot STATIC ${plot})
+
+add_library(plot STATIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Plotter.cpp)
 target_link_libraries(plot PUBLIC ettools)
+target_include_directories(plot PRIVATE 
+    include
+    ${EIGEN_INCLUDE_DIR}
+    ${BOOST_INCLUDEDIR}
+)

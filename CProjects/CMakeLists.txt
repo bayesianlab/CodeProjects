@@ -1,12 +1,36 @@
 # Top level cmake 
-cmake_minimum_required(VERSION 3.22) 
+cmake_minimum_required(VERSION 3.20) 
 project(multilevel)
-# set(CMAKE_CXX_STANDARD 17)
-# set(CMAKE_BUILD_TYPE DEBUG)
- set(CMAKE_BUILD_TYPE RELEASE)
- set(CMAKE_CXX_FLAGS_REALEASE "-O3 -march=native -mfpmath=sse -funroll-loops -fopenmp -DNDEBUG -ffast-math -j")
+
+# Include custom configuration
+include(cmake/cmake_config.cmake)
+
+# Compiler and build settings
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Default build type
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build" FORCE)
+endif()
+
+# Release flags
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -mfpmath=sse -funroll-loops -fopenmp -DNDEBUG -ffast-math -j")
+
+# Export compile commands for tooling
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-#add_compile_options(-Wall -Wextra -pedantic)
+
+# Boost settings
+set(Boost_DEBUG OFF)
+
+find_package(Boost 1.76.0 REQUIRED)
+if(Boost_FOUND)
+  message(STATUS "Boost found")
+else()
+  message(STATUS "Boost NOT FOUND")
+endif()
+
+# Use ccache if available
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
   message(STATUS "Found CCACHE")
@@ -15,36 +39,10 @@ if(CCACHE_FOUND)
   set(CMAKE_CXX_COMPILER_LAUNCHER ccache)
 endif(CCACHE_FOUND)
 
-find_package(Boost)
-if(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})
-  message(STATUS "Found boost headers")
-
-endif(Boost_FOUND)
-
-
-find_package(pybind11)
-
+# Output Directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/build)
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/EigenTools/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/Distributions/include 
-  ${CMAKE_CURRENT_SOURCE_DIR}/TimeSeries/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/Distributions/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/GnuPlotting/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/MultilevelModel/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/MVProbit/include
-  ${CMAKE_CURRENT_SOURCE_DIR}/OptimizationTools/include
-  # ${CMAKE_CURRENT_SOURCE_DIR}/MVProbit/include
-  /usr/local/include/stats/include
-  /usr/local/include/gcem-master/include 
-  /usr/local/include/eigen-3.4.0 
-  /usr/local/include/eigen-3.4.0/unsupported
-  
-  /home/dillon/miniconda3/envs/amh/include/python3.10/
-  /home/dillon/miniconda3/envs/amh/include/
-  )
 
+# Subdirectories
 add_subdirectory(GnuPlotting)
 add_subdirectory(Distributions)
 add_subdirectory(EigenTools)
@@ -52,5 +50,4 @@ add_subdirectory(TimeSeries)
 add_subdirectory(OptimizationTools)
 add_subdirectory(MultilevelModel)
 add_subdirectory(MVProbit)
-add_subdirectory(libfort)
 

@@ -16,7 +16,14 @@
 # target_link_libraries(tnorm PUBLIC Dist ettools ml plot)
 
 add_executable(fps src/factor_probit_sims.cpp)
-target_link_libraries(fps PUBLIC Dist ettools ml plot optlib)
+target_link_libraries(fps PRIVATE Dist ettools ml plot optlib)
+target_include_directories(fps PRIVATE 
+    MVProbit/include
+    ${EIGEN_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/MultilevelModel/include)
 
 add_executable(rp src/recession_prob.cpp)
-target_link_libraries(rp PUBLIC Dist ettools ml plot optlib)
+target_link_libraries(rp PRIVATE Dist ettools ml plot optlib)
+target_include_directories(rp PRIVATE
+    MVProbit/include
+    ${EIGEN_INCLUDE_DIR})

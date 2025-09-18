@@ -10,6 +10,10 @@
 
 add_executable(tv src/testvar.cpp)
 target_link_libraries(tv PUBLIC Dist) 
+target_include_directories(tv PRIVATE
+    include
+    ${EIGEN_INCLUDE_DIR}
+)
 
 
  
