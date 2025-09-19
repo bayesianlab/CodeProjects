@@ -13,6 +13,12 @@ target_link_libraries(tv PUBLIC Dist)
 target_include_directories(tv PRIVATE
     include
     ${EIGEN_INCLUDE_DIR}
+    ${EIGEN_UNSUPPORTED_DIR}
+    ${GCEM_INCLUDE_DIR}
+    ${STATS_INCLUDE_DIR}
+    ${BOOST_INCLUDEDIR}
+    ${CMAKE_SOURCE_DIR}/Distributions/include
+    ${CMAKE_SOURCE_DIR}/EigenTools/include
 )
 
 

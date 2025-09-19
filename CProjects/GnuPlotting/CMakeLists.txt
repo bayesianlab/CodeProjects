@@ -5,5 +5,7 @@ target_link_libraries(plot PUBLIC ettools)
 target_include_directories(plot PRIVATE 
     include
     ${EIGEN_INCLUDE_DIR}
+    ${EIGEN_UNSUPPORTED_DIR}
     ${BOOST_INCLUDEDIR}
+    ${CMAKE_SOURCE_DIR}/EigenTools/include
 )

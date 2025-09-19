@@ -18,12 +18,35 @@
 add_executable(fps src/factor_probit_sims.cpp)
 target_link_libraries(fps PRIVATE Dist ettools ml plot optlib)
 target_include_directories(fps PRIVATE 
-    MVProbit/include
+    include
     ${EIGEN_INCLUDE_DIR}
-    ${CMAKE_SOURCE_DIR}/MultilevelModel/include)
+    ${EIGEN_UNSUPPORTED_DIR}
+    ${GCEM_INCLUDE_DIR}
+    ${STATS_INCLUDE_DIR}
+    ${BOOST_INCLUDEDIR}
+    ${CMAKE_SOURCE_DIR}/MultilevelModel/include
+    ${CMAKE_SOURCE_DIR}/TimeSeries/include
+    ${CMAKE_SOURCE_DIR}/EigenTools/include
+    ${CMAKE_SOURCE_DIR}/Distributions/include
+    ${CMAKE_SOURCE_DIR}/Distributions/include
+    ${CMAKE_SOURCE_DIR}/GnuPlotting/include
+    ${CMAKE_SOURCE_DIR}/OptimizationTools/include
+    )
 
 add_executable(rp src/recession_prob.cpp)
 target_link_libraries(rp PRIVATE Dist ettools ml plot optlib)
 target_include_directories(rp PRIVATE
-    MVProbit/include
-    ${EIGEN_INCLUDE_DIR})
+    include
+    ${EIGEN_INCLUDE_DIR}
+    ${EIGEN_UNSUPPORTED_DIR}
+    ${GCEM_INCLUDE_DIR}
+    ${STATS_INCLUDE_DIR}
+    ${BOOST_INCLUDEDIR}
+    ${CMAKE_SOURCE_DIR}/MultilevelModel/include
+    ${CMAKE_SOURCE_DIR}/TimeSeries/include
+    ${CMAKE_SOURCE_DIR}/EigenTools/include
+    ${CMAKE_SOURCE_DIR}/Distributions/include
+    ${CMAKE_SOURCE_DIR}/Distributions/include
+    ${CMAKE_SOURCE_DIR}/GnuPlotting/include
+    ${CMAKE_SOURCE_DIR}/OptimizationTools/include
+)

@@ -2,24 +2,26 @@
 #ifndef VARS
 #define VARS
 
-#include <Eigen/Dense>
+#include <string>
 #include <iostream>
-#include <map>
-#include <vector>
-#include <math.h>
-#include <boost/format.hpp>
 
+struct Var {
+  Var() = default;
+  std::string name;
+  double coef;
 
-using namespace std;
-using namespace Eigen;
-using namespace boost;
+  Var(double c, std::string n) {
+    name = n;
+    coef = c;
+  }
 
+private:
+  double value;
+};
 
-struct Var{
-    string name;
-    double value;
+std::ostream& operator<<(std::ostream& os, const Var& v){
+    os << v.coef << v.name << std::endl; 
+    return os; 
 }
 
-
-
-#endif 
+#endif

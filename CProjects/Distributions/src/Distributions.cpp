@@ -496,7 +496,7 @@ double lognormalpdf(double x, double mu, double sigma2) {
 }
 
 double tnormpdf(double a, double b, double mu, double sigma2, double x) {
-  double sigma = sqrt(sigma);
+  double sigma = sqrt(sigma2);
   double alpha = (a - mu) / sigma;
   double beta = (b - mu) / sigma;
   double sigmaZ = sigma * (normalCDF(beta) - normalCDF(alpha));

@@ -13,6 +13,10 @@ target_include_directories(ml PRIVATE
   ${GCEM_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/Distributions/include
   ${CMAKE_SOURCE_DIR}/EigenTools/include
+  ${CMAKE_SOURCE_DIR}/TimeSeries/include
+  ${STATS_INCLUDE_DIR}
+  ${BOOST_INCLUDEDIR}
+
 )
 
 # add_executable(test_fullconditionals src/test_fullconditionals.cpp)

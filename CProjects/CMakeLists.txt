@@ -1,13 +1,16 @@
 # Top level cmake 
 cmake_minimum_required(VERSION 3.20) 
-project(multilevel)
+project(build_all)
 
 # Include custom configuration
 include(cmake/cmake_config.cmake)
 
 # Compiler and build settings
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if(MSVC)
+  add_compile_options(/bigobj)
+endif()
 
 # Default build type
 if(NOT CMAKE_BUILD_TYPE)
