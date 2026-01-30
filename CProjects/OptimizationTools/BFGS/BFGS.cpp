@@ -1,4 +1,4 @@
-#include "Optimization.hpp"
+#include "BFGS.hpp"
 
 void PressEnterToContinue()
 {

@@ -33,6 +33,13 @@ else()
   message(STATUS "Boost NOT FOUND")
 endif()
 
+find_package(GTest REQUIRED)
+if(GTest_FOUND)
+  message(STATUS "GTest found")
+else()
+  message(STATUS "GTest NOT FOUND")
+endif()
+
 # Use ccache if available
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)

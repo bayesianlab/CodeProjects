@@ -134,6 +134,6 @@
         "xutility": "cpp"
     },
     "cmake.configureOnOpen": false,
-    "C_Cpp.errorSquiggles": "Disabled",
-    "cmake.sourceDirectory": "${workspaceFolder}/MultilevelModel"
+    "C_Cpp.errorSquiggles": "Enabled",
+    "cmake.sourceDirectory": "${workspaceFolder}"
 }

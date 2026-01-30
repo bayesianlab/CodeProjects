@@ -1,4 +1,4 @@
-#include "LineSearchRoutines.hpp"
+#include "../LineSearch/LineSearchRoutines.hpp"
 
 double LineSearchRoutines::LineSearch(const Ref<const VectorXd> &point, const Ref<const VectorXd> &pk,
                                       const Ref<const VectorXd> &del0,

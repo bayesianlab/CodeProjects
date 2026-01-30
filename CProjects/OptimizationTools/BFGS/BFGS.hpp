@@ -3,7 +3,6 @@
 #define OPTIM_H
 
 #include <Eigen/Dense>
-#include "Optimization.hpp"
 #include <iostream>
 #include <math.h>
 #include <limits>
@@ -11,8 +10,8 @@
 #include <algorithm>
 #include <vector> 
 
-#include "LineSearchRoutines.hpp"
-#include "NumericalDifferentiation.hpp"
+#include "../LineSearch/LineSearchRoutines.hpp"
+#include "../Differentiation/NumericalDifferentiation.hpp"
 
 using namespace std;
 using namespace Eigen;

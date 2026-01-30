@@ -8,7 +8,7 @@
 #include <limits>
 #include <vector> 
 
-#include "NumericalDifferentiation.hpp"
+#include "../Differentiation/NumericalDifferentiation.hpp"
 
 using namespace Eigen;
 using namespace std;
