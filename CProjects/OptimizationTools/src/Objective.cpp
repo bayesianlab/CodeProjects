@@ -6,19 +6,20 @@
 using namespace std;
 
 std::ostream &operator<<(std::ostream &os, const Objective &objective) {
-  auto N = objective.getObjectiveEqn().size();
-  const auto &coef = objective.getObjectiveCoef();
-  size_t i = 0;
+  const auto &varRegister = objective.getVarRegister();
+  const auto &eqn = objective.getObjectiveEqn();
+  
   os << toString(objective.getObjectiveType()) << " ";
-  for (const auto &var : objective.getObjectiveVars()) {
-    if (i < N - 1) {
-      os << coef[i] << var.name << " + ";
-    } else {
-      os << coef[i] << var.name;
+  for (size_t i = 0; i < varRegister.size(); ++i) {
+    auto it = eqn.find(varRegister[i]);
+    if (it != eqn.end()) {
+      if (i < varRegister.size() - 1) {
+        os << it->second << varRegister[i].name << " + ";
+      } else {
+        os << it->second << varRegister[i].name;
+      }
     }
-    i++;
   }
   os << "\n";
   return os;
 }
-

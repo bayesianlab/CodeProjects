@@ -6,7 +6,7 @@
 /home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/Dist.dir
 /home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/edit_cache.dir
 /home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/rebuild_cache.dir
-/home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/ettools.dir
+/home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/tools.dir
 /home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/edit_cache.dir
 /home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/rebuild_cache.dir
 /home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/tv.dir
@@ -26,3 +26,6 @@
 /home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/rp.dir
 /home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/edit_cache.dir
 /home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/rebuild_cache.dir
+/home/dillon/CodeProjects/CProjects/build/ann/CMakeFiles/ann.dir
+/home/dillon/CodeProjects/CProjects/build/ann/CMakeFiles/edit_cache.dir
+/home/dillon/CodeProjects/CProjects/build/ann/CMakeFiles/rebuild_cache.dir

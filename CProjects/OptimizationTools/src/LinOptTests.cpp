@@ -49,3 +49,18 @@ TEST(ModelValidation, AddConstraintsAndObjective) {
   BuildStatus buildStatus = m.buildModel();
   EXPECT_NE(buildStatus, BuildStatus::InvalidConstraint);
 }
+
+TEST(PROBLEM1, simple){
+  std::vector<double> objCosts = {-1, 1};
+  std::vector<double> constr1Coefs = {1, -1};
+  std::vector<double> constr2Coefs = {1, 1};
+
+  std::vector<Var> vars = buildVarVector(2);
+  
+
+  Model m;
+  m.buildObjective(objCosts, vars, ObjectiveType::Min);
+  m.buildConstraint(constr1Coefs, vars, OperatorType::LessThan, 2);
+  m.buildConstraint(constr1Coefs, vars, OperatorType::LessThan, 6);
+
+}

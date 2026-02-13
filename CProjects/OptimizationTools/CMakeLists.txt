@@ -5,7 +5,7 @@ target_include_directories(fort PRIVATE
 )
 
 # Non linear optimization package
-set(optimsrc src/LinearConstraint.cpp src/Objective.cpp src/Model.cpp src/Enums.cpp src/LineSearchRoutines.cpp BFGS/BFGS.cpp Differentiation/NumericalDifferentiation.cpp)
+set(optimsrc src/LinearConstraint.cpp src/Objective.cpp src/Model.cpp src/Enums.cpp src/LineSearchRoutines.cpp src/Variables.cpp BFGS/BFGS.cpp Differentiation/NumericalDifferentiation.cpp)
 add_library(optlib STATIC ${optimsrc})
 target_include_directories(optlib PRIVATE include/ BFGS/ Differentiation/ LineSearch/
     ${EIGEN_INCLUDE_DIR}

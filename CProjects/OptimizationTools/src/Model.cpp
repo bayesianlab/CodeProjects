@@ -2,20 +2,17 @@
 #include "Model.hpp"
 using namespace std;
 
-std::ostream& operator<<(std::ostream& os, const Var& v) {
-os << v.name;
-return os;
-}
-
-std::ostream& operator<<(std::ostream& os, const Model& m) {
-  os << "Model with " << m.getConstraints().size() << " constraints\n";
+std::ostream &operator<<(std::ostream &os, const Var &v) {
+  os << v.name;
   return os;
 }
 
-std::vector<Var> buildVarVector(size_t N) {
-std::vector<Var> vars;
-for (size_t t = 0; t < N; t++) {
-vars.push_back(Var());
+std::ostream &operator<<(std::ostream &os, const Model &m) {
+  os << "Objective:\n  " << m.getObjective();
+  os << "\nConstraints:\n";
+  for (const auto &[name, constraint] : m.getConstraints()) {
+    os << "  " << constraint;
+  }
+  return os;
 }
-return vars;
-}
+

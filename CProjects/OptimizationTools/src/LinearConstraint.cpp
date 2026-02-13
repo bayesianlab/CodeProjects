@@ -22,7 +22,7 @@ std::ostream &operator<<(std::ostream &os, const LinearConstraint &lc) {
 }
 
 LinearConstraint buildConstraint(const vector<double> &coefs,
-                                 const vector<Var> &vars,
+                                  vector<Var> &vars,
                                  const OperatorType &op,
                                  const double &bound) {
   LinearConstraint lc;

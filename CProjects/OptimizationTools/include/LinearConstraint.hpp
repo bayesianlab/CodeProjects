@@ -2,8 +2,8 @@
 #ifndef LINEAR_CONSTRAINT_HPP
 #define LINEAR_CONSTRAINT_HPP
 
-#include "debug.hpp"
 #include "enums.hpp"
+#include <Eigen/Dense>
 #include "Variables.hpp"
 #include <iostream>
 #include <stdexcept>
@@ -16,8 +16,21 @@ public:
   LinearConstraint() : myId(++instanceCnt) {}
   LinearConstraint(std::string _name) : name(_name), myId(++instanceCnt) {}
 
+  Eigen::VectorXd getCoefs(const std::vector<Var> &varRegister){
+    std::vector<double> coefs;
+    for (auto &r : varRegister) {
+      auto k = constraintVars.find(r);
+      if (k != constraintVars.end()){
+        coefs.push_back(k->second);
+      } else {
+        coefs.push_back(0);
+      }
+    }
+    return Eigen::Map<Eigen::VectorXd>(coefs.data(), coefs.size());
+  }
+
   void buildConstraint(const std::vector<double> &coefs,
-                       const std::vector<Var> &vars, const OperatorType &op,
+                       std::vector<Var> &vars, const OperatorType &op,
                        const double &bound) {
     if (coefs.size() != vars.size()) {
       throw std::invalid_argument(
@@ -74,14 +87,13 @@ public:
 
   void resetCnt() { instanceCnt = -1; }
 
-  void addValidVar(const double &coef, const Var &v) {
+  void addValidVar(const double &coef,  Var &v) {
     if (constraintVars.find(v) != constraintVars.end()) {
       throw std::invalid_argument("Variable with name " + v.name +
                                   " already exists in constraint");
     }
-    Var varCopy = v;
-    varCopy.setVariableType(VariableType::Control);
-    constraintVars.insert({varCopy, coef});
+    v.setVariableType(VariableType::Control);
+    constraintVars.insert({v, coef});
   }
 
   LinearConstraint operator-() const {

@@ -16,6 +16,22 @@ class Model {
 public:
   Model() = default;
 
+  BuildStatus buildStatus;
+
+  void buildConstraint(const std::vector<double> &coefs, std::vector<Var> &vars,
+                       const OperatorType &op, const double &bound) {
+    LinearConstraint lc;
+    lc.buildConstraint(coefs, vars, op, bound);
+    addConstraint(lc);
+  }
+
+  void buildObjective(const std::vector<double> &coefs, std::vector<Var> &vars,
+                      const ObjectiveType &oType) {
+    Objective obj;
+    obj.buildObjective(coefs, vars, oType);
+    addObjective(obj);
+  }
+
   // Add a pre-built constraint
   void addConstraint(const LinearConstraint &lc) {
     LinearConstraint copy = lc;
@@ -49,6 +65,10 @@ public:
     }
 
     int row = 0;
+    int lessThanCnt = 0;
+    int greaterThanCnt = 0;
+    int equalToCnt = 0;
+    int negativeBoundsCnt = 0;
     for (auto &[constrName, constr] : constraints) {
       switch (constr.getOperatorType()) {
       case OperatorType::LessThan: {
@@ -56,6 +76,8 @@ public:
         constr.addValidVar(1.0, slack);
         varLookup.insert(slack.name);
         varRegister.push_back(slack);
+        if(constr.getBound()) ++negativeBoundsCnt;
+        ++lessThanCnt;
         break;
       }
       case OperatorType::GreaterThan: {
@@ -63,14 +85,34 @@ public:
         constr.addValidVar(-1.0, surplus);
         varLookup.insert(surplus.name);
         varRegister.push_back(surplus);
+        if(constr.getBound()) ++negativeBoundsCnt;
+        ++greaterThanCnt;
         break;
       }
       case OperatorType::EqualTo:
+        ++equalToCnt;
         break;
       }
       row++;
     }
-    return BuildStatus::Success;
+    int M = lessThanCnt + greaterThanCnt + equalToCnt;
+    if (lessThanCnt == M){
+      if(negativeBoundsCnt == 0){
+        buildStatus = BuildStatus::FeasibleSolution;
+        return buildStatus;
+      }
+    }
+    buildStatus = BuildStatus::Success;
+    return buildStatus;
+  }
+
+  Eigen::MatrixXd getCoefMatrix() const {
+    if(buildStatus != BuildStatus::FeasibleSolution || buildStatus != BuildStatus::Success){
+      throw invalid_argument("The model must be built successfully to return the coefficient matrix.");
+    }
+    for ( auto &[constrName, constr] : constraints ) {
+      
+    }
   }
 
 private:
@@ -80,6 +122,7 @@ private:
   std::vector<Var> varRegister;
   Objective objective;
   bool objectiveSet = false;
+  int twoPhaseModel = true;
 
   void addValidConstr(LinearConstraint &lc) {
     if (!lc.isNameSet()) {

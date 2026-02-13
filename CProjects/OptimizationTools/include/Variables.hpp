@@ -41,4 +41,8 @@ template <> struct hash<Var> {
 };
 } // namespace std
 
+// Function declarations
+std::vector<Var> buildVarVector(size_t N);
+std::vector<Var> buildVarVector(const std::vector<std::string> &names);
+
 #endif

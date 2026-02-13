@@ -5,21 +5,8 @@
 #include <iostream>
 #include <map>
 
-
 using namespace std;
 using namespace Eigen;
-
-void swap_col(MatrixXd &A, MatrixXd &B, int a, int b) {
-  VectorXd t = A.col(a);
-  A.col(a) = B.col(b);
-  B.col(b) = t;
-}
-
-void swap_col(VectorXd &A, VectorXd &B, int a, int b) {
-  double t = A(a);
-  A(a) = B(b);
-  B(b) = t;
-}
 
 int main() {
   Simplex S;
@@ -29,9 +16,9 @@ int main() {
   cout << "     x0 + x1 <= 6" << endl;
 
   Model m;
-  m.addVariable(-1, "x0");
+  // m.addVariable(-1, "x0");
 
-  cout << m.Variables["x0"] << endl; 
+  // cout << m.Variables["x0"] << endl; 
   
 
 

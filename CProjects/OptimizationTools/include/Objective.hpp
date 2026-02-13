@@ -2,8 +2,8 @@
 #ifndef OBJECTIVE_HPP
 #define OBJECTIVE_HPP
 
-#include "enums.hpp"
 #include "Variables.hpp"
+#include "enums.hpp"
 #include <Eigen/Dense>
 #include <unordered_map>
 #include <vector>
@@ -11,8 +11,12 @@
 class Objective {
 public:
   ObjectiveBuildStatus buildObjective(const std::vector<double> &coefs,
-                                      const std::vector<Var> &vars,
+                                       std::vector<Var> &vars,
                                       const ObjectiveType &oType) {
+    int N = coefs.size();
+    if (N <= 0) {
+      throw std::invalid_argument("coefs empty in objective");
+    }
     if (vars.empty()) {
       return ObjectiveBuildStatus::NoVariables;
     }
@@ -26,17 +30,19 @@ public:
       if (objectiveEqn.find(vars[i]) != objectiveEqn.end()) {
         return ObjectiveBuildStatus::DuplicateVariable;
       }
-      objectiveEqn.insert({vars[i], coefs[i]});
+      addValidVar(coefs[i], vars[i]);
     }
     setObjectiveType(oType);
     return ObjectiveBuildStatus::Success;
   }
 
-  void addValidVar(const double &coef, const Var &v) {
+  void addValidVar(const double &coef,  Var &v) {
     if (objectiveEqn.find(v) != objectiveEqn.end()) {
       throw std::invalid_argument("Variable with name " + v.name +
                                   " already exists in objective");
     }
+    varRegister.push_back(v);
+    v.setVariableType(VariableType::Control);
     objectiveEqn.insert({v, coef});
   }
 
@@ -44,8 +50,10 @@ public:
     return objectiveEqn;
   }
 
+  const std::vector<Var> getVarRegister() const { return varRegister; }
+
   const Eigen::VectorXd
-  getCoefficients(const std::vector<Var> &varRegister) const {
+  getCoefficients() const {
     Eigen::VectorXd coefs(varRegister.size());
     int i = 0;
     for (const auto &var : varRegister) {
@@ -88,10 +96,11 @@ public:
 
 private:
   ObjectiveType objectiveType = ObjectiveType::Min;
+  std::vector<Var> varRegister;
   std::unordered_map<Var, double> objectiveEqn;
 };
 
 // Forward declaration only
 std::ostream &operator<<(std::ostream &os, const Objective &objective);
 
-#endif  // OBJECTIVE_HPP
+#endif // OBJECTIVE_HPP

@@ -227,6 +227,11 @@ public:
 class SimplexCore {
 
 public:
+  SimplexCore(const Model &m) {
+    BuildStatus buildStatus = m.buildStatus;
+    Eigen::VectorXd objCosts = m.getObjective().getCoefficients();
+
+  }
   void set_basic_nonbasic_indxs(map<int, int> &BasicIndices,
                                 map<int, int> &NonBasicIndices,
                                 LPVariableMap &ModelVariables) {
@@ -289,31 +294,32 @@ public:
     NonBasicIndices[entering_col] = ti;
   }
 
-  Solution simplex(VectorXd &x_B, MatrixXd &A, VectorXd &b, VectorXd &c,
-                   int max_iterations) {
+  void simplex(VectorXd &x_B, MatrixXd &B, MatrixXd &D, VectorXd c_B, 
+    VectorXd &c_D, VectorXd &b, int max_iterations) {
     int basic_var_count = (int)b.cols();
     int non_basic_var = (int)b.cols();
-    VectorXd D = VectorXd::Zero(c.size());
-    VectorXd reduced_cost(c.size());
+    VectorXd D = VectorXd::Zero(c_D.size());
+    VectorXd reduced_cost(c_D.size());
     double F_val;
     for (int i = 0; i < max_iterations; ++i) {
-      F_val = c.transpose() * x_B;
-      reduced_cost = c - c.transpose() * A;
+      F_val = c_B.transpose() * x_B;
+      VectorXd y = b.transpose().lu().solve(c_B);
+      reduced_cost = c_D - y.transpose() * D;
       int entering_col = blands_enter(reduced_cost);
       if (entering_col == -1) {
         break;
       }
-      VectorXd aq = B.lu().solve(A.col(entering_col));
+      VectorXd aq = B.lu().solve(D.col(entering_col));
       if (aq.maxCoeff() < 0) {
         break;
       }
       int exiting_row = blands_exit(x_B, aq);
       int exiting_col = blands_exit(x_B, aq);
-      pivot(entering_col, exiting_col, x_B, aq);
+      // pivot(entering_col, exiting_col, x_B, B, D, c_B, c_D, b, BasicIndices, );
     }
     // For (auto it = BasicIndices.begin(); it != BasicIndices.end(); ++it) {
     // }
-    return sol;
+    // return sol;
   }
 
   // void drop_redundant_constraints(VectorXd &x_B, MatrixXd &B, MatrixXd &D,
