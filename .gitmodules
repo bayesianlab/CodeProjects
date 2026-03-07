@@ -1,0 +1,6 @@
+[submodule "CProjects/external/googletest"]
+	path = CProjects/external/googletest
+	url = https://github.com/google/googletest.git
+[submodule "CProjects/external/eigen"]
+	path = CProjects/external/eigen
+	url = https://gitlab.com/libeigen/eigen.git

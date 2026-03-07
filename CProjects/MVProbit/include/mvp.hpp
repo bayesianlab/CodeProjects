@@ -7,7 +7,7 @@
 #include "FullConditionals.hpp"
 #include "IntegratedLikelihood.hpp"
 #include "MultilevelModelFunctions.hpp"
-#include "Optimization.hpp"
+#include "BFGS.hpp"
 #include "TimeSeriesTools.hpp"
 
 using namespace Eigen;
@@ -205,12 +205,10 @@ public:
     int KT = K * T;
     int nFactors = InfoMat.rows();
     int QK = nFactors * K;
-    int nBetas = K * (Xt.cols() + nFactors);
-    int levels = calcLevels(InfoMat, K);
+
     MatrixXd A = MatrixXd::Ones(K, nFactors);
     Identification2(A);
     MatrixXd Sigma = MatrixXd::Identity(K, K);
-    VectorXd Ik = VectorXd::Ones(K);
     MatrixXd surX = surForm(Xt, K);
     MatrixXd Xbeta = surX * beta;
     Xbeta.resize(K, T);
@@ -264,8 +262,8 @@ public:
         gammas.row(n) = updateArParameters(Ft.row(n), gammas.row(n),
                                            factorVariance(n), g0, G0);
 
-        MatrixXd H = ReturnH(gammas.row(n), T);
-        MatrixXd nu = (H * Ft.row(n).transpose()).transpose();
+        // MatrixXd H = ReturnH(gammas.row(n), T);
+        // MatrixXd nu = (H * Ft.row(n).transpose()).transpose();
         // factor variance update
         // factorVariance(n) = updateSigma2(nu, d0, D0).value();
       }

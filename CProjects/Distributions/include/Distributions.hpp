@@ -53,6 +53,10 @@ MatrixXd mvnrnd(const MatrixBase<A> &mu, const MatrixBase<B> &sig, int N) {
   return Z;
 }
 
+
+MatrixXd mvnrnd(int K, int N);
+
+
 template <typename Derived1> double logdet(const MatrixBase<Derived1> &sig) {
   MatrixXd x = sig.llt().matrixL();
   return 2 * x.diagonal().array().log().sum();

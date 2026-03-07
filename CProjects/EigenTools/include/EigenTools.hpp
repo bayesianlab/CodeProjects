@@ -134,6 +134,20 @@ SparseDouble CreateBigDiag(const MatrixBase<Derived1> &diagonalMat,
   return EmptyD;
 }
 
+template <typename T>
+void writeEigenToCsv(string fname, std::vector<T> &M) {
+  const static Eigen::IOFormat CSVFormat(Eigen::StreamPrecision,
+                                          Eigen::DontAlignCols, ", ", "\n");
+  int size = M.size();
+  std::ofstream file(fname.c_str());
+  if (file.is_open()) {
+    for (int i = 0; i < size; ++i) {
+      file << M[i].format(CSVFormat) << endl;
+    }
+    file.close();
+  }
+}
+
 template <typename D> MatrixXd surForm(const MatrixBase<D> &stackedx, int K) {
   int KT = stackedx.rows();
   int cols = stackedx.cols();

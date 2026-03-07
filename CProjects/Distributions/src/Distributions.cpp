@@ -118,6 +118,22 @@ MatrixXd normrnd(double mu, double sig, int N, int J)
   return Z;
 }
 
+MatrixXd mvnrnd(int K, int N) {
+  MatrixXd sig = MatrixXd::Identity(K,K);
+  RowVectorXd mu = RowVectorXd::Zero(K);
+  
+  if (sig.cols() != mu.cols()) {
+    invalid_argument("Columns and rows must be equal in mvnrnd");
+  }
+  MatrixXd Z = normrnd(0., 1., N, sig.cols());
+  LLT<MatrixXd> lltofSig(sig);
+  MatrixXd L = lltofSig.matrixLLT();
+  Z = (L * Z.transpose()).transpose();
+  Z.rowwise() += mu;
+  return Z;
+}
+
+
 double unifrnd()
 {
   boost::random::uniform_01<> u;

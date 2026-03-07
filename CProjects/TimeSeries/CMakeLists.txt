@@ -9,13 +9,13 @@
 # target_link_libraries(test_mamodel PUBLIC ettools Dist plot)
 
 add_executable(tv src/testvar.cpp)
-target_link_libraries(tv PUBLIC Dist) 
+target_link_libraries(tv PUBLIC Dist Eigen3::Eigen)
+add_pch_to_target(tv)
 target_include_directories(tv PRIVATE
     include
-    ${EIGEN_INCLUDE_DIR}
-    ${EIGEN_UNSUPPORTED_DIR}
-    ${GCEM_INCLUDE_DIR}
-    ${STATS_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/gcem/include
+    ${CMAKE_SOURCE_DIR}/stats/include
+    ${EIGEN_UNSUPPORTED}
     ${BOOST_INCLUDEDIR}
     ${CMAKE_SOURCE_DIR}/Distributions/include
     ${CMAKE_SOURCE_DIR}/EigenTools/include

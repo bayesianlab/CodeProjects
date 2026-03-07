@@ -2,16 +2,19 @@
     "configurations": [
         {
             "name": "Linux",
-            "includePath": [
-                "${default}",
-		"${workspaceFolder}/MultilevelModel/include/"
-            ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-x64",
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+            "configurationProvider": "ms-vscode.cmake-tools",
+            "compileCommands": [
+                "${workspaceFolder}/build/compile_commands.json"
+            ],
+            "mergeConfigurations": true,
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            }
         }
     ],
     "version": 4

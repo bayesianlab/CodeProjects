@@ -123,6 +123,7 @@ MatrixXd readCSV(std::string file) {
   }
 }
 
+
 Matrix<int, Dynamic, 2> castToInfoMat(const MatrixXd &I) {
   Matrix<int, Dynamic, 2> InfoMat(I.rows(), 2);
   for (int i = 0; i < I.rows(); ++i) {

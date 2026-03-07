@@ -9,7 +9,7 @@
 #include <Eigen/Sparse>
 #include <unsupported/Eigen/KroneckerProduct>
 #include <chrono>
-#include "Optimization.hpp"
+#include "BFGS.hpp"
 #include "MultilevelModelFunctions.hpp"
 #include "EigenTools.hpp"
 #include "BayesianUpdates.hpp"

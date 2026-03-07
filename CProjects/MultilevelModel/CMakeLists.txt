@@ -1,23 +1,48 @@
 # Top level cmake 
-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(multilevel)
 
 set(mlsrc src/MultilevelModelFunctions.cpp src/GenerateFactorData.cpp )
 
 add_library(ml STATIC ${mlsrc})
-target_link_libraries(ml PUBLIC Dist ettools)
+target_link_libraries(ml PUBLIC Dist tools Eigen3::Eigen)
+add_pch_to_target(ml)
 target_include_directories(ml PRIVATE 
   include
   ${EIGEN_INCLUDE_DIR}
-  ${EIGEN_UNSUPPORTED_DIR}
+  ${EIGEN_UNSUPPORTED}
   ${GCEM_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/Distributions/include
   ${CMAKE_SOURCE_DIR}/EigenTools/include
   ${CMAKE_SOURCE_DIR}/TimeSeries/include
   ${STATS_INCLUDE_DIR}
   ${BOOST_INCLUDEDIR}
-
 )
+
+# Google Test
+find_package(GTest REQUIRED)
+
+# Test executable
+add_executable(test_updateSurBeta test/test_updateSurBeta.cpp)
+target_include_directories(test_updateSurBeta PRIVATE
+    ${CMAKE_SOURCE_DIR}/MultilevelModel/include
+    ${CMAKE_SOURCE_DIR}/Distributions/include
+    ${CMAKE_SOURCE_DIR}/EigenTools/include
+    ${CMAKE_SOURCE_DIR}/TimeSeries/include
+    ${CMAKE_SOURCE_DIR}/GnuPlotting/include
+    ${CMAKE_SOURCE_DIR}/gcem/include
+    ${CMAKE_SOURCE_DIR}/stats/include
+    ${CMAKE_CURRENT_LIST_DIR}/test
+    ${EIGEN_INCLUDE_DIR}
+    ${EIGEN_UNSUPPORTED}
+    ${GCEM_INCLUDE_DIR}
+    ${STATS_INCLUDE_DIR}
+    ${BOOST_INCLUDEDIR}
+)
+target_link_libraries(test_updateSurBeta GTest::GTest GTest::Main Dist tools Eigen3::Eigen)
+add_test_pch_to_target(test_updateSurBeta)
+
+enable_testing()
+add_test(NAME UpdateSurBetaTests COMMAND test_updateSurBeta)
 
 # add_executable(test_fullconditionals src/test_fullconditionals.cpp)
 # target_link_libraries(test_fullconditionals PUBLIC optim ettools plot Dist ml)

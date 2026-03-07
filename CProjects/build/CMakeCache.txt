@@ -17,11 +17,8 @@
 //The directory containing a CMake configuration file for Boost.
 Boost_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Boost-1.83.0
 
-//Path to a file.
-Boost_INCLUDE_DIR:PATH=/usr/include
-
 //Path to a program.
-CCACHE_FOUND:FILEPATH=CCACHE_FOUND-NOTFOUND
+CCACHE_FOUND:FILEPATH=/usr/bin/ccache
 
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
@@ -29,14 +26,14 @@ CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
-//No help, variable specified on the command line.
+//Choose the type of build
 CMAKE_BUILD_TYPE:STRING=Debug
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
-//No help, variable specified on the command line.
-CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/g++
+//CXX compiler
+CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -61,8 +58,8 @@ CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
 //Flags used by the CXX compiler during RELWITHDEBINFO builds.
 CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
 
-//No help, variable specified on the command line.
-CMAKE_C_COMPILER:FILEPATH=/usr/bin/gcc
+//C compiler
+CMAKE_C_COMPILER:FILEPATH=/usr/bin/cc
 
 //A wrapper around 'ar' adding the appropriate '--plugin' option
 // for the GCC compiler
@@ -105,8 +102,8 @@ CMAKE_EXE_LINKER_FLAGS_RELEASE:STRING=
 //Flags used by the linker during RELWITHDEBINFO builds.
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
-//No help, variable specified on the command line.
-CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
+//Enable/Disable output of compile commands during generation.
+CMAKE_EXPORT_COMPILE_COMMANDS:BOOL=
 
 //Value Computed by CMake.
 CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/CMakeFiles/pkgRedirects
@@ -150,6 +147,9 @@ CMAKE_OBJCOPY:FILEPATH=/usr/bin/objcopy
 CMAKE_OBJDUMP:FILEPATH=/usr/bin/objdump
 
 //Value Computed by CMake
+CMAKE_PROJECT_COMPAT_VERSION:STATIC=
+
+//Value Computed by CMake
 CMAKE_PROJECT_DESCRIPTION:STATIC=
 
 //Value Computed by CMake
@@ -157,6 +157,9 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
 CMAKE_PROJECT_NAME:STATIC=build_all
+
+//Value Computed by CMake
+CMAKE_PROJECT_SPDX_LICENSE:STATIC=
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -191,23 +194,23 @@ CMAKE_SKIP_INSTALL_RPATH:BOOL=NO
 //If set, runtime paths are not added when using shared libraries.
 CMAKE_SKIP_RPATH:BOOL=NO
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during all build types.
 CMAKE_STATIC_LINKER_FLAGS:STRING=
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during DEBUG builds.
 CMAKE_STATIC_LINKER_FLAGS_DEBUG:STRING=
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during MINSIZEREL builds.
 CMAKE_STATIC_LINKER_FLAGS_MINSIZEREL:STRING=
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during RELEASE builds.
 CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 
-//Flags used by the linker during the creation of static libraries
+//Flags used by the archiver during the creation of static libraries
 // during RELWITHDEBINFO builds.
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
@@ -223,17 +226,20 @@ CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Value Computed by CMake
+Distributions_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/Distributions
+
+//Value Computed by CMake
+Distributions_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+Distributions_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/Distributions
+
+//The directory containing a CMake configuration file for Eigen3.
+Eigen3_DIR:PATH=/usr/share/eigen3/cmake
+
 //The directory containing a CMake configuration file for GTest.
-GTest_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/GTest
-
-//Value Computed by CMake
-ann_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/ann
-
-//Value Computed by CMake
-ann_IS_TOP_LEVEL:STATIC=OFF
-
-//Value Computed by CMake
-ann_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/ann
+GTest_DIR:PATH=/usr/local/lib/cmake/GTest
 
 //The directory containing a CMake configuration file for boost_headers.
 boost_headers_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/boost_headers-1.83.0
@@ -247,8 +253,23 @@ build_all_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 build_all_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects
 
-//Dependencies for the target
-ml_LIB_DEPENDS:STATIC=general;Dist;general;ettools;
+//Value Computed by CMake
+eigentools_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/EigenTools
+
+//Value Computed by CMake
+eigentools_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+eigentools_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/EigenTools
+
+//Value Computed by CMake
+fort_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/fort
+
+//Value Computed by CMake
+fort_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+fort_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/fort
 
 //Value Computed by CMake
 multilevel_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/MultilevelModel
@@ -259,13 +280,56 @@ multilevel_IS_TOP_LEVEL:STATIC=OFF
 //Value Computed by CMake
 multilevel_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/MultilevelModel
 
+//Value Computed by CMake
+mvprobit_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/MVProbit
+
+//Value Computed by CMake
+mvprobit_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+mvprobit_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/MVProbit
+
+//Value Computed by CMake
+nnet_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/ann
+
+//Value Computed by CMake
+nnet_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+nnet_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/ann
+
+//Value Computed by CMake
+optimization_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/Optimization
+
+//Value Computed by CMake
+optimization_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+optimization_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/Optimization
+
+//Value Computed by CMake
+plotter_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/GnuPlotting
+
+//Value Computed by CMake
+plotter_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+plotter_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/GnuPlotting
+
+//Value Computed by CMake
+practice_BINARY_DIR:STATIC=/home/dillon/CodeProjects/CProjects/build/PracticeCode
+
+//Value Computed by CMake
+practice_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+practice_SOURCE_DIR:STATIC=/home/dillon/CodeProjects/CProjects/PracticeCode
+
 
 ########################
 # INTERNAL cache entries
 ########################
 
-//ADVANCED property for variable: Boost_DIR
-Boost_DIR-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_ADDR2LINE
 CMAKE_ADDR2LINE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_AR
@@ -273,9 +337,9 @@ CMAKE_AR-ADVANCED:INTERNAL=1
 //This is the directory where this CMakeCache.txt was created
 CMAKE_CACHEFILE_DIR:INTERNAL=/home/dillon/CodeProjects/CProjects/build
 //Major version of cmake used to create the current loaded cache
-CMAKE_CACHE_MAJOR_VERSION:INTERNAL=3
+CMAKE_CACHE_MAJOR_VERSION:INTERNAL=4
 //Minor version of cmake used to create the current loaded cache
-CMAKE_CACHE_MINOR_VERSION:INTERNAL=28
+CMAKE_CACHE_MINOR_VERSION:INTERNAL=2
 //Patch version of cmake used to create the current loaded cache
 CMAKE_CACHE_PATCH_VERSION:INTERNAL=3
 //ADVANCED property for variable: CMAKE_COLOR_MAKEFILE
@@ -332,6 +396,8 @@ CMAKE_EXE_LINKER_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
 CMAKE_EXE_LINKER_FLAGS_RELEASE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO
 CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_EXPORT_COMPILE_COMMANDS
+CMAKE_EXPORT_COMPILE_COMMANDS-ADVANCED:INTERNAL=1
 //Name of external makefile project generator.
 CMAKE_EXTRA_GENERATOR:INTERNAL=
 //Name of generator.
@@ -351,6 +417,8 @@ CMAKE_HOME_DIRECTORY:INTERNAL=/home/dillon/CodeProjects/CProjects
 CMAKE_INSTALL_SO_NO_EXE:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
 CMAKE_LINKER-ADVANCED:INTERNAL=1
+//Name of CMakeLists files to read
+CMAKE_LIST_FILE_NAME:INTERNAL=CMakeLists.txt
 //ADVANCED property for variable: CMAKE_MAKE_PROGRAM
 CMAKE_MAKE_PROGRAM-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_MODULE_LINKER_FLAGS
@@ -366,7 +434,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=9
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=11
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -378,7 +446,7 @@ CMAKE_RANLIB-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_READELF
 CMAKE_READELF-ADVANCED:INTERNAL=1
 //Path to CMake installation.
-CMAKE_ROOT:INTERNAL=/usr/share/cmake-3.28
+CMAKE_ROOT:INTERNAL=/usr/share/cmake-4.2
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS
 CMAKE_SHARED_LINKER_FLAGS-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_SHARED_LINKER_FLAGS_DEBUG
@@ -411,12 +479,8 @@ CMAKE_TAPI-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
-//Details about finding Boost
-FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/usr/lib/x86_64-linux-gnu/cmake/Boost-1.83.0/BoostConfig.cmake][c ][v1.83.0()]
 //Details about finding GTest
-FIND_PACKAGE_MESSAGE_DETAILS_GTest:INTERNAL=[/usr/lib/x86_64-linux-gnu/cmake/GTest/GTestConfig.cmake][c ][v1.14.0()]
-//linker supports push/pop state
-_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
+FIND_PACKAGE_MESSAGE_DETAILS_GTest:INTERNAL=[/usr/local/lib/cmake/GTest/GTestConfig.cmake][ ][v1.16.0()]
 //ADVANCED property for variable: boost_headers_DIR
 boost_headers_DIR-ADVANCED:INTERNAL=1
 

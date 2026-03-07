@@ -1,128 +1,218 @@
 [
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/GnuPlotting",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/usr/include/eigen3 -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/EigenTools/include -g -std=gnu++17 -o CMakeFiles/plot.dir/src/Plotter.cpp.o -c /home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/GnuPlotting/CMakeFiles/plot.dir/cmake_pch.hxx -o CMakeFiles/plot.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/GnuPlotting/CMakeFiles/plot.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/GnuPlotting/CMakeFiles/plot.dir/cmake_pch.hxx.cxx",
+  "output": "GnuPlotting/CMakeFiles/plot.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/GnuPlotting",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/GnuPlotting/CMakeFiles/plot.dir/cmake_pch.hxx -o CMakeFiles/plot.dir/src/Plotter.cpp.o -c /home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/GnuPlotting/src/Plotter.cpp",
   "output": "GnuPlotting/CMakeFiles/plot.dir/src/Plotter.cpp.o"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/Distributions",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/usr/include/eigen3 -I/usr/include/eigen3/unsupported -g -std=gnu++17 -o CMakeFiles/Dist.dir/src/Distributions.cpp.o -c /home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/EigenTools/include -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/Dist.dir/cmake_pch.hxx -o CMakeFiles/Dist.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/Dist.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/Dist.dir/cmake_pch.hxx.cxx",
+  "output": "Distributions/CMakeFiles/Dist.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Distributions",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/EigenTools/include -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Distributions/CMakeFiles/Dist.dir/cmake_pch.hxx -o CMakeFiles/Dist.dir/src/Distributions.cpp.o -c /home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/Distributions/src/Distributions.cpp",
   "output": "Distributions/CMakeFiles/Dist.dir/src/Distributions.cpp.o"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/EigenTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/usr/include/eigen3 -I/usr/include/eigen3/unsupported -g -std=gnu++17 -o CMakeFiles/tools.dir/src/EigenTools.cpp.o -c /home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/tools.dir/cmake_pch.hxx -o CMakeFiles/tools.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/tools.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/tools.dir/cmake_pch.hxx.cxx",
+  "output": "EigenTools/CMakeFiles/tools.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/EigenTools",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/EigenTools/CMakeFiles/tools.dir/cmake_pch.hxx -o CMakeFiles/tools.dir/src/EigenTools.cpp.o -c /home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/EigenTools/src/EigenTools.cpp",
   "output": "EigenTools/CMakeFiles/tools.dir/src/EigenTools.cpp.o"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/TimeSeries",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/usr/include/eigen3 -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -g -std=gnu++17 -o CMakeFiles/tv.dir/src/testvar.cpp.o -c /home/dillon/CodeProjects/CProjects/TimeSeries/src/testvar.cpp",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/tv.dir/cmake_pch.hxx -o CMakeFiles/tv.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/tv.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/tv.dir/cmake_pch.hxx.cxx",
+  "output": "TimeSeries/CMakeFiles/tv.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/TimeSeries",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/TimeSeries/CMakeFiles/tv.dir/cmake_pch.hxx -o CMakeFiles/tv.dir/src/testvar.cpp.o -c /home/dillon/CodeProjects/CProjects/TimeSeries/src/testvar.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/TimeSeries/src/testvar.cpp",
   "output": "TimeSeries/CMakeFiles/tv.dir/src/testvar.cpp.o"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/gcc  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -g -o CMakeFiles/fort.dir/src/fort.c.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/fort.c",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/fort.c",
-  "output": "OptimizationTools/CMakeFiles/fort.dir/src/fort.c.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/optlib.dir/cmake_pch.hxx -o CMakeFiles/optlib.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/optlib.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/optlib.dir/cmake_pch.hxx.cxx",
+  "output": "Optimization/CMakeFiles/optlib.dir/cmake_pch.hxx.gch"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -I/usr/include/eigen3 -g -std=gnu++17 -o CMakeFiles/optlib.dir/src/LinearConstraint.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/LinearConstraint.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LinearConstraint.cpp",
-  "output": "OptimizationTools/CMakeFiles/optlib.dir/src/LinearConstraint.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/optlib.dir/cmake_pch.hxx -o CMakeFiles/optlib.dir/NonLinOpt/LineSearchRoutines.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt/LineSearchRoutines.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt/LineSearchRoutines.cpp",
+  "output": "Optimization/CMakeFiles/optlib.dir/NonLinOpt/LineSearchRoutines.cpp.o"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -I/usr/include/eigen3 -g -std=gnu++17 -o CMakeFiles/optlib.dir/src/Objective.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Objective.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Objective.cpp",
-  "output": "OptimizationTools/CMakeFiles/optlib.dir/src/Objective.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/optlib.dir/cmake_pch.hxx -o CMakeFiles/optlib.dir/NonLinOpt/BFGS.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt/BFGS.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt/BFGS.cpp",
+  "output": "Optimization/CMakeFiles/optlib.dir/NonLinOpt/BFGS.cpp.o"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -I/usr/include/eigen3 -g -std=gnu++17 -o CMakeFiles/optlib.dir/src/Model.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Model.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Model.cpp",
-  "output": "OptimizationTools/CMakeFiles/optlib.dir/src/Model.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/optlib.dir/cmake_pch.hxx -o CMakeFiles/optlib.dir/NonLinOpt/NumericalDifferentiation.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt/NumericalDifferentiation.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt/NumericalDifferentiation.cpp",
+  "output": "Optimization/CMakeFiles/optlib.dir/NonLinOpt/NumericalDifferentiation.cpp.o"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -I/usr/include/eigen3 -g -std=gnu++17 -o CMakeFiles/optlib.dir/src/Enums.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Enums.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Enums.cpp",
-  "output": "OptimizationTools/CMakeFiles/optlib.dir/src/Enums.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/bfgstest.dir/cmake_pch.hxx -o CMakeFiles/bfgstest.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/bfgstest.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/bfgstest.dir/cmake_pch.hxx.cxx",
+  "output": "Optimization/CMakeFiles/bfgstest.dir/cmake_pch.hxx.gch"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -I/usr/include/eigen3 -g -std=gnu++17 -o CMakeFiles/optlib.dir/src/LineSearchRoutines.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LineSearchRoutines.cpp",
-  "output": "OptimizationTools/CMakeFiles/optlib.dir/src/LineSearchRoutines.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/bfgstest.dir/cmake_pch.hxx -o CMakeFiles/bfgstest.dir/NonLinOpt/Test_Optimization.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt/Test_Optimization.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt/Test_Optimization.cpp",
+  "output": "Optimization/CMakeFiles/bfgstest.dir/NonLinOpt/Test_Optimization.cpp.o"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -I/usr/include/eigen3 -g -std=gnu++17 -o CMakeFiles/optlib.dir/src/Variables.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Variables.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Variables.cpp",
-  "output": "OptimizationTools/CMakeFiles/optlib.dir/src/Variables.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linconstropt.dir/cmake_pch.hxx -o CMakeFiles/linconstropt.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linconstropt.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linconstropt.dir/cmake_pch.hxx.cxx",
+  "output": "Optimization/CMakeFiles/linconstropt.dir/cmake_pch.hxx.gch"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -I/usr/include/eigen3 -g -std=gnu++17 -o CMakeFiles/optlib.dir/BFGS/BFGS.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS/BFGS.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS/BFGS.cpp",
-  "output": "OptimizationTools/CMakeFiles/optlib.dir/BFGS/BFGS.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linconstropt.dir/cmake_pch.hxx -o CMakeFiles/linconstropt.dir/LinConstrOpt/src/LinearConstraint.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/LinearConstraint.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/LinearConstraint.cpp",
+  "output": "Optimization/CMakeFiles/linconstropt.dir/LinConstrOpt/src/LinearConstraint.cpp.o"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -I/usr/include/eigen3 -g -std=gnu++17 -o CMakeFiles/optlib.dir/Differentiation/NumericalDifferentiation.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation/NumericalDifferentiation.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation/NumericalDifferentiation.cpp",
-  "output": "OptimizationTools/CMakeFiles/optlib.dir/Differentiation/NumericalDifferentiation.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linconstropt.dir/cmake_pch.hxx -o CMakeFiles/linconstropt.dir/LinConstrOpt/src/Enums.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/Enums.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/Enums.cpp",
+  "output": "Optimization/CMakeFiles/linconstropt.dir/LinConstrOpt/src/Enums.cpp.o"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/usr/include/eigen3 -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -g -std=gnu++17 -o CMakeFiles/optimtest.dir/src/Test_Optimization.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/Test_Optimization.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/Test_Optimization.cpp",
-  "output": "OptimizationTools/CMakeFiles/optimtest.dir/src/Test_Optimization.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linconstropt.dir/cmake_pch.hxx -o CMakeFiles/linconstropt.dir/LinConstrOpt/src/Model.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/Model.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/Model.cpp",
+  "output": "Optimization/CMakeFiles/linconstropt.dir/LinConstrOpt/src/Model.cpp.o"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/usr/include/eigen3 -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/BFGS -I/home/dillon/CodeProjects/CProjects/OptimizationTools/Differentiation -I/home/dillon/CodeProjects/CProjects/OptimizationTools/LineSearch -g -std=gnu++17 -DGTEST_HAS_PTHREAD=1 -o CMakeFiles/linopttest.dir/src/LinOptTests.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/LinOptTests.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/LinOptTests.cpp",
-  "output": "OptimizationTools/CMakeFiles/linopttest.dir/src/LinOptTests.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linconstropt.dir/cmake_pch.hxx -o CMakeFiles/linconstropt.dir/LinConstrOpt/src/Objective.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/Objective.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/Objective.cpp",
+  "output": "Optimization/CMakeFiles/linconstropt.dir/LinConstrOpt/src/Objective.cpp.o"
 },
 {
-  "directory": "/home/dillon/CodeProjects/CProjects/build/OptimizationTools",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/usr/include/eigen3 -g -std=gnu++17 -o CMakeFiles/tab.dir/src/tableau.cpp.o -c /home/dillon/CodeProjects/CProjects/OptimizationTools/src/tableau.cpp",
-  "file": "/home/dillon/CodeProjects/CProjects/OptimizationTools/src/tableau.cpp",
-  "output": "OptimizationTools/CMakeFiles/tab.dir/src/tableau.cpp.o"
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/include -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linconstropt.dir/cmake_pch.hxx -o CMakeFiles/linconstropt.dir/LinConstrOpt/src/Variables.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/Variables.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/Variables.cpp",
+  "output": "Optimization/CMakeFiles/linconstropt.dir/LinConstrOpt/src/Variables.cpp.o"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/include -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linopttest.dir/cmake_pch.hxx -o CMakeFiles/linopttest.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linopttest.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linopttest.dir/cmake_pch.hxx.cxx",
+  "output": "Optimization/CMakeFiles/linopttest.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/Optimization",
+  "command": "/usr/bin/c++  -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/include -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/Optimization/CMakeFiles/linopttest.dir/cmake_pch.hxx -o CMakeFiles/linopttest.dir/LinConstrOpt/src/LinOptTests.cpp.o -c /home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/LinOptTests.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/Optimization/LinConstrOpt/src/LinOptTests.cpp",
+  "output": "Optimization/CMakeFiles/linopttest.dir/LinConstrOpt/src/LinOptTests.cpp.o"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/usr/include/eigen3 -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -g -std=gnu++17 -o CMakeFiles/ml.dir/src/MultilevelModelFunctions.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/MultilevelModel/CMakeFiles/ml.dir/cmake_pch.hxx -o CMakeFiles/ml.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/MultilevelModel/CMakeFiles/ml.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel/CMakeFiles/ml.dir/cmake_pch.hxx.cxx",
+  "output": "MultilevelModel/CMakeFiles/ml.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/MultilevelModel/CMakeFiles/ml.dir/cmake_pch.hxx -o CMakeFiles/ml.dir/src/MultilevelModelFunctions.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/MultilevelModelFunctions.cpp",
   "output": "MultilevelModel/CMakeFiles/ml.dir/src/MultilevelModelFunctions.cpp.o"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/usr/include/eigen3 -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -g -std=gnu++17 -o CMakeFiles/ml.dir/src/GenerateFactorData.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateFactorData.cpp",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/MultilevelModel/CMakeFiles/ml.dir/cmake_pch.hxx -o CMakeFiles/ml.dir/src/GenerateFactorData.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateFactorData.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/src/GenerateFactorData.cpp",
   "output": "MultilevelModel/CMakeFiles/ml.dir/src/GenerateFactorData.cpp.o"
 },
 {
+  "directory": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/test -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/MultilevelModel/CMakeFiles/test_updateSurBeta.dir/cmake_pch.hxx -o CMakeFiles/test_updateSurBeta.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/MultilevelModel/CMakeFiles/test_updateSurBeta.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel/CMakeFiles/test_updateSurBeta.dir/cmake_pch.hxx.cxx",
+  "output": "MultilevelModel/CMakeFiles/test_updateSurBeta.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/MultilevelModel",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/test -I/usr/include/eigen3/unsupported -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/MultilevelModel/CMakeFiles/test_updateSurBeta.dir/cmake_pch.hxx -o CMakeFiles/test_updateSurBeta.dir/test/test_updateSurBeta.cpp.o -c /home/dillon/CodeProjects/CProjects/MultilevelModel/test/test_updateSurBeta.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/MultilevelModel/test/test_updateSurBeta.cpp",
+  "output": "MultilevelModel/CMakeFiles/test_updateSurBeta.dir/test/test_updateSurBeta.cpp.o"
+},
+{
   "directory": "/home/dillon/CodeProjects/CProjects/build/MVProbit",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/include/eigen3 -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -g -std=gnu++17 -o CMakeFiles/fps.dir/src/factor_probit_sims.cpp.o -c /home/dillon/CodeProjects/CProjects/MVProbit/src/factor_probit_sims.cpp",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/Optimization/include -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/fps.dir/cmake_pch.hxx -o CMakeFiles/fps.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/fps.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/fps.dir/cmake_pch.hxx.cxx",
+  "output": "MVProbit/CMakeFiles/fps.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/MVProbit",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/Optimization/include -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/fps.dir/cmake_pch.hxx -o CMakeFiles/fps.dir/src/factor_probit_sims.cpp.o -c /home/dillon/CodeProjects/CProjects/MVProbit/src/factor_probit_sims.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MVProbit/src/factor_probit_sims.cpp",
   "output": "MVProbit/CMakeFiles/fps.dir/src/factor_probit_sims.cpp.o"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/MVProbit",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/include/eigen3 -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -g -std=gnu++17 -o CMakeFiles/rp.dir/src/recession_prob.cpp.o -c /home/dillon/CodeProjects/CProjects/MVProbit/src/recession_prob.cpp",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/rp.dir/cmake_pch.hxx -o CMakeFiles/rp.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/rp.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/rp.dir/cmake_pch.hxx.cxx",
+  "output": "MVProbit/CMakeFiles/rp.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/MVProbit",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/MVProbit/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/home/dillon/CodeProjects/CProjects/Optimization/NonLinOpt -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/MVProbit/CMakeFiles/rp.dir/cmake_pch.hxx -o CMakeFiles/rp.dir/src/recession_prob.cpp.o -c /home/dillon/CodeProjects/CProjects/MVProbit/src/recession_prob.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/MVProbit/src/recession_prob.cpp",
   "output": "MVProbit/CMakeFiles/rp.dir/src/recession_prob.cpp.o"
 },
 {
   "directory": "/home/dillon/CodeProjects/CProjects/build/ann",
-  "command": "/usr/bin/g++  -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/TimeSeries/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -I/home/dillon/CodeProjects/CProjects/MultilevelModel/include -I/home/dillon/CodeProjects/CProjects/OptimizationTools/include -I/usr/local/include/stats-master/include -I/usr/local/include/gcem-master/include -I/usr/local/include/eigen-3.4.0 -I/usr/local/include/eigen-3.4.0/unsupported -g -std=gnu++17 -o CMakeFiles/ann.dir/src/ann.cpp.o -c /home/dillon/CodeProjects/CProjects/ann/src/ann.cpp",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -x c++-header -include /home/dillon/CodeProjects/CProjects/build/ann/CMakeFiles/net.dir/cmake_pch.hxx -o CMakeFiles/net.dir/cmake_pch.hxx.gch -c /home/dillon/CodeProjects/CProjects/build/ann/CMakeFiles/net.dir/cmake_pch.hxx.cxx",
+  "file": "/home/dillon/CodeProjects/CProjects/build/ann/CMakeFiles/net.dir/cmake_pch.hxx.cxx",
+  "output": "ann/CMakeFiles/net.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/ann",
+  "command": "/usr/bin/c++  -I/home/dillon/CodeProjects/CProjects/Distributions/include -I/home/dillon/CodeProjects/CProjects/gcem/include -I/home/dillon/CodeProjects/CProjects/stats/include -I/usr/include/eigen3/unsupported -I/home/dillon/CodeProjects/CProjects/EigenTools/include -I/home/dillon/CodeProjects/CProjects/GnuPlotting/include -isystem /usr/include/eigen3 -g -std=gnu++17 -Winvalid-pch -include /home/dillon/CodeProjects/CProjects/build/ann/CMakeFiles/net.dir/cmake_pch.hxx -o CMakeFiles/net.dir/src/ann.cpp.o -c /home/dillon/CodeProjects/CProjects/ann/src/ann.cpp",
   "file": "/home/dillon/CodeProjects/CProjects/ann/src/ann.cpp",
-  "output": "ann/CMakeFiles/ann.dir/src/ann.cpp.o"
+  "output": "ann/CMakeFiles/net.dir/src/ann.cpp.o"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/fort",
+  "command": "/usr/bin/cc  -I/home/dillon/CodeProjects/CProjects/fort -g -o CMakeFiles/fort.dir/fort.c.o -c /home/dillon/CodeProjects/CProjects/fort/fort.c",
+  "file": "/home/dillon/CodeProjects/CProjects/fort/fort.c",
+  "output": "fort/CMakeFiles/fort.dir/fort.c.o"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/PracticeCode",
+  "command": "/usr/bin/c++   -g -std=gnu++17 -o CMakeFiles/diamond.dir/Interviews/diamond.cpp.o -c /home/dillon/CodeProjects/CProjects/PracticeCode/Interviews/diamond.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/PracticeCode/Interviews/diamond.cpp",
+  "output": "PracticeCode/CMakeFiles/diamond.dir/Interviews/diamond.cpp.o"
+},
+{
+  "directory": "/home/dillon/CodeProjects/CProjects/build/PracticeCode",
+  "command": "/usr/bin/c++   -g -std=gnu++17 -o CMakeFiles/const.dir/Interviews/const.cpp.o -c /home/dillon/CodeProjects/CProjects/PracticeCode/Interviews/const.cpp",
+  "file": "/home/dillon/CodeProjects/CProjects/PracticeCode/Interviews/const.cpp",
+  "output": "PracticeCode/CMakeFiles/const.dir/Interviews/const.cpp.o"
 }
 ]
