@@ -1,7 +1,13 @@
 #include "Variables.hpp"
 #include <vector>
 #include <string>
+#include <format>
 
+std::ostream& operator<<(std::ostream& os, const Var& v){
+  std::string vname = std::format("({},{})", v.name, v.getVariableType());
+  os << vname;
+  return os;
+}
 
 std::vector<Var> buildVarVector(size_t N) {
   std::vector<Var> vars;

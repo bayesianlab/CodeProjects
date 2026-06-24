@@ -1,7 +1,7 @@
 project(eigentools)
 
 set(tools src/EigenTools.cpp)
-message(STATUS "${EIGEN3_INCLUDE_DIR}")
+message(STATUS "${EIGEN3_INCLUDE_DIRS}")
 add_library(tools STATIC ${tools})
 target_include_directories(tools PRIVATE
     include

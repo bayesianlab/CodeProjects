@@ -8,6 +8,6 @@ target_link_libraries(plot PUBLIC
 add_pch_to_target(plot)
 target_include_directories(plot PUBLIC 
     include
-    ${BOOST_INCLUDEDIR}
+    ${Boost_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/EigenTools/include
     ${EIGEN_UNSUPPORTED})

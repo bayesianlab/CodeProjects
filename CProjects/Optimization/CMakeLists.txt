@@ -8,7 +8,7 @@ set(bfgssrc
 add_library(optlib STATIC ${bfgssrc})
 target_include_directories(optlib PUBLIC 
     NonLinOpt/ 
-    ${BOOST_INCLUDEDIR})
+    ${Boost_INCLUDE_DIRS})
 target_link_libraries(optlib PUBLIC Eigen3::Eigen)
 add_pch_to_target(optlib)
 
@@ -17,8 +17,8 @@ add_executable(bfgstest NonLinOpt/Test_Optimization.cpp)
 target_link_libraries(bfgstest PRIVATE optlib Eigen3::Eigen)
 add_pch_to_target(bfgstest)
 target_include_directories(bfgstest PRIVATE 
-    ${EIGEN_INCLUDE_DIR}
-    ${BOOST_INCLUDEDIR}
+    ${EIGEN3_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIRS}
     NonLinOpt
 )
 
@@ -32,7 +32,7 @@ set(linconstroptsrc
 add_library(linconstropt STATIC ${linconstroptsrc})
 target_include_directories(linconstropt PRIVATE 
     LinConstrOpt/include    
-    ${EIGEN3_INCLUDE_DIR}/unsupported
+    ${EIGEN3_INCLUDE_DIRS}/unsupported
 )
 target_link_libraries(linconstropt PRIVATE Eigen3::Eigen)
 add_pch_to_target(linconstropt)
@@ -42,8 +42,8 @@ add_executable(linopttest
     LinConstrOpt/src/LinOptTests.cpp
     )
 target_include_directories(linopttest PRIVATE 
-    ${EIGEN3_INCLUDE_DIR}/unsupported
-    ${BOOST_INCLUDEDIR}
+    ${EIGEN3_INCLUDE_DIRS}/unsupported
+    ${Boost_INCLUDE_DIRS}
     LinConstrOpt/include
 )
 target_link_libraries(linopttest PRIVATE linconstropt optlib fort GTest::gtest_main GTest::gtest Eigen3::Eigen)

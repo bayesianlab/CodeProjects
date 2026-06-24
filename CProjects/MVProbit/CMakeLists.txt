@@ -20,11 +20,11 @@ target_link_libraries(fps PRIVATE Dist tools ml plot optlib)
 add_pch_to_target(fps)
 target_include_directories(fps PRIVATE 
     include
-    ${EIGEN_INCLUDE_DIR}
+    ${EIGEN3_INCLUDE_DIRS}
     ${EIGEN_UNSUPPORTED}
     ${CMAKE_SOURCE_DIR}/gcem/include
     ${CMAKE_SOURCE_DIR}/stats/include
-    ${BOOST_INCLUDEDIR}
+    ${Boost_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/MultilevelModel/include
     ${CMAKE_SOURCE_DIR}/TimeSeries/include
     ${CMAKE_SOURCE_DIR}/EigenTools/include
@@ -38,11 +38,11 @@ target_link_libraries(rp PRIVATE Dist tools ml plot optlib)
 add_pch_to_target(rp)
 target_include_directories(rp PRIVATE
     include
-    ${EIGEN_INCLUDE_DIR}
+    ${EIGEN3_INCLUDE_DIRS}
     ${EIGEN_UNSUPPORTED}
     ${CMAKE_SOURCE_DIR}/gcem/include
     ${CMAKE_SOURCE_DIR}/stats/include
-    ${BOOST_INCLUDEDIR}
+    ${Boost_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/MultilevelModel/include
     ${CMAKE_SOURCE_DIR}/TimeSeries/include
     ${CMAKE_SOURCE_DIR}/EigenTools/include

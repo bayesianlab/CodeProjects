@@ -8,14 +8,14 @@ target_link_libraries(ml PUBLIC Dist tools Eigen3::Eigen)
 add_pch_to_target(ml)
 target_include_directories(ml PRIVATE 
   include
-  ${EIGEN_INCLUDE_DIR}
+  ${EIGEN3_INCLUDE_DIRS}
   ${EIGEN_UNSUPPORTED}
   ${GCEM_INCLUDE_DIR}
   ${CMAKE_SOURCE_DIR}/Distributions/include
   ${CMAKE_SOURCE_DIR}/EigenTools/include
   ${CMAKE_SOURCE_DIR}/TimeSeries/include
   ${STATS_INCLUDE_DIR}
-  ${BOOST_INCLUDEDIR}
+  ${Boost_INCLUDE_DIRS}
 )
 
 # Google Test
@@ -32,11 +32,11 @@ target_include_directories(test_updateSurBeta PRIVATE
     ${CMAKE_SOURCE_DIR}/gcem/include
     ${CMAKE_SOURCE_DIR}/stats/include
     ${CMAKE_CURRENT_LIST_DIR}/test
-    ${EIGEN_INCLUDE_DIR}
+    ${EIGEN3_INCLUDE_DIRS}
     ${EIGEN_UNSUPPORTED}
     ${GCEM_INCLUDE_DIR}
     ${STATS_INCLUDE_DIR}
-    ${BOOST_INCLUDEDIR}
+    ${Boost_INCLUDE_DIRS}
 )
 target_link_libraries(test_updateSurBeta GTest::GTest GTest::Main Dist tools Eigen3::Eigen)
 add_test_pch_to_target(test_updateSurBeta)

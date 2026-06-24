@@ -64,46 +64,22 @@ public:
       return BuildStatus::NoObjective;
     }
 
-    int row = 0;
-    int lessThanCnt = 0;
-    int greaterThanCnt = 0;
-    int equalToCnt = 0;
-    int negativeBoundsCnt = 0;
+    // Determining phase-1
+    // All boundaries must be positive, b > 0,
+    // This can be done by multiplying by -1 whichever constraints need transforming
+    bool phase1 = false;
     for (auto &[constrName, constr] : constraints) {
-      switch (constr.getOperatorType()) {
-      case OperatorType::LessThan: {
-        Var slack = Var(VariableType::Slack);
-        constr.addValidVar(1.0, slack);
-        varLookup.insert(slack.name);
-        varRegister.push_back(slack);
-        if(constr.getBound()) ++negativeBoundsCnt;
-        ++lessThanCnt;
-        break;
+      if(constr.getBound() < 0) {
+        constr = -constr;
       }
-      case OperatorType::GreaterThan: {
-        Var surplus = Var(VariableType::Surplus);
-        constr.addValidVar(-1.0, surplus);
-        varLookup.insert(surplus.name);
-        varRegister.push_back(surplus);
-        if(constr.getBound()) ++negativeBoundsCnt;
-        ++greaterThanCnt;
-        break;
+      switch(constr.getOperatorType()){
+        case OperatorType::GreaterThan: {
+          Var v = Var(VariableType::Surplus);
+          std::cout << v << std::endl;
+        }      
       }
-      case OperatorType::EqualTo:
-        ++equalToCnt;
-        break;
-      }
-      row++;
+
     }
-    int M = lessThanCnt + greaterThanCnt + equalToCnt;
-    if (lessThanCnt == M){
-      if(negativeBoundsCnt == 0){
-        buildStatus = BuildStatus::FeasibleSolution;
-        return buildStatus;
-      }
-    }
-    buildStatus = BuildStatus::Success;
-    return buildStatus;
   }
 
   Eigen::MatrixXd getCoefMatrix() const {
@@ -111,7 +87,6 @@ public:
       throw std::invalid_argument("The model must be built successfully to return the coefficient matrix.");
     }
     for ( auto &[constrName, constr] : constraints ) {
-      
     }
   }
 

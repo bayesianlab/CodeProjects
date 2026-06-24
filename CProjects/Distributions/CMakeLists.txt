@@ -14,7 +14,7 @@ target_include_directories(Dist PUBLIC
     ${EIGEN_UNSUPPORTED}
     ${CMAKE_SOURCE_DIR}/EigenTools/include
     ${STATS_INCLUDE_DIR}
-    ${BOOST_INCLUDEDIR}
+    ${Boost_INCLUDE_DIRS}
 )
 # add_executable(disttest src/Test_Distributions.cpp)
 # include_directories(Dist /home/dillon/stats) 

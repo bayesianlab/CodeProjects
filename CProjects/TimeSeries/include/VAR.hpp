@@ -66,8 +66,8 @@ public:
     F.block(K, K*(p-1), Z.rows(), Z.cols()) = Z; 
     auto eg = F.eigenvalues();
     ArrayXd real_eigs = eg.real();
-    if (real_eigs.any() > 1){
-      cout << "Warning: eigen values of coefficients greater than 1" << endl; 
+    if ((real_eigs > 1.0).any()) {
+      cout << "Warning: eigen values of coefficients greater than 1" << endl;
     }
   }
 

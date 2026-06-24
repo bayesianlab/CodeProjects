@@ -42,9 +42,6 @@ NoObjective,
 InvalidConstraint
 };
 
-
-
-
 enum class ObjectiveBuildStatus {
 Success,
 NoVariables,
@@ -55,7 +52,6 @@ DuplicateVariable
 
 std::string toString(OperatorType op);
 std::string toString(ObjectiveType obj);
-
 
 inline std::string toString(OperatorType op) {
   switch (op) {

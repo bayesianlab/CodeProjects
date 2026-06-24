@@ -4,11 +4,13 @@ import numpy as np
 from scipy.optimize import linprog 
 #%%
 
-c = np.array([2,1,3,1])
-A = np.array([[1,2,1,1], 
-             [-1,0,2,1],
-             [-1,1,0,0]], np.float64)
-b_eq = np.array([3,0,1])
+c = np.array([-1,1])
+A = np.array([[1,-1], 
+             [1,1]], np.float64)
+b_eq = np.array([2, 6])
 
 # %%
-linprog(c, A_eq=A, b_eq=b_eq)
+res = linprog(c, A_eq=A, b_eq=b_eq)
+print(res.x)
+
+print(res.fun)

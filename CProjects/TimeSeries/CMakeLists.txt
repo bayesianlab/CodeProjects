@@ -16,7 +16,7 @@ target_include_directories(tv PRIVATE
     ${CMAKE_SOURCE_DIR}/gcem/include
     ${CMAKE_SOURCE_DIR}/stats/include
     ${EIGEN_UNSUPPORTED}
-    ${BOOST_INCLUDEDIR}
+    ${Boost_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/Distributions/include
     ${CMAKE_SOURCE_DIR}/EigenTools/include
 )
