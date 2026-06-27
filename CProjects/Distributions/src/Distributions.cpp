@@ -86,6 +86,14 @@ double normrnd(double mu, double sig)
   return normalDist(GLOBAL_SEED);
 }
 
+
+double Normal::sample(double mu, double sigma) const {
+  using param_t = std::normal_distribution<double>::param_type;
+  dist.param(param_t{mu, sigma});
+  return dist(seed);
+}
+
+
 VectorXd normrnd(double mu, double sig, int N)
 {
   /* Normal is standard deviation parameterization */

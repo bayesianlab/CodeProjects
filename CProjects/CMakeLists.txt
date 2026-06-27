@@ -146,5 +146,5 @@ add_subdirectory(MultilevelModel)
 add_subdirectory(MVProbit)
 add_subdirectory(ann)
 add_subdirectory(fort)
-add_subdirectory(Calendar)
+add_subdirectory(ExperimentalBayesian)
 

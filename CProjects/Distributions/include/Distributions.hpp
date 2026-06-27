@@ -1,24 +1,28 @@
 #ifndef DIST_H
 #define DIST_H
 #define _USE_MATH_DEFINES
-#include "EigenTools.hpp"
-#include "gcem.hpp"
-#include "stats.hpp"
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
-#include <boost/math/distributions/exponential.hpp>
+
+// Assuming your custom headers are in the same directory
+#include "gcem.hpp"
+#include "EigenTools.hpp"
+#include "stats.hpp"
+
+// Boost includes
 #include <boost/math/distributions/normal.hpp>
+#include <boost/math/distributions/exponential.hpp>
 #include <boost/random/gamma_distribution.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/uniform_01.hpp>
 #include <boost/random/variate_generator.hpp>
+
+// C++ standard library
 #include <cmath>
 #include <limits>
-#include <math.h>
-#include <random>
 #include <stdexcept>
-#include <unsupported/Eigen/KroneckerProduct>
+#include <random>
 
 using namespace Eigen;
 using namespace std;
@@ -52,6 +56,18 @@ MatrixXd mvnrnd(const MatrixBase<A> &mu, const MatrixBase<B> &sig, int N) {
   Z.rowwise() += mu;
   return Z;
 }
+
+class Normal {
+  public:
+  Normal(std::mt19937& rng) : seed(rng) {}
+
+  double sample(double mu, double sigma) const;
+
+  private:
+  std::mt19937& seed;
+  mutable std::normal_distribution<double> dist;
+};
+
 
 
 MatrixXd mvnrnd(int K, int N);
