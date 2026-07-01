@@ -1,5 +1,9 @@
 # Top level cmake 
-cmake_minimum_required(VERSION 3.20...4.2) 
+cmake_minimum_required(VERSION 3.20...4.2)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
 # Auto-detect vcpkg so `cmake ..` works without explicit toolchain flags.
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -146,5 +150,4 @@ add_subdirectory(MultilevelModel)
 add_subdirectory(MVProbit)
 add_subdirectory(ann)
 add_subdirectory(fort)
-add_subdirectory(ExperimentalBayesian)
 

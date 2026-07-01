@@ -1,21 +1,14 @@
-project(Distributions)
+project(distlib)
 
+add_library(distlib STATIC DistLib.cpp)
+target_include_directories(distlib PUBLIC ${CMAKE_SOURCE_DIR}/Distributions)
+target_link_libraries(distlib PUBLIC Eigen3::Eigen)
 
-add_library(Dist STATIC src/Distributions.cpp)
+add_executable(test_distlib test_distlib.cpp)
+target_link_libraries(test_distlib PRIVATE GTest::gtest_main GTest::gtest distlib)
 
-target_link_libraries(Dist PUBLIC 
-    Eigen3::Eigen)
-add_pch_to_target(Dist)
-
-target_include_directories(Dist PUBLIC
-    include
-    ${CMAKE_SOURCE_DIR}/gcem/include
-    ${CMAKE_SOURCE_DIR}/stats/include
-    ${EIGEN_UNSUPPORTED}
-    ${CMAKE_SOURCE_DIR}/EigenTools/include
-    ${STATS_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIRS}
-)
-# add_executable(disttest src/Test_Distributions.cpp)
-# include_directories(Dist /home/dillon/stats) 
-# target_link_libraries(disttest PUBLIC Dist plot)
+add_executable(test_bayes 
+    bayes_test.cpp 
+    bayes.cpp)
+target_link_libraries(test_bayes PRIVATE GTest::gtest_main GTest::gtest distlib)
+target_include_directories(test_bayes PRIVATE Distributions)

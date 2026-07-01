@@ -90,8 +90,12 @@ double normrnd(double mu, double sig)
 double Normal::sample(double mu, double sigma) const {
   using param_t = std::normal_distribution<double>::param_type;
   dist.param(param_t{mu, sigma});
-  return dist(seed);
+  return dist(rng);
 }
+
+Eigen::VectorXd Normal::sample(double mu, double sigma, Eigen::Index size) {
+    return Eigen::VectorXd::NullaryExpr(size, NormalUnivariate(mu, sigma, rng));
+  }
 
 
 VectorXd normrnd(double mu, double sig, int N)

@@ -57,14 +57,25 @@ MatrixXd mvnrnd(const MatrixBase<A> &mu, const MatrixBase<B> &sig, int N) {
   return Z;
 }
 
+struct NormalUnivariate {
+  std::mt19937& rng;
+  mutable std::normal_distribution<double> dist;
+  NormalUnivariate(double mu, double sigma, std::mt19937& _rng) 
+  : rng(_rng), dist(mu, sigma) {}
+
+  double operator()() const{return dist(rng);}
+};
+
 class Normal {
   public:
-  Normal(std::mt19937& rng) : seed(rng) {}
-
+  Normal( std::mt19937& _rng) : rng(_rng) {}
+  
   double sample(double mu, double sigma) const;
 
+  Eigen::VectorXd sample(double mu, double sigma, Eigen::Index size);
+
   private:
-  std::mt19937& seed;
+  std::mt19937& rng;
   mutable std::normal_distribution<double> dist;
 };
 
